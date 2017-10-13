@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_card_no_margin"
+        android:contentDescription="@string/post_thumbnail"
+        android:layout_marginTop="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/video_duration"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:textColor="@color/colorSecondary_text"
+        android:textSize="@dimen/text_size_content"
+        android:textStyle="bold"
+        android:background="@drawable/bg_circle"
+        android:foreground="@drawable/ripple_dark"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/post_profile_pic" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_half"
+        android:textSize="@dimen/text_size_content"
+        android:text="Prem Suman"
+        android:layout_alignBottom="@+id/video_duration"
+        android:layout_toEndOf="@+id/video_duration" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_half"
+        android:paddingEnd="@dimen/padding_half"
+        android:text="Bangalore, Karnataka"
+        android:layout_below="@+id/video_duration"
+        android:layout_alignParentStart="true" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_half"
+        android:text="00:00"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignParentEnd="true" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_half"
+        android:gravity="center_horizontal"
+        android:drawableStart="@drawable/ic_like_hand"
+        android:text="12K"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="4dp"
+        android:id="@+id/yantramanavThinContentTextView" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_half"
+        android:gravity="center_horizontal"
+        android:drawableStart="@drawable/ic_view"
+        android:text="  212K"
+        android:layout_alignBaseline="@+id/yantramanavThinContentTextView"
+        android:layout_alignBottom="@+id/yantramanavThinContentTextView"
+        android:layout_toEndOf="@+id/video_duration" />
+
+</RelativeLayout>

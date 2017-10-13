@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\f0339e773b6b81acffa3d96d5c91113ffe43f9d7\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="56e96fa067ba358a6c60184e40947810dcd78f30">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9f141217f6a0a09463de87d9d3d5add93119d400\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.gradle\caches\modules-2\files-2.1\com.googlecode.libphonenumber\libphonenumber\8.8.2\37934a64f25d6ce248493444b8de1ffbcc9fb819\libphonenumber-8.8.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="37934a64f25d6ce248493444b8de1ffbcc9fb819">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\libphonenumber-8.8.2_f8137300031f94653e1b35356dc0651895e8705c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\4a81bb73d8f5a27669229a0520f79960a0ed5e39\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="1ee075177bd403c333d4843b92c4b6c55db929ed">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7d1384f0740b16ba9b3c03768a4ab2f3c71b5074\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\0bb3d1736dbde27cc82585b2af05bd4783f6fbdb\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="f799bb947a5f7c1735215e63f084e23b33e72e2d">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1843b81e77e849b0d2fc103a82933a6cba186357\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\3e6230416828d690f40eb522e73167355c5c1282\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="5b65ec1ebc84af3baecfd28954c9e7ff01b937a8">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_085c4c4e9bed912b73285fe720a49365185bc307\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\AndroidStudio\Teazer\app\libs\javax.mail-1.6.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="a055c648842c4954c1f7db7254f45d9ad565e278">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\2\javax.mail-1.6.0_12134a85e588c9288905a12c7985be6a7c2535e5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\4b8e801af20c1e2dbe4fd7880996850f3bcc1ba8\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="0e6f50723c6926ffd386fb61ef44a3a108060eca">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f03e0c3d8ad75d6a19316efa0aec9bab1a3773e0\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\AndroidStudio\sdk\build-tools\26.0.1\renderscript\lib\renderscript-v8.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6e81b059b564e20e1430f42fb38469a4d8f118f0">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\pre-dexed\debug\renderscript-v8_a578004e93c28431d87caffa95f06f5171fbc489.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\AndroidStudio\Teazer\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="db5b13a6536414ffbf8ace968c5f6659a38fc8b9">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_ca8cd721d9faf9197f72dfa90f3254e03aaba2f7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\glide-3.7.0_48dc9efb79e5b5441929a76befbeaba7d6ff9c9a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\f8c5ed96c1afaa1b97ef4433531b63812479a646\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="906fdd57c143ec9adc27a76a697fed1c0cfd6348">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2ee043e09b6b8710ce29fc1f43f741b0914345b6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\AndroidStudio\Teazer\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_6fad9c2b79ea5e474bdec8eddf8704726cb034aa\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\2cfe2db63428fa3a52ae5f31b17e94fbbe73fd12\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="10c32fcf3d0acc4b208fc39f8d2e16b69ef8bd3b">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a39cc07afc3ae366410554abf1e12214172bf743\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\a15d41717cc1440091584aef2347b195669c28e2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c390af22079a61fdc42712c19f15a700f1fc2cbf">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_52581eae8216bf97d83ae7b0c53f81199671a6ec\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Prem $\.android\build-cache\92740d2e157e44bb1cf386bdeb59fcbc40720b4d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fbaffbfc2a42fce3718dc9f52182810ad332b0ec">
+        <dex dex="D:\AndroidStudio\Teazer\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_43cd4c5adf1d92e882733adb78cc96cf41dc2c1e\classes.dex" />
+    </item>
+
+</items>

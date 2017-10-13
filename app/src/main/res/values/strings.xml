@@ -1,0 +1,97 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Teazer</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="create_here">Create here!</string>
+    <string name="hey_there_what_s_your_name">Hey there!\nWhat\'s your name?</string>
+    <string name="full_name">Full name</string>
+    <string name="next">Next</string>
+    <string name="be_secure_set_a_password">Be Secure\nSet a password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="tell_me_a_little_bit_about_yourself">Tell us a little bit about yourself</string>
+    <string name="your_email">Your email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="finish">Finish</string>
+    <string name="show_videos_on_device">Show videoses on device</string>
+    <string name="record_video">Record video</string>
+    <string name="flip_camera">Flip camera</string>
+    <string name="camera_flash">Camera flash</string>
+    <string name="camera_settings">Camera settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="check">Check</string>
+    <string name="play_pause">Play/pause</string>
+    <string name="video_thumbnail">Video thumbnail</string>
+    <string name="flip_video">flip_video</string>
+    <string name="caption">Caption…</string>
+    <string name="tag_friends">Tag Friends</string>
+    <string name="add_location">Add Location</string>
+    <string name="choose_category">Choose category</string>
+    <string name="facebook">\tFacebook</string>
+    <string name="instagram">\tInstagram</string>
+    <string name="title_activity_home_screen">HomeScreenActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="post_thumbnail">post_thumbnail</string>
+    <string name="post_profile_pic">post_profile_pic</string>
+    <string name="camera_failed_message">Failed to start camera service Please Restart your device.</string>
+    <string name="please_allow_all_permissions_message">We understand that you want to be on the safe side\n
+        But please allow the permissions so that you can use Teazer to its full potential!</string>
+    <string name="whoa">Whoa!</string>
+    <string name="back">Back</string>
+    <string name="upload">Upload</string>
+    <string name="continue_with_email_phone">Continue with email/phone</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="video_fun_friends">Video. Fun. Friends.</string>
+    <string name="username_email_mobile">Username / Email / Mobile</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="up">Up</string>
+    <string name="enter_email_mobile">Enter Email or Mobile</string>
+    <string name="reset_password">Reset password</string>
+    <string name="name">Name</string>
+    <string name="let_s_roll">Let\'s roll</string>
+    <string name="uploading_your_video">Uploading your video…</string>
+    <string name="login_through_otp">Login with OTP</string>
+    <string name="choose_a_username">Choose a username</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+
+    <string name="facebook_app_id">1983960948489137</string>
+    <string name="fb_login_protocol_scheme">fb1983960948489137</string>
+    <string name="google_web_client_id" tools:ignore="TypographyDashes">
+        359704933430-6lmo4378keof7gqtajd0ibe293c5rn1q.apps.googleusercontent.com
+    </string>
+    <string name="logout">Logout</string>
+    <string name="okay">Okay</string>
+    <string name="not_connected_message">No internet connection!</string>
+    <string name="oi">Oi!</string>
+    <string name="retry">Retry</string>
+    <string name="settings">Settings</string>
+    <string name="verified">Verified\t</string>
+    <string name="please_enter_your_email_or_mobile">Please enter your email or mobile in order to reset your password</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="email_sent">Email sent\t</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
+    <string name="no_text"> </string>
+    <string name="registration_message">You are not registered yet. Use the registration button to complete your registration.</string>
+    <string name="registration_failed">Your email or password is already in use</string>
+    <string name="code">Code</string>
+    <string name="otp_sent_1">An OTP has been sent to </string>
+    <!--<string name="otp_sent_2">. Don’t worry we will verify it automatically</string>-->
+    <string name="retry_in">Retry in</string>
+    <string name="you_can_try_again">You can retry if you didn\'t yet receive the OTP</string>
+    <string name="login_through_password">Login with password</string>
+    <string name="request_otp">Request OTP</string>
+    <string name="login_through_otp_error">
+        Email or Phone number does not match with existing records, or you have reached the maximum otp attempts.
+    </string>
+    <string name="video_image_thumbnail">Video image thumbnail</string>
+</resources>

@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clickable="true"
+    tools:context="com.cncoding.teazer.camera.VideoPreviewFragment">
+
+    <TextureView
+        android:id="@+id/video_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"/>
+
+    <include layout="@layout/video_pause_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/video_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorDisabled"
+        android:alpha="0.6">
+
+        <ImageButton
+            android:id="@+id/video_preview_cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_cancel"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/cancel"
+            android:layout_toStartOf="@+id/spacer"/>
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="80dp"
+            android:layout_height="1dp"
+            android:layout_centerInParent="true"/>
+
+        <ImageButton
+            android:id="@+id/video_preview_check_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_check"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/check"
+            android:layout_toEndOf="@+id/spacer" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/video_duration"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:textColor="@color/colorSecondary_text"
+        android:textSize="@dimen/text_size_content"
+        android:textStyle="bold"
+        android:background="@drawable/bg_circle"
+        android:foreground="@drawable/ripple_dark"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:visibility="gone"
+        android:id="@+id/flip_video_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/ic_flip"
+        android:background="@drawable/bg_circle"
+        android:layout_above="@+id/video_actions"
+        android:layout_margin="@dimen/padding_default"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/flip_video" />
+
+</RelativeLayout>

@@ -1,0 +1,123 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/padding_default"
+    android:paddingEnd="@dimen/padding_default"
+    android:gravity="center_horizontal"
+    tools:context="com.cncoding.teazer.authentication.LoginFragment">
+
+    <!--<include layout="@layout/custom_action_bar" />-->
+
+    <com.cncoding.teazer.customViews.SignPainterTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:padding="@dimen/padding_default"
+        android:textSize="@dimen/text_size_h2"
+        android:layout_marginTop="@dimen/padding_big"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+        android:id="@+id/login_username"
+        style="@style/AppTheme.RoundedEditText"
+        android:hint="@string/username_email_mobile"
+        android:inputType="textEmailAddress"
+        android:imeOptions="actionNext"
+        android:layout_marginTop="@dimen/padding_double"
+        android:layout_marginBottom="@dimen/padding_default" />
+
+    <com.hbb20.CountryCodePicker
+        android:id="@+id/login_country_code"
+        style="@style/AppTheme.CountryCodeEditText"
+        app:ccp_autoDetectCountry="true"
+        app:ccp_defaultLanguage="ENGLISH"
+        app:ccpDialog_allowSearch="true"
+        app:ccpDialog_fastScroller_bubbleColor="@color/colorPrimary"
+        app:ccpDialog_showFastScroller="true"
+        app:ccpDialog_backgroundColor="@color/material_grey100"
+        app:ccpDialog_textColor="@color/colorSecondary_text"
+        app:ccp_showNameCode="false"
+        app:ccp_showPhoneCode="false"
+        android:visibility="gone"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+        android:id="@+id/login_password"
+        android:layout_marginBottom="@dimen/padding_default"
+        style="@style/AppTheme.RoundedEditText"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:imeOptions="actionGo" />
+
+    <RelativeLayout
+        android:id="@+id/login_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/padding_default">
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            android:id="@+id/login_through_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="start"
+            android:text="@string/login_through_otp"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size_content"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/ripple_dark"
+            android:padding="@dimen/padding_default"
+            android:textColor="@color/colorIcons"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/spacer" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            android:id="@+id/forgot_password_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/forgot_password"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size_content"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/ripple_dark"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/padding_default"
+            android:textColor="@color/colorIcons"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/spacer"/>
+
+    </RelativeLayout>
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
+        android:text="@string/login"
+        android:textSize="@dimen/text_size_content_big"
+        style="@style/AppTheme.RoundedMaterialButton" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/login_through_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/login_through_password"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size_content"
+        android:background="@android:color/transparent"
+        android:foreground="@drawable/ripple_dark"
+        android:padding="@dimen/padding_default"
+        android:textColor="@color/colorIcons"
+        android:visibility="invisible" />
+
+</LinearLayout>

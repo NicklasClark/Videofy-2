@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".camera.CameraActivity">
+
+    <FrameLayout
+        android:id="@+id/camera_texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/space_background_color"
+        android:adjustViewBounds="true"/>
+
+    <ImageView
+        android:id="@+id/camera_flash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_flash_off"
+        android:padding="@dimen/padding_double"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/camera_flash"/>
+
+    <ImageView
+        android:id="@+id/camera_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_video_files"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/padding_double"
+        android:contentDescription="@string/show_videos_on_device" />
+
+    <FrameLayout
+        android:id="@+id/camera_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:id="@+id/camera_record_outer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_record_outer"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/padding_double"
+            android:contentDescription="@string/record_video" />
+
+        <ImageView
+            android:id="@+id/camera_record_inner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_record_inner"
+            android:layout_gravity="center"
+            android:contentDescription="@string/record_video" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/camera_flip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_rotate"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/padding_double"
+        android:contentDescription="@string/flip_camera" />
+
+    <FrameLayout
+        android:id="@+id/video_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDisabled"
+        android:visibility="gone"/>
+
+</RelativeLayout>
