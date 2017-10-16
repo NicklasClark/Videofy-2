@@ -47,15 +47,15 @@ import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_PASSWORD_ACTION;
+import static com.cncoding.teazer.MainActivity.getCountryCode;
 import static com.cncoding.teazer.MainActivity.getDeviceId;
 import static com.cncoding.teazer.MainActivity.getFcmToken;
+import static com.cncoding.teazer.MainActivity.togglePasswordVisibility;
 import static com.cncoding.teazer.authentication.SignupFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.UserProfile.TEAZER;
 
 public class LoginFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final int LOGIN_STATE_PASSWORD = 1;
     private static final int LOGIN_STATE_OTP = 2;
     private static final int PHONE_NUMBER_FORMAT = 10;
@@ -71,11 +71,8 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_country_code) CountryCodePicker countryCodePicker;
     @BindView(R.id.login_options_layout) RelativeLayout loginOptionsLayout;
 
-    private String mParam1;
-    private String mParam2;
     private String username;
     private int countryCode = -1;
-    private boolean isRemember;
 
     private LoginInteractionListener mListener;
     private SharedPreferences sharedPreferences;
@@ -84,24 +81,10 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         sharedPreferences = getActivity().getPreferences(MODE_PRIVATE);
-        getCountryCode();
 //        getContext().getTheme().applyStyle(R.style.AppTheme_LoginFragment, true);
     }
 
@@ -124,6 +107,7 @@ public class LoginFragment extends Fragment {
             usernameView.setText(username);
             passwordView.setText(sharedPreferences.getString("password", null));
         }
+        countryCode = getCountryCode(countryCodePicker, getActivity());
     }
 
     private void setOnCountryChangeListener() {
@@ -152,27 +136,21 @@ public class LoginFragment extends Fragment {
                 passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view, 0);
     }
 
-    private void getCountryCode() {
-        countryCode = getActivity().getApplicationContext()
-                .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
-                .getInt(COUNTRY_CODE, -1);
-    }
-
     @OnFocusChange(R.id.login_username) public void onUsernameFocusChanged(boolean isFocused) {
         if (!isFocused) {
             switch (getEnteredFormat()) {
                 case PHONE_NUMBER_FORMAT:
-                    getCountryCode();
+                    countryCode = getCountryCode(countryCodePicker, getActivity());
                     if (countryCode == -1)
                         countryCodePicker.launchCountrySelectionDialog();
                     else
-                        ApiCallingService.checkPhoneNumber(countryCode, usernameView, false);
+                        ApiCallingService.Auth.checkPhoneNumber(countryCode, usernameView, false);
                     break;
                 case EMAIL_FORMAT:
-                    ApiCallingService.checkEmail(usernameView, false);
+                    ApiCallingService.Auth.checkEmail(usernameView, false);
                     break;
                 case USERNAME_FORMAT:
-                    ApiCallingService.checkUsername(usernameView, false);
+                    ApiCallingService.Auth.checkUsername(usernameView, false);
                     break;
                 default:
                     break;
@@ -199,24 +177,7 @@ public class LoginFragment extends Fragment {
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
-        if (passwordView.getCompoundDrawables()[2] != null) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (event.getRawX() >= (passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width())) {
-                        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                        return true;
-                    }
-                    return false;
-                case MotionEvent.ACTION_UP:
-                    if (event.getRawX() >= (passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width())) {
-                        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
-                        return true;
-                    }
-                    return false;
-                default:
-                    return false;
-            }
-        } return false;
+        return togglePasswordVisibility(passwordView, event);
     }
 
     @OnEditorAction(R.id.login_password)
@@ -240,7 +201,7 @@ public class LoginFragment extends Fragment {
                         return;
                     }
                     if (isPasswordValid()) {
-                        ApiCallingService.loginWithPassword(
+                        ApiCallingService.Auth.loginWithPassword(
                                 new UserAuth.LoginWithPassword(
                                         username,
                                         password,
@@ -268,7 +229,7 @@ public class LoginFragment extends Fragment {
                 break;
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty()) {
-                    ApiCallingService.loginWithOtp(new UserAuth.PhoneNumberDetails(Long.parseLong(username), countryCode))
+                    ApiCallingService.Auth.loginWithOtp(new UserAuth.PhoneNumberDetails(Long.parseLong(username), countryCode))
                             .enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -308,6 +269,8 @@ public class LoginFragment extends Fragment {
         loginOptionsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_up));
         forgotPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
+        usernameView.setHint(R.string.phone_number);
+        countryCodePicker.setVisibility(View.VISIBLE);
         if (countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
         }
@@ -340,6 +303,8 @@ public class LoginFragment extends Fragment {
         passwordView.setVisibility(View.VISIBLE);
         loginOptionsLayout.setVisibility(View.VISIBLE);
         usernameView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        usernameView.setHint(R.string.username_email_mobile);
+        countryCodePicker.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -351,10 +316,10 @@ public class LoginFragment extends Fragment {
     }
 
     private int getLoginState() {
-        String string = loginThroughOtpBtn.getText().toString();
-        if (string.equals(getString(R.string.login_through_otp)))
+        String string = loginBtn.getText().toString();
+        if (string.equals(getString(R.string.login)))
             return LOGIN_STATE_PASSWORD;
-        else if (string.equals(getString(R.string.login_through_password)))
+        else if (string.equals(getString(R.string.request_otp)))
             return LOGIN_STATE_OTP;
         else return -1;
     }

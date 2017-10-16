@@ -64,6 +64,17 @@ public class UserAuth {
             this.country_code = country_code;
         }
 
+        /**
+         * Constructor for proceeding to second signup page
+         * */
+        public SignUp(String first_name, String last_name, String email, int country_code, long phone_number) {
+            this.first_name = first_name;
+            this.last_name = last_name;
+            this.email = email;
+            this.country_code = country_code;
+            this.phone_number = phone_number;
+        }
+
         public String getFirstName() {
             return first_name;
         }
@@ -276,6 +287,53 @@ public class UserAuth {
             this.phone_number = phone_number;
             this.country_code = country_code;
             this.otp = otp;
+        }
+    }
+
+    public static class UpdatePassword {
+        private String old_password;
+        private String new_password;
+
+        public UpdatePassword(String old_password, String new_password) {
+            this.old_password = old_password;
+            this.new_password = new_password;
+        }
+    }
+
+    public static class UpdateProfile {
+        private String firstName;
+        private String lastName;
+        private String email;
+        private long phoneNumber;
+        private int countryCode;
+
+        /**
+         * Update user profile
+         */
+        public UpdateProfile(String firstName, String lastName, String email, long phoneNumber, int countryCode) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.phoneNumber = phoneNumber;
+            this.countryCode = countryCode;
+        }
+    }
+
+    public static class UpdateCategories {
+        private String categories;
+
+        public UpdateCategories(String categories) {
+            this.categories = categories;
+        }
+    }
+
+    public static class ReportPost {
+        private int post_id;
+        private int report_type_id;
+
+        public ReportPost(int post_id, int report_type_id) {
+            this.post_id = post_id;
+            this.report_type_id = report_type_id;
         }
     }
 }

@@ -2,11 +2,16 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.apiCalls.Posts.PostDetails;
+import com.cncoding.teazer.apiCalls.Posts.PostDetails.Reactions;
+import com.cncoding.teazer.apiCalls.Posts.PostDetails.TaggedUser;
+
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -19,12 +24,12 @@ import retrofit2.http.Query;
  * Created by Prem $ on 10/3/2017.
  */
 
-public class TeazerApiCall {
+class TeazerApiCall {
 
     /**
      * Authentication interfaces
      */
-    public interface AuthenticationCalls {
+    interface AuthenticationCalls {
 
         /**
          * Perform Signup, pass in the user details in a JSON
@@ -121,9 +126,9 @@ public class TeazerApiCall {
     }
 
     /**
-     * Videos upload interface
+     * Posts interface
      */
-    public interface UploadCalls {
+    interface Posts {
 
         /**
          * Call this service to upload the video
@@ -137,12 +142,147 @@ public class TeazerApiCall {
                 @Part("latitude") double latitude,
                 @Part("longitude") double longitude
         );
+
+        /**
+         * Call this service to like/dislike a video.
+         * @param status should be 1 for like and 2 for dislike
+         * @return 201 : Liked Successfully
+         *      or 200 : Pre validation failed
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         */
+        @POST("/api/v1/post/like/{post_id}/{status}")
+        Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @Path("status") int status);
+
+        /**
+         * Call this service to increase the video view count
+         * @return 200 : status <code>true</code> if the video view count increased successfully and
+         *                      <code>false</code> if the video view count increased failed.
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @POST("/api/v1/post/increase/view/{media_id}")
+        Call<ResultObject> incrementViewCount(@Path("media_id") int mediaId);
+
+        /**
+         * Call this service to delete a post
+         * @return 200 : status <code>true</code> if the post is deleted successfully and
+         *                      <code>false</code> if deleting the post failed.
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @DELETE("/api/v1/post/delete/{post_id}")
+        Call<ResultObject> deletePost(@Path("post_id") int postId);
+
+        /**
+         * Call this service to report a post
+         * @return 200 : status <code>true</code> if the post is reported successfully and
+         *                      <code>false</code> if reporting the post failed or you have already reported.
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @POST("/spi/v1/post/report")
+        Call<ResultObject> reportPost(@Body UserAuth.ReportPost reportPostDetails);
+
+        /**
+         * Call this service to like a video.
+         * @param status should be 1 for hiding and 2 for showing the post.
+         * @return 200 : status <code>true</code> if the post is Hided/Shown successfully and
+         *                      <code>false</code> if hiding/showing the post failed.
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @POST("/api/v1/post/hide/{post_id}/{status}")
+        Call<ResultObject> hideUnhidePose(@Path("post_id") int postId, @Path("status") int status);
+
+        /**
+         * Call this service to get the post details
+         * @return 200 : PostDetails details
+         *               Returns tagged user to {@link PostDetails}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("api//v1/post/video/details/{post_id}")
+        Call<ResultObject> getPostDetails(@Path("post_id") int postId);
+
+        /**
+         * Call this service to get the tagged users of post.
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link TaggedUser}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/tagged/users/{post_id}/{page}")
+        Call<ResultObject> getTaggedUsers(@Path("post_id") int postId, @Path("page") int page);
+
+        /**
+         * Call this service to get videos hided by the user.
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link PostDetails}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/my/hided/videos/{page}")
+        Call<ResultObject> getHiddenPosts(@Path("page") int page);
+
+        /**
+         * Call this service to get the home page post lists
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/home/posts/{page}")
+        Call<ResultObject> getHomePagePosts(@Path("page") int page);
+
+        /**
+         * Call this service to get the videos posted by user
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/my/videos/{page}")
+        Call<ResultObject> getPostedVideos(@Path("page") int page);
+
+        /**
+         * Call this service to get the videos posted by friends
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
+        Call<ResultObject> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
+
+        /**
+         * Call this service to get the reactions of a post.
+         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
+         *               If “next_page” is false no more records present.
+         *               Returns tagged user to {@link Reactions}
+         *      or 401 : Un-Authorized access
+         *      or 412 : Validation Failed
+         * */
+        @GET("/api/v1/post/video/reactions/{post_id}/{page}")
+        Call<ResultObject> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
     }
 
     /**
      * User actions
      */
-    public interface UserActionCalls {
+    interface UserCalls {
+
+        /**
+         * To update a user profile media
+         * Call this service to update a user profile media
+         * */
+        @POST("/api/v1/user/update/profile/media")
+        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part file);
 
         /**
          * Reset the FCM Token
@@ -183,7 +323,7 @@ public class TeazerApiCall {
          *      }
          * */
         @PUT("/api/v1/user/update/profile")
-        Call<ResultObject> updateUserProfile();
+        Call<ResultObject> updateUserProfile(@Body UserAuth.UpdateProfile updateProfileDetails);
 
         /**
          * Call this service to update account password
@@ -194,7 +334,10 @@ public class TeazerApiCall {
          *      }
          * */
         @PUT("/api/v1/user/update/password")
-        Call<ResultObject> updatePassword();
+        Call<ResultObject> updatePassword(@Body UserAuth.UpdatePassword updatePasswordDetails);
+
+        @POST("/api/v1/user/update/categories")
+        Call<ResultObject> updateCategories(@Body UserAuth.UpdateCategories categories);
 
         /**
          * Call this service to get notifications
@@ -232,6 +375,6 @@ public class TeazerApiCall {
          * Call this service for Logout the user.
          * */
         @DELETE("/api/v1/user/logout")
-        Call<ResultObject> logout(@Part("Authorization") String header);
+        Call<ResultObject> logout(@Header("Authorization") String header);
     }
 }

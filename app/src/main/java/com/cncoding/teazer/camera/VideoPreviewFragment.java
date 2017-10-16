@@ -2,8 +2,6 @@ package com.cncoding.teazer.camera;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
@@ -11,18 +9,15 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -32,7 +27,7 @@ import butterknife.OnClick;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class VideoPreviewFragment extends Fragment implements TextureView.SurfaceTextureListener {
+public class VideoPreviewFragment extends Fragment {
 
     private static final String VIDEO_PATH = "videoPath";
     private static final String WHICH_CAMERA = "whichCamera";
@@ -45,13 +40,14 @@ public class VideoPreviewFragment extends Fragment implements TextureView.Surfac
     private String videoDuration;
     private boolean isVideoFlipped;
 
-    @BindView(R.id.video_preview) TextureView videoPreview;
+//    @BindView(R.id.video_preview) TextureView videoPreview;
+    @BindView(R.id.video_view_preview) VideoView videoViewPreview;
     @BindView(R.id.video_preview_cancel_btn) ImageButton cancelButton;
     @BindView(R.id.video_preview_check_btn) ImageButton checkButton;
     @BindView(R.id.video_duration) TextView videoDurationTextView;
     @BindView(R.id.flip_video_btn) ImageButton flipVideoBtn;
 
-    private MediaPlayer mediaPlayer;
+//    private MediaPlayer mediaPlayer;
     private OnVideoPreviewInteractionListener mListener;
 
     public VideoPreviewFragment() {
@@ -83,14 +79,29 @@ public class VideoPreviewFragment extends Fragment implements TextureView.Surfac
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_video_preview, container, false);
         ButterKnife.bind(this, rootView);
-        videoPreview.setSurfaceTextureListener(this);
+//        videoPreview.setSurfaceTextureListener(this);
 
-        if (whichCamera.equals(CameraActivity.CAMERA_FRONT)) {
-            flipVideoBtn.setVisibility(View.VISIBLE);
-            isVideoFlipped = true;
-        } else {
-            isVideoFlipped = false;
-        }
+        videoViewPreview.setVideoPath(videoPath);
+        videoViewPreview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoViewPreview.start();
+                if (mediaPlayer.getDuration() > 0) {
+                    int duration = mediaPlayer.getDuration();
+                    videoDuration = String.format(Locale.UK, "%02d:%02d",
+                            MILLISECONDS.toMinutes(duration),
+                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                }
+                videoDurationTextView.setText(videoDuration);
+            }
+        });
+
+//        if (whichCamera.equals(CameraActivity.CAMERA_FRONT)) {
+//            flipVideoBtn.setVisibility(View.VISIBLE);
+//            isVideoFlipped = true;
+//        } else {
+//            isVideoFlipped = false;
+//        }
 
         return rootView;
     }
@@ -98,7 +109,7 @@ public class VideoPreviewFragment extends Fragment implements TextureView.Surfac
     @OnClick(R.id.flip_video_btn)
     public void onFlipVideoClicked() {
         isVideoFlipped = !isVideoFlipped;
-        flipVideo();
+//        flipVideo();
     }
 
     @OnClick(R.id.video_preview_cancel_btn)
@@ -132,105 +143,109 @@ public class VideoPreviewFragment extends Fragment implements TextureView.Surfac
     @Override
     public void onResume() {
         super.onResume();
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
+        if (!videoViewPreview.isPlaying())
+            videoViewPreview.start();
+//        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+//            mediaPlayer.start();
+//        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mediaPlayer != null)
-            mediaPlayer.stop();
+        videoViewPreview.pause();
+//        if (mediaPlayer != null)
+//            mediaPlayer.stop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        destroyMediaPlayer();
+        videoViewPreview.stopPlayback();
+//        destroyMediaPlayer();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-        destroyMediaPlayer();
+//        mListener = null;
+//        destroyMediaPlayer();
     }
 
     private void destroyMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+//        if (mediaPlayer != null) {
+//            mediaPlayer.stop();
+//            mediaPlayer.release();
+//            mediaPlayer = null;
+//        }
     }
 
-    private void flipVideo() {
-        if (isVideoFlipped) {
-            videoPreview.setScaleX(-1);
-        }
-        else {
-            videoPreview.setScaleX(1);
-        }
-    }
+//    private void flipVideo() {
+//        if (isVideoFlipped) {
+//            videoPreview.setScaleX(-1);
+//        }
+//        else {
+//            videoPreview.setScaleX(1);
+//        }
+//    }
 
-    private void prepareMediaPlayer(SurfaceTexture surfaceTexture) {
-        Surface surface = new Surface(surfaceTexture);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setScreenOnWhilePlaying(true);
-        try {
-            mediaPlayer.setDataSource(videoPath);
-            mediaPlayer.setSurface(surface);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.prepareAsync();
+//    private void prepareMediaPlayer(SurfaceTexture surfaceTexture) {
+//        Surface surface = new Surface(surfaceTexture);
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.setScreenOnWhilePlaying(true);
+//        try {
+//            mediaPlayer.setDataSource(videoPath);
+//            mediaPlayer.setSurface(surface);
+//            mediaPlayer.setLooping(true);
+//            mediaPlayer.prepareAsync();
+//
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mediaPlayer) {
+//                    videoPreview.setLayoutParams(
+//                            new RelativeLayout.LayoutParams(
+//                                    mediaPlayer.getVideoWidth(),
+//                                    mediaPlayer.getVideoHeight())
+//                    );
+//                    mediaPlayer.start();
+//                    if (mediaPlayer.getDuration() > 0) {
+//                        int duration = mediaPlayer.getDuration();
+//                        videoDuration = String.format(Locale.UK, "%02d:%02d",
+//                                MILLISECONDS.toMinutes(duration),
+//                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+//                    }
+//                    videoDurationTextView.setText(videoDuration);
+//                }
+//            });
+//        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    videoPreview.setLayoutParams(
-                            new RelativeLayout.LayoutParams(
-                                    mediaPlayer.getVideoWidth(),
-                                    mediaPlayer.getVideoHeight())
-                    );
-                    mediaPlayer.start();
-                    if (mediaPlayer.getDuration() > 0) {
-                        int duration = mediaPlayer.getDuration();
-                        videoDuration = String.format(Locale.UK, "%02d:%02d",
-                                MILLISECONDS.toMinutes(duration),
-                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-                    }
-                    videoDurationTextView.setText(videoDuration);
-                }
-            });
-        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-        if (whichCamera.equals(CameraActivity.CAMERA_FRONT) && isVideoFlipped) {
-            Matrix matrix = new Matrix();
-            matrix.setScale(-1, 1);
-            matrix.postTranslate(width, 0);
-            videoPreview.setTransform(matrix);
-        }
-
-        prepareMediaPlayer(surfaceTexture);
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-    }
+//    @Override
+//    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+//        if (whichCamera.equals(CameraActivity.CAMERA_FRONT) && isVideoFlipped) {
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(-1, 1);
+//            matrix.postTranslate(width, 0);
+//            videoPreview.setTransform(matrix);
+//        }
+//
+//        prepareMediaPlayer(surfaceTexture);
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+//    }
+//
+//    @Override
+//    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+//    }
 
     interface OnVideoPreviewInteractionListener {
         void onVideoPreviewInteraction(int action, @Nullable byte[] thumbnail, @Nullable String videoFilePath);

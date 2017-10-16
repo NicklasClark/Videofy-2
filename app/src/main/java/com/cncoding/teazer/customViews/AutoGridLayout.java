@@ -2,8 +2,8 @@ package com.cncoding.teazer.customViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.widget.GridLayout;
 
 import com.cncoding.teazer.R;
 
@@ -12,7 +12,7 @@ import com.cncoding.teazer.R;
  * Created by Prem $ on 10/12/2017.
  */
 
-public class AutoGridLayout extends RecyclerView {
+public class AutoGridLayout extends GridLayout {
     private int defaultColumnCount;
     private int columnWidth;
 
@@ -44,7 +44,7 @@ public class AutoGridLayout extends RecyclerView {
         }
 
         /* Initially set columnCount to 1, will be changed automatically later. */
-//        setColumnCount(1);
+        setColumnCount(1);
     }
 
     @Override
@@ -55,9 +55,9 @@ public class AutoGridLayout extends RecyclerView {
         if (columnWidth > 0 && width > 0) {
             int totalSpace = width - getPaddingRight() - getPaddingLeft();
             int columnCount = Math.max(1, totalSpace / columnWidth);
-//            setColumnCount(columnCount);
+            setColumnCount(columnCount);
         } else {
-//            setColumnCount(defaultColumnCount);
+            setColumnCount(defaultColumnCount);
         }
     }
 }

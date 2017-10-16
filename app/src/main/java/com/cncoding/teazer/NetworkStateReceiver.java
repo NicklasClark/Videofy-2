@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  *
@@ -97,5 +100,11 @@ public class NetworkStateReceiver  extends BroadcastReceiver {
     public interface NetworkStateListener {
         void onNetworkAvailable();
         void onNetworkUnavailable();
+    }
+
+    public static boolean isConnected(FragmentActivity fragmentActivity) {
+        ConnectivityManager conman = (ConnectivityManager) fragmentActivity.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conman.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

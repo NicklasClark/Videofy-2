@@ -142,13 +142,13 @@
         <item name="android:textSize">@dimen/text_size_content_big</item>
     </style>
 
-    <style name="AppTheme.RoundedMaterialButtonWelcomePage" parent="Widget.AppCompat.Button.Colored">
+<!--    <style name="AppTheme.RoundedMaterialButtonWelcomePage" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_rounded_button_accent_light</item>
         <item name="android:foreground">@drawable/ripple_dark</item>
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
-    </style>
+    </style>-->
 
     <style name="AppTheme.RoundedMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_rounded_button_accent_dark</item>

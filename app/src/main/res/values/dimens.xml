@@ -26,4 +26,5 @@
     <dimen name="otp_edit_text_vertical_margin">22dp</dimen>
     <dimen name="otp_edit_text_width">77dp</dimen>
     <dimen name="bottom_scroll_margin">250dp</dimen>
+    <dimen name="thumbnail_size">100dp</dimen>
 </resources>

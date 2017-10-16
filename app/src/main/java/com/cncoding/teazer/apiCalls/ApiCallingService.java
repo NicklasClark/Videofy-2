@@ -56,9 +56,9 @@ public class ApiCallingService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClientBuilder.build())
                 .build();
-        TeazerApiCall.UploadCalls uploadCalls = retrofit.create(TeazerApiCall.UploadCalls.class);
+        TeazerApiCall.Posts posts = retrofit.create(TeazerApiCall.Posts.class);
 
-        Call<ResultObject> serverComm = uploadCalls.uploadVideoToServer(
+        Call<ResultObject> serverComm = posts.uploadVideoToServer(
                 videoPartFile, videoFile.getName(),
                 "Bangalore", 12.971599, 77.594563
         );
@@ -81,71 +81,120 @@ public class ApiCallingService {
         return returnCode[0];
     }
 
-    public static void checkUsername(ProximaNovaRegularAutoCompleteTextView usernameView, boolean isSignUp) {
-        getAvailabilityServiceCallback(
-                getAuthenticationService().checkUsernameAvailability(usernameView.getText().toString()),
-                usernameView, isSignUp);
-    }
+    public static class Auth {
 
-    public static void checkEmail(ProximaNovaRegularAutoCompleteTextView emailView, boolean isSignUp) {
-        getAvailabilityServiceCallback(
-                getAuthenticationService().checkEmailAvailability(emailView.getText().toString()),
-                emailView, isSignUp);
-    }
-
-    public static void checkPhoneNumber(int countryCode, ProximaNovaRegularAutoCompleteTextView phoneNumberView, boolean isSignUp) {
-        String phoneString = phoneNumberView.getText().toString();
-        if (!phoneString.isEmpty()) {
+        public static void checkUsername(ProximaNovaRegularAutoCompleteTextView usernameView, boolean isSignUp) {
             getAvailabilityServiceCallback(
-                    getAuthenticationService().checkPhoneNumberAvailability(
-                            countryCode,
-                            Long.parseLong(phoneString)),
-                    phoneNumberView, isSignUp);
+                    getAuthenticationService().checkUsernameAvailability(usernameView.getText().toString()),
+                    usernameView, isSignUp);
+        }
+
+        public static void checkEmail(ProximaNovaRegularAutoCompleteTextView emailView, boolean isSignUp) {
+            getAvailabilityServiceCallback(
+                    getAuthenticationService().checkEmailAvailability(emailView.getText().toString()),
+                    emailView, isSignUp);
+        }
+
+        public static void checkPhoneNumber(int countryCode, ProximaNovaRegularAutoCompleteTextView phoneNumberView, boolean isSignUp) {
+            String phoneString = phoneNumberView.getText().toString();
+            if (!phoneString.isEmpty()) {
+                getAvailabilityServiceCallback(
+                        getAuthenticationService().checkPhoneNumberAvailability(
+                                countryCode,
+                                Long.parseLong(phoneString)),
+                        phoneNumberView, isSignUp);
+            }
+        }
+
+        public static Call<ResultObject> performSignUp(UserAuth.SignUp signUpBody) {
+            return getAuthenticationService().signUp(signUpBody);
+        }
+
+        public static Call<ResultObject> verifySignUp(UserAuth.SignUp.Verify signUpVerificationBody) {
+            return getAuthenticationService().verifySignUp(signUpVerificationBody);
+        }
+
+        public static Call<ResultObject> socialSignUp(UserAuth.SignUp.Social socialSignUpDetails) {
+            return getAuthenticationService().socialSignUp(socialSignUpDetails);
+        }
+
+        public static Call<ResultObject> requestResetPasswordByEmail(String email) {
+            return getAuthenticationService().requestResetPasswordByEmail(email);
+        }
+
+        public static Call<ResultObject> requestResetPasswordByPhone(long phoneNumber, int countryCode) {
+            return getAuthenticationService().requestResetPasswordByPhone(new UserAuth.PhoneNumberDetails(phoneNumber, countryCode));
+        }
+
+        public static Call<ResultObject> resetPasswordByOtp(UserAuth.ResetPasswordDetails resetPasswordDetails) {
+            return getAuthenticationService().resetPasswordByOtp(resetPasswordDetails);
+        }
+
+        public static Call<ResultObject> loginWithPassword(UserAuth.LoginWithPassword loginWithPassword) {
+            return getAuthenticationService().loginWithPassword(loginWithPassword);
+        }
+
+        public static Call<ResultObject> loginWithOtp(UserAuth.PhoneNumberDetails phoneNumberDetails) {
+            return getAuthenticationService().loginWithOtp(phoneNumberDetails);
+        }
+
+        public static Call<ResultObject> verifyLoginWithOtp(UserAuth.PhoneNumberDetails.Verify verifyLoginWithOtp) {
+            return getAuthenticationService().verifyLoginWithOtp(verifyLoginWithOtp);
+        }
+
+        private static TeazerApiCall.AuthenticationCalls getAuthenticationService() {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
     }
 
-    public static Call<ResultObject> performSignUp(UserAuth.SignUp signUpBody) {
-        return getAuthenticationService().signUp(signUpBody);
-    }
+    public static class User {
+        public static Call<ResultObject> updateUserProfileMedia(MultipartBody.Part file) {
+            return getUserService().updateUserProfileMedia(file);
+        }
 
-    public static Call<ResultObject> verifySignUp(UserAuth.SignUp.Verify signUpVerificationBody) {
-        return getAuthenticationService().verifySignUp(signUpVerificationBody);
-    }
+        public static  Call<ResultObject> resetFcmToken(String header, String token) {
+            return getUserService().resetFcmToken(header, token);
+        }
 
-    public static Call<ResultObject> socialSignUp(UserAuth.SignUp.Social socialSignUpDetails) {
-        return getAuthenticationService().socialSignUp(socialSignUpDetails);
-    }
+        public static Call<ResultObject> setAccountVisibility(int accountType) {
+            return getUserService().setAccountVisibility(accountType);
+        }
 
-    public static Call<ResultObject> requestResetPasswordByEmail(String email) {
-        return getAuthenticationService().requestResetPasswordByEmail(email);
-    }
+        public static Call<ResultObject> getUserProfile() {
+            return getUserService().getUserProfile();
+        }
 
-    public static Call<ResultObject> requestResetPasswordByPhone(long phoneNumber, int countryCode) {
-        return getAuthenticationService().requestResetPasswordByPhone(new UserAuth.PhoneNumberDetails(phoneNumber, countryCode));
-    }
+        public static Call<ResultObject> updateUserProfile(UserAuth.UpdateProfile updateProfileDetails) {
+            return getUserService().updateUserProfile(updateProfileDetails);
+        }
 
-    public static Call<ResultObject> resetPasswordByOtp(UserAuth.ResetPasswordDetails resetPasswordDetails) {
-        return getAuthenticationService().resetPasswordByOtp(resetPasswordDetails);
-    }
+        public static Call<ResultObject> updatePassword(UserAuth.UpdatePassword updatePasswordDetails) {
+            return getUserService().updatePassword(updatePasswordDetails);
+        }
 
-    public static Call<ResultObject> loginWithPassword(UserAuth.LoginWithPassword loginWithPassword) {
-        return getAuthenticationService().loginWithPassword(loginWithPassword);
-    }
+        public static Call<ResultObject> updateCategories(UserAuth.UpdateCategories categories) {
+            return getUserService().updateCategories(categories);
+        }
 
-    public static Call<ResultObject> loginWithOtp(UserAuth.PhoneNumberDetails phoneNumberDetails) {
-        return getAuthenticationService().loginWithOtp(phoneNumberDetails);
-    }
+        public static Call<ResultObject> getNotifications(int page) {
+            return getUserService().getNotifications(page);
+        }
 
-    public static Call<ResultObject> verifyLoginWithOtp(UserAuth.PhoneNumberDetails.Verify verifyLoginWithOtp) {
-        return getAuthenticationService().verifyLoginWithOtp(verifyLoginWithOtp);
-    }
+        public static Call<ResultObject> logout(String header) {
+            return getUserService().logout(header);
+        }
 
-    private static TeazerApiCall.AuthenticationCalls getAuthenticationService() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
+        private static TeazerApiCall.UserCalls getUserService() {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            return retrofit.create(TeazerApiCall.UserCalls.class);
+        }
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,

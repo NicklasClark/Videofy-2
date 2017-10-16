@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="50dp"
+    app:umanoAnchorPoint="0.4"
+    sothree:umanoPanelHeight="0dp"
     sothree:umanoShadowHeight="40dp">
 
     <RelativeLayout
@@ -114,7 +115,6 @@
 
         </RelativeLayout>
 
-
         <FrameLayout
             android:id="@+id/video_preview_container"
             android:layout_width="match_parent"
@@ -128,24 +128,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/padding_default">
+        android:gravity="center"
+        android:background="@color/colorIcons"
+        android:paddingTop="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:paddingStart="@dimen/padding_default">
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/sliding_panel_arrow"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/padding_with_navigation_bar_height" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_up"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/video_gallery_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
+            android:scrollbars="none"
+            android:layout_gravity="center_horizontal"
+            android:numColumns="auto_fit"
             android:paddingTop="@dimen/padding_half"
             android:clipToPadding="false"
-            app:fastScrollEnabled="true"
-            app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-            app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-            app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
             android:clickable="true"/>
 
     </LinearLayout>

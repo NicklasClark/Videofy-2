@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cncoding.teazer.authentication.LoginFragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -126,7 +127,7 @@
         android:layout_marginEnd="@dimen/padding_default"
         android:text="@string/continue_with_facebook"
         android:textSize="@dimen/text_size_content_big"
-        android:drawableStart="@drawable/ic_facebook_white"
+        app:drawableStartCompat="@drawable/ic_facebook_white"
         style="@style/AppTheme.RoundedFacebookButtonWelcomePage"
         android:layout_above="@+id/signup_with_google"
         android:layout_alignParentStart="true" />
@@ -142,7 +143,7 @@
         android:layout_marginBottom="@dimen/padding_with_navigation_bar_height"
         android:text="@string/continue_with_google"
         android:textSize="@dimen/text_size_content_big"
-        android:drawableStart="@drawable/ic_google_white"
+        app:drawableStartCompat="@drawable/ic_google_white"
         style="@style/AppTheme.RoundedGoogleButtonWelcomePage"
         android:layout_alignParentBottom="true"/>
 

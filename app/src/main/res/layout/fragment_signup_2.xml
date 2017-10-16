@@ -1,118 +1,66 @@
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context="com.cncoding.teazer.authentication.LoginFragment"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:padding="@dimen/padding_default">
+    android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <LinearLayout android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/tell_me_a_little_bit_about_yourself"
-        android:gravity="center"
-        android:padding="@dimen/padding_default"
-        android:textSize="@dimen/text_size_h4"
-        android:layout_marginTop="@dimen/status_bar_height"
-        android:textColor="@color/colorSecondary_text"/>
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_default">
 
-    <com.cncoding.teazer.customViews.CircularImageView
-        android:id="@+id/signup_profile_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/padding_double"
-        android:layout_marginBottom="@dimen/padding_default">
-
-        <Space
-            android:id="@+id/spacer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"/>
-
-        <android.support.design.widget.TextInputLayout
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/signup_page_header"
+            android:text="@string/you_are_almost_there"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/spacer">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/signup_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/first_name"
-                android:textSize="@dimen/text_size_content_big"
-                android:maxLines="1"
-                android:inputType="textPersonName"
-                android:imeOptions="actionNext" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/spacer">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/signup_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:textSize="@dimen/text_size_content_big"
-                android:maxLines="1"
-                android:inputType="textPersonName"
-                android:imeOptions="actionNext" />
-
-        </android.support.design.widget.TextInputLayout>
-
-    </RelativeLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_default">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/signup_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/choose_a_username"
+            android:gravity="center"
+            android:padding="@dimen/padding_default"
             android:textSize="@dimen/text_size_content_big"
-            android:maxLines="1"
-            android:inputType="textAutoComplete"
+            android:layout_marginTop="@dimen/padding_including_status_bar"
+            android:layout_marginBottom="@dimen/padding_double"
+            android:textColor="@color/colorIcons"/>
+
+        <ImageView
+            android:id="@+id/signup_profile_pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_add_user"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:contentDescription="@string/add_user" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            android:id="@+id/signup_username"
+            style="@style/AppTheme.RoundedEditText"
+            android:hint="@string/username"
+            android:inputType="text"
             android:imeOptions="actionNext" />
 
-    </android.support.design.widget.TextInputLayout>
+        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            android:id="@+id/signup_password"
+            style="@style/AppTheme.RoundedEditText"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_default">
+        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            android:id="@+id/signup_confirm_password"
+            style="@style/AppTheme.RoundedEditText"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:imeOptions="actionGo" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/signup_phone"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signup_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/phone_number"
-            android:textSize="@dimen/text_size_content_big"
-            android:inputType="number|phone"
-            android:maxLines="1"
-            android:imeOptions="actionNext"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/signup_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:text="@string/let_s_roll"
-        android:layout_marginTop="@dimen/padding_double"
-        style="@style/AppTheme.RoundedMaterialButton" />
+            android:padding="@dimen/padding_default"
+            android:text="@string/okay_let_s_roll"
+            android:layout_marginTop="@dimen/padding_double"
+            style="@style/AppTheme.RoundedMaterialButton" />
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

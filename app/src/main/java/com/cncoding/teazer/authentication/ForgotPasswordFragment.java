@@ -70,7 +70,7 @@ public class ForgotPasswordFragment extends Fragment {
         if (!enteredText.isEmpty()) {
             if (TextUtils.isDigitsOnly(enteredText)) {
 //                Phone number is entered
-                ApiCallingService.requestResetPasswordByPhone(Long.parseLong(enteredText), 91)
+                ApiCallingService.Auth.requestResetPasswordByPhone(Long.parseLong(enteredText), 91)
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -84,7 +84,7 @@ public class ForgotPasswordFragment extends Fragment {
                         });
             } else {
 //                Email is entered
-                ApiCallingService.requestResetPasswordByEmail(enteredText)
+                ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {

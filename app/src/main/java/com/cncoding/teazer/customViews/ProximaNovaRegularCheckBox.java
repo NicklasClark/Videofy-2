@@ -3,7 +3,8 @@ package com.cncoding.teazer.customViews;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.CheckBox;
+
+import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttrs;
 
 /**
  *
@@ -13,20 +14,19 @@ import android.widget.CheckBox;
 public class ProximaNovaRegularCheckBox extends android.support.v7.widget.AppCompatCheckBox {
     public ProximaNovaRegularCheckBox(Context context) {
         super(context);
-
         applyCustomFont(context);
     }
 
     public ProximaNovaRegularCheckBox(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         applyCustomFont(context);
+        initAttrs(context, attrs, this);
     }
 
     public ProximaNovaRegularCheckBox(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         applyCustomFont(context);
+        initAttrs(context, attrs, this);
     }
 
     private void applyCustomFont(Context context) {

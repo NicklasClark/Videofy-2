@@ -72,6 +72,7 @@ public class ConfirmOtpFragment extends Fragment {
     int launchAction;
 
     private OnOtpInteractionListener mListener;
+    private CountDownTimer countDownTimer;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -123,7 +124,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     private void startCountDownTimer() {
-        new CountDownTimer(120000, 1000) {
+        countDownTimer = new CountDownTimer(120000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (isAdded()) {
@@ -144,7 +145,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     @OnClick(R.id.otp_resend_btn) public void resendOtp() {
-        ApiCallingService.performSignUp(userSignUpDetails).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Auth.performSignUp(userSignUpDetails).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
@@ -210,7 +211,7 @@ public class ConfirmOtpFragment extends Fragment {
                         getDeviceId(),
                         DEVICE_TYPE_ANDROID);
 
-                ApiCallingService.verifySignUp(verify)
+                ApiCallingService.Auth.verifySignUp(verify)
 
                         .enqueue(new Callback<ResultObject>() {
                     @Override
@@ -218,12 +219,14 @@ public class ConfirmOtpFragment extends Fragment {
                         switch (response.code()) {
 //                    Signup successful
                             case 200:
+                                countDownTimer.cancel();
                                 otpVerifiedTextView.setText(getString(R.string.verified));
                                 otpVerifiedTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
                                 mListener.onOtpInteraction(SIGNUP_OTP_VERIFICATION_ACTION, verify, true);
                                 break;
 //                    Username, Email or Phone Number already exists
                             case 201:
+                                countDownTimer.cancel();
                                 otpVerifiedTextView.setText(getString(R.string.verified));
                                 otpVerifiedTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
                                 mListener.onOtpInteraction(SIGNUP_OTP_VERIFICATION_ACTION, verify, false);
@@ -241,7 +244,7 @@ public class ConfirmOtpFragment extends Fragment {
                 });
                 break;
             case LOGIN_THROUGH_OTP_ACTION:
-                ApiCallingService.verifyLoginWithOtp(
+                ApiCallingService.Auth.verifyLoginWithOtp(
                         new UserAuth.PhoneNumberDetails.Verify(
                                 userSignUpDetails.getPhoneNumber(),
                                 userSignUpDetails.getCountryCode(),
@@ -255,6 +258,7 @@ public class ConfirmOtpFragment extends Fragment {
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                 if (response.code() == 200) {
                                     if (response.body().getStatus()) {
+                                        countDownTimer.cancel();
                                         otpVerifiedTextView.setText(getString(R.string.verified));
                                         otpVerifiedTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
                                         mListener.onOtpInteraction(LOGIN_OTP_VERIFICATION_ACTION, null, false);

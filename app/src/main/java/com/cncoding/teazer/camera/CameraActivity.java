@@ -26,7 +26,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Surface;
@@ -53,6 +53,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.codetail.animation.SupportAnimator;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -62,12 +63,16 @@ import static android.hardware.Camera.Parameters.FLASH_MODE_AUTO;
 import static android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 import static android.hardware.Camera.Parameters.FLASH_MODE_ON;
 import static android.hardware.Camera.Parameters.FLASH_MODE_TORCH;
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
 import static java.lang.Thread.sleep;
 
 @SuppressWarnings("deprecation")
 public class CameraActivity extends AppCompatActivity
         implements VideoPreviewFragment.OnVideoPreviewInteractionListener,
-        VideoUploadFragment.OnVideoUploadInteractionListener {
+        VideoUploadFragment.OnVideoUploadInteractionListener,
+        VideoGalleryAdapter.VideoGalleryAdapterInteractionListener {
 
 //    private static final int SETTINGS_CLICKED = 0;
 //    private static final int FLASH_CLICKED = 1;
@@ -98,7 +103,7 @@ public class CameraActivity extends AppCompatActivity
     @BindView(R.id.camera_countdown_progress_bar_flipped) ProgressBar cameraCountdownProgressBarFlipped;
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
-
+    @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
 
     private static final String[] FLASH_MODES = {
             FLASH_MODE_AUTO,
@@ -130,6 +135,7 @@ public class CameraActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private Thread progressBarThread;
     private ArrayList<Videos> videosList = new ArrayList<>();
+    private SupportAnimator animator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,12 +156,12 @@ public class CameraActivity extends AppCompatActivity
             cameraFlashView.setVisibility(View.VISIBLE);
 
         initializeCameraWithPermissions();
-        prepareVideoGallery();
     }
 
     private void initializeCameraWithPermissions() {
         if (arePermissionsAllowed(getApplicationContext())) {
             setupCamera();
+            prepareVideoGallery();
         } else {
             requestPermissions();
         }
@@ -286,15 +292,36 @@ public class CameraActivity extends AppCompatActivity
             Toast.makeText(this, FLASH_TITLES[currentFlashMode], Toast.LENGTH_SHORT).show();
         } catch (RuntimeException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to change camera mode!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to change flash mode!", Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.camera_files)
     public void onCameraFilesClicked() {
+        slidingUpPanelLayout.setPanelState(ANCHORED);
     }
 
     private void prepareVideoGallery() {
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
+                                            SlidingUpPanelLayout.PanelState newState) {
+                if (newState == COLLAPSED) {
+                    slidingPanelArrow.setImageResource(R.drawable.ic_up);
+                }
+                else if (newState == EXPANDED) {
+                    slidingPanelArrow.setImageResource(R.drawable.ic_down);
+                }
+                else if (newState == ANCHORED) {
+                    slidingPanelArrow.setImageResource(R.drawable.ic_drag_handle);
+                }
+            }
+        });
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -334,7 +361,7 @@ public class CameraActivity extends AppCompatActivity
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                recyclerView.setAdapter(new VideoGalleryAdapter(videosList, getApplicationContext(), CameraActivity.this));
+                recyclerView.setAdapter(new VideoGalleryAdapter(videosList, CameraActivity.this));
                 super.onPostExecute(aVoid);
             }
         }.execute();
@@ -471,7 +498,7 @@ public class CameraActivity extends AppCompatActivity
         mediaRecorder.stop();
         releaseMediaRecorder();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 if (currentVideoFilePath != null) {
@@ -480,7 +507,7 @@ public class CameraActivity extends AppCompatActivity
                 } else
                     Toast.makeText(CameraActivity.this, "current video file path not found!", Toast.LENGTH_SHORT).show();
             }
-        }, 600);
+        });
     }
 
     private void animateRecordButton(Context context) {
@@ -664,21 +691,6 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (isFragmentActive(VIDEO_UPLOAD_FRAGMENT_TAG)) {
-            fragmentManager.popBackStack();
-        }
-        else if (isFragmentActive(VIDEO_PREVIEW_FRAGMENT_TAG)) {
-            comeBackFromPreviewFragment();
-        }
-        else {
-            releaseMediaRecorder();
-            releaseCamera();
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onVideoPreviewInteraction(int action, @Nullable byte[] thumbnail, @Nullable String videoFilePath) {
         switch (action) {
             case VideoPreviewFragment.VIDEO_PREVIEW_ACTION_CANCEL:
@@ -732,6 +744,12 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onVideoGalleryAdapterInteraction(String videoPath) {
+        slidingUpPanelLayout.setPanelState(COLLAPSED);
+        showVideoPreview(videoPath, getWhichCamera());
+    }
+
     /**
      * PERMISSIONS AND SHIT
      */
@@ -768,6 +786,7 @@ public class CameraActivity extends AppCompatActivity
                     if (cameraAccepted && recordAudioAccepted && writeAccepted && readAccepted) {
 //                        permissions are granted
                         setupCamera();
+                        prepareVideoGallery();
                     }
                     else {
 //                        permissions are denied
@@ -897,6 +916,25 @@ public class CameraActivity extends AppCompatActivity
 
                 camera = null;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (slidingUpPanelLayout.getPanelState() == ANCHORED ||
+                slidingUpPanelLayout.getPanelState() == EXPANDED) {
+            slidingUpPanelLayout.setPanelState(COLLAPSED);
+        }
+        else if (isFragmentActive(VIDEO_UPLOAD_FRAGMENT_TAG)) {
+            fragmentManager.popBackStack();
+        }
+        else if (isFragmentActive(VIDEO_PREVIEW_FRAGMENT_TAG)) {
+            comeBackFromPreviewFragment();
+        }
+        else {
+            releaseMediaRecorder();
+            releaseCamera();
+            super.onBackPressed();
         }
     }
 }

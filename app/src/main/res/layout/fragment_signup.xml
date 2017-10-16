@@ -1,8 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,43 +23,13 @@
             android:textSize="@dimen/text_size_h2"
             android:layout_marginTop="@dimen/padding_big"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-                android:id="@+id/signup_first_name"
-                android:layout_marginTop="@dimen/padding_double"
-                style="@style/AppTheme.FirstNameEditText"
-                android:hint="@string/first_name"
-                android:inputType="textPersonName"
-                android:imeOptions="actionNext"
-                android:layout_toStartOf="@+id/spacer"/>
-
-            <Space
-                android:id="@+id/spacer"
-                android:layout_width="10dp"
-                android:layout_height="0dp"
-                android:layout_centerInParent="true"/>
-
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-                android:id="@+id/signup_last_name"
-                android:layout_marginTop="@dimen/padding_double"
-                style="@style/AppTheme.LastNameEditText"
-                android:hint="@string/last_name"
-                android:inputType="textPersonName"
-                android:imeOptions="actionNext"
-                android:layout_toEndOf="@+id/spacer"/>
-
-        </RelativeLayout>
-
         <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-            android:id="@+id/signup_username"
+            android:id="@+id/signup_name"
+            android:layout_marginTop="@dimen/padding_double"
             style="@style/AppTheme.RoundedEditText"
-            android:hint="@string/username"
-            android:inputType="text"
-            android:imeOptions="actionNext" />
+            android:hint="@string/first_and_last_name"
+            android:inputType="text|textPersonName|textCapWords"
+            android:imeOptions="actionNext"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
             android:id="@+id/signup_email"
@@ -70,8 +40,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/signup_country_code"
@@ -79,9 +48,11 @@
                 app:ccp_autoDetectCountry="true"
                 app:ccp_defaultLanguage="ENGLISH"
                 app:ccpDialog_allowSearch="true"
+                app:ccp_defaultNameCode="IN"
                 app:ccpDialog_fastScroller_bubbleColor="@color/colorPrimary"
                 app:ccpDialog_showFastScroller="true"
                 app:ccpDialog_keyboardAutoPopup="false"
+                app:ccp_countryPreference="IN,US,GB"
                 app:ccpDialog_fastScroller_handleColor="@color/colorAccent3"
                 app:ccpDialog_backgroundColor="@color/material_grey100"
                 app:ccpDialog_textColor="@color/colorSecondary_text"
@@ -100,26 +71,12 @@
 
         </RelativeLayout>
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-            android:id="@+id/signup_password"
-            style="@style/AppTheme.RoundedEditText"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:imeOptions="actionNext" />
-
-        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-            android:id="@+id/signup_confirm_password"
-            style="@style/AppTheme.RoundedEditText"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:imeOptions="actionGo" />
-
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/signup_btn"
+            android:id="@+id/signup__proceed_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_default"
-            android:text="@string/let_s_roll"
+            android:text="@string/proceed"
             android:layout_marginTop="@dimen/padding_default"
             android:layout_marginBottom="@dimen/bottom_scroll_margin"
             style="@style/AppTheme.RoundedMaterialButton" />

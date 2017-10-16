@@ -17,9 +17,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,9 +37,11 @@ import com.cncoding.teazer.authentication.ForgotPasswordFragment;
 import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
 import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.authentication.SignupFragment;
+import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.authentication.UserProfile;
 import com.cncoding.teazer.authentication.WelcomeFragment;
 import com.cncoding.teazer.camera.CameraActivity;
+import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
@@ -49,19 +54,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.hbb20.CountryCodePicker;
 
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.codetail.animation.SupportAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.authentication.SignupFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.authentication.UserProfile.TEAZER;
+import static io.codetail.animation.ViewAnimationUtils.createCircularReveal;
+
 public class MainActivity extends FragmentActivity
         implements LoginFragment.LoginInteractionListener,
         SignupFragment.OnEmailSignupInteractionListener,
+        SignupFragment2.OnFinalSignupInteractionListener,
         WelcomeFragment.OnWelcomeInteractionListener,
         ForgotPasswordFragment.OnForgotPasswordInteractionListener,
         ConfirmOtpFragment.OnOtpInteractionListener,
@@ -78,12 +90,14 @@ public class MainActivity extends FragmentActivity
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
+    private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_THROUGH_PASSWORD_ACTION = 10;
     public static final int LOGIN_THROUGH_OTP_ACTION = 11;
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
+    public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
     public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
     public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
@@ -93,8 +107,10 @@ public class MainActivity extends FragmentActivity
 
     @BindView(R.id.welcome_video) TextureView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
+    @BindView(R.id.reveal_layout) FrameLayout revealLayout;
     @BindView(R.id.up_btn) ImageView upBtn;
 
+    private float[] touchCoordinates = new float[2];
 //    private int currentLoginAction;
 //    private GoogleSignInAccount googleAccount;
 //    private Profile facebookProfile;
@@ -104,6 +120,14 @@ public class MainActivity extends FragmentActivity
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private TransitionDrawable transitionDrawable;
+    private SupportAnimator animator;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        touchCoordinates[0] = event.getX();
+        touchCoordinates[1] = event.getY();
+        return super.dispatchTouchEvent(event);
+    }
 
     @Override
     protected void onStart() {
@@ -220,6 +244,23 @@ public class MainActivity extends FragmentActivity
                         .replace(R.id.main_fragment_container, new SignupFragment(), TAG_SIGNUP_FRAGMENT)
                         .commit();
                 break;
+            case TAG_SECOND_SIGNUP_FRAGMENT:
+                toggleUpBtnVisibility(View.VISIBLE);
+                if (addToBackStack)
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                                    R.anim.slide_in_left, R.anim.slide_out_right)
+                            .replace(R.id.main_fragment_container, SignupFragment2.newInstance((UserAuth.SignUp) args[0]),
+                                    TAG_SECOND_SIGNUP_FRAGMENT)
+                            .addToBackStack(TAG_SECOND_SIGNUP_FRAGMENT)
+                            .commit();
+                else fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                                R.anim.slide_in_left, R.anim.slide_out_right)
+                        .replace(R.id.main_fragment_container, SignupFragment2.newInstance((UserAuth.SignUp) args[0]),
+                                TAG_SECOND_SIGNUP_FRAGMENT)
+                        .commit();
+                break;
             case TAG_OTP_FRAGMENT:
                 toggleUpBtnVisibility(View.VISIBLE);
                 if (addToBackStack)
@@ -242,6 +283,10 @@ public class MainActivity extends FragmentActivity
 
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         if (!reverse) {
+//            animationForward(revealLayout, (int) touchCoordinates[0], (int) touchCoordinates[1], Color.argb(200, 0, 0, 0));
+//            revealLayout.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
+//            revealLayout.setVisibility(View.INVISIBLE);
+
             new AsyncTask<Void, Void, Void>() {
 
                 private Bitmap bitmap;
@@ -355,7 +400,7 @@ public class MainActivity extends FragmentActivity
     }
 
     private void handleFacebookLogin(final AccessToken token, final Profile facebookProfile) {
-        ApiCallingService.socialSignUp(new UserAuth.SignUp.Social(
+        ApiCallingService.Auth.socialSignUp(new UserAuth.SignUp.Social(
                 token.getToken(),
                 getDeviceId(),
                 DEVICE_TYPE_ANDROID,
@@ -397,7 +442,7 @@ public class MainActivity extends FragmentActivity
     }
 
     private void handleGoogleSignIn(final String token, final GoogleSignInAccount googleAccount) {
-        ApiCallingService.socialSignUp(new UserAuth.SignUp.Social(
+        ApiCallingService.Auth.socialSignUp(new UserAuth.SignUp.Social(
                 token,
                 getDeviceId(),
                 DEVICE_TYPE_ANDROID,
@@ -486,9 +531,23 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onEmailSignupInteraction(int action, final UserAuth.SignUp signUpDetails) {
         switch (action) {
+            case EMAIL_SIGNUP_PROCEED_ACTION:
+                if (signUpDetails != null) {
+                    setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails});
+                }
+                break;
+            case BACK_PRESSED_ACTION:
+                onBackPressed();
+                break;
+        }
+    }
+
+    @Override
+    public void onFinalSignupInteraction(int action, final UserAuth.SignUp signUpDetails) {
+        switch (action) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 if (signUpDetails != null) {
-                    ApiCallingService.performSignUp(signUpDetails).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.Auth.performSignUp(signUpDetails).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {
@@ -509,8 +568,7 @@ public class MainActivity extends FragmentActivity
                     });
                 }
                 break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
+            default:
                 break;
         }
     }
@@ -579,6 +637,81 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void onResetForgotPasswordInteraction(int action) {
+    }
+
+    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event) {
+        if (view.getCompoundDrawables()[2] != null) {
+            if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width())) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        view.setSelection(view.getText().length());
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                        view.setSelection(view.getText().length());
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        } return false;
+    }
+
+    private void animationForward(View mRevealView, int centerX, int centerY, int color){
+        int startRadius = 0;
+        mRevealView.setBackgroundColor(color);
+        int endRadius = (int) (Math.hypot(mRevealView.getWidth() * 2, mRevealView.getHeight() * 2));
+        animator = createCircularReveal(mRevealView, centerX, centerY, startRadius, endRadius);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(600);
+        animator.start();
+        mRevealView.setVisibility(View.VISIBLE);
+    }
+
+    private void animationReversed(final View mRevealView, int[] centerCoords){
+        int startRadius = 0;
+        int endRadius = (int) (Math.hypot(mRevealView.getWidth() * 2, mRevealView.getHeight() * 2));
+        animator = createCircularReveal(mRevealView, centerCoords[0], centerCoords[1], startRadius, endRadius);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(800);
+        if (!animator.isRunning()){
+            animator = animator.reverse();
+            animator.addListener(new SupportAnimator.AnimatorListener() {
+                @Override
+                public void onAnimationStart() {
+
+                }
+
+                @Override
+                public void onAnimationEnd() {
+                    mRevealView.setVisibility(View.INVISIBLE);
+                    mRevealView.setBackgroundResource(android.R.color.transparent);
+//                    hidden = true;
+                }
+
+                @Override
+                public void onAnimationCancel() {
+
+                }
+
+                @Override
+                public void onAnimationRepeat() {
+
+                }
+            });
+            animator.start();
+        }
+    }
+
+    public static int getCountryCode(CountryCodePicker countryCodePicker, FragmentActivity fragmentActivity) {
+        int countryCode = fragmentActivity.getApplicationContext()
+                .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
+                .getInt(COUNTRY_CODE, -1);
+        if (countryCode != -1) {
+            countryCodePicker.setCountryForPhoneCode(countryCode);
+        }
+        return countryCode;
     }
 
     public static String getDeviceId() {

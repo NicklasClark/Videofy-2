@@ -1,21 +1,17 @@
 package com.cncoding.teazer.camera;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
-
-import static com.cncoding.teazer.camera.VideoPreview.VIDEO_PATH;
 
 /**
  *
@@ -26,12 +22,18 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
 
     private ArrayList<Videos> videos;
     private Context context;
-    private Activity activity;
+    private VideoGalleryAdapterInteractionListener mListener;
 
-    VideoGalleryAdapter(ArrayList<Videos> videos, Context context, Activity activity) {
+    VideoGalleryAdapter(ArrayList<Videos> videos, Context context) {
         this.videos = videos;
         this.context = context;
-        this.activity = activity;
+
+        if (context instanceof VideoGalleryAdapterInteractionListener) {
+            mListener = (VideoGalleryAdapterInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement VideoGalleryAdapterInteractionListener");
+        }
     }
 
     @Override
@@ -49,9 +51,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
         holder.selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, VideoPreview.class);
-                intent.putExtra(VIDEO_PATH, videos.get(holder.getAdapterPosition()).getPath());
-                activity.startActivity(intent);
+                mListener.onVideoGalleryAdapterInteraction(videos.get(holder.getAdapterPosition()).getPath());
             }
         });
     }
@@ -63,7 +63,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private RoundedImageView thumbnailView;
+        private ImageView thumbnailView;
         private FrameLayout selector;
 
         ViewHolder(View view) {
@@ -71,5 +71,9 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
             thumbnailView = view.findViewById(R.id.video_gallery_thumbnail);
             selector = view.findViewById(R.id.video_gallery_selector);
         }
+    }
+
+    interface VideoGalleryAdapterInteractionListener {
+        void onVideoGalleryAdapterInteraction(String videoPath);
     }
 }

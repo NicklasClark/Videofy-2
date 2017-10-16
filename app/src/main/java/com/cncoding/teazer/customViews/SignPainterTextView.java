@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 public class SignPainterTextView extends android.support.v7.widget.AppCompatTextView {
     public SignPainterTextView(Context context) {
         super(context);
-
         applyCustomFont(context);
     }
 

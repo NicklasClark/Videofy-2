@@ -7,17 +7,17 @@
     android:clickable="true"
     tools:context="com.cncoding.teazer.camera.VideoPreviewFragment">
 
-    <TextureView
-        android:id="@+id/video_preview"
+    <!--<TextureView-->
+        <!--android:id="@+id/video_preview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:adjustViewBounds="true"/>-->
+    <VideoView
+        android:id="@+id/video_view_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:adjustViewBounds="true"/>
-
-    <include layout="@layout/video_pause_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"/>
     <RelativeLayout
         android:id="@+id/video_actions"
         android:layout_width="match_parent"

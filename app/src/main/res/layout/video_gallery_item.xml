@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="120dp"
-    android:layout_height="120dp"
-    android:layout_margin="@dimen/padding_default">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <ImageView
         android:id="@+id/video_gallery_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/thumbnail_size"
+        android:layout_height="@dimen/thumbnail_size"
         android:scaleType="centerCrop"
-        app:riv_corner_radius="@dimen/rounded_edge_radius_big"
-        app:riv_border_width="2dp"
-        app:riv_border_color="@android:color/white"
         android:contentDescription="@string/video_image_thumbnail" />
 
     <FrameLayout
         android:id="@+id/video_gallery_selector"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="@dimen/thumbnail_size"
+        android:layout_height="@dimen/thumbnail_size"
+        android:background="@drawable/bg_outline"/>
 
 </FrameLayout>

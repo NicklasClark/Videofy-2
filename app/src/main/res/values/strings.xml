@@ -53,7 +53,7 @@
     <string name="enter_email_mobile">Enter Email or Mobile</string>
     <string name="reset_password">Reset password</string>
     <string name="name">Name</string>
-    <string name="let_s_roll">Let\'s roll</string>
+    <string name="okay_let_s_roll">Okay, Let\'s roll</string>
     <string name="uploading_your_video">Uploading your video…</string>
     <string name="login_through_otp">Login with OTP</string>
     <string name="choose_a_username">Choose a username</string>
@@ -94,4 +94,8 @@
         Email or Phone number does not match with existing records, or you have reached the maximum otp attempts.
     </string>
     <string name="video_image_thumbnail">Video image thumbnail</string>
+    <string name="proceed">Proceed</string>
+    <string name="first_and_last_name">First and last name</string>
+    <string name="you_are_almost_there">You\'re almost there,\njust a couple things more</string>
+    <string name="add_user">Add user</string>
 </resources>
