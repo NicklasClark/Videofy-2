@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categories_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/ripple_dark_no_rounded"
+    android:paddingTop="@dimen/padding_half"
+    android:paddingStart="@dimen/padding_default"
+    android:paddingEnd="0dp"
+    android:paddingBottom="@dimen/padding_half">
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+        android:id="@+id/list_item_checked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
+        android:textColor="@color/colorSecondary_text"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:textSize="@dimen/text_size_content_big"
+        android:gravity="center_vertical"/>
+
+<!--
+    <com.cncoding.teazer.customViews.CircularImageView
+        android:id="@+id/list_item_checked_thumbnail_image"
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/list_item_checked"
+        android:layout_alignBottom="@+id/list_item_checked"
+        android:scaleType="centerCrop"/>
+-->
+
+</RelativeLayout>

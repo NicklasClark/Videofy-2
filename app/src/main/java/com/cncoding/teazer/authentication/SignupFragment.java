@@ -13,8 +13,9 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.UserAuth;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.AuthUtils;
+import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -23,8 +24,10 @@ import butterknife.OnClick;
 import butterknife.OnFocusChange;
 
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
-import static com.cncoding.teazer.MainActivity.getCountryCode;
-import static com.cncoding.teazer.authentication.UserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
+import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class SignupFragment extends Fragment {
     public static final String COUNTRY_CODE = "countryCode";
@@ -78,7 +81,7 @@ public class SignupFragment extends Fragment {
         if (areAllViewsFilled()) {
             String[] names = getFirstAndLastNames(nameView.getText().toString());
             mListener.onEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
-                    new UserAuth.SignUp(names[0], names[1],
+                    new Authorize(names[0], names[1],
                             emailView.getText().toString(),
                             countryCodeView.getSelectedCountryCodeAsInt(),
                             Long.parseLong(phoneNumberView.getText().toString())));
@@ -92,15 +95,20 @@ public class SignupFragment extends Fragment {
     @OnFocusChange(R.id.signup_email) public void onEmailFocusChanged(boolean isFocused) {
         if (!isFocused) {
             String email = emailView.getText().toString();
-            if (!email.isEmpty()) {
+            if (!email.isEmpty() && AuthUtils.isValidEmailAddress(emailView.getText().toString())) {
                 ApiCallingService.Auth.checkEmail(emailView, true);
+            } else {
+                setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
         }
     }
 
     @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
         if (!isFocused) {
-            ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+            if (isValidPhoneNumber(phoneNumberView.getText().toString()))
+                ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+            else
+                setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
         }
     }
 
@@ -138,6 +146,6 @@ public class SignupFragment extends Fragment {
     }
 
     public interface OnEmailSignupInteractionListener {
-        void onEmailSignupInteraction(int action, UserAuth.SignUp signUpDetails);
+        void onEmailSignupInteraction(int action, Authorize signUpDetails);
     }
 }

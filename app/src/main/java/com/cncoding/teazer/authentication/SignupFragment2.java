@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,12 +14,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.cncoding.teazer.NetworkStateReceiver;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.UserAuth;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.NetworkStateReceiver;
+import com.cncoding.teazer.utilities.Pojos.Authorize;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,19 +30,21 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
-import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
-import static com.cncoding.teazer.MainActivity.togglePasswordVisibility;
+import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignup;
+import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 
 public class SignupFragment2 extends Fragment {
     private static final String SIGNUP_DETAILS = "signupDetails";
 
-    private UserAuth.SignUp signUpDetails;
+    private Authorize signUpDetails;
 
     @BindView(R.id.signup_page_header) ProximaNovaRegularTextView headerTextView;
     @BindView(R.id.signup_username) ProximaNovaRegularAutoCompleteTextView usernameView;
     @BindView(R.id.signup_password) ProximaNovaRegularAutoCompleteTextView passwordView;
     @BindView(R.id.signup_confirm_password) ProximaNovaRegularAutoCompleteTextView confirmPasswordView;
-    @BindView(R.id.signup_btn) AppCompatButton signupBtn;
+    @BindView(R.id.signup_btn) ProximaNovaSemiboldButton signupBtn;
 
     private OnFinalSignupInteractionListener mListener;
 
@@ -50,7 +52,7 @@ public class SignupFragment2 extends Fragment {
         // Required empty public constructor
     }
 
-    public static SignupFragment2 newInstance(UserAuth.SignUp signUpDetails) {
+    public static SignupFragment2 newInstance(Authorize signUpDetails) {
         SignupFragment2 fragment = new SignupFragment2();
         Bundle args = new Bundle();
         args.putParcelable(SIGNUP_DETAILS, signUpDetails);
@@ -94,18 +96,18 @@ public class SignupFragment2 extends Fragment {
 
     @OnTextChanged(R.id.signup_password) public void signupPasswordTextChanged(CharSequence charSequence) {
         if (charSequence.toString().equals(""))
-            passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            clearDrawables(passwordView);
         else
         if (passwordView.getCompoundDrawables()[2] == null)
-            passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view, 0);
+            setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
     }
 
     @OnTextChanged(R.id.signup_confirm_password) public void confirmPasswordTextChanged(CharSequence charSequence) {
         if (charSequence.toString().equals(""))
-            confirmPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            clearDrawables(confirmPasswordView);
         else
         if (confirmPasswordView.getCompoundDrawables()[2] == null)
-            confirmPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view, 0);
+            setEditTextDrawableEnd(confirmPasswordView, R.drawable.ic_view_filled);
     }
 
     @OnTouch(R.id.signup_password) public boolean onSignupPasswordShow(MotionEvent event) {
@@ -121,12 +123,14 @@ public class SignupFragment2 extends Fragment {
             String username = usernameView.getText().toString();
             if (!username.isEmpty()) {
                 ApiCallingService.Auth.checkUsername(usernameView, true);
+            } else {
+                setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
             }
         }
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() >= 5;
+        return password.length() >= 5 && password.length() <= 32;
     }
 
     private boolean areAllViewsFilled() {
@@ -141,21 +145,21 @@ public class SignupFragment2 extends Fragment {
             if (areAllViewsFilled()) {
                 if (isPasswordValid(password)) {
                     if (password.equals(confirmPasswordView.getText().toString())) {
-                        mListener.onFinalSignupInteraction(SIGNUP_WITH_EMAIL_ACTION,
-                                new UserAuth.SignUp(
-                                        usernameView.getText().toString(),
-                                        signUpDetails.getFirstName(),
-                                        signUpDetails.getLastName(),
-                                        signUpDetails.getEmail(),
-                                        passwordView.getText().toString(),
-                                        signUpDetails.getPhoneNumber(),
-                                        signUpDetails.getCountryCode()
-                                )
+                        final Authorize authorize = new Authorize(
+                                usernameView.getText().toString(),
+                                signUpDetails.getFirstName(),
+                                signUpDetails.getLastName(),
+                                signUpDetails.getEmail(),
+                                passwordView.getText().toString(),
+                                signUpDetails.getPhoneNumber(),
+                                signUpDetails.getCountryCode()
                         );
+                        signupBtn.setEnabled(false);
+                        performInitialSignup(mListener, authorize, signupBtn);
                     } else
                         Snackbar.make(signupBtn, "Passwords don't match!", Snackbar.LENGTH_SHORT).show();
                 } else
-                    Snackbar.make(signupBtn, "Password must be at least 5 characters", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(signupBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
             } else
                 Snackbar.make(signupBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
         } else
@@ -186,6 +190,6 @@ public class SignupFragment2 extends Fragment {
     }
 
     public interface OnFinalSignupInteractionListener {
-        void onFinalSignupInteraction(int action, UserAuth.SignUp signUpDetails);
+        void onFinalSignupInteraction(int action, Authorize signUpDetails);
     }
 }

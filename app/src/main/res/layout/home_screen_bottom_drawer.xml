@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RadioGroup
+        android:id="@+id/bottom_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/material_grey100"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.cncoding.teazer.customViews.RadioButtonPlus
+            android:id="@+id/home_tab_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingStart="26dp"
+            android:paddingEnd="26dp"
+            android:layout_weight="1"
+            android:foreground="@drawable/ripple_dark_no_rounded"
+            android:drawableTop="@drawable/ic_home"
+            android:button="@null" />
+
+        <com.cncoding.teazer.customViews.RadioButtonPlus
+            android:id="@+id/search_tab_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingStart="26dp"
+            android:paddingEnd="26dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:foreground="@drawable/ripple_dark_no_rounded"
+            android:drawableTop="@drawable/ic_binoculars_black"
+            android:button="@null" />
+
+        <com.cncoding.teazer.customViews.RadioButtonPlus
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_thin"
+            android:paddingBottom="@dimen/padding_thin"
+            android:paddingStart="@dimen/padding_double"
+            android:paddingEnd="@dimen/padding_double"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null" />
+
+        <com.cncoding.teazer.customViews.RadioButtonPlus
+            android:id="@+id/notifications_tab_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingStart="26dp"
+            android:paddingEnd="26dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:foreground="@drawable/ripple_dark_no_rounded"
+            android:drawableTop="@drawable/ic_notifications_black"
+            android:button="@null" />
+
+        <com.cncoding.teazer.customViews.RadioButtonPlus
+            android:id="@+id/user_profile_tab_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingStart="26dp"
+            android:paddingEnd="26dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:foreground="@drawable/ripple_dark_no_rounded"
+            android:drawableTop="@drawable/ic_person_black"
+            android:button="@null" />
+    </RadioGroup>
+
+</layout>

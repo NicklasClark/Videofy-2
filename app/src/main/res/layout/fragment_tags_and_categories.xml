@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_grey100"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.cncoding.teazer.camera.upload.TagsFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tags_categories_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:fastScrollEnabled="true"
+        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tags_categories_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_check_white"
+        android:layout_marginBottom="@dimen/padding_default"/>
+
+</FrameLayout>
