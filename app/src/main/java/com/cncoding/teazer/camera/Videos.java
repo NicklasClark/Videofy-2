@@ -5,11 +5,11 @@ package com.cncoding.teazer.camera;
  * Created by Prem $ on 10/12/2017.
  */
 
-public class Videos {
+class Videos {
     private String path;
     private String thumbnail;
 
-    public Videos(String path, String thumbnail) {
+    Videos(String path, String thumbnail) {
         this.path = path;
         this.thumbnail = thumbnail;
     }
@@ -22,11 +22,11 @@ public class Videos {
         this.path = path;
     }
 
-    public String getThumbnail() {
+    String getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+//    public void setThumbnail(String thumbnail) {
+//        this.thumbnail = thumbnail;
+//    }
 }

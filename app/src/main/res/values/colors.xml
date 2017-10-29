@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#26C6DA</color>
-    <color name="colorPrimaryDark">#00ACC1</color>
-    <color name="colorPrimaryLight">#80DEEA</color>
+    <!--<color name="colorPrimary">#26C6DA</color>-->
+    <color name="colorPrimary">#546E7A</color>
+    <color name="colorPrimaryTranslucent">#dd546e7a</color>
+    <color name="colorPrimaryDark">#37474F</color>
+    <color name="colorPrimaryLight">#B0BEC5</color>
     <color name="colorAccent">#8D6E63</color>
     <color name="colorAccent2">#00c853</color>
     <color name="colorAccent3">#fb595b</color>
     <color name="colorBg">#eeeeee</color>
-    <color name="colorTranslucentBg">#bb212121</color>
+    <color name="colorTranslucentBg">#dd212121</color>
     <color name="colorTranslucentButton">#5a000000</color>
     <color name="colorPrimary_text">#212121</color>
     <color name="colorSecondary_text">#757575</color>
@@ -22,4 +24,16 @@
     <color name="colorRippleDark">#bb616161</color>
     <color name="colorFacebook">#4469AF</color>
     <color name="colorGoogle">#DC4E41</color>
+
+<!--    <color name="space_background_color">#757575</color>
+    <color name="space_transparent">#00000000</color>
+    &lt;!&ndash;<color name="space_white">#ffffff</color>&ndash;&gt;
+    <color name="space_default_color">#2A3137</color>
+    <color name="centre_button_color">#4285F4</color>
+    <color name="default_inactive_item_color">#9e9e9e</color>
+    <color name="default_active_item_color">#262626</color>
+    <color name="selected_item_color">#3fffffff</color>
+    <color name="badge_background_color">#f44336</color>
+    <color name="white_with_alpha">#bfffffff</color>
+    <color name="colorBackgroundHighlightWhite">#8dffffff</color>-->
 </resources>

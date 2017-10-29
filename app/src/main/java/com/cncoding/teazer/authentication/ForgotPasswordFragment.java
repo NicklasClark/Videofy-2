@@ -74,12 +74,10 @@ public class ForgotPasswordFragment extends Fragment {
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                
                             }
 
                             @Override
                             public void onFailure(Call<ResultObject> call, Throwable t) {
-
                             }
                         });
             } else {
@@ -88,12 +86,10 @@ public class ForgotPasswordFragment extends Fragment {
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-
                             }
 
                             @Override
                             public void onFailure(Call<ResultObject> call, Throwable t) {
-
                             }
                         });
             }

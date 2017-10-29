@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/padding_half"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/videoSurfaceContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.cncoding.teazer.customViews.ResizableSurfaceView
+            android:id="@+id/video_surface"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            style="@android:style/Widget.ProgressBar.Inverse" />
+    </FrameLayout>
+
+    <com.cncoding.teazer.customViews.SemiboldButtonWithStartDrawable
+        style="@style/AppTheme.ReactButton"
+        android:text="@string/react"
+        app:iconSrc="@drawable/ic_react"
+        app:iconSize="30dp"
+        app:iconPadding="@dimen/padding_default"
+        android:layout_margin="@dimen/padding_half"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/padding_half"
+        android:layout_marginBottom="@dimen/padding_half"
+        android:background="@color/colorDivider"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reactions"
+        android:textSize="@dimen/text_size_h4"
+        android:textColor="@color/colorSecondary_text"
+        android:gravity="center"
+        android:padding="@dimen/padding_default"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/padding_thin"
+        android:paddingStart="@dimen/padding_thin"
+        android:paddingEnd="@dimen/padding_thin"
+        android:paddingBottom="@dimen/padding_default"
+        android:clipToPadding="false"
+        android:animateLayoutChanges="true"
+        app:layoutManager="StaggeredGridLayoutManager"
+        tools:context="com.cncoding.teazer.home.post.PostDetailsFragment"
+        tools:listitem="@layout/reaction_post_item" />
+
+</LinearLayout>

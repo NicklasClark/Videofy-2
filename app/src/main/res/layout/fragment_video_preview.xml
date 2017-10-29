@@ -1,23 +1,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:clickable="true"
-    tools:context="com.cncoding.teazer.camera.VideoPreviewFragment">
+    android:background="@android:color/black"
+    tools:context="com.cncoding.teazer.camera.upload.VideoPreview">
 
-    <!--<TextureView-->
-        <!--android:id="@+id/video_preview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:adjustViewBounds="true"/>-->
+    <!--<TextureView
+        android:id="@+id/video_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"/>-->
+
     <VideoView
         android:id="@+id/video_view_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:layout_centerInParent="true"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/play_pause_video_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/ic_play"
+        android:visibility="invisible"/>
+
+<!--
     <RelativeLayout
         android:id="@+id/video_actions"
         android:layout_width="match_parent"
@@ -85,5 +98,6 @@
         android:layout_margin="@dimen/padding_default"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/flip_video" />
+-->
 
 </RelativeLayout>

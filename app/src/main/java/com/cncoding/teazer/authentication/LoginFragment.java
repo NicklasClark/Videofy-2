@@ -1,7 +1,6 @@
 package com.cncoding.teazer.authentication;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,15 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.apiCalls.UserAuth;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.hbb20.CountryCodePicker;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,29 +32,24 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_OTP_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.getCountryCode;
-import static com.cncoding.teazer.MainActivity.getDeviceId;
-import static com.cncoding.teazer.MainActivity.getFcmToken;
-import static com.cncoding.teazer.MainActivity.togglePasswordVisibility;
-import static com.cncoding.teazer.authentication.SignupFragment.COUNTRY_CODE;
-import static com.cncoding.teazer.authentication.UserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
+import static com.cncoding.teazer.utilities.AuthUtils.loginWithUsernameAndPassword;
+import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
+import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
+import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
 
 public class LoginFragment extends Fragment {
 
     private static final int LOGIN_STATE_PASSWORD = 1;
     private static final int LOGIN_STATE_OTP = 2;
-    private static final int PHONE_NUMBER_FORMAT = 10;
-    private static final int EMAIL_FORMAT = 11;
-    private static final int USERNAME_FORMAT = 12;
+    public static final int PHONE_NUMBER_FORMAT = 10;
+    public static final int EMAIL_FORMAT = 11;
+    public static final int USERNAME_FORMAT = 12;
 
     @BindView(R.id.login_btn) ProximaNovaSemiboldButton loginBtn;
     @BindView(R.id.forgot_password_btn) ProximaNovaSemiboldButton forgotPasswordBtn;
@@ -75,17 +64,9 @@ public class LoginFragment extends Fragment {
     private int countryCode = -1;
 
     private LoginInteractionListener mListener;
-    private SharedPreferences sharedPreferences;
 
     public LoginFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getPreferences(MODE_PRIVATE);
-//        getContext().getTheme().applyStyle(R.style.AppTheme_LoginFragment, true);
     }
 
     @Override
@@ -102,12 +83,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        username = sharedPreferences.getString("username", null);
-        if (username != null) {
-            usernameView.setText(username);
-            passwordView.setText(sharedPreferences.getString("password", null));
-        }
         countryCode = getCountryCode(countryCodePicker, getActivity());
+        countryCodePicker.setCountryForPhoneCode(countryCode);
     }
 
     private void setOnCountryChangeListener() {
@@ -115,65 +92,31 @@ public class LoginFragment extends Fragment {
             @Override
             public void onCountrySelected() {
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
-                getActivity().getApplicationContext()
-                        .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
-                        .edit()
-                        .putInt(COUNTRY_CODE, countryCode)
-                        .apply();
+                setCountryCode(getActivity().getApplicationContext(), countryCode);
             }
         });
     }
 
     @OnTextChanged(R.id.login_username) public void usernameTextChanged(CharSequence charSequence) {
         username = charSequence.toString();
+        if (usernameView.getCompoundDrawables()[2] != null) {
+            clearDrawables(usernameView);
+        }
     }
 
     @OnTextChanged(R.id.login_password) public void passwordTextChanged(CharSequence charSequence) {
-        if (charSequence.toString().equals(""))
-            passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        else
+        if (!charSequence.toString().equals("")) {
             if (passwordView.getCompoundDrawables()[2] == null)
-                passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view, 0);
+                passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+        } else {
+            clearDrawables(passwordView);
+        }
     }
 
     @OnFocusChange(R.id.login_username) public void onUsernameFocusChanged(boolean isFocused) {
         if (!isFocused) {
-            switch (getEnteredFormat()) {
-                case PHONE_NUMBER_FORMAT:
-                    countryCode = getCountryCode(countryCodePicker, getActivity());
-                    if (countryCode == -1)
-                        countryCodePicker.launchCountrySelectionDialog();
-                    else
-                        ApiCallingService.Auth.checkPhoneNumber(countryCode, usernameView, false);
-                    break;
-                case EMAIL_FORMAT:
-                    ApiCallingService.Auth.checkEmail(usernameView, false);
-                    break;
-                case USERNAME_FORMAT:
-                    ApiCallingService.Auth.checkUsername(usernameView, false);
-                    break;
-                default:
-                    break;
-            }
+            validateUsername(usernameView, getActivity());
         }
-    }
-
-    private int getEnteredFormat() {
-        String enteredText = usernameView.getText().toString();
-        if (!enteredText.isEmpty()) {
-            if (TextUtils.isDigitsOnly(enteredText)) {
-//                    Phone number is entered
-                return PHONE_NUMBER_FORMAT;
-            }
-            else if (isValidEmailAddress(enteredText)) {
-//                    Email is entered
-                return EMAIL_FORMAT;
-            }
-            else {
-//                    Username is entered
-                return USERNAME_FORMAT;
-            }
-        } else return -1;
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
@@ -192,65 +135,20 @@ public class LoginFragment extends Fragment {
     }
 
     @OnClick(R.id.login_btn) public void onLoginBtnClick() {
+        loginBtn.setEnabled(false);
         switch (getLoginState()) {
             case LOGIN_STATE_PASSWORD:
-                final String password = passwordView.getText().toString();
+                String password = passwordView.getText().toString();
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
-                    if (TextUtils.isDigitsOnly(usernameView.getText().toString()) && countryCode == -1) {
-                        countryCodePicker.launchCountrySelectionDialog();
-                        return;
-                    }
-                    if (isPasswordValid()) {
-                        ApiCallingService.Auth.loginWithPassword(
-                                new UserAuth.LoginWithPassword(
-                                        username,
-                                        password,
-                                        getFcmToken(),
-                                        getDeviceId(),
-                                        DEVICE_TYPE_ANDROID))
-
-                                .enqueue(new Callback<ResultObject>() {
-                                    @Override
-                                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                        if (response.code() == 200 && response.body().getStatus()) {
-                                            mListener.onLoginFragmentInteraction(
-                                                    LOGIN_THROUGH_PASSWORD_ACTION,
-                                                    new UserAuth.SignUp(username, password));
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                                    }
-                                });
-                    } else
-                        Snackbar.make(loginBtn, "Password must be at least 5 characters", Snackbar.LENGTH_SHORT).show();
-                } else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
+                    loginWithUsernameAndPassword(username, passwordView, countryCode, countryCodePicker, mListener, loginBtn);
+                }
+                else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty()) {
-                    ApiCallingService.Auth.loginWithOtp(new UserAuth.PhoneNumberDetails(Long.parseLong(username), countryCode))
-                            .enqueue(new Callback<ResultObject>() {
-                                @Override
-                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                    if (response.code() == 200) {
-                                        if (response.body().getStatus()) {
-                                            if (countryCode == -1) {
-                                                countryCodePicker.launchCountrySelectionDialog();
-                                            } else {
-                                                mListener.onLoginFragmentInteraction(
-                                                        LOGIN_THROUGH_OTP_ACTION,
-                                                        new UserAuth.SignUp(Long.parseLong(username), countryCode));
-                                            }
-                                        } else Snackbar.make(loginBtn, R.string.login_through_otp_error, Snackbar.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                }
-                            });
+                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, null, null, false);
                 }
+                else setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                 break;
             default:
                 break;
@@ -259,17 +157,18 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.forgot_password_btn)
     public void onForgotPasswordClick() {
-        mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new UserAuth.SignUp(username));
+        mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new Authorize(username), null);
     }
 
-    @OnClick(R.id.login_through_otp)
-    public void onLoginThroughOtpClicked() {
+    @OnClick(R.id.login_through_otp) public void onLoginThroughOtpClicked() {
 //            Toggle login through OTP
         passwordView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_up));
         loginOptionsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_up));
         forgotPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
+        //noinspection deprecation
+        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_rounded_button_white_last_name));
         countryCodePicker.setVisibility(View.VISIBLE);
         if (countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
@@ -304,6 +203,8 @@ public class LoginFragment extends Fragment {
         loginOptionsLayout.setVisibility(View.VISIBLE);
         usernameView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         usernameView.setHint(R.string.username_email_mobile);
+        //noinspection deprecation
+        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_rounded_button_accent_light));
         countryCodePicker.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -324,21 +225,6 @@ public class LoginFragment extends Fragment {
         else return -1;
     }
 
-    public static boolean isValidEmailAddress(String email) {
-        boolean result = true;
-        try {
-            InternetAddress emailAddress = new InternetAddress(email);
-            emailAddress.validate();
-        } catch (AddressException ex) {
-            result = false;
-        }
-        return result;
-    }
-
-    private boolean isPasswordValid() {
-        return passwordView.getText().toString().length() >= 5;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -357,6 +243,6 @@ public class LoginFragment extends Fragment {
     }
 
     public interface LoginInteractionListener {
-        void onLoginFragmentInteraction(int action, UserAuth.SignUp userDetails);
+        void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.UserProfile userProfile);
     }
 }

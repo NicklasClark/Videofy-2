@@ -15,7 +15,7 @@
     <string name="your_email">Your email</string>
     <string name="phone_number">Phone number</string>
     <string name="finish">Finish</string>
-    <string name="show_videos_on_device">Show videoses on device</string>
+    <string name="show_videos_on_device">Show videos on device</string>
     <string name="record_video">Record video</string>
     <string name="flip_camera">Flip camera</string>
     <string name="camera_flash">Camera flash</string>
@@ -28,16 +28,15 @@
     <string name="caption">Caption…</string>
     <string name="tag_friends">Tag Friends</string>
     <string name="add_location">Add Location</string>
-    <string name="choose_category">Choose category</string>
+    <string name="choose_category">Add categories to your video</string>
     <string name="facebook">\tFacebook</string>
     <string name="instagram">\tInstagram</string>
-    <string name="title_activity_home_screen">HomeScreenActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="post_thumbnail">post_thumbnail</string>
     <string name="post_profile_pic">post_profile_pic</string>
-    <string name="camera_failed_message">Failed to start camera service Please Restart your device.</string>
+    <string name="camera_failed_message">Failed to start camera service\nPlease Restart your device.</string>
     <string name="please_allow_all_permissions_message">We understand that you want to be on the safe side\n
         But please allow the permissions so that you can use Teazer to its full potential!</string>
     <string name="whoa">Whoa!</string>
@@ -60,11 +59,16 @@
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
 
-    <string name="facebook_app_id">1983960948489137</string>
-    <string name="fb_login_protocol_scheme">fb1983960948489137</string>
-    <string name="google_web_client_id" tools:ignore="TypographyDashes">
+    <string name="facebook_app_id">147258822561370</string>
+    <string name="fb_login_protocol_scheme">fb147258822561370</string>
+    <!--    <string name="google_web_client_id" tools:ignore="TypographyDashes">
         359704933430-6lmo4378keof7gqtajd0ibe293c5rn1q.apps.googleusercontent.com
+    </string>-->
+    <!--<string name="google_places_api_key">AIzaSyCDAqoBaC1dwPbEONs0dfnDOZjkm13wgeE</string>-->
+    <string name="google_web_client_id" tools:ignore="TypographyDashes">
+        962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com
     </string>
+    <string name="google_places_api_key">AIzaSyD-Y-E7Z_Piz3TVQ8M8paulF8ZwdPT_vdg</string>
     <string name="logout">Logout</string>
     <string name="okay">Okay</string>
     <string name="not_connected_message">No internet connection!</string>
@@ -93,9 +97,35 @@
     <string name="login_through_otp_error">
         Email or Phone number does not match with existing records, or you have reached the maximum otp attempts.
     </string>
-    <string name="video_image_thumbnail">Video image thumbnail</string>
+    <string name="video_image_thumbnail">Video imageView thumbnail</string>
     <string name="proceed">Proceed</string>
     <string name="first_and_last_name">First and last name</string>
     <string name="you_are_almost_there">You\'re almost there,\njust a couple things more</string>
     <string name="add_user">Add user</string>
+    <string name="title_activity_video_upload">Upload Video</string>
+    <string name="action_settings">Settings</string>
+    <string name="video_preview_thumbnail">Video preview thumbnail</string>
+    <string name="title">Title</string>
+    <string name="share_with">Share with</string>
+    <string name="retake">Retake</string>
+    <string name="see_nearby_places">See nearby categories</string>
+    <string name="in_order_to_see_nearby_places">In order to see nearby categories you need to turn on your location first.</string>
+    <string name="turn_on_location">Turn on location</string>
+    <string name="nearby_place_side_image">Nearby place side imageView</string>
+    <string name="location">Location</string>
+    <string name="save">Save</string>
+    <string name="select_at_least_5_to_continue">Select at least 5 interests to continue</string>
+    <string name="continue_text">Continue</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="find_a_location">\t\tFind a location</string>
+    <string name="select_a_location">Select a location</string>
+    <string name="select_your_interests">Select your interests</string>
+    <string name="select_at_least_5_interests">Select at least 5 interests</string>
+    <string name="react">React</string>
+    <string name="reactions">Reactions</string>
+    <string name="description">Media player control</string>
+    <string name="share">Share</string>
+    <string name="hide">Hide</string>
+    <string name="delete">Delete</string>
+    <string name="report">Report</string>
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTranslucentBg"
+    android:orientation="vertical">
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/interests_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_content_big"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:padding="@dimen/padding_default"
+        android:text="@string/select_at_least_5_to_continue"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/interests_selection_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            android:padding="@dimen/padding_default"
+            android:clipToPadding="false"
+            android:animateLayoutChanges="true"
+            app:alignItems="center"
+            app:alignContent="flex_start"
+            app:justifyContent="center"/>
+
+    </ScrollView>
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/save_interests_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
+        android:gravity="center"
+        android:text="@string/save"
+        app:iconSrc="@drawable/ic_tick_circle_outline"
+        app:iconSize="20dp"
+        app:iconPadding="@dimen/padding_default"
+        android:drawablePadding="-80dp"
+        android:textSize="@dimen/text_size_content_big"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:foreground="@drawable/ripple_light"/>
+
+</LinearLayout>

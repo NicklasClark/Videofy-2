@@ -8,11 +8,12 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 
 /**
  *
@@ -44,8 +45,8 @@ public class CircularImageView extends AppCompatImageView {
         if (getWidth() == 0 || getHeight() == 0) {
             return;
         }
-        
-        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+
+        Bitmap b = ((GlideBitmapDrawable) drawable).getBitmap();
         if (b == null)
             return;
         
@@ -88,4 +89,19 @@ public class CircularImageView extends AppCompatImageView {
 
         return output;
     }
+
+//    private static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+//        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//            drawable = (DrawableCompat.wrap(drawable)).mutate();
+//        }
+//
+//        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+//                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//        drawable.draw(canvas);
+//
+//        return bitmap;
+//    }
 }

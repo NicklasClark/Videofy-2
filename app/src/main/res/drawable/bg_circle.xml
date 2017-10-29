@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Drop Shadow Stack -->
-    <item>
+<!--    <item>
         <shape android:shape="oval">
             <padding
                 android:top="0dp"
@@ -110,11 +110,21 @@
                 android:left="0dp"/>
             <solid android:color="#50a1887f"/>
         </shape>
-    </item>
+    </item>-->
     <!-- Background -->
-    <item>
+    <item android:top="8dp"
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp">
         <shape android:shape="oval">
-            <solid android:color="@android:color/white"/>
+            <solid android:color="#5D5D5D"/>
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="oval">
+            <stroke android:width="2dp"
+                android:color="#5D5D5D"/>
         </shape>
     </item>
 </layer-list>

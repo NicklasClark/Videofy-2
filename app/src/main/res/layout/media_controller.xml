@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_vignette_top"
+        android:minHeight="42dp"
+        android:paddingTop="@dimen/padding_half"
+        android:paddingStart="@dimen/padding_half"
+        android:paddingBottom="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_half">
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/media_controller_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last night bash at delhi fort"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/media_controller_eta"
+            android:paddingTop="@dimen/padding_half"
+            android:paddingBottom="@dimen/padding_half"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_content_big" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/media_controller_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/ic_add_location"
+            android:layout_alignParentStart="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_content"
+            android:text="  New Delhi"
+            android:layout_below="@id/media_controller_caption"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/media_controller_eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/ic_volume"
+            android:paddingTop="@dimen/padding_half"
+            android:paddingBottom="@dimen/padding_half"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/padding_default"
+            android:layout_alignParentEnd="true"
+            android:text="  -00:30"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_content_big"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/media_controller_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent" />
+
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_vignette_bottom"
+        android:paddingTop="@dimen/padding_default">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/media_controller_dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentStart="true"
+            android:foreground="@drawable/bg_circle_outline"
+            android:layout_marginStart="@dimen/padding_half"
+            android:layout_marginEnd="@dimen/padding_half"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/media_controller_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_content"
+            android:textColor="@android:color/white"
+            android:text="Prem Suman"
+            android:layout_toEndOf="@+id/media_controller_dp"
+            android:layout_alignTop="@+id/media_controller_dp"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/media_controller_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/home_screen_post_header"
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_like_outline"
+            android:gravity="end|center_vertical"
+            android:paddingStart="@dimen/padding_thin"
+            android:paddingEnd="0dp"
+            android:text="  4561"
+            android:layout_marginTop="@dimen/padding_thin"
+            android:layout_marginBottom="@dimen/padding_half"
+            android:layout_toEndOf="@+id/media_controller_dp"
+            android:layout_alignBottom="@+id/media_controller_dp"
+            tools:ignore="HardcodedText" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/media_controller_views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/home_screen_post_header"
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_view_outline"
+            android:gravity="end|center_vertical"
+            android:paddingStart="@dimen/padding_half"
+            android:paddingEnd="0dp"
+            android:text="  0132"
+            android:layout_marginTop="@dimen/padding_thin"
+            android:layout_marginBottom="@dimen/padding_half"
+            android:layout_toEndOf="@+id/media_controller_likes"
+            android:layout_alignBottom="@+id/media_controller_dp"
+            tools:ignore="HardcodedText" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/media_controller_categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Dance, Videography, Bollywood, Music, Clubmusic, EDM"
+            android:layout_below="@+id/media_controller_dp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:requiresFadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:layout_toStartOf="@+id/spacer"
+            tools:ignore="Deprecated"
+            android:paddingTop="@dimen/padding_half"
+            android:paddingBottom="@dimen/padding_half"
+            android:paddingStart="@dimen/padding_default"
+            android:paddingEnd="@dimen/padding_default"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/media_controller_reaction_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_content_big"
+            android:textColor="@android:color/white"
+            android:text="+200 R"
+            android:paddingTop="@dimen/padding_half"
+            android:paddingBottom="@dimen/padding_half"
+            android:paddingStart="@dimen/padding_default"
+            android:paddingEnd="@dimen/padding_default"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/media_controller_reaction_3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:foreground="@drawable/bg_circle_outline"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/media_controller_reaction_count"/>
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/media_controller_reaction_2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:foreground="@drawable/bg_circle_outline"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="-14dp"
+            android:layout_toStartOf="@+id/media_controller_reaction_3"/>
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/media_controller_reaction_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:foreground="@drawable/bg_circle_outline"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="-14dp"
+            android:layout_toStartOf="@+id/media_controller_reaction_2"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

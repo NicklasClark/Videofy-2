@@ -50,8 +50,7 @@
             android:inputType="textEmailAddress"
             android:imeOptions="actionNext"
             android:layout_marginTop="@dimen/padding_double"
-            android:layout_marginBottom="@dimen/padding_default"
-            android:layout_toEndOf="@+id/login_country_code"/>
+            android:layout_marginBottom="@dimen/padding_default"/>
 
     </RelativeLayout>
 

@@ -56,11 +56,24 @@
             android:textSize="@dimen/text_size_h1" />
 
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:id="@+id/marquee_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_content_big"
             android:gravity="center"
-            android:text="@string/video_fun_friends"/>
+            android:text="@string/video_fun_friends" />
+
+        <!--TO MARQUEE THE TEXT:
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:requiresFadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            tools:ignore="Deprecated"
+
+            then set view.setSelected(true) in the code.
+        -->
 
     </LinearLayout>
 

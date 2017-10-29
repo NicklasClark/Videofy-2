@@ -20,9 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.camera.upload.VideoUpload;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
@@ -53,7 +52,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.codetail.animation.SupportAnimator;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -63,6 +61,7 @@ import static android.hardware.Camera.Parameters.FLASH_MODE_AUTO;
 import static android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 import static android.hardware.Camera.Parameters.FLASH_MODE_ON;
 import static android.hardware.Camera.Parameters.FLASH_MODE_TORCH;
+import static com.cncoding.teazer.camera.upload.VideoUpload.VIDEO_PATH;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
@@ -70,20 +69,18 @@ import static java.lang.Thread.sleep;
 
 @SuppressWarnings("deprecation")
 public class CameraActivity extends AppCompatActivity
-        implements VideoPreviewFragment.OnVideoPreviewInteractionListener,
-        VideoUploadFragment.OnVideoUploadInteractionListener,
-        VideoGalleryAdapter.VideoGalleryAdapterInteractionListener {
+        implements VideoGalleryAdapter.VideoGalleryAdapterInteractionListener {
 
 //    private static final int SETTINGS_CLICKED = 0;
 //    private static final int FLASH_CLICKED = 1;
 //    private static final int CAMERA_FILES_CLICKED = 2;
 //    private static final int RECORD_CLICKED = 3;
 //    private static final int CAMERA_FLIP_CLICKED = 4;
-    public static final int VIDEO_UPLOAD_FINISHED_ACTION = 9;
-    public static final int VIDEO_UPLOAD_ERROR_ACTION = 10;
+//    public static final int VIDEO_UPLOAD_FINISHED_ACTION = 9;
+//    public static final int VIDEO_UPLOAD_ERROR_ACTION = 10;
     private static final int REQUEST_CAMERA_PERMISSIONS = 931;
-    private static final String VIDEO_PREVIEW_FRAGMENT_TAG = "videoPreviewFragment";
-    private static final String VIDEO_UPLOAD_FRAGMENT_TAG = "videoUploadFragment";
+//    private static final String VIDEO_PREVIEW_FRAGMENT_TAG = "videoPreviewFragment";
+//    private static final String VIDEO_UPLOAD_FRAGMENT_TAG = "videoUploadFragment";
     public static final String CAMERA_FRONT = "frontCamera";
     public static final String CAMERA_BACK = "cameraBack";
     private static final String CAMERA_NONE = "noCamera";
@@ -97,7 +94,7 @@ public class CameraActivity extends AppCompatActivity
     @BindView(R.id.camera_files) ImageView cameraFilesView;
     @BindView(R.id.camera_flip) ImageView cameraFlipView;
     @BindView(R.id.camera_flash) ImageView cameraFlashView;
-    @BindView(R.id.video_preview_container) FrameLayout videoPreviewContainer;
+    @BindView(R.id.video_upload_fragment_container) FrameLayout videoPreviewContainer;
     @BindView(R.id.progress_layout) RelativeLayout progressLayout;
     @BindView(R.id.camera_countdown_progress_bar) ProgressBar cameraCountdownProgressBar;
     @BindView(R.id.camera_countdown_progress_bar_flipped) ProgressBar cameraCountdownProgressBarFlipped;
@@ -132,10 +129,11 @@ public class CameraActivity extends AppCompatActivity
     private Camera.Parameters parameters;
     private MediaRecorder mediaRecorder;
 //    private SurfaceHolder surfaceHolder;
-    private FragmentManager fragmentManager;
+//    private FragmentManager fragmentManager;
     private Thread progressBarThread;
     private ArrayList<Videos> videosList = new ArrayList<>();
-    private SupportAnimator animator;
+//    private SupportAnimator animator;
+    private SlidingUpPanelLayout.PanelSlideListener panelSlideListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +141,9 @@ public class CameraActivity extends AppCompatActivity
         isRecording = false;
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
-        fragmentManager = getSupportFragmentManager();
+
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         cameraCountdownProgressBar.setMax(MAX_PROGRESS);
         cameraCountdownProgressBarFlipped.setMax(MAX_PROGRESS);
 
@@ -154,6 +154,12 @@ public class CameraActivity extends AppCompatActivity
 
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
             cameraFlashView.setVisibility(View.VISIBLE);
+
+//        Point point = new Point();
+//        getWindowManager().getDefaultDisplay().getSize(point);
+//        cameraPreview.setLayoutParams(new RelativeLayout.LayoutParams(
+//                (point.y - (point.y / 3)),
+//                point.y));
 
         initializeCameraWithPermissions();
     }
@@ -177,7 +183,7 @@ public class CameraActivity extends AppCompatActivity
                 cameraCountdownProgressBarFlipped.setProgress(progress);
                 cameraSurfaceView = new CameraSurfaceView(this, camera);
                 cameraPreview.addView(cameraSurfaceView);
-                setCameraDisplayOrientation(this, CAMERA_ID, camera);
+//                setCameraDisplayOrientation(this, CAMERA_ID, camera);
                 parameters = camera.getParameters();
                 return true;
             } else {
@@ -207,7 +213,7 @@ public class CameraActivity extends AppCompatActivity
                 }
             }
             else getFrontCamera();
-            camera.setDisplayOrientation(90);
+            setCameraDisplayOrientation(this, CAMERA_ID, camera);
             isOpened = (camera != null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,19 +235,19 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
-    private void getBackCamera() {
-        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-            CameraInfo cameraInfo = new CameraInfo();
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
-                CAMERA_ID = CameraInfo.CAMERA_FACING_BACK;
-                break;
-            }
-        }
-        if (CAMERA_ID > -1) {
-            openCamera();
-        }
-    }
+//    private void getBackCamera() {
+//        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+//            CameraInfo cameraInfo = new CameraInfo();
+//            Camera.getCameraInfo(i, cameraInfo);
+//            if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+//                CAMERA_ID = CameraInfo.CAMERA_FACING_BACK;
+//                break;
+//            }
+//        }
+//        if (CAMERA_ID > -1) {
+//            openCamera();
+//        }
+//    }
 
     @NonNull
     private String getWhichCamera() {
@@ -302,7 +308,11 @@ public class CameraActivity extends AppCompatActivity
     }
 
     private void prepareVideoGallery() {
-        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+        if (panelSlideListener != null) {
+            slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
+            panelSlideListener = null;
+        }
+        panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
             }
@@ -320,9 +330,16 @@ public class CameraActivity extends AppCompatActivity
                     slidingPanelArrow.setImageResource(R.drawable.ic_drag_handle);
                 }
             }
-        });
+        };
+        slidingUpPanelLayout.addPanelSlideListener(panelSlideListener);
 
         new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                videosList.clear();
+            }
+
             @Override
             protected Void doInBackground(Void... voids) {
                 Uri uri;
@@ -390,7 +407,8 @@ public class CameraActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         if (isReturningWithResult) {
-            showVideoPreview(getRealPathFromURI(CameraActivity.this, offlineVideoData), CAMERA_NONE);
+            String videoPath = getRealPathFromURI(CameraActivity.this, offlineVideoData);
+            showVideoPreview(videoPath);
         }
         isReturningWithResult = false;
     }
@@ -498,16 +516,16 @@ public class CameraActivity extends AppCompatActivity
         mediaRecorder.stop();
         releaseMediaRecorder();
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (currentVideoFilePath != null) {
-                    showVideoPreview(currentVideoFilePath, getWhichCamera());
+        if (currentVideoFilePath != null) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showVideoPreview(currentVideoFilePath);
                     currentVideoFilePath = null;
-                } else
-                    Toast.makeText(CameraActivity.this, "current video file path not found!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            }, 500);
+        } else
+            Toast.makeText(CameraActivity.this, "current video file path not found!", Toast.LENGTH_SHORT).show();
     }
 
     private void animateRecordButton(Context context) {
@@ -520,17 +538,14 @@ public class CameraActivity extends AppCompatActivity
         recordBtnOuter.clearAnimation();
     }
 
-    private void showVideoPreview(String videoFilePath, String whichCamera) {
+    private void showVideoPreview(String videoFilePath) {
         videoPreviewContainer.setVisibility(View.VISIBLE);
         cameraPreview.setVisibility(View.GONE);
-        resetCameraAndPreview();
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out_left,
-                        R.anim.slide_in_left, R.anim.slide_out_right)
-                .add(R.id.video_preview_container,
-                        VideoPreviewFragment.newInstance(videoFilePath, whichCamera),
-                        VIDEO_PREVIEW_FRAGMENT_TAG)
-                .commit();
+        releaseCamera();
+        Intent intent = new Intent(this, VideoUpload.class);
+        intent.putExtra(VIDEO_PATH, videoFilePath);
+        startActivity(intent);
+//        finish();
     }
 
     private void toggleButtonsVisibility(int visibility) {
@@ -539,24 +554,60 @@ public class CameraActivity extends AppCompatActivity
         cameraFlashView.setVisibility(visibility);
     }
 
-    @OnClick(R.id.camera_flip)
-    public void onCameraFlipClicked() {
-        resetCameraAndPreview();
-
-        if (CAMERA_ID == CameraInfo.CAMERA_FACING_BACK) {
-            getFrontCamera();
-        }
-        else {
-            getBackCamera();
-        }
-        cameraSurfaceView = new CameraSurfaceView(this, camera);
-        cameraPreview.addView(cameraSurfaceView);
+    @OnClick(R.id.camera_flip) public void onCameraFlipClicked() {
+        if (camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
             try {
-                camera.setPreviewDisplay(cameraSurfaceView.getHolder());
-            } catch (IOException e) {
+                if (CAMERA_ID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    CAMERA_ID = Camera.CameraInfo.CAMERA_FACING_BACK;
+                }
+                else {
+                    CAMERA_ID = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                }
+                if (openCamera()) {
+                    Camera.Parameters parameters = camera.getParameters();
+                    Camera.Size previewSize = parameters.getPreviewSize();
+                    for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+                        if ((size.height / size.width) == (4 / 3)) {
+                            previewSize = size;
+                            break;
+                        }
+                    }
+                    parameters.setPreviewSize(previewSize.width, previewSize.height);
+                    camera.setParameters(parameters);
+                    cameraPreview.setLayoutParams(new RelativeLayout.LayoutParams(previewSize.width, previewSize.height));
+                    camera.setPreviewDisplay(cameraSurfaceView.getHolder());
+                    camera.startPreview();
+                }
+            }
+            catch (final Exception e) {
                 e.printStackTrace();
             }
-            camera.startPreview();
+        }
+//        releaseCamera();
+//        cameraSurfaceView = null;
+//
+//        if (CAMERA_ID == CameraInfo.CAMERA_FACING_BACK) {
+////            CAMERA_ID = CameraInfo.CAMERA_FACING_FRONT;
+////            setupCamera();
+//            getFrontCamera();
+//        }
+//        else {
+////            CAMERA_ID = CameraInfo.CAMERA_FACING_BACK;
+////            setupCamera();
+//            getBackCamera();
+//        }
+//        cameraSurfaceView = new CameraSurfaceView(this, camera);
+//        cameraPreview.addView(cameraSurfaceView);
+//            try {
+//                camera.setPreviewDisplay(cameraSurfaceView.getHolder());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            camera.startPreview();
     }
 
     private boolean prepareMediaRecorder() {
@@ -636,17 +687,11 @@ public class CameraActivity extends AppCompatActivity
 
     private void releaseCamera() {
         if (camera != null && cameraSurfaceView != null) {
-            cameraSurfaceView.setCamera(null);
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
             camera.release();
             camera = null;
-        }
-    }
-
-    private void resetCameraAndPreview() {
-        if (camera != null) {
-            camera.stopPreview();
-            cameraPreview.removeAllViews();
-            releaseCamera();
+//            cameraSurfaceView.setCamera(null);
         }
     }
 
@@ -661,21 +706,13 @@ public class CameraActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (camera == null) {
-            setupCamera();
+            comeBackFromPreview();
         }
     }
 
-    private boolean isFragmentActive(String tag) {
-        return fragmentManager.findFragmentByTag(tag) != null;
-    }
-
-    private int removeFragment(String tag) {
-        return fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(tag)).commit();
-    }
-
-    private boolean comeBackFromPreviewFragment() {
+    private boolean comeBackFromPreview() {
         boolean result = false;
-        removeFragment(VIDEO_PREVIEW_FRAGMENT_TAG);
+//        removeFragment(VIDEO_PREVIEW_FRAGMENT_TAG);
         cameraPreview.setVisibility(View.VISIBLE);
         videoPreviewContainer.setVisibility(View.GONE);
         if (currentVideoFilePath != null) {
@@ -691,63 +728,9 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onVideoPreviewInteraction(int action, @Nullable byte[] thumbnail, @Nullable String videoFilePath) {
-        switch (action) {
-            case VideoPreviewFragment.VIDEO_PREVIEW_ACTION_CANCEL:
-                comeBackFromPreviewFragment();
-                break;
-            case VideoPreviewFragment.VIDEO_PREVIEW_ACTION_CHECK:
-                if (thumbnail != null && videoFilePath != null) {
-                    fragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-                                    R.anim.slide_in_left, R.anim.slide_out_right)
-                            .replace(R.id.video_preview_container,
-                                    VideoUploadFragment.newInstance(thumbnail, videoFilePath),
-                                    VIDEO_UPLOAD_FRAGMENT_TAG)
-                            .addToBackStack(VIDEO_PREVIEW_FRAGMENT_TAG)
-                            .commit();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onVideoUploadInteraction(int action) {
-        switch (action) {
-            case VIDEO_UPLOAD_FINISHED_ACTION:
-                new AlertDialog.Builder(this)
-                        .setTitle("Success!")
-                        .setMessage("Your video was successfully uploaded.")
-                        .setCancelable(false)
-                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        })
-                        .show();
-                break;
-            case VIDEO_UPLOAD_ERROR_ACTION:
-                new AlertDialog.Builder(this)
-                        .setTitle("Sorry!")
-                        .setMessage("Videos upload encountered an error, please try again.")
-                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-            default:
-                break;
-        }
-    }
-
-    @Override
     public void onVideoGalleryAdapterInteraction(String videoPath) {
         slidingUpPanelLayout.setPanelState(COLLAPSED);
-        showVideoPreview(videoPath, getWhichCamera());
+        showVideoPreview(videoPath);
     }
 
     /**
@@ -830,13 +813,14 @@ public class CameraActivity extends AppCompatActivity
 
         private SurfaceHolder surfaceHolder;
         private Camera camera;
+//        private List<Camera.Size> supportedPreviewSizes;
+        private Camera.Size previewSize;
 
         public CameraSurfaceView(Context context, Camera camera) {
             super(context);
             stopPreviewAndFreeCamera();
             if (camera != null) {
                 this.camera = camera;
-                this.camera.setDisplayOrientation(90);
                 surfaceHolder = getHolder();
                 surfaceHolder.addCallback(this);
             } else {
@@ -850,13 +834,13 @@ public class CameraActivity extends AppCompatActivity
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
             try {
+                setCamera(CameraActivity.camera);
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
             } catch (IOException | RuntimeException e) {
                 e.printStackTrace();
                 stopPreviewAndFreeCamera();
                 setupCamera();
-//                openCamera();
             }
         }
 
@@ -865,7 +849,7 @@ public class CameraActivity extends AppCompatActivity
          *  NOTE: stop the preview before resizing or reformatting it.
          */
         @Override
-        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int width, int height) {
             if (surfaceHolder.getSurface() == null) {
 //                surface doesn't exist
                 return;
@@ -877,6 +861,16 @@ public class CameraActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             try {
+                Camera.Parameters parameters = camera.getParameters();
+                for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+                    if ((size.height / size.width) == (4 / 3)) {
+                        previewSize = size;
+                        break;
+                    }
+                }
+                parameters.setPreviewSize(previewSize.width, previewSize.height);
+                camera.setParameters(parameters);
+                cameraPreview.setLayoutParams(new RelativeLayout.LayoutParams(previewSize.width, previewSize.height));
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
             } catch (IOException | NullPointerException e) {
@@ -891,14 +885,57 @@ public class CameraActivity extends AppCompatActivity
             releaseCamera();
         }
 
+//        @Override
+//        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//            final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+//            final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+//            setMeasuredDimension(width, height);
+//
+////            supportedPreviewSizes = camera.getParameters().getSupportedPreviewSizes();
+////            if (supportedPreviewSizes != null) {
+////                previewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
+////            }
+//        }
+//
+//        private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
+//            final double ASPECT_TOLERANCE = 0.1;
+//            double targetRatio=(double)height / width;
+//
+//            if (sizes == null) return null;
+//
+//            Camera.Size optimalSize = null;
+//            double minDiff = Double.MAX_VALUE;
+//
+//            for (Camera.Size size : sizes) {
+//                double ratio = (double) size.width / size.height;
+//                if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+//                if (Math.abs(size.height - height) < minDiff) {
+//                    optimalSize = size;
+//                    minDiff = Math.abs(size.height - height);
+//                }
+//            }
+//
+//            if (optimalSize == null) {
+//                minDiff = Double.MAX_VALUE;
+//                for (Camera.Size size : sizes) {
+//                    if (Math.abs(size.height - height) < minDiff) {
+//                        optimalSize = size;
+//                        minDiff = Math.abs(size.height - height);
+//                    }
+//                }
+//            }
+//            return optimalSize;
+//        }
+
         private void setCamera(Camera camera) {
             if (this.camera == camera)
                 return;
 
-            stopPreviewAndFreeCamera();
+            if (camera != null)
+                stopPreviewAndFreeCamera();
 
             this.camera = camera;
-            if (this.camera != null) {
+            if (camera != null) {
                 requestLayout();
                 try {
                     camera.setPreviewDisplay(surfaceHolder);
@@ -911,9 +948,9 @@ public class CameraActivity extends AppCompatActivity
 
         private void stopPreviewAndFreeCamera() {
             if (camera != null) {
+//                camera.setPreviewCallback(null);
                 camera.stopPreview();
                 camera.release();
-
                 camera = null;
             }
         }
@@ -924,12 +961,6 @@ public class CameraActivity extends AppCompatActivity
         if (slidingUpPanelLayout.getPanelState() == ANCHORED ||
                 slidingUpPanelLayout.getPanelState() == EXPANDED) {
             slidingUpPanelLayout.setPanelState(COLLAPSED);
-        }
-        else if (isFragmentActive(VIDEO_UPLOAD_FRAGMENT_TAG)) {
-            fragmentManager.popBackStack();
-        }
-        else if (isFragmentActive(VIDEO_PREVIEW_FRAGMENT_TAG)) {
-            comeBackFromPreviewFragment();
         }
         else {
             releaseMediaRecorder();

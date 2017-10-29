@@ -51,7 +51,7 @@
             android:inputType="textPassword"
             android:imeOptions="actionGo" />
 
-        <android.support.v7.widget.AppCompatButton
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/signup_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

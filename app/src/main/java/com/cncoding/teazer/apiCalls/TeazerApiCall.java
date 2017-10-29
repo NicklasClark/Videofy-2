@@ -2,9 +2,16 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.apiCalls.Posts.PostDetails;
-import com.cncoding.teazer.apiCalls.Posts.PostDetails.Reactions;
-import com.cncoding.teazer.apiCalls.Posts.PostDetails.TaggedUser;
+import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.Pojos.Post.PostList;
+import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
+import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
+import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
+import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
+
+import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -26,57 +33,97 @@ import retrofit2.http.Query;
 
 class TeazerApiCall {
 
+    public static final int RESPONSE_CODE_200 = 200;
+    public static final int RESPONSE_CODE_201 = 201;
+
+    /**Invalid JSON Format present in Request Body**/
+    public static final int RESPONSE_CODE_400 = 400;
+
+    /**Un-Authorized access**/
+    public static final int RESPONSE_CODE_401 = 401;
+
+    /**Validation failed**/
+    public static final int RESPONSE_CODE_412 = 412;
+
+    /**
+     * Application interfaces
+     * */
+    interface ApplicationCalls {
+
+        /**
+         * To get the post report types
+         * */
+        @GET("/api/v1/application/post/report/types")
+        Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes();
+
+        /**
+         * To get the profile report types
+         * */
+        @GET("/api/v1/application/profile/report/types")
+        Call<ArrayList<Pojos.Application.ReportType>> getProfileReportTypes();
+
+        /**
+         * To get the categories list
+         * */
+        @GET("/api/v1/application/categories")
+        Call<ArrayList<Pojos.Category>> getCategories();
+    }
+
     /**
      * Authentication interfaces
      */
     interface AuthenticationCalls {
 
         /**
-         * Perform Signup, pass in the user details in a JSON
-         *      {
-         *          "user_name": "string",
-         *          "first_name": "string",
-         *          "last_name": "string",
-         *          "email": "string",
-         *          "password": "string",
-         *          "phone_number": 0,
-         *          "country_code": 0,
-         *          "fcm_token": "string",
-         *          "device_id": "string",
-         *          "device_type": 0
-         *      }
-         * Responses:
-         *      200: Signup failed, Username, Email or Phone Number already exist. Status will be false
-         *      201: Signup successful. Status will be true
-         *      400: Invalid JSON Format present in Request Body
-         *      412: Validation Failed
+         * Call this service for Signup into application
+         * Signup Step 1.
+         * @return :
+         *      200: If status is true OTP will send to given mobile number.
+         *           If Status is false the Username, Email and Phone Number already exist or you may reached maximum OTP retry attempts.
+         *   or 400: Invalid JSON Format present in Request Body
+         *   or 412: Validation Failed
+         * @param signUpBody containing username, first name, last name, email, password, phone number and country code.
          */
         @POST("/api/v1/authentication/signup")
-        Call<ResultObject> signUp(@Body UserAuth.SignUp signUpBody);
+        Call<ResultObject> signUp(@Body Authorize signUpBody);
 
+        /**
+         * Call this service for verify the OTP and complete the signup process.
+         * Signup Step 1.
+         * @return :
+         *      200: If status is true OTP will send to given mobile number.
+         *           If Status is false the Username, Email and Phone Number already exist or you may reached maximum OTP retry attempts.
+         *   or 400: Invalid JSON Format present in Request Body
+         *   or 412: Validation Failed
+         * @param verifySignUp containing fcm_token, device_id, device_type, username, first name, last name,
+         *                     email, password, phone number, country code and otp.
+         */
         @POST("/api/v1/authentication/signup/verify")
-        Call<ResultObject> verifySignUp(@Body UserAuth.SignUp.Verify verifySignUp);
+        Call<ResultObject> verifySignUp(@Body Authorize verifySignUp);
 
         @POST("/api/v1/authentication/social/signup")
-        Call<ResultObject> socialSignUp(@Body UserAuth.SignUp.Social socialSignUpDetails);
+        Call<ResultObject> socialSignUp(@Body Authorize socialSignUpDetails);
 
         /**
          * Perform sign in with password.
+         * @param loginWithPassword
          */
         @POST("/api/v1/authentication/signin/with/password")
-        Call<ResultObject> loginWithPassword(@Body UserAuth.LoginWithPassword loginWithPassword);
+        Call<ResultObject> loginWithPassword(@Body Authorize loginWithPassword);
 
         /**
          * Perform sign in with OTP.
+         * Login step 1.
          */
         @POST("/api/v1/authentication/signin/with/otp")
-        Call<ResultObject> loginWithOtp(@Body UserAuth.PhoneNumberDetails phoneNumberDetails);
+        Call<ResultObject> loginWithOtp(@Body Authorize phoneNumberDetails);
 
         /**
          * Perform sign in with OTP.
+         * Login step 2.
          */
         @POST("/api/v1/authentication/signin/with/otp")
-        Call<ResultObject> verifyLoginWithOtp(@Body UserAuth.PhoneNumberDetails.Verify verifyLoginWithOtp);
+        Call<ResultObject> verifyLoginWithOtp(@Body Authorize verifyLoginWithOtp);
 
         /**
          * Check username availability, Pass in @param String username
@@ -115,14 +162,224 @@ class TeazerApiCall {
          * Call this service to reset the password by OTP received in email or phone number
          */
         @POST("/api/v1/authentication/reset/password/by/phonenumber")
-        Call<ResultObject> requestResetPasswordByPhone(@Body UserAuth.PhoneNumberDetails phoneNumberDetails);
+        Call<ResultObject> requestResetPasswordByPhone(@Body Authorize phoneNumberDetails);
 
         /**
          * Call this service to reset the password by OTP received in email or phone number.
          * Either you need to send Email or Phone number and Country code along with OTP and New password
          * */
         @POST("/api/v1/authentication/password/reset")
-        Call<ResultObject> resetPasswordByOtp(@Body UserAuth.ResetPasswordDetails resetPasswordDetails);
+        Call<ResultObject> resetPasswordByOtp(@Body Authorize resetPasswordDetails);
+    }
+
+    /**
+     * Friends interface
+     * */
+    interface FriendsCalls {
+
+        /**
+         * Get the "my circle" with search term
+         * */
+        @GET("/api/v1/friend/my/circle")
+        Call<ResultObject> getMyCircleWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get the my followings list
+         * */
+        @GET("/api/v1/friend/my/followings/{page}")
+        Call<Pojos.Friends.CircleList> getMyFollowings(@Path("page") int page);
+
+        /**
+         * Call this service to send a join request
+         * */
+        @POST("/api/v1/friend/join/request/send/{user_id}")
+        Call<ResultObject> sendJoinRequest(@Path("user_id") int userId);
+
+        /**
+         * Call this service to accept the join request
+         * */
+        @POST("/api/v1/friend/join/request/accept/{notification_id}")
+        Call<ResultObject> acceptJoinRequest(@Query("notification_id") int notificationId);
+
+        /**
+         * Call this service to delete the join request
+         * */
+        @DELETE("/api/v1/friend/join/request/delete/{notification_id}")
+        Call<ResultObject> deleteJoinRequest(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get the my circle list
+         * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.
+         * If “next_page” is false no more records present.
+         * */
+        @GET("/api/v1/friend/my/circle/{page}")
+        Call<ResultObject> getMyCircle(@Path("page") int page);
+
+        /**
+         * Call this service to get the my followings list with search term
+         * */
+        @GET("/api/v1/friend/my/followings")
+        Call<ResultObject> getMyFollowingsWithSearchTerm(@Path("page") int page, @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get the friends followings list
+         * */
+        @GET("/api/v1/friend/followings/{user_id}/{page}")
+        Call<ResultObject> getFriendsFollowings(@Path("page") int page, @Path("user_id") int userId);
+
+        /**
+         * Call this service to get the friends followings list with search term
+         * */
+        @GET("/api/v1/friend/followings/{user_id}")
+        Call<ResultObject> getFriendsFollowingsWithSearchTerm(
+                @Path("user_id") int userId,
+                @Query("page") int page,
+                @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get the my followers list
+         * */
+        @GET("/api/v1/friend/my/followers/{page}")
+        Call<ResultObject> getMyFollowers(@Path("page") int page);
+
+        /**
+         * Call this service to get the my followers list with search term
+         * */
+        @GET("/api/v1/friend/my/followers")
+        Call<ResultObject> getMyFollowersWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get the friends followers list
+         * */
+        @GET("/api/v1/friend/followers/{user_id}/{page}")
+        Call<ResultObject> getFriendsFollowers(@Path("page") int page, @Path("user_id") int userId);
+
+        /**
+         * Call this service to get the friends followers list with search term
+         * */
+        @GET("/api/v1/friend/followers/{user_id}")
+        Call<ResultObject> getFriendsFollowersWithSearchTerm(
+                @Path("user_id") int userId,
+                @Query("page") int page,
+                @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to unfollow a user
+         * */
+        @DELETE("/api/v1/friend/unfollow/{user_id}")
+        Call<ResultObject> unfollowUser(@Path("user_id") int userId);
+
+        /**
+         * Call this service to get other's profile information
+         * @return “account_type” 1 is a Private account, 2 is a Public account.
+         *          “can_join” tell whether you peoples are already friends.
+         *          Based on “account_type” you can read either private or public profile.
+         * */
+        @GET("/api/v1/friend/profile/{user_id}")
+        Call<ResultObject> getOthersProfileInfo(@Path("user_id") int userId);
+    }
+
+    /**
+     * Reaction's interface
+     * */
+    interface ReactCalls {
+
+        /**
+         * Call this service to react for a video
+         * @return {@value RESPONSE_CODE_200} : Reacted to video has failed. Due to incorrect post id, not having access to react, already done a reaction.
+         *               On all above cases the “status” will be false.
+         *         {@value RESPONSE_CODE_201} : Reacted to video Successfully.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @POST("/api/v1/react/create")
+        Call<ResultObject> postReaction(@Part MultipartBody.Part video, @Part("post_id") int postId);
+
+        /**
+         * Call this service to like/dislike a reacted video.
+         * ‘Status’ should be 1 for like and 2 for dislike
+         * @return {@value RESPONSE_CODE_200} : Pre validation failed.
+         *         {@value RESPONSE_CODE_201} : Liked Successfully.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @POST("/api/v1/react/like/{react_id}/{status}")
+        Call<ResultObject> likeDislikeReaction(@Path("react_id") int reactId, @Path("status") int status);
+
+        /**
+         * Call this service to increase the reacted video view count
+         * @return {@value RESPONSE_CODE_200} : If “status” is true reacted video view count increased successfully.
+         *                                      If “status” is false reacted video view count increased failed.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @POST("/api/v1/react/increase/view/{media_id}")
+        Call<ResultObject> incrementReactionViewCount(@Path("media_id") int mediaId);
+
+        /**
+         * Call this service to delete a reaction.
+         * Only the Video Owner or Reacted Owner has the delete access.
+         * @return {@value RESPONSE_CODE_200} : If “status” is true post deleted successfully.
+         *                              If “status” is false post deleted failed.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @DELETE("/api/v1/react/delete/{react_id}")
+        Call<ResultObject> deleteReaction(@Path("react_id") int reactId);
+
+        /**
+         * Call this service to report the reaction.
+         * @return {@value RESPONSE_CODE_200} : If “status” is true reported successfully.
+         *                                      If “status” is false reported failed or you have already reported.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @POST("/api/v1/react/report")
+        Call<ResultObject> reportReaction(@Body Pojos.React.ReportReaction reportReaction);
+
+        /**
+         * Call this service to hide or show a reaction.
+         * ‘Status’ should be 1 to hide and 2 to show the reaction.
+         * @return {@value RESPONSE_CODE_200} : If status is true Hided/Un Hided Successfully.
+         *                                      If status is false Hide/Un Hide failed.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @POST("/api/v1/react/hide/{react_id}/{status}")
+        Call<ResultObject> hideOrShowReaction(@Path("react_id") int reactId, @Path("status") int status);
+
+        /**
+         * Call this service to get the reactions of user.
+         * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,
+         *                                      so you can call again after incrementing the page count by 1,
+         *                                      If “next_page” is false no more records present.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @GET("/api/v1/react/my/reactions/{page}")
+        Call<UserReactionsList> getMyReactions(@Path("page") int page);
+
+        /**
+         * Call this service to get the reactions of friends.
+         * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,
+         *                                      so you can call again after incrementing the page count by 1,
+         *                                      If “next_page” is false no more records present.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @GET("/api/v1/react/friend/reactions/{friend_id}/{page}")
+        Call<ResultObject> getFriendsReactions(@Path("page") int page, @Path("friend_id") int friend_id);
+
+        /**
+         * Call this service to get the reactions hidden by user.
+         * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,
+         *                                      so you can call again after incrementing the page count by 1,
+         *                                      If “next_page” is false no more records present.
+         *         {@value RESPONSE_CODE_401} : Un-Authorized access.
+         *         {@value RESPONSE_CODE_412} : Validation failed.
+         * */
+        @GET("/api/v1/react/my/hided/reactions/{page}")
+        Call<ResultObject> getHiddenReactions(@Path("page") int page);
     }
 
     /**
@@ -182,7 +439,7 @@ class TeazerApiCall {
          *      or 412 : Validation Failed
          * */
         @POST("/spi/v1/post/report")
-        Call<ResultObject> reportPost(@Body UserAuth.ReportPost reportPostDetails);
+        Call<ResultObject> reportPost(@Body Pojos.Post.ReportPost reportPostDetails);
 
         /**
          * Call this service to like a video.
@@ -193,7 +450,7 @@ class TeazerApiCall {
          *      or 412 : Validation Failed
          * */
         @POST("/api/v1/post/hide/{post_id}/{status}")
-        Call<ResultObject> hideUnhidePose(@Path("post_id") int postId, @Path("status") int status);
+        Call<ResultObject> hideOrShowPost(@Path("post_id") int postId, @Path("status") int status);
 
         /**
          * Call this service to get the post details
@@ -203,18 +460,18 @@ class TeazerApiCall {
          *      or 412 : Validation Failed
          * */
         @GET("api//v1/post/video/details/{post_id}")
-        Call<ResultObject> getPostDetails(@Path("post_id") int postId);
+        Call<PostDetails> getPostDetails(@Path("post_id") int postId);
 
         /**
          * Call this service to get the tagged users of post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link TaggedUser}
+         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.TaggedUser}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/tagged/users/{post_id}/{page}")
-        Call<ResultObject> getTaggedUsers(@Path("post_id") int postId, @Path("page") int page);
+        Call<TaggedUsersList> getTaggedUsers(@Path("post_id") int postId, @Path("page") int page);
 
         /**
          * Call this service to get videos hided by the user.
@@ -225,51 +482,51 @@ class TeazerApiCall {
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/my/hided/videos/{page}")
-        Call<ResultObject> getHiddenPosts(@Path("page") int page);
+        Call<PostList> getHiddenPosts(@Path("page") int page);
 
         /**
          * Call this service to get the home page post lists
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.Post}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/home/posts/{page}")
-        Call<ResultObject> getHomePagePosts(@Path("page") int page);
+        Call<PostList> getHomePagePosts(@Path("page") int page);
 
         /**
          * Call this service to get the videos posted by user
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.Post}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/my/videos/{page}")
-        Call<ResultObject> getPostedVideos(@Path("page") int page);
+        Call<PostList> getPostedVideos(@Path("page") int page);
 
         /**
          * Call this service to get the videos posted by friends
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.apiCalls.Posts}
+         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.Post}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
-        Call<ResultObject> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
+        Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
 
         /**
          * Call this service to get the reactions of a post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link Reactions}
+         *               Returns tagged user to {@link Pojos.Post.PostReaction}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
         @GET("/api/v1/post/video/reactions/{post_id}/{page}")
-        Call<ResultObject> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
+        Call<PostReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
     }
 
     /**
@@ -305,9 +562,10 @@ class TeazerApiCall {
         /**
          * Get user profile
          * Call this service to get user profile details
+         * @return {@link }
          * */
         @GET("/api/v1/user/profile")
-        Call<ResultObject> getUserProfile();
+        Call<UserProfile> getUserProfile();
 
         /**
          * Update user profile
@@ -323,7 +581,7 @@ class TeazerApiCall {
          *      }
          * */
         @PUT("/api/v1/user/update/profile")
-        Call<ResultObject> updateUserProfile(@Body UserAuth.UpdateProfile updateProfileDetails);
+        Call<ResultObject> updateUserProfile(@Body Pojos.User.UpdateProfile updateProfileDetails);
 
         /**
          * Call this service to update account password
@@ -334,10 +592,10 @@ class TeazerApiCall {
          *      }
          * */
         @PUT("/api/v1/user/update/password")
-        Call<ResultObject> updatePassword(@Body UserAuth.UpdatePassword updatePasswordDetails);
+        Call<ResultObject> updatePassword(@Body Pojos.User.UpdatePassword updatePasswordDetails);
 
         @POST("/api/v1/user/update/categories")
-        Call<ResultObject> updateCategories(@Body UserAuth.UpdateCategories categories);
+        Call<ResultObject> updateCategories(@Body Pojos.User.UpdateCategories categories);
 
         /**
          * Call this service to get notifications

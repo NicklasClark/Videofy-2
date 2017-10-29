@@ -1,29 +1,21 @@
 {
   "project_info": {
-    "project_number": "359704933430",
-    "firebase_url": "https://teazer-8c8c1.firebaseio.com",
-    "project_id": "teazer-8c8c1",
-    "storage_bucket": "teazer-8c8c1.appspot.com"
+    "project_number": "962455421064",
+    "firebase_url": "https://teazer-363f8.firebaseio.com",
+    "project_id": "teazer-363f8",
+    "storage_bucket": "teazer-363f8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:359704933430:android:3e03763685676bbf",
+        "mobilesdk_app_id": "1:962455421064:android:3e03763685676bbf",
         "android_client_info": {
           "package_name": "com.cncoding.teazer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "359704933430-rqhskcvf1usci4ilmnt20lq4i61mjs4e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cncoding.teazer",
-            "certificate_hash": "ea65ae5fa9b829570b863d97b2cb89d5cd8827a0"
-          }
-        },
-        {
-          "client_id": "359704933430-034eusllc809kc79d2eecoos2hrl74aa.apps.googleusercontent.com",
+          "client_id": "962455421064-2j638f1lkolo952guaki1lr352a4albh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cncoding.teazer",
@@ -31,13 +23,21 @@
           }
         },
         {
-          "client_id": "359704933430-6lmo4378keof7gqtajd0ibe293c5rn1q.apps.googleusercontent.com",
+          "client_id": "962455421064-0om8nkus3ncgdaln76f75n57de4lehot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cncoding.teazer",
+            "certificate_hash": "ea65ae5fa9b829570b863d97b2cb89d5cd8827a0"
+          }
+        },
+        {
+          "client_id": "962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDJZ-AZXOvXUXpoiYt7JqoBRISeEtVyZXg"
+          "current_key": "AIzaSyDqNEvf-QwMzzIiLe-F-z9KskzNF23hr6E"
         }
       ],
       "services": {
@@ -48,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "359704933430-6lmo4378keof7gqtajd0ibe293c5rn1q.apps.googleusercontent.com",
+              "client_id": "962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
