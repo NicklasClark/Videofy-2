@@ -82,7 +82,7 @@
         android:textColor="@color/colorSecondary_text"
         android:textSize="@dimen/text_size_content"
         android:textStyle="bold"
-        android:background="@drawable/bg_circle"
+        android:background="@drawabg_circle_dark_outlinedrcle"
         android:foreground="@drawable/ripple_dark"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
@@ -93,7 +93,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:srcCompat="@drawable/ic_flip"
-        android:background="@drawable/bg_circle"
+        android:background="@drawabg_circle_dark_outlinedrcle"
         android:layout_above="@+id/video_actions"
         android:layout_margin="@dimen/padding_default"
         android:layout_alignParentEnd="true"

@@ -104,8 +104,8 @@
             android:layout_centerVertical="true"
             android:layout_alignTop="@+id/react_btn"
             android:layout_alignBottom="@+id/react_btn"
-            android:paddingStart="@dimen/padding_default"
-            android:paddingEnd="@dimen/padding_default"/>
+            android:paddingStart="@dimen/padding_half"
+            android:paddingEnd="@dimen/padding_half"/>
 
     </RelativeLayout>
 

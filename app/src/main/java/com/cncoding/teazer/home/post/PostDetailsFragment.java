@@ -143,6 +143,7 @@ public class PostDetailsFragment extends Fragment implements MediaControllerView
 
     @OnClick(R.id.menu) public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(getContext(), anchor);
+        popupMenu.inflate(R.menu.menu_post);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -158,7 +159,6 @@ public class PostDetailsFragment extends Fragment implements MediaControllerView
                 }
             }
         });
-        popupMenu.inflate(R.menu.menu_post);
         popupMenu.show();
     }
 

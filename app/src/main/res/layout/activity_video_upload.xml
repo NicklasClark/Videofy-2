@@ -243,7 +243,7 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_content"
-        android:background="@drawable/bg_circle"
+        android:background="@drawable/bg_circle_dark_outlined"
         android:foreground="@drawable/ripple_dark"
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_gravity="bottom|center_horizontal" />

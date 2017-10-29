@@ -168,7 +168,7 @@ public class LoginFragment extends Fragment {
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
         //noinspection deprecation
-        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_rounded_button_white_last_name));
+        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(View.VISIBLE);
         if (countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
@@ -204,7 +204,7 @@ public class LoginFragment extends Fragment {
         usernameView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         usernameView.setHint(R.string.username_email_mobile);
         //noinspection deprecation
-        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_rounded_button_accent_light));
+        usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
         countryCodePicker.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override

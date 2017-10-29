@@ -13,7 +13,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="@dimen/padding_half"
-        android:background="@drawable/bg_circle_with_outline"
+        android:background="@drawabg_circle_light_outlinedline"
         android:layout_centerVertical="true"
         android:contentDescription="@string/nearby_place_side_image" />-->
 

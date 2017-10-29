@@ -54,7 +54,7 @@
         android:id="@+id/camera_tab_btn"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:background="@drawable/bg_circle_with_outline"
+        android:background="@drawable/bg_circle_light_filled_outlined"
         app:layout_anchor="@id/home_screen_fragment_container"
         app:srcCompat="@drawable/ic_add_video"
         app:layout_anchorGravity="bottom|center"
