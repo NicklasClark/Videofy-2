@@ -6,5 +6,5 @@
         android:angle="135"
         android:endColor="@color/colorAccent2"/>-->
 
-    <corners android:radius="@dimen/rounded_edge_radius"/>
+    <corners android:radius="@dimen/rounded_edge_radius_2dp"/>
 </shape>

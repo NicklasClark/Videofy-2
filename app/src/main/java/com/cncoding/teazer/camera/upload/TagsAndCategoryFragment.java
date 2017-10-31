@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class TagsFragment extends Fragment {
+public class TagsAndCategoryFragment extends Fragment {
 
     private static final String ACTION = "action";
 //    public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
@@ -38,15 +38,15 @@ public class TagsFragment extends Fragment {
 //    private CategoriesAdapter categoriesAdapter;
 
     private ArrayList<MiniProfile> circles;
-    private TagsAdapter tagsAdapter;
+    private TagsAndCategoryAdapter tagsAndCategoryAdapter;
     private TagsInteractionListener mListener;
 
-    public TagsFragment() {
+    public TagsAndCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static TagsFragment newInstance(ArrayList<? extends Parcelable> args) {
-        TagsFragment fragment = new TagsFragment();
+    public static TagsAndCategoryFragment newInstance(ArrayList<? extends Parcelable> args) {
+        TagsAndCategoryFragment fragment = new TagsAndCategoryFragment();
         Bundle bundle = new Bundle();
 //        bundle.putString(ACTION, action);
         bundle.putParcelableArrayList(ACTION, args);
@@ -75,8 +75,8 @@ public class TagsFragment extends Fragment {
 
     private void prepareRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        tagsAdapter = new TagsAdapter(circles, this);
-        recyclerView.setAdapter(tagsAdapter);
+        tagsAndCategoryAdapter = new TagsAndCategoryAdapter(circles, this);
+        recyclerView.setAdapter(tagsAndCategoryAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -92,7 +92,7 @@ public class TagsFragment extends Fragment {
     }
 
     @OnClick(R.id.tags_categories_done) public void getResult() {
-        mListener.onTagsInteraction(getSelectedTags(tagsAdapter.getSelectedTags()));
+        mListener.onTagsInteraction(getSelectedTags(tagsAndCategoryAdapter.getSelectedTags()));
     }
 
     private String getSelectedTags(SparseArray<MiniProfile> sparseArray) {

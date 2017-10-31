@@ -31,7 +31,7 @@ public class ResizableSurfaceView extends SurfaceView {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int windowWidth = displayMetrics.widthPixels;
             int windowHeight = displayMetrics.heightPixels;
-            int margin = (int) (getContext().getResources().getDisplayMetrics().density* MARGIN_DP);
+//            int margin = (int) (getContext().getResources().getDisplayMetrics().density* MARGIN_DP);
             float videoRatio;
             if (windowWidth < windowHeight) {
                 videoRatio = ((float) (videoWidth)) / videoHeight;
@@ -59,17 +59,22 @@ public class ResizableSurfaceView extends SurfaceView {
             } else if (windowWidth > windowHeight) {// landscape
                 if (videoWidth > videoHeight) {//video is landscape
                     if (windowWidth * videoRatio > videoHeight) {
-                        lp.height = windowHeight - margin;
-                        lp.width = (int) ((windowHeight - margin) / videoRatio);
+                        lp.height = windowHeight;
+//                        lp.width = (int) ((windowHeight - margin) / videoRatio);
+                        lp.height = windowHeight;
+                        lp.width = (int) ((windowHeight) / videoRatio);
                     } else {
                         lp.height = (int) (windowWidth * videoRatio);
                         lp.width = windowWidth;
                     }
                 } else if (videoWidth < videoHeight) {//video is portrait
-                    lp.width = (int) ((windowHeight - margin) / videoRatio);
-                    lp.height = windowHeight - margin;
+//                    lp.width = (int) ((windowHeight - margin) / videoRatio);
+                    lp.width = (int) ((windowHeight) / videoRatio);
+//                    lp.height = windowHeight - margin;
+                    lp.height = windowHeight;
                 } else {
-                    lp.height = windowHeight- margin;
+//                    lp.height = windowHeight- margin;
+                    lp.height = windowHeight;
                     lp.width = lp.height;
                 }
             }

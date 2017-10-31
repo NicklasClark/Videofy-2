@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/ic_play"
+                    app:srcCompat="@drawable/ic_play_big"
                     android:clickable="false"/>
 
                 <ProgressBar
@@ -312,7 +312,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/ic_play"
+                            app:srcCompat="@drawaic_play_bigplay"
                             android:clickable="false"/>
 
                         <ProgressBar

@@ -1560,10 +1560,10 @@ public class Pojos {
         private String react_media_url;
         private String react_thumb_url;
         private String react_duration;
-        private String react_dimension;
+        private Dimension react_dimension;
         private boolean react_is_image;
 
-        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, String react_dimension, boolean react_is_image) {
+        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension react_dimension, boolean react_is_image) {
             this.media_id = media_id;
             this.react_media_url = react_media_url;
             this.react_thumb_url = react_thumb_url;
@@ -1588,7 +1588,7 @@ public class Pojos {
             return react_duration;
         }
 
-        public String getReactDimension() {
+        public Dimension getReactDimension() {
             return react_dimension;
         }
 
@@ -1607,7 +1607,7 @@ public class Pojos {
             parcel.writeString(react_media_url);
             parcel.writeString(react_thumb_url);
             parcel.writeString(react_duration);
-            parcel.writeString(react_dimension);
+            parcel.writeParcelable(react_dimension, i);
             parcel.writeByte((byte) (react_is_image ? 1 : 0));
         }
 
@@ -1616,7 +1616,7 @@ public class Pojos {
             react_media_url = in.readString();
             react_thumb_url = in.readString();
             react_duration = in.readString();
-            react_dimension = in.readString();
+            react_dimension = in.readParcelable(Dimension.class.getClassLoader());
             react_is_image = in.readByte() != 0;
         }
 
@@ -1637,14 +1637,14 @@ public class Pojos {
         private String media_url;
         private String thumb_url;
         private String duration;
-        private String dimension;
+        private Dimension media_dimension;
         private boolean is_image;
 
-        public ProfileMedia(String media_url, String thumb_url, String duration, String dimension, boolean is_image) {
+        public ProfileMedia(String media_url, String thumb_url, String duration, Dimension dimension, boolean is_image) {
             this.media_url = media_url;
             this.thumb_url = thumb_url;
             this.duration = duration;
-            this.dimension = dimension;
+            this.media_dimension = dimension;
             this.is_image = is_image;
         }
 
@@ -1660,8 +1660,8 @@ public class Pojos {
             return duration;
         }
 
-        public String getDimension() {
-            return dimension;
+        public Dimension getDimension() {
+            return media_dimension;
         }
 
         public boolean isImage() {
@@ -1678,7 +1678,7 @@ public class Pojos {
             parcel.writeString(media_url);
             parcel.writeString(thumb_url);
             parcel.writeString(duration);
-            parcel.writeString(dimension);
+            parcel.writeParcelable(media_dimension, i);
             parcel.writeByte((byte) (is_image ? 1 : 0));
         }
 
@@ -1686,7 +1686,7 @@ public class Pojos {
             media_url = in.readString();
             thumb_url = in.readString();
             duration = in.readString();
-            dimension = in.readString();
+            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
             is_image = in.readByte() != 0;
         }
 
@@ -1708,18 +1708,17 @@ public class Pojos {
         private String media_url;
         private String thumb_url;
         private String duration;
-        private String dimension;
+        private Dimension media_dimension;
         private boolean is_image;
         private int views;
         private String created_at;
-
         public Medias(int media_id, String media_url, String thumb_url, String duration,
-                      String dimension, boolean is_image, int views, String created_at) {
+                      Dimension dimension, boolean is_image, int views, String created_at) {
             this.media_id = media_id;
             this.media_url = media_url;
             this.thumb_url = thumb_url;
             this.duration = duration;
-            this.dimension = dimension;
+            this.media_dimension = dimension;
             this.is_image = is_image;
             this.views = views;
             this.created_at = created_at;
@@ -1741,8 +1740,8 @@ public class Pojos {
             return duration;
         }
 
-        public String getDimension() {
-            return dimension;
+        public Dimension getDimension() {
+            return media_dimension;
         }
 
         public boolean isImage() {
@@ -1768,7 +1767,7 @@ public class Pojos {
             parcel.writeString(media_url);
             parcel.writeString(thumb_url);
             parcel.writeString(duration);
-            parcel.writeString(dimension);
+            parcel.writeParcelable(media_dimension, i);
             parcel.writeByte((byte) (is_image ? 1 : 0));
             parcel.writeInt(views);
             parcel.writeString(created_at);
@@ -1779,7 +1778,7 @@ public class Pojos {
             media_url = in.readString();
             thumb_url = in.readString();
             duration = in.readString();
-            dimension = in.readString();
+            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
             is_image = in.readByte() != 0;
             views = in.readInt();
             created_at = in.readString();
@@ -1794,6 +1793,52 @@ public class Pojos {
             @Override
             public Medias[] newArray(int size) {
                 return new Medias[size];
+            }
+        };
+    }
+
+    public static class Dimension implements Parcelable {
+        private int height;
+        private int width;
+
+        public Dimension(int height, int width) {
+            this.height = height;
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(height);
+            parcel.writeInt(width);
+        }
+
+        protected Dimension(Parcel in) {
+            height = in.readInt();
+            width = in.readInt();
+        }
+
+        public static final Creator<Dimension> CREATOR = new Creator<Dimension>() {
+            @Override
+            public Dimension createFromParcel(Parcel in) {
+                return new Dimension(in);
+            }
+
+            @Override
+            public Dimension[] newArray(int size) {
+                return new Dimension[size];
             }
         };
     }

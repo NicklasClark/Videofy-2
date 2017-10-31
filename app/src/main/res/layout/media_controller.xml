@@ -37,7 +37,7 @@
             app:drawableStartCompat="@drawable/ic_add_location"
             android:layout_alignParentStart="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_content"
+            android:textSize="@dimen/home_screen_post_header"
             android:text="  New Delhi"
             android:layout_below="@id/media_controller_caption"/>
 
@@ -45,6 +45,7 @@
             android:id="@+id/media_controller_eta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end|center_vertical"
             app:drawableStartCompat="@drawable/ic_volume"
             android:paddingTop="@dimen/padding_half"
             android:paddingBottom="@dimen/padding_half"
@@ -53,7 +54,7 @@
             android:layout_alignParentEnd="true"
             android:text="  -00:30"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_content_big"/>
+            android:textSize="@dimen/home_screen_post_header"/>
 
     </RelativeLayout>
 
@@ -76,8 +77,8 @@
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/media_controller_dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:scaleType="centerCrop"
             android:layout_alignParentStart="true"
             android:foreground="@drawable/bg_circle_white_outline"
@@ -98,7 +99,7 @@
             android:id="@+id/media_controller_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/home_screen_post_content"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_like_outline"
             android:gravity="end|center_vertical"
@@ -106,7 +107,6 @@
             android:paddingEnd="0dp"
             android:text="  4561"
             android:layout_marginTop="@dimen/padding_thin"
-            android:layout_marginBottom="@dimen/padding_half"
             android:layout_toEndOf="@+id/media_controller_dp"
             android:layout_alignBottom="@+id/media_controller_dp"
             tools:ignore="HardcodedText" />
@@ -115,7 +115,7 @@
             android:id="@+id/media_controller_views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/home_screen_post_content"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline"
             android:gravity="end|center_vertical"
@@ -123,7 +123,6 @@
             android:paddingEnd="0dp"
             android:text="  0132"
             android:layout_marginTop="@dimen/padding_thin"
-            android:layout_marginBottom="@dimen/padding_half"
             android:layout_toEndOf="@+id/media_controller_likes"
             android:layout_alignBottom="@+id/media_controller_dp"
             tools:ignore="HardcodedText" />
@@ -136,28 +135,29 @@
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/media_controller_categories"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:text="Dance, Videography, Bollywood, Music, Clubmusic, EDM"
+            android:textSize="@dimen/home_screen_post_header"
+            android:text="Dance, Videography, Bollywood, Music, Clubmusic"
+            android:gravity="center"
             android:layout_below="@+id/media_controller_dp"
             android:singleLine="true"
             android:ellipsize="marquee"
             android:requiresFadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:layout_toStartOf="@+id/spacer"
             tools:ignore="Deprecated"
             android:paddingTop="@dimen/padding_half"
             android:paddingBottom="@dimen/padding_half"
-            android:paddingStart="@dimen/padding_default"
-            android:paddingEnd="@dimen/padding_default"/>
+            android:paddingStart="@dimen/padding_double"
+            android:paddingEnd="@dimen/padding_double"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/media_controller_reaction_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_content_big"
+            android:textSize="@dimen/home_screen_post_header"
             android:textColor="@android:color/white"
             android:text="+200 R"
             android:paddingTop="@dimen/padding_half"
@@ -169,31 +169,34 @@
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_3"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/status_bar_height"
+            android:layout_height="@dimen/status_bar_height"
             android:scaleType="centerCrop"
+            android:src="@color/colorAccent"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/media_controller_reaction_count"/>
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/status_bar_height"
+            android:layout_height="@dimen/status_bar_height"
             android:scaleType="centerCrop"
+            android:src="@color/colorAccent2"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="-14dp"
+            android:layout_marginEnd="@dimen/margin_reaction_bubbles"
             android:layout_toStartOf="@+id/media_controller_reaction_3"/>
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/media_controller_reaction_1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/status_bar_height"
+            android:layout_height="@dimen/status_bar_height"
             android:scaleType="centerCrop"
+            android:src="@color/colorAccent3"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="-14dp"
+            android:layout_marginEnd="@dimen/margin_reaction_bubbles"
             android:layout_toStartOf="@+id/media_controller_reaction_2"/>
 
     </RelativeLayout>

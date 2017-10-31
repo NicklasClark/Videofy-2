@@ -107,7 +107,7 @@ public class VideoUpload extends AppCompatActivity
         implements ProgressRequestBody.UploadCallbacks,
         NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
-        TagsFragment.TagsInteractionListener, Interests.OnInterestsInteractionListener{
+        TagsAndCategoryFragment.TagsInteractionListener, Interests.OnInterestsInteractionListener{
 
     public static final String VIDEO_PATH = "videoPath";
     private static final String TAG_VIDEO_PREVIEW = "videoPreview";
@@ -505,9 +505,7 @@ public class VideoUpload extends AppCompatActivity
                         getMyFollowings();
                         break;
                     case SUCCESS_OK_FALSE:
-                        for (int i = 0; i < response.body().getCircles().size(); i++) {
-                            postOwnerList.add(response.body().getCircles().get(i));
-                        }
+                        postOwnerList.addAll(response.body().getCircles());
                         break;
                     default:
                         Log.e("getMyFollowings", response.message());

@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home;
+package com.cncoding.teazer.home.post;
 
 import android.os.Parcel;
 import android.os.Parcelable;

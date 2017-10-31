@@ -4,17 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.cncoding.teazer.camera.upload.TagsFragment">
+    tools:context="com.cncoding.teazer.camera.upload.TagsAndCategoryFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tags_categories_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:fastScrollEnabled="true"
-        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"/>
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/tags_categories_done"

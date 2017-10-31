@@ -126,6 +126,7 @@ public class Interests extends Fragment implements View.OnClickListener {
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Pojos.Category>> call, Response<ArrayList<Pojos.Category>> response) {
+                interestsMap = new HashMap<>();
                 for (int i = 0; i < response.body().size(); i++) {
                     addChip(i, response.body().get(i).getCategoryName());
                 }

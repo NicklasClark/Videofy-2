@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
 <!--    <item android:id="@+id/action_share"
         android:title="@string/share"
@@ -9,17 +11,17 @@
 
     <item android:id="@+id/action_hide"
         android:title="@string/hide"
-        android:icon="@drawable/ic_hide"
-        app:showAsAction="never" />
+        app:showAsAction="withText"
+        android:visible="true" />
 
     <item android:id="@+id/action_delete"
         android:title="@string/delete"
-        android:icon="@drawable/ic_delete"
-        app:showAsAction="never" />
+        app:showAsAction="withText"
+        android:visible="true" />
 
     <item android:id="@+id/action_report"
         android:title="@string/report"
-        android:icon="@drawable/ic_report"
-        app:showAsAction="never" />
+        app:showAsAction="withText"
+        android:visible="true" />
 
 </menu>

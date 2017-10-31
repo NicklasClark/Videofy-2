@@ -20,15 +20,18 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
+import java.util.Random;
 
 import static com.cncoding.teazer.customViews.ViewAnimator.Listeners;
 import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
+import static com.cncoding.teazer.utilities.PlaceHolderDrawableHelper.getBackgroundDrawable;
 
 /**
  *
@@ -149,6 +152,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
         initControllerView();
         isPlaying = true;
+        show();
 
 //        this.surfaceView.setOnTouchListener(new OnTouchListener() {
 //            @Override
@@ -241,15 +245,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         likesView.setText(SPACE + likes);
         viewsView.setText(SPACE + views);
         categoriesView.setText(categories);
-        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
-//        Glide.with(getContext())
-//                .load(profilePicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(profilePic);
-//        Glide.with(getContext())
-//                .load(reaction1Url).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction1Pic);
-//        Glide.with(getContext())
-//                .load(reaction2Url).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction2Pic);
-//        Glide.with(getContext())
-//                .load(reaction3Url).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction3Pic);
+//        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
+        Glide.with(getContext())
+                .load(profilePicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(profilePic);
 
 //        set remaining time of video.
         playPauseButton.setOnClickListener(new OnClickListener() {
@@ -282,6 +280,25 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         //init formatter
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
+    }
+
+    public void setReaction1Pic(String reaction1PicUrl) {
+        Glide.with(getContext())
+                .load(reaction1PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction1Pic);
+    }
+
+    public void setReaction2Pic(String reaction2PicUrl) {
+        Glide.with(getContext())
+                .load(reaction2PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction2Pic);
+    }
+
+    public void setReaction3Pic(String reaction3PicUrl) {
+        Glide.with(getContext())
+                .load(reaction3PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction3Pic);
+    }
+
+    public void setReactionCount(String reactionCount) {
+        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
     }
 
     private void toggleVolume() {
@@ -505,8 +522,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         private MediaPlayerControlListener mediaPlayerControlListener;
         private ViewGroup anchorView;
         private SurfaceView surfaceView;
-        @DrawableRes private int playIcon = R.drawable.ic_play_outline;
-        @DrawableRes private int pauseIcon = R.drawable.ic_pause_outline;
+        @DrawableRes private int playIcon;
+        @DrawableRes private int pauseIcon;
 //        private boolean canSeekVideo = true;
 //        private boolean canControlVolume = true;
 //        private boolean canControlBrightness = true;
@@ -518,6 +535,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         public Builder(@Nullable Activity context, @Nullable MediaPlayerControlListener mediaControlListener){
             this.context = context;
             this.mediaPlayerControlListener = mediaControlListener;
+            playIcon = R.drawable.ic_play;
+            pauseIcon = R.drawable.ic_pause;
         }
         public Builder with(@Nullable Activity context) {
             this.context = context;
@@ -600,16 +619,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder pauseIcon(@DrawableRes int pauseIcon) {
-            this.pauseIcon = pauseIcon;
-            return this;
-        }
-
-        public Builder playIcon(@DrawableRes int playIcon) {
-            this.playIcon = playIcon;
-            return this;
-        }
-
         public MediaControllerView build(@Nullable ViewGroup anchorView) {
             this.anchorView = anchorView;
             return new MediaControllerView(this);
@@ -685,7 +694,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     }
 
     public void exit() {
-        mediaPlayerControlListener.exit();
+//        mediaPlayerControlListener.exit();
         context.getContentResolver().registerContentObserver(
                 android.provider.Settings.System.CONTENT_URI, true, contentObserver);
     }

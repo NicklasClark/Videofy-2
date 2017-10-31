@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.databinding.HomeScreenBottomDrawerBinding;
+import com.cncoding.teazer.databinding.BottomDrawerBinding;
 
 /**
  *
@@ -32,7 +32,7 @@ public class BottomDrawer extends FrameLayout {
     // Used in initial layout
 //    private boolean shadowDrawn;
 
-    private HomeScreenBottomDrawerBinding binding;
+    private BottomDrawerBinding binding;
     // To store resource ids of the drawable for the icons, the order of tabs above should be the same
     private Integer[] tabResId;
 
@@ -59,7 +59,7 @@ public class BottomDrawer extends FrameLayout {
 
     private void initLayout(Context context) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.home_screen_bottom_drawer, this, true);
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.bottom_drawer, this, true);
 
         tabResId = new Integer[]{
                 R.id.home_tab_btn, R.id.search_tab_btn,
@@ -148,7 +148,7 @@ public class BottomDrawer extends FrameLayout {
     public void resetDrawables() {
         binding.homeTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_home_black, 0, 0);
         binding.searchTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_binoculars_black, 0, 0);
-//        binding.cameraTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_add_video_black, 0, 0);
+//        binding.cameraTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_add_video_white, 0, 0);
         binding.notificationsTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications_black, 0, 0);
         binding.userProfileTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_person_black, 0, 0);
     }

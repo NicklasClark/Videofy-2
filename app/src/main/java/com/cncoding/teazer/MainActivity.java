@@ -34,7 +34,7 @@ import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
 import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.authentication.SignupFragment;
 import com.cncoding.teazer.authentication.SignupFragment2;
-import com.cncoding.teazer.home.HomeScreenActivity;
+import com.cncoding.teazer.home.post.HomeScreenPostsActivity;
 import com.cncoding.teazer.home.Interests;
 import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
@@ -154,7 +154,7 @@ public class MainActivity extends FragmentActivity
                     new OfflineUserProfile(MainActivity.this).setEmail(user.getEmail());
 //                    user is signed in
                     if (!isFirebaseSignup) {
-                        startActivity(new Intent(MainActivity.this, HomeScreenActivity.class));
+                        startActivity(new Intent(MainActivity.this, HomeScreenPostsActivity.class));
                         finish();
                     } else {
                         setFragment(TAG_SELECT_CATEGORIES, false, null);
@@ -330,7 +330,7 @@ public class MainActivity extends FragmentActivity
                 break;
             case OPEN_CAMERA_ACTION:
 //                setFragment("interests", true, null);
-                startActivity(new Intent(this, HomeScreenActivity.class));
+                startActivity(new Intent(this, HomeScreenPostsActivity.class));
 //                finish();
             default:
                 break;

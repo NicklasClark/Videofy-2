@@ -7,14 +7,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
-        <item name="android:textColor">#000000</item>
-        <!--<item name="android:windowLightStatusBar">true</item>-->
-        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <item name="android:textColor">@color/colorSecondary_text</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge
+        </item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall
+        </item>
         <item name="windowNoTitle">true</item>
         <item name="android:orientation">vertical</item>
     </style>
@@ -34,6 +37,15 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
+    </style>
+
+    <style name="BaseActivityTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
     <style name="myCustomAppBarTheme" parent="Theme.AppCompat.Light">
@@ -171,12 +183,13 @@
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">@dimen/padding_half</item>
-        <item name="android:paddingBottom">@dimen/padding_half</item>
-        <item name="android:paddingStart">@dimen/padding_default</item>
+        <!--<item name="android:paddingTop">@dimen/padding_half</item>-->
+        <!--<item name="android:paddingBottom">@dimen/padding_half</item>-->
+        <!--<item name="android:paddingStart">@dimen/padding_half</item>-->
         <item name="android:paddingEnd">@dimen/padding_default</item>
-        <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:layout_margin">@dimen/padding_half</item>
+        <item name="android:background">@drawable/bg_button_react</item>
+        <item name="android:foreground">@drawable/ripple_dark</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
     </style>
@@ -237,19 +250,38 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="SeekBarTheme" parent="Widget.AppCompat.SeekBar" >
+    <style name="SeekBarTheme" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">@android:color/white</item>
     </style>
 
-    <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar" >
+    <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@android:color/white</item>
     </style>
 
-    <style name="PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/popup_drawable</item>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">#ffffff</item>
+        <item name="android:textColor">@color/colorSecondary_text</item>
+        <item name="android:textSize">16sp</item>
+        <!--<item name="android:itemTextAppearance">@android:style/Widget.Holo.Light.TextView</item>-->
     </style>
 
-<!--    <style name="AppTheme.ChipLayout" parent="Widget.AppCompat.CompoundButton.CheckBox">
+    <style name="myPopupMenuTextAppearanceSmall" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <!--<item name="android:textColorPrimary">@color/colorSecondary_text</item>-->
+        <item name="android:textColor">@color/colorSecondary_text</item>
+        <!--<item name="android:textSize">16sp</item>-->
+    </style>
+
+    <style name="myPopupMenuTextAppearanceLarge" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <!--<item name="android:textColorPrimary">@color/colorSecondary_text</item>-->
+        <item name="android:textColor">@color/colorSecondary_text</item>
+        <!--<item name="android:textSize">25sp</item>-->
+    </style>
+
+    <style name="CustomProfileFAB" parent="Widget.Design.FloatingActionButton">
+        <item name="colorAccent">@android:color/transparent</item>
+    </style>
+
+    <!--    <style name="AppTheme.ChipLayout" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">@dimen/padding_half</item>

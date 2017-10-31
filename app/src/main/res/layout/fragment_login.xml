@@ -7,6 +7,7 @@
     android:paddingStart="@dimen/padding_default"
     android:paddingEnd="@dimen/padding_default"
     android:gravity="center_horizontal"
+    android:animateLayoutChanges="true"
     tools:context="com.cncoding.teazer.authentication.LoginFragment">
 
     <!--<include layout="@layout/custom_action_bar" />-->

@@ -9,49 +9,47 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.CircularImageView;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.home.HomeScreenPostFragment;
 import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
+
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
- * specified {@link HomeScreenPostFragment.HomeScreenPostInteractionListener}.
+ * specified {@link PostReactionAdapterListener}.
  */
 public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapter.ViewHolder> {
 
-    static final int ACTION_VIEW_POST = 0;
-    static final int ACTION_VIEW_PROFILE = 1;
-    static final int ACTION_VIEW_CATEGORY_POSTS = 2;
-
-    private final PostReactionsList posts;
-    private final PostDetailsFragment.OnPostDetailsInteractionListener mListener;
+    private final ArrayList<PostReaction> postReactions;
     private Context context;
+    private PostReactionAdapterListener listener;
 
-    public PostReactionAdapter(PostReactionsList posts, PostDetailsFragment.OnPostDetailsInteractionListener listener, Context context) {
-        this.posts = posts;
-        mListener = listener;
+    PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
+        this.postReactions = postReactions;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_screen_post_item, parent, false);
+                .inflate(R.layout.reaction_post_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final PostReaction postReaction = posts.getReactions().get(position);
+        final PostReaction postReaction = postReactions.get(position);
         MiniProfile postOwner = postReaction.getReactOwner();
 
         Glide.with(context)
@@ -74,37 +72,30 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         holder.likes.setText("  " + postReaction.getLikes());
         holder.views.setText("  " + postReaction.getViews());
 
-//        if (mListener != null) {
-//            View.OnClickListener viewPostDetails = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mListener.onPostDetailsInteraction(ACTION_VIEW_POST);
-//                }
-//            };
-//            View.OnClickListener viewProfile = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mListener.onPostDetailsInteraction(ACTION_VIEW_PROFILE);
-//                }
-//            };
-//            View.OnClickListener viewCategoryPosts = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mListener.onPostDetailsInteraction(ACTION_VIEW_CATEGORY_POSTS);
-//                }
-//            };
-//
-//            holder.postThumbnail.setOnClickListener(viewPostDetails);
-//            holder.likes.setOnClickListener(viewPostDetails);
-//            holder.category.setOnClickListener(viewCategoryPosts);
-//            holder.profilePic.setOnClickListener(viewProfile);
-//            holder.name.setOnClickListener(viewProfile);
-//        }
+        if (listener != null) {
+            View.OnClickListener viewPostDetails = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
+                }
+            };
+            View.OnClickListener viewProfile = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPostReactionInteraction(ACTION_VIEW_PROFILE, postReaction);
+                }
+            };
+
+            holder.postThumbnail.setOnClickListener(viewPostDetails);
+            holder.likes.setOnClickListener(viewPostDetails);
+            holder.profilePic.setOnClickListener(viewProfile);
+            holder.name.setOnClickListener(viewProfile);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return posts.getReactions().size();
+        return postReactions.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -112,8 +103,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 //        @BindView(R.id.home_screen_post_layout) RelativeLayout layout;
         @BindView(R.id.reaction_post_thumb) ImageView postThumbnail;
         @BindView(R.id.reaction_post_caption) ProximaNovaSemiboldTextView caption;
-        @BindView(R.id.reaction_post_dp) CircularImageView profilePic;
-        @BindView(R.id.home_screen_post_name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.reaction_post_dp) CircularAppCompatImageView profilePic;
+        @BindView(R.id.reaction_post_name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView views;
 
@@ -126,5 +117,26 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         public String toString() {
             return super.toString() + " '" + name.getText() + "' : \"" + caption.getText() + "\"";
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        if (context instanceof PostReactionAdapterListener) {
+            listener = (PostReactionAdapterListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement PostReactionAdapterListener");
+        }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        listener = null;
+    }
+
+    interface PostReactionAdapterListener {
+        void onPostReactionInteraction(int action, PostReaction postReaction);
     }
 }

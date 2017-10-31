@@ -1,7 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="rounded_edge_radius">2dp</dimen>
-    <dimen name="rounded_edge_radius_big">10dp</dimen>
+    <dimen name="rounded_edge_radius_2dp">2dp</dimen>
+    <dimen name="rounded_edge_radius_10dp">10dp</dimen>
+    <dimen name="rounded_edge_radius_40dp">40dp</dimen>
     <dimen name="border_thin">2dp</dimen>
     <dimen name="border_thick">5dp</dimen>
     <dimen name="padding_half">8dp</dimen>
@@ -47,5 +48,8 @@
     <dimen name="home_screen_post_content">12sp</dimen>
     <dimen name="home_screen_post_content_small">10sp</dimen>
     <dimen name="home_screen_post_content_smaller">8sp</dimen>
+    <dimen name="margin_reaction_bubbles">12dp</dimen>
     <dimen name="popup_corner_radius">40dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
 </resources>

@@ -35,7 +35,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="post_thumbnail">post_thumbnail</string>
-    <string name="post_profile_pic">post_profile_pic</string>
+    <string name="profile_pic">Profile pic</string>
     <string name="camera_failed_message">Failed to start camera service\nPlease Restart your device.</string>
     <string name="please_allow_all_permissions_message">We understand that you want to be on the safe side\n
         But please allow the permissions so that you can use Teazer to its full potential!</string>
@@ -128,4 +128,11 @@
     <string name="hide">Hide</string>
     <string name="delete">Delete</string>
     <string name="report">Report</string>
+    <string name="title_activity_tab2">Tab2Activity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="videos">Videos</string>
+    <string name="title_activity_base_bottom_bar">BaseBottomBarActivity</string>
 </resources>

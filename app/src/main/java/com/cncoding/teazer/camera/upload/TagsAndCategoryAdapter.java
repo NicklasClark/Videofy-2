@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by Prem $ on 10/20/2017.
  */
 
-class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
+class TagsAndCategoryAdapter extends RecyclerView.Adapter<TagsAndCategoryAdapter.ViewHolder> {
 
     private ArrayList<MiniProfile> circles;
     private Fragment fragment;
@@ -31,7 +31,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     private SparseArray<MiniProfile> selectedTags;
 
     @SuppressLint("UseSparseArrays")
-    TagsAdapter(ArrayList<MiniProfile> circles, Fragment fragment) {
+    TagsAndCategoryAdapter(ArrayList<MiniProfile> circles, Fragment fragment) {
         this.circles = circles;
         this.fragment = fragment;
         selectedTagsArray = new SparseBooleanArray();
@@ -39,13 +39,13 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
     @Override
-    public TagsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TagsAndCategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tags_item, parent, false);
-        return new TagsAdapter.ViewHolder(view);
+        return new TagsAndCategoryAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final TagsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final TagsAndCategoryAdapter.ViewHolder holder, int position) {
         final MiniProfile circle = circles.get(position);
         holder.nameView.setText(circle.getFirstName() + " " + circle.getLastName());
         if (circle.hasProfileMedia()) {
@@ -60,7 +60,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                 boolean isChecked = !holder.nameView.isChecked();
                 selectedTagsArray.put(holder.getAdapterPosition(), isChecked);
                 holder.nameView.setChecked(isChecked);
-                ((TagsFragment) fragment).changeVisibility(View.VISIBLE);
+                ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
                 if (isChecked) {
                     selectedTags.put(holder.getAdapterPosition(), circle);
                 }

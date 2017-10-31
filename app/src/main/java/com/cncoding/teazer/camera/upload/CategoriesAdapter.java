@@ -53,7 +53,7 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
                 boolean isChecked = !holder.nameView.isChecked();
                 selectedCategoriesArray.put(holder.getAdapterPosition(), isChecked);
                 holder.nameView.setChecked(isChecked);
-                ((TagsFragment) fragment).changeVisibility(View.VISIBLE);
+                ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
                 if (isChecked) {
                     selectedCategories.put(holder.getAdapterPosition(), category);
                 }
