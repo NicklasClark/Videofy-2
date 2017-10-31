@@ -79,7 +79,7 @@ public class PostDetailsActivity extends BaseBottomBarActivity implements MediaC
         postReactions = new ArrayList<>();
 //        Bundle bundle = getIntent().getBundleExtra("bundle");
 //        postDetails = bundle.getParcelable(EXTRAS);
-        postDetails = getIntent().getExtras().getParcelable(EXTRAS);
+        postDetails = getIntent().getParcelableExtra(EXTRAS);
         columnCount = getIntent().getIntExtra(ARG_COLUMN_COUNT, 2);
         surfaceView.getHolder().addCallback(this);
         progressBar.setVisibility(View.VISIBLE);
