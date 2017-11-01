@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.cncoding.teazer.home.profile.ProfileFragment">
+    tools:context="com.cncoding.teazer.home.profile.UserVideosFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -28,7 +28,7 @@
                 android:id="@+id/profile_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/bg_image_view"
+                android:src="@drawable/material_flat"
                 android:scaleType="centerInside"
                 android:contentDescription="@string/profile_pic"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"

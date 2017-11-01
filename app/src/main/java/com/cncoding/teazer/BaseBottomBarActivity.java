@@ -15,7 +15,9 @@ import android.widget.FrameLayout;
 import com.cncoding.teazer.camera.CameraActivity;
 import com.cncoding.teazer.customViews.BottomDrawer;
 import com.cncoding.teazer.home.post.HomeScreenPostsActivity;
+import com.cncoding.teazer.home.profile.ProfileActivity;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.ViewUtils;
 
 import butterknife.OnClick;
 
@@ -48,20 +50,24 @@ public class BaseBottomBarActivity extends AppCompatActivity {
     private BottomDrawer.OnTabSelectionListener tabSelectionListener = new BottomDrawer.OnTabSelectionListener() {
         @Override
         public void onTabSelected(int position) {
+            bottomDrawer.setSelectedTab(position);
             // start your various top-level activities from here
             if (position != getCurrentBottomNavPosition()) {
-                setSelectedColor(position);
                 switch (position) {
                     case BottomDrawer.POSITION_HOME_TAB:
-                        setActivity("", BaseBottomBarActivity.this, HomeScreenPostsActivity.class, 2, null);
+                        setActivity(TAG_HOME_ACTIVITY, BaseBottomBarActivity.this,
+                                HomeScreenPostsActivity.class, 2, null);
                         break;
                     case BottomDrawer.POSITION_SEARCH_TAB:
                         break;
                     case BottomDrawer.POSITION_NOTIFICATIONS_TAB:
                         break;
                     case BottomDrawer.POSITION_USER_PROFILE_TAB:
+                        setActivity(TAG_USER_PROFILE_ACTIVITY, BaseBottomBarActivity.this,
+                                ProfileActivity.class, 0, null);
                         break;
                 }
+                setSelectedColor(position);
             } else {
                 onNavBarReselect();
             }
@@ -73,13 +79,18 @@ public class BaseBottomBarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
-        container = findViewById(R.id.container);
-        bottomDrawer = findViewById(R.id.bottom_navigation_bar);
-        cameraButton = findViewById(R.id.bottom_camera_btn);
-        bottomDrawer.setOnTabSelectionListener(tabSelectionListener);
+        if (container == null)
+            container = findViewById(R.id.container);
+        if (bottomDrawer == null) {
+            bottomDrawer = findViewById(R.id.bottom_navigation_bar);
+            bottomDrawer.setOnTabSelectionListener(tabSelectionListener);
+        }
+        if (cameraButton == null)
+            cameraButton = findViewById(R.id.bottom_camera_btn);
     }
 
     protected void setCustomContentView (View view) {
+        container.removeAllViews();
         container.addView(view);
     }
 
@@ -115,7 +126,13 @@ public class BaseBottomBarActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bottomDrawer.setSelectedTab(getCurrentBottomNavPosition());
+//        bottomDrawer.setSelectedTab(getCurrentBottomNavPosition());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ViewUtils.unbindDrawables(container);
     }
 
     /**

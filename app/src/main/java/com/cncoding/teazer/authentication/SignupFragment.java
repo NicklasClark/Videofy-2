@@ -25,8 +25,8 @@ import butterknife.OnFocusChange;
 
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
-import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
+import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class SignupFragment extends Fragment {

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="rounded_edge_radius_2dp">2dp</dimen>
     <dimen name="rounded_edge_radius_10dp">10dp</dimen>
@@ -9,7 +9,7 @@
     <dimen name="padding_thin">4dp</dimen>
     <dimen name="padding_default">16dp</dimen>
     <dimen name="padding_double">36dp</dimen>
-    <dimen name="padding_big">82dp</dimen>
+    <dimen name="padding_big">60dp</dimen>
     <dimen name="padding_including_action_bar">122dp</dimen>
     <dimen name="text_size_h1">82sp</dimen>
     <dimen name="text_size_h2">42sp</dimen>
@@ -26,7 +26,7 @@
     <dimen name="otp_edit_text_horizontal_margin">6dp</dimen>
     <dimen name="otp_edit_text_vertical_margin">22dp</dimen>
     <dimen name="otp_edit_text_width">77dp</dimen>
-    <dimen name="bottom_scroll_margin">250dp</dimen>
+    <dimen name="bottom_scroll_margin">280dp</dimen>
     <dimen name="thumbnail_size">100dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
@@ -51,5 +51,6 @@
     <dimen name="margin_reaction_bubbles">12dp</dimen>
     <dimen name="popup_corner_radius">40dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="padding_with_small_profile_pic">62dp</dimen>
 
 </resources>

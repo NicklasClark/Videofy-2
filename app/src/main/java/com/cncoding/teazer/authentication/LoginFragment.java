@@ -34,14 +34,14 @@ import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithUsernameAndPassword;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
-import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
+import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class LoginFragment extends Fragment {
 
@@ -127,7 +127,9 @@ public class LoginFragment extends Fragment {
     public boolean onLoginByKeyboard(TextView v, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
             InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            }
             onLoginBtnClick();
             return true;
         }

@@ -56,11 +56,11 @@ public class HomeScreenPostsActivity extends BaseBottomBarActivity implements Ho
         getHomePagePosts(1);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomDrawer.setSelectedTab(getCurrentBottomNavPosition());
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+////        bottomDrawer.setSelectedTab(getCurrentBottomNavPosition());
+//    }
 
     @OnClick(R.id.bottom_camera_btn) public void startCamera() {
         startActivity(new Intent(this, CameraActivity.class));
@@ -185,6 +185,9 @@ public class HomeScreenPostsActivity extends BaseBottomBarActivity implements Ho
                 Intent intent = new Intent(this, PostDetailsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 intent.putExtra(ARG_COLUMN_COUNT, 2);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(EXTRAS, postDetails);
+                intent.putExtra("bundle", bundle);
                 intent.putExtra(EXTRAS, postDetails);
                 startActivity(intent);
 //                setActivity(TAG_POST_DETAILS_ACTIVITY, this, PostDetailsActivity.class, 2, postDetails);

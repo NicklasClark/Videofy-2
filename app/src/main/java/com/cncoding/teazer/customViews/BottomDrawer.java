@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,8 @@ public class BottomDrawer extends FrameLayout {
     // These would be names and associated positions of the tabs specific to your app
     public static final int POSITION_HOME_TAB = 0;
     public static final int POSITION_SEARCH_TAB = 1;
-//    public static final int POSITION_CAMERA_TAB = 2;
-    public static final int POSITION_NOTIFICATIONS_TAB = 3;
-    public static final int POSITION_USER_PROFILE_TAB = 4;
+    public static final int POSITION_NOTIFICATIONS_TAB = 2;
+    public static final int POSITION_USER_PROFILE_TAB = 3;
     // Passed in from the activities using this, in the setter below
     private OnTabSelectionListener mTabSelectionListener;
     private int mCurrentPosition;
@@ -57,17 +57,15 @@ public class BottomDrawer extends FrameLayout {
         initLayout(context);
     }
 
-    private void initLayout(Context context) {
+    private void initLayout(@NonNull Context context) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.bottom_drawer, this, true);
+        if (layoutInflater != null) {
+            binding = DataBindingUtil.inflate(layoutInflater, R.layout.bottom_drawer, this, true);
+        }
 
-        tabResId = new Integer[]{
-                R.id.home_tab_btn, R.id.search_tab_btn,
-//                R.id.camera_tab_btn,
-                R.id.notifications_tab_btn, R.id.user_profile_tab_btn};
+        tabResId = new Integer[]{R.id.home_tab_btn, R.id.search_tab_btn, R.id.notifications_tab_btn, R.id.user_profile_tab_btn};
         binding.homeTabBtn.setOnClickListener(new InternalTabSelectionListener(POSITION_HOME_TAB));
         binding.searchTabBtn.setOnClickListener(new InternalTabSelectionListener(POSITION_SEARCH_TAB));
-//        binding.cameraTabBtn.setOnClickListener(new InternalTabSelectionListener(POSITION_CAMERA_TAB));
         binding.notificationsTabBtn.setOnClickListener(new InternalTabSelectionListener(POSITION_NOTIFICATIONS_TAB));
         binding.userProfileTabBtn.setOnClickListener(new InternalTabSelectionListener(POSITION_USER_PROFILE_TAB));
 
@@ -112,8 +110,6 @@ public class BottomDrawer extends FrameLayout {
                 return binding.homeTabBtn;
             case POSITION_SEARCH_TAB:
                 return binding.searchTabBtn;
-//            case POSITION_CAMERA_TAB:
-//                return binding.cameraTabBtn;
             case POSITION_NOTIFICATIONS_TAB:
                 return binding.notificationsTabBtn;
             case POSITION_USER_PROFILE_TAB:
@@ -126,19 +122,16 @@ public class BottomDrawer extends FrameLayout {
     public void setColor(int position) {
         switch (position) {
             case POSITION_HOME_TAB:
-                binding.homeTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_home, 0, 0);
+                binding.homeTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_home_black, 0, 0);
                 break;
             case POSITION_SEARCH_TAB:
-                binding.searchTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_binoculars, 0, 0);
+                binding.searchTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_binoculars_black, 0, 0);
                 break;
-//            case POSITION_CAMERA_TAB:
-//                binding.cameraTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_add_video, 0, 0);
-//                break;
             case POSITION_NOTIFICATIONS_TAB:
-                binding.notificationsTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications, 0, 0);
+                binding.notificationsTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications_black, 0, 0);
                 break;
             case POSITION_USER_PROFILE_TAB:
-                binding.userProfileTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_person, 0, 0);
+                binding.userProfileTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_person_black, 0, 0);
                 break;
             default:
                 break;
@@ -146,11 +139,10 @@ public class BottomDrawer extends FrameLayout {
     }
 
     public void resetDrawables() {
-        binding.homeTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_home_black, 0, 0);
-        binding.searchTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_binoculars_black, 0, 0);
-//        binding.cameraTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_add_video_white, 0, 0);
-        binding.notificationsTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications_black, 0, 0);
-        binding.userProfileTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_person_black, 0, 0);
+        binding.homeTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_home, 0, 0);
+        binding.searchTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_binoculars, 0, 0);
+        binding.notificationsTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications, 0, 0);
+        binding.userProfileTabBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_person, 0, 0);
     }
 
     public interface OnTabSelectionListener {
@@ -163,6 +155,7 @@ public class BottomDrawer extends FrameLayout {
 
         InternalTabSelectionListener(int currentTabPosition) {
             currentPosition = currentTabPosition;
+            mCurrentPosition = currentTabPosition;
         }
 
         @Override

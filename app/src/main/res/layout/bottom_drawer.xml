@@ -7,6 +7,7 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/material_grey100"
         android:gravity="center"
+        android:checkedButton="@id/home_tab_btn"
         android:orientation="horizontal">
 
         <com.cncoding.teazer.customViews.RadioButtonPlus
@@ -34,7 +35,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:foreground="@drawable/ripple_dark_no_rounded"
-            android:drawableTop="@drawable/ic_binoculars_black"
+            android:drawableTop="@drawable/ic_binoculars"
             android:button="@null" />
 
         <com.cncoding.teazer.customViews.RadioButtonPlus
@@ -59,7 +60,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:foreground="@drawable/ripple_dark_no_rounded"
-            android:drawableTop="@drawable/ic_notifications_black"
+            android:drawableTop="@drawable/ic_notifications"
             android:button="@null" />
 
         <com.cncoding.teazer.customViews.RadioButtonPlus
@@ -73,7 +74,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:foreground="@drawable/ripple_dark_no_rounded"
-            android:drawableTop="@drawable/ic_person_black"
+            android:drawableTop="@drawable/ic_person"
             android:button="@null" />
     </RadioGroup>
 

@@ -63,6 +63,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/AppTheme.Overlay">
             <intent-filter tools:ignore="GoogleAppIndexingWarning">
 
@@ -121,14 +122,20 @@
         <activity
             android:name=".BaseBottomBarActivity"
             android:label="@string/title_activity_base_bottom_bar"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme" />
-        <activity android:name=".home.post.PostDetailsActivity"
+        <activity
+            android:name=".home.post.PostDetailsActivity"
             android:parentActivityName=".home.post.HomeScreenPostsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.post.HomeScreenPostsActivity" />
         </activity>
+        <activity android:name=".home.profile.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ProfileActivityTheme"/>
     </application>
 
 </manifest>

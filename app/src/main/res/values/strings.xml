@@ -135,4 +135,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="videos">Videos</string>
     <string name="title_activity_base_bottom_bar">BaseBottomBarActivity</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

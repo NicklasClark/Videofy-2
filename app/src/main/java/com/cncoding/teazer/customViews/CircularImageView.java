@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
@@ -46,7 +47,12 @@ public class CircularImageView extends AppCompatImageView {
             return;
         }
 
-        Bitmap b = ((GlideBitmapDrawable) drawable).getBitmap();
+        Bitmap b;
+        if (drawable instanceof GlideBitmapDrawable)
+            b = ((GlideBitmapDrawable) drawable).getBitmap();
+        else
+            b = ((BitmapDrawable) drawable).getBitmap();
+
         if (b == null)
             return;
         

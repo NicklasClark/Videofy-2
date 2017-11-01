@@ -107,7 +107,7 @@ public class VideoUpload extends AppCompatActivity
         implements ProgressRequestBody.UploadCallbacks,
         NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
-        TagsAndCategoryFragment.TagsInteractionListener, Interests.OnInterestsInteractionListener{
+        TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, Interests.OnInterestsInteractionListener{
 
     public static final String VIDEO_PATH = "videoPath";
     private static final String TAG_VIDEO_PREVIEW = "videoPreview";
@@ -849,7 +849,7 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @Override
-    public void onTagsInteraction(String result) {
+    public void onTagsAndCategoriesInteraction(String result) {
         tagFriendsText.setText(result);
     }
 

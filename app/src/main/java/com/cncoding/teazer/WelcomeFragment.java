@@ -125,11 +125,11 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
     private void showNotConnectedDialog(AppCompatButton view) {
         final Snackbar snackbar = Snackbar.make(view, R.string.not_connected_message, Snackbar.LENGTH_SHORT);
-        snackbar.setAction(R.string.retry, new View.OnClickListener() {
+        snackbar.setAction(R.string.dismiss, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         snackbar.dismiss();
-                        view.performClick();
+//                        view.performClick();
                     }
                 })
                 .setActionTextColor(Color.rgb(105, 240, 174));
@@ -167,7 +167,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     }
 
     @OnClick(R.id.fb_login_btn) public void fbSignup() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
     }
 
     private void setupGoogleSignIn() {

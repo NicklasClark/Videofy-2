@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
 import java.util.ArrayList;
@@ -28,28 +29,29 @@ import static android.view.View.VISIBLE;
 public class TagsAndCategoryFragment extends Fragment {
 
     private static final String ACTION = "action";
-//    public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
+    public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
+    public static final String ACTION_TAGS_FRAGMENT = "tagsFragment";
 
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_done) FloatingActionButton doneBtn;
 
-//    private String action;
-//    private ArrayList<Category> categories;
-//    private CategoriesAdapter categoriesAdapter;
+    private String action;
+    private ArrayList<Category> categories;
+    private CategoriesAdapter categoriesAdapter;
 
     private ArrayList<MiniProfile> circles;
-    private TagsAndCategoryAdapter tagsAndCategoryAdapter;
-    private TagsInteractionListener mListener;
+    private TagsAdapter tagsAdapter;
+    private TagsAndCategoriesInteractionListener listener;
 
     public TagsAndCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static TagsAndCategoryFragment newInstance(ArrayList<? extends Parcelable> args) {
+    public static TagsAndCategoryFragment newInstance(String action, ArrayList<? extends Parcelable> args) {
         TagsAndCategoryFragment fragment = new TagsAndCategoryFragment();
         Bundle bundle = new Bundle();
-//        bundle.putString(ACTION, action);
-        bundle.putParcelableArrayList(ACTION, args);
+        bundle.putString(ACTION, action);
+        bundle.putParcelableArrayList(action, args);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -58,8 +60,19 @@ public class TagsAndCategoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            action = getArguments().getString(ACTION);
-            circles = getArguments().getParcelableArrayList(ACTION);
+            action = getArguments().getString(ACTION);
+            if (action != null) {
+                switch (action) {
+                    case ACTION_TAGS_FRAGMENT:
+                        circles = getArguments().getParcelableArrayList(ACTION_TAGS_FRAGMENT);
+                        break;
+                    case ACTION_CATEGORIES_FRAGMENT:
+                        categories = getArguments().getParcelableArrayList(ACTION_CATEGORIES_FRAGMENT);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -75,9 +88,18 @@ public class TagsAndCategoryFragment extends Fragment {
 
     private void prepareRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        tagsAndCategoryAdapter = new TagsAndCategoryAdapter(circles, this);
-        recyclerView.setAdapter(tagsAndCategoryAdapter);
-
+        switch (action) {
+            case ACTION_TAGS_FRAGMENT:
+                tagsAdapter = new TagsAdapter(circles, this);
+                recyclerView.setAdapter(tagsAdapter);
+                break;
+            case ACTION_CATEGORIES_FRAGMENT:
+                categoriesAdapter = new CategoriesAdapter(categories, this);
+                recyclerView.setAdapter(categoriesAdapter);
+                break;
+            default:
+                break;
+        }
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -92,7 +114,17 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     @OnClick(R.id.tags_categories_done) public void getResult() {
-        mListener.onTagsInteraction(getSelectedTags(tagsAndCategoryAdapter.getSelectedTags()));
+        switch (action) {
+            case ACTION_TAGS_FRAGMENT:
+                listener.onTagsAndCategoriesInteraction(getSelectedTags(tagsAdapter.getSelectedTags()));
+                break;
+            case ACTION_CATEGORIES_FRAGMENT:
+                listener.onTagsAndCategoriesInteraction(getSelectedCategories(categoriesAdapter.getSelectedCategories()));
+                break;
+            default:
+                break;
+        }
+        listener.onTagsAndCategoriesInteraction(getSelectedTags(tagsAdapter.getSelectedTags()));
     }
 
     private String getSelectedTags(SparseArray<MiniProfile> sparseArray) {
@@ -106,16 +138,16 @@ public class TagsAndCategoryFragment extends Fragment {
         return stringBuilder.toString();
     }
 
-//    private String getSelectedCategories(SparseArray<Category> sparseArray) {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (int i = 0; i < sparseArray.size(); i++) {
-//            stringBuilder.append(sparseArray.valueAt(i).getCategoryName());
-//            if (i < sparseArray.size() - 1) {
-//                stringBuilder.append(", ");
-//            }
-//        }
-//        return stringBuilder.toString();
-//    }
+    private String getSelectedCategories(SparseArray<Category> sparseArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            stringBuilder.append(sparseArray.valueAt(i).getCategoryName());
+            if (i < sparseArray.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
+    }
 
     public void changeVisibility(int visibility) {
         if (doneBtn.getVisibility() != visibility) {
@@ -136,21 +168,21 @@ public class TagsAndCategoryFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof TagsInteractionListener) {
-            mListener = (TagsInteractionListener) context;
+        if (context instanceof TagsAndCategoriesInteractionListener) {
+            listener = (TagsAndCategoriesInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement TagsInteractionListener");
+                    + " must implement TagsAndCategoriesInteractionListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
-    public interface TagsInteractionListener {
-        void onTagsInteraction(String result);
+    public interface TagsAndCategoriesInteractionListener {
+        void onTagsAndCategoriesInteraction(String result);
     }
 }

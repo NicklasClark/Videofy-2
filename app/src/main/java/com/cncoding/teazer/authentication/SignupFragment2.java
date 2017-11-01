@@ -30,10 +30,10 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignup;
-import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
+import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class SignupFragment2 extends Fragment {
     private static final String SIGNUP_DETAILS = "signupDetails";
@@ -87,7 +87,9 @@ public class SignupFragment2 extends Fragment {
     @OnEditorAction(R.id.signup_confirm_password) public boolean onLoginByKeyboard(TextView v, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
             InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            }
             performSignup();
             return true;
         }
