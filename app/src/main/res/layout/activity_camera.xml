@@ -10,7 +10,7 @@
     app:umanoAnchorPoint="0.4"
     sothree:umanoPanelHeight="0dp"
     sothree:umanoShadowHeight="40dp"
-    tools:context=".camera.CameraActivity">
+    tools:context=".home.camera.CameraActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -153,8 +153,7 @@
             android:layout_gravity="center_horizontal"
             android:numColumns="auto_fit"
             android:paddingTop="@dimen/padding_half"
-            android:clipToPadding="false"
-            android:clickable="true"/>
+            android:clipToPadding="false"/>
 
     </LinearLayout>
 

@@ -1,281 +1,281 @@
 package com.cncoding.teazer;
 
-import android.content.Context;
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
-import com.cncoding.teazer.camera.CameraActivity;
-import com.cncoding.teazer.customViews.BottomDrawer;
-import com.cncoding.teazer.home.post.HomeScreenPostsActivity;
-import com.cncoding.teazer.home.profile.ProfileActivity;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.ViewUtils;
+import com.cncoding.teazer.customViews.SignPainterTextView;
+import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.notifications.NotificationsFragment;
+import com.cncoding.teazer.home.post.PostDetailsFragment;
+import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
+import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.home.search.SearchFragment;
+import com.cncoding.teazer.utilities.BottomBarUtils;
+import com.cncoding.teazer.utilities.FragmentHistory;
+import com.cncoding.teazer.utilities.NavigationController;
+import com.cncoding.teazer.utilities.Pojos;
 
-import butterknife.OnClick;
+import butterknife.BindArray;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
 
-public class BaseBottomBarActivity extends AppCompatActivity {
-
-    protected static final String ARG_COLUMN_COUNT = "columnCount";
-    protected static final String TAG_HOME_ACTIVITY = "homeActivity";
-    protected static final String TAG_SEARCH_ACTIVITY = "searchActivity";
-    protected static final String TAG_NOTIFICATION_ACTIVITY = "notificationActivity";
-    protected static final String TAG_USER_PROFILE_ACTIVITY = "userProfileActivity";
-    protected static final String TAG_POST_DETAILS_ACTIVITY = "postDetailsActivity";
-    protected static final String EXTRAS = "extras";
+public class BaseBottomBarActivity extends BaseActivity
+        implements BaseFragment.FragmentNavigation,
+        NavigationController.TransactionListener,
+        NavigationController.RootFragmentListener,
+        OnPostAdapterInteractionListener, PostReactionAdapterListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
     public static final int ACTION_VIEW_PROFILE = 2;
 //    public static final int ACTION_VIEW_CATEGORY_POSTS = 4;
 
-    protected FrameLayout container;
-    protected BottomDrawer bottomDrawer;
-    protected AppCompatImageView cameraButton;
+    private int[] mTabIconsSelected = {
+            R.drawable.ic_home_black,
+            R.drawable.ic_binoculars_black,
+            R.drawable.ic_add_video_black,
+            R.drawable.ic_notifications_black,
+            R.drawable.ic_person_black};
 
-//    public FragmentManager fragmentManager;
+    @BindArray(R.array.tab_name) String[] TABS;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
+    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
 
-    private int currentSelectedPosition = 0;
-
-    private BottomDrawer.OnTabSelectionListener tabSelectionListener = new BottomDrawer.OnTabSelectionListener() {
-        @Override
-        public void onTabSelected(int position) {
-            bottomDrawer.setSelectedTab(position);
-            // start your various top-level activities from here
-            if (position != getCurrentBottomNavPosition()) {
-                switch (position) {
-                    case BottomDrawer.POSITION_HOME_TAB:
-                        setActivity(TAG_HOME_ACTIVITY, BaseBottomBarActivity.this,
-                                HomeScreenPostsActivity.class, 2, null);
-                        break;
-                    case BottomDrawer.POSITION_SEARCH_TAB:
-                        break;
-                    case BottomDrawer.POSITION_NOTIFICATIONS_TAB:
-                        break;
-                    case BottomDrawer.POSITION_USER_PROFILE_TAB:
-                        setActivity(TAG_USER_PROFILE_ACTIVITY, BaseBottomBarActivity.this,
-                                ProfileActivity.class, 0, null);
-                        break;
-                }
-                setSelectedColor(position);
-            } else {
-                onNavBarReselect();
-            }
-            currentSelectedPosition = position;
-        }
-    };
+    private NavigationController navigationController;
+    private FragmentHistory fragmentHistory;
+    private ActionBar actionBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
-        if (container == null)
-            container = findViewById(R.id.container);
-        if (bottomDrawer == null) {
-            bottomDrawer = findViewById(R.id.bottom_navigation_bar);
-            bottomDrawer.setOnTabSelectionListener(tabSelectionListener);
+
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+
+        fragmentHistory = new FragmentHistory();
+        navigationController = NavigationController
+                .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_fragment_container)
+                .transactionListener(this)
+                .rootFragmentListener(this, TABS.length)
+                .build();
+
+        bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                fragmentHistory.push(tab.getPosition());
+                switchTab(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                navigationController.clearStack();
+                switchTab(tab.getPosition());
+            }
+        });
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        initTab();
+        switchTab(0);
+    }
+
+    private void initTab() {
+        for (int i = 0; i < TABS.length; i++) {
+            bottomTabLayout.addTab(bottomTabLayout.newTab());
+            TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(getTabView(i));
+//                bottomTabLayout.addTab(tab, i);
+            }
         }
-        if (cameraButton == null)
-            cameraButton = findViewById(R.id.bottom_camera_btn);
     }
 
-    protected void setCustomContentView (View view) {
-        container.removeAllViews();
-        container.addView(view);
+    @SuppressLint("InflateParams")
+    private View getTabView(int position) {
+        ImageView view;
+//        if (position != 2)
+            view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
+//        else
+//            view = (CircularAppCompatImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom_center, null);
+        view.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[position]));
+        return view;
     }
 
-    protected static void setupActionBar(AppCompatActivity activity, Toolbar toolbar, boolean showHomeAsUp) {
-        activity.setSupportActionBar(toolbar);
-        ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar != null && showHomeAsUp) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    private void switchTab(int position) {
+        navigationController.switchTab(position);
+//        updateToolbarTitle(position);
+    }
+
+    private void updateTabSelection(int currentTab){
+        for (int i = 0; i <  TABS.length; i++) {
+            TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+            if (selectedTab != null) {
+                if (currentTab != i) {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(false);
+                    }
+                } else {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (navigationController != null) {
+            navigationController.onSaveInstanceState(outState);
+        }
+    }
+
+    public void updateToolbar() {
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
+            actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_previous);
         }
     }
 
-    protected static Parcelable getParcelableExtra(AppCompatActivity activity, String tag) {
-        Bundle bundle = activity.getIntent().getExtras();
-        if (bundle != null) {
-            return bundle.getParcelable(tag);
+    /**
+     * Updates the toolbar title.
+     * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
+     * */
+    public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
+        if (title == null) {
+            toolbarTitle.animate().alpha(1).setDuration(250).start();
+            toolbarTitle.setVisibility(View.VISIBLE);
+        } else {
+            toolbarTitle.animate().alpha(0).setDuration(250).start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toolbarTitle.setVisibility(View.INVISIBLE);
+                    actionBar.setTitle("    " + title);
+                }
+            }, 250);
         }
-        else return null;
-    }
-
-    protected static int getParcelableInt(AppCompatActivity activity, String tag) {
-        Bundle bundle = activity.getIntent().getExtras();
-        if (bundle != null) {
-            return bundle.getInt(tag);
-        }
-        else return 1;
-    }
-
-    @OnClick(R.id.bottom_camera_btn) public void startCamera() {
-        startActivity(new Intent(this, CameraActivity.class));
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-//        bottomDrawer.setSelectedTab(getCurrentBottomNavPosition());
+    public void onTabTransaction(Fragment fragment, int index) {
+        // If we have a backStack, show the back button
+        if (getSupportActionBar() != null && navigationController != null) {
+            updateToolbar();
+        }
+    }
+
+    @Override
+    public void onFragmentTransaction(Fragment fragment, NavigationController.TransactionType transactionType) {
+        //Do fragment stuff. Maybe change title.
+        // If we have a backStack, show the back button
+        if (getSupportActionBar() != null && navigationController != null) {
+            updateToolbar();
+        }
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment) {
+        if (navigationController != null) {
+            navigationController.pushFragment(fragment);
+        }
+    }
+
+    @Override
+    public Fragment getRootFragment(int index) {
+        switch (index) {
+            case NavigationController.TAB1:
+                return new PostsListFragment();
+            case NavigationController.TAB2:
+                return new SearchFragment();
+            case NavigationController.TAB3:
+                return new SearchFragment();
+            case NavigationController.TAB4:
+                return new NotificationsFragment();
+            case NavigationController.TAB5:
+                return new ProfileFragment();
+        }
+        throw new IllegalArgumentException("Need to send an index that we know");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ViewUtils.unbindDrawables(container);
+//        ViewUtils.unbindDrawables(contentFrame);
     }
 
-    /**
-     * How re-selecting the same (current) tab will be handled.
-     * */
-    protected void onNavBarReselect() {
-    }
-
-    private void setSelectedColor(int position) {
-        bottomDrawer.resetDrawables();
-        bottomDrawer.setColor(position);
-    }
-
-    private boolean isVisible(View view) {
-        return view.getVisibility() == VISIBLE;
-    }
-
-    /**
-     * e.g. get the bottom nav bar from the child's layout
-     * */
-    protected BottomDrawer getBottomDrawer() {
-        return bottomDrawer;
-    }
-
-    public AppCompatImageView getCameraButton() {
-        return cameraButton;
-    }
-
-    protected void toggleBottonBarVisibility(int visibility) {
-        switch (visibility) {
-            case VISIBLE:
-                if (isVisible(bottomDrawer) && isVisible(cameraButton)) {
-                    bottomDrawer.startAnimation(AnimationUtils.loadAnimation(this, R.anim.sink_down));
-                    cameraButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_out));
-                    bottomDrawer.setVisibility(visibility);
-                    cameraButton.setVisibility(visibility);
+    @Override
+    public void onBackPressed() {
+        if (!navigationController.isRootFragment()) {
+            navigationController.popFragment();
+        } else {
+            if (fragmentHistory.isEmpty()) {
+                super.onBackPressed();
+            } else {
+                if (fragmentHistory.getStackSize() > 1) {
+                    int position = fragmentHistory.popPrevious();
+                    switchTab(position);
+                    updateTabSelection(position);
+                } else {
+                    switchTab(0);
+                    updateTabSelection(0);
+                    fragmentHistory.emptyStack();
                 }
-                break;
-            case INVISIBLE:
-                if (!isVisible(bottomDrawer) && !isVisible(cameraButton)) {
-                    bottomDrawer.startAnimation(AnimationUtils.loadAnimation(this, R.anim.float_up));
-                    cameraButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in));
-                    bottomDrawer.setVisibility(visibility);
-                    cameraButton.setVisibility(visibility);
-                }
-                break;
-            default:
-                break;
+            }
         }
     }
 
-    protected int getCurrentBottomNavPosition(){
-        return currentSelectedPosition;
-    }
-
-    protected void setActivity(String tag, Context context, Class<? extends BaseBottomBarActivity> cls,
-                               int columnCount, PostDetails postDetails) {
-        Intent intent = new Intent(context, cls);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        switch (tag) {
-            case TAG_HOME_ACTIVITY:
-                intent.putExtra(ARG_COLUMN_COUNT, (columnCount));
+    @Override
+    public void onPostInteraction(int action, Pojos.Post.PostDetails postDetails) {
+        switch (action) {
+            case ACTION_VIEW_POST:
+                pushFragment(PostDetailsFragment.newInstance(2, postDetails));
                 break;
-            case TAG_POST_DETAILS_ACTIVITY:
-                intent.putExtra(ARG_COLUMN_COUNT, (columnCount));
-                if (postDetails != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(EXTRAS, postDetails);
-                    intent.putExtra("bundle", bundle);
-                }
-                break;
-            case TAG_SEARCH_ACTIVITY:
-                break;
-            case TAG_NOTIFICATION_ACTIVITY:
-                break;
-            case TAG_USER_PROFILE_ACTIVITY:
-                break;
-            default:
-                break;
+            case ACTION_VIEW_PROFILE:
+                pushFragment(new ProfileFragment());
         }
-        startActivity(intent);
     }
-//    private void toggleUpBtnVisibility(int visibility) {
-//        switch (visibility) {
-//            case View.VISIBLE:
-//                if (upBtn.getVisibility() != View.VISIBLE) {
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in));
-//                    upBtn.setVisibility(View.VISIBLE);
-//                }
-//                break;
-//            case INVISIBLE:
-//                if (upBtn.getVisibility() != INVISIBLE) {
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_out));
-//                    upBtn.setVisibility(INVISIBLE);
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 
-//    @Override
-//    public void onHomeScreenPostInteraction(int action, Pojos.Post.PostDetails postDetails) {
-//        switch (action) {
-//            case ACTION_VIEW_POST:
-//                setFragment(TAG_POST_DETAILS_ACTIVITY, postDetails);
-//                break;
-//            case ACTION_VIEW_PROFILE:
-//                break;
-//            case ACTION_VIEW_CATEGORY_POSTS:
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-
-//    @Override
-//    public void onPostDetailsInteraction(int action) {
-//        switch (action) {
-//            case EXIT_FRAGMENT:
-//                onBackPressed();
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-
-//    private void toggleUpBtnVisibility(int visibility) {
-//        switch (visibility) {
-//            case View.VISIBLE:
-//                if (upBtn.getVisibility() != View.VISIBLE) {
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in));
-//                    upBtn.setVisibility(View.VISIBLE);
-//                }
-//                break;
-//            case INVISIBLE:
-//                if (upBtn.getVisibility() != INVISIBLE) {
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_out));
-//                    upBtn.setVisibility(INVISIBLE);
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+    @Override
+    public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
+    }
 }

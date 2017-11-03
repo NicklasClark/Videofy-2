@@ -10,4 +10,4 @@
     android:paddingBottom="@dimen/padding_half"
     android:clipToPadding="false"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-    tools:listitem="@layout/user_videos_item" />
+    tools:listitem="@layout/item_user_videos" />

@@ -50,7 +50,7 @@ public class BlurBuilder {
             Allocation alloc = Allocation.createFromBitmap(rsScript, input);
 
             ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript,   Element.U8_4(rsScript));
-            blur.setRadius(25);
+            blur.setRadius(15);
             blur.setInput(alloc);
 
             Bitmap result = Bitmap.createBitmap(input.getWidth(), input.getHeight(), Bitmap.Config.ARGB_8888);

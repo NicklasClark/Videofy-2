@@ -84,7 +84,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".camera.CameraActivity"
+            android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
@@ -98,44 +98,23 @@
         </receiver>
 
         <activity
-            android:name=".camera.upload.VideoUpload"
+            android:name=".home.camera.upload.VideoUpload"
             android:label="@string/title_activity_video_upload"
-            android:parentActivityName=".camera.CameraActivity"
+            android:parentActivityName=".home.camera.CameraActivity"
             android:theme="@style/AppTheme.FullScreen"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cncoding.teazer.camera.CameraActivity" />
+                android:value=".home.camera.CameraActivity" />
         </activity>
         <activity
-            android:name=".camera.Camera2"
+            android:name=".home.camera.Camera2"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".home.post.HomeScreenPostsActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme" />
-        <activity
-            android:name=".home.profile.Tab2Activity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".BaseBottomBarActivity"
-            android:label="@string/title_activity_base_bottom_bar"
+            android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme" />
-        <activity
-            android:name=".home.post.PostDetailsActivity"
-            android:parentActivityName=".home.post.HomeScreenPostsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".home.post.HomeScreenPostsActivity" />
-        </activity>
-        <activity android:name=".home.profile.ProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ProfileActivityTheme"/>
     </application>
 
 </manifest>

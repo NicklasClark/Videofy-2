@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * Created by Prem $ on 10/25/2017.
  */
 
+@SuppressWarnings("WeakerAccess, unused")
 public class Pojos {
 
     public static class Application {
@@ -1887,8 +1888,8 @@ public class Pojos {
 
         protected CheckIn(Parcel in) {
             checkin_id = in.readInt();
-            latitude = in.readInt();
-            longitude = in.readInt();
+            latitude = in.readFloat();
+            longitude = in.readFloat();
             location = in.readString();
         }
 

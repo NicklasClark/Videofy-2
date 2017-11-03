@@ -11,9 +11,7 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,6 +29,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
  * Created by Prem $ on 10/27/2017.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
     /**
@@ -113,19 +112,19 @@ public class ViewUtils {
         };
     }
 
-    public static void unbindDrawables(View view) {
-        if (view != null) {
-            if (view.getBackground() != null) {
-                view.getBackground().setCallback(null);
-            }
-            if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
-                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                    unbindDrawables(((ViewGroup) view).getChildAt(i));
-                }
-                ((ViewGroup) view).removeAllViews();
-            }
-        }
-    }
+//    public static void unbindDrawables(View view) {
+//        if (view != null) {
+//            if (view.getBackground() != null) {
+//                view.getBackground().setCallback(null);
+//            }
+//            if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
+//                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+//                    unbindDrawables(((ViewGroup) view).getChildAt(i));
+//                }
+//                ((ViewGroup) view).removeAllViews();
+//            }
+//        }
+//    }
 
 //    public static void showSnackBarAboveNavBar(Context context, Snackbar snackbar) {
 //        final View snackBarView = snackbar.getView();

@@ -23,7 +23,7 @@ public class UserVideosAdapter extends RecyclerView.Adapter<UserVideosAdapter.Us
     @Override
     public UserVideosHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_videos_item, parent, false);
+                .inflate(R.layout.item_user_videos, parent, false);
         return new UserVideosHolder(itemView);
     }
 

@@ -1,1 +1,1 @@
-include ':app', ':VideoControlView'
+include ':app'

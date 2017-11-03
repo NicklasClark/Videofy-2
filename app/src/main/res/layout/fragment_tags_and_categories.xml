@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.cncoding.teazer.camera.upload.TagsAndCategoryFragment">
+    tools:context=".home.camera.upload.TagsAndCategoryFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tags_categories_recycler_view"

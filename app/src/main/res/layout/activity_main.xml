@@ -5,6 +5,7 @@
     tools:context="com.cncoding.teazer.MainActivity">
 
     <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,8 +18,13 @@
         <FrameLayout
             android:id="@+id/main_fragment_container"
             android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/main_fragment_bg"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true" />
+            android:contentDescription="@string/background_image" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/up_btn"

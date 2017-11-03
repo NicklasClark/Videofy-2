@@ -13,12 +13,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.home.BaseFragment;
 
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
 
-public class UserVideosFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
+public class UserVideosFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -152,11 +153,11 @@ public class UserVideosFragment extends Fragment implements AppBarLayout.OnOffse
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
+//        if (context instanceof HomeScreenPostsListener) {
+//            mListener = (HomeScreenPostsListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement HomeScreenPostsListener");
 //        }
     }
 

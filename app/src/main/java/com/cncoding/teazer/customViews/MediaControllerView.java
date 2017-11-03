@@ -22,16 +22,15 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
-import java.util.Random;
 
 import static com.cncoding.teazer.customViews.ViewAnimator.Listeners;
 import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
-import static com.cncoding.teazer.utilities.PlaceHolderDrawableHelper.getBackgroundDrawable;
 
 /**
  *
@@ -43,7 +42,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //    private static final String TAG = "MediaControllerView";
     private static final String SPACE = "  ";
 
-    private static final int HANDLER_ANIMATE_OUT = 1000;// out animate
+    private static final int HANDLER_ANIMATE_OUT = 5000;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
 //    private static final long PROGRESS_SEEK = 500;
     private static final long ANIMATE_TIME = 400;
@@ -114,6 +113,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private CountDownTimer countDownTimer;
     private GestureDetector gestureDetector;
     private int currentVolume;
+
+    public MediaControllerView(Context context) {
+        super(context);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     public MediaControllerView(Builder builder) {
@@ -207,6 +210,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
      *
      * @return the root view of {@link MediaControllerView}
      */
+    @SuppressLint("InflateParams")
     private View makeControllerView() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater != null) {
@@ -247,7 +251,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         categoriesView.setText(categories);
 //        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
         Glide.with(getContext())
-                .load(profilePicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(profilePic);
+                .load(profilePicUrl)
+                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .crossFade(400)
+//                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
+                .into(profilePic);
 
 //        set remaining time of video.
         playPauseButton.setOnClickListener(new OnClickListener() {
@@ -284,17 +293,32 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     public void setReaction1Pic(String reaction1PicUrl) {
         Glide.with(getContext())
-                .load(reaction1PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction1Pic);
+                .load(reaction1PicUrl)
+                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .crossFade(400)
+//                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
+                .into(reaction1Pic);
     }
 
     public void setReaction2Pic(String reaction2PicUrl) {
         Glide.with(getContext())
-                .load(reaction2PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction2Pic);
+                .load(reaction2PicUrl)
+                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .crossFade(400)
+//                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
+                .into(reaction2Pic);
     }
 
     public void setReaction3Pic(String reaction3PicUrl) {
         Glide.with(getContext())
-                .load(reaction3PicUrl).placeholder(getBackgroundDrawable(new Random().nextInt(23))).crossFade().into(reaction3Pic);
+                .load(reaction3PicUrl)
+                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .crossFade(400)
+//                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
+                .into(reaction3Pic);
     }
 
     public void setReactionCount(String reactionCount) {
@@ -599,17 +623,17 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder withReaction1Url(String reaction1Url) {
+        public Builder withReaction1Url(@SuppressWarnings("SameParameterValue") String reaction1Url) {
             this.reaction1Url = reaction1Url;
             return this;
         }
 
-        public Builder withReaction2Url(String reaction2Url) {
+        public Builder withReaction2Url(@SuppressWarnings("SameParameterValue") String reaction2Url) {
             this.reaction2Url = reaction2Url;
             return this;
         }
 
-        public Builder withReaction3Url(String reaction3Url) {
+        public Builder withReaction3Url(@SuppressWarnings("SameParameterValue") String reaction3Url) {
             this.reaction3Url = reaction3Url;
             return this;
         }
@@ -777,7 +801,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public class SettingsContentObserver extends ContentObserver {
         private AudioManager audioManager;
 
-        public SettingsContentObserver(Context context, Handler handler) {
+        SettingsContentObserver(Context context, Handler handler) {
             super(handler);
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         }

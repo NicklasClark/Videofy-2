@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
-    tools:context="com.cncoding.teazer.camera.nearbyPlaces.NearbyPlacesList">
+    tools:context=".home.camera.nearbyPlaces.NearbyPlacesList">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/nearby_places_search"

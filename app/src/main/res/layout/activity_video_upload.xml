@@ -276,7 +276,7 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:id="@+id/video_upload_coordinator_layout"
-            tools:context="com.cncoding.teazer.camera.upload.VideoUpload">
+            tools:contecom.cncoding.teazer.home.cameramera.upload.VideoUpload">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"

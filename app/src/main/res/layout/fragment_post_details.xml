@@ -1,0 +1,156 @@
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cncoding.teazer.home.post.PostDetailsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <RelativeLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_grey100">
+
+        <FrameLayout
+            android:id="@+id/video_container_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="200dp"
+            android:layout_alignParentTop="true">
+
+            <com.cncoding.teazer.customViews.ResizableSurfaceView
+                android:id="@+id/video_surface"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="?android:attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleLarge"
+                android:theme="@style/ProgressBarTheme" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/video_surface_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/video_container_1"
+            android:layout_alignBottom="@+id/video_container_1" />
+
+        <RelativeLayout
+            android:id="@+id/post_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/video_surface_container">
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                android:id="@+id/react_btn"
+                style="@style/AppTheme.ReactButton"
+                android:text="@string/react"
+                app:drawableStartCompat="@drawable/ic_react"
+                android:layout_alignParentStart="true"/>
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_share"
+                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:layout_toStartOf="@+id/tags"
+                android:layout_alignTop="@+id/menu"
+                android:layout_alignBottom="@+id/menu"
+                android:paddingStart="@dimen/padding_default"
+                android:paddingEnd="@dimen/padding_default"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                android:id="@+id/tags_badge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/home_screen_post_content_small"
+                android:background="@drawable/bg_circle_accent_color"
+                android:layout_alignTop="@+id/tags"
+                android:layout_alignEnd="@+id/tags"
+                android:layout_marginTop="@dimen/padding_thin"
+                android:layout_marginEnd="@dimen/padding_thin"
+                android:visibility="invisible"/>
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_person"
+                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:layout_toStartOf="@+id/menu"
+                android:layout_alignTop="@+id/menu"
+                android:layout_alignBottom="@+id/menu"
+                android:paddingStart="@dimen/padding_default"
+                android:paddingEnd="@dimen/padding_default"/>
+
+            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_menu"
+                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_alignTop="@+id/react_btn"
+                android:layout_alignBottom="@+id/react_btn"
+                android:layout_marginEnd="@dimen/padding_default"
+                android:paddingStart="@dimen/margin_reaction_bubbles"
+                android:paddingEnd="@dimen/margin_reaction_bubbles"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/padding_half"
+            android:layout_marginBottom="@dimen/padding_half"
+            android:background="@color/colorDivider"
+            android:layout_below="@+id/post_actions"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:id="@+id/reactions_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reactions"
+            android:textSize="@dimen/text_size_h4"
+            android:textColor="@color/colorSecondary_text"
+            android:gravity="center"
+            android:padding="@dimen/padding_default"
+            android:layout_below="@+id/separator"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_thin"
+            android:paddingStart="@dimen/padding_thin"
+            android:paddingEnd="@dimen/padding_thin"
+            android:paddingBottom="@dimen/padding_default"
+            android:clipToPadding="false"
+            android:layout_below="@+id/reactions_header"
+            app:layoutManager="StaggeredGridLayoutManager"
+            tools:listitem="@layout/item_reaction_post" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

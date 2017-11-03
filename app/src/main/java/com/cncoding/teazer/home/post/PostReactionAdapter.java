@@ -43,7 +43,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.reaction_post_item, parent, false);
+                .inflate(R.layout.item_reaction_post, parent, false);
         return new ViewHolder(view);
     }
 
@@ -54,6 +54,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
         Glide.with(context)
                 .load(postReaction.getMediaDetail().getThumbUrl())
+//                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .crossFade()
 //                .animate(android.R.anim.fade_in)
@@ -62,9 +64,11 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
+//                    .apply(RequestOptions.circleCropTransform())
+//                    .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                     .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                     .crossFade()
-                    .animate(R.anim.zoom_in)
+//                    .animate(R.anim.zoom_in)
                     .into(holder.profilePic);
 
         holder.caption.setText(postReaction.getTitle());
@@ -124,7 +128,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         super.onAttachedToRecyclerView(recyclerView);
         if (context instanceof PostReactionAdapterListener) {
             listener = (PostReactionAdapterListener) context;
-        } else {
+        }
+        else {
             throw new RuntimeException(context.toString()
                     + " must implement PostReactionAdapterListener");
         }
@@ -136,7 +141,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         listener = null;
     }
 
-    interface PostReactionAdapterListener {
+    public interface PostReactionAdapterListener {
         void onPostReactionInteraction(int action, PostReaction postReaction);
     }
 }

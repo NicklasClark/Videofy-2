@@ -7,25 +7,36 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light">
+    <style name="BottomTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabPaddingStart">0dp</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="actionMenuTextColor">@color/colorPrimary</item>
         <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="AppTheme.Overlay">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="windowNoTitle">true</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:windowTranslucentStatus">false</item>-->
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 

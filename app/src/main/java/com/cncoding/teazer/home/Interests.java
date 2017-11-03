@@ -164,7 +164,7 @@ public class Interests extends Fragment implements View.OnClickListener {
     }
 
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
-//        mListener.onFragmentInteraction(selectedInterestsValues);
+//        mListener.onHomeScreenPostsInteraction(selectedInterestsValues);
         switch (launchType) {
             case LAUNCH_TYPE_SIGNUP:
                 ApiCallingService.User.updateCategories(new Pojos.User.UpdateCategories(

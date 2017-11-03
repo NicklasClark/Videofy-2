@@ -1,5 +1,6 @@
 package com.cncoding.teazer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,7 +36,6 @@ import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.authentication.SignupFragment;
 import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.home.Interests;
-import com.cncoding.teazer.home.post.HomeScreenPostsActivity;
 import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
@@ -58,7 +58,6 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.codetail.animation.SupportAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,7 +97,9 @@ public class MainActivity extends FragmentActivity
     public static final int BACK_PRESSED_ACTION = 6;
     public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
     public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
+    private String VIDEO_PATH;
 
+    @BindView(R.id.main_fragment_bg) ImageView blurBg;
     @BindView(R.id.welcome_video) TextureView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.reveal_layout) FrameLayout revealLayout;
@@ -114,8 +115,9 @@ public class MainActivity extends FragmentActivity
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private TransitionDrawable transitionDrawable;
-    private SupportAnimator animator;
+//    private SupportAnimator animator;
     private boolean isFirebaseSignup;
+    private Bitmap bitmap;
 
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent event) {
@@ -134,6 +136,7 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        VIDEO_PATH = "android.resource://" + getPackageName() + "/" + R.raw.welcome_video;
         isFirebaseSignup = false;
 
         ButterKnife.bind(this);
@@ -151,16 +154,16 @@ public class MainActivity extends FragmentActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    new OfflineUserProfile(MainActivity.this).setEmail(user.getEmail());
 //                    user is signed in
+                    new OfflineUserProfile(MainActivity.this).setEmail(user.getEmail());
                     if (!isFirebaseSignup) {
-                        startActivity(new Intent(MainActivity.this, HomeScreenPostsActivity.class));
+                        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
                         finish();
                     } else {
                         setFragment(TAG_SELECT_CATEGORIES, false, null);
                     }
                 } else {
-//                    user is signed out
+//                    user is signed out, set Welcome fragment
                     if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
                         setFragment(TAG_WELCOME_FRAGMENT, false, null);
                 }
@@ -218,20 +221,19 @@ public class MainActivity extends FragmentActivity
         transaction.commit();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         if (!reverse) {
 //            animationForward(revealLayout, (int) touchCoordinates[0], (int) touchCoordinates[1], Color.argb(200, 0, 0, 0));
 //            revealLayout.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
 //            revealLayout.setVisibility(View.INVISIBLE);
-
             new AsyncTask<Void, Void, Void>() {
-
-                private Bitmap bitmap;
 
                 @Override
                 protected void onPreExecute() {
                     if (mediaPlayer.isPlaying())
                         mediaPlayer.pause();
+                    setFragment(tag, addToBackStack, null);
                     bitmap = welcomeVideo.getBitmap();
                 }
 
@@ -253,14 +255,12 @@ public class MainActivity extends FragmentActivity
                     transitionDrawable.setCrossFadeEnabled(true);
                     mainFragmentContainer.setBackground(transitionDrawable);
                     transitionDrawable.startTransition(400);
-                    setFragment(tag, addToBackStack, null);
                 }
             }.execute();
         }
         else {
             if (transitionDrawable != null)
                 transitionDrawable.reverseTransition(600);
-//            mainFragmentContainer.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 
@@ -330,7 +330,7 @@ public class MainActivity extends FragmentActivity
                 break;
             case OPEN_CAMERA_ACTION:
 //                setFragment("interests", true, null);
-                startActivity(new Intent(this, HomeScreenPostsActivity.class));
+                startActivity(new Intent(this, BaseBottomBarActivity.class));
 //                finish();
             default:
                 break;
@@ -649,6 +649,11 @@ public class MainActivity extends FragmentActivity
         super.onPause();
         if (mediaPlayer != null)
             mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

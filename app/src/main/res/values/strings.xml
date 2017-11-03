@@ -121,7 +121,6 @@
     <string name="select_a_location">Select a location</string>
     <string name="select_your_interests">Select your interests</string>
     <string name="select_at_least_5_interests">Select at least 5 interests</string>
-    <string name="react">React</string>
     <string name="reactions">Reactions</string>
     <string name="description">Media player control</string>
     <string name="share">Share</string>
@@ -136,4 +135,15 @@
     <string name="videos">Videos</string>
     <string name="title_activity_base_bottom_bar">BaseBottomBarActivity</string>
     <string name="dismiss">Dismiss</string>
+    <string name="background_image">Background image</string>
+    <string name="generic_bottom_icon">Generic bottom icon</string>
+    <string name="search_fragment">Search Fragment</string>
+    <string name="notifications_fragment">Notifications fragment</string>
+    <string name="this_is_the_caption">This is the caption</string>
+    <string name="location_goes_here">Location goes here</string>
+    <string name="_653_views_204_reactions">653 Views | 204 Reactions</string>
+    <string name="prem_suman">Prem Suman</string>
+    <string name="usermane_goes_here">\@usermane goes here</string>
+    <string name="profile_bio_and_user_details_nthey_all_go_here">Profile bio and user details they all go here.</string>
+    <string name="react">&#160;&#160;&#160;React</string>
 </resources>
