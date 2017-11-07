@@ -50,6 +50,6 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:background="@color/colorPrimary"
-        android:foreground="@drawable/ripple_light"/>
+        android:foreground="@drawable/ripple_light_rounded_2dp"/>
 
 </LinearLayout>

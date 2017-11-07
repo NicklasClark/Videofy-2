@@ -36,8 +36,9 @@
         <item name="android:orientation">vertical</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <!--<item name="android:windowTranslucentStatus">false</item>-->
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!--<item name="android:windowTranslucentStatus">false</item>-->
     </style>
 
     <style name="AppTheme.FullScreen">
@@ -45,7 +46,8 @@
         <!--<item name="android:textColor">#FFFFFF</item>-->
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:orientation">vertical</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
@@ -144,7 +146,6 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
         <item name="android:paddingTop">@dimen/padding_thin</item>
-        <item name="android:paddingEnd">@dimen/padding_half</item>
         <item name="android:paddingBottom">@dimen/padding_thin</item>
         <item name="android:paddingStart">@dimen/padding_default</item>
         <!--<item name="android:layout_marginBottom">@dimen/padding_default</item>-->
@@ -162,14 +163,14 @@
         <item name="android:layout_marginEnd">@dimen/otp_edit_text_horizontal_margin</item>
         <item name="android:layout_marginTop">@dimen/otp_edit_text_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/otp_edit_text_vertical_margin</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:drawableBottom">@drawable/bg_otp</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:textCursorDrawable">@null</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <style name="AppTheme.RoundedFacebookButtonWelcomePage" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_button_facebook</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
@@ -177,7 +178,7 @@
 
     <style name="AppTheme.RoundedGoogleButtonWelcomePage" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_button_google</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
@@ -193,10 +194,24 @@
 
     <style name="AppTheme.RoundedMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
+    </style>
+
+    <style name="AppTheme.Chip" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:paddingStart">@dimen/padding_default</item>
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:background">@drawable/bg_chip</item>
+        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
@@ -217,7 +232,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:paddingTop">@dimen/padding_default</item>
         <item name="android:paddingBottom">@dimen/padding_default</item>
@@ -249,7 +264,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">@drawable/ripple_light</item>
+        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
         <item name="android:textAllCaps">false</item>

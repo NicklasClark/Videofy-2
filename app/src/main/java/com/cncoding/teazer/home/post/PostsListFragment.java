@@ -71,7 +71,7 @@ public class PostsListFragment extends BaseFragment {
     }
 
     private void getHomePagePosts(final int pageNumber) {
-        ApiCallingService.Posts.getHomePagePosts(pageNumber)
+        ApiCallingService.Posts.getHomePagePosts(pageNumber, getContext())
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
@@ -137,7 +137,7 @@ public class PostsListFragment extends BaseFragment {
         ArrayList<Pojos.Category> categories = new ArrayList<>();
         categories.add(new Pojos.Category(1, "Fun"));
         PostDetails postDetails1 = new PostDetails(12, 324, 456, 12, false, "Watch this!", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
@@ -150,7 +150,7 @@ public class PostsListFragment extends BaseFragment {
                 categories
         );
         PostDetails postDetails2 = new PostDetails(12, 324, 456, 12, false, "Weekend at Bahamas", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
@@ -163,7 +163,7 @@ public class PostsListFragment extends BaseFragment {
                 categories
         );
         PostDetails postDetails3 = new PostDetails(12, 324, 456, 12, false, "See this!", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",

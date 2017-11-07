@@ -184,7 +184,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
-        ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber)
+        ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, getContext())
                 .enqueue(new Callback<Pojos.Post.PostReactionsList>() {
                     @Override
                     public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
@@ -243,7 +243,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         postDetails = new PostDetails(0, 0, 121, 232, false, "Last night bash at Delhi fort",
                 false, false, false,
                 new Pojos.MiniProfile(324, "prem",
-                        "Prem", "Suman", true,
+                        "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
@@ -271,7 +271,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         ArrayList<Pojos.Post.PostReaction> postReactions = new ArrayList<>();
         Pojos.Post.PostReaction postReaction1 = new Pojos.Post.PostReaction(0, 0, "Dude please!", 0, 0, 0, false,
                 false, mediaDetail1,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
@@ -281,7 +281,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         )),"");
         Pojos.Post.PostReaction postReaction2 = new Pojos.Post.PostReaction(0, 0, "Wait till you see this", 0, 0, 0, false,
                 false, mediaDetail2,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg",
@@ -291,7 +291,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         )),"");
         Pojos.Post.PostReaction postReaction3 = new Pojos.Post.PostReaction(0, 0, "Mine is better", 0, 0, 0, false,
                 false, mediaDetail3,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", true,
+                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
                         new Pojos.ProfileMedia(
                                 "",
                                 "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",

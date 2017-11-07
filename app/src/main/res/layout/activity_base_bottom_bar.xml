@@ -31,6 +31,15 @@
                 android:textSize="@dimen/text_size_h3"
                 android:gravity="center"/>
 
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/logout_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_content"
+                android:layout_gravity="center_vertical|end"
+                android:padding="@dimen/padding_default"
+                android:text="@string/logout"/>
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -49,6 +58,16 @@
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom"
         android:background="@android:color/white" />
+
+    <ImageButton
+        android:id="@+id/camera_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:foreground="@drawable/ripple_dark_circle"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/padding_half"
+        android:background="@drawable/bg_circle_light_filled_outlined"
+        android:contentDescription="@string/record_video" />
 
 </android.support.design.widget.CoordinatorLayout>
 <!--

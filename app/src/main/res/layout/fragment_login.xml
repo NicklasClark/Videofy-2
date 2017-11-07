@@ -28,10 +28,11 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
 
             <com.hbb20.CountryCodePicker
-                android:id="@+id/login_country_code"
+                android:id="@+id/country_code_picker"
                 style="@style/AppTheme.CountryCodeEditText"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_defaultLanguage="ENGLISH"
@@ -66,6 +67,7 @@
             android:layout_marginBottom="@dimen/padding_default"
             style="@style/AppTheme.RoundedEditText"
             android:hint="@string/password"
+            android:maxLength="32"
             android:inputType="textPassword"
             android:imeOptions="actionGo" />
 

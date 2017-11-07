@@ -37,7 +37,7 @@
             app:drawableStartCompat="@drawable/ic_add_location"
             android:layout_alignParentStart="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/text_size_14sp"
             android:text="  New Delhi"
             android:layout_below="@id/media_controller_caption"/>
 
@@ -54,7 +54,7 @@
             android:layout_alignParentEnd="true"
             android:text="  -00:30"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/home_screen_post_header"/>
+            android:textSize="@dimen/text_size_14sp"/>
 
     </RelativeLayout>
 
@@ -99,7 +99,7 @@
             android:id="@+id/media_controller_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_content"
+            android:textSize="@dimen/text_size_12sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_like_outline"
             android:gravity="end|center_vertical"
@@ -115,7 +115,7 @@
             android:id="@+id/media_controller_views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_content"
+            android:textSize="@dimen/text_size_12sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline"
             android:gravity="end|center_vertical"
@@ -138,7 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/text_size_14sp"
             android:text="Dance, Videography, Bollywood, Music, Clubmusic"
             android:gravity="center"
             android:layout_below="@+id/media_controller_dp"
@@ -157,7 +157,7 @@
             android:id="@+id/media_controller_reaction_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/text_size_14sp"
             android:textColor="@android:color/white"
             android:text="+200 R"
             android:paddingTop="@dimen/padding_half"

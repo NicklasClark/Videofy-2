@@ -84,7 +84,7 @@
                     android:paddingEnd="@dimen/padding_half"
                     android:layout_below="@+id/toolbar_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:text="@string/usermane_goes_here" />
+                    android:text="@string/username_goes_here" />
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:id="@+id/toolbar_bio"
@@ -98,7 +98,7 @@
                     android:paddingEnd="@dimen/padding_half"
                     android:layout_below="@+id/toolbar_username"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-                    android:text="@string/profile_bio_and_user_details_nthey_all_go_here" />
+                    android:text="@string/profile_bio_and_user_details_they_all_go_here" />
 
             </RelativeLayout>
 

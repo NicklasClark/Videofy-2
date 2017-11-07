@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -39,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Interests extends Fragment implements View.OnClickListener {
+public class Interests extends BaseFragment implements View.OnClickListener {
     private static final String LAUNCH_TYPE = "launchType";
 //    private static final String CATEGORIES_LIST = "categoriesList";
 
@@ -109,12 +107,12 @@ public class Interests extends Fragment implements View.OnClickListener {
                 break;
         }
 
-        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            if (actionBar.getTitle() != null)
-                previousTitle = actionBar.getTitle().toString();
-            actionBar.setTitle("Select your interests");
-        }
+//        actionBar = ((FragmentActivity) getActivity()).getSupportActionBar();
+//        if (actionBar != null) {
+//            if (actionBar.getTitle() != null)
+//                previousTitle = actionBar.getTitle().toString();
+//            actionBar.setTitle("Select your interests");
+//        }
         return rootView;
     }
 
@@ -168,7 +166,8 @@ public class Interests extends Fragment implements View.OnClickListener {
         switch (launchType) {
             case LAUNCH_TYPE_SIGNUP:
                 ApiCallingService.User.updateCategories(new Pojos.User.UpdateCategories(
-                        Arrays.toString(selectedInterestsValues.toArray()).replace("[", "").replace("]", "")))
+                        Arrays.toString(selectedInterestsValues.toArray())
+                                .replace("[", "").replace("]", "")), getContext())
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {

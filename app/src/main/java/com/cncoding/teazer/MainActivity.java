@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,10 +37,11 @@ import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.authentication.SignupFragment;
 import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.home.Interests;
+import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
@@ -81,11 +83,12 @@ public class MainActivity extends FragmentActivity
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
+    private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
     public static final String TAG_SELECT_CATEGORIES = "selectCategories";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
-    public static final int LOGIN_THROUGH_PASSWORD_ACTION = 10;
+    public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
@@ -102,7 +105,7 @@ public class MainActivity extends FragmentActivity
     @BindView(R.id.main_fragment_bg) ImageView blurBg;
     @BindView(R.id.welcome_video) TextureView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
-    @BindView(R.id.reveal_layout) FrameLayout revealLayout;
+//    @BindView(R.id.reveal_layout) FrameLayout revealLayout;
     @BindView(R.id.up_btn) ImageView upBtn;
 
 //    private float[] touchCoordinates = new float[2];
@@ -191,12 +194,27 @@ public class MainActivity extends FragmentActivity
                 transaction.replace(R.id.main_fragment_container, new WelcomeFragment(), TAG_WELCOME_FRAGMENT);
                 break;
             case TAG_LOGIN_FRAGMENT:
-                toggleUpBtnVisibility(View.VISIBLE);
-                transaction.replace(R.id.main_fragment_container, new LoginFragment(), TAG_LOGIN_FRAGMENT);
+                if (args!= null) {
+                    String name = fragmentManager.getBackStackEntryAt(0).getName();
+                    fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    transaction.replace(R.id.main_fragment_container,
+                            LoginFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
+                            TAG_LOGIN_FRAGMENT);
+                } else {
+                    toggleUpBtnVisibility(View.VISIBLE);
+                    transaction.replace(R.id.main_fragment_container, new LoginFragment(), TAG_LOGIN_FRAGMENT);
+                }
                 break;
             case TAG_FORGOT_PASSWORD_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container,
                         ForgotPasswordFragment.newInstance((String) args[0]), TAG_FORGOT_PASSWORD_FRAGMENT);
+                break;
+            case TAG_FORGOT_PASSWORD_RESET_FRAGMENT:
+                if (args.length >= 3) {
+                    transaction.replace(R.id.main_fragment_container,
+                            ForgotPasswordResetFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
+                            TAG_FORGOT_PASSWORD_FRAGMENT);
+                }
                 break;
             case TAG_SIGNUP_FRAGMENT:
                 toggleUpBtnVisibility(View.VISIBLE);
@@ -270,8 +288,7 @@ public class MainActivity extends FragmentActivity
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setScreenOnWhilePlaying(true);
         try {
-            mediaPlayer.setDataSource(getApplicationContext(),
-                    Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.welcome_video));
+            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
             mediaPlayer.setSurface(surface);
             mediaPlayer.setLooping(true);
             mediaPlayer.prepareAsync();
@@ -305,7 +322,7 @@ public class MainActivity extends FragmentActivity
     public void onWelcomeInteraction(int action, @Nullable Object token,
                                      Profile facebookProfile, @Nullable GoogleSignInAccount googleAccount) {
         switch (action) {
-            case LOGIN_THROUGH_PASSWORD_ACTION:
+            case LOGIN_WITH_PASSWORD_ACTION:
                 startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
@@ -330,7 +347,7 @@ public class MainActivity extends FragmentActivity
                 break;
             case OPEN_CAMERA_ACTION:
 //                setFragment("interests", true, null);
-                startActivity(new Intent(this, BaseBottomBarActivity.class));
+                startActivity(new Intent(this, CameraActivity.class));
 //                finish();
             default:
                 break;
@@ -419,10 +436,11 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void onLoginFragmentInteraction(int action, Authorize authorize, UserProfile userProfile) {
+    public void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.Profile userProfile) {
         switch (action) {
-            case LOGIN_THROUGH_PASSWORD_ACTION:
+            case LOGIN_WITH_PASSWORD_ACTION:
                 firebaseUserNamePasswordSignin(authorize, userProfile);
+//                firebaseAuthTokenSignin(SharedPrefs.getAuthToken(this));
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
@@ -440,7 +458,7 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void onOtpInteraction(int action, Authorize verificationDetails,
-                                 UserProfile userProfile, boolean isSignUp, String authToken) {
+                                 Pojos.User.Profile userProfile, boolean isSignUp, String authToken) {
         switch (action) {
             case SIGNUP_OTP_VERIFICATION_ACTION:
                 if (isSignUp) {
@@ -453,7 +471,7 @@ public class MainActivity extends FragmentActivity
             case LOGIN_OTP_VERIFICATION_ACTION:
 //                The user can't signin with username and password in the firebase because the password is not returned.
 //                Using anonymous signin instead.
-                firebaseAuthTokenSignin(authToken, userProfile);
+                firebaseAuthTokenSignin(authToken);
                 Toast.makeText(this, "Login!", Toast.LENGTH_SHORT).show();
                 break;
             default:
@@ -487,16 +505,13 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void onForgotPasswordInteraction(int action) {
-        switch (action) {
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
-                break;
-        }
+    public void onForgotPasswordInteraction(String enteredText, int countryCode, boolean isEmail) {
+        setFragment(TAG_FORGOT_PASSWORD_RESET_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
     }
 
     @Override
-    public void onResetForgotPasswordInteraction(int action) {
+    public void onResetForgotPasswordInteraction(String enteredText, int countryCode, boolean isEmail) {
+        setFragment(TAG_LOGIN_FRAGMENT, true, new Object[]{enteredText, countryCode, isEmail});
     }
 
     private void firebaseSignup(final Authorize verificationDetails) {
@@ -516,15 +531,15 @@ public class MainActivity extends FragmentActivity
                                     .setPassword(verificationDetails.getPassword());
                             isFirebaseSignup = false;
                         } else {
-                            Toast.makeText(MainActivity.this, "Authorize failed!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(upBtn, "FirebaseSignup failed!", Snackbar.LENGTH_SHORT).show();
                         }
                         isFirebaseSignup = false;
                     }
                 });
     }
 
-    private void firebaseUserNamePasswordSignin(final Authorize verificationDetails, final UserProfile userProfile) {
-        firebaseAuth.signInWithEmailAndPassword(verificationDetails.getEmail(), verificationDetails.getPassword())
+    private void firebaseUserNamePasswordSignin(final Authorize verificationDetails, final Pojos.User.Profile userProfile) {
+        firebaseAuth.signInWithEmailAndPassword(userProfile.getUserProfile().getEmail(), verificationDetails.getPassword())
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -532,13 +547,14 @@ public class MainActivity extends FragmentActivity
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    userProfile.setPassword(verificationDetails.getPassword());
+                                    userProfile.getUserProfile().setPassword(verificationDetails.getPassword());
                                     OfflineUserProfile.saveUserProfileOffline(userProfile, MainActivity.this);
                                 }
                             }).start();
                             Snackbar.make(mainFragmentContainer, "Login!", Snackbar.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.this, "firebaseUserNamePasswordSignin failed!", Toast.LENGTH_SHORT).show();
+                            AuthUtils.logout(MainActivity.this);
+                            Snackbar.make(upBtn, "FirebaseUserNamePasswordSignin failed!", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -551,23 +567,31 @@ public class MainActivity extends FragmentActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Snackbar.make(mainFragmentContainer, "Welcome!", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            AuthUtils.logout(MainActivity.this);
+                            Snackbar.make(upBtn, "FirebaseCredentialSignin failed!", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    private void firebaseAuthTokenSignin(String authToken, final UserProfile userProfile) {
+    private void firebaseAuthTokenSignin(String authToken) {
         firebaseAuth.signInWithCustomToken(authToken).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
 //                        Note: password is always null here.
-                        OfflineUserProfile.saveUserProfileOffline(userProfile, MainActivity.this);
-                    }
-                }).start();
-                Snackbar.make(mainFragmentContainer, "Login!", Snackbar.LENGTH_SHORT).show();
+//                        OfflineUserProfile.saveUserProfileOffline(userProfile, MainActivity.this);
+//                    }
+//                }).start();
+                if (task.isSuccessful()) {
+                    Snackbar.make(mainFragmentContainer, "Login!", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    AuthUtils.logout(MainActivity.this);
+                    Snackbar.make(upBtn, "FirebaseAuthTokenSignin failed!", Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -622,15 +646,15 @@ public class MainActivity extends FragmentActivity
         switch (visibility) {
             case View.VISIBLE:
                 if (upBtn.getVisibility() != View.VISIBLE) {
-                    upBtn.animate().scaleX(1).scaleY(1).alpha(1).setDuration(280).start();
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in));
+                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//                    upBtn.animate().scaleX(1).scaleY(1).alpha(1).setDuration(280).start();
                     upBtn.setVisibility(View.VISIBLE);
                 }
                 break;
             case View.INVISIBLE:
                 if (upBtn.getVisibility() != View.INVISIBLE) {
-                    upBtn.animate().scaleX(0).scaleY(0).alpha(0).setDuration(280).start();
-//                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_out));
+                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
+//                    upBtn.animate().scaleX(0).scaleY(0).alpha(0).setDuration(280).start();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

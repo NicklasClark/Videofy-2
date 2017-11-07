@@ -228,7 +228,8 @@ public class VideoUpload extends AppCompatActivity
 
     private void getLastLocation() {
         if (arePermissionsAllowed(this)) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -499,7 +500,7 @@ public class VideoUpload extends AppCompatActivity
     @OnClick(R.id.video_upload_tag_friends) public void getMyFollowings() {
         if (this.page == 0) this.page = 1;
 
-        ApiCallingService.Friends.getMyFollowings(page).enqueue(new Callback<CircleList>() {
+        ApiCallingService.Friends.getMyFollowings(page, this).enqueue(new Callback<CircleList>() {
             @Override
             public void onResponse(Call<CircleList> call, Response<CircleList> response) {
                 switch (isResponseOk(response)) {
@@ -679,7 +680,8 @@ public class VideoUpload extends AppCompatActivity
         ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
 //        RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), videoFile);
         MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
-        ApiCallingService.Posts.uploadVideo(videoPartFile, videoTitle.getText().toString()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Posts.uploadVideo(videoPartFile, videoTitle.getText().toString(), this)
+                .enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 ResultObject result = new ResultObject(response.code(), response.message(), response.body().getAuthToken(), false);

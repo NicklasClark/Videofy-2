@@ -27,7 +27,7 @@
     <dimen name="otp_edit_text_vertical_margin">22dp</dimen>
     <dimen name="otp_edit_text_width">77dp</dimen>
     <dimen name="bottom_scroll_margin">280dp</dimen>
-    <dimen name="thumbnail_size">100dp</dimen>
+    <dimen name="thumbnail_size">120dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
@@ -44,10 +44,10 @@
     <dimen name="badge_left_margin">5dp</dimen>
     <dimen name="view_bottom_margin">50dp</dimen>
     <dimen name="bottom_bar_with_shadow_height">70dp</dimen>
-    <dimen name="home_screen_post_header">14sp</dimen>
-    <dimen name="home_screen_post_content">12sp</dimen>
-    <dimen name="home_screen_post_content_small">10sp</dimen>
-    <dimen name="home_screen_post_content_smaller">8sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_10sp">10sp</dimen>
+    <dimen name="text_size_8sp">8sp</dimen>
     <dimen name="margin_reaction_bubbles">12dp</dimen>
     <dimen name="popup_corner_radius">40dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:layout_margin="@dimen/padding_thin"
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/video_gallery_thumbnail"
         android:layout_width="@dimen/thumbnail_size"
         android:layout_height="@dimen/thumbnail_size"
         android:scaleType="centerCrop"
+        android:layout_marginTop="-10dp"
         android:contentDescription="@string/video_image_thumbnail" />
 
-    <FrameLayout
-        android:id="@+id/video_gallery_selector"
-        android:layout_width="@dimen/thumbnail_size"
-        android:layout_height="@dimen/thumbnail_size"
-        android:background="@drawable/bg_outline"/>
-
-</FrameLayout>
+</RelativeLayout>

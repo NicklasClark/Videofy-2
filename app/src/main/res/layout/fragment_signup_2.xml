@@ -47,6 +47,7 @@
                 android:id="@+id/signup_password"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/password"
+                android:maxLength="32"
                 android:inputType="textPassword"
                 android:imeOptions="actionNext" />
 
@@ -54,6 +55,7 @@
                 android:id="@+id/signup_confirm_password"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/confirm_password"
+                android:maxLength="32"
                 android:inputType="textPassword"
                 android:imeOptions="actionGo" />
 

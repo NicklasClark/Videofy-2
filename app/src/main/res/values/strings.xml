@@ -143,7 +143,26 @@
     <string name="location_goes_here">Location goes here</string>
     <string name="_653_views_204_reactions">653 Views | 204 Reactions</string>
     <string name="prem_suman">Prem Suman</string>
-    <string name="usermane_goes_here">\@usermane goes here</string>
-    <string name="profile_bio_and_user_details_nthey_all_go_here">Profile bio and user details they all go here.</string>
+    <string name="username_goes_here">\@usermane goes here</string>
+    <string name="profile_bio_and_user_details_they_all_go_here">Profile bio and user details they all go here.</string>
     <string name="react">&#160;&#160;&#160;React</string>
+    <string name="already_exists">Username, Email or Phone Number already exists</string>
+    <string name="take_photo">Take photo</string>
+    <string name="intro_message">
+        <![CDATA[
+
+
+            This sample demonstrates how to record video using Camera2 API.
+
+
+        ]]>
+    </string>
+    <string name="permission_request">Teazer needs permission for camera and audio recording.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="otp">OTP</string>
+    <string name="new_password">New Password</string>
+    <string name="password_successfully_reset">Password successfully reset!</string>
+    <string name="search">&#160;&#160;&#160;Search</string>
+    <string name="add">Add</string>
+    <string name="added">Added</string>
 </resources>

@@ -4,12 +4,13 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
+import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 
 import java.util.ArrayList;
 
@@ -277,6 +278,31 @@ class TeazerApiCall {
          * */
         @GET("/api/v1/friend/profile/{user_id}")
         Call<ResultObject> getOthersProfileInfo(@Path("user_id") int userId);
+
+        /**
+         * Call this service to Block/Unblock a user
+         * @param status should be 1 for block and 2 for unblock
+         */
+        @POST("/api/v1/friend/block/{user_id}/{status}")
+        Call<ResultObject> blockUnblockUser(@Path("user_id") int userId, @Path("status") int status);
+
+        /**
+         * Call this service to get blocked users list by you.
+         */
+        @GET("/api/v1/friend/blocked/users/{page}")
+        Call<FollowersList> getBlockedUsers(@Path("page") int page);
+
+        /**
+         * Call this service to get users list to send follow request.
+         */
+        @GET("/api/v1/friend/application/users/{page}")
+        Call<UsersList> getUsersListToFollow(@Path("page") int page);
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        @GET("/api/v1/friend/application/users")
+        Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**
@@ -565,7 +591,7 @@ class TeazerApiCall {
          * @return {@link }
          * */
         @GET("/api/v1/user/profile")
-        Call<UserProfile> getUserProfile();
+        Call<Pojos.User.Profile> getUserProfile();
 
         /**
          * Update user profile

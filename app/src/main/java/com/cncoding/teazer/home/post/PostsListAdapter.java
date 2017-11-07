@@ -85,7 +85,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
         else
             holder.category.setText(categories[new Random().nextInt(categories.length - 1)]);
-        holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
+//        holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
+        holder.name.setText("@" + postOwner.getUserName());
         holder.popularity.setText(postDetails.getLikes() + " Likes | " + postDetails.getTotalReactions() + " Reactions");
 
         if (listener != null) {
@@ -120,7 +121,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_caption) ProximaNovaSemiboldTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
-        @BindView(R.id.home_screen_post_name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
         @BindView(R.id.home_screen_post_popularity) ProximaNovaRegularTextView popularity;
 
         ViewHolder(View view) {
@@ -142,7 +143,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         }
         else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnPostAdapterInteractionListener");
+                    + " must implement OnUserAdapterInteractionListener");
         }
     }
 

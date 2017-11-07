@@ -108,9 +108,6 @@
                 android:value=".home.camera.CameraActivity" />
         </activity>
         <activity
-            android:name=".home.camera.Camera2"
-            android:theme="@style/AppTheme.FullScreen" />
-        <activity
             android:name=".BaseBottomBarActivity"
             android:label=""
             android:screenOrientation="portrait"

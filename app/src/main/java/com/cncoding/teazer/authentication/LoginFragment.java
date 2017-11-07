@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,9 @@ import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
+import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.ENTERED_TEXT;
+import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.IS_EMAIL;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithUsernameAndPassword;
@@ -57,16 +61,40 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_password) ProximaNovaRegularAutoCompleteTextView passwordView;
     @BindView(R.id.login_through_otp) ProximaNovaSemiboldButton loginThroughOtpBtn;
     @BindView(R.id.login_through_password) ProximaNovaSemiboldButton loginThroughPasswordBtn;
-    @BindView(R.id.login_country_code) CountryCodePicker countryCodePicker;
+    @BindView(R.id.country_code_picker) CountryCodePicker countryCodePicker;
     @BindView(R.id.login_options_layout) RelativeLayout loginOptionsLayout;
 
     private String username;
     private int countryCode = -1;
+    private String enteredText;
+    private boolean isEmail;
+    private boolean isComingFromResetPassword = false;
 
     private LoginInteractionListener mListener;
 
     public LoginFragment() {
         // Required empty public constructor
+    }
+
+    public static LoginFragment newInstance(String enteredText, int countryCode, boolean isEmail) {
+        LoginFragment fragment = new LoginFragment();
+        Bundle args = new Bundle();
+        args.putString(ENTERED_TEXT, enteredText);
+        args.putInt(COUNTRY_CODE, countryCode);
+        args.putBoolean(IS_EMAIL, isEmail);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            enteredText = getArguments().getString(ENTERED_TEXT);
+            countryCode = getArguments().getInt(COUNTRY_CODE);
+            isEmail = getArguments().getBoolean(IS_EMAIL);
+            isComingFromResetPassword = true;
+        }
     }
 
     @Override
@@ -83,7 +111,13 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        countryCode = getCountryCode(countryCodePicker, getActivity());
+        if (isComingFromResetPassword) {
+            usernameView.setText(enteredText);
+            countryCodePicker.setCountryForPhoneCode(countryCode);
+            passwordView.requestFocus();
+        } else {
+            countryCode = getCountryCode(countryCodePicker, getActivity());
+        }
         countryCodePicker.setCountryForPhoneCode(countryCode);
     }
 
@@ -101,6 +135,24 @@ public class LoginFragment extends Fragment {
         username = charSequence.toString();
         if (usernameView.getCompoundDrawables()[2] != null) {
             clearDrawables(usernameView);
+        }
+        if (charSequence.length() > 0) {
+            if (TextUtils.isDigitsOnly(charSequence)) {
+                if (countryCodePicker.getVisibility() != View.VISIBLE) {
+                    countryCodePicker.setVisibility(View.VISIBLE);
+                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+                }
+            } else {
+                if (countryCodePicker.getVisibility() == View.VISIBLE) {
+                    countryCodePicker.setVisibility(View.GONE);
+                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
+                }
+            }
+        } else {
+            if (countryCodePicker.getVisibility() == View.VISIBLE) {
+                countryCodePicker.setVisibility(View.GONE);
+                usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+            }
         }
     }
 
@@ -142,7 +194,7 @@ public class LoginFragment extends Fragment {
             case LOGIN_STATE_PASSWORD:
                 String password = passwordView.getText().toString();
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
-                    loginWithUsernameAndPassword(username, passwordView, countryCode, countryCodePicker, mListener, loginBtn);
+                    loginWithUsernameAndPassword(getContext(), username, passwordView, countryCode, countryCodePicker, mListener, loginBtn);
                 }
                 else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
@@ -245,6 +297,6 @@ public class LoginFragment extends Fragment {
     }
 
     public interface LoginInteractionListener {
-        void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.UserProfile userProfile);
+        void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.Profile userProfile);
     }
 }
