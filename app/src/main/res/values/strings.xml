@@ -3,6 +3,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="creation">Creations</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="create_here">Create here!</string>
@@ -145,5 +148,7 @@
     <string name="prem_suman">Prem Suman</string>
     <string name="usermane_goes_here">\@usermane goes here</string>
     <string name="profile_bio_and_user_details_nthey_all_go_here">Profile bio and user details they all go here.</string>
+    <string name="hobby">Photographer,Traveller,Dreamer.</string>
+    <string name="user_detail">Follow me to see my creative Videos.</string>
     <string name="react">&#160;&#160;&#160;React</string>
 </resources>

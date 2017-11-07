@@ -25,6 +25,7 @@
     <color name="colorRippleDark">#bb616161</color>
     <color name="colorFacebook">#4469AF</color>
     <color name="colorGoogle">#DC4E41</color>
+    <color name="colorTabindicator">#26C6DA</color>
 
 <!--    <color name="space_background_color">#757575</color>
     <color name="space_transparent">#00000000</color>

@@ -77,11 +77,7 @@
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".home.camera.CameraActivity"
@@ -114,7 +110,13 @@
             android:name=".BaseBottomBarActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme" />
+            android:theme="@style/BaseActivityTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

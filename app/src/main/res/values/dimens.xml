@@ -16,6 +16,7 @@
     <dimen name="text_size_h3">32sp</dimen>
     <dimen name="text_size_h4">22sp</dimen>
     <dimen name="text_size_content">16sp</dimen>
+    <dimen name="text_size_content2">12sp</dimen>
     <dimen name="text_size_content_big">18sp</dimen>
     <dimen name="text_size_otp">55sp</dimen>
     <dimen name="action_bar_height">56dp</dimen>

@@ -506,14 +506,7 @@ class TeazerApiCall {
         @GET("/api/v1/post/my/videos/{page}")
         Call<PostList> getPostedVideos(@Path("page") int page);
 
-        /**
-         * Call this service to get the videos posted by friends
-         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
-         *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.Post}
-         *      or 401 : Un-Authorized access
-         *      or 412 : Validation Failed
-         * */
+
         @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
         Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
 

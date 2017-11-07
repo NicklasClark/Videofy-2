@@ -1,14 +1,34 @@
 package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.utilities.BlurBuilder;
 
 public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -16,6 +36,17 @@ public class ProfileFragment extends BaseFragment {
 
     private String mParam1;
     private String mParam2;
+    ImageView profile_image;
+    ImageView bgImage;
+    ImageView small_profile_icon;
+    LinearLayout mContainerView;
+    Context context;
+    AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout = null;
+
+
+
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,8 +75,54 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+
+         View view=inflater.inflate(R.layout.fragment_profile, container, false);
+         context=container.getContext();
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             getActivity().onBackPressed();
+            }
+        });
+        profile_image= (CircularAppCompatImageView) view.findViewById(R.id.profile_id);
+        bgImage= (CircularAppCompatImageView)view.findViewById(R.id.profile_id);
+        collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
+        small_profile_icon= (CircularAppCompatImageView)view.findViewById(R.id.small_profile_icon);
+        mContainerView = view.findViewById(R.id.container);
+        ViewPager viewPager =  view.findViewById(R.id.viewpager);
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
+        TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arifimage);
+        Bitmap blurredBitmap = BlurBuilder.blur( getActivity(), originalBitmap );
+        collapsingToolbarLayout.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
+        appBarLayout =  view.findViewById(R.id.appbar);
+        // collapsingToolbarLayout.setTitle(getResources().getString(R.string.user_name));
+        dynamicToolbarColor();
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if(verticalOffset<-530)
+                {
+                    small_profile_icon.setVisibility(View.VISIBLE);
+
+                }
+                else
+                {
+                    small_profile_icon.setVisibility(View.INVISIBLE);
+
+
+                }
+            }
+        });
+        return view;
+
     }
 
     @Override
@@ -54,10 +131,7 @@ public class ProfileFragment extends BaseFragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+
     }
 
     @Override
@@ -69,4 +143,35 @@ public class ProfileFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
+
+    private void dynamicToolbarColor() {
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.arifimage);
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+
+            @Override
+            public void onGenerated(Palette palette) {
+                collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(R.attr.colorPrimary));
+                collapsingToolbarLayout.setStatusBarScrimColor(palette.getMutedColor(R.attr.colorPrimaryDark));
+            }
+        });
+    }
+
+
+    public interface RemoveAppBar
+    {
+        public void removeAppbar();
+    }
+
+
 }
