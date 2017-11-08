@@ -2,14 +2,236 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#342961"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="MyCtreations"
 
-        android:gravity="center" />
+    <!--<android.support.v7.widget.RecyclerView-->
+
+    <!--android:id="@+id/rv_recycler_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" >-->
+
+    <!--</android.support.v7.widget.RecyclerView>-->
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="290dp">
+        <ImageView
+            android:id="@+id/demoimage"
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            android:src="@drawable/material_flat"/>
+        <RelativeLayout
+            android:id="@+id/descriptionlayout"
+            android:layout_marginTop="16dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/videodetails"
+                android:layout_width="wrap_content"
+
+                android:layout_marginLeft="16dp"
+                android:text="@string/video_details"
+                android:textSize="16dp"
+                android:textColor="@color/cardview_light_background"
+                android:layout_height="wrap_content"
+                />
+            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_contextmenu"
+                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="16dp"
+                android:padding="5dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="@dimen/padding_default"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+
+                android:text="48 secs"
+                android:padding="5dp"
+                android:textSize="12dp"
+
+                android:textColor="@color/cardview_light_background"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/menu"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_below="@+id/descriptionlayout"
+
+            android:layout_marginLeft="16dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+
+            android:id="@+id/locationimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To"
+            android:textSize="12dp"
+
+            android:textColor="@color/cardview_light_background"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="New Delhi"
+            android:textSize="12dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/cardview_light_background"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/locationimage"/>
+
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/playvideo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/playimages"/>
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_alignParentBottom="true">-->
+
+            <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
+                <!--android:id="@+id/likes"-->
+                <!--android:layout_width="16dp"-->
+                <!--android:layout_height="16dp"-->
+                <!--app:srcCompat="@drawable/likeimage"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:id="@+id/txtlikes"-->
+                <!--android:text="800"-->
+                <!--android:textSize="12dp"-->
+                <!--android:textColor="@color/cardview_light_background"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toRightOf="@+id/likes"/>-->
+
+            <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
+                <!--android:id="@+id/view"-->
+                <!--android:layout_width="16dp"-->
+                <!--android:layout_height="16dp"-->
+                <!--app:srcCompat="@drawable/viewimage"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:layout_toRightOf="@+id/txtlikes"-->
+                <!--/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:id="@+id/txtview"-->
+                <!--android:text="1080"-->
+                <!--android:textSize="12dp"-->
+                <!--android:textColor="@color/cardview_light_background"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toRightOf="@+id/view"/>-->
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/reactiontext"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginEnd="16dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_alignParentEnd="true"-->
+
+                <!--&gt;-->
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:text="+200 R"-->
+                    <!--android:textSize="12dp"-->
+
+
+                    <!--android:textColor="@color/cardview_light_background"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--/>-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/image1_layout"-->
+                <!--android:layout_width="35dp"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:layout_toLeftOf="@+id/reactiontext"-->
+                <!--android:background="@drawable/bg_circle_white_outline"-->
+                <!--&gt;-->
+                <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
+                    <!--android:id="@+id/home_screen_post_dp"-->
+                    <!--android:layout_width="35dp"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:layout_margin="1dp"-->
+                    <!--app:srcCompat="@drawable/arifimage" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/image2_layout"-->
+                <!--android:layout_width="35dp"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:layout_toLeftOf="@+id/image1_layout"-->
+                <!--android:layout_marginStart="@dimen/padding_half"-->
+                <!--android:background="@drawable/bg_circle_white_outline">-->
+
+                <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
+                    <!--android:layout_width="35dp"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:layout_margin="1dp"-->
+                    <!--app:srcCompat="@drawable/arifimage" />-->
+
+            <!--</RelativeLayout>-->
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/image3_layout"-->
+                <!--android:layout_width="35dp"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_toLeftOf="@+id/image2_layout"-->
+                <!--android:layout_marginStart="@dimen/padding_half"-->
+                <!--android:background="@drawable/bg_circle_white_outline">-->
+
+                <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
+                    <!--android:layout_width="35dp"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:layout_margin="1dp"-->
+                    <!--app:srcCompat="@drawable/arifimage" />-->
+
+            <!--</RelativeLayout>-->
+
+        <!--</RelativeLayout>-->
+
+
+        <FrameLayout
+            android:id="@+id/flContainer"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+
+
+        </FrameLayout>
+    </RelativeLayout>
+
+    <VideoView
+        android:id="@+id/videoview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:visibility="gone"
+
+        />
+
 
 </RelativeLayout>
+
+
+
+

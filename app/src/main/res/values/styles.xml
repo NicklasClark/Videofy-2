@@ -331,4 +331,15 @@
         <item name="android:textColor">@color/colorTabindicator</item>
         <item name="textAllCaps">false</item>
     </style>
-</resources>
+
+    <style name="expandedappbar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">0dp
+        </item>
+        <item name="android:textColor">@color/material_grey100</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="collapsedappbar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/material_grey100</item>
+    </style></resources>

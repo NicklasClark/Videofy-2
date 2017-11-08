@@ -2,14 +2,10 @@ package com.cncoding.teazer.utilities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.Element;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicBlur;
-
-/**
- * Created by MOHD ARIF on 06-11-2017.
- */
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 
 public class BlurBuilder {
     private static final float BITMAP_SCALE = 0.2f;
@@ -30,7 +26,7 @@ public class BlurBuilder {
         theIntrinsic.setInput(tmpIn);
         theIntrinsic.forEach(tmpOut);
         tmpOut.copyTo(outputBitmap);
-
         return outputBitmap;
+
     }
 }

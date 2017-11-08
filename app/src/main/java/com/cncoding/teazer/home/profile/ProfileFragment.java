@@ -1,10 +1,12 @@
 package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,11 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.BlurBuilder;
 
 public class ProfileFragment extends BaseFragment {
@@ -38,22 +42,19 @@ public class ProfileFragment extends BaseFragment {
     private String mParam2;
     ImageView profile_image;
     ImageView bgImage;
+    ImageView settings;
+    ImageView backbutton;
     ImageView small_profile_icon;
     LinearLayout mContainerView;
     Context context;
     AppBarLayout appBarLayout;
+    TextView toolbarusername;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
 
-
-
-
-
     private OnFragmentInteractionListener mListener;
-
     public ProfileFragment() {
         // Required empty public constructor
     }
-
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -83,17 +84,40 @@ public class ProfileFragment extends BaseFragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-             getActivity().onBackPressed();
-            }
-        });
+        backbutton= view.findViewById(R.id.backbutton);
+        settings= view.findViewById(R.id.settings);
+        toolbarusername= view.findViewById(R.id.toolbarusername);
         profile_image= (CircularAppCompatImageView) view.findViewById(R.id.profile_id);
         bgImage= (CircularAppCompatImageView)view.findViewById(R.id.profile_id);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
-        small_profile_icon= (CircularAppCompatImageView)view.findViewById(R.id.small_profile_icon);
-        mContainerView = view.findViewById(R.id.container);
+
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, Settings.class);
+                startActivity(intent);
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                getActivity().onBackPressed();
+            }
+        });
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
+
+        toolbarusername.setText(R.string.name);
+        //small_profile_icon= (CircularAppCompatImageView)view.findViewById(R.id.small_profile_icon);
+        //mContainerView = view.findViewById(R.id.container);
         ViewPager viewPager =  view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
@@ -102,7 +126,7 @@ public class ProfileFragment extends BaseFragment {
         Bitmap blurredBitmap = BlurBuilder.blur( getActivity(), originalBitmap );
         collapsingToolbarLayout.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
         appBarLayout =  view.findViewById(R.id.appbar);
-        // collapsingToolbarLayout.setTitle(getResources().getString(R.string.user_name));
+        //collapsingToolbarLayout.setTitle(getResources().getString(R.string.username));
         dynamicToolbarColor();
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -110,12 +134,12 @@ public class ProfileFragment extends BaseFragment {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if(verticalOffset<-530)
                 {
-                    small_profile_icon.setVisibility(View.VISIBLE);
+                    toolbarusername.setVisibility(View.VISIBLE);
 
                 }
                 else
                 {
-                    small_profile_icon.setVisibility(View.INVISIBLE);
+                    toolbarusername.setVisibility(View.INVISIBLE);
 
 
                 }
@@ -155,16 +179,21 @@ public class ProfileFragment extends BaseFragment {
 
     private void dynamicToolbarColor() {
 
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.arifimage);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
 
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @SuppressWarnings("ResourceType")
             @Override
             public void onGenerated(Palette palette) {
-                collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(R.attr.colorPrimary));
-                collapsingToolbarLayout.setStatusBarScrimColor(palette.getMutedColor(R.attr.colorPrimaryDark));
+                int vibrantColor = palette.getVibrantColor(R.color.colorPrimary);
+                collapsingToolbarLayout.setContentScrimColor(vibrantColor);
+                collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
             }
-        });
+
+
+       });
     }
 
 

@@ -63,8 +63,8 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppTheme.Overlay">
+            android:theme="@style/AppTheme.Overlay"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter tools:ignore="GoogleAppIndexingWarning">
 
                 <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -76,9 +76,7 @@
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreenTheme">
-
-        </activity>
+            android:theme="@style/SplashScreenTheme"></activity>
         <activity
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
@@ -110,13 +108,21 @@
             android:name=".BaseBottomBarActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme" >
+            android:theme="@style/BaseActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.fragment.activity.Settings"
+            android:label="Settings"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
+
+        </activity>
+
     </application>
 
 </manifest>

@@ -54,7 +54,7 @@
     <string name="up">Up</string>
     <string name="enter_email_mobile">Enter Email or Mobile</string>
     <string name="reset_password">Reset password</string>
-    <string name="name">Name</string>
+    <string name="name">Arif</string>
     <string name="okay_let_s_roll">Okay, Let\'s roll</string>
     <string name="uploading_your_video">Uploading your video…</string>
     <string name="login_through_otp">Login with OTP</string>
@@ -117,6 +117,7 @@
     <string name="nearby_place_side_image">Nearby place side imageView</string>
     <string name="location">Location</string>
     <string name="save">Save</string>
+    <string name="video_details">Last Night Bash at Delhi Fort</string>
     <string name="select_at_least_5_to_continue">Select at least 5 interests to continue</string>
     <string name="continue_text">Continue</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
@@ -150,5 +151,8 @@
     <string name="profile_bio_and_user_details_nthey_all_go_here">Profile bio and user details they all go here.</string>
     <string name="hobby">Photographer,Traveller,Dreamer.</string>
     <string name="user_detail">Follow me to see my creative Videos.</string>
+    <string name="invitefriends">Invite Friends</string>
+    <string name="personasettings">PERSONAL SETTINGS</string>
+    <string name="changecategories">Change Categories</string>
     <string name="react">&#160;&#160;&#160;React</string>
 </resources>
