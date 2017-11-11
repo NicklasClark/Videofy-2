@@ -80,7 +80,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="@dimen/home_screen_post_content_small"
+                android:textSize="@dimen/text_size_10sp"
                 android:background="@drawable/bg_circle_accent_color"
                 android:layout_alignTop="@+id/tags"
                 android:layout_alignEnd="@+id/tags"

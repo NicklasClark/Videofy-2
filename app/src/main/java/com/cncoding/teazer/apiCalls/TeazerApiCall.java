@@ -2,14 +2,19 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
+import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
+import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 
 import java.util.ArrayList;
 
@@ -31,7 +36,7 @@ import retrofit2.http.Query;
  * Created by Prem $ on 10/3/2017.
  */
 
-class TeazerApiCall {
+ class TeazerApiCall {
 
     public static final int RESPONSE_CODE_200 = 200;
     public static final int RESPONSE_CODE_201 = 201;
@@ -175,7 +180,7 @@ class TeazerApiCall {
     /**
      * Friends interface
      * */
-    interface FriendsCalls {
+   interface FriendsCalls {
 
         /**
          * Get the "my circle" with search term
@@ -189,6 +194,10 @@ class TeazerApiCall {
         @GET("/api/v1/friend/my/followings/{page}")
         Call<Pojos.Friends.CircleList> getMyFollowings(@Path("page") int page);
 
+        //by arif
+
+        @GET("/api/v1/friend/my/followings/{page}")
+        Call<ProfileMyFollowing> getMyFollowing(@Path("page") int page);
         /**
          * Call this service to send a join request
          * */
@@ -240,7 +249,7 @@ class TeazerApiCall {
          * Call this service to get the my followers list
          * */
         @GET("/api/v1/friend/my/followers/{page}")
-        Call<ResultObject> getMyFollowers(@Path("page") int page);
+        Call<ProfileMyFollowers> getMyFollowers(@Path("page") int page);
 
         /**
          * Call this service to get the my followers list with search term
@@ -277,6 +286,31 @@ class TeazerApiCall {
          * */
         @GET("/api/v1/friend/profile/{user_id}")
         Call<ResultObject> getOthersProfileInfo(@Path("user_id") int userId);
+
+        /**
+         * Call this service to Block/Unblock a user
+         * @param status should be 1 for block and 2 for unblock
+         */
+        @POST("/api/v1/friend/block/{user_id}/{status}")
+        Call<ResultObject> blockUnblockUser(@Path("user_id") int userId, @Path("status") int status);
+
+        /**
+         * Call this service to get blocked users list by you.
+         */
+        @GET("/api/v1/friend/blocked/users/{page}")
+        Call<FollowersList> getBlockedUsers(@Path("page") int page);
+
+        /**
+         * Call this service to get users list to send follow request.
+         */
+        @GET("/api/v1/friend/application/users/{page}")
+        Call<UsersList> getUsersListToFollow(@Path("page") int page);
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        @GET("/api/v1/friend/application/users")
+        Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**
@@ -359,6 +393,10 @@ class TeazerApiCall {
         @GET("/api/v1/react/my/reactions/{page}")
         Call<UserReactionsList> getMyReactions(@Path("page") int page);
 
+        //Arif
+
+        @GET("/api/v1/react/my/reactions/{page}")
+        Call<ProfileReactions> getMyReaction(@Path("page") int page);
         /**
          * Call this service to get the reactions of friends.
          * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,
@@ -430,6 +468,10 @@ class TeazerApiCall {
          * */
         @DELETE("/api/v1/post/delete/{post_id}")
         Call<ResultObject> deletePost(@Path("post_id") int postId);
+
+
+        @DELETE("/api/v1/post/delete/{post_id}")
+        Call<DeleteMyVideos> deletePostVideo(@Path("post_id") int postId);
 
         /**
          * Call this service to report a post
@@ -555,10 +597,10 @@ class TeazerApiCall {
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link }
+         * @return {@link com.cncoding.teazer.utilities.Pojos.User.Profile}
          * */
         @GET("/api/v1/user/profile")
-        Call<UserProfile> getUserProfile();
+        Call<Pojos.User.Profile> getUserProfile();
 
         /**
          * Update user profile

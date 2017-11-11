@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -20,7 +21,7 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -33,14 +34,14 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_OTP_VERIFICATION_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_PASSWORD_ACTION;
+import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_OTP_VERIFICATION_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
+import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
-import static com.cncoding.teazer.authentication.SignupFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 
 /**
@@ -205,15 +206,18 @@ public class AuthUtils {
                             case 201:
                                 countDownTimer.cancel();
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
+                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
                                 ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_tick_circle);
                                 mListener.onOtpInteraction(SIGNUP_OTP_VERIFICATION_ACTION,
-                                        verify, null, true, response.body().getAuthToken());
+                                        verify, new Profile(new Pojos.User.UserProfile(verify.getEmail()),
+                                                0, 0, 0), true, response.body().getAuthToken());
                                 break;
 //                    Username, Email or Phone Number already exists
                             case 200:
                                 countDownTimer.cancel();
-                                otpVerifiedTextView.setText(context.getString(R.string.verified));
-                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_tick_circle);
+                                otpVerifiedTextView.setText(R.string.already_exists);
+                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
+                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_error);
                                 mListener.onOtpInteraction(SIGNUP_OTP_VERIFICATION_ACTION,
                                         verify, null, false, response.body().getAuthToken());
                                 break;
@@ -225,12 +229,14 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                        Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                        logout(context);
                     }
                 });
     }
 
-    public static void loginWithUsernameAndPassword(String username, ProximaNovaRegularAutoCompleteTextView passwordView,
+    public static void loginWithUsernameAndPassword(final Context context, String username,
+                                                    ProximaNovaRegularAutoCompleteTextView passwordView,
                                                     int countryCode, CountryCodePicker countryCodePicker,
                                                     final LoginInteractionListener mListener,
                                                     final ProximaNovaSemiboldButton loginBtn) {
@@ -250,14 +256,20 @@ public class AuthUtils {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200 && response.body().getStatus()) {
-                                ApiCallingService.User.getUserProfile().enqueue(new Callback<UserProfile>() {
+                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
+                                ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Profile>() {
                                     @Override
-                                    public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                                        mListener.onLoginFragmentInteraction(LOGIN_THROUGH_PASSWORD_ACTION, authorize, response.body());
+                                    public void onResponse(Call<Profile> call, Response<Profile> response) {
+                                        if (response.code() == 200)
+                                            mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize, response.body());
+                                        else
+                                            Toast.makeText(context, response.code() + " : " + response.message(),
+                                                    Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
-                                    public void onFailure(Call<UserProfile> call, Throwable t) {
+                                    public void onFailure(Call<Profile> call, Throwable t) {
+                                        logout(context);
                                         ViewUtils.showSnackBar(loginBtn, t.getMessage());
                                         loginBtn.setEnabled(true);
                                     }
@@ -274,7 +286,6 @@ public class AuthUtils {
                     });
         } else
             Snackbar.make(loginBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
-
     }
 
     /**
@@ -332,21 +343,23 @@ public class AuthUtils {
                     public void onResponse(Call<ResultObject> call, final Response<ResultObject> response) {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
+                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
                                 countDownTimer.cancel();
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
                                 ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_check);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ApiCallingService.User.getUserProfile().enqueue(new Callback<UserProfile>() {
+                                        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Profile>() {
                                             @Override
-                                            public void onResponse(Call<UserProfile> call, Response<UserProfile> response1) {
+                                            public void onResponse(Call<Profile> call, Response<Profile> response1) {
                                                 mListener.onOtpInteraction(LOGIN_OTP_VERIFICATION_ACTION,
-                                                        null, response1.body(), false, response.body().getAuthToken());
+                                                        null, response1.body(),
+                                                        false, response.body().getAuthToken());
                                             }
 
                                             @Override
-                                            public void onFailure(Call<UserProfile> call, Throwable t) {
+                                            public void onFailure(Call<Profile> call, Throwable t) {
                                             }
                                         });
                                     }
@@ -363,6 +376,27 @@ public class AuthUtils {
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         ViewUtils.showSnackBar(otpResendBtn, t.getMessage());
                         otpResendBtn.setEnabled(true);
+                    }
+                });
+    }
+
+    public static void logout(final Context context) {
+        ApiCallingService.User.logout("Bearer " + SharedPrefs.getAuthToken(context), context)
+                .enqueue(new Callback<ResultObject>() {
+                    @Override
+                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        if (response.code() == 200) {
+                            if (response.body().getStatus()) {
+                                SharedPrefs.resetAuthToken(context);
+                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(context, "Logout failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

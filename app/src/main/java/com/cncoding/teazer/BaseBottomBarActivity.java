@@ -1,21 +1,26 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.post.PostDetailsFragment;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
@@ -26,10 +31,12 @@ import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
 
@@ -37,7 +44,7 @@ public class BaseBottomBarActivity extends BaseActivity
         implements BaseFragment.FragmentNavigation,
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
-        OnPostAdapterInteractionListener, PostReactionAdapterListener {
+        OnPostAdapterInteractionListener, PostReactionAdapterListener,ProfileFragment.RemoveAppBar {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -56,6 +63,10 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn) ImageButton cameraButton;
+//    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
+    AppBarLayout app_bar;
+
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
@@ -68,6 +79,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        app_bar=findViewById(R.id.app_bar);
+
 
         fragmentHistory = new FragmentHistory();
         navigationController = NavigationController
@@ -96,11 +109,21 @@ public class BaseBottomBarActivity extends BaseActivity
         });
     }
 
+    @OnClick(R.id.logout_btn) public void logout() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, MainActivity.class));
+//        ApiCallingService.User.logout(SharedPrefs.getAuthToken(this), this);
+    }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         initTab();
         switchTab(0);
+    }
+
+    @OnClick(R.id.camera_btn) public void startCamera() {
+        startActivity(new Intent(this, CameraActivity.class));
     }
 
     private void initTab() {
@@ -116,12 +139,10 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @SuppressLint("InflateParams")
     private View getTabView(int position) {
-        ImageView view;
-//        if (position != 2)
-            view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
-//        else
-//            view = (CircularAppCompatImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom_center, null);
-        view.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[position]));
+        ImageView view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
+        if (position != 2)
+            view.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[position]));
+        else cameraButton.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[2]));
         return view;
     }
 
@@ -217,8 +238,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 return new PostsListFragment();
             case NavigationController.TAB2:
                 return new SearchFragment();
-            case NavigationController.TAB3:
-                return new SearchFragment();
+//            case NavigationController.TAB3:
+//                return new SearchFragment();
             case NavigationController.TAB4:
                 return new NotificationsFragment();
             case NavigationController.TAB5:
@@ -235,6 +256,21 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPostInteraction(int action, Pojos.Post.PostDetails postDetails) {
+        switch (action) {
+            case ACTION_VIEW_POST:
+                pushFragment(PostDetailsFragment.newInstance(2, postDetails));
+                break;
+            case ACTION_VIEW_PROFILE:
+                pushFragment(new ProfileFragment());
+        }
+    }
+
+    @Override
+    public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
     }
 
     @Override
@@ -265,17 +301,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostInteraction(int action, Pojos.Post.PostDetails postDetails) {
-        switch (action) {
-            case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(2, postDetails));
-                break;
-            case ACTION_VIEW_PROFILE:
-                pushFragment(new ProfileFragment());
-        }
-    }
+    public void removeAppbar() {
 
-    @Override
-    public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
+  //   getSupportActionBar().hide();
     }
 }

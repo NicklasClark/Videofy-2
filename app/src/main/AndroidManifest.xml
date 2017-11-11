@@ -76,7 +76,13 @@
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreenTheme"></activity>
+            android:theme="@style/SplashScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
@@ -102,27 +108,27 @@
                 android:value=".home.camera.CameraActivity" />
         </activity>
         <activity
-            android:name=".home.camera.Camera2"
-            android:theme="@style/AppTheme.FullScreen" />
-        <activity
             android:name=".BaseBottomBarActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.fragment.activity.Settings"
+            android:theme="@style/BaseActivityTheme" />
+        <activity
+            android:name=".ui.fragment.activity.Settings"
             android:label="Settings"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.fragment.activity.ProfileCreationVideos"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.fragment.activity.FollowersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        </activity>
-
+        <activity android:name=".ui.fragment.activity.FollowingActivities"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

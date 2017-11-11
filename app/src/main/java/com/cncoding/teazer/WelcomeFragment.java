@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -17,8 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
@@ -47,7 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_THROUGH_PASSWORD_ACTION;
+import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.OPEN_CAMERA_ACTION;
 import static com.cncoding.teazer.MainActivity.RESUME_WELCOME_VIDEO_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
@@ -101,11 +98,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         ButterKnife.bind(this, rootView);
 
         marqueeText.setSelected(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = fragmentActivity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
 
         callbackManager = CallbackManager.Factory.create();
         fbLoginButton.setReadPermissions("email");
@@ -142,7 +134,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
     @OnClick(R.id.login_page_btn) public void onLoginBtnClick() {
         if (isConnected)
-            mListener.onWelcomeInteraction(LOGIN_THROUGH_PASSWORD_ACTION, null, null, null);
+            mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null, null, null);
         else showNotConnectedDialog(loginBtn);
     }
 

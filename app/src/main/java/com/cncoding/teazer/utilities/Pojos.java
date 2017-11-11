@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -343,6 +345,24 @@ public class Pojos {
 
             public ArrayList<MiniProfile> getFollowers() {
                 return followers;
+            }
+        }
+
+        public static class UsersList {
+            boolean next_page;
+            ArrayList<MiniProfile> users;
+
+            public UsersList(boolean next_page, ArrayList<MiniProfile> users) {
+                this.next_page = next_page;
+                this.users = users;
+            }
+
+            public boolean isNextPage() {
+                return next_page;
+            }
+
+            public ArrayList<MiniProfile> getUsers() {
+                return users;
             }
         }
     }
@@ -962,7 +982,71 @@ public class Pojos {
         }
     }
 
-    public static class User {
+
+
+        public static class User {
+
+        public static class Profile implements Parcelable {
+            private UserProfile user_profile;
+            private int followers;
+            private int followings;
+            private int total_videos;
+
+            public Profile(UserProfile user_profile, int followers, int followings, int total_videos) {
+                this.user_profile = user_profile;
+                this.followers = followers;
+                this.followings = followings;
+                this.total_videos = total_videos;
+            }
+
+            public UserProfile getUserProfile() {
+                return user_profile;
+            }
+
+            public int getFollowers() {
+                return followers;
+            }
+
+            public int getFollowings() {
+                return followings;
+            }
+
+            public int getTotalVideos() {
+                return total_videos;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeParcelable(user_profile, i);
+                parcel.writeInt(followers);
+                parcel.writeInt(followings);
+                parcel.writeInt(total_videos);
+            }
+
+            protected Profile(Parcel in) {
+                user_profile = in.readParcelable(UserProfile.class.getClassLoader());
+                followers = in.readInt();
+                followings = in.readInt();
+                total_videos = in.readInt();
+            }
+
+            public static final Creator<Profile> CREATOR = new Creator<Profile>() {
+                @Override
+                public Profile createFromParcel(Parcel in) {
+                    return new Profile(in);
+                }
+
+                @Override
+                public Profile[] newArray(int size) {
+                    return new Profile[size];
+                }
+            };
+        }
 
         public static class UserProfile implements Parcelable {
             private String user_id;
@@ -979,9 +1063,6 @@ public class Pojos {
             private boolean has_profile_media;
             private ProfileMedia profile_media;
             private ArrayList<Category> categories;
-            private int followers;
-            private int followings;
-            private int total_videos;
             private String password;
 
             public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
@@ -1001,10 +1082,20 @@ public class Pojos {
                 this.has_profile_media = has_profile_media;
                 this.profile_media = profile_media;
                 this.categories = categories;
-                this.followers = followers;
-                this.followings = followings;
-                this.total_videos = total_videos;
                 this.password = password;
+            }
+
+            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code) {
+                this.user_name = user_name;
+                this.first_name = first_name;
+                this.last_name = last_name;
+                this.email = email;
+                this.phone_number = phone_number;
+                this.country_code = country_code;
+            }
+
+            public UserProfile(String email) {
+                this.email = email;
             }
 
             public String getUserId() {
@@ -1063,18 +1154,6 @@ public class Pojos {
                 return categories;
             }
 
-            public int getFollowers() {
-                return followers;
-            }
-
-            public int getFollowings() {
-                return followings;
-            }
-
-            public int getTotalVideos() {
-                return total_videos;
-            }
-
             public String getPassword() {
                 return password;
             }
@@ -1104,9 +1183,6 @@ public class Pojos {
                 parcel.writeByte((byte) (has_profile_media ? 1 : 0));
                 parcel.writeParcelable(profile_media, i);
                 parcel.writeTypedList(categories);
-                parcel.writeInt(followers);
-                parcel.writeInt(followings);
-                parcel.writeInt(total_videos);
             }
 
             protected UserProfile(Parcel in) {
@@ -1124,9 +1200,6 @@ public class Pojos {
                 has_profile_media = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 categories = in.createTypedArrayList(Category.CREATOR);
-                followers = in.readInt();
-                followings = in.readInt();
-                total_videos = in.readInt();
             }
 
             public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -1469,15 +1542,19 @@ public class Pojos {
         String user_name;
         String first_name;
         String last_name;
+        boolean following;
+        boolean follower;
         boolean has_profile_media;
         ProfileMedia profile_media;
 
         public MiniProfile(int user_id, String user_name, String first_name, String last_name,
-                           boolean has_profile_media, ProfileMedia profile_media) {
+                           boolean following, boolean follower, boolean has_profile_media, ProfileMedia profile_media) {
             this.user_id = user_id;
             this.user_name = user_name;
             this.first_name = first_name;
             this.last_name = last_name;
+            this.following = following;
+            this.follower = follower;
             this.has_profile_media = has_profile_media;
             this.profile_media = profile_media;
         }
@@ -1496,6 +1573,14 @@ public class Pojos {
 
         public String getLastName() {
             return last_name;
+        }
+
+        public boolean isFollowing() {
+            return following;
+        }
+
+        public boolean isFollower() {
+            return follower;
         }
 
         public boolean hasProfileMedia() {
@@ -1517,16 +1602,21 @@ public class Pojos {
             parcel.writeString(user_name);
             parcel.writeString(first_name);
             parcel.writeString(last_name);
+            parcel.writeByte((byte) (following ? 1 : 0));
+            parcel.writeByte((byte) (follower ? 1 : 0));
             parcel.writeByte((byte) (has_profile_media ? 1 : 0));
             parcel.writeParcelable(profile_media, i);
         }
 
-        MiniProfile(Parcel in) {
+        protected MiniProfile(Parcel in) {
             user_id = in.readInt();
             user_name = in.readString();
             first_name = in.readString();
             last_name = in.readString();
+            following = in.readByte() != 0;
+            follower = in.readByte() != 0;
             has_profile_media = in.readByte() != 0;
+            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
         }
 
         public static final Creator<MiniProfile> CREATOR = new Creator<MiniProfile>() {
@@ -1545,10 +1635,14 @@ public class Pojos {
     public static class TaggedUser extends MiniProfile implements Parcelable {
         private int tag_id;
 
-        public TaggedUser(int tag_id, int user_id, String user_name, String first_name, String last_name,
-                          boolean has_profile_media, ProfileMedia profile_media) {
-            super(user_id, user_name, first_name, last_name, has_profile_media, profile_media);
+        public TaggedUser(int tag_id, int user_id, String user_name, String first_name, String last_name, boolean following,
+                          boolean follower, boolean has_profile_media, ProfileMedia profile_media) {
+            super(user_id, user_name, first_name, last_name, following, follower, has_profile_media, profile_media);
             this.tag_id = tag_id;
+        }
+
+        protected TaggedUser(Parcel in) {
+            super(in);
         }
 
         public int getTagId() {
@@ -1703,6 +1797,7 @@ public class Pojos {
             }
         };
     }
+
 
     public static class Medias implements Parcelable {
         private int media_id;
@@ -1960,4 +2055,8 @@ public class Pojos {
             }
         };
     }
+
+
+
+
 }

@@ -45,7 +45,7 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/otp_1"
-                style="@style/AppTheme.OtpEditText" />
+                style="@style/AppTheme.OtpEditText"/>
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/otp_2"

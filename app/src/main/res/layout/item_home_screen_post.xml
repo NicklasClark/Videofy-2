@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/home_screen_post_header"
+            android:textSize="@dimen/text_size_14sp"
             android:layout_marginEnd="@dimen/padding_half"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/home_screen_post_category"/>
@@ -43,7 +43,7 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/home_screen_post_content_smaller"
+            android:textSize="@dimen/text_size_8sp"
             android:padding="@dimen/padding_thin"
             android:gravity="center"
             android:background="@drawable/bg_outline_rounded"
@@ -74,10 +74,10 @@
         android:layout_alignBottom="@+id/home_screen_post_dp">
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-            android:id="@+id/home_screen_post_name"
+            android:id="@+id/home_screen_post_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_content"
+            android:textSize="@dimen/text_size_12sp"
             android:textColor="@android:color/white"
             android:layout_weight="1" />
 
@@ -85,7 +85,7 @@
             android:id="@+id/home_screen_post_popularity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/home_screen_post_content_small"
+            android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
             android:layout_marginTop="@dimen/padding_thin"
             android:layout_weight="1" />
