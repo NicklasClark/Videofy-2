@@ -15,4 +15,5 @@
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
         <item name="windowNoTitle">true</item>
     </style>
+
 </resources>

@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
     </style>
 
     <style name="BottomTabLayout" parent="Base.Widget.Design.TabLayout">
@@ -15,11 +16,12 @@
         <item name="tabMode">fixed</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.NoActionBar">
         <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>
@@ -29,11 +31,10 @@
     </style>
 
     <style name="AppTheme.Overlay">
-        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:orientation">vertical</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -45,28 +46,23 @@
         <item name="windowActionBar">false</item>
         <!--<item name="android:textColor">#FFFFFF</item>-->
         <item name="windowNoTitle">true</item>
+        <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
-    </style>
-
-    <style name="AppTheme.ProfileActivityTheme">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
     </style>
 
     <style name="BaseActivityTransition">
-        <item name="android:windowEnterAnimation">@anim/fast_fade_in</item>
-        <item name="android:windowExitAnimation">@anim/fast_fade_out</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
     <style name="myCustomAppBarTheme" parent="Theme.AppCompat.Light">
@@ -86,7 +82,7 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="SplashScreenTheme" parent="AppTheme.FullScreen">
+    <style name="SplashScreenTheme" parent="AppTheme.Overlay">
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:scaleType">centerCrop</item>
@@ -232,8 +228,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:foreground">@drawable/ripple_dark_no_rounded</item>
+        <!--<item name="android:textColor">@android:color/white</item>-->
         <item name="android:paddingTop">@dimen/padding_default</item>
         <item name="android:paddingBottom">@dimen/padding_default</item>
         <item name="android:paddingStart">@dimen/padding_double</item>
@@ -289,7 +285,7 @@
     </style>
 
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
-        <item name="colorAccent">@android:color/white</item>
+        <item name="colorAccent">@color/colorReactBtn</item>
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">

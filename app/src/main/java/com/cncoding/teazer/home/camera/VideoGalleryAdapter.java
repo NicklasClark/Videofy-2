@@ -46,9 +46,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Glide.with(context).load("file://" + videos.get(position).getThumbnail())
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
-                .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
+                .crossFade(280)
                 .skipMemoryCache(false)
                 .into(holder.thumbnailView);
 

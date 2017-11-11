@@ -423,7 +423,9 @@ class TeazerApiCall {
                 @Part("title") String title,
                 @Part("location") String location,
                 @Part("latitude") double latitude,
-                @Part("longitude") double longitude
+                @Part("longitude") double longitude,
+                @Part("tags") String tags,
+                @Part("categories") String categories
         );
 
         /**

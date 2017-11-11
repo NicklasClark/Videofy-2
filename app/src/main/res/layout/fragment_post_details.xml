@@ -20,14 +20,15 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:minHeight="200dp"
+            android:minHeight="400dp"
             android:layout_alignParentTop="true">
 
             <com.cncoding.teazer.customViews.ResizableSurfaceView
                 android:id="@+id/video_surface"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="400dp"/>
 
             <ProgressBar
                 android:id="@+id/loading"
@@ -142,10 +143,7 @@
             android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/padding_thin"
-            android:paddingStart="@dimen/padding_thin"
-            android:paddingEnd="@dimen/padding_thin"
-            android:paddingBottom="@dimen/padding_default"
+            android:padding="@dimen/padding_thin"
             android:clipToPadding="false"
             android:layout_below="@+id/reactions_header"
             app:layoutManager="StaggeredGridLayoutManager"

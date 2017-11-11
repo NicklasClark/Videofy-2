@@ -14,7 +14,7 @@
         android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
 
     <alpha
-        android:fromAlpha="0.8"
+        android:fromAlpha="1"
         android:toAlpha="0"
         android:duration="1600"
         android:repeatCount = "infinite"

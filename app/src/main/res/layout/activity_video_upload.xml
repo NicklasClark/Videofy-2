@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/black"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.cncoding.teazer.home.camera.upload.VideoUpload">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,15 +18,16 @@
             <RelativeLayout
                 android:id="@+id/video_preview_thumbnail_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
 
                 <ImageView
                     android:id="@+id/video_preview_thumbnail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:minHeight="200dp"
-                    android:animateLayoutChanges="true"
+                    android:minHeight="250dp"
+                    android:maxHeight="400dp"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/video_preview_thumbnail" />
 
@@ -37,7 +39,7 @@
                     android:clickable="false"/>
 
                 <ProgressBar
-                    android:id="@+id/video_progress_bar"
+                    android:id="@+id/thumbnail_progress_bar"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:indeterminate="true"
@@ -45,33 +47,18 @@
                     android:theme="@style/ProgressBarTheme"
                     android:layout_centerInParent="true" />
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                    android:id="@+id/uploading_notification"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default"
-                    android:textSize="@dimen/text_size_h3"
-                    android:text="@string/uploading_your_video"
-                    android:layout_below="@+id/video_progress_bar"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="invisible"/>
-
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimary"
-                android:layout_gravity="top"
-                android:layout_marginBottom="@dimen/padding_default"/>
-
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
                 android:id="@+id/video_upload_title"
-                style="@style/AppTheme.RoundedEditText"
-                android:layout_marginTop="@dimen/padding_half"
                 android:hint="@string/title"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/height_24dp"
                 android:layout_marginStart="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default"/>
 
@@ -81,7 +68,7 @@
                 android:layout_marginStart="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default">
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/add_location"
@@ -108,7 +95,7 @@
                     android:layout_height="0dp"
                     android:layout_centerInParent="true"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                     android:id="@+id/video_upload_tag_friends"
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/tag_friends"
@@ -131,7 +118,7 @@
 
             </RelativeLayout>
 
-            <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                 android:id="@+id/video_upload_categories"
                 style="@style/AppTheme.TransparentButton"
                 android:text="@string/choose_category"
@@ -145,8 +132,9 @@
                 android:id="@+id/video_upload_categories_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_marginBottom="@dimen/padding_default"
                 android:layout_marginStart="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default" />
@@ -154,7 +142,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="center_vertical|end"
                 android:padding="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/app_bar_height">
 
@@ -164,6 +152,7 @@
                     android:text="@string/share_with"
                     android:textSize="@dimen/text_size_content_big"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginStart="@dimen/padding_default"
                     android:layout_marginEnd="@dimen/padding_default"
                     android:layout_toStartOf="@+id/facebook_share_btn" />
@@ -195,7 +184,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/padding_thin"
-                    android:layout_marginEnd="@dimen/padding_double"
+                    android:layout_marginEnd="@dimen/padding_default"
                     app:srcCompat="@drawable/ic_instagram_enabled" />
 
             </RelativeLayout>
@@ -207,6 +196,7 @@
     <RelativeLayout
         android:id="@+id/video_actions"
         android:layout_width="match_parent"
+        android:background="@android:color/black"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom|center_horizontal">
 
@@ -219,8 +209,8 @@
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/video_upload_cancel_btn"
             style="@style/AppTheme.CancelUploadButtonsTheme"
-            app:drawableStartCompat="@drawable/ic_cancel"
-            android:text="@string/cancel"
+            app:drawableStartCompat="@drawable/ic_previous_white"
+            android:text="@string/retake"
             android:layout_alignParentStart="true"
             android:contentDescription="@string/cancel"
             android:layout_toStartOf="@+id/spacer1"/>
@@ -238,36 +228,63 @@
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/video_duration"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_content"
         android:background="@drawable/bg_circle_dark_outlined"
         android:foreground="@drawable/ripple_dark"
-        android:layout_marginBottom="@dimen/padding_default"
         android:layout_gravity="bottom|center_horizontal" />
 
     <FrameLayout
-        android:id="@+id/video_upload_fragment_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/uploading_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_vignette_top">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:background="@color/colorTranslucentBg"
+        android:visibility="invisible"
+        android:animateLayoutChanges="true">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/up_btn"
-            android:layout_width="wrap_content"
+        <ProgressBar
+            android:id="@+id/video_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/ProgressBarTheme" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/uploading_notification"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_previous_white"
-            android:foreground="@drawable/ripple_dark"
-            android:padding="@dimen/padding_default"
-            android:contentDescription="@string/up"/>
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:textSize="@dimen/text_size_h4"
+            android:text="@string/uploading_your_video"/>
 
-    </FrameLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/up_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_previous"
+        android:foreground="@drawable/ripple_dark"
+        android:padding="@dimen/padding_default"
+        android:contentDescription="@string/up"/>
 
 </FrameLayout>
     <!--
@@ -275,8 +292,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:id="@+id/video_upload_coordinator_layout"
-            tools:contecom.cncoding.teazer.home.cameramera.upload.VideoUpload">
+            android:id="@+id/video_upload_coordinator_layout">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"

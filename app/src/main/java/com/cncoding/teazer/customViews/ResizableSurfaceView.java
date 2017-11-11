@@ -6,12 +6,14 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 /**
  * Created by Prem $ on 28/10/2017
  */
 public class ResizableSurfaceView extends SurfaceView {
-    private static final int MARGIN_DP = 0;//margin of ResizeSurfaceView
+//    private static final int MARGIN_DP = 0;//margin of ResizeSurfaceView
     public ResizableSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -25,9 +27,9 @@ public class ResizableSurfaceView extends SurfaceView {
      * @param surfaceViewWidth original width
      * @param surfaceViewHeight original height
      */
-    public void adjustSize(int surfaceViewWidth, int surfaceViewHeight, int videoWidth, int videoHeight) {
+    public void adjustSize(int surfaceViewWidth, int surfaceViewHeight, final int videoWidth, final int videoHeight) {
         if (videoWidth > 0 && videoHeight > 0) {
-            ViewGroup.LayoutParams lp = getLayoutParams();
+            final ViewGroup.LayoutParams lp = getLayoutParams();
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int windowWidth = displayMetrics.widthPixels;
             int windowHeight = displayMetrics.heightPixels;
@@ -75,12 +77,22 @@ public class ResizableSurfaceView extends SurfaceView {
                 } else {
 //                    lp.height = windowHeight- margin;
                     lp.height = windowHeight;
+                    //noinspection SuspiciousNameCombination
                     lp.width = lp.height;
                 }
             }
-            setLayoutParams(lp);
-            getHolder().setFixedSize(videoWidth, videoHeight);
-            setVisibility(View.VISIBLE);
+            Animation animation = new ScaleAnimation(0, 0, surfaceViewHeight, videoHeight);
+            animation.setDuration(400);
+            animation.setFillAfter(true);
+            startAnimation(animation);
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setLayoutParams(lp);
+                    getHolder().setFixedSize(videoWidth, videoHeight);
+                    setVisibility(View.VISIBLE);
+                }
+            }, 400);
         }
     }
 }

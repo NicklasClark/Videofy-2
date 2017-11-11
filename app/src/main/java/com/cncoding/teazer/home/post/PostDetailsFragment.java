@@ -46,6 +46,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
     private static final String ARG_COLUMN_COUNT = "columnCount";
     private static final String ARG_POST_DETAILS = "postDetails";
+    public static final int ACTION_DISMISS_PLACEHOLDER = 10;
 
     @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.video_surface) ResizableSurfaceView surfaceView;
@@ -94,9 +95,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
 
-
         surfaceView.getHolder().addCallback(this);
         progressBar.setVisibility(View.VISIBLE);
+        prepareController();
         prepareMediaPlayer();
         getPostReactions(postDetails.getPostId(), 1);
 
@@ -121,46 +122,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 progressBar.setVisibility(View.INVISIBLE);
                 isComplete = false;
                 mediaPlayer.start();
+                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
-                String profilePicUrl = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-                if (postDetails.getPostOwner().getProfileMedia() != null)
-                    profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
-                String location = "";
-                if (postDetails.hasCheckin())
-                    location = postDetails.getCheckIn().getLocation();
-
-                if (postDetails != null) {
-                    controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
-                            .withVideoTitle(postDetails.getTitle())
-                            .withVideoSurfaceView(surfaceView)
-                            .withLocation(location)
-                            .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
-                            .withProfilePicUrl(profilePicUrl)
-                            .withLikes(String.valueOf(postDetails.getLikes()))
-                            .withViews(String.valueOf(postDetails.getMedias().get(0).getViews()))
-                            .withCategories(getUserCategories())
-                            .withDuration(postDetails.getMedias().get(0).getDuration())
-                            .withReactions(String.valueOf(postDetails.getTotalReactions()))
-                            .build(surfaceContainer);
-                }
-                else {
-                    initDummyPostDetails();
-                    controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
-                            .withVideoTitle(postDetails.getTitle())
-                            .withVideoSurfaceView(surfaceView)
-                            .withLocation("New Delhi")
-                            .withProfileName("Prem Suman")
-                            .withProfilePicUrl(postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                            .withLikes("123")
-                            .withViews("408")
-                            .withCategories("Dance, Music, Entertainment, EDM, VideoGraphy")
-                            .withDuration("00:32")
-                            .withReactions("215")
-                            .withReaction1Url("https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg")
-                            .withReaction2Url("https://i.pinimg.com/736x/84/e1/57/84e15741767278781febecef51b8f6e7--portrait-photography-tips-people-photography.jpg")
-                            .withReaction3Url("http://is5.mzstatic.com/image/thumb/Purple71/v4/90/ae/1b/90ae1b97-762d-82fa-1ff9-bcc76435ea88/source/1200x630bb.jpg")
-                            .build(surfaceContainer);
-                }
+//                Increment the video view count
+                ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), getContext());
             }
         });
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -171,6 +136,48 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         });
         mediaPlayer.setLooping(true);
         mediaPlayer.prepareAsync();
+    }
+
+    private void prepareController() {
+        String profilePicUrl = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+        if (postDetails.getPostOwner().getProfileMedia() != null)
+            profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
+        String location = "";
+        if (postDetails.hasCheckin())
+            location = postDetails.getCheckIn().getLocation();
+
+        if (postDetails != null) {
+            controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
+                    .withVideoTitle(postDetails.getTitle())
+                    .withVideoSurfaceView(surfaceView)
+                    .withLocation(location)
+                    .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
+                    .withProfilePicUrl(profilePicUrl)
+                    .withLikes(String.valueOf(postDetails.getLikes()))
+                    .withViews(String.valueOf(postDetails.getMedias().get(0).getViews()))
+                    .withCategories(getUserCategories())
+                    .withDuration(postDetails.getMedias().get(0).getDuration())
+                    .withReactions(String.valueOf(postDetails.getTotalReactions()))
+                    .build(surfaceContainer);
+        }
+        else {
+            initDummyPostDetails();
+            controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
+                    .withVideoTitle(postDetails.getTitle())
+                    .withVideoSurfaceView(surfaceView)
+                    .withLocation("New Delhi")
+                    .withProfileName("Prem Suman")
+                    .withProfilePicUrl(postDetails.getPostOwner().getProfileMedia().getThumbUrl())
+                    .withLikes("123")
+                    .withViews("408")
+                    .withCategories("Dance, Music, Entertainment, EDM, VideoGraphy")
+                    .withDuration("00:32")
+                    .withReactions("215")
+                    .withReaction1Url("https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg")
+                    .withReaction2Url("https://i.pinimg.com/736x/84/e1/57/84e15741767278781febecef51b8f6e7--portrait-photography-tips-people-photography.jpg")
+                    .withReaction3Url("http://is5.mzstatic.com/image/thumb/Purple71/v4/90/ae/1b/90ae1b97-762d-82fa-1ff9-bcc76435ea88/source/1200x630bb.jpg")
+                    .build(surfaceContainer);
+        }
     }
 
     private String getUserCategories() {
@@ -231,6 +238,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(new PostReactionAdapter(postReactions, getContext()));
+
+//        recyclerView.addOnScrollListener(((BaseBottomBarActivity) getActivity()).recyclerViewScrollListener());
     }
 
     private void initDummyPostDetails() {

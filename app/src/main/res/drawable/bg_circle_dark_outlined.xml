@@ -1,126 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Drop Shadow Stack -->
-<!--    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#00a1887f"/>
-        </shape>
-    </item>
     <item>
         <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#05a1887f"/>
+            <solid android:color="@android:color/black"/>
         </shape>
     </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#10a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#15a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#20a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
-            <solid android:color="#25a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="0dp"
-                android:bottom="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="0dp"
-                android:bottom="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="0dp"
-                android:bottom="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="0dp"
-                android:bottom="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:top="0dp"
-                android:right="0dp"
-                android:bottom="1dp"
-                android:left="0dp"/>
-            <solid android:color="#50a1887f"/>
-        </shape>
-    </item>-->
-    <!-- Background -->
-    <item android:top="8dp"
-        android:bottom="8dp"
-        android:left="8dp"
-        android:right="8dp">
+    <item android:top="@dimen/padding_default"
+        android:bottom="@dimen/padding_default"
+        android:left="@dimen/padding_default"
+        android:right="@dimen/padding_default">
         <shape android:shape="oval">
             <solid android:color="#5D5D5D"/>
         </shape>
     </item>
-    <item>
+    <item android:top="@dimen/padding_half"
+        android:bottom="@dimen/padding_half"
+        android:left="@dimen/padding_half"
+        android:right="@dimen/padding_half">
         <shape
             android:shape="oval">
             <stroke android:width="2dp"

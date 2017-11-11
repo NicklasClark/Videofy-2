@@ -48,6 +48,13 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
+              "client_id": "962455421064-6fdsgeuerfg93haoon3kd83f0hfg2e2c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cnapplications.teazerdevapp"
+              }
+            },
+            {
               "client_id": "962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com",
               "client_type": 3
             }

@@ -16,7 +16,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextColor="@color/colorSecondary_text">
@@ -34,10 +34,13 @@
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/logout_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/text_size_content"
-                android:layout_gravity="center_vertical|end"
-                android:padding="@dimen/padding_default"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:paddingStart="@dimen/padding_default"
+                android:paddingEnd="@dimen/padding_default"
                 android:text="@string/logout"/>
 
         </android.support.v7.widget.Toolbar>
@@ -68,6 +71,19 @@
         android:layout_marginBottom="@dimen/padding_half"
         android:background="@drawable/bg_circle_light_filled_outlined"
         android:contentDescription="@string/record_video" />
+
+    <!--REACTION CAMERA FRAGMENT CONTAINER-->
+    <FrameLayout
+        android:id="@+id/reaction_camera_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/expanded_placeholder_image" />
 
 </android.support.design.widget.CoordinatorLayout>
 <!--

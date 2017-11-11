@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -144,18 +145,32 @@ public class SearchFragment extends BaseFragment {
             View.OnClickListener viewUserDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    holder.addFriendBtn.setEnabled(false);
                     ApiCallingService.Friends.sendJoinRequest(miniProfile.getUserId(), context).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            holder.addFriendBtn.setText(R.string.added);
-                            holder.addFriendBtn.setEnabled(false);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    usersList.remove(holder.getAdapterPosition());
-                                    userListAdapter.notifyItemRemoved(holder.getAdapterPosition());
+                            if (response.code() == 200) {
+                                if (response.body().getStatus()) {
+                                    holder.addFriendBtn.setText(R.string.added);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            usersList.remove(holder.getAdapterPosition());
+                                            userListAdapter.notifyItemRemoved(holder.getAdapterPosition());
+                                        }
+                                    }, 1500);
+                                } else {
+                                    holder.addFriendBtn.setText("Failed!");
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            holder.addFriendBtn.setText(R.string.add);
+                                            holder.addFriendBtn.setEnabled(true);
+                                        }
+                                    }, 1500);
                                 }
-                            }, 2000);
+                            } else
+                                Toast.makeText(getContext(), response.code() + " : " + response.message(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.cncoding.teazer.R;
@@ -33,6 +32,7 @@ import butterknife.OnTouch;
 import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignup;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class SignupFragment2 extends Fragment {
@@ -86,10 +86,6 @@ public class SignupFragment2 extends Fragment {
 
     @OnEditorAction(R.id.signup_confirm_password) public boolean onLoginByKeyboard(TextView v, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
-            InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
-            }
             performSignup();
             return true;
         }
@@ -132,7 +128,7 @@ public class SignupFragment2 extends Fragment {
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() >= 5 && password.length() <= 32;
+        return password.length() >= 8 && password.length() <= 32;
     }
 
     private boolean areAllViewsFilled() {
@@ -142,6 +138,7 @@ public class SignupFragment2 extends Fragment {
     }
 
     @OnClick(R.id.signup_btn) public void performSignup() {
+        hideKeyboard(getActivity(), signupBtn);
         String password = passwordView.getText().toString();
         if (NetworkStateReceiver.isConnected(getActivity())) {
             if (areAllViewsFilled()) {
@@ -161,7 +158,7 @@ public class SignupFragment2 extends Fragment {
                     } else
                         Snackbar.make(signupBtn, "Passwords don't match!", Snackbar.LENGTH_SHORT).show();
                 } else
-                    Snackbar.make(signupBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(signupBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
             } else
                 Snackbar.make(signupBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
         } else

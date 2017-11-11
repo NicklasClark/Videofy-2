@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.post;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
+import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
+import com.cncoding.teazer.utilities.ViewUtils;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,25 +79,34 @@ public class PostsListFragment extends BaseFragment {
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
-                        if (response.code() == 200) {
+                        switch (response.code()) {
+                            case 200:
 //                            Posts came! now fetching the posts and checking if next page is true (More posts are available) or not.
-                            for (int i = 0; i < response.body().getPosts().size(); i++) {
-                                postList.add(response.body().getPosts().get(i));
-                            }
-                            if (response.body().isNextPage()) {
+                                for (int i = 0; i < response.body().getPosts().size(); i++) {
+                                    postList.add(response.body().getPosts().get(i));
+                                }
+                                if (response.body().isNextPage()) {
 //                                More posts are available, so incrementing the page number and re-calling this method.
-                                getHomePagePosts(pageNumber + 1);
-                            }
-                            else {
+                                    getHomePagePosts(pageNumber + 1);
+                                }
+                                else {
 //                                No more posts available. So populating the posts in the recyclerView.
-                                if (postList.getPosts().size() > 0)
-                                    populateRecyclerView(postList.getPosts());
-                                else populateDummyLists();
-                            }
-                        }
-                        else {
-                            Toast.makeText(getContext(), response.code() +": " + response.message(), Toast.LENGTH_SHORT).show();
-                            populateDummyLists();
+                                    if (postList.getPosts().size() > 0)
+                                        populateRecyclerView(postList.getPosts());
+                                    else populateDummyLists();
+                                }
+                                break;
+                            case 500:
+//                                User's auth token is no longer valid
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                getActivity().finish();
+                                break;
+                            default:
+                                ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView,
+                                        response.code() +": " + response.message());
+                                populateDummyLists();
+                                break;
                         }
                     }
 
@@ -110,7 +123,9 @@ public class PostsListFragment extends BaseFragment {
         manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new PostsListAdapter(posts, getContext()));
+        recyclerView.setAdapter(new PostsListAdapter(posts, getContext(), getActivity()));
+
+//        recyclerView.addOnScrollListener(((BaseBottomBarActivity) getActivity()).recyclerViewScrollListener());
     }
 
     private void populateDummyLists() {
@@ -182,7 +197,7 @@ public class PostsListFragment extends BaseFragment {
             postDetailsList.add(postDetails3);
         }
 
-        PostsListAdapter adapter = new PostsListAdapter(postDetailsList, getContext());
+        PostsListAdapter adapter = new PostsListAdapter(postDetailsList, getContext(), getActivity());
 
         recyclerView.setAdapter(adapter);
     }

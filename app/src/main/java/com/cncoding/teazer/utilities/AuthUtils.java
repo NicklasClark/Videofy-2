@@ -1,5 +1,6 @@
 package com.cncoding.teazer.utilities;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -10,6 +11,10 @@ import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -91,8 +96,8 @@ public class AuthUtils {
         return Settings.Secure.ANDROID_ID;
     }
 
-    public static String getFcmToken() {
-        return FirebaseInstanceId.getInstance().getToken();
+    public static String getFcmToken(Context context) {
+        return SharedPrefs.getFcmToken(context) != null? SharedPrefs.getFcmToken(context) : FirebaseInstanceId.getInstance().getToken();
     }
 
     /**
@@ -182,7 +187,8 @@ public class AuthUtils {
                         ViewUtils.showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
                     }
-                }
+                } else
+                    ViewUtils.showSnackBar(signupBtn, response.code() + " : " + response.message());
                 signupBtn.setEnabled(true);
             }
 
@@ -223,6 +229,7 @@ public class AuthUtils {
                                 break;
 //                    Failed, Invalid JSON or validation failed
                             default:
+                                ViewUtils.showSnackBar(otpVerifiedTextView, response.code() + " : " + response.message());
                                 break;
                         }
                     }
@@ -235,18 +242,46 @@ public class AuthUtils {
                 });
     }
 
+    private static void stopCircularReveal(final View revealLayout, View anchorButton) {
+        final Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
+                (int) anchorButton.getX() + (anchorButton.getWidth() / 2),
+                (int) anchorButton.getY() + (anchorButton.getHeight() / 2),
+                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
+        animator.setDuration(500);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                revealLayout.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        animator.start();
+    }
+
     public static void loginWithUsernameAndPassword(final Context context, String username,
                                                     ProximaNovaRegularAutoCompleteTextView passwordView,
                                                     int countryCode, CountryCodePicker countryCodePicker,
                                                     final LoginInteractionListener mListener,
-                                                    final ProximaNovaSemiboldButton loginBtn) {
+                                                    final ProximaNovaSemiboldButton loginBtn, final LinearLayout revealLayout) {
         if (TextUtils.isDigitsOnly(username) && countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
             return;
         }
         if (AuthUtils.isPasswordValid(passwordView)) {
             final Pojos.Authorize authorize = new Pojos.Authorize(
-                    getFcmToken(),
+                    getFcmToken(context),
                     getDeviceId(),
                     DEVICE_TYPE_ANDROID,
                     username,
@@ -265,6 +300,13 @@ public class AuthUtils {
                                         else
                                             Toast.makeText(context, response.code() + " : " + response.message(),
                                                     Toast.LENGTH_LONG).show();
+
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                stopCircularReveal(revealLayout, loginBtn);
+                                            }
+                                        }, 1000);
                                     }
 
                                     @Override
@@ -272,9 +314,16 @@ public class AuthUtils {
                                         logout(context);
                                         ViewUtils.showSnackBar(loginBtn, t.getMessage());
                                         loginBtn.setEnabled(true);
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                stopCircularReveal(revealLayout, loginBtn);
+                                            }
+                                        }, 1000);
                                     }
                                 });
-                            }
+                            } else
+                                ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
                             loginBtn.setEnabled(true);
                         }
 
@@ -293,7 +342,7 @@ public class AuthUtils {
      * */
     public static void loginWithOtp(final Context context, final String username, final int countryCode,
                                     final LoginInteractionListener mListener, final ProximaNovaSemiboldButton loginBtn,
-                                    final ProximaNovaRegularTextView otpVerifiedTextView,
+                                    final LinearLayout revealLayout, final ProximaNovaRegularTextView otpVerifiedTextView,
                                     final CountDownTimer[] countDownTimer, final boolean isResendAction) {
         final Pojos.Authorize authorize = new Pojos.Authorize(Long.parseLong(username), countryCode);
         ApiCallingService.Auth.loginWithOtp(authorize).enqueue(new Callback<ResultObject>() {
@@ -311,14 +360,27 @@ public class AuthUtils {
                         }
                     }
                     else Snackbar.make(loginBtn, R.string.login_through_otp_error, Snackbar.LENGTH_LONG).show();
-                }
+                } else
+                    ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
                 loginBtn.setEnabled(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCircularReveal(revealLayout, loginBtn);
+                    }
+                }, 1000);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 ViewUtils.showSnackBar(loginBtn, t.getMessage());
                 loginBtn.setEnabled(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCircularReveal(revealLayout, loginBtn);
+                    }
+                }, 1000);
             }
         });
     }
@@ -331,7 +393,7 @@ public class AuthUtils {
                                       final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
         ApiCallingService.Auth.verifyLoginWithOtp(
                 new Pojos.Authorize(
-                        getFcmToken(),
+                        getFcmToken(context),
                         getDeviceId(),
                         DEVICE_TYPE_ANDROID,
                         userSignUpDetails.getPhoneNumber(),
@@ -368,7 +430,8 @@ public class AuthUtils {
                                 Snackbar.make(otpVerifiedTextView, R.string.login_through_otp_error,
                                         Snackbar.LENGTH_SHORT).show();
                             }
-                        }
+                        } else
+                            ViewUtils.showSnackBar(otpResendBtn, response.code() + " : " + response.message());
                         otpResendBtn.setEnabled(true);
                     }
 
@@ -391,7 +454,8 @@ public class AuthUtils {
                                 Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
                             } else
                                 Toast.makeText(context, "Logout failed!", Toast.LENGTH_SHORT).show();
-                        }
+                        } else
+                            Toast.makeText(context, response.code() + " : " + response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

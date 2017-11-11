@@ -33,11 +33,6 @@ public class VideoPreview extends Fragment {
 
     @BindView(R.id.video_view_preview) VideoView videoViewPreview;
     @BindView(R.id.play_pause_video_preview) AppCompatImageView playPauseBtn;
-//    @BindView(R.id.video_preview) TextureView videoPreview;
-//    @BindView(R.id.video_preview_cancel_btn) ImageButton cancelButton;
-//    @BindView(R.id.video_preview_check_btn) ImageButton checkButton;
-//    @BindView(R.id.video_duration) TextView videoDurationTextView;
-//    @BindView(R.id.flip_video_btn) ImageButton flipVideoBtn;
 
 //    private MediaPlayer mediaPlayer;
 //    private OnVideoPreviewInteractionListener mListener;

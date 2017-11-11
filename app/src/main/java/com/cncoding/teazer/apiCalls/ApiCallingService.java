@@ -1,6 +1,7 @@
 package com.cncoding.teazer.apiCalls;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
@@ -431,8 +432,10 @@ public class ApiCallingService {
 
     public static class Posts {
 
-        public static Call<ResultObject> uploadVideo(MultipartBody.Part videoPartFile, String title, Context context) {
-            return getPostalService(context).uploadVideoToServer(videoPartFile, title, "Bangalore", 12.971599, 77.594563);
+        public static Call<ResultObject> uploadVideo(MultipartBody.Part videoPartFile, String title, @NonNull String location,
+                                                     @NonNull double latitude, @NonNull double longitude,
+                                                     String tags, String categories, Context context) {
+            return getPostalService(context).uploadVideoToServer(videoPartFile, title, location, latitude, longitude, tags, categories);
         }
 
         public static Call<ResultObject> likeDislikePost(int postId, int status, Context context) {

@@ -7,6 +7,7 @@
     <dimen name="border_thick">5dp</dimen>
     <dimen name="padding_half">8dp</dimen>
     <dimen name="padding_thin">4dp</dimen>
+    <dimen name="padding_x_thin">2dp</dimen>
     <dimen name="padding_default">16dp</dimen>
     <dimen name="padding_double">36dp</dimen>
     <dimen name="padding_big">60dp</dimen>
@@ -19,7 +20,7 @@
     <dimen name="text_size_content_big">18sp</dimen>
     <dimen name="text_size_otp">55sp</dimen>
     <dimen name="action_bar_height">56dp</dimen>
-    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="height_24dp">24dp</dimen>
     <dimen name="padding_including_status_bar">32dp</dimen>
     <dimen name="navigation_bar_height">48dp</dimen>
     <dimen name="padding_with_navigation_bar_height">64dp</dimen>
@@ -27,7 +28,7 @@
     <dimen name="otp_edit_text_vertical_margin">22dp</dimen>
     <dimen name="otp_edit_text_width">77dp</dimen>
     <dimen name="bottom_scroll_margin">280dp</dimen>
-    <dimen name="thumbnail_size">120dp</dimen>
+    <dimen name="thumbnail_size">100dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
@@ -52,5 +53,6 @@
     <dimen name="popup_corner_radius">40dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="padding_with_small_profile_pic">62dp</dimen>
+    <dimen name="overlay_toolbar_height">80dp</dimen>
 
 </resources>

@@ -1,26 +1,30 @@
 package com.cncoding.teazer;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.post.PostDetailsFragment;
+import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractionListener;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
@@ -29,6 +33,8 @@ import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.SharedPrefs;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindArray;
@@ -36,45 +42,59 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
+import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
+import static com.cncoding.teazer.utilities.ViewUtils.zoomImageFromThumb;
 
 public class BaseBottomBarActivity extends BaseActivity
         implements BaseFragment.FragmentNavigation,
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
-        OnPostAdapterInteractionListener, PostReactionAdapterListener {
+        OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
+        PostReactionAdapterListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
     public static final int ACTION_VIEW_PROFILE = 2;
-//    public static final int ACTION_VIEW_CATEGORY_POSTS = 4;
 
     private int[] mTabIconsSelected = {
             R.drawable.ic_home_black,
             R.drawable.ic_binoculars_black,
             R.drawable.ic_add_video_black,
             R.drawable.ic_notifications_black,
-            R.drawable.ic_person_black};
+            R.drawable.ic_person_black
+    };
 
     @BindArray(R.array.tab_name) String[] TABS;
+    @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
+    @BindView(R.id.expanded_image) ImageView expandedImage;
 //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
+    private Animator animator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_base_bottom_bar);
+
+        Log.d("AUTH_TOKEN", SharedPrefs.getAuthToken(this));
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
         fragmentHistory = new FragmentHistory();
         navigationController = NavigationController
@@ -106,6 +126,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @OnClick(R.id.logout_btn) public void logout() {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this, MainActivity.class));
+        finish();
 //        ApiCallingService.User.logout(SharedPrefs.getAuthToken(this), this);
     }
 
@@ -117,17 +138,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @OnClick(R.id.camera_btn) public void startCamera() {
-        startActivity(new Intent(this, CameraActivity.class));
+        launchVideoUploadCamera(this);
     }
 
     private void initTab() {
         for (int i = 0; i < TABS.length; i++) {
-            bottomTabLayout.addTab(bottomTabLayout.newTab());
-            TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-            if (tab != null) {
-                tab.setCustomView(getTabView(i));
-//                bottomTabLayout.addTab(tab, i);
-            }
+            bottomTabLayout.addTab(bottomTabLayout.newTab().setCustomView(getTabView(i)));
         }
     }
 
@@ -188,17 +204,32 @@ public class BaseBottomBarActivity extends BaseActivity
     public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
         if (title == null) {
             toolbarTitle.animate().alpha(1).setDuration(250).start();
-            toolbarTitle.setVisibility(View.VISIBLE);
+            toolbarTitle.setVisibility(VISIBLE);
         } else {
             toolbarTitle.animate().alpha(0).setDuration(250).start();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    toolbarTitle.setVisibility(View.INVISIBLE);
+                    toolbarTitle.setVisibility(INVISIBLE);
                     actionBar.setTitle("    " + title);
                 }
             }, 250);
         }
+    }
+
+    public AppBarLayout.OnOffsetChangedListener appBarOffsetChangeListener() {
+        return new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                bottomTabLayout.setTranslationY((float) (-verticalOffset));
+                cameraButton.setTranslationY((float) -(verticalOffset * 1.6));
+//                int percentage = (Math.abs(verticalOffset)) * 100 / appBarLayout.getTotalScrollRange();
+//                if (percentage > 0) {
+//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                } else
+//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        };
     }
 
     @Override
@@ -253,13 +284,36 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostInteraction(int action, Pojos.Post.PostDetails postDetails) {
+    public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(2, postDetails));
+                zoomImageFromThumb(postThumbnail, expandedImage, layout, animator, 500);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pushFragment(PostDetailsFragment.newInstance(2, postDetails));
+                    }
+                }, 500);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
+        }
+    }
+
+    @Override
+    public void onPostDetailsInteraction(int action) {
+        switch (action) {
+            case ACTION_DISMISS_PLACEHOLDER:
+//                expandedImage.animate().alpha(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        expandedImage.setImageDrawable(null);
+//                    }
+//                }, 250);
+                break;
+            default:
+                break;
         }
     }
 

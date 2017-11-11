@@ -42,10 +42,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //    private static final String TAG = "MediaControllerView";
     private static final String SPACE = "  ";
 
-    private static final int HANDLER_ANIMATE_OUT = 5000;// out animate
+    private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
 //    private static final long PROGRESS_SEEK = 500;
-    private static final long ANIMATE_TIME = 400;
+    private static final long ANIMATE_TIME = 500;
 
 //    private SeekBar mSeekBar; //seek bar for video
 //    private boolean mIsDragging; //is dragging seekBar
@@ -373,12 +373,19 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         togglePlayPauseIcons();
         if (!isShowing()) {
             show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isPlaying && isShowing)
+                        hide();
+                }
+            }, 5000);
         } else {
             //animate out controller view
             Message msg = handler.obtainMessage(HANDLER_ANIMATE_OUT);
             //remove exist one first
             handler.removeMessages(HANDLER_ANIMATE_OUT);
-            handler.sendMessageDelayed(msg, 100);
+            handler.sendMessageDelayed(msg, 5000);
         }
     }
 
@@ -434,13 +441,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                                     });
                         }
                     });
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isPlaying && isShowing)
-                        hide();
-                }
-            }, 2000);
         }
 
 //        if (mPauseButton != null) {
@@ -456,7 +456,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
      * hide controller view with animation
      * With custom animation
      */
-    private void hide() {
+    public void hide() {
         if (anchorView == null) {
             return;
         }

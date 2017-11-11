@@ -1,5 +1,6 @@
 package com.cncoding.teazer.authentication;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,18 +13,23 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.ViewUtils;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -63,6 +69,9 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_through_password) ProximaNovaSemiboldButton loginThroughPasswordBtn;
     @BindView(R.id.country_code_picker) CountryCodePicker countryCodePicker;
     @BindView(R.id.login_options_layout) RelativeLayout loginOptionsLayout;
+    @BindView(R.id.reveal_layout) LinearLayout revealLayout;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.uploading_notification) ProximaNovaRegularTextView uploadingNotification;
 
     private String username;
     private int countryCode = -1;
@@ -119,6 +128,9 @@ public class LoginFragment extends Fragment {
             countryCode = getCountryCode(countryCodePicker, getActivity());
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
+
+        usernameView.setText("premsuman8");
+        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
@@ -175,13 +187,8 @@ public class LoginFragment extends Fragment {
         return togglePasswordVisibility(passwordView, event);
     }
 
-    @OnEditorAction(R.id.login_password)
-    public boolean onLoginByKeyboard(TextView v, int actionId) {
+    @OnEditorAction(R.id.login_password) public boolean onLoginByKeyboard(TextView v, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
-            InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
-            }
             onLoginBtnClick();
             return true;
         }
@@ -189,18 +196,23 @@ public class LoginFragment extends Fragment {
     }
 
     @OnClick(R.id.login_btn) public void onLoginBtnClick() {
+        ViewUtils.hideKeyboard(getActivity(), loginBtn);
         loginBtn.setEnabled(false);
         switch (getLoginState()) {
             case LOGIN_STATE_PASSWORD:
                 String password = passwordView.getText().toString();
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
-                    loginWithUsernameAndPassword(getContext(), username, passwordView, countryCode, countryCodePicker, mListener, loginBtn);
+                    startCircularReveal(revealLayout);
+                    loginWithUsernameAndPassword(getContext(), username, passwordView, countryCode,
+                            countryCodePicker, mListener, loginBtn, revealLayout);
                 }
                 else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty()) {
-                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, null, null, false);
+                    startCircularReveal(revealLayout);
+                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, revealLayout,
+                            null, null, false);
                 }
                 else setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                 break;
@@ -277,6 +289,41 @@ public class LoginFragment extends Fragment {
         else if (string.equals(getString(R.string.request_otp)))
             return LOGIN_STATE_OTP;
         else return -1;
+    }
+
+    private void startCircularReveal(final View revealLayout) {
+        Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
+                (int) loginBtn.getX() + (loginBtn.getWidth() / 2), (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
+                0, (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()));
+        animator.setDuration(500);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                revealLayout.setVisibility(View.VISIBLE);
+                uploadingNotification.setText(R.string.logging_you_in);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        animator.start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }, 680);
     }
 
     @Override

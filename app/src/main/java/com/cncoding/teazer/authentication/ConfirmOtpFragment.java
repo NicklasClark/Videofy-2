@@ -147,7 +147,8 @@ public class ConfirmOtpFragment extends Fragment {
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 loginWithOtp(getContext(), String.valueOf(userSignUpDetails.getPhoneNumber()), userSignUpDetails.getCountryCode(),
-                        null, otpResendBtn, otpVerifiedTextView, new CountDownTimer[]{countDownTimer}, true);
+                        null, otpResendBtn, null, otpVerifiedTextView, new CountDownTimer[]{countDownTimer},
+                        true);
                 break;
             default:
                 break;
@@ -185,6 +186,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     private void verifyOtp() {
+        ViewUtils.hideKeyboard(getActivity(), otp4EditText);
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 final Authorize verify = new Authorize(
@@ -196,7 +198,7 @@ public class ConfirmOtpFragment extends Fragment {
                         userSignUpDetails.getPhoneNumber(),
                         userSignUpDetails.getCountryCode(),
                         getOtp(),
-                        getFcmToken(),
+                        getFcmToken(getContext()),
                         getDeviceId(),
                         DEVICE_TYPE_ANDROID);
                 performFinalSignup(getContext(), verify, countDownTimer, otpVerifiedTextView, mListener);

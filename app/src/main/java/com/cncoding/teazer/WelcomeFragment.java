@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
@@ -37,6 +38,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -45,7 +51,6 @@ import butterknife.OnClick;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.OPEN_CAMERA_ACTION;
 import static com.cncoding.teazer.MainActivity.RESUME_WELCOME_VIDEO_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_FACEBOOK_ACTION;
@@ -115,7 +120,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 //        return networkInfo != null && networkInfo.isConnected();
 //    }
 
-    private void showNotConnectedDialog(AppCompatButton view) {
+    private void showNotConnectedDialog(ProximaNovaSemiboldButton view) {
         final Snackbar snackbar = Snackbar.make(view, R.string.not_connected_message, Snackbar.LENGTH_SHORT);
         snackbar.setAction(R.string.dismiss, new View.OnClickListener() {
                     @Override
@@ -128,24 +133,25 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         snackbar.show();
     }
 
-    @OnClick(R.id.teazer_header) public void openCamera() {
-        mListener.onWelcomeInteraction(OPEN_CAMERA_ACTION, null, null, null);
-    }
+//    @OnClick(R.id.teazer_header) public void openCamera() {
+//        mListener.onWelcomeInteraction(OPEN_CAMERA_ACTION, null, null, null);
+//    }
 
     @OnClick(R.id.login_page_btn) public void onLoginBtnClick() {
         if (isConnected)
-            mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null, null, null);
+            mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null, null, null, null, null);
         else showNotConnectedDialog(loginBtn);
     }
 
     @OnClick(R.id.signup_page_btn) public void onSignupOptionClick() {
         if (isConnected)
-            mListener.onWelcomeInteraction(SIGNUP_WITH_EMAIL_ACTION, null, null, null);
+            mListener.onWelcomeInteraction(SIGNUP_WITH_EMAIL_ACTION, null, null, null, null, null);
         else showNotConnectedDialog(signupWithEmailBtn);
     }
 
     @OnClick(R.id.signup_with_google) public void onGoogleSignupClick() {
         if (isConnected) {
+            signupWithGoogleBtn.startAnimation();
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             startActivityForResult(intent, SIGNUP_WITH_GOOGLE_ACTION);
         }
@@ -153,9 +159,10 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     }
 
     @OnClick(R.id.signup_with_facebook) public void onFacebookSignupClick() {
-        if (isConnected)
-            fbLoginButton.performClick();
-        else showNotConnectedDialog(signupWithFbBtn);
+        if (isConnected) {
+            signupWithFbBtn.startAnimation();
+            fbSignup();
+        } else showNotConnectedDialog(signupWithFbBtn);
     }
 
     @OnClick(R.id.fb_login_btn) public void fbSignup() {
@@ -198,10 +205,26 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         };
         fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
 //                accessToken = loginResult.getAccessToken();
                 facebookProfile = Profile.getCurrentProfile();
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                String accessToken = loginResult.getAccessToken().getToken();
+                Log.i("accessToken", accessToken);
+
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.i("registerFbCallback()", response.toString());
+                        // Get facebook data from login
+                        Bundle facebookData = getFacebookData(object);
+                        handleFacebookAccessToken(loginResult.getAccessToken(), facebookData);
+                    }
+                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
@@ -210,12 +233,52 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
             @Override
             public void onError(FacebookException error) {
+                Log.v("registerFbCallback()", error.getCause().toString());
             }
         });
     }
 
-    private void handleFacebookAccessToken(AccessToken accessToken) {
-        mListener.onWelcomeInteraction(SIGNUP_WITH_FACEBOOK_ACTION, accessToken, facebookProfile, null);
+    private Bundle getFacebookData(JSONObject object) {
+
+        try {
+            Bundle bundle = new Bundle();
+            String id = object.getString("id");
+
+            try {
+                URL profile_pic = new URL("https://graph.facebook.com/" + id + "/picture?width=200&height=200");
+                Log.i("profile_pic", profile_pic + "");
+                bundle.putString("profile_pic", profile_pic.toString());
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            bundle.putString("idFacebook", id);
+            if (object.has("first_name"))
+                bundle.putString("first_name", object.getString("first_name"));
+            if (object.has("last_name"))
+                bundle.putString("last_name", object.getString("last_name"));
+            if (object.has("email"))
+                bundle.putString("email", object.getString("email"));
+            if (object.has("gender"))
+                bundle.putString("gender", object.getString("gender"));
+            if (object.has("birthday"))
+                bundle.putString("birthday", object.getString("birthday"));
+            if (object.has("location"))
+                bundle.putString("location", object.getJSONObject("location").getString("name"));
+
+            return bundle;
+        }
+        catch(JSONException e) {
+            Log.d("getFacebookData()","Error parsing JSON");
+        }
+        return null;
+    }
+
+    private void handleFacebookAccessToken(AccessToken accessToken, Bundle facebookData) {
+        mListener.onWelcomeInteraction(SIGNUP_WITH_FACEBOOK_ACTION, accessToken, facebookProfile,
+                facebookData, null, signupWithFbBtn);
     }
 
     @Override
@@ -229,7 +292,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 if (account != null)
-                    mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION, account.getIdToken(), null, account);
+                    mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION, account.getIdToken(),
+                            null, null, account, signupWithGoogleBtn);
                 else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
             } else
                 Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
@@ -245,7 +309,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @Override
     public void onResume() {
         super.onResume();
-        mListener.onWelcomeInteraction(RESUME_WELCOME_VIDEO_ACTION, null, null, null);
+        mListener.onWelcomeInteraction(RESUME_WELCOME_VIDEO_ACTION, null, null, null, null, null);
     }
 
     @Override
@@ -306,6 +370,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
     public interface OnWelcomeInteractionListener {
         void onWelcomeInteraction(int action, @Nullable Object token,
-                                  Profile facebookProfile, @Nullable GoogleSignInAccount googleAccount);
+                                  Profile facebookProfile, Bundle facebookData, @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button);
     }
 }

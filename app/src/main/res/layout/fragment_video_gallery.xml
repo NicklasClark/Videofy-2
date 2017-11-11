@@ -11,5 +11,4 @@
     android:paddingTop="@dimen/padding_default"
     android:paddingBottom="@dimen/padding_default"
     android:clipToPadding="false"
-    tools:context="com.cncoding.teazer.home.camera.VideoGalleryFragment"
     tools:listitem="@layout/item_video_gallery" />

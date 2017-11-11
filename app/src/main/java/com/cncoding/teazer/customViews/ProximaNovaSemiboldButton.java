@@ -12,18 +12,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.cncoding.teazer.R;
+
+import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
 /**
  *
  * Created by Prem $ on 9/19/2017.
  */
 
-public class ProximaNovaSemiboldButton extends AppCompatButton {
+public class ProximaNovaSemiboldButton extends CircularProgressButton {
     private Bitmap mIcon;
     private Paint mPaint;
     private Rect mSrcRect;

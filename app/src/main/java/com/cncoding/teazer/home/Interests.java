@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -107,19 +108,19 @@ public class Interests extends BaseFragment implements View.OnClickListener {
                 break;
         }
 
-//        actionBar = ((FragmentActivity) getActivity()).getSupportActionBar();
-//        if (actionBar != null) {
-//            if (actionBar.getTitle() != null)
-//                previousTitle = actionBar.getTitle().toString();
-//            actionBar.setTitle("Select your interests");
-//        }
+        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            if (actionBar.getTitle() != null)
+                previousTitle = actionBar.getTitle().toString();
+            actionBar.setTitle("Select your interests");
+        }
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoriesLimit = (launchType == LAUNCH_TYPE_UPLOAD)? 5 : -1;
+        categoriesLimit = (launchType == LAUNCH_TYPE_UPLOAD)? 5 : 100;
 
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
             @Override
@@ -209,10 +210,10 @@ public class Interests extends BaseFragment implements View.OnClickListener {
                 switch (launchType) {
                     case LAUNCH_TYPE_SIGNUP:
                         incrementCategory((ProximaNovaRegularCheckedTextView) view, text);
-                        if (selectedCategoryCount >= 5) {
+                        if (selectedCategoryCount <= categoriesLimit && selectedCategoryCount > 0) {
                             saveBtn.setEnabled(true);
                             saveBtn.setText(R.string.save);
-                            saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
+//                            saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
                         }
                         break;
                     case LAUNCH_TYPE_UPLOAD:

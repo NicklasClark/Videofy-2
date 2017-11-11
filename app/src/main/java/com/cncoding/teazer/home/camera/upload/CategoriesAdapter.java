@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.utilities.Pojos.Category;
 
 import java.util.ArrayList;
 
@@ -50,14 +50,18 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isChecked = !holder.nameView.isChecked();
-                selectedCategoriesArray.put(holder.getAdapterPosition(), isChecked);
-                holder.nameView.setChecked(isChecked);
-                ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
-                if (isChecked) {
-                    selectedCategories.put(holder.getAdapterPosition(), category);
+                if (selectedCategories.size() < 5) {
+                    boolean isChecked = !holder.nameView.isChecked();
+                    selectedCategoriesArray.put(holder.getAdapterPosition(), isChecked);
+                    holder.nameView.setChecked(isChecked);
+                    ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
+                    if (isChecked) {
+                        selectedCategories.put(holder.getAdapterPosition(), category);
+                    } else selectedCategories.delete(holder.getAdapterPosition());
+                } else {
+                    holder.nameView.setChecked(false);
+                    selectedCategories.delete(holder.getAdapterPosition());
                 }
-                else selectedCategories.delete(holder.getAdapterPosition());
             }
         });
     }

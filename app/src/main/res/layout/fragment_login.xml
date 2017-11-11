@@ -143,4 +143,37 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/reveal_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/SeekBarTheme" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/uploading_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_default"
+            android:textSize="@dimen/text_size_h4"
+            android:text="@string/logging_you_in"/>
+
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

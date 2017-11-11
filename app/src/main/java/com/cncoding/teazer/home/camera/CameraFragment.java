@@ -20,8 +20,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -46,6 +44,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.util.Size;
@@ -78,12 +78,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
+
 public class CameraFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
-    public static final int ACTION_UPLOAD = 20;
-    public static final int ACTION_SHOW_GALLERY = 21;
+    public static final int ACTION_UPLOAD_VIDEO_POST = 20;
+    public static final int ACTION_UPLOAD_REACTION = 21;
+    public static final int ACTION_SHOW_GALLERY = 22;
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
 
@@ -92,7 +95,6 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
     private static final String FRAGMENT_DIALOG = "dialog";
     private static final int CAMERA_FRONT = 1;
     private static final int CAMERA_BACK = 0;
-    private static final String IS_REACTION = "isReaction";
 
     private static final String[] VIDEO_PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -238,7 +240,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_camera2_video, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
         createVideoFolder();
         return rootView;
@@ -328,7 +330,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
      */
     private boolean shouldShowRequestPermissionRationale(String[] permissions) {
         for (String permission : permissions) {
-            if (FragmentCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
                 return true;
             }
         }
@@ -349,7 +351,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         if (shouldShowRequestPermissionRationale(VIDEO_PERMISSIONS)) {
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            FragmentCompat.requestPermissions(this, VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
+            ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
         }
     }
 
@@ -724,7 +726,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         }
 //        mNextVideoAbsolutePath = null;
 //        startPreview();
-        mListener.onCameraInteraction(ACTION_UPLOAD, mNextVideoAbsolutePath);
+        mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, mNextVideoAbsolutePath);
     }
 
     /**
@@ -753,6 +755,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
             return dialog;
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Activity activity = getActivity();
@@ -771,6 +774,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
 
     public static class ConfirmationDialog extends DialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Fragment parent = getParentFragment();
@@ -779,7 +783,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(parent, VIDEO_PERMISSIONS,
+                            ActivityCompat.requestPermissions(parent.getActivity(), VIDEO_PERMISSIONS,
                                     REQUEST_VIDEO_PERMISSIONS);
                         }
                     })
@@ -795,9 +799,9 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
 
     }
 
-    interface OnCameraFragmentInteractionListener {
+    public interface OnCameraFragmentInteractionListener {
         /**
-         * @param action {@value #ACTION_UPLOAD} or {@value #ACTION_SHOW_GALLERY}
+         * @param action {@value #ACTION_UPLOAD_VIDEO_POST} or {@value #ACTION_SHOW_GALLERY}
          * @param filePath the absolute path to the ".mp4" file that was created or chosen.
          */
         void onCameraInteraction(int action, String filePath);

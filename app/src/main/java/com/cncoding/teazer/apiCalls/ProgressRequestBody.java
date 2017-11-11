@@ -63,7 +63,7 @@ public class ProgressRequestBody extends RequestBody {
 
     public interface UploadCallbacks {
         void onProgressUpdate(int percentage);
-        void onUploadError();
+        void onUploadError(Throwable throwable);
         void onUploadFinish();
     }
 

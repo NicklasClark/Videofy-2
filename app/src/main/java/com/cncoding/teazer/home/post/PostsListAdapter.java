@@ -1,11 +1,13 @@
 package com.cncoding.teazer.home.post;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -43,10 +45,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     private OnPostAdapterInteractionListener listener;
     private final List<PostDetails> posts;
     private Context context;
+    private Activity activity;
 
-    PostsListAdapter(List<PostDetails> posts, Context context) {
+    PostsListAdapter(List<PostDetails> posts, Context context, Activity activity) {
         this.posts = posts;
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -57,27 +61,31 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final PostDetails postDetails = posts.get(position);
         Pojos.MiniProfile postOwner = postDetails.getPostOwner();
 
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.postThumbnail.getLayoutParams();
+//        params.height = postDetails.getMedias().get(0).getDimension().getHeight() +
+//                (postDetails.getMedias().get(0).getDimension().getWidth() * 5/6);
+//        holder.postThumbnail.setLayoutParams(params);
+        holder.postThumbnail.setMinimumHeight(postDetails.getMedias().get(0).getDimension().getHeight() +
+                postDetails.getMedias().get(0).getDimension().getHeight() * 2/3
+        );
+
         Glide.with(context)
                 .load(postDetails.getMedias().get(0).getThumbUrl())
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+//                .thumbnail(0.1f)
                 .crossFade()
-//                .animate(android.R.anim.fade_in)
                 .into(holder.postThumbnail);
 
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                     .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+//                    .thumbnail(0.1f)
                     .crossFade()
-//                    .animate(R.anim.zoom_in)
                     .into(holder.profilePic);
 
         holder.caption.setText(postDetails.getTitle());
@@ -93,13 +101,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             View.OnClickListener viewPostDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails);
+                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails);
+                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail, holder.layout);
                 }
             };
 
@@ -116,7 +124,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.home_screen_post_layout) RelativeLayout layout;
+        @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
         @BindView(R.id.home_screen_post_caption) ProximaNovaSemiboldTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
@@ -154,6 +162,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     public interface OnPostAdapterInteractionListener {
-        void onPostInteraction(int action, PostDetails postDetails);
+        void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
     }
 }
