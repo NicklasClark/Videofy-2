@@ -39,7 +39,7 @@
                 android:textSize="@dimen/text_size_content"
                 android:layout_gravity="end"
                 android:gravity="center"
-                android:foreground="@drawable/ripple_dark_no_rounded"
+                android:foreground="@drawable/ripple_dark"
                 android:paddingStart="@dimen/padding_default"
                 android:paddingEnd="@dimen/padding_default"
                 android:text="@string/logout"/>

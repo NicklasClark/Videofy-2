@@ -338,6 +338,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         googleApiClient.stopAutoManage(fragmentActivity);
         googleApiClient.disconnect();
         profileTracker.stopTracking();
+        signupWithGoogleBtn.dispose();
+        signupWithFbBtn.dispose();
 //        accessTokenTracker.stopTracking();
     }
 

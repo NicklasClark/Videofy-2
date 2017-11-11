@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity
                                 finish();
                             }
                         }, 500);
-                        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-                        finish();
+//                        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+//                        finish();
                     } else {
                         setFragment(TAG_SELECT_CATEGORIES, false, null);
                     }

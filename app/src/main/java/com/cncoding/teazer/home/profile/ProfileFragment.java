@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.ui.fragment.activity.FollowersActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingActivities;
@@ -108,8 +107,8 @@ public class ProfileFragment extends BaseFragment {
         _creations= view.findViewById(R.id.creations);
         _followers= view.findViewById(R.id.followers);
         _following= view.findViewById(R.id.following);
-        profile_image= (CircularAppCompatImageView) view.findViewById(R.id.profile_id);
-        bgImage= (CircularAppCompatImageView)view.findViewById(R.id.profile_id);
+//        profile_image= (CircularAppCompatImageView) view.findViewById(R.id.profile_id);
+//        bgImage= (CircularAppCompatImageView)view.findViewById(R.id.profile_id);
         backgroundprofile=view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
 
