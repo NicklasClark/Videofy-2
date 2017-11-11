@@ -319,7 +319,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         recyclerView.setAdapter(adapter);
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor) {
+    @OnClick(R.id.menu) public void showMenu(View anchor)
+    {
         PopupMenu popupMenu = new PopupMenu(getContext(), anchor);
         popupMenu.setOnDismissListener(new OnDismissListener());
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
@@ -327,7 +328,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.video_surface_container)
+    public void toggleMediaControllerVisibility() {
         if (controller != null)
             controller.toggleControllerView();
     }

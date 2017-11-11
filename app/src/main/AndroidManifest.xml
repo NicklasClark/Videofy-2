@@ -102,6 +102,23 @@
                 android:value=".home.camera.CameraActivity" />
         </activity>
 
+        <activity android:name=".ui.fragment.activity.Settings"
+            android:label="@string/settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.fragment.activity.ProfileCreationVideos"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.fragment.activity.FollowersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.fragment.activity.FollowingActivities"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <receiver
             android:name=".authentication.SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS">

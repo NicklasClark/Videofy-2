@@ -3,6 +3,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="creation">Creations</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="create_here">Create here!</string>
@@ -115,6 +118,7 @@
     <string name="nearby_place_side_image">Nearby place side imageView</string>
     <string name="location">Location</string>
     <string name="save">Save</string>
+    <string name="video_details">Last Night Bash at Delhi Fort</string>
     <string name="select_at_least_5_to_continue">Select at least 5 interests to continue</string>
     <string name="continue_text">Continue</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
@@ -144,8 +148,13 @@
     <string name="location_goes_here">Location goes here</string>
     <string name="_653_views_204_reactions">653 Views | 204 Reactions</string>
     <string name="prem_suman">Prem Suman</string>
-    <string name="username_goes_here">\@usermane goes here</string>
-    <string name="profile_bio_and_user_details_they_all_go_here">Profile bio and user details they all go here.</string>
+    <string name="usermane_goes_here">\@usermane goes here</string>
+    <string name="profile_bio_and_user_details_nthey_all_go_here">Profile bio and user details they all go here.</string>
+    <string name="hobby">Photographer,Traveller,Dreamer.</string>
+    <string name="user_detail">Follow me to see my creative Videos.</string>
+    <string name="invitefriends">Invite Friends</string>
+    <string name="personasettings">PERSONAL SETTINGS</string>
+    <string name="changecategories">Change Categories</string>
     <string name="react">&#160;&#160;&#160;React</string>
     <string name="already_exists">Username, Email or Phone Number already exists</string>
     <string name="take_photo">Take photo</string>
@@ -170,4 +179,17 @@
     <string name="tag_your_friends">Tag your friends</string>
     <string name="logging_you_in">Logging you in…</string>
     <string name="expanded_placeholder_image">Expanded placeholder image</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">UnFollow</string>
+    <string name="background_profile">Background profile</string>
+    <string name="your_details">Your Details</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="change_categories">Change Categories</string>
+    <string name="account_settings">ACCOUNT SETTINGS</string>
+    <string name="my_account_info">My Account Info</string>
+    <string name="link_accounts">Link Accounts</string>
+    <string name="change_password">Change Password</string>
+    <string name="personal_settings">PERSONAL SETTINGS</string>
+    <string name="my_block_list">My Block List</string>
+    <string name="private_account">Private Account</string>
 </resources>

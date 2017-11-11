@@ -54,7 +54,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener {
+        PostReactionAdapterListener,ProfileFragment.RemoveAppBar {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -86,7 +86,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_base_bottom_bar);
 
         Log.d("AUTH_TOKEN", SharedPrefs.getAuthToken(this));
@@ -346,5 +345,11 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }
+    }
+
+    @Override
+    public void removeAppbar() {
+
+  //   getSupportActionBar().hide();
     }
 }

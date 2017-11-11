@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-common-4.27.0.aar/a18d2e58c261f747ae1812f1c2d68aa6/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-common-4.27.0.aar/a18d2e58c261f747ae1812f1c2d68aa6/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-common-4.27.0.aar/774d8ba18a2519c2256c0bc5918819af/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-common-4.27.0.aar/774d8ba18a2519c2256c0bc5918819af/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

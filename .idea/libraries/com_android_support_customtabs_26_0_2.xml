@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/customtabs-26.0.2.aar/f7108ffd2ad6be42eb42c2578980720a/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/customtabs-26.0.2.aar/f7108ffd2ad6be42eb42c2578980720a/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/customtabs-26.0.2.aar/b57eacd06facbdb40560d013d143a0e8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/customtabs-26.0.2.aar/b57eacd06facbdb40560d013d143a0e8/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

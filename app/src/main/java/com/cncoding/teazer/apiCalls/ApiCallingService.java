@@ -6,6 +6,10 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
+import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -30,6 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.cncoding.teazer.MainActivity.BASE_URL;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+//5346800017115465
+//136
 
 /**
  *
@@ -41,7 +47,7 @@ public class ApiCallingService {
 //    private static String AUTH_TOKEN = "Bearer 8c2400ccd8c32d572cc8181ccadc70c08f5df408b14e0c77b60e2277825ef2ad";
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
-    public static final int FAIL = 3;
+    static final int FAIL = 3;
 
     public static class Application {
 
@@ -150,6 +156,9 @@ public class ApiCallingService {
         public static Call<Pojos.Friends.CircleList> getMyFollowings(int page, Context context) {
             return getFriendsService(context).getMyFollowings(page);
         }
+        public static Call<ProfileMyFollowing> getMyFollowing(int page, Context context) {
+            return getFriendsService(context).getMyFollowing(page);
+        }
 
         /**
          * Call this service to send a join request
@@ -208,7 +217,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the my followers list
          * */
-        public static Call<ResultObject> getMyFollowers(int page, Context context) {
+        public static Call<ProfileMyFollowers> getMyFollowers(int page, Context context) {
             return getFriendsService(context).getMyFollowers(page);
         }
 
@@ -394,6 +403,11 @@ public class ApiCallingService {
             return getReactService(context).getMyReactions(page);
         }
 
+
+        public static Call<ProfileReactions> getMyReaction(int page, Context context) {
+            return getReactService(context).getMyReaction(page);
+        }
+
         /**
          * Call this service to get the reactions of friends.
          *
@@ -433,7 +447,7 @@ public class ApiCallingService {
     public static class Posts {
 
         public static Call<ResultObject> uploadVideo(MultipartBody.Part videoPartFile, String title, @NonNull String location,
-                                                     @NonNull double latitude, @NonNull double longitude,
+                                                     double latitude, double longitude,
                                                      String tags, String categories, Context context) {
             return getPostalService(context).uploadVideoToServer(videoPartFile, title, location, latitude, longitude, tags, categories);
         }
@@ -448,6 +462,10 @@ public class ApiCallingService {
 
         public static Call<ResultObject> deletePost(int postId, Context context) {
             return getPostalService(context).deletePost(postId);
+        }
+
+        public static Call<DeleteMyVideos> deletePosts(int postId, Context context) {
+            return getPostalService(context).deletePostVideo(postId);
         }
 
         public static Call<ResultObject> reportPost(Pojos.Post.ReportPost reportPostDetails, Context context) {
@@ -484,6 +502,11 @@ public class ApiCallingService {
 
         public static Call<PostReactionsList> getReactionsOfPost(int postId, int page, Context context) {
             return getPostalService(context).getReactionsOfPost(postId, page);
+        }
+
+        public static Call<PostList>getPostedVideos(Context context, int page) {
+            return getPostalService(context).getPostedVideos(page);
+
         }
 
         private static TeazerApiCall.Posts getPostalService(Context context) {
@@ -533,6 +556,13 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
+
+        public static Call<Pojos.User.Profile>getUserProfileDetail(Context context)
+        {
+            return getUserService(context).getUserProfile();
+        }
+
+
         private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -541,6 +571,9 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
+
+
+
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,

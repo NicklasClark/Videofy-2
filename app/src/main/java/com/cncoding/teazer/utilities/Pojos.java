@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -980,7 +982,9 @@ public class Pojos {
         }
     }
 
-    public static class User {
+
+
+        public static class User {
 
         public static class Profile implements Parcelable {
             private UserProfile user_profile;
@@ -1794,6 +1798,7 @@ public class Pojos {
         };
     }
 
+
     public static class Medias implements Parcelable {
         private int media_id;
         private String media_url;
@@ -2050,4 +2055,8 @@ public class Pojos {
             }
         };
     }
+
+
+
+
 }

@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.6.0.aar/4629c6f0adf9e14c1c8d6b213ce8bc57/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.6.0.aar/4629c6f0adf9e14c1c8d6b213ce8bc57/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.4.2.aar/033fb9dcf611b9c7aebe9860aeab1e95/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.4.2.aar/033fb9dcf611b9c7aebe9860aeab1e95/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

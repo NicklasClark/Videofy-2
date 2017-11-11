@@ -2,6 +2,10 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
+import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
@@ -32,19 +36,19 @@ import retrofit2.http.Query;
  * Created by Prem $ on 10/3/2017.
  */
 
-class TeazerApiCall {
+ class TeazerApiCall {
 
-    public static final int RESPONSE_CODE_200 = 200;
-    public static final int RESPONSE_CODE_201 = 201;
+    static final int RESPONSE_CODE_200 = 200;
+    static final int RESPONSE_CODE_201 = 201;
 
     /**Invalid JSON Format present in Request Body**/
     public static final int RESPONSE_CODE_400 = 400;
 
     /**Un-Authorized access**/
-    public static final int RESPONSE_CODE_401 = 401;
+    static final int RESPONSE_CODE_401 = 401;
 
     /**Validation failed**/
-    public static final int RESPONSE_CODE_412 = 412;
+    static final int RESPONSE_CODE_412 = 412;
 
     /**
      * Application interfaces
@@ -107,7 +111,6 @@ class TeazerApiCall {
 
         /**
          * Perform sign in with password.
-         * @param loginWithPassword
          */
         @POST("/api/v1/authentication/signin/with/password")
         Call<ResultObject> loginWithPassword(@Body Authorize loginWithPassword);
@@ -176,7 +179,7 @@ class TeazerApiCall {
     /**
      * Friends interface
      * */
-    interface FriendsCalls {
+   interface FriendsCalls {
 
         /**
          * Get the "my circle" with search term
@@ -190,6 +193,10 @@ class TeazerApiCall {
         @GET("/api/v1/friend/my/followings/{page}")
         Call<Pojos.Friends.CircleList> getMyFollowings(@Path("page") int page);
 
+        //by arif
+
+        @GET("/api/v1/friend/my/followings/{page}")
+        Call<ProfileMyFollowing> getMyFollowing(@Path("page") int page);
         /**
          * Call this service to send a join request
          * */
@@ -241,7 +248,7 @@ class TeazerApiCall {
          * Call this service to get the my followers list
          * */
         @GET("/api/v1/friend/my/followers/{page}")
-        Call<ResultObject> getMyFollowers(@Path("page") int page);
+        Call<ProfileMyFollowers> getMyFollowers(@Path("page") int page);
 
         /**
          * Call this service to get the my followers list with search term
@@ -385,6 +392,10 @@ class TeazerApiCall {
         @GET("/api/v1/react/my/reactions/{page}")
         Call<UserReactionsList> getMyReactions(@Path("page") int page);
 
+        //Arif
+
+        @GET("/api/v1/react/my/reactions/{page}")
+        Call<ProfileReactions> getMyReaction(@Path("page") int page);
         /**
          * Call this service to get the reactions of friends.
          * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,
@@ -458,6 +469,10 @@ class TeazerApiCall {
          * */
         @DELETE("/api/v1/post/delete/{post_id}")
         Call<ResultObject> deletePost(@Path("post_id") int postId);
+
+
+        @DELETE("/api/v1/post/delete/{post_id}")
+        Call<DeleteMyVideos> deletePostVideo(@Path("post_id") int postId);
 
         /**
          * Call this service to report a post
@@ -534,14 +549,7 @@ class TeazerApiCall {
         @GET("/api/v1/post/my/videos/{page}")
         Call<PostList> getPostedVideos(@Path("page") int page);
 
-        /**
-         * Call this service to get the videos posted by friends
-         * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
-         *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.Post}
-         *      or 401 : Un-Authorized access
-         *      or 412 : Validation Failed
-         * */
+
         @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
         Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
 
@@ -590,7 +598,7 @@ class TeazerApiCall {
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link }
+         * @return {@link com.cncoding.teazer.utilities.Pojos.User.Profile}
          * */
         @GET("/api/v1/user/profile")
         Call<Pojos.User.Profile> getUserProfile();
