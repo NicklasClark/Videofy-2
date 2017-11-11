@@ -334,14 +334,14 @@ public class MainActivity extends AppCompatActivity
                 startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
-//                mediaPlayer.pause();
+                mediaPlayer.pause();
                 loggingIn = true;
                 if (token != null && facebookProfile != null && facebookData != null) {
                     handleFacebookLogin((AccessToken) token, facebookProfile, facebookData, button);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
-//                mediaPlayer.pause();
+                mediaPlayer.pause();
                 loggingIn = true;
                 if (token != null && googleAccount != null)
                     handleGoogleSignIn((String) token,  googleAccount, button);
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity
                 onBackPressed();
                 break;
             case RESUME_WELCOME_VIDEO_ACTION:
-                if (mediaPlayer != null && !loggingIn)
+                if (mediaPlayer != null && loggingIn)
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
                 break;
@@ -665,7 +665,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null && loggingIn)
+        if (mediaPlayer != null)
             mediaPlayer.pause();
     }
 
