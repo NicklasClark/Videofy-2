@@ -104,7 +104,6 @@ public class FragmentProfileMyCreations extends Fragment {
                 }
 
             }
-
             @Override
             public void onFailure(Call<Pojos.Post.PostList> call, Throwable t) {
 
