@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.TextureView;
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authStateListener;
     private TransitionDrawable transitionDrawable;
     private boolean isFirebaseSignup;
+    private boolean loggingIn;
     private Bitmap bitmap;
 
     @Override
@@ -143,6 +147,7 @@ public class MainActivity extends AppCompatActivity
 
         welcomeVideo.setSurfaceTextureListener(MainActivity.this);
         isFirebaseSignup = false;
+        loggingIn = false;
         firebaseAuth = FirebaseAuth.getInstance();
         setFirebaseAuthStateListener();
     }
@@ -156,6 +161,13 @@ public class MainActivity extends AppCompatActivity
 //                    user is signed in
                     new OfflineUserProfile(MainActivity.this).setEmail(user.getEmail());
                     if (!isFirebaseSignup) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+                                finish();
+                            }
+                        }, 500);
                         startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
                         finish();
                     } else {
@@ -322,11 +334,15 @@ public class MainActivity extends AppCompatActivity
                 startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
+//                mediaPlayer.pause();
+                loggingIn = true;
                 if (token != null && facebookProfile != null && facebookData != null) {
                     handleFacebookLogin((AccessToken) token, facebookProfile, facebookData, button);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
+//                mediaPlayer.pause();
+                loggingIn = true;
                 if (token != null && googleAccount != null)
                     handleGoogleSignIn((String) token,  googleAccount, button);
                 break;
@@ -337,7 +353,7 @@ public class MainActivity extends AppCompatActivity
                 onBackPressed();
                 break;
             case RESUME_WELCOME_VIDEO_ACTION:
-                if (mediaPlayer != null)
+                if (mediaPlayer != null && !loggingIn)
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
                 break;
@@ -376,7 +392,7 @@ public class MainActivity extends AppCompatActivity
                                         facebookProfile.getName(),
                                         facebookProfile.getProfilePictureUri(100, 100));
 
-                                firebaseCredentialSignin(FacebookAuthProvider.getCredential(token.getToken()), button);
+                                firebaseCredentialSignin(FacebookAuthProvider.getCredential(token.getToken()), button, true);
                             }
                         }
                     }
@@ -412,7 +428,7 @@ public class MainActivity extends AppCompatActivity
                                         googleAccount.getDisplayName(),
                                         googleAccount.getPhotoUrl());
 
-                                firebaseCredentialSignin(GoogleAuthProvider.getCredential(token, null), button);
+                                firebaseCredentialSignin(GoogleAuthProvider.getCredential(token, null), button, false);
                             }
                         }
                     }
@@ -559,18 +575,30 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-    private void firebaseCredentialSignin(AuthCredential credential, final ProximaNovaSemiboldButton button) {
+    private void firebaseCredentialSignin(AuthCredential credential, final ProximaNovaSemiboldButton button, final boolean isFacebook) {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Snackbar.make(mainFragmentContainer, "Welcome!", Snackbar.LENGTH_SHORT).show();
-                        } else {
+                        if (!task.isSuccessful()) {
                             AuthUtils.logout(MainActivity.this);
-                            Snackbar.make(upBtn, "FirebaseCredentialSignin failed!", Snackbar.LENGTH_SHORT).show();
+                            Exception e = task.getException();
+                            if (e != null) {
+                                Snackbar.make(upBtn, "FirebaseCredentialSignin failed!" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            }
                         }
-                        button.revertAnimation();
+//                        else {
+//                            Snackbar.make(mainFragmentContainer, "Welcome!", Snackbar.LENGTH_SHORT).show();
+//                        }
+                        if (isFacebook) {
+                            button.doneLoadingAnimation(Color.parseColor("#4469AF"),
+                                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
+                            button.setBackgroundResource(R.drawable.bg_button_facebook);
+                        } else {
+                            button.doneLoadingAnimation(Color.parseColor("#DC4E41"),
+                                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
+                        }
+                        loggingIn = false;
                     }
                 });
     }
@@ -622,10 +650,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null)
+        if (mediaPlayer != null && loggingIn)
             mediaPlayer.pause();
     }
 

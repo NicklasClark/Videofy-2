@@ -139,31 +139,20 @@
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/signup_with_facebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default"
-            android:layout_marginStart="@dimen/padding_default"
-            android:layout_marginEnd="@dimen/padding_default"
-            android:text="@string/continue_with_facebook"
-            android:textSize="@dimen/text_size_content_big"
-            app:drawableStartCompat="@drawable/ic_facebook_white"
             style="@style/AppTheme.RoundedFacebookButtonWelcomePage"
-            android:layout_above="@+id/signup_with_google"
-            android:layout_alignParentStart="true" />
+            app:spinning_bar_color="@android:color/white"
+            app:spinning_bar_padding="@dimen/padding_half"
+            app:drawableStartCompat="@drawable/ic_facebook_white"
+            android:layout_above="@+id/signup_with_google" />
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/signup_with_google"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default"
-            android:layout_marginTop="@dimen/padding_default"
-            android:layout_marginStart="@dimen/padding_default"
-            android:layout_marginEnd="@dimen/padding_default"
-            android:layout_marginBottom="@dimen/padding_double"
-            android:text="@string/continue_with_google"
-            android:textSize="@dimen/text_size_content_big"
-            app:drawableStartCompat="@drawable/ic_google_white"
             style="@style/AppTheme.RoundedGoogleButtonWelcomePage"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_double"
+            app:spinning_bar_color="@android:color/white"
+            app:spinning_bar_padding="@dimen/padding_half"
+            app:drawableStartCompat="@drawable/ic_google_white"
             android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
