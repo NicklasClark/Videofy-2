@@ -198,7 +198,7 @@ public class ConfirmOtpFragment extends Fragment {
                         userSignUpDetails.getCountryCode(),
                         getOtp(),
                         getFcmToken(getContext()),
-                        getDeviceId(),
+                        getDeviceId(getContext()),
                         DEVICE_TYPE_ANDROID);
                 performFinalSignup(getContext(), verify, countDownTimer, otpVerifiedTextView, mListener);
                 break;

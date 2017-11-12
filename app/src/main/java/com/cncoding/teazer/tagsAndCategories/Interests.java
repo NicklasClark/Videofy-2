@@ -10,6 +10,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -64,8 +66,6 @@ public class Interests extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        categoriesLimit = (launchType == LAUNCH_TYPE_UPLOAD)? 5 : 100;
-
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
@@ -75,6 +75,9 @@ public class Interests extends Fragment {
 //                flexboxLayoutManager.setAlignContent(AlignContent.FLEX_START);
                 flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
                 recyclerView.setLayoutManager(flexboxLayoutManager);
+                recyclerView.setLayoutAnimation(new LayoutAnimationController(
+                        AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in), 0.04f)
+                );
                 recyclerView.setAdapter(interestsAdapter);
             }
 

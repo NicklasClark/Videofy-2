@@ -64,8 +64,9 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
                     view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
                 }
 
-                if (selectedInterests.size() >= 5 && !interests.isSaveBtnEnabled()) {
-                    interests.enableSaveBtn();
+                if (selectedInterests.size() >= 5) {
+                    if (!interests.isSaveBtnEnabled())
+                        interests.enableSaveBtn();
                 } else {
                     if (interests.isSaveBtnEnabled())
                         interests.disableSaveBtn();

@@ -203,7 +203,7 @@ public class LoginFragment extends Fragment {
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
                     startCircularReveal(revealLayout);
                     loginWithUsernameAndPassword(getContext(), username, passwordView, countryCode,
-                            countryCodePicker, mListener, loginBtn, revealLayout);
+                            countryCodePicker, mListener, loginBtn);
                 }
                 else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;

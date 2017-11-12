@@ -32,7 +32,6 @@ import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.SharedPrefs;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -44,6 +43,7 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
+import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
 public class BaseBottomBarActivity extends BaseActivity
@@ -83,7 +83,7 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
 
-        Log.d("AUTH_TOKEN", SharedPrefs.getAuthToken(this));
+        Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null? "N/A" : getAuthToken(getApplicationContext()));
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);

@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -128,15 +127,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()
 //                .penaltyLog()
-//                .penaltyDialog()
+////                .penaltyDialog()
 //                .build());
 //        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
-//                .penaltyLog()
+////                .penaltyLog()
 //                .build());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -164,19 +161,9 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
-    private void successfullyLoggedIn(int delay) {
-        if (delay == 0) {
-            startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-            finish();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-                    finish();
-                }
-            }, delay);
-        }
+    private void successfullyLoggedIn() {
+        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+        finish();
     }
 
     private void setFragment(String tag, boolean addToBackStack, Object[] args) {
@@ -235,9 +222,6 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         if (!reverse) {
-//            showCircularRevealAnimation(revealLayout, (int) touchCoordinates[0], (int) touchCoordinates[1], Color.argb(200, 0, 0, 0));
-//            revealLayout.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
-//            revealLayout.setVisibility(View.INVISIBLE);
             new AsyncTask<Void, Void, Void>() {
 
                 @Override
@@ -272,6 +256,8 @@ public class MainActivity extends AppCompatActivity
         else {
             if (transitionDrawable != null)
                 transitionDrawable.reverseTransition(600);
+            if (mediaPlayer != null && !mediaPlayer.isPlaying())
+                mediaPlayer.start();
         }
     }
 
@@ -299,7 +285,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
     }
 
     @Override
@@ -354,7 +339,7 @@ public class MainActivity extends AppCompatActivity
                                      final ProximaNovaSemiboldButton button) {
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
-                getDeviceId(),
+                getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 facebookProfile.getId(),                                            //social ID
                 SOCIAL_LOGIN_TYPE_FACEBOOK,
@@ -369,16 +354,16 @@ public class MainActivity extends AppCompatActivity
                         loggingIn = false;
                         SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
                         switch (response.code()) {
-                            case 200:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button);
-                                }
-                                break;
                             case 201:
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button);
+                                            facebookData, facebookProfile, button, false);
+                                }
+                                break;
+                            case 200:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(true, null,
+                                            facebookData, facebookProfile, button, true);
                                 } else {
                                     new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
                                             facebookProfile, button);
@@ -400,7 +385,7 @@ public class MainActivity extends AppCompatActivity
                                     final ProximaNovaSemiboldButton button) {
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
-                getDeviceId(),
+                getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 googleAccount.getId(),              //Social ID
                 SOCIAL_LOGIN_TYPE_GOOGLE,
@@ -415,16 +400,16 @@ public class MainActivity extends AppCompatActivity
                         loggingIn = false;
                         SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
                         switch (response.code()) {
-                            case 200:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(false, googleAccount,
-                                            null, null, button);
-                                }
-                                break;
                             case 201:
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false, googleAccount,
-                                            null, null, button);
+                                            null, null, button, false);
+                                }
+                                break;
+                            case 200:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(false, googleAccount,
+                                            null, null, button, true);
                                 } else {
                                     new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
                                             null, button);
@@ -439,7 +424,8 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData, Profile facebookProfile, ProximaNovaSemiboldButton button) {
+    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData,
+                                        Profile facebookProfile, ProximaNovaSemiboldButton button, boolean accountAlreadyExists) {
         if (isFacebookAccount) {
             saveUserProfile(MainActivity.this,
                     facebookProfile.getId(),
@@ -462,7 +448,14 @@ public class MainActivity extends AppCompatActivity
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         }
 
-        successfullyLoggedIn(500);
+        if (accountAlreadyExists) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+                }
+            }, 500);
+        }
     }
 
     private void saveUserProfile(Context context, String id, String firstName,
@@ -480,7 +473,7 @@ public class MainActivity extends AppCompatActivity
     public void onLoginFragmentInteraction(int action, Authorize authorize) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-                successfullyLoggedIn(0);
+                successfullyLoggedIn();
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
@@ -496,7 +489,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
         if (isVerified)
-            setFragment(TAG_SELECT_INTERESTS, true, null);
+            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
         else {
             setFragment(TAG_LOGIN_FRAGMENT, true,
                     new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
@@ -525,7 +518,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onInterestsInteraction() {
-        successfullyLoggedIn(0);
+        successfullyLoggedIn();
     }
 
     private void toggleUpBtnVisibility(int visibility) {

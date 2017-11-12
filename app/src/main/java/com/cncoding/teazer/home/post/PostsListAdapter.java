@@ -1,8 +1,8 @@
 package com.cncoding.teazer.home.post;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Dimension;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.List;
@@ -42,15 +43,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         ,"Food And Drink","Gardening","Geek","Hair And Beauty"
     };
 
+    private SparseArray<Dimension> dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
     private final List<PostDetails> posts;
     private Context context;
-    private Activity activity;
 
-    PostsListAdapter(List<PostDetails> posts, Context context, Activity activity) {
+    PostsListAdapter(List<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
-        this.activity = activity;
+        dimensionSparseArray = new SparseArray<>();
     }
 
     @Override
@@ -64,6 +65,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PostDetails postDetails = posts.get(position);
         Pojos.MiniProfile postOwner = postDetails.getPostOwner();
+        dimensionSparseArray.put(position, postDetails.getMedias().get(0).getDimension());
 
 //        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.postThumbnail.getLayoutParams();
 //        params.height = postDetails.getMedias().get(0).getDimension().getHeight() +
@@ -72,6 +74,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         holder.postThumbnail.setMinimumHeight(postDetails.getMedias().get(0).getDimension().getHeight() +
                 postDetails.getMedias().get(0).getDimension().getHeight() * 2/3
         );
+
+
 
         Glide.with(context)
                 .load(postDetails.getMedias().get(0).getThumbUrl())

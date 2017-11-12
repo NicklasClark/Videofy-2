@@ -1,15 +1,21 @@
 package com.cncoding.teazer.utilities;
 
+import android.Manifest;
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -40,8 +46,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
+import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
@@ -76,7 +82,8 @@ public class AuthUtils {
                         return false;
                 }
             }
-        } return false;
+        }
+        return false;
     }
 
     public static void setCountryCode(Context context, int countryCode) {
@@ -96,12 +103,20 @@ public class AuthUtils {
         return countryCode;
     }
 
-    public static String getDeviceId() {
-        return Settings.Secure.ANDROID_ID;
+    @NonNull
+    @SuppressLint("HardwareIds")
+    public static String getDeviceId(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return Settings.Secure.ANDROID_ID;
+        }
+        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+        if (telephonyManager != null) {
+            return telephonyManager.getDeviceId();
+        } else return Settings.Secure.ANDROID_ID;
     }
 
     public static String getFcmToken(Context context) {
-        return SharedPrefs.getFcmToken(context) != null? SharedPrefs.getFcmToken(context) : FirebaseInstanceId.getInstance().getToken();
+        return SharedPrefs.getFcmToken(context) == null ? FirebaseInstanceId.getInstance().getToken() : SharedPrefs.getFcmToken(context);
     }
 
     /**
@@ -278,7 +293,7 @@ public class AuthUtils {
                                                     ProximaNovaRegularAutoCompleteTextView passwordView,
                                                     int countryCode, CountryCodePicker countryCodePicker,
                                                     final LoginInteractionListener mListener,
-                                                    final ProximaNovaSemiboldButton loginBtn, final LinearLayout revealLayout) {
+                                                    final ProximaNovaSemiboldButton loginBtn) {
         if (TextUtils.isDigitsOnly(username) && countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
             return;
@@ -286,7 +301,7 @@ public class AuthUtils {
         if (AuthUtils.isPasswordValid(passwordView)) {
             final Pojos.Authorize authorize = new Pojos.Authorize(
                     getFcmToken(context),
-                    getDeviceId(),
+                    getDeviceId(context),
                     DEVICE_TYPE_ANDROID,
                     username,
                     passwordView.getText().toString());
@@ -369,7 +384,7 @@ public class AuthUtils {
         ApiCallingService.Auth.verifyLoginWithOtp(
                 new Pojos.Authorize(
                         getFcmToken(context),
-                        getDeviceId(),
+                        getDeviceId(context),
                         DEVICE_TYPE_ANDROID,
                         userSignUpDetails.getPhoneNumber(),
                         userSignUpDetails.getCountryCode(),
