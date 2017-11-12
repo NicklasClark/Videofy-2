@@ -10,8 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/.gitignore" afterPath="$PROJECT_DIR$/app/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
@@ -79,17 +84,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java">
+      <file leaf-file-name="PostsListFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="162" column="0" lean-forward="true" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
+            <state relative-caret-position="833">
+              <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
               <folding>
-                <element signature="e#23888#23889#0" expanded="true" />
-                <element signature="e#23926#23927#0" expanded="true" />
-                <element signature="method#toggleUpBtnVisibility#0;class#MainActivity#0" expanded="false" />
-                <element signature="class#28438:29352" expanded="false" />
+                <element signature="method#getHomePagePosts#0;class#PostsListFragment#0" expanded="false" />
+                <element signature="method#populateRecyclerView#0;class#PostsListFragment#0" expanded="false" />
+                <element signature="method#populateDummyLists#0;class#PostsListFragment#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseBottomBarActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="54" column="0" lean-forward="true" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -98,7 +112,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="187">
-              <caret line="67" column="90" lean-forward="true" selection-start-line="67" selection-start-column="90" selection-end-line="67" selection-end-column="90" />
+              <caret line="67" column="90" lean-forward="false" selection-start-line="67" selection-start-column="90" selection-end-line="67" selection-end-column="90" />
               <folding />
             </state>
           </provider>
@@ -163,7 +177,9 @@
     </dirStrings>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="FORCE_PUSH_ALLOWED" value="false" />
   </component>
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
@@ -1947,7 +1963,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_video_upload.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_alternate_email.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/SignupFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml" />
@@ -1976,6 +1991,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/.gitignore" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
       </list>
     </option>
   </component>
@@ -2028,6 +2044,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2250,7 +2280,7 @@
     <property name="android.profiler.active" value="true" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="show.do.not.ask.upgrade.gradle.plugin" value="3.0.0" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
@@ -2329,7 +2359,7 @@
       <option name="ACTIVITY_CLASS" value="com.cncoding.teazer.ui.fragment.activity.FollowingActivity" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510489480296" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
@@ -2402,7 +2432,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510489480296" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2450,7 +2480,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510489480296" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2633,7 +2663,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510489480300" />
       </method>
     </configuration>
     <list size="2">
@@ -2699,7 +2729,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510488590226</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="edited gitignore">
+      <created>1510488746449</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1510488746449</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2783,7 +2820,8 @@
     <MESSAGE value="Merge branch 'arif_dev' of https://bitbucket.org/teaserandroidteam/teazerandroid into prem_dev&#10;&#10;# Conflicts:&#10;#&#9;.gradle/4.1/fileContent/fileContent.lock&#10;#&#9;.gradle/4.1/fileHashes/fileHashes.bin&#10;#&#9;.gradle/4.1/fileHashes/fileHashes.lock&#10;#&#9;.gradle/4.1/fileHashes/resourceHashesCache.bin&#10;#&#9;.gradle/4.1/taskHistory/fileSnapshots.bin&#10;#&#9;.gradle/4.1/taskHistory/taskHistory.bin&#10;#&#9;.gradle/4.1/taskHistory/taskHistory.lock&#10;#&#9;.gradle/buildOutputCleanup/cache.properties&#10;#&#9;.idea/libraries/com_android_databinding_adapters_1_3_1.xml&#10;#&#9;.idea/libraries/com_android_databinding_library_1_3_1.xml&#10;#&#9;.idea/libraries/com_android_support_animated_vector_drawable_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_appcompat_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_cardview_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_constraint_constraint_layout_1_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_customtabs_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_design_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_palette_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_recyclerview_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_compat_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_core_ui_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_core_utils_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_fragment_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_media_compat_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_v13_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_v4_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_vector_drawable_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_espresso_espresso_core_2_2_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_exposed_instrumentation_api_publish_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_test_rules_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_test_runner_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_transition_26_0_2.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_common_4_27_0.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_core_4_27_0.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_login_4_27_0.xml&#10;#&#9;.idea/libraries/com_futuremind_recyclerfastscroll_fastscroll_0_2_5.xml&#10;#&#9;.idea/libraries/com_google_android_flexbox_0_3_1.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_api_phone_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_api_phone_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_base_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_base_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_base_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_base_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_basement_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_basement_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_location_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_location_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_maps_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_maps_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_places_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_places_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_tasks_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_tasks_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_impl_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_impl_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_auth_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_auth_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_common_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_common_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_core_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_connection_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_connection_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_iid_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_iid_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_hbb20_ccp_2_0_5.xml&#10;#&#9;.idea/libraries/com_jakewharton_butterknife_8_5_1.xml&#10;#&#9;app/app.iml&#10;#&#9;app/build.gradle&#10;#&#9;app/src/main/AndroidManifest.xml&#10;#&#9;app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java&#10;#&#9;app/src/main/res/values/colors.xml&#10;#&#9;app/src/main/res/values/strings.xml" />
     <MESSAGE value="Optimized the authentication section&#10;Changes in interests fragment" />
     <MESSAGE value="Pushed again" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pushed again" />
+    <MESSAGE value="edited gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="edited gitignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3168,14 +3206,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1632">
@@ -3199,14 +3229,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="20" lean-forward="false" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/AuthUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -3252,18 +3274,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-948">
-          <caret line="133" column="17" lean-forward="false" selection-start-line="133" selection-start-column="17" selection-end-line="133" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="67" column="90" lean-forward="true" selection-start-line="67" selection-start-column="90" selection-end-line="67" selection-end-column="90" />
+          <caret line="67" column="90" lean-forward="false" selection-start-line="67" selection-start-column="90" selection-end-line="67" selection-end-column="90" />
           <folding />
         </state>
       </provider>
@@ -3276,16 +3290,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+          <folding>
+            <element signature="method#getHomePagePosts#0;class#PostsListFragment#0" expanded="false" />
+            <element signature="method#populateRecyclerView#0;class#PostsListFragment#0" expanded="false" />
+            <element signature="method#populateDummyLists#0;class#PostsListFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="162" column="0" lean-forward="true" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
+        <state relative-caret-position="1445">
+          <caret line="162" column="0" lean-forward="false" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
           <folding>
             <element signature="e#23888#23889#0" expanded="true" />
             <element signature="e#23926#23927#0" expanded="true" />
             <element signature="method#toggleUpBtnVisibility#0;class#MainActivity#0" expanded="false" />
             <element signature="class#28438:29352" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/AuthUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="54" column="0" lean-forward="true" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

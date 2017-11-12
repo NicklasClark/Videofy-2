@@ -126,7 +126,7 @@ public class PostsListFragment extends BaseFragment {
         manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new PostsListAdapter(posts, getContext(), getActivity()));
+        recyclerView.setAdapter(new PostsListAdapter(posts, getContext()));
 
 //        recyclerView.addOnScrollListener(((BaseBottomBarActivity) getActivity()).recyclerViewScrollListener());
     }
@@ -200,7 +200,7 @@ public class PostsListFragment extends BaseFragment {
             postDetailsList.add(postDetails3);
         }
 
-        PostsListAdapter adapter = new PostsListAdapter(postDetailsList, getContext(), getActivity());
+        PostsListAdapter adapter = new PostsListAdapter(postDetailsList, getContext());
 
         recyclerView.setAdapter(adapter);
     }
