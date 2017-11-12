@@ -9,23 +9,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="Optimized the authentication section&#10;Changes in interests fragment">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/EndlessScrollListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
+    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/ConfirmOtpFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/ConfirmOtpFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/Interests.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/Interests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/InterestsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/InterestsAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/AuthUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/AuthUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/.gitignore" afterPath="$PROJECT_DIR$/app/.gitignore" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
@@ -1939,7 +1925,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/FollowingAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/ui/fragment/fragment/FragmentProfileVideoPlay.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyReactionAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/FollowersAdapter.java" />
@@ -1990,6 +1975,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/EndlessScrollListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/.gitignore" />
       </list>
     </option>
   </component>
@@ -2028,6 +2014,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2329,7 +2329,7 @@
       <option name="ACTIVITY_CLASS" value="com.cncoding.teazer.ui.fragment.activity.FollowingActivity" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488555667" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
@@ -2402,7 +2402,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488555667" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2450,7 +2450,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488555667" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2633,7 +2633,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488555672" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510488733417" />
       </method>
     </configuration>
     <list size="2">
@@ -2692,7 +2692,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510480407182</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Pushed again">
+      <created>1510488590226</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1510488590226</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2775,7 +2782,8 @@
     <MESSAGE value="merged with arif_dev" />
     <MESSAGE value="Merge branch 'arif_dev' of https://bitbucket.org/teaserandroidteam/teazerandroid into prem_dev&#10;&#10;# Conflicts:&#10;#&#9;.gradle/4.1/fileContent/fileContent.lock&#10;#&#9;.gradle/4.1/fileHashes/fileHashes.bin&#10;#&#9;.gradle/4.1/fileHashes/fileHashes.lock&#10;#&#9;.gradle/4.1/fileHashes/resourceHashesCache.bin&#10;#&#9;.gradle/4.1/taskHistory/fileSnapshots.bin&#10;#&#9;.gradle/4.1/taskHistory/taskHistory.bin&#10;#&#9;.gradle/4.1/taskHistory/taskHistory.lock&#10;#&#9;.gradle/buildOutputCleanup/cache.properties&#10;#&#9;.idea/libraries/com_android_databinding_adapters_1_3_1.xml&#10;#&#9;.idea/libraries/com_android_databinding_library_1_3_1.xml&#10;#&#9;.idea/libraries/com_android_support_animated_vector_drawable_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_appcompat_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_cardview_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_constraint_constraint_layout_1_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_customtabs_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_design_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_palette_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_recyclerview_v7_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_compat_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_core_ui_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_core_utils_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_fragment_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_media_compat_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_v13_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_v4_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_support_vector_drawable_26_0_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_espresso_espresso_core_2_2_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml&#10;#&#9;.idea/libraries/com_android_support_test_exposed_instrumentation_api_publish_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_test_rules_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_test_runner_0_5.xml&#10;#&#9;.idea/libraries/com_android_support_transition_26_0_2.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_common_4_27_0.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_core_4_27_0.xml&#10;#&#9;.idea/libraries/com_facebook_android_facebook_login_4_27_0.xml&#10;#&#9;.idea/libraries/com_futuremind_recyclerfastscroll_fastscroll_0_2_5.xml&#10;#&#9;.idea/libraries/com_google_android_flexbox_0_3_1.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_api_phone_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_api_phone_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_base_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_base_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_auth_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_base_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_base_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_basement_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_basement_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_location_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_location_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_maps_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_maps_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_places_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_places_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_tasks_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_android_gms_play_services_tasks_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_impl_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_impl_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_analytics_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_auth_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_auth_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_common_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_common_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_core_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_connection_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_connection_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_database_license_11_6_0.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_iid_11_4_2.xml&#10;#&#9;.idea/libraries/com_google_firebase_firebase_iid_license_11_4_2.xml&#10;#&#9;.idea/libraries/com_hbb20_ccp_2_0_5.xml&#10;#&#9;.idea/libraries/com_jakewharton_butterknife_8_5_1.xml&#10;#&#9;app/app.iml&#10;#&#9;app/build.gradle&#10;#&#9;app/src/main/AndroidManifest.xml&#10;#&#9;app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java&#10;#&#9;app/src/main/res/values/colors.xml&#10;#&#9;app/src/main/res/values/strings.xml" />
     <MESSAGE value="Optimized the authentication section&#10;Changes in interests fragment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimized the authentication section&#10;Changes in interests fragment" />
+    <MESSAGE value="Pushed again" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pushed again" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2810,11 +2818,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_add_video_black.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_notifications_black.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -3261,6 +3264,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="67" column="90" lean-forward="true" selection-start-line="67" selection-start-column="90" selection-end-line="67" selection-end-column="90" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="20" lean-forward="true" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
           <folding />
         </state>
       </provider>
