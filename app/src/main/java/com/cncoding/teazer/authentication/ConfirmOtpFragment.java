@@ -28,7 +28,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.ViewUtils;
 
@@ -325,6 +324,6 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     public interface OnOtpInteractionListener {
-        void onOtpInteraction(int action, Authorize verificationDetails, Pojos.User.Profile userProfile, boolean isSignUp, String authToken);
+        void onOtpInteraction(Authorize verificationDetails, boolean isVerified);
     }
 }

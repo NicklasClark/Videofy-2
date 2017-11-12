@@ -605,27 +605,13 @@ import retrofit2.http.Query;
 
         /**
          * Update user profile
-         * Call this service to update user profile
-         *
-         * body JSON format:
-         *      {
-         *          "first_name": "string",
-         *          "last_name": "string",
-         *          "email": "string",
-         *          "phone_number": 0,
-         *          "country_code": 0
-         *      }
+         * Call this service to update user profile.
          * */
         @PUT("/api/v1/user/update/profile")
         Call<ResultObject> updateUserProfile(@Body Pojos.User.UpdateProfile updateProfileDetails);
 
         /**
-         * Call this service to update account password
-         * body JSON format:
-         *      {
-         *          "old_password": "string",
-         *          "new_password": "string"
-         *      }
+         * Call this service to update account password.
          * */
         @PUT("/api/v1/user/update/password")
         Call<ResultObject> updatePassword(@Body Pojos.User.UpdatePassword updatePasswordDetails);
@@ -639,27 +625,6 @@ import retrofit2.http.Query;
          *      If “nextPage” is true, then some more records are present.
          *      So, you can call this method again after increasing the page count by 1,
          *      If “next_page” is false no more records present.
-         *
-         *      Return JSON format:
-         *      {
-         *          "notifications": [
-         *              {
-         *                  "notification_id": 0,
-         *                  "notification_type": 0,
-         *                  "source_id": 0,
-         *                  "meta_data": "string",
-         *                  "title": "string",
-         *                  "message": "string",
-         *                  "created_at": "2017-10-04T06:46:13.307Z",
-         *                  "has_profile_picture": true,
-         *                  "profile_picture": {
-         *                      "profile_image_path": "string",
-         *                      "thumb_image_path": "string"
-         *                  }
-         *              }
-         *          ],
-         *         "next_page": true
-         *      }
          * */
         @GET("/api/v1/user/notifications/{page}")
         Call<ResultObject> getNotifications(@Path("page") int page);

@@ -3,8 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-analytics-impl-license-11.6.0.aar/4201b882170c10651d1c47aaec051021/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-analytics-impl-license-11.6.0.aar/4201b882170c10651d1c47aaec051021/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-analytics-impl-license-11.4.2.aar/1daefd0f62da0b6aa936906fe9bdc4d8/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-analytics-impl-license-11.4.2.aar/1daefd0f62da0b6aa936906fe9bdc4d8/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

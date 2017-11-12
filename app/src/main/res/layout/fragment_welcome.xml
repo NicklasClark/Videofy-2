@@ -142,6 +142,7 @@
             style="@style/AppTheme.RoundedFacebookButtonWelcomePage"
             app:spinning_bar_color="@android:color/white"
             app:spinning_bar_padding="@dimen/padding_half"
+            app:initialCornerAngle="@dimen/rounded_edge_radius_2dp"
             app:drawableStartCompat="@drawable/ic_facebook_white"
             android:layout_above="@+id/signup_with_google" />
 
@@ -152,6 +153,7 @@
             android:layout_marginBottom="@dimen/padding_double"
             app:spinning_bar_color="@android:color/white"
             app:spinning_bar_padding="@dimen/padding_half"
+            app:initialCornerAngle="@dimen/rounded_edge_radius_2dp"
             app:drawableStartCompat="@drawable/ic_google_white"
             android:layout_alignParentBottom="true"/>
 

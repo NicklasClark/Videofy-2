@@ -3,8 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-26.0.2.aar/29a4f690f542dad07258d33b6156c3c7/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-26.0.2.aar/29a4f690f542dad07258d33b6156c3c7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-26.0.2.aar/6e15f1df6f4fc8e98b0fc2f0ea0df744/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-26.0.2.aar/6e15f1df6f4fc8e98b0fc2f0ea0df744/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

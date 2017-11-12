@@ -27,7 +27,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.hbb20.CountryCodePicker;
@@ -223,7 +222,7 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.forgot_password_btn)
     public void onForgotPasswordClick() {
-        mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new Authorize(username), null);
+        mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new Authorize(username));
     }
 
     @OnClick(R.id.login_through_otp) public void onLoginThroughOtpClicked() {
@@ -292,6 +291,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void startCircularReveal(final View revealLayout) {
+        revealLayout.setVisibility(View.VISIBLE);
+        uploadingNotification.setText(R.string.logging_you_in);
         Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
                 (int) loginBtn.getX() + (loginBtn.getWidth() / 2), (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
                 0, (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()));
@@ -300,12 +301,44 @@ public class LoginFragment extends Fragment {
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                revealLayout.setVisibility(View.VISIBLE);
-                uploadingNotification.setText(R.string.logging_you_in);
             }
 
             @Override
             public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        animator.start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }, 680);
+    }
+
+    private void stopCircularReveal(final View revealLayout) {
+        Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
+                (int) loginBtn.getX() + (loginBtn.getWidth() / 2), (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
+                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
+        animator.setDuration(500);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                revealLayout.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -344,6 +377,6 @@ public class LoginFragment extends Fragment {
     }
 
     public interface LoginInteractionListener {
-        void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.Profile userProfile);
+        void onLoginFragmentInteraction(int action, Authorize authorize);
     }
 }

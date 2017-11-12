@@ -3,8 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-11.6.0.aar/049182f1d5d0b7b6a3684cff20cd0b30/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-11.6.0.aar/049182f1d5d0b7b6a3684cff20cd0b30/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-11.4.2.aar/8c99e269ad4d36e0e7ec224495303024/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-11.4.2.aar/8c99e269ad4d36e0e7ec224495303024/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

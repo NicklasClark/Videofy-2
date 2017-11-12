@@ -1,8 +1,6 @@
 package com.cncoding.teazer;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -35,7 +33,6 @@ import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -46,8 +43,8 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
+import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
-import static com.cncoding.teazer.utilities.ViewUtils.zoomImageFromThumb;
 
 public class BaseBottomBarActivity extends BaseActivity
         implements BaseFragment.FragmentNavigation,
@@ -75,13 +72,11 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
-    @BindView(R.id.expanded_image) ImageView expandedImage;
 //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
-    private Animator animator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,11 +117,9 @@ public class BaseBottomBarActivity extends BaseActivity
         });
     }
 
-    @OnClick(R.id.logout_btn) public void logout() {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-//        ApiCallingService.User.logout(SharedPrefs.getAuthToken(this), this);
+    @OnClick(R.id.logout_btn) public void performLogout() {
+        logout(getApplicationContext(), this);
+//        ApiCallingService.User.performLogout(SharedPrefs.getAuthToken(this), this);
     }
 
     @Override
@@ -286,7 +279,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout) {
         switch (action) {
             case ACTION_VIEW_POST:
-                zoomImageFromThumb(postThumbnail, expandedImage, layout, animator, 500);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

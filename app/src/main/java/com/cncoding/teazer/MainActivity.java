@@ -2,6 +2,7 @@ package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,49 +16,54 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.authentication.BlurBuilder;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
+import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
+import com.cncoding.teazer.authentication.ForgotPasswordFragment.OnForgotPasswordInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
+import com.cncoding.teazer.authentication.ForgotPasswordResetFragment.OnResetForgotPasswordInteractionListener;
 import com.cncoding.teazer.authentication.LoginFragment;
+import com.cncoding.teazer.authentication.LoginFragment.LoginInteractionListener;
 import com.cncoding.teazer.authentication.SignupFragment;
+import com.cncoding.teazer.authentication.SignupFragment.OnInitialSignupInteractionListener;
 import com.cncoding.teazer.authentication.SignupFragment2;
+import com.cncoding.teazer.authentication.SignupFragment2.OnFinalSignupInteractionListener;
+import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.home.Interests;
-import com.cncoding.teazer.utilities.AuthUtils;
+import com.cncoding.teazer.tagsAndCategories.Interests;
+import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.facebook.AccessToken;
+import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.io.IOException;
 
@@ -68,24 +74,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.home.Interests.LAUNCH_TYPE_SIGNUP;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
 
 public class MainActivity extends AppCompatActivity
-        implements LoginFragment.LoginInteractionListener,
-        SignupFragment.OnEmailSignupInteractionListener,
-        SignupFragment2.OnFinalSignupInteractionListener,
-        WelcomeFragment.OnWelcomeInteractionListener,
-        ForgotPasswordFragment.OnForgotPasswordInteractionListener,
-        ConfirmOtpFragment.OnOtpInteractionListener,
-        ForgotPasswordResetFragment.OnResetForgotPasswordInteractionListener,
-        TextureView.SurfaceTextureListener {
+        implements SurfaceTextureListener,
+        OnWelcomeInteractionListener,
+        LoginInteractionListener, OnOtpInteractionListener,
+        OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
+        OnForgotPasswordInteractionListener, OnResetForgotPasswordInteractionListener, OnInterestsInteractionListener {
 
 //    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int DEVICE_TYPE_ANDROID = 2;
-//    public static final int OPEN_CAMERA_ACTION = 98;
+    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
     private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
@@ -93,52 +95,49 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
     private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
-    public static final String TAG_SELECT_CATEGORIES = "selectCategories";
+    private static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
-    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
-    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
+//    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
+//    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
-    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
-    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
+//    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
+//    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     public static final int BACK_PRESSED_ACTION = 6;
     public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
     public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
     private String VIDEO_PATH;
 
-    @BindView(R.id.main_fragment_bg) ImageView blurBg;
     @BindView(R.id.welcome_video) TextureView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
 
-//    private int currentLoginAction;
-//    private GoogleSignInAccount googleAccount;
-//    private Profile facebookProfile;
     private MediaPlayer mediaPlayer;
     private ProfileTracker facebookProfileTracker;
     private FragmentManager fragmentManager;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
     private TransitionDrawable transitionDrawable;
-    private boolean isFirebaseSignup;
     private boolean loggingIn;
     private Bitmap bitmap;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .penaltyDialog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+//                .penaltyLog()
+//                .build());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
@@ -146,40 +145,11 @@ public class MainActivity extends AppCompatActivity
         VIDEO_PATH = "android.resource://" + getPackageName() + "/" + R.raw.welcome_video;
 
         welcomeVideo.setSurfaceTextureListener(MainActivity.this);
-        isFirebaseSignup = false;
         loggingIn = false;
-        firebaseAuth = FirebaseAuth.getInstance();
-        setFirebaseAuthStateListener();
-    }
 
-    private void setFirebaseAuthStateListener() {
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-//                    user is signed in
-                    new OfflineUserProfile(MainActivity.this).setEmail(user.getEmail());
-                    if (!isFirebaseSignup) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-                                finish();
-                            }
-                        }, 500);
-//                        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-//                        finish();
-                    } else {
-                        setFragment(TAG_SELECT_CATEGORIES, false, null);
-                    }
-                } else {
-//                    user is signed out, set Welcome fragment
-                    if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
-                        setFragment(TAG_WELCOME_FRAGMENT, false, null);
-                }
-            }
-        };
+        if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
+            setFragment(TAG_WELCOME_FRAGMENT, false, null);
+
         facebookProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -188,10 +158,25 @@ public class MainActivity extends AppCompatActivity
                         currentProfile.getFirstName(),
                         currentProfile.getLastName(),
                         currentProfile.getName(),
-                        currentProfile.getProfilePictureUri(100, 100)
+                        "", currentProfile.getProfilePictureUri(100, 100)
                 );
             }
         };
+    }
+
+    private void successfullyLoggedIn(int delay) {
+        if (delay == 0) {
+            startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+            finish();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+                    finish();
+                }
+            }, delay);
+        }
     }
 
     private void setFragment(String tag, boolean addToBackStack, Object[] args) {
@@ -235,9 +220,9 @@ public class MainActivity extends AppCompatActivity
             case TAG_OTP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
                 break;
-            case TAG_SELECT_CATEGORIES:
-                toggleUpBtnVisibility(View.INVISIBLE);
-                transaction.replace(R.id.main_fragment_container, Interests.newInstance(LAUNCH_TYPE_SIGNUP), TAG_SELECT_CATEGORIES);
+            case TAG_SELECT_INTERESTS:
+                toggleUpBtnVisibility(View.VISIBLE);
+                transaction.replace(R.id.main_fragment_container, Interests.newInstance(), TAG_SELECT_INTERESTS);
                 break;
             default:
                 break;
@@ -327,7 +312,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onWelcomeInteraction(int action, @Nullable Object token, Profile facebookProfile, Bundle facebookData,
+    public void onWelcomeInteraction(int action, Profile facebookProfile, Bundle facebookData,
                                      @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
@@ -336,15 +321,15 @@ public class MainActivity extends AppCompatActivity
             case SIGNUP_WITH_FACEBOOK_ACTION:
                 mediaPlayer.pause();
                 loggingIn = true;
-                if (token != null && facebookProfile != null && facebookData != null) {
-                    handleFacebookLogin((AccessToken) token, facebookProfile, facebookData, button);
+                if (facebookProfile != null && facebookData != null) {
+                    handleFacebookLogin(facebookProfile, facebookData, button);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
                 mediaPlayer.pause();
                 loggingIn = true;
-                if (token != null && googleAccount != null)
-                    handleGoogleSignIn((String) token,  googleAccount, button);
+                if (googleAccount != null)
+                    handleGoogleSignIn(googleAccount, button);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
@@ -357,17 +342,16 @@ public class MainActivity extends AppCompatActivity
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
                 break;
-//            case OPEN_CAMERA_ACTION:
-////                setFragment("interests", true, null);
-//                startActivity(new Intent(this, BaseBottomBarActivity.class));
-////                finish();
-//                break;
+            case OPEN_CAMERA_ACTION:
+                setFragment(TAG_SELECT_INTERESTS, true, null);
+                break;
             default:
                 break;
         }
     }
 
-    private void handleFacebookLogin(final AccessToken token, final Profile facebookProfile, Bundle facebookData, final ProximaNovaSemiboldButton button) {
+    private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
+                                     final ProximaNovaSemiboldButton button) {
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
                 getDeviceId(),
@@ -382,28 +366,38 @@ public class MainActivity extends AppCompatActivity
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        loggingIn = false;
                         SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
-                        if (response.code() == 200 || response.code() == 201) {
-                            if (response.body().getStatus()) {
-                                saveUserProfile(MainActivity.this,
-                                        facebookProfile.getId(),
-                                        facebookProfile.getFirstName(),
-                                        facebookProfile.getLastName(),
-                                        facebookProfile.getName(),
-                                        facebookProfile.getProfilePictureUri(100, 100));
-
-                                firebaseCredentialSignin(FacebookAuthProvider.getCredential(token.getToken()), button, true);
-                            }
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(true, null,
+                                            facebookData, facebookProfile, button);
+                                }
+                                break;
+                            case 201:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(true, null,
+                                            facebookData, facebookProfile, button);
+                                } else {
+                                    new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
+                                            facebookProfile, button);
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
+                        loggingIn = false;
                     }
                 });
     }
 
-    private void handleGoogleSignIn(final String token, final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button) {
+    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount,
+                                    final ProximaNovaSemiboldButton button) {
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
                 getDeviceId(),
@@ -418,44 +412,75 @@ public class MainActivity extends AppCompatActivity
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        loggingIn = false;
                         SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
-                        if (response.code() == 200 || response.code() == 201) {
-                            if (response.body().getStatus()) {
-                                saveUserProfile(MainActivity.this,
-                                        googleAccount.getId(),
-                                        googleAccount.getGivenName(),
-                                        googleAccount.getFamilyName(),
-                                        googleAccount.getDisplayName(),
-                                        googleAccount.getPhotoUrl());
-
-                                firebaseCredentialSignin(GoogleAuthProvider.getCredential(token, null), button, false);
-                            }
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(false, googleAccount,
+                                            null, null, button);
+                                }
+                                break;
+                            case 201:
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(false, googleAccount,
+                                            null, null, button);
+                                } else {
+                                    new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
+                                            null, button);
+                                }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
+                        loggingIn = false;
                     }
                 });
     }
 
+    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData, Profile facebookProfile, ProximaNovaSemiboldButton button) {
+        if (isFacebookAccount) {
+            saveUserProfile(MainActivity.this,
+                    facebookProfile.getId(),
+                    facebookProfile.getFirstName(),
+                    facebookProfile.getLastName(),
+                    facebookProfile.getName(),
+                    facebookData.getString("email"),
+                    facebookProfile.getProfilePictureUri(500, 500));
+            button.doneLoadingAnimation(Color.parseColor("#4469AF"),
+                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
+        } else {
+            saveUserProfile(MainActivity.this,
+                    googleAccount.getId(),
+                    googleAccount.getGivenName(),
+                    googleAccount.getFamilyName(),
+                    googleAccount.getDisplayName(),
+                    googleAccount.getEmail(),
+                    googleAccount.getPhotoUrl());
+            button.doneLoadingAnimation(Color.parseColor("#DC4E41"),
+                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
+        }
+
+        successfullyLoggedIn(500);
+    }
+
     private void saveUserProfile(Context context, String id, String firstName,
-                                 String lastName, String name, Uri profilePicUri) {
+                                 String lastName, String name, String email, Uri profilePicUri) {
         new OfflineUserProfile(context)
-//                .reset()
                 .setUserId(id)
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setUsername(name)
+                .setEmail(email)
                 .setProfilePicUri(profilePicUri);
     }
 
     @Override
-    public void onLoginFragmentInteraction(int action, Authorize authorize, Pojos.User.Profile userProfile) {
+    public void onLoginFragmentInteraction(int action, Authorize authorize) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-                firebaseUserNamePasswordSignin(authorize, userProfile);
-//                firebaseAuthTokenSignin(SharedPrefs.getAuthToken(this));
+                successfullyLoggedIn(0);
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
@@ -463,59 +488,18 @@ public class MainActivity extends AppCompatActivity
             case FORGOT_PASSWORD_ACTION:
                 setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[] {authorize.getUsername()});
                 break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
-                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void onOtpInteraction(int action, Authorize verificationDetails,
-                                 Pojos.User.Profile userProfile, boolean isSignUp, String authToken) {
-        switch (action) {
-            case SIGNUP_OTP_VERIFICATION_ACTION:
-                if (isSignUp) {
-                    isFirebaseSignup = true;
-                    firebaseSignup(verificationDetails);
-                } else {
-                    firebaseUserNamePasswordSignin(verificationDetails, userProfile);
-                }
-                break;
-            case LOGIN_OTP_VERIFICATION_ACTION:
-//                The user can't signin with username and password in the firebase because the password is not returned.
-//                Using anonymous signin instead.
-                firebaseAuthTokenSignin(authToken);
-                Toast.makeText(this, "Login!", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onEmailSignupInteraction(int action, final Authorize signUpDetails) {
-        switch (action) {
-            case EMAIL_SIGNUP_PROCEED_ACTION:
-                if (signUpDetails != null) {
-                    setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails});
-                }
-                break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
-                break;
-        }
-    }
-
-    @Override
-    public void onFinalSignupInteraction(int action, final Authorize signUpDetails) {
-        switch (action) {
-            case SIGNUP_WITH_EMAIL_ACTION:
-                setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION});
-                break;
-            default:
-                break;
+    public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
+        if (isVerified)
+            setFragment(TAG_SELECT_INTERESTS, true, null);
+        else {
+            setFragment(TAG_LOGIN_FRAGMENT, true,
+                    new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
         }
     }
 
@@ -529,99 +513,19 @@ public class MainActivity extends AppCompatActivity
         setFragment(TAG_LOGIN_FRAGMENT, true, new Object[]{enteredText, countryCode, isEmail});
     }
 
-    private void firebaseSignup(final Authorize verificationDetails) {
-        firebaseAuth.createUserWithEmailAndPassword(verificationDetails.getEmail(), verificationDetails.getPassword())
-                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            new OfflineUserProfile(MainActivity.this)
-//                                    .reset()
-                                    .setFirstName(verificationDetails.getFirstName())
-                                    .setLastName(verificationDetails.getLastName())
-                                    .setUsername(verificationDetails.getUsername())
-                                    .setEmail(verificationDetails.getEmail())
-                                    .setCountryCode(verificationDetails.getCountryCode())
-                                    .setPhoneNumber(verificationDetails.getPhoneNumber())
-                                    .setPassword(verificationDetails.getPassword());
-                            isFirebaseSignup = false;
-                        } else {
-                            Snackbar.make(upBtn, "FirebaseSignup failed!", Snackbar.LENGTH_SHORT).show();
-                        }
-                        isFirebaseSignup = false;
-                    }
-                });
+    @Override
+    public void onInitialEmailSignupInteraction(int action, final Authorize signUpDetails) {
+        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails});
     }
 
-    private void firebaseUserNamePasswordSignin(final Authorize verificationDetails, final Pojos.User.Profile userProfile) {
-        firebaseAuth.signInWithEmailAndPassword(userProfile.getUserProfile().getEmail(), verificationDetails.getPassword())
-                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    userProfile.getUserProfile().setPassword(verificationDetails.getPassword());
-                                    OfflineUserProfile.saveUserProfileOffline(userProfile, MainActivity.this);
-                                }
-                            }).start();
-                            Snackbar.make(mainFragmentContainer, "Login!", Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            AuthUtils.logout(MainActivity.this);
-                            Snackbar.make(upBtn, "FirebaseUserNamePasswordSignin failed!", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    @Override
+    public void onFinalEmailSignupInteraction(int action, final Authorize signUpDetails) {
+        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION});
     }
 
-    private void firebaseCredentialSignin(AuthCredential credential, final ProximaNovaSemiboldButton button, final boolean isFacebook) {
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            AuthUtils.logout(MainActivity.this);
-                            Exception e = task.getException();
-                            if (e != null) {
-                                Snackbar.make(upBtn, "FirebaseCredentialSignin failed!" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
-                            }
-                        }
-//                        else {
-//                            Snackbar.make(mainFragmentContainer, "Welcome!", Snackbar.LENGTH_SHORT).show();
-//                        }
-                        if (isFacebook) {
-                            button.doneLoadingAnimation(Color.parseColor("#4469AF"),
-                                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
-                            button.setBackgroundResource(R.drawable.bg_button_facebook);
-                        } else {
-                            button.doneLoadingAnimation(Color.parseColor("#DC4E41"),
-                                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
-                        }
-                        loggingIn = false;
-                    }
-                });
-    }
-
-    private void firebaseAuthTokenSignin(String authToken) {
-        firebaseAuth.signInWithCustomToken(authToken).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Note: password is always null here.
-//                        OfflineUserProfile.saveUserProfileOffline(userProfile, MainActivity.this);
-//                    }
-//                }).start();
-                if (task.isSuccessful()) {
-                    Snackbar.make(mainFragmentContainer, "Login!", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    AuthUtils.logout(MainActivity.this);
-                    Snackbar.make(upBtn, "FirebaseAuthTokenSignin failed!", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        });
+    @Override
+    public void onInterestsInteraction() {
+        successfullyLoggedIn(0);
     }
 
     private void toggleUpBtnVisibility(int visibility) {
@@ -662,6 +566,106 @@ public class MainActivity extends AppCompatActivity
         return bitmap;
     }
 
+    private class UserNameAlreadyAvailableDialog extends AlertDialog.Builder {
+
+        UserNameAlreadyAvailableDialog(boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
+                                       Profile facebookProfile, final ProximaNovaSemiboldButton button) {
+            super(context);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
+            dialogBuilder.setView(dialogView);
+
+            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
+
+            setupEditText(editText);
+
+            dialogBuilder.setTitle(R.string.this_is_embarrassing);
+            if (isFacebook) {
+                dialogBuilder.setMessage(getString(R.string.the_username) + facebookProfile.getName()
+                        + getString(R.string.username_already_exists));
+            } else {
+                dialogBuilder.setMessage(getString(R.string.the_username) + googleAccount.getDisplayName()
+                        + getString(R.string.username_already_exists));
+            }
+            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (!editText.getText().toString().equals("")) {
+                        handleGoogleSignIn(googleAccount, button);
+                    }
+                }
+            });
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    fragmentManager.popBackStackImmediate();
+                }
+            });
+            AlertDialog b = dialogBuilder.create();
+            b.show();
+        }
+
+        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (editText.getText().toString().equals("")) {
+                        editText.setCompoundDrawablesWithIntrinsicBounds(
+                                0, 0, R.drawable.ic_error, 0);
+                    }
+                    else {
+                        if (editText.getCompoundDrawables()[2] != null) {
+                            editText.setCompoundDrawablesWithIntrinsicBounds(
+                                    0, 0, 0, 0);
+                        }
+                    }
+                }
+            });
+
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (editable.toString().equals("")) {
+                        editText.setCompoundDrawablesWithIntrinsicBounds(
+                                0, 0, R.drawable.ic_error, 0);
+                    }
+                    else {
+                        if (editText.getCompoundDrawables()[2] != null) {
+                            editText.setCompoundDrawablesWithIntrinsicBounds(
+                                    0, 0, 0, 0);
+                        }
+                    }
+                }
+            });
+
+            editText.requestFocus();
+
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    ViewUtils.hideKeyboard(MainActivity.this, textView);
+                    return true;
+                }
+            });
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mediaPlayer != null)
+            if (!mediaPlayer.isPlaying())
+                mediaPlayer.start();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -670,18 +674,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         if (mediaPlayer != null)
             mediaPlayer.pause();
-        if (authStateListener != null) {
-            firebaseAuth.removeAuthStateListener(authStateListener);
-        }
         facebookProfileTracker.stopTracking();
     }
 
@@ -696,8 +692,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.up_btn)
-    public void BackPressed() {
+    @OnClick(R.id.up_btn) public void backPressed() {
         onBackPressed();
     }
 

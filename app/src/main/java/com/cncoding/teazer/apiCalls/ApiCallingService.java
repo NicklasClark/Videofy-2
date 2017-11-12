@@ -31,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static com.cncoding.teazer.MainActivity.BASE_URL;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
@@ -66,6 +67,7 @@ public class ApiCallingService {
         private static TeazerApiCall.ApplicationCalls getApplicationService() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
@@ -136,6 +138,7 @@ public class ApiCallingService {
         private static TeazerApiCall.AuthenticationCalls getAuthenticationService() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
@@ -305,6 +308,7 @@ public class ApiCallingService {
         private static TeazerApiCall.FriendsCalls getFriendsService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getOkHttpClientWithAuthToken(context))
                     .build();
@@ -437,6 +441,7 @@ public class ApiCallingService {
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getOkHttpClientWithAuthToken(context))
                     .build();
@@ -512,6 +517,7 @@ public class ApiCallingService {
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getOkHttpClientWithAuthToken(context))
                     .build();
@@ -566,6 +572,7 @@ public class ApiCallingService {
         private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getOkHttpClientWithAuthToken(context))
                     .build();

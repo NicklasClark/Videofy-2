@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.post;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -15,11 +16,11 @@ import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.ViewUtils;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class PostsListFragment extends BaseFragment {
     private static final String COLUMN_COUNT = "columnCount";
 
     @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.transition_pager) ViewPager pager;
+    @BindView(R.id.transition_full_background)  View background;
 
     private PostList postList;
     private int columnCount = 2;
@@ -98,7 +101,7 @@ public class PostsListFragment extends BaseFragment {
                                 break;
                             case 500:
 //                                User's auth token is no longer valid
-                                FirebaseAuth.getInstance().signOut();
+                                AuthUtils.logout(getContext(), getActivity());
                                 startActivity(new Intent(getActivity(), MainActivity.class));
                                 getActivity().finish();
                                 break;

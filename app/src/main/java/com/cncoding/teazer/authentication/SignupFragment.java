@@ -40,7 +40,7 @@ public class SignupFragment extends Fragment {
     @BindView(R.id.signup_phone_number) ProximaNovaRegularAutoCompleteTextView phoneNumberView;
     @BindView(R.id.signup__proceed_btn) AppCompatButton signupProceedBtn;
 
-    private OnEmailSignupInteractionListener mListener;
+    private OnInitialSignupInteractionListener mListener;
     //    private Context context;
 
     public SignupFragment() {
@@ -79,18 +79,16 @@ public class SignupFragment extends Fragment {
 
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (areAllViewsFilled()) {
-            String[] names = getFirstAndLastNames(nameView.getText().toString());
-            mListener.onEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
-                    new Authorize(names[0], names[1],
-                            emailView.getText().toString(),
-                            countryCodeView.getSelectedCountryCodeAsInt(),
-                            Long.parseLong(phoneNumberView.getText().toString())));
+            if (getFirstAndLastNames(nameView.getText().toString()).length >= 2) {
+                String[] names = getFirstAndLastNames(nameView.getText().toString());
+                mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
+                        new Authorize(names[0], names[1],
+                                emailView.getText().toString(),
+                                countryCodeView.getSelectedCountryCodeAsInt(),
+                                Long.parseLong(phoneNumberView.getText().toString())));
+            } else Snackbar.make(signupProceedBtn, "Please provide both first and last names", Snackbar.LENGTH_SHORT).show();
         } else Snackbar.make(signupProceedBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
     }
-
-//    @OnTextChanged(R.id.signup_email) public void emailTextChanged(CharSequence charSequence) {
-//        email = charSequence.toString();
-//    }
 
     @OnFocusChange(R.id.signup_email) public void onEmailFocusChanged(boolean isFocused) {
         if (!isFocused) {
@@ -131,8 +129,8 @@ public class SignupFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnEmailSignupInteractionListener) {
-            mListener = (OnEmailSignupInteractionListener) context;
+        if (context instanceof OnInitialSignupInteractionListener) {
+            mListener = (OnInitialSignupInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement LoginInteractionListener");
@@ -145,7 +143,7 @@ public class SignupFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnEmailSignupInteractionListener {
-        void onEmailSignupInteraction(int action, Authorize signUpDetails);
+    public interface OnInitialSignupInteractionListener {
+        void onInitialEmailSignupInteraction(int action, Authorize signUpDetails);
     }
 }

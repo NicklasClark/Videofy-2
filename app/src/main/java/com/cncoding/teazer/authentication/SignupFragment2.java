@@ -189,6 +189,6 @@ public class SignupFragment2 extends Fragment {
     }
 
     public interface OnFinalSignupInteractionListener {
-        void onFinalSignupInteraction(int action, Authorize signUpDetails);
+        void onFinalEmailSignupInteraction(int action, Authorize signUpDetails);
     }
 }

@@ -3,8 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-license-11.6.0.aar/0d349a97155081af8e1cb2325d3b4d0c/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-license-11.6.0.aar/0d349a97155081af8e1cb2325d3b4d0c/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-license-11.4.2.aar/a7d597dfa7a12091e9b1b2f736737cd3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-license-11.4.2.aar/a7d597dfa7a12091e9b1b2f736737cd3/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

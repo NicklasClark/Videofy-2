@@ -31,7 +31,7 @@
     <string name="caption">Caption…</string>
     <string name="tag_friends">Tag Friends</string>
     <string name="add_location">Add Location</string>
-    <string name="choose_category">Add categories to your video</string>
+    <string name="choose_category">Add interestsList to your video</string>
     <string name="facebook">\tFacebook</string>
     <string name="instagram">\tInstagram</string>
     <string name="title_home">Home</string>
@@ -112,12 +112,13 @@
     <string name="title">Title</string>
     <string name="share_with">Share with</string>
     <string name="retake">Retake</string>
-    <string name="see_nearby_places">See nearby categories</string>
-    <string name="in_order_to_see_nearby_places">In order to see nearby categories you need to turn on your location first.</string>
+    <string name="see_nearby_places">See nearby interestsList</string>
+    <string name="in_order_to_see_nearby_places">In order to see nearby interestsList you need to turn on your location first.</string>
     <string name="turn_on_location">Turn on location</string>
     <string name="nearby_place_side_image">Nearby place side imageView</string>
     <string name="location">Location</string>
     <string name="save">Save</string>
+    <string name="save_with_leading_spaces">Save&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="video_details">Last Night Bash at Delhi Fort</string>
     <string name="select_at_least_5_to_continue">Select at least 5 interests to continue</string>
     <string name="continue_text">Continue</string>
@@ -156,7 +157,7 @@
     <string name="personasettings">PERSONAL SETTINGS</string>
     <string name="changecategories">Change Categories</string>
     <string name="react">&#160;&#160;&#160;React</string>
-    <string name="already_exists">Username, Email or Phone Number already exists</string>
+    <string name="already_exists">Username, Email or Phone Number already exists!\nPlease login instead.</string>
     <string name="take_photo">Take photo</string>
     <string name="intro_message">
         <![CDATA[
@@ -175,7 +176,7 @@
     <string name="search">&#160;&#160;&#160;Search</string>
     <string name="add">Add</string>
     <string name="added">Added</string>
-    <string name="select_up_to_5_categories">Select up to 5 categories</string>
+    <string name="select_up_to_5_categories">Select up to 5 interestsList</string>
     <string name="tag_your_friends">Tag your friends</string>
     <string name="logging_you_in">Logging you in…</string>
     <string name="expanded_placeholder_image">Expanded placeholder image</string>
@@ -192,4 +193,8 @@
     <string name="personal_settings">PERSONAL SETTINGS</string>
     <string name="my_block_list">My Block List</string>
     <string name="private_account">Private Account</string>
+    <string name="this_is_embarrassing">This is embarrassing</string>
+    <string name="the_username">The username&#160;</string>
+    <string name="username_already_exists">&#160;already exists!\nPlease choose another username below.</string>
+    <string name="done">Done</string>
 </resources>

@@ -3,8 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/butterknife-8.5.1.aar/ef57bd2822e9715a8e7e7f95df907a3d/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/butterknife-8.5.1.aar/ef57bd2822e9715a8e7e7f95df907a3d/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/butterknife-8.5.1.aar/cb95e8702cb4d36ca6e460ac543777cf/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/butterknife-8.5.1.aar/cb95e8702cb4d36ca6e460ac543777cf/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

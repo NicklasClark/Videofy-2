@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.cncoding.teazer.BaseBottomBarActivity">
 
 
@@ -53,7 +54,6 @@
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?android:attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.TabLayout
@@ -79,13 +79,6 @@
         android:id="@+id/reaction_camera_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <ImageView
-        android:id="@+id/expanded_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/expanded_placeholder_image" />
 
 </android.support.design.widget.CoordinatorLayout>
 <!--
