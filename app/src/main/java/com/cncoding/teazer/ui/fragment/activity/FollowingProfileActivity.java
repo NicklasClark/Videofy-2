@@ -148,19 +148,14 @@ public class FollowingProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
                 Log.d("ShutDown", t.getMessage());
 
-
             }
 
         });
-
-
     }
-
     public void getProfileVideos(int followerId) {
         int page = 1;
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
-
         ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<FollowersProfileCreations>() {
             @Override
             public void onResponse(Call<FollowersProfileCreations> call, Response<FollowersProfileCreations> response) {
@@ -171,29 +166,20 @@ public class FollowingProfileActivity extends AppCompatActivity {
                         _recycler_view.setAdapter(followerCreationAdapter);
 
 
-                        Toast.makeText(getApplicationContext(), "Public getVideos", Toast.LENGTH_LONG).show();
-
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "Exception", Toast.LENGTH_LONG).show();
                     }
 
                 }
-
             }
-
             @Override
             public void onFailure(Call<FollowersProfileCreations> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
                 Log.d("ShutDown", t.getMessage());
-
-
             }
 
         });
-
 
     }
 }

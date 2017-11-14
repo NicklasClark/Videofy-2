@@ -32,7 +32,6 @@ import retrofit2.Response;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
- *
  * Created by farazhabib on 09/11/17.
  */
 
@@ -46,17 +45,19 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         this.addressdetail_list = addressdetail_list;
 
     }
+
     @Override
     public ProfileMyCreationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_mycreations, viewGroup, false);
         return new ProfileMyCreationAdapter.ViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
         final Pojos.Post.PostDetails cont = addressdetail_list.get(i);
-        final  String videotitle = cont.getTitle();
+        final String videotitle = cont.getTitle();
         final String videourl = cont.getMedias().get(0).getMediaUrl();
-        final int videopostId=cont.getPostId();
+        final int videopostId = cont.getPostId();
         final String thumb_url = cont.getMedias().get(0).getThumbUrl();
 
         Glide.with(context).load(thumb_url)
@@ -68,8 +69,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context, ProfileCreationVideos.class);
-                intent.putExtra("VideoURL",videourl);
+                Intent intent = new Intent(context, ProfileCreationVideos.class);
+                intent.putExtra("VideoURL", videourl);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
@@ -91,7 +92,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                         switch (item.getItemId()) {
                             case R.id.action_delete:
                                 deleteVideos(videopostId);
-                               // notifyItemRemoved(i);
+                                // notifyItemRemoved(i);
                                 viewHolder.cardView.setVisibility(View.GONE);
                                 break;
 
@@ -105,10 +106,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         });
 
     }
+
     @Override
     public int getItemCount() {
         return addressdetail_list.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView videoTitle;
         VideoView videoviewContainer;
@@ -129,8 +132,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         }
     }
+
     private void deleteVideos(int deleteId) {
-        ApiCallingService.Posts.deletePosts(deleteId,context).enqueue(new Callback<DeleteMyVideos>() {
+        ApiCallingService.Posts.deletePosts(deleteId, context).enqueue(new Callback<DeleteMyVideos>() {
             @Override
             public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
                 try {
@@ -142,8 +146,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                         Toast.makeText(context, "Video has not been deleted", Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

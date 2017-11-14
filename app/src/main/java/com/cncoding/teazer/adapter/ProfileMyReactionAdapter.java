@@ -17,7 +17,6 @@ import com.cncoding.teazer.model.profile.reaction.Reaction;
 import java.util.List;
 
 /**
- *
  * Created by farazhabib on 10/11/17.
  */
 
@@ -30,7 +29,8 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         this.context = context;
         //this.addressdetail_list = addressdetail_list;
 
-        }
+    }
+
     @Override
     public ProfileMyReactionAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_myreactions, viewGroup, false);

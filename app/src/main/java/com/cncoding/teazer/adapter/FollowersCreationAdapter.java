@@ -1,4 +1,5 @@
 package com.cncoding.teazer.adapter;
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -37,7 +38,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by farazhabib on 11/11/17.
  */
 
-public class FollowersCreationAdapter  extends RecyclerView.Adapter<FollowersCreationAdapter.ViewHolder> {
+public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCreationAdapter.ViewHolder> {
 
     private List<Post> _list;
     Context context;

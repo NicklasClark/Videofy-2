@@ -36,9 +36,11 @@ public class FollowingListActivities extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_activities);
-        context=this;
-        Intent intent=getIntent();
-        String identifier= intent.getStringExtra("Identifier");
+        context = this;
+        Intent intent = getIntent();
+
+
+        String identifier = intent.getStringExtra("Identifier");
         int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
 
 
@@ -59,79 +61,68 @@ public class FollowingListActivities extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        recyclerView=findViewById(R.id.recycler_view);
-        layoutManager=new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-       if(identifier.equals("User")) {
+        if (identifier.equals("User")) {
 
-           getUserfollowinglist();
-       }
-       else if(identifier.equals("Other"))
-       {
+            getUserfollowinglist();
+        } else if (identifier.equals("Other")) {
 
-           getOthersFollowingList(userID);
+            getOthersFollowingList(userID);
 
-       }
-       }
+        }
+    }
 
-    public void getUserfollowinglist()
-    {
-        int i=1;
-        ApiCallingService.Friends.getMyFollowing(i,context).enqueue(new Callback<ProfileMyFollowing>() {
+    public void getUserfollowinglist() {
+        int i = 1;
+
+        ApiCallingService.Friends.getMyFollowing(i, context).enqueue(new Callback<ProfileMyFollowing>() {
             @Override
             public void onResponse(Call<ProfileMyFollowing> call, Response<ProfileMyFollowing> response) {
-                if(response.code()==200)
-                {
-                    try
-                    {
-
-                        list= response.body().getFollowings();
-                        profileMyFollowingAdapter=new FollowingAdapter(context,list);
+                if (response.code() == 200) {
+                    try {
+                        list = response.body().getFollowings();
+                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
                         recyclerView.setAdapter(profileMyFollowingAdapter);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else
-                {
-                    Toast.makeText(context,"Something went wrong,Please try again",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ProfileMyFollowing> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
 
             }
         });
 
     }
 
-    public void getOthersFollowingList(int userId)
-    {
+    public void getOthersFollowingList(int userId) {
 
 
-        int i=1;
-        ApiCallingService.Friends.getFriendsFollowings(i,userId,context).enqueue(new Callback<OthersFollowing>() {
+        int i = 1;
+        ApiCallingService.Friends.getFriendsFollowings(i, userId, context).enqueue(new Callback<OthersFollowing>() {
             @Override
             public void onResponse(Call<OthersFollowing> call, Response<OthersFollowing> response) {
-                if(response.code()==200)
-                {
-                    try
-                    {
-                        list= response.body().getFollowings();
-                        profileMyFollowingAdapter=new FollowingAdapter(context,list);
+                if (response.code() == 200) {
+                    try {
+                        list = response.body().getFollowings();
+                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
                         recyclerView.setAdapter(profileMyFollowingAdapter);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else
-                {
-                    Toast.makeText(context,"Something went wrong,Please try again",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onFailure(Call<OthersFollowing> call, Throwable t) {
 
@@ -140,5 +131,5 @@ public class FollowingListActivities extends AppCompatActivity {
 
 
     }
-    }
+}
 

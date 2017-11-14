@@ -128,7 +128,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(_btnfollow.getText().equals("Follow"))
                 {
-                    Toast.makeText(getApplicationContext(), "FollowButton", Toast.LENGTH_LONG).show();
                     followUser(followersid,context);
                 }
                 else if (_btnfollow.getText().equals("Unfollow"))
@@ -310,7 +309,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         }
                         else
                             {
-                                Toast.makeText(getApplicationContext(), "User has not been unfollowed,Please try again", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "You have already unfollowed", Toast.LENGTH_LONG).show();
                             }
 
                     } catch (Exception e) {
@@ -347,7 +346,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(), "some error, Please try again", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "You are aleady following", Toast.LENGTH_LONG).show();
                         }
 
                     }

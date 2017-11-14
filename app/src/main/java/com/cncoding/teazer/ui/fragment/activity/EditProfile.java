@@ -55,7 +55,7 @@ public class EditProfile extends AppCompatActivity {
     EditText _username;
     EditText _firstname;
     EditText _lastName;
-    EditText  _email;
+    EditText _email;
     EditText _mobileNumber;
     EditText _bio;
     RadioButton _male;
@@ -114,41 +114,40 @@ public class EditProfile extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         layoutdetail.setVisibility(View.GONE);
 
-        Intent intent=getIntent();
-        username= intent.getStringExtra("UserName");
-        firstname= intent.getStringExtra("FirstName");
-        lastname=  intent.getStringExtra("LastName");
-        mobilenumber= Long.parseLong(intent.getStringExtra("MobileNumber"));
-        gender=Integer.parseInt(intent.getStringExtra("Gender"));
-        emailId=intent.getStringExtra("EmailId");
-        countrycode=Integer.parseInt(intent.getStringExtra("CountryCode"));
-        detail=intent.getStringExtra("Detail");
+        Intent intent = getIntent();
+        username = intent.getStringExtra("UserName");
+        firstname = intent.getStringExtra("FirstName");
+        lastname = intent.getStringExtra("LastName");
+        mobilenumber = Long.parseLong(intent.getStringExtra("MobileNumber"));
+        gender = Integer.parseInt(intent.getStringExtra("Gender"));
+        emailId = intent.getStringExtra("EmailId");
+        countrycode = Integer.parseInt(intent.getStringExtra("CountryCode"));
+        detail = intent.getStringExtra("Detail");
         _username.setText(username);
         _firstname.setText(firstname);
-      //  _lastName.setText(lastname);
+        //  _lastName.setText(lastname);
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
 
 
-        if(gender==1)
-        {_male.setChecked(true);
-        }
-        else{
+        if (gender == 1) {
+            _male.setChecked(true);
+        } else {
             _female.setChecked(true);
         }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String  usernames= _username.getText().toString();
-                String  firstname= _firstname.getText().toString();
-                String  lastnames= "ABCde";
-                int     countrycodes= countrycode;
-                long mobilenumber= Long.valueOf(_mobileNumber.getText().toString());
-                String emailid= _email.getText().toString();
-                String  details= _bio.getText().toString();
-                ProfileUpdateRequest profileUpdateRequest=new ProfileUpdateRequest(firstname, lastnames, usernames, emailid,  mobilenumber,  countrycodes,  gender,detail);
+                String usernames = _username.getText().toString();
+                String firstname = _firstname.getText().toString();
+                String lastnames = "ABCde";
+                int countrycodes = countrycode;
+                long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
+                String emailid = _email.getText().toString();
+                String details = _bio.getText().toString();
+                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, detail);
                 ProfileUpdate(profileUpdateRequest);
 
             }
@@ -167,16 +166,16 @@ public class EditProfile extends AppCompatActivity {
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.male:
                 if (checked)
-             gender=1;
+                    gender = 1;
                 break;
             case R.id.female:
                 if (checked)
-                    gender=2;
+                    gender = 2;
 
-                    break;
+                break;
 
         }
     }
@@ -184,14 +183,14 @@ public class EditProfile extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       final String pic="https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
         Glide.with(context)
                 .load(pic)
                 .into(profile_image);
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
-            protected Bitmap doInBackground( final Void ... params ) {
+            protected Bitmap doInBackground(final Void... params) {
 
                 Bitmap bitmap = null;
                 try {
@@ -225,9 +224,7 @@ public class EditProfile extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
 
                 }
 
@@ -235,7 +232,7 @@ public class EditProfile extends AppCompatActivity {
             }
 
             @Override
-            protected void onPostExecute( final Bitmap result ) {
+            protected void onPostExecute(final Bitmap result) {
                 Blurry.with(context).from(result).into(bgImage);
                 layoutdetail.setVisibility(View.VISIBLE);
                 simpleProgressBar.setVisibility(View.GONE);
@@ -246,66 +243,53 @@ public class EditProfile extends AppCompatActivity {
     }
 
 
-
     public void ProfileUpdate(ProfileUpdateRequest profileUpdateRequest) {
         simpleProgressBar.setVisibility(View.VISIBLE);
         layoutdetail.setVisibility(View.GONE);
 
-        ApiCallingService.User.updateUserProfiles(profileUpdateRequest,getApplicationContext()).enqueue(new Callback<ProfileUpdate>() {
+        ApiCallingService.User.updateUserProfiles(profileUpdateRequest, getApplicationContext()).enqueue(new Callback<ProfileUpdate>() {
             @Override
             public void onResponse(Call<ProfileUpdate> call, Response<ProfileUpdate> response) {
 
 
-                Log.d("Exception",String.valueOf(response.code()));
-
+                Log.d("ResponseCode", String.valueOf(response.code()));
 
                 if (response.code() == 200) {
-                    Log.d("messages1234",String.valueOf(response.body().getStatus()));
+
                     try {
-                        if (response.body().getStatus()){
+                        if (response.body().getStatus()) {
 
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
-                    }
-                        else {
+                        } else {
 
-                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated", Toast.LENGTH_LONG).show();
-                             simpleProgressBar.setVisibility(View.GONE);
-                             layoutdetail.setVisibility(View.VISIBLE);
+                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_LONG).show();
+                            simpleProgressBar.setVisibility(View.GONE);
+                            layoutdetail.setVisibility(View.VISIBLE);
                         }
-                    }catch (Exception e)
-                    {
-                        Log.d("Exception",e.getMessage());
-                        Toast.makeText(getApplicationContext(),"Something went wrong Please try again",Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.d("Exception", e.getMessage());
+                        Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
 
                     }
-                }
-                else
-                {
-
-                    Toast.makeText(getApplicationContext(),"Please check your data is correct",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_LONG).show();
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
-
                 }
-
             }
             @Override
             public void onFailure(Call<ProfileUpdate> call, Throwable t) {
-                Log.d("Failure",t.getMessage());
-                Toast.makeText(getApplicationContext(),"Network Issue Please check once again ",Toast.LENGTH_LONG).show();
+                Log.d("Failure", t.getMessage());
+                Toast.makeText(getApplicationContext(), "Network Issue Please check once again ", Toast.LENGTH_LONG).show();
                 simpleProgressBar.setVisibility(View.GONE);
                 layoutdetail.setVisibility(View.VISIBLE);
             }
         });
     }
-
-
-
-
 
 
 }

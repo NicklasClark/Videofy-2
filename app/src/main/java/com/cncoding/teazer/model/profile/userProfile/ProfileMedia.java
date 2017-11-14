@@ -4,7 +4,7 @@ package com.cncoding.teazer.model.profile.userProfile;
  * Created by farazhabib on 14/11/17.
  */
 
-import com.cncoding.teazer.model.profile.followers.MediaDimension;
+import com.cncoding.teazer.model.profile.followerprofile.MediaDimension;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

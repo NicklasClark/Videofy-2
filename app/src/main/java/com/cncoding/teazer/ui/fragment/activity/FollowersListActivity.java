@@ -40,12 +40,9 @@ public class FollowersListActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,10 +50,10 @@ public class FollowersListActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         recyclerView=findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
         getProfileDetail();
 
     }
@@ -72,7 +69,6 @@ public class FollowersListActivity extends AppCompatActivity {
                     try
                     {
 
-                         Toast.makeText(context,"FollowersListActivity Detail fetched",Toast.LENGTH_LONG).show();
                           list= response.body().getFollowers();
                           profileMyFollowerAdapter=new FollowersAdapter(context,list);
                           recyclerView.setAdapter(profileMyFollowerAdapter);
@@ -85,7 +81,6 @@ public class FollowersListActivity extends AppCompatActivity {
                 else
                 {
 
-                    Toast.makeText(context,"UserProfile Detail not fetched",Toast.LENGTH_LONG).show();
                 }
             }
             @Override
