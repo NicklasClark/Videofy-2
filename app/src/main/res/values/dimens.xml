@@ -57,5 +57,6 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="padding_with_small_profile_pic">62dp</dimen>
     <dimen name="overlay_toolbar_height">80dp</dimen>
+    <dimen name="textsize14">80dp</dimen>
 
 </resources>

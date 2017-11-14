@@ -1051,6 +1051,7 @@ public class Pojos {
             private String user_name;
             private String first_name;
             private String last_name;
+            int gender;
             private String email;
             private long phone_number;
             private int country_code;
@@ -1062,10 +1063,11 @@ public class Pojos {
             private ProfileMedia profile_media;
             private ArrayList<Category> categories;
             private String password;
+            private String description;
 
             public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
                                String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos) {
+                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos,int gender,String description) {
                 this.user_id = user_id;
                 this.user_name = user_name;
                 this.first_name = first_name;
@@ -1081,15 +1083,23 @@ public class Pojos {
                 this.profile_media = profile_media;
                 this.categories = categories;
                 this.password = password;
+                this.gender=gender;
+                this.description=description;
             }
 
-            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code) {
+            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code,int gender,String description) {
                 this.user_name = user_name;
                 this.first_name = first_name;
                 this.last_name = last_name;
                 this.email = email;
                 this.phone_number = phone_number;
                 this.country_code = country_code;
+                this.gender=gender;
+                this.description=description;
+            }
+
+            public String getDescription() {
+                return description;
             }
 
             public UserProfile(String email) {
@@ -1118,6 +1128,10 @@ public class Pojos {
 
             public long getPhoneNumber() {
                 return phone_number;
+            }
+
+            public int getGender() {
+                return gender;
             }
 
             public int getCountryCode() {
@@ -1181,6 +1195,8 @@ public class Pojos {
                 parcel.writeByte((byte) (has_profile_media ? 1 : 0));
                 parcel.writeParcelable(profile_media, i);
                 parcel.writeTypedList(categories);
+                parcel.writeInt(gender);
+                parcel.writeString(description);
             }
 
             protected UserProfile(Parcel in) {
@@ -1198,6 +1214,8 @@ public class Pojos {
                 has_profile_media = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 categories = in.createTypedArrayList(Category.CREATOR);
+                gender = in.readInt();
+                description = in.readString();
             }
 
             public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {

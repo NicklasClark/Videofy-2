@@ -1,6 +1,7 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.model.profile.following.Following;
+import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
 
 import java.util.List;
 
@@ -35,8 +37,26 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     @Override
     public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder, int i) {
         Following cont = list.get(i);
-        String username=cont.getUserName();
-        viewHolder.followersname.setText(username);
+        final String followingname=cont.getUserName();
+        final  int followerId=cont.getUserId();
+        viewHolder.followingName.setText(followingname);
+        viewHolder.followingName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewHolder.followingName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent= new Intent(context, FollowerFollowingProfileActivity.class);
+                        intent.putExtra("Username",followingname);
+                        intent.putExtra("FollowerId",String.valueOf(followerId));
+                        intent.putExtra("UserType","Following");
+                        context.startActivity(intent);
+
+                    }
+                });
+
+            }
+        });
 
     }
     @Override
@@ -44,12 +64,12 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         return list.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView followersname, address;
+        private TextView followingName, address;
         Button follow;
 
         public ViewHolder(View view) {
             super(view);
-            followersname = view.findViewById(R.id.followers_name);
+            followingName = view.findViewById(R.id.following_name);
 
 
         }

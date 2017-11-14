@@ -631,7 +631,7 @@ public class VideoUpload extends AppCompatActivity
             String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
             String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
             String taggedFriends = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend.replace("\"", "");
+            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend;
             if (location != null) {
                 ApiCallingService.Posts.uploadVideo(videoPartFile, title, location,
                         selectedPlace.getLatitude(), selectedPlace.getLongitude(), taggedFriends, categories, this)

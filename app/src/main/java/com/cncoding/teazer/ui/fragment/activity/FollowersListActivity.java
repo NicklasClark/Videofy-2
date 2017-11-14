@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -19,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowersActivity extends AppCompatActivity {
+public class FollowersListActivity extends AppCompatActivity {
 
     Context context;
     List<Follower> list;
@@ -27,15 +29,31 @@ public class FollowersActivity extends AppCompatActivity {
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers);
         context=this;
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_OK, null);
+                onBackPressed();
+            }
+        });
+
         recyclerView=findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -54,7 +72,7 @@ public class FollowersActivity extends AppCompatActivity {
                     try
                     {
 
-                         Toast.makeText(context,"FollowersActivity Detail fetched",Toast.LENGTH_LONG).show();
+                         Toast.makeText(context,"FollowersListActivity Detail fetched",Toast.LENGTH_LONG).show();
                           list= response.body().getFollowers();
                           profileMyFollowerAdapter=new FollowersAdapter(context,list);
                           recyclerView.setAdapter(profileMyFollowerAdapter);

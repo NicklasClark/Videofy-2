@@ -31,7 +31,7 @@ public class Settings extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>Settings</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>Hello</font>"));
 
 
     }

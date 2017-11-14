@@ -3,9 +3,15 @@ package com.cncoding.teazer.apiCalls;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
+import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
@@ -233,7 +239,7 @@ import retrofit2.http.Query;
          * Call this service to get the friends followings list
          * */
         @GET("/api/v1/friend/followings/{user_id}/{page}")
-        Call<ResultObject> getFriendsFollowings(@Path("page") int page, @Path("user_id") int userId);
+        Call<OthersFollowing> getFriendsFollowings(@Path("page") int page, @Path("user_id") int userId);
 
         /**
          * Call this service to get the friends followings list with search term
@@ -274,8 +280,13 @@ import retrofit2.http.Query;
         /**
          * Call this service to unfollow a user
          * */
+
         @DELETE("/api/v1/friend/unfollow/{user_id}")
         Call<ResultObject> unfollowUser(@Path("user_id") int userId);
+
+
+        @POST("/api/v1/friend/join/request/by/userid/{user_id}")
+        Call<ResultObject>followUser(@Path("user_id") int userId);
 
         /**
          * Call this service to get other's profile information
@@ -284,7 +295,7 @@ import retrofit2.http.Query;
          *          Based on “account_type” you can read either private or public profile.
          * */
         @GET("/api/v1/friend/profile/{user_id}")
-        Call<ResultObject> getOthersProfileInfo(@Path("user_id") int userId);
+        Call<FollowersProfile> getOthersProfileInfo(@Path("user_id") int userId);
 
         /**
          * Call this service to Block/Unblock a user
@@ -553,6 +564,9 @@ import retrofit2.http.Query;
         @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
         Call<PostList> getVideosPostedByFriends(@Path("page") int page, @Path("friend_id") int friendId);
 
+        @GET("/api/v1/post/friend/videos/{friend_id}/{page}")
+        Call<FollowersProfileCreations> getVideosPostedByFriend(@Path("page") int page, @Path("friend_id") int friendId);
+
         /**
          * Call this service to get the reactions of a post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
@@ -603,12 +617,16 @@ import retrofit2.http.Query;
         @GET("/api/v1/user/profile")
         Call<Pojos.User.Profile> getUserProfile();
 
+
+        @GET("/api/v1/user/profile")
+        Call<Pojos.User.Profile> getUserProfileDetail();
+
         /**
          * Update user profile
          * Call this service to update user profile.
          * */
         @PUT("/api/v1/user/update/profile")
-        Call<ResultObject> updateUserProfile(@Body Pojos.User.UpdateProfile updateProfileDetails);
+        Call<ProfileUpdate> updateUserProfile(@Body ProfileUpdateRequest updateProfileDetails);
 
         /**
          * Call this service to update account password.

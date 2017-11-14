@@ -132,6 +132,7 @@
     <string name="share">Share</string>
     <string name="hide">Hide</string>
     <string name="delete">Delete</string>
+    <string name="block">Block</string>
     <string name="report">Report</string>
     <string name="title_activity_tab2">Tab2Activity</string>
     <string name="tab_text_1">Tab 1</string>
@@ -181,7 +182,7 @@
     <string name="logging_you_in">Logging you in…</string>
     <string name="expanded_placeholder_image">Expanded placeholder image</string>
     <string name="follow">Follow</string>
-    <string name="unfollow">UnFollow</string>
+    <string name="unfollow">Following</string>
     <string name="background_profile">Background profile</string>
     <string name="your_details">Your Details</string>
     <string name="edit_profile">Edit profile</string>

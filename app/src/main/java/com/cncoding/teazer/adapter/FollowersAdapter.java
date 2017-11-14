@@ -1,6 +1,8 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.model.profile.followers.Follower;
+import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
     private List<Follower> list;
     private Context context;
-
+    public static final String UserType="Follower";
     public FollowersAdapter(Context context, List<Follower> list) {
         this.context = context;
         this.list =list;
@@ -35,21 +38,38 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     @Override
     public void onBindViewHolder(final FollowersAdapter.ViewHolder viewHolder, int i) {
           Follower  cont = list.get(i);
-          String username=cont.getUserName();
-          viewHolder.followersname.setText(username);
+        final String followername=cont.getUserName();
+        final  int followerId=cont.getUserId();
+        viewHolder.followersname.setText(followername);
+        viewHolder.followersname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(context, FollowerFollowingProfileActivity.class);
+                intent.putExtra("Username",followername);
+                intent.putExtra("FollowerId",String.valueOf(followerId));
+                intent.putExtra("UserType",UserType);
+                context.startActivity(intent);
+
+            }
+        });
 
     }
     @Override
     public int getItemCount() {
         return list.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView followersname, address;
         Button follow;
+        CardView cardview;
+
 
         public ViewHolder(View view) {
             super(view);
             followersname = view.findViewById(R.id.followers_name);
+            cardview = view.findViewById(R.id.cardview);
+
 
 
         }

@@ -7,9 +7,15 @@ import android.support.design.widget.Snackbar;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
+import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -203,7 +209,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the friends followings list
          * */
-        public static Call<ResultObject> getFriendsFollowings(int page, int userId, Context context) {
+        public static Call<OthersFollowing> getFriendsFollowings(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowings(page, userId);
         }
 
@@ -255,13 +261,17 @@ public class ApiCallingService {
             return getFriendsService(context).unfollowUser(userId);
         }
 
+        public static Call<ResultObject> followUser(int userId, Context context) {
+            return getFriendsService(context).followUser(userId);
+        }
+
         /**
          * Call this service to get other's profile information
          * @return “account_type” 1 is a Private account, 2 is a Public account.
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-        public static Call<ResultObject> getOthersProfileInfo(int userId, Context context) {
+        public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
 
@@ -503,6 +513,11 @@ public class ApiCallingService {
 
         public static Call<PostList> getVideosPostedByFriends(int page, int friendId, Context context) {
             return getPostalService(context).getVideosPostedByFriends(page, friendId);
+
+        }
+
+        public static Call<FollowersProfileCreations> getVideosPostedByFriend(int page, int friendId, Context context) {
+            return getPostalService(context).getVideosPostedByFriend(page, friendId);
         }
 
         public static Call<PostReactionsList> getReactionsOfPost(int postId, int page, Context context) {
@@ -540,9 +555,15 @@ public class ApiCallingService {
 
         public static Call<Pojos.User.Profile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
+
         }
 
-        public static Call<ResultObject> updateUserProfile(Pojos.User.UpdateProfile updateProfileDetails, Context context) {
+
+//        public static Call<UserProfileDetail> getUserProfileDetails(Context context) {
+//            return getUserService(context).getUserProfileDetail();
+//        }
+
+        public static Call<ProfileUpdate> updateUserProfiles(ProfileUpdateRequest updateProfileDetails, Context context) {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }
 

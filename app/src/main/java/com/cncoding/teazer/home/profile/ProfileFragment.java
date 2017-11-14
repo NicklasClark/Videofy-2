@@ -14,9 +14,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +28,12 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.ui.fragment.activity.FollowersActivity;
-import com.cncoding.teazer.ui.fragment.activity.FollowingActivities;
+import com.cncoding.teazer.model.profile.followerprofile.Category;
+import com.cncoding.teazer.model.profile.userProfile.UserProfile;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -57,88 +63,112 @@ public class ProfileFragment extends BaseFragment {
     TextView _creations;
     TextView _followers;
     TextView _following;
+    TextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    Pojos.User.UserProfile userprofile;
-    boolean hasProfleMedia;
     RemoveAppBar removeAppBar;
-
-
+    Button btnedit;
+    int totalfollowers;
+    int totalfollowing;
+    int totalvideos;
+    String firstname;
+    String lastname;
+    String username;
+    String email;
+    int accountType;
+    boolean hasProfleMedia;
+    Pojos.User.UserProfile userprofile;
+    Long mobilenumber;
+    int gender;
+    int countrycode;
+    String detail;
 
     private OnFragmentInteractionListener mListener;
+
     public ProfileFragment() {
     }
+
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.fragment_profile, container, false);
-        context=container.getContext();
-        removeAppBar=(RemoveAppBar)context;
-
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        context = container.getContext();
+        removeAppBar = (RemoveAppBar) context;
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        backbutton= view.findViewById(R.id.backbutton);
-        settings= view.findViewById(R.id.settings);
-        _toolbarusername= view.findViewById(R.id.toolbarusername);
-        _username= view.findViewById(R.id.username);
-        _name= view.findViewById(R.id.username_title);
-        _creations= view.findViewById(R.id.creations);
-        _followers= view.findViewById(R.id.followers);
-        _following= view.findViewById(R.id.following);
-//        profile_image= (CircularAppCompatImageView) view.findViewById(R.id.profile_id);
-//        bgImage= (CircularAppCompatImageView)view.findViewById(R.id.profile_id);
-        backgroundprofile=view.findViewById(R.id.background_profile);
+        backbutton = view.findViewById(R.id.backbutton);
+        settings = view.findViewById(R.id.settings);
+        _toolbarusername = view.findViewById(R.id.toolbarusername);
+        _username = view.findViewById(R.id.username);
+        _name = view.findViewById(R.id.username_title);
+        _creations = view.findViewById(R.id.creations);
+        _followers = view.findViewById(R.id.followers);
+        _following = view.findViewById(R.id.following);
+        _detail = view.findViewById(R.id.hobby);
+        backgroundprofile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
+        btnedit = view.findViewById(R.id.btnedit);
 
+
+        btnedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, EditProfile.class);
+                intent.putExtra("UserName",username);
+                intent.putExtra("FirstName",firstname);
+                intent.putExtra("LastName",lastname);
+                intent.putExtra("EmailId",email);
+                intent.putExtra("MobileNumber",String.valueOf(mobilenumber));
+                intent.putExtra("Gender",String.valueOf(gender));
+                intent.putExtra("CountryCode",String.valueOf(countrycode));
+                intent.putExtra("Detail",detail);
+                startActivity(intent);
+            }
+        });
 
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent= new Intent(context, FollowersActivity.class);
-            startActivity(intent);
+                Intent intent = new Intent(context, FollowersListActivity.class);
+                startActivity(intent);
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(context, FollowingActivities.class);
+                Intent intent = new Intent(context, FollowingListActivities.class);
+                intent.putExtra("FollowerId", String.valueOf(0));
+                intent.putExtra("Identifier", "User");
                 startActivity(intent);
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context, Settings.class);
+                Intent intent = new Intent(context, Settings.class);
                 startActivity(intent);
             }
         });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
 
                 getActivity().onBackPressed();
             }
@@ -150,21 +180,18 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
-        ViewPager viewPager =  view.findViewById(R.id.viewpager);
+        ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        appBarLayout =  view.findViewById(R.id.appbar);
+        appBarLayout = view.findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if(verticalOffset<-530)
-                {
+                if (verticalOffset < -530) {
                     _toolbarusername.setVisibility(View.VISIBLE);
 
-                }
-                else
-                {
+                } else {
                     _toolbarusername.setVisibility(View.INVISIBLE);
 
                 }
@@ -173,6 +200,7 @@ public class ProfileFragment extends BaseFragment {
 
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -181,63 +209,77 @@ public class ProfileFragment extends BaseFragment {
         getProfileDetail();
 
 
+
     }
-    public void getProfileDetail()
-    {
-        ApiCallingService.User.getUserProfileDetail(context).enqueue(new Callback<Pojos.User.Profile>() {
+
+    public void getProfileDetail() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.Profile>() {
             @Override
-            public void onResponse(Call<Pojos.User.Profile> call, Response<Pojos.User.Profile> response) {
-                if(response.code()==200)
-                {
+                public void onResponse(Call<Pojos.User.Profile> call, Response<Pojos.User.Profile> response) {
+
+                Log.d("Response",response.toString());
+
+                if (response.code() == 200) {
+
                     try {
+
                         Pojos.User.UserProfile userProfile = response.body().getUserProfile();
-                        int totalfollowers = response.body().getFollowers();
-                        int totalfollowing = response.body().getFollowings();
-                        int totalvideos = response.body().getTotalVideos();
-                        String firstname=userProfile.getFirstName();
-                        String lastname=userProfile.getLastName();
-                        String username=userProfile.getUsername();
-                        String email=userProfile.getEmail();
-                        int accountType=userProfile.getAccountType();
-                        hasProfleMedia=userProfile.hasProfileMedia();
+                        totalfollowers = response.body().getFollowers();
+                        totalfollowing = response.body().getFollowings();
+                        totalvideos = response.body().getTotalVideos();
+                        firstname = userProfile.getFirstName();
+                        lastname = userProfile.getLastName();
+                        username = userProfile.getUsername();
+                        gender=userProfile.getGender();
+                        email = userProfile.getEmail();
+                        mobilenumber= userProfile.getPhoneNumber();
+                        accountType = userProfile.getAccountType();
+                        hasProfleMedia = userProfile.hasProfileMedia();
+                        countrycode = userProfile.getCountryCode();
+                         detail=userProfile.getDescription();
+
+                        Toast.makeText(context, "UserProfile Detail fetched", Toast.LENGTH_LONG).show();
 
 
-                        List<Pojos.Category> categoryList=userProfile.getCategories();
+                        if (hasProfleMedia) {
+                            backgroundprofile.setBackgroundResource(R.drawable.material_flat);
 
-                        if(hasProfleMedia) {
-    //                        Picasso.with(context).
-    //                                load(newUrl)
-    //                                .placeholder(ContextCompat.getDrawable(context, R.drawable.blankimage))
-    //                                .into(imageView);
-                        }
-                        else {
+                            //                        Picasso.with(context).
+                            //                                load(newUrl)
+                            //                                .placeholder(ContextCompat.getDrawable(context, R.drawable.blankimage))
+                            //                                .into(imageView);
+                        } else {
                             backgroundprofile.setBackgroundResource(R.drawable.material_flat);
                         }
-                        Pojos.ProfileMedia profile_media = userProfile.getProfileMedia();
-                        if (profile_media != null) {
-                            String thumburl = profile_media.getThumbUrl();
-                            String mediaurl = profile_media.getMediaUrl();
-                        }
+
+//                        if (b != null) {
+//                            String thumburl = profile_media.getThumbUrl();
+//                            String mediaurl = profile_media.getMediaUrl();
+//                        }
                         _toolbarusername.setText(firstname);
                         _name.setText(firstname);
                         _username.setText(username);
-                        _followers.setText(String.valueOf(totalfollowers)+" Follower");
-                        _following.setText(String.valueOf(totalfollowing+ " Following"));
-                        _creations.setText(String.valueOf(totalvideos +" Creations"));
+                       // _detail.setText(detail);
+                        Log.d("Gender",detail);
+                        Toast.makeText(context, detail, Toast.LENGTH_LONG).show();
+                        Log.d("Gender","hii");
+                        _followers.setText(String.valueOf(totalfollowers) + " Follower");
+                        _following.setText(String.valueOf(totalfollowing + " Following"));
+                        _creations.setText(String.valueOf(totalvideos + " Creations"));
                     }
                     catch (Exception e) {
-                        e.printStackTrace();
+                        Log.d("Gender122334",e.getMessage());
                     }
-                }
-                else
-                {
+                } else {
 
-                    Toast.makeText(context,"UserProfile Detail not fetched",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "UserProfile Detail not fetched", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Pojos.User.Profile> call, Throwable t) {
 
+                Log.d("errror4",t.getMessage());
             }
         });
 
@@ -251,6 +293,7 @@ public class ProfileFragment extends BaseFragment {
         }
 
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -284,6 +327,7 @@ public class ProfileFragment extends BaseFragment {
             });
         }
     }
+
     public interface RemoveAppBar {
         void removeAppbar();
     }

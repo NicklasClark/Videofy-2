@@ -27,7 +27,7 @@
                     android:background="@drawable/bg_circle_white_outline">
 
                     <TextView
-                        android:id="@+id/followers_name"
+                        android:id="@+id/following_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"

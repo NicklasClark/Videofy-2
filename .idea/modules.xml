@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Teazer.iml" filepath="$PROJECT_DIR$/Teazer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/teazerandroid.iml" filepath="$PROJECT_DIR$/teazerandroid.iml" />
     </modules>
   </component>
 </project>
