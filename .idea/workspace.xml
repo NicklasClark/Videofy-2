@@ -9,48 +9,17 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="Refinements in PostListFragment and PostDetailsFragment.&#10;Migrated from SurfaceView to TextureView in PostDetailsFragment.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/EndlessRecyclerViewScrollListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_error_outline.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sad.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/progress_bar_horizontal.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostObject.java" afterPath="" />
+    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_reactions.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Prem__.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Prem__.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/AutoFitTextureView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/AutoFitTextureView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/MediaControllerView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/MediaControllerView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ProximaNovaSemiboldButton.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ProximaNovaSemiboldButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ResizableSurfaceView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ResizableSurfaceView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/BaseFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/BaseFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/CameraActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/CameraActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/VideoGalleryAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/VideoGalleryAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostReactionAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostReactionAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/TagsAndCategoryFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/TagsAndCategoryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/NavigationController.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/NavigationController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/PlaceHolderDrawableHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/PlaceHolderDrawableHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_add_location.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_add_location.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_grid.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_grid.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_white.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_white.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_video_upload.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_video_upload.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_home_screen_post.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_home_screen_post.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
@@ -108,47 +77,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PostsListFragment.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="75" column="37" lean-forward="true" selection-start-line="75" selection-start-column="37" selection-end-line="75" selection-end-column="37" />
-              <folding />
-            </state>
+      <file leaf-file-name="fragment_posts_list.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml">
+          <provider editor-type-id="android-designer2">
+            <state />
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PostDetailsFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="165" column="0" lean-forward="true" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+            <state relative-caret-position="29">
+              <caret line="39" column="46" lean-forward="false" selection-start-line="39" selection-start-column="46" selection-end-line="39" selection-end-column="46" />
               <folding>
-                <element signature="e#6844#7352#0" expanded="true" />
-                <element signature="e#7351#7352#0" expanded="true" />
-                <element signature="e#11791#11831#0" expanded="true" />
-                <element signature="e#11905#11926#0" expanded="true" />
-                <element signature="e#12531#12556#0" expanded="true" />
-                <element signature="e#12597#12631#0" expanded="true" />
-                <element signature="e#12827#12980#0" expanded="true" />
-                <element signature="e#12979#12980#0" expanded="true" />
-                <element signature="e#14753#14783#0" expanded="false" />
-                <element signature="e#19143#19177#0" expanded="false" />
-                <element signature="e#19322#19372#0" expanded="false" />
+                <element signature="e#2144#2167#0" expanded="true" />
+                <element signature="e#2202#2245#0" expanded="true" />
+                <element signature="e#2455#2495#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fragment_post_details.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="PostsListFragment.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12">
-              <caret line="144" column="50" lean-forward="false" selection-start-line="144" selection-start-column="50" selection-end-line="144" selection-end-column="50" />
-              <folding />
+            <state relative-caret-position="269">
+              <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+              <folding>
+                <element signature="e#3963#4134#0" expanded="true" />
+                <element signature="e#4133#4134#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1977,7 +1931,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/Interests.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/tagsAndCategories/CategoriesAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_interests.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/WelcomeFragment.java" />
@@ -2006,7 +1959,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/VideoGalleryAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/progress_bar_horizontal.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_home_screen_post.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_profile.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_post.xml" />
@@ -2018,16 +1970,18 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/MediaControllerView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/ic_error_outline.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostReactionAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ProximaNovaSemiboldButton.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/ProximaNovaBoldTextView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_video_upload.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/EndlessRecyclerViewScrollListener.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/ic_reactions.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java" />
       </list>
     </option>
   </component>
@@ -2292,7 +2246,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
-    <property name="device.picker.selection" value="ce0317139a1ab86c0c" />
+    <property name="device.picker.selection" value="4d000adc56796017" />
     <property name="sync.plugin.last.upgrade.timestamp" value="1510570607654" />
     <property name="android.profiler.active" value="true" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
@@ -2302,7 +2256,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="last_opened_file_path" value="D:/Teazer Logs/com.cncoding.teazer.hprof" />
     <property name="UI_DESIGNER_EDITOR_MODE.CaptureAnalysis.SHOW" value="false" />
-    <property name="VectorAssetImportPath" value="D:\AndroidStudio" />
+    <property name="VectorAssetImportPath" value="D:\Icons\Teazer" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -2379,7 +2333,7 @@
       <option name="ACTIVITY_CLASS" value="com.cncoding.teazer.ui.fragment.activity.FollowingActivity" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510662253704" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510666194048" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
@@ -2452,7 +2406,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510662253704" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510666194049" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2500,7 +2454,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510662253704" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510666194049" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2683,7 +2637,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510662253704" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1510666194052" />
       </method>
     </configuration>
     <list size="2">
@@ -2763,7 +2717,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510489502059</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Refinements in PostListFragment and PostDetailsFragment.&#10;Migrated from SurfaceView to TextureView in PostDetailsFragment.">
+      <created>1510662282251</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1510662282251</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2789,7 +2750,7 @@
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39776358" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.53846157" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2891374" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2891374" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2878,14 +2839,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_person_white.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="36" lean-forward="false" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_add_location.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -3015,17 +2968,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
           <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -3163,35 +3105,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="20" column="24" lean-forward="false" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/MediaControllerView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
           <caret line="320" column="0" lean-forward="true" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
-          <folding>
-            <element signature="e#13106#13107#0" expanded="false" />
-            <element signature="e#13153#13154#0" expanded="false" />
-            <element signature="e#13185#13186#0" expanded="false" />
-            <element signature="e#13231#13232#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3262,25 +3180,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12">
-          <caret line="144" column="50" lean-forward="false" selection-start-line="144" selection-start-column="50" selection-end-line="144" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="38" lean-forward="false" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_button_white.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -3300,10 +3199,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/EndlessRecyclerViewScrollListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="41" column="4" lean-forward="false" selection-start-line="41" selection-start-column="4" selection-end-line="41" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="38" lean-forward="false" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_reactions.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1602">
+          <caret line="4" column="10806" lean-forward="true" selection-start-line="4" selection-start-column="10806" selection-end-line="4" selection-end-column="10806" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_post_details.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="152" column="0" lean-forward="true" selection-start-line="152" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="165" column="0" lean-forward="true" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+        <state relative-caret-position="31">
+          <caret line="149" column="13" lean-forward="true" selection-start-line="149" selection-start-column="13" selection-end-line="149" selection-end-column="13" />
           <folding>
             <element signature="e#6844#7352#0" expanded="true" />
             <element signature="e#7351#7352#0" expanded="true" />
@@ -3320,21 +3256,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/customViews/EndlessRecyclerViewScrollListener.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_base_bottom_bar.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="41" column="4" lean-forward="false" selection-start-line="41" selection-start-column="4" selection-end-line="41" selection-end-column="4" />
+        <state relative-caret-position="-1122">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="473">
+          <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_posts_list.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="39" column="46" lean-forward="false" selection-start-line="39" selection-start-column="46" selection-end-line="39" selection-end-column="46" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#2144#2167#0" expanded="true" />
+            <element signature="e#2202#2245#0" expanded="true" />
+            <element signature="e#2455#2495#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostsListFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="75" column="37" lean-forward="true" selection-start-line="75" selection-start-column="37" selection-end-line="75" selection-end-column="37" />
-          <folding />
+        <state relative-caret-position="269">
+          <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding>
+            <element signature="e#3963#4134#0" expanded="true" />
+            <element signature="e#4133#4134#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

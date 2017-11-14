@@ -36,21 +36,28 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
-        android:background="@color/material_grey100"
-        android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
-        android:paddingTop="@dimen/padding_x_thin"
-        android:paddingBottom="@dimen/padding_with_navigation_bar_height"
-        android:clipToPadding="false"
-        app:layoutManager="StaggeredGridLayoutManager"
-        tools:context="com.cncoding.teazer.home.post.PostsListFragment"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_home_screen_post" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/material_grey100"
+            android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:paddingTop="@dimen/padding_x_thin"
+            android:paddingBottom="@dimen/padding_with_navigation_bar_height"
+            android:clipToPadding="false"
+            app:layoutManager="StaggeredGridLayoutManager"
+            tools:context="com.cncoding.teazer.home.post.PostsListFragment"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/item_home_screen_post" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <include layout="@layout/progress_bar_horizontal"
         android:layout_width="match_parent"

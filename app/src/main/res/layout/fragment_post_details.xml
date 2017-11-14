@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textAllCaps="true"
-                app:drawableTopCompat="@drawable/ic_error_outline"
+                app:drawableTopCompat="@drawable/ic_reactions"
                 android:textSize="@dimen/text_size_h5"/>
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView

@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.post;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -36,6 +37,7 @@ public class PostsListFragment extends BaseFragment {
 
     @BindView(R.id.thumbnail_progress_bar) ProgressBar progressBar;
     @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.transition_pager) ViewPager pager;
     @BindView(R.id.transition_full_background)  View background;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
@@ -87,10 +89,17 @@ public class PostsListFragment extends BaseFragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 if (page > 1)
-                    getHomePagePosts(page);
+                    getHomePagePosts(page, false);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHomePagePosts(1, true);
+            }
+        });
 
         return rootView;
     }
@@ -103,12 +112,12 @@ public class PostsListFragment extends BaseFragment {
             returningFromUpload = false;
         }
         else if (postList != null && postList.size() == 0)
-            getHomePagePosts(1);
+            getHomePagePosts(1, false);
 
         ((BaseBottomBarActivity) getActivity()).showAppBar();
     }
 
-    private void getHomePagePosts(int page) {
+    private void getHomePagePosts(int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
@@ -125,6 +134,8 @@ public class PostsListFragment extends BaseFragment {
                                 showErrorMessage("Error " + response.code() +": " + response.message());
                                 break;
                         }
+                        if (isRefreshing)
+                            swipeRefreshLayout.setRefreshing(false);
                     }
 
                     private void showErrorMessage(String message) {
@@ -140,6 +151,9 @@ public class PostsListFragment extends BaseFragment {
                         if (t.getMessage().contains("resolve"))
                             showErrorMessage("No internet connection found!");
                         else showErrorMessage("Error: " + t.getMessage());
+
+                        if (isRefreshing)
+                            swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
@@ -160,7 +174,7 @@ public class PostsListFragment extends BaseFragment {
         if (postListAdapter != null)
             postListAdapter.notifyDataSetChanged();
         scrollListener.resetState();
-        getHomePagePosts(1);
+        getHomePagePosts(1, false);
     }
 
     @OnClick(R.id.fab) public void changeLayoutManager() {
