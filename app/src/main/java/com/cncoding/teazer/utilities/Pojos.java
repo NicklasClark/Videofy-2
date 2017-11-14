@@ -855,7 +855,7 @@ public class Pojos {
         public static class PostReaction implements Parcelable {
             private int react_id;
             private int post_id;
-            private String title;
+            private String react_title;
             private int post_owner_id;
             private int likes;
             private int views;
@@ -865,11 +865,11 @@ public class Pojos {
             private MiniProfile react_owner;
             private String reacted_at;
 
-            public PostReaction(int react_id, int post_id, String title, int post_owner_id, int likes, int views, boolean can_like,
+            public PostReaction(int react_id, int post_id, String react_title, int post_owner_id, int likes, int views, boolean can_like,
                                 boolean can_delete, ReactionMediaDetail media_detail, MiniProfile react_owner, String reacted_at) {
                 this.react_id = react_id;
                 this.post_id = post_id;
-                this.title = title;
+                this.react_title = react_title;
                 this.post_owner_id = post_owner_id;
                 this.likes = likes;
                 this.views = views;
@@ -888,8 +888,8 @@ public class Pojos {
                 return post_id;
             }
 
-            public String getTitle() {
-                return title;
+            public String getReact_title() {
+                return react_title;
             }
 
             public int getPostOwnerId() {
@@ -1653,15 +1653,15 @@ public class Pojos {
         private String react_media_url;
         private String react_thumb_url;
         private String react_duration;
-        private Dimension react_dimension;
+        private Dimension media_dimension;
         private boolean react_is_image;
 
-        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension react_dimension, boolean react_is_image) {
+        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension media_dimension, boolean react_is_image) {
             this.media_id = media_id;
             this.react_media_url = react_media_url;
             this.react_thumb_url = react_thumb_url;
             this.react_duration = react_duration;
-            this.react_dimension = react_dimension;
+            this.media_dimension = media_dimension;
             this.react_is_image = react_is_image;
         }
 
@@ -1682,7 +1682,7 @@ public class Pojos {
         }
 
         public Dimension getReactDimension() {
-            return react_dimension;
+            return media_dimension;
         }
 
         public boolean hasImage() {
@@ -1700,7 +1700,7 @@ public class Pojos {
             parcel.writeString(react_media_url);
             parcel.writeString(react_thumb_url);
             parcel.writeString(react_duration);
-            parcel.writeParcelable(react_dimension, i);
+            parcel.writeParcelable(media_dimension, i);
             parcel.writeByte((byte) (react_is_image ? 1 : 0));
         }
 
@@ -1709,7 +1709,7 @@ public class Pojos {
             react_media_url = in.readString();
             react_thumb_url = in.readString();
             react_duration = in.readString();
-            react_dimension = in.readParcelable(Dimension.class.getClassLoader());
+            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
             react_is_image = in.readByte() != 0;
         }
 

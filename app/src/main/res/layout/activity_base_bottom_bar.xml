@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.cncoding.teazer.BaseBottomBarActivity">
 
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"

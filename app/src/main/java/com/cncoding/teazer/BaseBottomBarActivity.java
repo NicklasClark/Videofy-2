@@ -43,6 +43,7 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
+import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
@@ -131,6 +132,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @OnClick(R.id.camera_btn) public void startCamera() {
         launchVideoUploadCamera(this);
+        finish();
     }
 
     private void initTab() {
@@ -251,7 +253,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
-            case NavigationController.TAB1:
+            case TAB1:
                 return new PostsListFragment();
             case NavigationController.TAB2:
                 return new SearchFragment();
@@ -331,12 +333,24 @@ public class BaseBottomBarActivity extends BaseActivity
                     switchTab(position);
                     updateTabSelection(position);
                 } else {
-                    switchTab(0);
-                    updateTabSelection(0);
-                    fragmentHistory.emptyStack();
+                    if (navigationController.getCurrentStackIndex() != TAB1) {
+                        switchTab(0);
+                        updateTabSelection(0);
+                        fragmentHistory.emptyStack();
+                    } else {
+                        super.onBackPressed();
+                    }
                 }
             }
         }
+    }
+
+    public void hideAppBar() {
+        appBar.setExpanded(false, true);
+    }
+
+    public void showAppBar() {
+        appBar.setExpanded(true, true);
     }
 
     @Override

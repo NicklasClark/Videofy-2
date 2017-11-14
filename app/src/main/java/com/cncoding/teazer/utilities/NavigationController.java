@@ -854,9 +854,9 @@ public class NavigationController {
                 case TAB2:
                     switchTab(TAB2);
                     break;
-                case TAB3:
-                    switchTab(TAB3);
-                    break;
+//                case TAB3:
+//                    switchTab(TAB3);
+//                    break;
                 case TAB4:
                     switchTab(TAB4);
                     break;

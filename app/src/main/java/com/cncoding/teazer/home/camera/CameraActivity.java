@@ -29,6 +29,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.VideoGalleryAdapter.VideoGalleryAdapterInteractionListener;
@@ -210,7 +211,8 @@ public class CameraActivity extends AppCompatActivity
             slidingUpPanelLayout.setPanelState(COLLAPSED);
         }
         else {
-            super.onBackPressed();
+            startActivity(new Intent(this, BaseBottomBarActivity.class));
+            finish();
         }
     }
 }

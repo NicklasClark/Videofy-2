@@ -31,7 +31,7 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
  */
 public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapter.ViewHolder> {
 
-    private final ArrayList<PostReaction> postReactions;
+    private ArrayList<PostReaction> postReactions;
     private Context context;
     private PostReactionAdapterListener listener;
 
@@ -54,24 +54,19 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
         Glide.with(context)
                 .load(postReaction.getMediaDetail().getThumbUrl())
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .crossFade()
-//                .animate(android.R.anim.fade_in)
+                .animate(R.anim.float_up)
                 .into(holder.postThumbnail);
 
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                     .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                     .crossFade()
-//                    .animate(R.anim.zoom_in)
                     .into(holder.profilePic);
 
-        holder.caption.setText(postReaction.getTitle());
+        holder.caption.setText(postReaction.getReact_title());
         holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
         holder.likes.setText("  " + postReaction.getLikes());
         holder.views.setText("  " + postReaction.getViews());
@@ -139,6 +134,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         listener = null;
+//        postReactions = null;
+//        context = null;
     }
 
     public interface PostReactionAdapterListener {

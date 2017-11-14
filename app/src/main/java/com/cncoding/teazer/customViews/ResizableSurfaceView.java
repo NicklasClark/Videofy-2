@@ -6,8 +6,6 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 
 /**
  * Created by Prem $ on 28/10/2017
@@ -81,18 +79,9 @@ public class ResizableSurfaceView extends SurfaceView {
                     lp.width = lp.height;
                 }
             }
-            Animation animation = new ScaleAnimation(0, 0, surfaceViewHeight, videoHeight);
-            animation.setDuration(400);
-            animation.setFillAfter(true);
-            startAnimation(animation);
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setLayoutParams(lp);
-                    getHolder().setFixedSize(videoWidth, videoHeight);
-                    setVisibility(View.VISIBLE);
-                }
-            }, 400);
+            setLayoutParams(lp);
+            getHolder().setFixedSize(videoWidth, videoHeight);
+            setVisibility(View.VISIBLE);
         }
     }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+
 /**
  *
  * Created by Prem $ on 11/02/2017.
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 public class BaseFragment extends Fragment {
 
     public FragmentNavigation fragmentNavigation;
+    protected EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

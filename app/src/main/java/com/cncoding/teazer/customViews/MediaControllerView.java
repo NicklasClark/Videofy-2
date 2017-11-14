@@ -14,7 +14,7 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -82,7 +82,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private String reaction3Url;
     private MediaPlayerControlListener mediaPlayerControlListener;
     private ViewGroup anchorView;
-    private SurfaceView surfaceView;
+    private TextureView textureView;
     private MotionEvent event;
 
     @DrawableRes private int pauseIcon;
@@ -128,7 +128,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         videoTitle = builder.videoTitle;
         pauseIcon = builder.pauseIcon;
         playIcon = builder.playIcon;
-        surfaceView = builder.surfaceView;
+        textureView = builder.textureView;
         location = builder.location;
         profileName = builder.profileName;
         profilePicUrl = builder.profilePicUrl;
@@ -157,7 +157,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         isPlaying = true;
         show();
 
-//        this.surfaceView.setOnTouchListener(new OnTouchListener() {
+//        this.textureView.setOnTouchListener(new OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent event) {
 //                toggleControllerView();
@@ -296,8 +296,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                 .load(reaction1PicUrl)
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction1Pic);
     }
 
@@ -306,8 +304,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                 .load(reaction2PicUrl)
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction2Pic);
     }
 
@@ -316,8 +312,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                 .load(reaction3PicUrl)
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction3Pic);
     }
 
@@ -494,13 +488,23 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
 
         int position = mediaPlayerControlListener.getCurrentPosition();
-        int duration = mediaPlayerControlListener.getDuration();
+        int duration = convert(mediaPlayerControlListener.getDuration() + ".");
 
         remainingTime.setText(SPACE + stringToTime(duration - position));
         if(mediaPlayerControlListener.isComplete()){
             remainingTime.setText(SPACE + stringToTime(duration));
         }
         return position;
+    }
+
+    private int convert(String time) {
+        int quoteInd = time.indexOf(":");
+        int pointInd = time.indexOf(".");
+
+        int min = Integer.valueOf(time.substring(0, quoteInd));
+        int sec = Integer.valueOf(time.substring(++quoteInd, pointInd));
+
+        return (((min * 60) + sec) * 1000);
     }
 
     /**
@@ -545,7 +549,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         private String reaction3Url = "";
         private MediaPlayerControlListener mediaPlayerControlListener;
         private ViewGroup anchorView;
-        private SurfaceView surfaceView;
+        private TextureView textureView;
         @DrawableRes private int playIcon;
         @DrawableRes private int pauseIcon;
 //        private boolean canSeekVideo = true;
@@ -638,8 +642,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder withVideoSurfaceView(@Nullable SurfaceView surfaceView){
-            this.surfaceView = surfaceView;
+        public Builder withVideoSurfaceView(@Nullable TextureView textureView){
+            this.textureView = textureView;
             return this;
         }
 
@@ -744,7 +748,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
          *
          * @return total time
          */
-        int getDuration();
+        String getDuration();
 
         /**
          * get video current position

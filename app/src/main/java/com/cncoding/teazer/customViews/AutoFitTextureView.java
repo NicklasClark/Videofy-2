@@ -19,6 +19,9 @@ package com.cncoding.teazer.customViews;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 /**
  * A {@link TextureView} that can be adjusted to a specified aspect ratio.
@@ -52,9 +55,21 @@ public class AutoFitTextureView extends TextureView {
         if (width < 0 || height < 0) {
             throw new IllegalArgumentException("Size cannot be negative.");
         }
+
         mRatioWidth = width;
         mRatioHeight = height;
+//        animate().scaleY(mRatioHeight).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+        Animation animation = new ScaleAnimation(0, 0, getHeight(), height);
+        animation.setDuration(400);
+        animation.setFillAfter(true);
+        startAnimation(animation);
         requestLayout();
+        setVisibility(View.VISIBLE);
+//        new android.os.Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//            }
+//        }, 400);
     }
 
     @Override

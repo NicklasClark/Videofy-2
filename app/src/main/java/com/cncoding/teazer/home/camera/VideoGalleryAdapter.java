@@ -27,13 +27,6 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
     VideoGalleryAdapter(ArrayList<Videos> videos, Context context) {
         this.videos = videos;
         this.context = context;
-
-        if (context instanceof VideoGalleryAdapterInteractionListener) {
-            mListener = (VideoGalleryAdapterInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement VideoGalleryAdapterInteractionListener");
-        }
     }
 
     @Override
@@ -71,6 +64,24 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
             super(view);
             thumbnailView = view.findViewById(R.id.video_gallery_thumbnail);
         }
+    }
+
+    @Override
+    public void onViewAttachedToWindow(ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (context instanceof VideoGalleryAdapterInteractionListener) {
+            mListener = (VideoGalleryAdapterInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement VideoGalleryAdapterInteractionListener");
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        mListener = null;
+        videos = null;
     }
 
     interface VideoGalleryAdapterInteractionListener {

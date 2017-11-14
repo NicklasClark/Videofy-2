@@ -12,40 +12,31 @@
         android:id="@+id/video_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:background="@color/material_grey100">
 
-        <FrameLayout
-            android:id="@+id/video_container_1"
+        <TextureView
+            android:id="@+id/video_surface"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:minHeight="400dp"
-            android:layout_alignParentTop="true">
-
-            <com.cncoding.teazer.customViews.ResizableSurfaceView
-                android:id="@+id/video_surface"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="400dp"/>
-
-            <ProgressBar
-                android:id="@+id/loading"
-                android:layout_width="?android:attr/actionBarSize"
-                android:layout_height="?android:attr/actionBarSize"
-                android:layout_gravity="center"
-                style="?android:attr/progressBarStyleLarge"
-                android:theme="@style/ProgressBarTheme" />
-
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
         <FrameLayout
             android:id="@+id/video_surface_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/video_container_1"
-            android:layout_alignBottom="@+id/video_container_1" />
+            android:layout_alignTop="@+id/video_surface"
+            android:layout_alignBottom="@+id/video_surface"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-12dp"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/ProgressBarTheme" />
 
         <RelativeLayout
             android:id="@+id/post_actions"
@@ -138,6 +129,37 @@
             android:padding="@dimen/padding_default"
             android:layout_below="@+id/separator"/>
 
+        <LinearLayout
+            android:id="@+id/post_load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_below="@+id/reactions_header"
+            android:paddingTop="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_double"
+            android:foreground="@drawable/ripple_dark_no_rounded"
+            android:layout_centerInParent="true"
+            android:visibility="invisible">
+
+            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                android:id="@+id/post_load_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAllCaps="true"
+                app:drawableTopCompat="@drawable/ic_error_outline"
+                android:textSize="@dimen/text_size_h5"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/post_load_error_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_content_big"/>
+
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
             android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
@@ -147,7 +169,8 @@
             android:clipToPadding="false"
             android:layout_below="@+id/reactions_header"
             app:layoutManager="StaggeredGridLayoutManager"
-            tools:listitem="@layout/item_reaction_post" />
+            tools:listitem="@layout/item_reaction_post"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 

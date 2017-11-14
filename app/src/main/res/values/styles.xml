@@ -52,6 +52,10 @@
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
+    <style name="VideoUploadTheme" parent="AppTheme.FullScreen">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
         <!--<item name="colorPrimaryDark">@android:color/white</item>-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

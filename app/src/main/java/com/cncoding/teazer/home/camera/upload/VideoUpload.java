@@ -25,8 +25,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -40,6 +42,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
@@ -58,7 +61,6 @@ import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
-import com.cncoding.teazer.utilities.ViewUtils;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -99,14 +101,18 @@ import retrofit2.Response;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.INTERNET;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.apiCalls.ApiCallingService.Friends.isResponseOk;
 import static com.cncoding.teazer.apiCalls.ApiCallingService.SUCCESS_OK_FALSE;
 import static com.cncoding.teazer.apiCalls.ApiCallingService.SUCCESS_OK_TRUE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
+import static com.cncoding.teazer.home.post.PostsListFragment.returningFromUpload;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.showCircularRevealAnimation;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -147,6 +153,7 @@ public class VideoUpload extends AppCompatActivity
     @BindView(R.id.video_upload_categories) ProximaNovaBoldButton uploadCategoriesBtn;
     @BindView(R.id.video_upload_categories_text) ProximaNovaRegularTextView uploadCategoriesText;
     @BindView(R.id.uploading_layout) LinearLayout uploadingLayout;
+    @BindView(R.id.up_btn) AppCompatImageView upBtn;
 
     private String videoPath;
     private String selectedCategoriesToSend;
@@ -221,7 +228,7 @@ public class VideoUpload extends AppCompatActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        thumbnailProgressBar.setVisibility(View.VISIBLE);
+        thumbnailProgressBar.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(getThumbnail(videoPath).toByteArray())
                 .asBitmap()
@@ -431,6 +438,7 @@ public class VideoUpload extends AppCompatActivity
 
             @Override
             protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
+                toggleUpBtnVisibility(VISIBLE);
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
                         .add(R.id.fragment_container, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES)
@@ -560,6 +568,7 @@ public class VideoUpload extends AppCompatActivity
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
+                        toggleUpBtnVisibility(VISIBLE);
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
                                 .add(R.id.fragment_container,
@@ -599,6 +608,7 @@ public class VideoUpload extends AppCompatActivity
                             break;
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
+                            toggleUpBtnVisibility(VISIBLE);
                             fragmentManager.beginTransaction()
                                     .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out,
                                             R.anim.fast_fade_in, R.anim.fast_fade_out)
@@ -630,11 +640,10 @@ public class VideoUpload extends AppCompatActivity
             showProgressLayout();
             String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
             String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
-            String taggedFriends = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend.replace("\"", "");
             if (location != null) {
                 ApiCallingService.Posts.uploadVideo(videoPartFile, title, location,
-                        selectedPlace.getLatitude(), selectedPlace.getLongitude(), taggedFriends, categories, this)
+                        selectedPlace.getLatitude(), selectedPlace.getLongitude(),
+                        tagFriendsText.getText().toString(), selectedCategoriesToSend, this)
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -657,7 +666,12 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @OnClick(R.id.video_upload_cancel_btn) public void retakeVideo() {
-        ViewUtils.launchVideoUploadCamera(this);
+        launchVideoUploadCamera(this);
+        finish();
+    }
+
+    @OnClick(R.id.up_btn) public void goBack() {
+        onBackPressed();
     }
 
     private void showProgressLayout() {
@@ -670,14 +684,9 @@ public class VideoUpload extends AppCompatActivity
         videoProgressBar.setIndeterminate(false);
     }
 
-    private void hideProgressLayout(boolean isSuccessful) {
+    private void hideProgressLayout() {
+        returningFromUpload = true;
         finish();
-//        float endRadius = (int) (Math.hypot(uploadingLayout.getWidth(), uploadingLayout.getHeight()));
-//        int centerX = uploadingLayout.getRight() - uploadBtn.getWidth() / 2;
-//        int centerY = uploadingLayout.getBottom() - uploadBtn.getHeight() / 2;
-//
-//        showCircularRevealAnimation(uploadingLayout, centerX, centerY, 0, endRadius,
-//                500, Color.parseColor("#dd212121"), true);
     }
 
     @Override
@@ -692,7 +701,7 @@ public class VideoUpload extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                hideProgressLayout(false);
+                hideProgressLayout();
             }
         }, 1500);
     }
@@ -704,9 +713,33 @@ public class VideoUpload extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                hideProgressLayout(true);
+                hideProgressLayout();
             }
         }, 1500);
+    }
+
+    private void toggleUpBtnVisibility(int visibility) {
+        switch (visibility) {
+            case VISIBLE:
+                if (upBtn.getVisibility() != VISIBLE) {
+                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in));
+                    upBtn.setVisibility(VISIBLE);
+                }
+                break;
+            case INVISIBLE:
+                if (upBtn.getVisibility() != INVISIBLE) {
+                    upBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_out));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            upBtn.setVisibility(INVISIBLE);
+                        }
+                    }, 400);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -749,24 +782,35 @@ public class VideoUpload extends AppCompatActivity
                     }
                     else {
 //                        permissions are denied, show empty list
-                        fragmentManager.beginTransaction()
-                                .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                                .add(R.id.fragment_container, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES)
-                                .addToBackStack(TAG_NEARBY_PLACES)
-                                .commit();
+                        showEmptyList();
                     }
                 } else {
 //                        permissions are denied, show empty list
-                    fragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                            .add(R.id.fragment_container, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES)
-                            .addToBackStack(TAG_NEARBY_PLACES)
-                            .commit();
+                    showEmptyList();
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    private void showEmptyList() {
+        toggleUpBtnVisibility(VISIBLE);
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
+                .add(R.id.fragment_container, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES)
+                .addToBackStack(TAG_NEARBY_PLACES)
+                .commit();
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        isRequestingLocationUpdates = false;
+                    }
+                });
     }
 
     @Override
@@ -780,16 +824,6 @@ public class VideoUpload extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         stopLocationUpdates();
-    }
-
-    private void stopLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        isRequestingLocationUpdates = false;
-                    }
-                });
     }
 
     @Override
@@ -827,12 +861,6 @@ public class VideoUpload extends AppCompatActivity
         fragmentManager.popBackStack();
     }
 
-//    @Override
-//    public void onInterestsInteraction(String result) {
-//        uploadCategoriesText.setText(result);
-//        onBackPressed();
-//    }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -843,9 +871,13 @@ public class VideoUpload extends AppCompatActivity
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                toggleUpBtnVisibility(View.INVISIBLE);
+            }
         }
         else {
-            super.onBackPressed();
+            startActivity(new Intent(this, BaseBottomBarActivity.class));
+            finish();
         }
     }
 }
