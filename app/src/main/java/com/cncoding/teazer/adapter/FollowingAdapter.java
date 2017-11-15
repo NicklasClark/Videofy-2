@@ -62,7 +62,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     public void onClick(View view) {
                         Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
                         intent.putExtra("Username", followingname);
-                        intent.putExtra("FollowerId", String.valueOf(followerId));
+                        intent.putExtra("FollowId", String.valueOf(followerId));
                         intent.putExtra("UserType", "Following");
                         context.startActivity(intent);
 

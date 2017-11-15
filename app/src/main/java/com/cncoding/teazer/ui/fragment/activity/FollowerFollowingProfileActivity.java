@@ -108,9 +108,13 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         menu = findViewById(R.id.menu);
         Intent intent = getIntent();
-        final int followersid = Integer.parseInt(getIntent().getStringExtra("FollowerId"));
+
+        final int followerfollowingid = Integer.parseInt(getIntent().getStringExtra("FollowId"));
         String username = intent.getStringExtra("username");
         String  userType= intent.getStringExtra("UserType");
+
+
+
 
         _username.setText(username);
         if(userType.equals("Follower"))
@@ -128,11 +132,11 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(_btnfollow.getText().equals("Follow"))
                 {
-                    followUser(followersid,context);
+                    followUser(followerfollowingid,context);
                 }
                 else if (_btnfollow.getText().equals("Unfollow"))
                 {
-                    unFollowUser(followersid,context);
+                    unFollowUser(followerfollowingid,context);
 
                 }
             }
@@ -142,7 +146,19 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
-                intent.putExtra("FollowerId", String.valueOf(followersid));
+                intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
+                intent.putExtra("Identifier", "Other");
+                startActivity(intent);
+
+            }
+        });
+
+
+        _followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                 intent.putExtra("Identifier", "Other");
                 startActivity(intent);
 
@@ -160,7 +176,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_report_block:
-                                blockunBlock(followersid);
+                                blockunBlock(followerfollowingid);
                                 break;
                         }
                         return false;
@@ -170,7 +186,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             }
         });
 
-        getProfilInformation(followersid);
+        getProfilInformation(followerfollowingid);
     }
 
 
@@ -184,16 +200,13 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                         int i = response.body().getAccountType();
                         boolean b = response.body().getCanJoin();
-                        int following = response.body().getFollowers();
-                        int follower = response.body().getFollowings();
-
+                        int follower = response.body().getFollowers();
+                        int following = response.body().getFollowings();
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
-
                         if (i == PUBLIC_ACCOUNT) {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
-
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();

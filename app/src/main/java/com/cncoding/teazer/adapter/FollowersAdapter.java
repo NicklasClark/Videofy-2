@@ -54,18 +54,23 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         final int followerId = cont.getUserId();
         final String  followerusernamee = cont.getUserName();
         viewHolder.followersname.setText(followername);
+
         getuserFollowing(viewHolder,followerusernamee);
+
+
+
         viewHolder.followersname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
                 intent.putExtra("Username", followername);
-                intent.putExtra("FollowerId", String.valueOf(followerId));
-                intent.putExtra("UserType", UserType);
+                intent.putExtra("FollowId", String.valueOf(followerId));
+                intent.putExtra("UserType", "Follower");
                 context.startActivity(intent);
             }
         });
     }
+
     public void  getuserFollowing(final FollowersAdapter.ViewHolder viewHolder ,final String username)
     {
         final int i = 1;

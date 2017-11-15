@@ -39,10 +39,8 @@ public class FollowingListActivities extends AppCompatActivity {
         context = this;
         Intent intent = getIntent();
 
-
         String identifier = intent.getStringExtra("Identifier");
         int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,11 +63,14 @@ public class FollowingListActivities extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+
+
         if (identifier.equals("User")) {
 
             getUserfollowinglist();
-        } else if (identifier.equals("Other")) {
-
+        }
+        else if (identifier.equals("Other"))
+        {
             getOthersFollowingList(userID);
 
         }
@@ -122,9 +123,9 @@ public class FollowingListActivities extends AppCompatActivity {
                     Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<OthersFollowing> call, Throwable t) {
+
 
             }
         });

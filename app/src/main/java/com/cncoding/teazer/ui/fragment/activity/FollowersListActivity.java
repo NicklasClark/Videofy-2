@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.cncoding.teazer.adapter.FollowersAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
+import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 
 import java.util.List;
 
@@ -53,12 +55,21 @@ public class FollowersListActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        Intent intent = getIntent();
+        int followerid=  Integer.parseInt(intent.getStringExtra("FollowerId"));
+        String identifier=intent.getStringExtra("Identifier");
 
-        getProfileDetail();
+        if(identifier.equals("Other"))
+        {
+            getOthersFollowerDetails(followerid);
+        }
+        else if(identifier.equals("User"))
+        {
+            getUserfollowerList();
 
+        }
     }
-
-    public void getProfileDetail()
+    public void getUserfollowerList()
     {
         int i=1;
         ApiCallingService.Friends.getMyFollowers(i,context).enqueue(new Callback<ProfileMyFollowers>() {
@@ -68,11 +79,9 @@ public class FollowersListActivity extends AppCompatActivity {
                 {
                     try
                     {
-
-                          list= response.body().getFollowers();
-                          profileMyFollowerAdapter=new FollowersAdapter(context,list);
-                          recyclerView.setAdapter(profileMyFollowerAdapter);
-
+                        list= response.body().getFollowers();
+                        profileMyFollowerAdapter=new FollowersAdapter(context,list);
+                        recyclerView.setAdapter(profileMyFollowerAdapter);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -87,6 +96,41 @@ public class FollowersListActivity extends AppCompatActivity {
             public void onFailure(Call<ProfileMyFollowers> call, Throwable t) {
 
             }
+
+        });
+
+    }
+
+    public void getOthersFollowerDetails(int followerid)
+    {
+
+        int i=1;
+        ApiCallingService.Friends.getFriendsFollowers(i,followerid,context).enqueue(new Callback<FreindFollower>() {
+            @Override
+            public void onResponse(Call<FreindFollower> call, Response<FreindFollower> response) {
+                if(response.code()==200)
+                {
+                    try
+
+                    {
+                        list= response.body().getFollowers();
+                        profileMyFollowerAdapter=new FollowersAdapter(context,list);
+                        recyclerView.setAdapter(profileMyFollowerAdapter);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            @Override
+            public void onFailure(Call<FreindFollower> call, Throwable t) {
+
+            }
+
         });
 
     }

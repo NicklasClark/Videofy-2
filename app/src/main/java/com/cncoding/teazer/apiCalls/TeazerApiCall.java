@@ -7,6 +7,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
@@ -266,7 +267,7 @@ import retrofit2.http.Query;
          * Call this service to get the friends followers list
          * */
         @GET("/api/v1/friend/followers/{user_id}/{page}")
-        Call<ResultObject> getFriendsFollowers(@Path("page") int page, @Path("user_id") int userId);
+        Call<FreindFollower> getFriendsFollowers(@Path("page") int page, @Path("user_id") int userId);
 
         /**
          * Call this service to get the friends followers list with search term

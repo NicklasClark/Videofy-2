@@ -147,7 +147,7 @@ public class EditProfile extends AppCompatActivity {
                 long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
                 String emailid = _email.getText().toString();
                 String details = _bio.getText().toString();
-                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, detail);
+                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, details);
                 ProfileUpdate(profileUpdateRequest);
 
             }

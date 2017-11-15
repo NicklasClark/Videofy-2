@@ -64,7 +64,7 @@
         android:id="@+id/profile_image_layout"
 
         android:layout_width="match_parent"
-        android:layout_height="118sp"
+        android:layout_height="147dp"
         android:orientation="vertical">
 
         <ImageView
@@ -97,8 +97,8 @@
 
             <com.cncoding.teazer.customViews.CircularAppCompatImageView
                 android:id="@+id/profile_id"
-                android:layout_width="76sp"
-                android:layout_height="76sp"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/arif_image"
 
@@ -106,10 +106,11 @@
                 android:transitionName="profile" />
 
             <RelativeLayout
-                android:layout_width="20sp"
-                android:layout_height="20sp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="50dp"
+                android:layout_width="24sp"
+                android:layout_height="24sp"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="55dp"
+                android:gravity="center"
                 android:background="@drawable/bg_image_whiter_outline_solid"
                 android:orientation="vertical">
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
@@ -198,7 +199,7 @@
                             android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:textColor="#797979"
-                        android:textSize="@dimen/text_size_14sp" />
+                        android:textSize="@dimen/text_size_16sp" />
 
                     </LinearLayout>
 
@@ -244,7 +245,7 @@
                                 android:layout_marginTop="5dp"
                                 android:layout_weight="1"
                                 android:textColor="#797979"
-                                android:textSize="@dimen/text_size_14sp"/>
+                                android:textSize="@dimen/text_size_16sp"/>
 
                         </LinearLayout>
 
@@ -409,15 +410,14 @@
                             <EditText
                                 android:id="@+id/bio"
                                 android:layout_width="match_parent"
-
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_weight="1"
-                                android:maxLines="4"
+                                android:maxLines="1"
                                 android:textColor="#797979"
-                                android:textSize="@dimen/text_size_14sp"/>
+                                android:textSize="@dimen/text_size_16sp"/>
 
                         </LinearLayout>
 
@@ -481,7 +481,7 @@
                                 android:inputType="number"
 
                                 android:textColor="#797979"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_16sp" />
 
                         </LinearLayout>
 
@@ -528,7 +528,7 @@
 
                                 android:textColor="#797979"
                                 android:inputType="textEmailAddress"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_16sp" />
 
                         </LinearLayout>
 

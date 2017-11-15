@@ -11,6 +11,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
@@ -240,7 +241,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the friends followers list
          * */
-        public static Call<ResultObject> getFriendsFollowers(int page, int userId, Context context) {
+        public static Call<FreindFollower> getFriendsFollowers(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowers(page, userId);
         }
 

@@ -72,6 +72,7 @@ public class ProfileFragment extends BaseFragment {
     int totalfollowing;
     int totalvideos;
     String firstname;
+    String userId;
     String lastname;
     String username;
     String email;
@@ -130,14 +131,19 @@ public class ProfileFragment extends BaseFragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, EditProfile.class);
-                intent.putExtra("UserName",username);
-                intent.putExtra("FirstName",firstname);
-                intent.putExtra("LastName",lastname);
-                intent.putExtra("EmailId",email);
-                intent.putExtra("MobileNumber",String.valueOf(mobilenumber));
-                intent.putExtra("Gender",String.valueOf(gender));
-                intent.putExtra("CountryCode",String.valueOf(countrycode));
-                intent.putExtra("Detail",detail);
+                intent.putExtra("UserName", username);
+                intent.putExtra("FirstName", firstname);
+                intent.putExtra("LastName", lastname);
+                intent.putExtra("EmailId", email);
+                intent.putExtra("MobileNumber", String.valueOf(mobilenumber));
+                intent.putExtra("Gender", String.valueOf(gender));
+                intent.putExtra("CountryCode", String.valueOf(countrycode));
+                if (detail == null)
+                    intent.putExtra("Detail", "");
+
+                else
+                    {intent.putExtra("Detail", detail);}
+
                 startActivity(intent);
             }
         });
@@ -147,12 +153,16 @@ public class ProfileFragment extends BaseFragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, FollowersListActivity.class);
+                intent.putExtra("FollowerId", String.valueOf(0));
+                intent.putExtra("Identifier", "User");
                 startActivity(intent);
             }
         });
+
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(context, FollowingListActivities.class);
                 intent.putExtra("FollowerId", String.valueOf(0));
                 intent.putExtra("Identifier", "User");
@@ -193,14 +203,11 @@ public class ProfileFragment extends BaseFragment {
 
                 } else {
                     _toolbarusername.setVisibility(View.INVISIBLE);
-
                 }
             }
         });
-
         return view;
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -208,25 +215,21 @@ public class ProfileFragment extends BaseFragment {
         dynamicToolbarColor();
         getProfileDetail();
 
-
-
     }
-
     public void getProfileDetail() {
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.Profile>() {
             @Override
                 public void onResponse(Call<Pojos.User.Profile> call, Response<Pojos.User.Profile> response) {
-
                 Log.d("Response",response.toString());
-
                 if (response.code() == 200) {
 
                     try {
-
                         Pojos.User.UserProfile userProfile = response.body().getUserProfile();
+
                         totalfollowers = response.body().getFollowers();
                         totalfollowing = response.body().getFollowings();
                         totalvideos = response.body().getTotalVideos();
+                        userId = userProfile.getUserId();
                         firstname = userProfile.getFirstName();
                         lastname = userProfile.getLastName();
                         username = userProfile.getUsername();
@@ -236,10 +239,7 @@ public class ProfileFragment extends BaseFragment {
                         accountType = userProfile.getAccountType();
                         hasProfleMedia = userProfile.hasProfileMedia();
                         countrycode = userProfile.getCountryCode();
-                         detail=userProfile.getDescription();
-
-                        Toast.makeText(context, "UserProfile Detail fetched", Toast.LENGTH_LONG).show();
-
+                        detail=userProfile.getDescription();
 
                         if (hasProfleMedia) {
                             backgroundprofile.setBackgroundResource(R.drawable.material_flat);
@@ -261,57 +261,48 @@ public class ProfileFragment extends BaseFragment {
                         _username.setText(username);
                        // _detail.setText(detail);
                         Log.d("Gender",detail);
-                        Toast.makeText(context, detail, Toast.LENGTH_LONG).show();
-                        Log.d("Gender","hii");
                         _followers.setText(String.valueOf(totalfollowers) + " Follower");
                         _following.setText(String.valueOf(totalfollowing + " Following"));
                         _creations.setText(String.valueOf(totalvideos + " Creations"));
                     }
                     catch (Exception e) {
-                        Log.d("Gender122334",e.getMessage());
+                        Log.d("Exception",e.getMessage());
                     }
                 } else {
 
-                    Toast.makeText(context, "UserProfile Detail not fetched", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Pojos.User.Profile> call, Throwable t) {
 
-                Log.d("errror4",t.getMessage());
+                Log.d("errror",t.getMessage());
             }
         });
 
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         }
-
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
 
-
     }
-
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
