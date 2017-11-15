@@ -42,7 +42,6 @@ import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
-import java.text.DecimalFormat;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -180,14 +179,11 @@ public class BaseBottomBarActivity extends BaseActivity
         ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
         MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
         String title = uploadParams.getTitle().equals("") ? null : uploadParams.getTitle();
-        DecimalFormat df = new DecimalFormat("#.#######");
         if (!uploadParams.isReaction()) {
 //                UPLOADING POST VIDEO
             uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(),
-                    Double.parseDouble(df.format(uploadParams.getLatitude())),
-                    Double.parseDouble(df.format(uploadParams.getLongitude())),
-                    uploadParams.getTags(), uploadParams.getCategories(), this)
+            ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
+                    uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), this)
                     .enqueue(callback);
         } else {
 //                UPLOADING REACTION VIDEO
