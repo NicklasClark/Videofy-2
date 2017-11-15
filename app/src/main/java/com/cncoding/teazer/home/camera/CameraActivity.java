@@ -34,19 +34,20 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.VideoGalleryAdapter.VideoGalleryAdapterInteractionListener;
 import com.cncoding.teazer.home.camera.upload.VideoUpload;
+import com.cncoding.teazer.utilities.Pojos;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
-import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_UPLOAD_REACTION;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_UPLOAD_VIDEO_POST;
 import static com.cncoding.teazer.home.camera.upload.VideoUpload.VIDEO_PATH;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_ID;
+import static com.cncoding.teazer.utilities.ViewUtils.updateMediaDatabase;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
@@ -62,6 +63,7 @@ public class CameraActivity extends AppCompatActivity
     private ArrayList<Videos> videosList = new ArrayList<>();
 
     private boolean isReaction = false;
+    private int postId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +71,18 @@ public class CameraActivity extends AppCompatActivity
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null)
+        if (bundle != null) {
             isReaction = bundle.getBoolean(IS_REACTION);
+            postId = bundle.getInt(POST_ID);
+        }
 
         slidingUpPanelLayout.setOverlayed(true);
         slidingUpPanelLayout.setScrollableView(recyclerView);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, CameraFragment.newInstance(isReaction)).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postId))
+                    .commit();
         }
     }
 
@@ -138,7 +144,8 @@ public class CameraActivity extends AppCompatActivity
                 };
                 final String orderByDateTaken = MediaStore.Video.Media.DATE_TAKEN;
 
-                cursor = getContentResolver().query(uri, projection, null, null, orderByDateTaken + " DESC");
+                cursor = getContentResolver().query(uri, projection, null, null,
+                        orderByDateTaken + " DESC");
                 if (cursor != null) {
                     columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
 //                    columnFolderName = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
@@ -172,17 +179,12 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCameraInteraction(int action, String videoPath) {
+    public void onCameraInteraction(int action, Pojos.UploadParams uploadParams) {
         switch (action) {
             case ACTION_UPLOAD_VIDEO_POST:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
-                sendBroadcast(
-                        new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-                                .setData(Uri.fromFile(new File(videoPath)))
-                );
-                startVideoUploadActivity(videoPath);
-                break;
-            case ACTION_UPLOAD_REACTION:
+                updateMediaDatabase(this, uploadParams.getVideoPath());
+                startVideoUploadActivity(uploadParams.getVideoPath());
                 break;
             case ACTION_SHOW_GALLERY:
                 slidingUpPanelLayout.setPanelState(ANCHORED);
@@ -195,6 +197,7 @@ public class CameraActivity extends AppCompatActivity
     private void startVideoUploadActivity(String videoPath) {
         Intent intent = new Intent(this, VideoUpload.class);
         intent.putExtra(VIDEO_PATH, videoPath);
+//        intent.putExtra(IS_REACTION, isReaction);
         startActivity(intent);
         finish();
     }
@@ -211,8 +214,10 @@ public class CameraActivity extends AppCompatActivity
             slidingUpPanelLayout.setPanelState(COLLAPSED);
         }
         else {
-            startActivity(new Intent(this, BaseBottomBarActivity.class));
-            finish();
+            if (!isReaction) {
+                startActivity(new Intent(this, BaseBottomBarActivity.class));
+                finish();
+            } else super.onBackPressed();
         }
     }
 }

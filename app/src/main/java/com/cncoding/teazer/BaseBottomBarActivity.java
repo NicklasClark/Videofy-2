@@ -16,8 +16,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
@@ -32,19 +38,29 @@ import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.SharedPrefs;
+
+import java.io.File;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MultipartBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
+import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
+import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
 public class BaseBottomBarActivity extends BaseActivity
@@ -52,7 +68,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener,ProfileFragment.RemoveAppBar {
+        PostReactionAdapterListener,ProfileFragment.RemoveAppBar, ProgressRequestBody.UploadCallbacks {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -73,6 +89,9 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
+    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
 //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
@@ -83,6 +102,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
+
+        checkIfAnyVideoIsUploading();
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null? "N/A" : getAuthToken(getApplicationContext()));
 
@@ -116,6 +137,52 @@ public class BaseBottomBarActivity extends BaseActivity
                 switchTab(tab.getPosition());
             }
         });
+    }
+
+    private void checkIfAnyVideoIsUploading() {
+        final Pojos.UploadParams uploadParams = getIntent().getParcelableExtra(UPLOAD_PARAMS);
+
+        Callback<ResultObject> callback = new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 201) {
+                    onUploadFinish();
+                } else {
+                    saveVideoUploadSession();
+                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                }
+            }
+
+            private void saveVideoUploadSession() {
+                SharedPrefs.saveVideoUploadSession(BaseBottomBarActivity.this, uploadParams);
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                saveVideoUploadSession();
+                onUploadError(t);
+            }
+        };
+
+        if (getIntent().getExtras() != null) {
+            uploadingStatusLayout.setVisibility(VISIBLE);
+            File videoFile = new File(uploadParams.getVideoPath());
+            ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
+            MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
+            String title = uploadParams.getTitle().equals("")? null : uploadParams.getTitle();
+            if (!uploadParams.isReaction()) {
+//                UPLOADING POST VIDEO
+                uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
+                        uploadParams.getLongitude(),uploadParams.getTags(), uploadParams.getCategories(), this)
+                        .enqueue(callback);
+            } else {
+//                UPLOADING REACTION VIDEO
+                uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+                ApiCallingService.React.uploadReaction(videoPartFile, uploadParams.getPostId(), this)
+                        .enqueue(callback);
+            }
+        }
     }
 
     @OnClick(R.id.logout_btn) public void performLogout() {
@@ -294,7 +361,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostDetailsInteraction(int action) {
+    public void onPostDetailsInteraction(int action, int postId) {
         switch (action) {
             case ACTION_DISMISS_PLACEHOLDER:
 //                expandedImage.animate().alpha(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
@@ -305,6 +372,9 @@ public class BaseBottomBarActivity extends BaseActivity
 //                    }
 //                }, 250);
                 break;
+            case ACTION_OPEN_REACTION_CAMERA:
+                launchReactionCamera(this, postId);
+                break;
             default:
                 break;
         }
@@ -312,6 +382,28 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
+    }
+
+    @Override
+    public void onProgressUpdate(int percentage) {
+        progressBar.setProgress(percentage);
+    }
+
+    @Override
+    public void onUploadError(Throwable throwable) {
+        uploadingNotificationTextView.setText(throwable.getMessage());
+    }
+
+    @Override
+    public void onUploadFinish() {
+        uploadingNotificationTextView.setText(R.string.finished);
+        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadingStatusLayout.setVisibility(View.GONE);
+            }
+        }, 1000);
     }
 
     @Override

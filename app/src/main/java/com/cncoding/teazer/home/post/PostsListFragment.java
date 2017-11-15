@@ -35,7 +35,7 @@ import retrofit2.Response;
 public class PostsListFragment extends BaseFragment {
     private static final String COLUMN_COUNT = "columnCount";
 
-    @BindView(R.id.thumbnail_progress_bar) ProgressBar progressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.transition_pager) ViewPager pager;

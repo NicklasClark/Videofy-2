@@ -2054,7 +2054,116 @@ public class Pojos {
         };
     }
 
+    public static class UploadParams implements Parcelable {
+        private String videoPath;
+        private boolean isReaction;
+        private String title;
+        private String location;
+        private double latitude;
+        private double longitude;
+        private String tags;
+        private String categories;
 
+        private int postId;
 
+        public UploadParams(String videoPath, boolean isReaction, String title, String location,
+                            double latitude, double longitude, String tags, String categories) {
+            this.videoPath = videoPath;
+            this.isReaction = isReaction;
+            this.title = title;
+            this.location = location;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.tags = tags;
+            this.categories = categories;
+        }
 
+        public UploadParams(String videoPath, String title, int postId) {
+            this.videoPath = videoPath;
+            this.title = title;
+            this.postId = postId;
+        }
+
+        public UploadParams(String videoPath) {
+            this.videoPath = videoPath;
+        }
+
+        protected UploadParams(Parcel in) {
+            videoPath = in.readString();
+            isReaction = in.readByte() != 0;
+            title = in.readString();
+            location = in.readString();
+            latitude = in.readDouble();
+            longitude = in.readDouble();
+            tags = in.readString();
+            categories = in.readString();
+            postId = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(videoPath);
+            dest.writeByte((byte) (isReaction ? 1 : 0));
+            dest.writeString(title);
+            dest.writeString(location);
+            dest.writeDouble(latitude);
+            dest.writeDouble(longitude);
+            dest.writeString(tags);
+            dest.writeString(categories);
+            dest.writeInt(postId);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<UploadParams> CREATOR = new Creator<UploadParams>() {
+            @Override
+            public UploadParams createFromParcel(Parcel in) {
+                return new UploadParams(in);
+            }
+
+            @Override
+            public UploadParams[] newArray(int size) {
+                return new UploadParams[size];
+            }
+        };
+
+        public String getVideoPath() {
+            return videoPath;
+        }
+
+        public boolean isReaction() {
+            return isReaction;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public String getTags() {
+            return tags;
+        }
+
+        public String getCategories() {
+            return categories;
+        }
+
+        public int getPostId() {
+            return postId;
+        }
+    }
 }

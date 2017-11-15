@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.camera.upload;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -46,7 +45,6 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -58,6 +56,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
@@ -84,7 +83,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -93,7 +91,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,6 +110,7 @@ import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTI
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
+import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.showCircularRevealAnimation;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -141,7 +139,7 @@ public class VideoUpload extends AppCompatActivity
     @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
     @BindView(R.id.video_progress_bar) ProgressBar videoProgressBar;
-    @BindView(R.id.thumbnail_progress_bar) ProgressBar thumbnailProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar thumbnailProgressBar;
     @BindView(R.id.video_upload_cancel_btn) Button cancelBtn;
     @BindView(R.id.video_upload_check_btn) Button uploadBtn;
     @BindView(R.id.uploading_notification) ProximaNovaRegularTextView uploadingNotificationTextView;
@@ -165,7 +163,7 @@ public class VideoUpload extends AppCompatActivity
     private Location currentLocation;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private Animator animator;
+//    private Animator animator;
     private SelectedPlace selectedPlace;
 //    private SelectedPlace selectedPlace;
 
@@ -632,33 +630,15 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
-        File videoFile = new File(videoPath);
-        ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
-        MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
         if (selectedPlace != null) {
-            uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            showProgressLayout();
             String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
             String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
+            String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
             if (location != null) {
-                ApiCallingService.Posts.uploadVideo(videoPartFile, title, location,
-                        selectedPlace.getLatitude(), selectedPlace.getLongitude(),
-                        tagFriendsText.getText().toString(), selectedCategoriesToSend, this)
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                if (response.code() == 201 && response.message().equals("Created")) {
-                                    onUploadFinish();
-                                } else {
-                                    onUploadError(new Throwable(response.code() + " : " + response.message()));
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-                                onUploadError(t);
-                            }
-                        });
+                performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
+                        selectedPlace.getLatitude(), selectedPlace.getLongitude(), tags, selectedCategoriesToSend));
+            } else {
+                Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();

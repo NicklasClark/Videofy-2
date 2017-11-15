@@ -24,7 +24,6 @@ import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,19 +37,19 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.ViewHolder> {
 
-    private final String[] categories = new String[] {
-            "Singing","Dancing","Movies","Adventure","Instruments","Comedy","Travel",
-            "Videography","Acting","Technology","iOS","Android"
-        ,"Apple","Fashion","Lifestyle","Sports","Restaurants","Wildlife","Nightlife",
-            "Photography","Love","Health And Fitness","History"
-        ,"Home Décor","Humour","Kids And Parenting","Men's Fashion","Outdoors",
-            "Photography","Quotes","Science","Nature","Sports","Tattoos"
-        ,"Technology","Travel","Weddings","Women's Fashion","Popular","Everything",
-            "Animals And Pets","Architecture","Art"
-        ,"Cars And Motorcycles","Celebrations And Events","Celebrities",
-            "DIY And Crafts","Design","Education","Entertainment"
-        ,"Food And Drink","Gardening","Geek","Hair And Beauty"
-    };
+//    private final String[] categories = new String[] {
+//            "Singing","Dancing","Movies","Adventure","Instruments","Comedy","Travel",
+//            "Videography","Acting","Technology","iOS","Android"
+//        ,"Apple","Fashion","Lifestyle","Sports","Restaurants","Wildlife","Nightlife",
+//            "Photography","Love","Health And Fitness","History"
+//        ,"Home Décor","Humour","Kids And Parenting","Men's Fashion","Outdoors",
+//            "Photography","Quotes","Science","Nature","Sports","Tattoos"
+//        ,"Technology","Travel","Weddings","Women's Fashion","Popular","Everything",
+//            "Animals And Pets","Architecture","Art"
+//        ,"Cars And Motorcycles","Celebrations And Events","Celebrities",
+//            "DIY And Crafts","Design","Education","Entertainment"
+//        ,"Food And Drink","Gardening","Geek","Hair And Beauty"
+//    };
 
     private SparseIntArray dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
@@ -116,7 +115,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                             holder.layout.animate().alpha(1).setDuration(280).start();
                             holder.layout.setVisibility(View.VISIBLE);
                         }
-                        if (holder.getAdapterPosition() == posts.size() - 1) {
+                        if (holder.getAdapterPosition() == 4 || holder.getAdapterPosition() == posts.size() - 1) {
                             postsListFragment.dismissProgressBar();
                         }
                         return false;
@@ -146,7 +145,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         if (postDetails.getCategories().size() > 0)
             holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
         else
-            holder.category.setText(categories[new Random().nextInt(categories.length - 1)]);
+            holder.category.setVisibility(View.GONE);
 //        holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
         holder.name.setText("@" + postOwner.getUserName());
         holder.popularity.setText(postDetails.getLikes() + " Likes | " + postDetails.getTotalReactions() + " Reactions");

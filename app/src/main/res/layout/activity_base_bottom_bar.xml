@@ -49,11 +49,42 @@
     </android.support.design.widget.AppBarLayout>
 
     <!--MAIN FRAGMENT CONTAINER-->
-    <FrameLayout
-        android:id="@+id/main_fragment_container"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/uploading_status_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                android:id="@+id/uploading_notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/uploading_your_video"
+                android:textSize="@dimen/text_size_content"
+                android:paddingStart="@dimen/padding_default"
+                android:paddingEnd="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_half"/>
+
+            <include layout="@layout/progress_bar_horizontal" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/main_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/bottom_tab_layout"
@@ -74,10 +105,10 @@
         android:contentDescription="@string/record_video" />
 
     <!--REACTION CAMERA FRAGMENT CONTAINER-->
-    <FrameLayout
-        android:id="@+id/reaction_camera_fragment_container"
+<!--    <FrameLayout
+        android:id="@+id/camera_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" />-->
 
 </android.support.design.widget.CoordinatorLayout>
 <!--

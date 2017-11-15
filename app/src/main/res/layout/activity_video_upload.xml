@@ -40,7 +40,7 @@
                     android:clickable="false"/>
 
                 <ProgressBar
-                    android:id="@+id/thumbnail_progress_bar"
+                    android:id="@+id/progress_bar"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:indeterminate="true"
@@ -59,6 +59,8 @@
                 android:background="@drawable/bg_button_white"
                 android:maxLength="30"
                 android:maxLines="1"
+                android:lines="1"
+                android:singleLine="true"
                 android:ellipsize="end"
                 android:imeOptions="actionDone"
                 android:layout_marginTop="@dimen/height_24dp"

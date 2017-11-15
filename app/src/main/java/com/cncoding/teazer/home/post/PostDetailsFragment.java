@@ -57,6 +57,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     private static final String ARG_COLUMN_COUNT = "columnCount";
     private static final String ARG_POST_DETAILS = "postDetails";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
+    public static final int ACTION_OPEN_REACTION_CAMERA = 11;
 
     @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.video_surface) TextureView textureView;
@@ -275,6 +276,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 progressBar.setVisibility(View.INVISIBLE);
             }
         }, 280);
+    }
+
+    @OnClick(R.id.react_btn) public void react() {
+        mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails.getPostId());
     }
 
     @OnClick(R.id.menu) public void showMenu(View anchor)
@@ -501,6 +506,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     public interface OnPostDetailsInteractionListener {
-        void onPostDetailsInteraction(int action);
+        void onPostDetailsInteraction(int action, int postId);
     }
 }

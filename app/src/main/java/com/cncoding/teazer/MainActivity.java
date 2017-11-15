@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
+    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
 //    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
 //    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
@@ -327,9 +328,9 @@ public class MainActivity extends AppCompatActivity
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
                 break;
-            case OPEN_CAMERA_ACTION:
-                setFragment(TAG_SELECT_INTERESTS, true, null);
-                break;
+//            case OPEN_CAMERA_ACTION:
+//                setFragment(TAG_SELECT_INTERESTS, true, null);
+//                break;
             default:
                 break;
         }
@@ -425,7 +426,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData,
-                                        Profile facebookProfile, ProximaNovaSemiboldButton button, boolean accountAlreadyExists) {
+                                        Profile facebookProfile, ProximaNovaSemiboldButton button, final boolean accountAlreadyExists) {
         if (isFacebookAccount) {
             saveUserProfile(MainActivity.this,
                     facebookProfile.getId(),
@@ -448,14 +449,15 @@ public class MainActivity extends AppCompatActivity
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         }
 
-        if (accountAlreadyExists) {
             new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+            @Override
+            public void run() {
+                if (!accountAlreadyExists)
                     startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-                }
-            }, 500);
-        }
+                else
+                    successfullyLoggedIn();
+            }
+        }, 500);
     }
 
     private void saveUserProfile(Context context, String id, String firstName,
@@ -648,7 +650,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
     }
 
     @Override
