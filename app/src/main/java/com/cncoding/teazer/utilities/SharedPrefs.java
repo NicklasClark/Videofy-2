@@ -59,7 +59,11 @@ public class SharedPrefs {
         getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
     }
 
-    public UploadParams getVideoUploadSession(Context context) {
+    public static void finishVideoUploadSession(Context context) {
+        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, null).apply();
+    }
+
+    public static UploadParams getVideoUploadSession(Context context) {
         return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
     }
 }

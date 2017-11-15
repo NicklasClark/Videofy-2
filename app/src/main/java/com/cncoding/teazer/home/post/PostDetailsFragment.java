@@ -282,8 +282,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails.getPostId());
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor)
-    {
+    @OnClick(R.id.menu) public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(getContext(), anchor);
 //        popupMenu.setOnDismissListener(new OnDismissListener());
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());

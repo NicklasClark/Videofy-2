@@ -327,8 +327,8 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ResultObject> uploadReaction(MultipartBody.Part video, int postId, Context context) {
-            return getReactService(context).postReaction(video, postId);
+        public static Call<ResultObject> uploadReaction(MultipartBody.Part video, int postId, Context context, String title) {
+            return getReactService(context).uploadReaction(video, postId, title);
         }
 
         /**

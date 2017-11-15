@@ -18,11 +18,14 @@ package com.cncoding.teazer.home.camera;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,6 +45,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_UPLOAD_VIDEO_POST;
 import static com.cncoding.teazer.home.camera.upload.VideoUpload.VIDEO_PATH;
@@ -55,6 +60,7 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDE
 public class CameraActivity extends AppCompatActivity
         implements OnCameraFragmentInteractionListener, VideoGalleryAdapterInteractionListener {
 
+    private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
@@ -89,7 +95,13 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        prepareVideoGallery();
+        if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSIONS);
+        }
+        else
+            prepareVideoGallery();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -205,6 +217,18 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onVideoGalleryAdapterInteraction(String videoPath) {
         startVideoUploadActivity(videoPath);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSIONS) {
+            if (grantResults.length == 2 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                prepareVideoGallery();
+            }
+        }
     }
 
     @Override

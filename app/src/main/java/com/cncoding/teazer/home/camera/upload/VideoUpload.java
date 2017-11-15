@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
@@ -32,7 +31,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,7 +42,6 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -83,6 +80,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -105,20 +103,17 @@ import static com.cncoding.teazer.apiCalls.ApiCallingService.SUCCESS_OK_FALSE;
 import static com.cncoding.teazer.apiCalls.ApiCallingService.SUCCESS_OK_TRUE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
-import static com.cncoding.teazer.home.post.PostsListFragment.returningFromUpload;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.showCircularRevealAnimation;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 @SuppressLint("StaticFieldLeak")
 public class VideoUpload extends AppCompatActivity
-        implements ProgressRequestBody.UploadCallbacks,
-        NearbyPlacesList.OnNearbyPlacesInteractionListener,
+        implements NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
         TagsAndCategoriesInteractionListener {
 
@@ -138,11 +133,9 @@ public class VideoUpload extends AppCompatActivity
     @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
     @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
-    @BindView(R.id.video_progress_bar) ProgressBar videoProgressBar;
     @BindView(R.id.progress_bar) ProgressBar thumbnailProgressBar;
     @BindView(R.id.video_upload_cancel_btn) Button cancelBtn;
     @BindView(R.id.video_upload_check_btn) Button uploadBtn;
-    @BindView(R.id.uploading_notification) ProximaNovaRegularTextView uploadingNotificationTextView;
     @BindView(R.id.video_upload_title) ProximaNovaRegularAutoCompleteTextView videoTitle;
     @BindView(R.id.video_upload_location) ProximaNovaBoldButton addLocationBtn;
     @BindView(R.id.video_upload_location_text) ProximaNovaRegularTextView addLocationText;
@@ -150,7 +143,6 @@ public class VideoUpload extends AppCompatActivity
     @BindView(R.id.video_upload_tag_friends_text) ProximaNovaRegularTextView tagFriendsText;
     @BindView(R.id.video_upload_categories) ProximaNovaBoldButton uploadCategoriesBtn;
     @BindView(R.id.video_upload_categories_text) ProximaNovaRegularTextView uploadCategoriesText;
-    @BindView(R.id.uploading_layout) LinearLayout uploadingLayout;
     @BindView(R.id.up_btn) AppCompatImageView upBtn;
 
     private String videoPath;
@@ -634,9 +626,11 @@ public class VideoUpload extends AppCompatActivity
             String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
             String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
             String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+            DecimalFormat df = new DecimalFormat("#.#######");
             if (location != null) {
                 performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
-                        selectedPlace.getLatitude(), selectedPlace.getLongitude(), tags, selectedCategoriesToSend));
+                        Double.parseDouble(df.format(selectedPlace.getLatitude())),
+                        Double.parseDouble(df.format(selectedPlace.getLongitude())), tags, selectedCategoriesToSend));
             } else {
                 Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
             }
@@ -652,50 +646,6 @@ public class VideoUpload extends AppCompatActivity
 
     @OnClick(R.id.up_btn) public void goBack() {
         onBackPressed();
-    }
-
-    private void showProgressLayout() {
-        float endRadius = (int) (Math.hypot(uploadingLayout.getWidth(), uploadingLayout.getHeight()));
-        int centerX = uploadingLayout.getRight() - uploadBtn.getWidth() / 2;
-        int centerY = uploadingLayout.getBottom() - uploadBtn.getHeight() / 2;
-
-        showCircularRevealAnimation(uploadingLayout, centerX, centerY, 0, endRadius,
-                500, Color.parseColor("#dd212121"), false);
-        videoProgressBar.setIndeterminate(false);
-    }
-
-    private void hideProgressLayout() {
-        returningFromUpload = true;
-        finish();
-    }
-
-    @Override
-    public void onProgressUpdate(int percentage) {
-        videoProgressBar.setProgress(percentage);
-    }
-
-    @Override
-    public void onUploadError(Throwable throwable) {
-        uploadingNotificationTextView.setText(throwable.getMessage());
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_error, 0, 0, 0);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideProgressLayout();
-            }
-        }, 1500);
-    }
-
-    @Override
-    public void onUploadFinish() {
-        uploadingNotificationTextView.setText("Your video was successfully uploaded!");
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tick_circle, 0, 0, 0);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideProgressLayout();
-            }
-        }, 1500);
     }
 
     private void toggleUpBtnVisibility(int visibility) {

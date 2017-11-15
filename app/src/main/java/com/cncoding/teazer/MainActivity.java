@@ -328,9 +328,9 @@ public class MainActivity extends AppCompatActivity
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
                 break;
-//            case OPEN_CAMERA_ACTION:
-//                setFragment(TAG_SELECT_INTERESTS, true, null);
-//                break;
+            case OPEN_CAMERA_ACTION:
+//                ViewUtils.launchReactionCamera(this, 37);
+                break;
             default:
                 break;
         }

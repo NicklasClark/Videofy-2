@@ -325,8 +325,9 @@ import retrofit2.http.Query;
          *         {@value RESPONSE_CODE_401} : Un-Authorized access.
          *         {@value RESPONSE_CODE_412} : Validation failed.
          * */
+        @Multipart
         @POST("/api/v1/react/create")
-        Call<ResultObject> postReaction(@Part MultipartBody.Part video, @Part("post_id") int postId);
+        Call<ResultObject> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
 
         /**
          * Call this service to like/dislike a reacted video.
@@ -425,7 +426,7 @@ import retrofit2.http.Query;
     interface Posts {
 
         /**
-         * Call this service to upload the video
+         * Call this service to post a video
          * */
         @Multipart
         @POST("/api/v1/post/create")

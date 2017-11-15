@@ -68,13 +68,18 @@
                 android:id="@+id/uploading_notification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/uploading_your_video"
+                android:gravity="center_vertical"
+                android:foreground="@drawable/ripple_dark_no_rounded"
                 android:textSize="@dimen/text_size_content"
-                android:paddingStart="@dimen/padding_default"
-                android:paddingEnd="@dimen/padding_default"
-                android:paddingTop="@dimen/padding_half"/>
+                android:padding="@dimen/padding_default"/>
 
-            <include layout="@layout/progress_bar_horizontal" />
+            <ProgressBar
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:indeterminate="false"
+                style="?android:attr/progressBarStyleHorizontal"/>
 
         </LinearLayout>
 

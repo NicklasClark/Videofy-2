@@ -2078,8 +2078,9 @@ public class Pojos {
             this.categories = categories;
         }
 
-        public UploadParams(String videoPath, String title, int postId) {
+        public UploadParams(String videoPath, boolean isReaction, String title, int postId) {
             this.videoPath = videoPath;
+            this.isReaction = isReaction;
             this.title = title;
             this.postId = postId;
         }

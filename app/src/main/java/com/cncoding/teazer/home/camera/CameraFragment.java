@@ -43,13 +43,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.FragmentCompat;
-import android.support.v4.app.ActivityCompat;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -68,7 +65,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,9 +84,10 @@ import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_ID;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
-public class CameraFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
+public class CameraFragment extends Fragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
@@ -232,7 +229,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         args.putBoolean(IS_REACTION, isReaction);
         args.putInt(POST_ID, postId);
         fragment.setArguments(args);
-        return new CameraFragment();
+        return fragment;
     }
 
     @Override
@@ -619,6 +616,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
             case SENSOR_ORIENTATION_DEFAULT_DEGREES:
@@ -730,7 +728,11 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
             e.printStackTrace();
         }
         // Stop recording
-        mMediaRecorder.stop();
+        try {
+            mMediaRecorder.stop();
+        } catch (RuntimeException e) {
+            Log.e("MediaRecorder stop()", e.getMessage());
+        }
         mMediaRecorder.reset();
 
         Toast.makeText(getActivity(), "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
@@ -825,13 +827,13 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
 
             setupEditText(editText);
 
-//            dialogBuilder.setTitle(R.string.this_is_embarrassing);
             dialogBuilder.setCancelable(false);
             dialogBuilder.setMessage(R.string.optional_title);
             dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    hideKeyboard(getActivity(), editText);
                     performUpload(context,
-                            new Pojos.UploadParams(uploadParams.getVideoPath(), editText.getText().toString(), postId));
+                            new Pojos.UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(), postId));
                     getActivity().finish();
                 }
             });
@@ -840,52 +842,11 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         }
 
         private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
-            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (editText.getText().toString().equals("")) {
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                0, 0, R.drawable.ic_error, 0);
-                    }
-                    else {
-                        if (editText.getCompoundDrawables()[2] != null) {
-                            editText.setCompoundDrawablesWithIntrinsicBounds(
-                                    0, 0, 0, 0);
-                        }
-                    }
-                }
-            });
-
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (editable.toString().equals("")) {
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                0, 0, R.drawable.ic_error, 0);
-                    }
-                    else {
-                        if (editText.getCompoundDrawables()[2] != null) {
-                            editText.setCompoundDrawablesWithIntrinsicBounds(
-                                    0, 0, 0, 0);
-                        }
-                    }
-                }
-            });
-
             editText.requestFocus();
-
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    ViewUtils.hideKeyboard(getActivity(), textView);
+                    hideKeyboard(getActivity(), textView);
                     return true;
                 }
             });

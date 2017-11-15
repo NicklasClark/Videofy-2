@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
@@ -236,9 +235,6 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.login_through_otp) public void onLoginThroughOtpClicked() {
 //            Toggle login through OTP
-        passwordView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_up));
-        loginOptionsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_up));
-        forgotPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
         //noinspection deprecation
@@ -247,32 +243,15 @@ public class LoginFragment extends Fragment {
         if (countryCode == -1) {
             countryCodePicker.launchCountrySelectionDialog();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                passwordView.setVisibility(View.GONE);
-                loginOptionsLayout.setVisibility(View.INVISIBLE);
-                loginBtn.setText(getString(R.string.request_otp));
-                loginThroughPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.float_up));
-                loginThroughPasswordBtn.setVisibility(View.VISIBLE);
-            }
-        }, 250);
-        switch (getLoginState()) {
-            case LOGIN_STATE_PASSWORD:
-                break;
-            case LOGIN_STATE_OTP:
-                break;
-            default:break;
-
-        }
+        passwordView.setVisibility(View.GONE);
+        loginOptionsLayout.setVisibility(View.GONE);
+        loginBtn.setText(getString(R.string.request_otp));
+        loginThroughPasswordBtn.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.login_through_password) public void onLoginThroughPasswordClicked() {
 //            Toggle login through password
         loginThroughOtpBtn.setText(getString(R.string.login_through_otp));
-        passwordView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.float_down));
-        loginOptionsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.float_down));
-        forgotPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
         passwordView.setVisibility(View.VISIBLE);
         loginOptionsLayout.setVisibility(View.VISIBLE);
         usernameView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -280,14 +259,8 @@ public class LoginFragment extends Fragment {
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
         countryCodePicker.setVisibility(View.GONE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loginBtn.setText(getString(R.string.login));
-                loginThroughPasswordBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_down));
-                loginThroughPasswordBtn.setVisibility(View.INVISIBLE);
-            }
-        }, 250);
+        loginThroughPasswordBtn.setVisibility(View.GONE);
+        loginBtn.setText(getString(R.string.login));
     }
 
     public void loginWithUsernameAndPassword() {
