@@ -49,8 +49,8 @@ public class ProximaNovaSemiboldButton extends CircularProgressButton {
 
     static void initAttrs(Context context, AttributeSet attrs, TextView button) {
         if (attrs != null) {
-            @SuppressLint("CustomViewStyleable") TypedArray attributeArray = context.obtainStyledAttributes(
-                    attrs, R.styleable.CustomTextView);
+            @SuppressLint("CustomViewStyleable")
+            TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CustomTextView);
 
             Drawable drawableStart = attributeArray.getDrawable(R.styleable.CustomTextView_drawableStartCompat);
             Drawable drawableEnd = attributeArray.getDrawable(R.styleable.CustomTextView_drawableEndCompat);

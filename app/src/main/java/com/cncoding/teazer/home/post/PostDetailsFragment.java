@@ -19,11 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -56,11 +58,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         TextureView.SurfaceTextureListener, MediaPlayer.OnVideoSizeChangedListener {
     private static final String ARG_COLUMN_COUNT = "columnCount";
     private static final String ARG_POST_DETAILS = "postDetails";
+    private static final String ARG_THUMBNAIL = "thumbnail";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
 
     @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.video_surface) TextureView textureView;
+    @BindView(R.id.placeholder) ImageView placeholder;
     @BindView(R.id.video_surface_container) FrameLayout surfaceContainer;
     @BindView(R.id.loading) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
@@ -73,6 +77,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     private PostDetails postDetails;
     private int columnCount = 1;
     private boolean isComplete;
+    private byte[] image;
     private ArrayList<PostReaction> postReactions;
     private MediaControllerView controller;
     private MediaPlayer mediaPlayer;
@@ -83,11 +88,12 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(int columnCount, PostDetails postDetails) {
+    public static PostDetailsFragment newInstance(int columnCount, PostDetails postDetails, byte[] image) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putParcelable(ARG_POST_DETAILS, postDetails);
+        args.putByteArray(ARG_THUMBNAIL, image);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,6 +105,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         if (getArguments() != null) {
             columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
+            image = getArguments().getByteArray(ARG_THUMBNAIL);
         }
     }
 
@@ -111,6 +118,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
+
+        Glide.with(this)
+                .load(image)
+                .asBitmap()
+                .animate(R.anim.fast_fade_in)
+                .into(placeholder);
+
         progressBar.setVisibility(View.VISIBLE);
         prepareController();
 
@@ -122,8 +136,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
                 if (page > 1)
                     getPostReactions(postDetails.getPostId(), page);
             }
@@ -408,8 +420,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     @Override
     public void onDestroy() {
         super.onDestroy();
-        scrollListener.resetState();
-        scrollListener = null;
         postReactionAdapter = null;
     }
 

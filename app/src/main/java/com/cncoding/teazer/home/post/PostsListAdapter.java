@@ -1,6 +1,8 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -154,13 +157,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             View.OnClickListener viewPostDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
+                            holder.layout, getImage(holder.postThumbnail));
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail, holder.layout);
+                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
+                            holder.layout, getImage(holder.postThumbnail));
                 }
             };
 
@@ -168,6 +173,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.profilePic.setOnClickListener(viewProfile);
             holder.name.setOnClickListener(viewProfile);
         }
+    }
+
+    private byte[] getImage(ImageView imageView) {
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 
     @Override
@@ -218,6 +230,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     public interface OnPostAdapterInteractionListener {
-        void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
+        void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout, byte[] image);
     }
 }

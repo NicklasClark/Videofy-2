@@ -81,7 +81,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
     public void onViewDetachedFromWindow(ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         mListener = null;
-        videos = null;
+//        videos = null;
     }
 
     interface VideoGalleryAdapterInteractionListener {

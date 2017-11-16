@@ -1063,9 +1063,10 @@ public class Pojos {
             private ArrayList<Category> categories;
             private String password;
 
-            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
-                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos) {
+            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number,
+                               int country_code, String password, boolean is_active, int account_type, String created_at,
+                               String updated_at, boolean has_profile_media, ProfileMedia profile_media, ArrayList<Category> categories,
+                               int followers, int followings, int total_videos) {
                 this.user_id = user_id;
                 this.user_name = user_name;
                 this.first_name = first_name;
@@ -1368,16 +1369,22 @@ public class Pojos {
         }
 
         public static class NotificationsList {
-            private ArrayList<Notifications> notifications;
+            private ArrayList<Notification> notifications;
+            private int unread_count;
             private boolean next_page;
 
-            public NotificationsList(ArrayList<Notifications> notifications, boolean next_page) {
+            public NotificationsList(ArrayList<Notification> notifications, int unread_count, boolean next_page) {
                 this.notifications = notifications;
+                this.unread_count = unread_count;
                 this.next_page = next_page;
             }
 
-            public ArrayList<Notifications> getNotifications() {
+            public ArrayList<Notification> getNotifications() {
                 return notifications;
+            }
+
+            public int getUnreadCount() {
+                return unread_count;
             }
 
             public boolean isNextPage() {
@@ -1385,28 +1392,31 @@ public class Pojos {
             }
         }
 
-        public static class Notifications implements Parcelable {
+        public static class Notification implements Parcelable {
             private int notification_id;
             private int notification_type;
             private int source_id;
-            private String meta_data;
             private String title;
             private String message;
             private String created_at;
             private boolean has_profile_media;
             private ProfileMedia profile_media;
+            private ArrayList<String> highlights;
+            private MetaData meta_data;
 
-            public Notifications(int notification_id, int notification_type, int source_id, String meta_data, String title,
-                                 String message, String created_at, boolean has_profile_media, ProfileMedia profile_media) {
+            public Notification(int notification_id, int notification_type, int source_id, String title, String message,
+                                String created_at, boolean has_profile_media, ProfileMedia profile_media,
+                                ArrayList<String> highlights, MetaData meta_data) {
                 this.notification_id = notification_id;
                 this.notification_type = notification_type;
                 this.source_id = source_id;
-                this.meta_data = meta_data;
                 this.title = title;
                 this.message = message;
                 this.created_at = created_at;
                 this.has_profile_media = has_profile_media;
                 this.profile_media = profile_media;
+                this.highlights = highlights;
+                this.meta_data = meta_data;
             }
 
             public int getNotificationId() {
@@ -1419,10 +1429,6 @@ public class Pojos {
 
             public int getSourceId() {
                 return source_id;
-            }
-
-            public String getMetaData() {
-                return meta_data;
             }
 
             public String getTitle() {
@@ -1445,6 +1451,14 @@ public class Pojos {
                 return profile_media;
             }
 
+            public ArrayList<String> getHighlights() {
+                return highlights;
+            }
+
+            public MetaData getMetaData() {
+                return meta_data;
+            }
+
             @Override
             public int describeContents() {
                 return 0;
@@ -1455,37 +1469,109 @@ public class Pojos {
                 parcel.writeInt(notification_id);
                 parcel.writeInt(notification_type);
                 parcel.writeInt(source_id);
-                parcel.writeString(meta_data);
                 parcel.writeString(title);
                 parcel.writeString(message);
                 parcel.writeString(created_at);
                 parcel.writeByte((byte) (has_profile_media ? 1 : 0));
                 parcel.writeParcelable(profile_media, i);
+                parcel.writeStringList(highlights);
+                parcel.writeParcelable(meta_data, i);
             }
 
-            protected Notifications(Parcel in) {
+            protected Notification(Parcel in) {
                 notification_id = in.readInt();
                 notification_type = in.readInt();
                 source_id = in.readInt();
-                meta_data = in.readString();
                 title = in.readString();
                 message = in.readString();
                 created_at = in.readString();
                 has_profile_media = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+                highlights = in.createStringArrayList();
+                meta_data = in.readParcelable(MetaData.class.getClassLoader());
             }
 
-            public static final Creator<Notifications> CREATOR = new Creator<Notifications>() {
+            public static final Creator<Notification> CREATOR = new Creator<Notification>() {
                 @Override
-                public Notifications createFromParcel(Parcel in) {
-                    return new Notifications(in);
+                public Notification createFromParcel(Parcel in) {
+                    return new Notification(in);
                 }
 
                 @Override
-                public Notifications[] newArray(int size) {
-                    return new Notifications[size];
+                public Notification[] newArray(int size) {
+                    return new Notification[size];
                 }
             };
+        }
+
+        public static class MetaData implements Parcelable {
+            private int notification_type;
+            private String thumb_url;
+            private int from_id;
+            private int to_id;
+            private int source_id;
+
+            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id) {
+                this.notification_type = notification_type;
+                this.thumb_url = thumb_url;
+                this.from_id = from_id;
+                this.to_id = to_id;
+                this.source_id = source_id;
+            }
+
+            protected MetaData(Parcel in) {
+                notification_type = in.readInt();
+                thumb_url = in.readString();
+                from_id = in.readInt();
+                to_id = in.readInt();
+                source_id = in.readInt();
+            }
+
+            public static final Creator<MetaData> CREATOR = new Creator<MetaData>() {
+                @Override
+                public MetaData createFromParcel(Parcel in) {
+                    return new MetaData(in);
+                }
+
+                @Override
+                public MetaData[] newArray(int size) {
+                    return new MetaData[size];
+                }
+            };
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeInt(notification_type);
+                parcel.writeString(thumb_url);
+                parcel.writeInt(from_id);
+                parcel.writeInt(to_id);
+                parcel.writeInt(source_id);
+            }
+
+            public int getNotificationType() {
+                return notification_type;
+            }
+
+            public String getThumbUrl() {
+                return thumb_url;
+            }
+
+            public int getFromId() {
+                return from_id;
+            }
+
+            public int getToId() {
+                return to_id;
+            }
+
+            public int getSourceId() {
+                return source_id;
+            }
         }
 
         public static class ReportUser implements Parcelable {
@@ -1795,7 +1881,6 @@ public class Pojos {
             }
         };
     }
-
 
     public static class Medias implements Parcelable {
         private int media_id;

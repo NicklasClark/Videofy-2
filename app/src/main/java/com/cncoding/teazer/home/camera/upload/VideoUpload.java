@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.camera.upload;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -80,6 +79,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +111,6 @@ import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-@SuppressLint("StaticFieldLeak")
 public class VideoUpload extends AppCompatActivity
         implements NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
@@ -197,7 +196,8 @@ public class VideoUpload extends AppCompatActivity
         setContentView(R.layout.activity_video_upload);
         getBundleExtras();
         ButterKnife.bind(this);
-        setVideoDuration();
+
+        new SetVideoDuration(this).execute();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -333,27 +333,31 @@ public class VideoUpload extends AppCompatActivity
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
-    private void setVideoDuration() {
-        new AsyncTask<Void, Void, String>() {
+    private static class SetVideoDuration extends AsyncTask<Void, Void, String> {
 
-            @Override
-            protected String doInBackground(Void... voids) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(videoPath);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration = Long.parseLong(time );
-                retriever.release();
-                return String.format(Locale.UK, "%02d:%02d",
-                        MILLISECONDS.toMinutes(duration),
-                        MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-            }
+        private WeakReference<VideoUpload> reference;
 
-            @Override
-            protected void onPostExecute(String videoDuration) {
-                videoDurationTextView.setText(videoDuration);
-                super.onPostExecute(videoDuration);
-            }
-        }.execute();
+        SetVideoDuration(VideoUpload context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(reference.get().videoPath);
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long duration = Long.parseLong(time );
+            retriever.release();
+            return String.format(Locale.UK, "%02d:%02d",
+                    MILLISECONDS.toMinutes(duration),
+                    MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+        }
+
+        @Override
+        protected void onPostExecute(String videoDuration) {
+            reference.get().videoDurationTextView.setText(videoDuration);
+            super.onPostExecute(videoDuration);
+        }
     }
 
     private ByteArrayOutputStream getThumbnail(String videoPath) {
@@ -409,33 +413,36 @@ public class VideoUpload extends AppCompatActivity
 //        }
     }
 
-    private void getNearbyPlacesData(String url) {
-        new AsyncTask<String, String, ArrayList<HashMap<String, String>>>() {
+    private static class GetNearbyPlacesData extends AsyncTask<String, String, ArrayList<HashMap<String, String>>> {
 
-            private String googlePlacesJsonData;
+        private String googlePlacesJsonData;
+        private WeakReference<VideoUpload> reference;
 
-            @Override
-            protected ArrayList<HashMap<String, String>> doInBackground(String... strings) {
-                try {
-                    String url = strings[0];
-                    DownloadUrl downloadUrl = new DownloadUrl();
-                    googlePlacesJsonData = downloadUrl.readUrl(url);
-                } catch (Exception e) {
-                    Log.e("GooglePlacesReadTask", e.toString());
-                }
-                return DataParser.parse(googlePlacesJsonData);
+        GetNearbyPlacesData(VideoUpload context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected ArrayList<HashMap<String, String>> doInBackground(String... strings) {
+            try {
+                String url = strings[0];
+                DownloadUrl downloadUrl = new DownloadUrl();
+                googlePlacesJsonData = downloadUrl.readUrl(url);
+            } catch (Exception e) {
+                Log.e("GooglePlacesReadTask", e.toString());
             }
+            return DataParser.parse(googlePlacesJsonData);
+        }
 
-            @Override
-            protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
-                toggleUpBtnVisibility(VISIBLE);
-                fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                        .add(R.id.fragment_container, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES)
-                        .addToBackStack(TAG_NEARBY_PLACES)
-                        .commit();
-            }
-        }.execute(url);
+        @Override
+        protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
+            reference.get().toggleUpBtnVisibility(VISIBLE);
+            reference.get().fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
+                    .add(R.id.fragment_container, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES)
+                    .addToBackStack(TAG_NEARBY_PLACES)
+                    .commit();
+        }
     }
 
     private String getNearbySearchUrl(Location location) {
@@ -548,7 +555,7 @@ public class VideoUpload extends AppCompatActivity
     @OnClick(R.id.video_upload_location) public void addLocation() {
         if (arePermissionsAllowed(this)) {
             if (currentLocation != null)
-                getNearbyPlacesData(getNearbySearchUrl(currentLocation));
+                new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else requestPermissions();
     }
 
@@ -705,7 +712,7 @@ public class VideoUpload extends AppCompatActivity
 //                        permissions are granted
 //                        launchPlacePicker();
                         if (currentLocation != null)
-                            getNearbyPlacesData(getNearbySearchUrl(currentLocation));
+                            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
                         if (isRequestingLocationUpdates) {
                             startLocationUpdates();
                         }

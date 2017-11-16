@@ -40,6 +40,15 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (scrollListener != null) {
+            scrollListener.resetState();
+            scrollListener = null;
+        }
+    }
+
     public interface FragmentNavigation {
          void pushFragment(Fragment fragment);
     }

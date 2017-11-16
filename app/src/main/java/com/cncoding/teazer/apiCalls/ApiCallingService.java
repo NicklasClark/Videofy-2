@@ -164,10 +164,17 @@ public class ApiCallingService {
         }
 
         /**
-         * Call this service to send a join request
+         * Call this service to send a join request by user ID
          * */
-        public static Call<ResultObject> sendJoinRequest(int userId, Context context) {
-            return getFriendsService(context).sendJoinRequest(userId);
+        public static Call<ResultObject> sendJoinRequestByUserId(int userId, Context context) {
+            return getFriendsService(context).sendJoinRequestByUserId(userId);
+        }
+
+        /**
+         * Call this service to send a join request by user name
+         * */
+        public static Call<ResultObject> sendJoinRequestByUsername(String username, Context context) {
+            return getFriendsService(context).sendJoinRequestByUsername(username);
         }
 
         /**
@@ -180,8 +187,8 @@ public class ApiCallingService {
         /**
          * Call this service to delete the join request
          * */
-        public static Call<ResultObject> deleteJoinRequest(int page, String searchTerm, Context context) {
-            return getFriendsService(context).deleteJoinRequest(page, searchTerm);
+        public static Call<ResultObject> deleteJoinRequest(int notificationId, Context context) {
+            return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
         /**
@@ -550,24 +557,25 @@ public class ApiCallingService {
             return getUserService(context).updatePassword(updatePasswordDetails);
         }
 
-        public static Call<ResultObject> updateCategories(Pojos.User.UpdateCategories categories, Context context) {
-            return getUserService(context).updateCategories(categories);
+        public static Call<Pojos.User.NotificationsList> getFollowingNotifications(int page, Context context){
+            return getUserService(context).getFollowingNotifications(page);
         }
 
-        public static Call<ResultObject> getNotifications(int page, Context context) {
-            return getUserService(context).getNotifications(page);
+        public static Call<Pojos.User.NotificationsList> getRequestNotifications(int page, Context context){
+            return getUserService(context).getRequestNotifications(page);
+        }
+
+        public static Call<ResultObject> updateCategories(Pojos.User.UpdateCategories categories, Context context) {
+            return getUserService(context).updateCategories(categories);
         }
 
         public static Call<ResultObject> logout(String header, Context context) {
             return getUserService(context).logout(header);
         }
 
-
-        public static Call<Pojos.User.Profile>getUserProfileDetail(Context context)
-        {
+        public static Call<Pojos.User.Profile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
-
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -578,9 +586,6 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
-
-
-
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,

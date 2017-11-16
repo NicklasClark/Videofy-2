@@ -98,6 +98,7 @@ public class PostsListFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                scrollListener.resetState();
                 getHomePagePosts(1, true);
             }
         });
@@ -189,8 +190,6 @@ public class PostsListFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        scrollListener.resetState();
-        scrollListener = null;
         postListAdapter = null;
     }
 }

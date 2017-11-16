@@ -162,11 +162,29 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 201) {
                     onUploadFinish();
-                    //noinspection ResultOfMethodCallIgnored
-                    new File(uploadParams.getVideoPath()).delete();
+                    deleteFile(uploadParams.getVideoPath());
                 } else {
+                    if (response.code() == 200) {
+                        if (response.body().getMessage().contains("own video")) {
+//                        USER IS REACTING ON HIS OWN VIDEO.
+                            uploadingNotificationTextView.setText(response.body().getMessage());
+                            deleteFile(uploadParams.getVideoPath());
+                            SharedPrefs.finishVideoUploadSession(getApplicationContext());
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    uploadingStatusLayout.setVisibility(View.GONE);
+                                }
+                            }, 1500);
+                        }
+                    }
                     onUploadError(new Throwable(response.code() + " : " + response.message()));
                 }
+            }
+
+            private void deleteFile(String path) {
+                //noinspection ResultOfMethodCallIgnored
+                new File(path).delete();
             }
 
             @Override
@@ -360,13 +378,14 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout) {
+    public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail,
+                                  RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pushFragment(PostDetailsFragment.newInstance(2, postDetails));
+                        pushFragment(PostDetailsFragment.newInstance(2, postDetails, image));
                     }
                 }, 500);
                 break;

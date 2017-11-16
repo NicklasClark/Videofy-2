@@ -16,7 +16,6 @@
 
 package com.cncoding.teazer.home.camera;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -40,6 +39,7 @@ import com.cncoding.teazer.home.camera.upload.VideoUpload;
 import com.cncoding.teazer.utilities.Pojos;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -66,7 +66,7 @@ public class CameraActivity extends AppCompatActivity
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
 
     private SlidingUpPanelLayout.PanelSlideListener panelSlideListener;
-    private ArrayList<Videos> videosList = new ArrayList<>();
+    private ArrayList<Videos> videosList;
 
     private boolean isReaction = false;
     private int postId = -1;
@@ -76,6 +76,7 @@ public class CameraActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
+        videosList = new ArrayList<>();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isReaction = bundle.getBoolean(IS_REACTION);
@@ -104,7 +105,6 @@ public class CameraActivity extends AppCompatActivity
             prepareVideoGallery();
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void prepareVideoGallery() {
         if (panelSlideListener != null) {
             slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
@@ -131,63 +131,66 @@ public class CameraActivity extends AppCompatActivity
         };
         slidingUpPanelLayout.addPanelSlideListener(panelSlideListener);
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                videosList.clear();
-            }
+        new GetVideoGalleryData(this).execute();
+    }
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                Uri uri;
-                Cursor cursor;
-                int columnIndexData;
+    private static class GetVideoGalleryData extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<CameraActivity> reference;
+
+        GetVideoGalleryData(CameraActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            reference.get().videosList.clear();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Uri uri;
+            Cursor cursor;
+            int columnIndexData;
 //                int columnId;
 //                int columnFolderName;
-                int thumbnailData;
-                uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+            int thumbnailData;
+            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
-                String[] projection = {
-                        MediaStore.MediaColumns.DATA,
+            String[] projection = {
+                    MediaStore.MediaColumns.DATA,
 //                        MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
 //                        MediaStore.Video.Media._ID,
-                        MediaStore.Video.Thumbnails.DATA
-                };
-                final String orderByDateTaken = MediaStore.Video.Media.DATE_TAKEN;
+                    MediaStore.Video.Thumbnails.DATA
+            };
+            final String orderByDateTaken = MediaStore.Video.Media.DATE_TAKEN;
 
-                cursor = getContentResolver().query(uri, projection, null, null,
-                        orderByDateTaken + " DESC");
-                if (cursor != null) {
-                    columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            cursor = reference.get().getContentResolver().query(uri, projection, null, null,
+                    orderByDateTaken + " DESC");
+            if (cursor != null) {
+                columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
 //                    columnFolderName = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
 //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
+                thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
-                    while (cursor.moveToNext()) {
-                        videosList.add(new Videos(
-                                cursor.getString(columnIndexData),              //Video path
-                                cursor.getString(thumbnailData)                 //Thumbnail
-                        ));
-                    }
-                    cursor.close();
+                while (cursor.moveToNext()) {
+                    reference.get().videosList.add(new Videos(
+                            cursor.getString(columnIndexData),              //Video path
+                            cursor.getString(thumbnailData)                 //Thumbnail
+                    ));
                 }
-                return null;
+                cursor.close();
             }
+            return null;
+        }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(CameraActivity.this,
-//                        FlexboxLayout.LAYOUT_DIRECTION_LTR);
-//                flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
-////                flexboxLayoutManager.setAlignContent(AlignContent.FLEX_START);
-//                flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
-//                flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_AROUND);
-                recyclerView.setLayoutManager(new GridLayoutManager(CameraActivity.this, 3));
-                recyclerView.setAdapter(new VideoGalleryAdapter(videosList, CameraActivity.this));
-                super.onPostExecute(aVoid);
-            }
-        }.execute();
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            reference.get().recyclerView.setLayoutManager(new GridLayoutManager(reference.get(), 3));
+            reference.get().recyclerView.setAdapter(new VideoGalleryAdapter(reference.get().videosList, reference.get()));
+            super.onPostExecute(aVoid);
+        }
     }
 
     @Override

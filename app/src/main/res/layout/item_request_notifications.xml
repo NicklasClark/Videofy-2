@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root_layout"
+        android:animateLayoutChanges="true"
+        android:foreground="@drawable/ripple_dark_no_rounded"
+        android:orientation="horizontal">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/notification_dp"
+            android:layout_width="@dimen/padding_double"
+            android:layout_height="@dimen/padding_double"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:layout_margin="14dp"/>
+
+        <com.cncoding.teazer.customViews.UniversalTextView
+            android:id="@+id/notification_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_size_14sp"
+            app:font_name="sign_painter"
+            android:text="@string/following"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            android:id="@+id/notification_action"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_margin="14dp"
+            android:foreground="@drawable/ripple_dark_rounded_4dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            style="@style/AppTheme.RoundedButtonWithBoundary"
+            android:contentDescription="@string/post_thumbnail" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/notification_decline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_half"
+            android:foreground="@drawable/ripple_dark_circle"
+            android:src="@drawable/ic_cancel_dark"
+            android:layout_marginEnd="14dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"/>
+
+</LinearLayout>
