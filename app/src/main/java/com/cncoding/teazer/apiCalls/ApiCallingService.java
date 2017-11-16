@@ -6,6 +6,8 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -280,14 +282,14 @@ public class ApiCallingService {
          * Call this service to Block/Unblock a user
          * @param status should be 1 for block and 2 for unblock.
          */
-        public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context){
+        public static Call<BlockUnBlockUser> blockUnblockUser(int userId, int status, Context context){
             return getFriendsService(context).blockUnblockUser(userId, status);
         }
 
         /**
          * Call this service to get blocked users list by you.
          */
-        public static Call<Pojos.Friends.FollowersList> getBlockedUsers(int page, Context context){
+        public static Call<BlockUsers> getBlockedUsers(int page, Context context){
             return getFriendsService(context).getBlockedUsers(page);
         }
 

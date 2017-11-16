@@ -2,6 +2,8 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
+import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -303,13 +305,13 @@ import retrofit2.http.Query;
          * @param status should be 1 for block and 2 for unblock
          */
         @POST("/api/v1/friend/block/{user_id}/{status}")
-        Call<ResultObject> blockUnblockUser(@Path("user_id") int userId, @Path("status") int status);
+        Call<BlockUnBlockUser> blockUnblockUser(@Path("user_id") int userId, @Path("status") int status);
 
         /**
          * Call this service to get blocked users list by you.
          */
         @GET("/api/v1/friend/blocked/users/{page}")
-        Call<FollowersList> getBlockedUsers(@Path("page") int page);
+        Call<BlockUsers> getBlockedUsers(@Path("page") int page);
 
         /**
          * Call this service to get users list to send follow request.
@@ -608,7 +610,7 @@ import retrofit2.http.Query;
          * Send accountType as @int 1 for Private, @int 2 for Public
          * */
         @PUT("/api/v1/user/profile/visibility")
-        Call<ResultObject> setAccountVisibility(@Part("accountType") int accountType);
+        Call<ResultObject> setAccountVisibility(@Query("accountType") int accountType);
 
         /**
          * Get user profile

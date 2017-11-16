@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <!--<android.support.design.widget.AppBarLayout-->
     <!--android:id="@+id/appbar"-->
     <!--android:layout_width="match_parent"-->
@@ -279,8 +285,10 @@
 
 
 
-
-
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:id="@+id/layout"
+    android:layout_height="wrap_content">
 
     <android.support.design.widget.AppBarLayout
 
@@ -577,7 +585,7 @@
 
     </RelativeLayout>
 
-
+</android.support.design.widget.CoordinatorLayout>
 
 
 

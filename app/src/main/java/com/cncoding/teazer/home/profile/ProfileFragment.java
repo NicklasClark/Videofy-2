@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,8 @@ import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,6 +87,10 @@ public class ProfileFragment extends BaseFragment {
     int gender;
     int countrycode;
     String detail;
+//    @BindView(R.id.layout)
+    CoordinatorLayout coordinatorLayout;
+
+    ProgressBar progressbar;
 
     private OnFragmentInteractionListener mListener;
 
@@ -106,7 +114,9 @@ public class ProfileFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
+      //  ButterKnife.bind(getActivity());
         removeAppBar = (RemoveAppBar) context;
+
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,12 +134,12 @@ public class ProfileFragment extends BaseFragment {
         backgroundprofile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         btnedit = view.findViewById(R.id.btnedit);
-
+        coordinatorLayout = view.findViewById(R.id.layout);
+        progressbar = view.findViewById(R.id.progress_bar);
 
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(context, EditProfile.class);
                 intent.putExtra("UserName", username);
                 intent.putExtra("FirstName", firstname);
@@ -140,14 +150,11 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("CountryCode", String.valueOf(countrycode));
                 if (detail == null)
                     intent.putExtra("Detail", "");
-
                 else
                     {intent.putExtra("Detail", detail);}
-
                 startActivity(intent);
             }
         });
-
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,7 +165,6 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,13 +185,13 @@ public class ProfileFragment extends BaseFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getActivity().onBackPressed();
             }
         });
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getActivity().onBackPressed();
             }
         });
@@ -211,6 +217,8 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
         removeAppBar.removeAppbar();
         dynamicToolbarColor();
         getProfileDetail();
@@ -264,6 +272,8 @@ public class ProfileFragment extends BaseFragment {
                         _followers.setText(String.valueOf(totalfollowers) + " Follower");
                         _following.setText(String.valueOf(totalfollowing + " Following"));
                         _creations.setText(String.valueOf(totalvideos + " Creations"));
+                        progressbar.setVisibility(View.GONE);
+                        coordinatorLayout.setVisibility(View.VISIBLE);
                     }
                     catch (Exception e) {
                         Log.d("Exception",e.getMessage());

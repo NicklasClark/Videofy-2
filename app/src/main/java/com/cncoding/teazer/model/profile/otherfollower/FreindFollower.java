@@ -19,7 +19,7 @@ public class FreindFollower {
     private Boolean nextPage;
     @SerializedName("followers")
     @Expose
-    private List<Follower> followers = null;
+    private List<OtherFollowers> followers = null;
 
     public Boolean getNextPage() {
         return nextPage;
@@ -29,11 +29,11 @@ public class FreindFollower {
         this.nextPage = nextPage;
     }
 
-    public List<Follower> getFollowers() {
+    public List<OtherFollowers> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<Follower> followers) {
+    public void setFollowers(List<OtherFollowers> followers) {
         this.followers = followers;
     }
 }

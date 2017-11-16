@@ -170,10 +170,17 @@
         <activity
             android:name=".ui.fragment.activity.FollowerFollowingProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-          />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".ui.fragment.activity.FollowingProfileActivity"></activity>
+        <activity android:name=".ui.fragment.activity.FollowingProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.fragment.activity.BlockUserList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

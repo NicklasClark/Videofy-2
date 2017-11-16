@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.activity.FollowerFollowingProfileActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout"
+        android:layout_height="match_parent">
+
     <android.support.design.widget.AppBarLayout
 
         android:id="@+id/appbar"
@@ -285,4 +296,5 @@
         android:id="@+id/recycler_view"
         android:layout_marginBottom="10dp"/>
     </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
 </android.support.design.widget.CoordinatorLayout>
