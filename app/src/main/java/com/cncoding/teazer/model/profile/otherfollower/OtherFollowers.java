@@ -22,6 +22,9 @@ public class OtherFollowers {
     @SerializedName("last_name")
     @Expose
     private String lastName;
+    @SerializedName("is_blocked_you")
+    @Expose
+    private Boolean isBlockedYou;
     @SerializedName("my_self")
     @Expose
     private Boolean mySelf;
@@ -62,6 +65,14 @@ public class OtherFollowers {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Boolean getIsBlockedYou() {
+        return isBlockedYou;
+    }
+
+    public void setIsBlockedYou(Boolean isBlockedYou) {
+        this.isBlockedYou = isBlockedYou;
     }
 
     public Boolean getMySelf() {

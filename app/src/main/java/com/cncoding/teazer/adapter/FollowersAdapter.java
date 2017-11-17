@@ -63,7 +63,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     public void onBindViewHolder(final FollowersAdapter.ViewHolder viewHolder, int i) {
         try {
 
-
             final int followerId;
             if (counter == 100) {
 
@@ -91,11 +90,24 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final OtherFollowers cont = list.get(i);
                 final boolean  myself = cont.getMySelf();
                 final String followername = cont.getUserName();
+
                 followerId = cont.getUserId();
                 viewHolder.followersname.setText(followername);
                 viewHolder.cardview.setVisibility(View.GONE);
                 viewHolder.progress_bar.setVisibility(View.VISIBLE);
                 getuserFollowing(viewHolder, followername);
+                final boolean isblockedyou=cont.getIsBlockedYou();
+                if(isblockedyou) {
+                    viewHolder.followersname.setTextColor(Color.GRAY);
+                    viewHolder.follow.setVisibility(View.INVISIBLE);
+                }
+
+                if(myself) {
+
+                    viewHolder.followersname.setTextColor(Color.BLUE);
+                    viewHolder.follow.setVisibility(View.INVISIBLE);
+                }
+
                 viewHolder.followersname.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -105,12 +117,25 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             Intent intent = new Intent(context, BaseBottomBarActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                            intent.putExtra("Username", followername);
-                            intent.putExtra("FollowId", String.valueOf(followerId));
-                            intent.putExtra("UserType", "Follower");
-                            context.startActivity(intent);
+                        }
+                        else {
+
+
+                            if(isblockedyou)
+                            {
+
+                                Toast.makeText(context,"you can not view this user profile",Toast.LENGTH_LONG).show();
+
+                            }
+                            else
+                            {
+                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+                                intent.putExtra("Username", followername);
+                                intent.putExtra("FollowId", String.valueOf(followerId));
+                                intent.putExtra("UserType", "Follower");
+                                context.startActivity(intent);
+                            }
+
 
 
                         }

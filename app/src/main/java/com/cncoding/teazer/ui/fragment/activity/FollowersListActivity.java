@@ -89,6 +89,13 @@ public class FollowersListActivity extends AppCompatActivity {
             getUserfollowerList();
         }
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public void getUserfollowerList()
     {
         int i=1;
