@@ -39,10 +39,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     private ArrayList<Pojos.Post.PostDetails> addressdetail_list;
     private Context context;
+    myCreationListener listener;
 
     public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> addressdetail_list) {
         this.context = context;
         this.addressdetail_list = addressdetail_list;
+        listener=(myCreationListener)context;
 
     }
 
@@ -65,7 +67,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final String reaction= String.valueOf(cont.getTotalReactions());
         final String location=cont.getCheckIn().getLocation();
 
-
         viewHolder.videoTitle.setText(videotitle);
         viewHolder.txtlikes.setText(likes);
         viewHolder.duration.setText(duration);
@@ -73,20 +74,21 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         viewHolder.reactions.setText(reaction);
         viewHolder.location.setText(location);
 
+
         Glide.with(context).load(thumb_url)
                 .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
 
-
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ProfileCreationVideos.class);
-                intent.putExtra("VideoURL", videourl);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-
+//                Intent intent = new Intent(context, ProfileCreationVideos.class);
+//                intent.putExtra("VideoURL", videourl);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+                listener.myCreationVideos(2,cont);
+               // Toast.makeText(context,"Hello",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -138,7 +140,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         View line;
         ImageView playvideo;
         CircularAppCompatImageView menu;
-
         public ViewHolder(View view) {
             super(view);
             videoTitle = view.findViewById(R.id.videodetails);
@@ -172,8 +173,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                     e.printStackTrace();
                 }
             }
-
-
             @Override
             public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
 
@@ -182,4 +181,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         });
     }
+
+    public  interface myCreationListener
+    {
+
+        public void  myCreationVideos ( int i, Pojos.Post.PostDetails postDetails);
+    }
+
 }

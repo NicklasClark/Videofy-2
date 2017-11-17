@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
@@ -27,11 +28,14 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+
+import java.util.ArrayList;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -51,7 +55,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener,ProfileFragment.RemoveAppBar {
+        PostReactionAdapterListener,ProfileFragment.RemoveAppBar,ProfileMyCreationAdapter.myCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -65,14 +69,21 @@ public class BaseBottomBarActivity extends BaseActivity
             R.drawable.ic_person_black
     };
 
-    @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) AppBarLayout appBar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
-    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
-    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ImageButton cameraButton;
-//    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
+    @BindArray(R.array.tab_name)
+    String[] TABS;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_title)
+    SignPainterTextView toolbarTitle;
+    @BindView(R.id.main_fragment_container)
+    FrameLayout contentFrame;
+    @BindView(R.id.bottom_tab_layout)
+    TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn)
+    ImageButton cameraButton;
+    //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
@@ -82,7 +93,7 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
 
-        Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null? "N/A" : getAuthToken(getApplicationContext()));
+        Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -116,7 +127,8 @@ public class BaseBottomBarActivity extends BaseActivity
         });
     }
 
-    @OnClick(R.id.logout_btn) public void performLogout() {
+    @OnClick(R.id.logout_btn)
+    public void performLogout() {
         logout(getApplicationContext(), this);
 //        ApiCallingService.User.performLogout(SharedPrefs.getAuthToken(this), this);
     }
@@ -128,7 +140,8 @@ public class BaseBottomBarActivity extends BaseActivity
         switchTab(0);
     }
 
-    @OnClick(R.id.camera_btn) public void startCamera() {
+    @OnClick(R.id.camera_btn)
+    public void startCamera() {
         launchVideoUploadCamera(this);
     }
 
@@ -143,7 +156,8 @@ public class BaseBottomBarActivity extends BaseActivity
         ImageView view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
         if (position != 2)
             view.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[position]));
-        else cameraButton.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[2]));
+        else
+            cameraButton.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[2]));
         return view;
     }
 
@@ -152,8 +166,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //        updateToolbarTitle(position);
     }
 
-    private void updateTabSelection(int currentTab){
-        for (int i = 0; i <  TABS.length; i++) {
+    private void updateTabSelection(int currentTab) {
+        for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
             if (selectedTab != null) {
                 if (currentTab != i) {
@@ -190,8 +204,9 @@ public class BaseBottomBarActivity extends BaseActivity
 
     /**
      * Updates the toolbar title.
+     *
      * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
-     * */
+     */
     public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
         if (title == null) {
             toolbarTitle.animate().alpha(1).setDuration(250).start();
@@ -341,6 +356,12 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void removeAppbar() {
 
-  //   getSupportActionBar().hide();
+        //   getSupportActionBar().hide();
+    }
+
+    @Override
+    public void myCreationVideos(int i, PostDetails postDetails) {
+        pushFragment(PostDetailsFragment.newInstance(2,postDetails));
+
     }
 }
