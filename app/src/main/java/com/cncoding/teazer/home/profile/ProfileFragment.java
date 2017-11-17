@@ -30,19 +30,12 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.profile.followerprofile.Category;
-import com.cncoding.teazer.model.profile.userProfile.UserProfile;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,8 +63,7 @@ public class ProfileFragment extends BaseFragment {
     TextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    Pojos.User.PublicProfile userprofile;
-    boolean hasProfleMedia;
+    Pojos.User.UserProfile userprofile;
     RemoveAppBar removeAppBar;
     Button btnedit;
     int totalfollowers;
@@ -84,7 +76,7 @@ public class ProfileFragment extends BaseFragment {
     String email;
     int accountType;
     boolean hasProfleMedia;
-    Pojos.User.UserProfile userprofile;
+//    Pojos.User.UserProfile userprofile;
     Long mobilenumber;
     int gender;
     int countrycode;
@@ -224,7 +216,7 @@ public class ProfileFragment extends BaseFragment {
                 if (response.code() == 200) {
 
                     try {
-                        Pojos.User.PublicProfile userProfile = response.body().getPublicProfile();
+                        Pojos.User.UserProfile userProfile = response.body().getPublicProfile();
                         int totalfollowers = response.body().getFollowers();
                         int totalfollowing = response.body().getFollowings();
                         int totalvideos = response.body().getTotalVideos();
@@ -281,11 +273,7 @@ public class ProfileFragment extends BaseFragment {
                     }
                 } else {
 
-<<<<<<< HEAD
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
-=======
-                    Toast.makeText(context,"PublicProfile Detail not fetched",Toast.LENGTH_LONG).show();
->>>>>>> amit_test
                 }
             }
 

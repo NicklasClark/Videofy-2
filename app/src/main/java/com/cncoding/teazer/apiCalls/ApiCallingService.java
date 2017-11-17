@@ -281,12 +281,15 @@ public class ApiCallingService {
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-<<<<<<< HEAD
+//<<<<<<< HEAD
         public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
-=======
-        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
->>>>>>> amit_test
             return getFriendsService(context).getOthersProfileInfo(userId);
+        }
+//=======
+//        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
+//>>>>>>> amit_test
+            public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
+            return getFriendsService(context).getOthersProfileInfoNoti(userId);
         }
 
         /**

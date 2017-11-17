@@ -68,32 +68,32 @@ public class OfflineUserProfile {
                 .setTotalVideos(userProfile.getTotalVideos());
     }
     
-    public UserProfile getOfflineUserProfile() {
-        return new UserProfile(
-                getUserId(),
-                getUsername(),
-                getFirstName(),
-                getLastName(),
-                getEmail(),
-                getPhoneNumber(),
-                getCountryCode(),
-                getPassword(),
-                isActive(),
-                getAccountType(),
-                getCreatedAt(),
-                getUpdatedAt(),
-                hasProfileMedia(),
-                getProfileMedia(),
-                getCategories(),
-                getFollowers(),
-                getFollowings(),
-                getTotalVideos(),
-                getGender()
-                ,getDetail());
-
-    }
-//    public PublicProfile getOfflineUserProfile() {
-//        return new PublicProfile(
+//    public UserProfile getOfflineUserProfile() {
+//        return new UserProfile(
+//                getUserId(),
+//                getUsername(),
+//                getFirstName(),
+//                getLastName(),
+//                getEmail(),
+//                getPhoneNumber(),
+//                getCountryCode(),
+//                getPassword(),
+//                isActive(),
+//                getAccountType(),
+//                getCreatedAt(),
+//                getUpdatedAt(),
+//                hasProfileMedia(),
+//                getProfileMedia(),
+//                getCategories(),
+//                getFollowers(),
+//                getFollowings(),
+//                getTotalVideos(),
+//                getGender()
+//                ,getDetail());
+//
+//    }
+//    public UserProfile getOfflineUserProfile() {
+//        return new UserProfile(
 //                getUserId(),
 //                getUsername(),
 //                getFirstName(),

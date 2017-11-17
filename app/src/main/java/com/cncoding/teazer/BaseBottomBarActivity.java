@@ -22,14 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
-=======
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
->>>>>>> amit_test
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter;
@@ -40,7 +37,6 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -50,8 +46,6 @@ import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
-
-import java.util.ArrayList;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -82,7 +76,8 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener,ProfileFragment.RemoveAppBar,
-        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks {
+        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
+        ProfileMyCreationAdapter.myCreationListener{
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -533,7 +528,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(2,postDetails));
+        pushFragment(PostDetailsFragment.newInstance(2,postDetails, null));
 
     }
+
 }
