@@ -28,6 +28,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+    <TextView
+        android:id="@+id/nousertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#cfcfcf"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:text="No User following you"
+        android:layout_centerInParent="true"/>
 
 
             <RelativeLayout

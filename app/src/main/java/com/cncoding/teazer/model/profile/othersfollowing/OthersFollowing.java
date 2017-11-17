@@ -14,7 +14,7 @@ public class OthersFollowing {
     private Boolean nextPage;
     @SerializedName("followings")
     @Expose
-    private List<Following> followings = null;
+    private List<OtherUserFollowings> followings = null;
 
     public Boolean getNextPage() {
         return nextPage;
@@ -24,11 +24,11 @@ public class OthersFollowing {
         this.nextPage = nextPage;
     }
 
-    public List<Following> getFollowings() {
+    public List<OtherUserFollowings> getFollowings() {
         return followings;
     }
 
-    public void setFollowings(List<Following> followings) {
+    public void setFollowings(List<OtherUserFollowings> followings) {
         this.followings = followings;
     }
 

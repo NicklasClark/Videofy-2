@@ -275,14 +275,14 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginEnd="@dimen/padding_default"
                         />
-
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+        <RelativeLayout
 
-    <RelativeLayout
+            android:id="@+id/layoutDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"

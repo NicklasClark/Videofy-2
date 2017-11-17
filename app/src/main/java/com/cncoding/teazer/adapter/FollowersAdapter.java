@@ -73,7 +73,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 viewHolder.cardview.setVisibility(View.GONE);
                 viewHolder.progress_bar.setVisibility(View.VISIBLE);
                 getuserFollowing(viewHolder, followername);
-                viewHolder.followersname.setOnClickListener(new View.OnClickListener() {
+                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -86,11 +86,12 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 });
 
             }
+
             else {
+
                 final OtherFollowers cont = list.get(i);
                 final boolean  myself = cont.getMySelf();
                 final String followername = cont.getUserName();
-
                 followerId = cont.getUserId();
                 viewHolder.followersname.setText(followername);
                 viewHolder.cardview.setVisibility(View.GONE);
@@ -108,7 +109,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     viewHolder.follow.setVisibility(View.INVISIBLE);
                 }
 
-                viewHolder.followersname.setOnClickListener(new View.OnClickListener() {
+                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -119,13 +120,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             context.startActivity(intent);
                         }
                         else {
-
-
                             if(isblockedyou)
                             {
-
                                 Toast.makeText(context,"you can not view this user profile",Toast.LENGTH_LONG).show();
-
                             }
                             else
                             {
@@ -135,9 +132,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                 intent.putExtra("UserType", "Follower");
                                 context.startActivity(intent);
                             }
-
-
-
                         }
                     }
                 });

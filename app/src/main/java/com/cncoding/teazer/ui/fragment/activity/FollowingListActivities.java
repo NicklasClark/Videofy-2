@@ -12,6 +12,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -19,6 +20,7 @@ import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -33,6 +35,7 @@ import retrofit2.Response;
 public class FollowingListActivities extends AppCompatActivity {
     Context context;
     List<Following> list;
+    List<OtherUserFollowings> otherlist;
     RecyclerView recyclerView;
     FollowingAdapter profileMyFollowingAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -40,6 +43,8 @@ public class FollowingListActivities extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.layout)
     RelativeLayout layout;
+    @BindView(R.id.nousertext)
+    TextView nousertext;
 
 
     @Override
@@ -51,12 +56,9 @@ public class FollowingListActivities extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
         }
-
         Intent intent = getIntent();
-
         String identifier = intent.getStringExtra("Identifier");
         int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -66,7 +68,6 @@ public class FollowingListActivities extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Following List</font>"));
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,18 +75,12 @@ public class FollowingListActivities extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         recyclerView = findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
         if (identifier.equals("User")) {
-
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-
             getUserfollowinglist();
         }
         else if (identifier.equals("Other"))
@@ -93,10 +88,8 @@ public class FollowingListActivities extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             getOthersFollowingList(userID);
-
         }
     }
-
     public void getUserfollowinglist() {
         int i = 1;
         ApiCallingService.Friends.getMyFollowing(i, context).enqueue(new Callback<ProfileMyFollowing>() {
@@ -105,10 +98,18 @@ public class FollowingListActivities extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
                         list = response.body().getFollowings();
-                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
-                        recyclerView.setAdapter(profileMyFollowingAdapter);
-                        layout.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
+                        if (list == null || list.size() == 0) {
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            nousertext.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            profileMyFollowingAdapter = new FollowingAdapter(context, list, 100);
+                            recyclerView.setAdapter(profileMyFollowingAdapter);
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
@@ -120,11 +121,9 @@ public class FollowingListActivities extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 }
             }
-
             @Override
             public void onFailure(Call<ProfileMyFollowing> call, Throwable t) {
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
-
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
@@ -138,10 +137,19 @@ public class FollowingListActivities extends AppCompatActivity {
             public void onResponse(Call<OthersFollowing> call, Response<OthersFollowing> response) {
                 if (response.code() == 200) {
                     try {
-                        list = response.body().getFollowings();
-                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
-                        recyclerView.setAdapter(profileMyFollowingAdapter);
-                        layout.setVisibility(View.VISIBLE);
+                        otherlist = response.body().getFollowings();
+                        if (otherlist == null || otherlist.size() == 0) {
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            nousertext.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            profileMyFollowingAdapter = new FollowingAdapter(context, otherlist);
+                            recyclerView.setAdapter(profileMyFollowingAdapter);
+                            layout.setVisibility(View.VISIBLE);
+                        }
                         progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();

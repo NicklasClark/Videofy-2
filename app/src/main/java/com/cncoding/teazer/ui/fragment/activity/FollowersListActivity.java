@@ -12,6 +12,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -43,6 +44,8 @@ public class FollowersListActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.layout)
     RelativeLayout layout;
+    @BindView(R.id.nousertext)
+    TextView nousertext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,14 @@ public class FollowersListActivity extends AppCompatActivity {
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         Intent intent = getIntent();
         int followerid=  Integer.parseInt(intent.getStringExtra("FollowerId"));
         String identifier=intent.getStringExtra("Identifier");
@@ -81,6 +92,7 @@ public class FollowersListActivity extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(followerid);
+
         }
         else if(identifier.equals("User"))
         {
@@ -88,12 +100,6 @@ public class FollowersListActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             getUserfollowerList();
         }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void getUserfollowerList()
@@ -104,14 +110,26 @@ public class FollowersListActivity extends AppCompatActivity {
             public void onResponse(Call<ProfileMyFollowers> call, Response<ProfileMyFollowers> response) {
                 if(response.code()==200)
                 {
-                    try
-                    {
-                        list2= response.body().getFollowers();
-                        profileMyFollowerAdapter=new FollowersAdapter(context,list2,100);
+                    try {
+                        list2 = response.body().getFollowers();
+                        if (list2 == null || list2.size() == 0) {
+                            Toast.makeText(context,"NO User Found", Toast.LENGTH_LONG).show();
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            nousertext.setVisibility(View.VISIBLE);
+
+                        }
+                        else{
+                        profileMyFollowerAdapter = new FollowersAdapter(context, list2, 100);
                         recyclerView.setAdapter(profileMyFollowerAdapter);
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                     }
+
+
+
+                    }
+
                     catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
@@ -146,10 +164,19 @@ public class FollowersListActivity extends AppCompatActivity {
                     try
                     {
                         list= response.body().getFollowers();
-                        profileMyFollowerAdapter=new FollowersAdapter(context,list);
-                        recyclerView.setAdapter(profileMyFollowerAdapter);
-                        layout.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
+                        if (list == null || list.size() == 0) {
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            nousertext.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            profileMyFollowerAdapter = new FollowersAdapter(context, list);
+                            recyclerView.setAdapter(profileMyFollowerAdapter);
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
                     catch (Exception e) {
                         e.printStackTrace();

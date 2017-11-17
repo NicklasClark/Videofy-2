@@ -2,6 +2,8 @@ package com.cncoding.teazer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
+import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
+import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
 import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -30,59 +28,113 @@ import retrofit2.Response;
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.ViewHolder> {
 
     private List<Following> list;
+    private List<OtherUserFollowings> otherlist;
     private Context context;
+    int counter;
 
-    public FollowingAdapter(Context context, List<Following> list) {
+    public FollowingAdapter(Context context, List<OtherUserFollowings> otherlist) {
+        this.context = context;
+        this.otherlist = otherlist;
+    }
+    public FollowingAdapter(Context context, List<Following> list, int counter) {
         this.context = context;
         this.list = list;
+        this.counter = counter;
     }
-
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_following, viewGroup, false);
         return new FollowingAdapter.ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder, int i) {
-        Following cont = list.get(i);
-        final String followingname = cont.getUserName();
-        final int followerId = cont.getUserId();
-        viewHolder.followingName.setText(followingname);
+
+        final int followerId;
+        if (counter == 100) {
+
+            final Following cont = list.get(i);
+            final String followingname = cont.getUserName();
+            followerId = cont.getUserId();
+            viewHolder.followingName.setText(followingname);
 
 
+            viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+                    intent.putExtra("Username", followingname);
+                    intent.putExtra("FollowId", String.valueOf(followerId));
+                    intent.putExtra("UserType", "Following");
+                    context.startActivity(intent);
+                }
+            });
 
+        }
+        else
+        {
+            final OtherUserFollowings cont = otherlist.get(i);
+            final boolean  myself = cont.getMySelf();
+            final String followername = cont.getUserName();
+            followerId = cont.getUserId();
+            viewHolder.followingName.setText(followername);
+            final boolean isblockedyou=cont.getIsBlockedYou();
 
-        viewHolder.followingName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewHolder.followingName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                        intent.putExtra("Username", followingname);
-                        intent.putExtra("FollowId", String.valueOf(followerId));
-                        intent.putExtra("UserType", "Following");
+            if(isblockedyou) {
+                viewHolder.followingName.setTextColor(Color.GRAY);
+                viewHolder.follow.setVisibility(View.INVISIBLE);
+            }
+            if(myself) {
+
+                viewHolder.followingName.setTextColor(Color.BLUE);
+                viewHolder.follow.setVisibility(View.INVISIBLE);
+            }
+            viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (myself) {
+                        Intent intent = new Intent(context, BaseBottomBarActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(intent);
                     }
-                });
-            }
-        });
+                    else {
+                        if(isblockedyou)
+                        {
+                            Toast.makeText(context,"you can not view this user profile",Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+                            intent.putExtra("Username", followername);
+                            intent.putExtra("FollowId", String.valueOf(followerId));
+                            intent.putExtra("UserType", "Following");
+                            context.startActivity(intent);
+                        }
+                    }
+                }
+            });
+
+        }
     }
     @Override
     public int getItemCount() {
+        if(counter==100)
+        {
         return list.size();
+    }
+    else{
+            return otherlist.size();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView followingName, address;
         Button follow;
-
+        CardView cardview;
         public ViewHolder(View view) {
             super(view);
             followingName = view.findViewById(R.id.following_name);
-
+            cardview = view.findViewById(R.id.cardview);
 
         }
     }

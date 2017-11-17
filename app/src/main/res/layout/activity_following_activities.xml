@@ -19,6 +19,17 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+    <TextView
+        android:id="@+id/nousertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#cfcfcf"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        android:maxLines="3"
+        android:text="You are not following any one teazer to view the videos of other users follow him"
+        android:layout_centerInParent="true"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
