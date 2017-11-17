@@ -65,17 +65,11 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         intent.putExtra("FollowId", String.valueOf(followerId));
                         intent.putExtra("UserType", "Following");
                         context.startActivity(intent);
-
                     }
                 });
-
             }
         });
-
     }
-
-
-
     @Override
     public int getItemCount() {
         return list.size();

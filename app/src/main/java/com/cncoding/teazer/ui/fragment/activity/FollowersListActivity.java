@@ -114,6 +114,8 @@ public class FollowersListActivity extends AppCompatActivity {
                 else
                 {
 
+                    layout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
             @Override

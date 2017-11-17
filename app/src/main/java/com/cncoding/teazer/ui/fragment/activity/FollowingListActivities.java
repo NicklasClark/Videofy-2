@@ -62,7 +62,6 @@ public class FollowingListActivities extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -100,14 +99,13 @@ public class FollowingListActivities extends AppCompatActivity {
 
     public void getUserfollowinglist() {
         int i = 1;
-
         ApiCallingService.Friends.getMyFollowing(i, context).enqueue(new Callback<ProfileMyFollowing>() {
             @Override
             public void onResponse(Call<ProfileMyFollowing> call, Response<ProfileMyFollowing> response) {
                 if (response.code() == 200) {
                     try {
                         list = response.body().getFollowings();
-                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
+                        profileMyFollowingAdapter = new FollowingAdapter(context, list,100);
                         recyclerView.setAdapter(profileMyFollowingAdapter);
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
@@ -133,10 +131,7 @@ public class FollowingListActivities extends AppCompatActivity {
         });
 
     }
-
     public void getOthersFollowingList(int userId) {
-
-
         int i = 1;
         ApiCallingService.Friends.getFriendsFollowings(i, userId, context).enqueue(new Callback<OthersFollowing>() {
             @Override

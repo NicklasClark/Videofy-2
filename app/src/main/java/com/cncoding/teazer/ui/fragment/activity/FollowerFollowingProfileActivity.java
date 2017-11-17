@@ -205,8 +205,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
 
-
-
                         int i = response.body().getAccountType();
                         boolean b = response.body().getCanJoin();
                         int follower = response.body().getFollowers();
