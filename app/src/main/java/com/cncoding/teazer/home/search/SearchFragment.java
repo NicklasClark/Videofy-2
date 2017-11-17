@@ -146,7 +146,7 @@ public class SearchFragment extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     holder.addFriendBtn.setEnabled(false);
-                    ApiCallingService.Friends.sendJoinRequest(miniProfile.getUserId(), context).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.Friends.sendJoinRequestByUserId(miniProfile.getUserId(), context).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {

@@ -49,6 +49,10 @@ public class PlaceHolderDrawableHelper {
         return drawableBackgroundList.get(new Random().nextInt(23) % placeholderValues.length);
     }
 
+    public static String getBackgroundColor() {
+        return placeholderValues[new Random().nextInt(placeholderValues.length - 1)];
+    }
+
     public static int getColor() {
         return Color.parseColor(placeholderValues[new Random().nextInt(23)]);
     }

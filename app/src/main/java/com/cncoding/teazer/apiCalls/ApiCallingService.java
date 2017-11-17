@@ -25,6 +25,7 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -172,10 +173,17 @@ public class ApiCallingService {
         }
 
         /**
-         * Call this service to send a join request
+         * Call this service to send a join request by user ID
          * */
-        public static Call<ResultObject> sendJoinRequest(int userId, Context context) {
-            return getFriendsService(context).sendJoinRequest(userId);
+        public static Call<ResultObject> sendJoinRequestByUserId(int userId, Context context) {
+            return getFriendsService(context).sendJoinRequestByUserId(userId);
+        }
+
+        /**
+         * Call this service to send a join request by user name
+         * */
+        public static Call<ResultObject> sendJoinRequestByUsername(String username, Context context) {
+            return getFriendsService(context).sendJoinRequestByUsername(username);
         }
 
         /**
@@ -188,8 +196,8 @@ public class ApiCallingService {
         /**
          * Call this service to delete the join request
          * */
-        public static Call<ResultObject> deleteJoinRequest(int page, String searchTerm, Context context) {
-            return getFriendsService(context).deleteJoinRequest(page, searchTerm);
+        public static Call<ResultObject> deleteJoinRequest(int notificationId, Context context) {
+            return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
         /**
@@ -273,7 +281,11 @@ public class ApiCallingService {
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
+<<<<<<< HEAD
         public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
+=======
+        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
+>>>>>>> amit_test
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
 
@@ -339,8 +351,8 @@ public class ApiCallingService {
          * 401 : Un-Authorized access.
          * 412 : Validation failed.
          */
-        public static Call<ResultObject> postReaction(MultipartBody.Part video, int postId, Context context) {
-            return getReactService(context).postReaction(video, postId);
+        public static Call<ResultObject> uploadReaction(MultipartBody.Part video, int postId, Context context, String title) {
+            return getReactService(context).uploadReaction(video, postId, title);
         }
 
         /**
@@ -555,7 +567,7 @@ public class ApiCallingService {
             return getUserService(context).setAccountVisibility(accountType);
         }
 
-        public static Call<Pojos.User.Profile> getUserProfile(Context context) {
+        public static Call<Profile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
 
         }
@@ -573,24 +585,25 @@ public class ApiCallingService {
             return getUserService(context).updatePassword(updatePasswordDetails);
         }
 
-        public static Call<ResultObject> updateCategories(Pojos.User.UpdateCategories categories, Context context) {
-            return getUserService(context).updateCategories(categories);
+        public static Call<Pojos.User.NotificationsList> getFollowingNotifications(int page, Context context){
+            return getUserService(context).getFollowingNotifications(page);
         }
 
-        public static Call<ResultObject> getNotifications(int page, Context context) {
-            return getUserService(context).getNotifications(page);
+        public static Call<Pojos.User.NotificationsList> getRequestNotifications(int page, Context context){
+            return getUserService(context).getRequestNotifications(page);
+        }
+
+        public static Call<ResultObject> updateCategories(Pojos.User.UpdateCategories categories, Context context) {
+            return getUserService(context).updateCategories(categories);
         }
 
         public static Call<ResultObject> logout(String header, Context context) {
             return getUserService(context).logout(header);
         }
 
-
-        public static Call<Pojos.User.Profile>getUserProfileDetail(Context context)
-        {
+        public static Call<Profile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
-
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -601,9 +614,6 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
-
-
-
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,

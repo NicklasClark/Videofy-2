@@ -22,6 +22,9 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
+import com.cncoding.teazer.utilities.Pojos.TaggedUser;
+import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 
 import java.util.ArrayList;
 
@@ -204,23 +207,30 @@ import retrofit2.http.Query;
 
         @GET("/api/v1/friend/my/followings/{page}")
         Call<ProfileMyFollowing> getMyFollowing(@Path("page") int page);
+
         /**
-         * Call this service to send a join request
+         * Call this service to send a join request by user ID
          * */
-        @POST("/api/v1/friend/join/request/send/{user_id}")
-        Call<ResultObject> sendJoinRequest(@Path("user_id") int userId);
+        @POST("/api/v1/friend/join/request/by/userid/{user_id}")
+        Call<ResultObject> sendJoinRequestByUserId(@Path("user_id") int userId);
+
+        /**
+         * Call this service to send a join request by username
+         * */
+        @POST("/api/v1/friend/join/request/by/username/{user_name}")
+        Call<ResultObject> sendJoinRequestByUsername(@Path("user_name") String username);
 
         /**
          * Call this service to accept the join request
          * */
         @POST("/api/v1/friend/join/request/accept/{notification_id}")
-        Call<ResultObject> acceptJoinRequest(@Query("notification_id") int notificationId);
+        Call<ResultObject> acceptJoinRequest(@Path("notification_id") int notificationId);
 
         /**
          * Call this service to delete the join request
          * */
         @DELETE("/api/v1/friend/join/request/delete/{notification_id}")
-        Call<ResultObject> deleteJoinRequest(@Query("page") int page, @Query("searchTerm") String searchTerm);
+        Call<ResultObject> deleteJoinRequest(@Path("notification_id") int notificationId);
 
         /**
          * Call this service to get the my circle list
@@ -337,8 +347,9 @@ import retrofit2.http.Query;
          *         {@value RESPONSE_CODE_401} : Un-Authorized access.
          *         {@value RESPONSE_CODE_412} : Validation failed.
          * */
+        @Multipart
         @POST("/api/v1/react/create")
-        Call<ResultObject> postReaction(@Part MultipartBody.Part video, @Part("post_id") int postId);
+        Call<ResultObject> uploadReaction(@Part MultipartBody.Part video, @Part("post_id") int postId, @Part("title") String title);
 
         /**
          * Call this service to like/dislike a reacted video.
@@ -437,7 +448,7 @@ import retrofit2.http.Query;
     interface Posts {
 
         /**
-         * Call this service to upload the video
+         * Call this service to post a video
          * */
         @Multipart
         @POST("/api/v1/post/create")
@@ -514,14 +525,14 @@ import retrofit2.http.Query;
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
-        @GET("api//v1/post/video/details/{post_id}")
+        @GET("api/v1/post/video/details/{post_id}")
         Call<PostDetails> getPostDetails(@Path("post_id") int postId);
 
         /**
          * Call this service to get the tagged users of post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.TaggedUser}
+         *               Returns tagged user to {@link TaggedUser}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
@@ -613,10 +624,10 @@ import retrofit2.http.Query;
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link com.cncoding.teazer.utilities.Pojos.User.Profile}
+         * @return {@link Profile}
          * */
         @GET("/api/v1/user/profile")
-        Call<Pojos.User.Profile> getUserProfile();
+        Call<Profile> getUserProfile();
 
 
         @GET("/api/v1/user/profile")
@@ -635,18 +646,20 @@ import retrofit2.http.Query;
         @PUT("/api/v1/user/update/password")
         Call<ResultObject> updatePassword(@Body Pojos.User.UpdatePassword updatePasswordDetails);
 
-        @POST("/api/v1/user/update/categories")
-        Call<ResultObject> updateCategories(@Body Pojos.User.UpdateCategories categories);
+        /**
+         * Call this service to get Following Notification.
+         * */
+        @GET("/api/v1/user/notifications/followings/{page}")
+        Call<NotificationsList> getFollowingNotifications(@Path("page") int page);
 
         /**
-         * Call this service to get notifications
-         * @param page is the initial page of notifications
-         *      If “nextPage” is true, then some more records are present.
-         *      So, you can call this method again after increasing the page count by 1,
-         *      If “next_page” is false no more records present.
+         * Call this service to get Request Notification.
          * */
-        @GET("/api/v1/user/notifications/{page}")
-        Call<ResultObject> getNotifications(@Path("page") int page);
+        @GET("/api/v1/user/notifications/requests/{page}")
+        Call<NotificationsList> getRequestNotifications(@Path("page") int page);
+
+        @POST("/api/v1/user/update/categories")
+        Call<ResultObject> updateCategories(@Body Pojos.User.UpdateCategories categories);
 
         /**
          * Invalidate the AuthToken

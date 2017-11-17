@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import static android.R.anim.fade_in;
+import static android.R.anim.fade_out;
+
 /**
  * The class is used to manage navigation through multiple stacks of fragments, as well as coordinate
  * fragments that may appear on screen
@@ -161,6 +164,7 @@ public class NavigationController {
             FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
             detachCurrentFragment(ft);
+            ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
             ft.add(containerId, fragment, generateTag(fragment));
             ft.commit();
 
@@ -365,6 +369,7 @@ public class NavigationController {
             }
 
             String tag = generateTag(fragment);
+            ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
             ft.replace(containerId, fragment, tag);
 
             //Commit our transactions
@@ -854,9 +859,9 @@ public class NavigationController {
                 case TAB2:
                     switchTab(TAB2);
                     break;
-                case TAB3:
-                    switchTab(TAB3);
-                    break;
+//                case TAB3:
+//                    switchTab(TAB3);
+//                    break;
                 case TAB4:
                     switchTab(TAB4);
                     break;

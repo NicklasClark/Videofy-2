@@ -70,6 +70,8 @@ public class ProfileFragment extends BaseFragment {
     TextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    Pojos.User.PublicProfile userprofile;
+    boolean hasProfleMedia;
     RemoveAppBar removeAppBar;
     Button btnedit;
     int totalfollowers;
@@ -222,7 +224,16 @@ public class ProfileFragment extends BaseFragment {
                 if (response.code() == 200) {
 
                     try {
-                        Pojos.User.UserProfile userProfile = response.body().getUserProfile();
+                        Pojos.User.PublicProfile userProfile = response.body().getPublicProfile();
+                        int totalfollowers = response.body().getFollowers();
+                        int totalfollowing = response.body().getFollowings();
+                        int totalvideos = response.body().getTotalVideos();
+                        String firstname=userProfile.getFirstName();
+                        String lastname=userProfile.getLastName();
+                        String username=userProfile.getUsername();
+                        String email=userProfile.getEmail();
+                        int accountType=userProfile.getAccountType();
+                        hasProfleMedia=userProfile.hasProfileMedia();
 
                         totalfollowers = response.body().getFollowers();
                         totalfollowing = response.body().getFollowings();
@@ -270,7 +281,11 @@ public class ProfileFragment extends BaseFragment {
                     }
                 } else {
 
+<<<<<<< HEAD
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
+=======
+                    Toast.makeText(context,"PublicProfile Detail not fetched",Toast.LENGTH_LONG).show();
+>>>>>>> amit_test
                 }
             }
 

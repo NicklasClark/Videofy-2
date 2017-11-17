@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -49,21 +48,21 @@ public class OfflineUserProfile {
     
     public static void saveUserProfileOffline(Pojos.User.Profile userProfile, Context context) {
         new OfflineUserProfile(context)
-                .setUserId(userProfile.getUserProfile().getUserId())
-                .setUsername(userProfile.getUserProfile().getUsername())
-                .setFirstName(userProfile.getUserProfile().getFirstName())
-                .setLastName(userProfile.getUserProfile().getLastName())
-                .setEmail(userProfile.getUserProfile().getEmail())
-                .setPhoneNumber(userProfile.getUserProfile().getPhoneNumber())
-                .setCountryCode(userProfile.getUserProfile().getCountryCode())
-                .setPassword(userProfile.getUserProfile().getPassword())
-                .setIsActive(userProfile.getUserProfile().isActive())
-                .setAccountType(userProfile.getUserProfile().getAccountType())
-                .setCreatedAt(userProfile.getUserProfile().getCreatedAt())
-                .setUpdatedAt(userProfile.getUserProfile().getUpdatedAt())
-                .setHasProfileMedia(userProfile.getUserProfile().hasProfileMedia())
-                .setProfileMedia(userProfile.getUserProfile().getProfileMedia())
-                .setCategories(userProfile.getUserProfile().getCategories())
+                .setUserId(userProfile.getPublicProfile().getUserId())
+                .setUsername(userProfile.getPublicProfile().getUsername())
+                .setFirstName(userProfile.getPublicProfile().getFirstName())
+                .setLastName(userProfile.getPublicProfile().getLastName())
+                .setEmail(userProfile.getPublicProfile().getEmail())
+                .setPhoneNumber(userProfile.getPublicProfile().getPhoneNumber())
+                .setCountryCode(userProfile.getPublicProfile().getCountryCode())
+                .setPassword(userProfile.getPublicProfile().getPassword())
+                .setIsActive(userProfile.getPublicProfile().isActive())
+                .setAccountType(userProfile.getPublicProfile().getAccountType())
+                .setCreatedAt(userProfile.getPublicProfile().getCreatedAt())
+                .setUpdatedAt(userProfile.getPublicProfile().getUpdatedAt())
+                .setHasProfileMedia(userProfile.getPublicProfile().hasProfileMedia())
+                .setProfileMedia(userProfile.getPublicProfile().getProfileMedia())
+                .setCategories(userProfile.getPublicProfile().getCategories())
                 .setFollowers(userProfile.getFollowers())
                 .setFollowings(userProfile.getFollowings())
                 .setTotalVideos(userProfile.getTotalVideos());
@@ -93,6 +92,27 @@ public class OfflineUserProfile {
                 ,getDetail());
 
     }
+//    public PublicProfile getOfflineUserProfile() {
+//        return new PublicProfile(
+//                getUserId(),
+//                getUsername(),
+//                getFirstName(),
+//                getLastName(),
+//                getEmail(),
+//                getPhoneNumber(),
+//                getCountryCode(),
+//                getPassword(),
+//                isActive(),
+//                getAccountType(),
+//                getCreatedAt(),
+//                getUpdatedAt(),
+//                hasProfileMedia(),
+//                getProfileMedia(),
+//                getCategories(),
+//                getFollowers(),
+//                getFollowings(),
+//                getTotalVideos());
+//    }
 
     private String getString(String id) {
         return sharedPreferences.getString(id, null);

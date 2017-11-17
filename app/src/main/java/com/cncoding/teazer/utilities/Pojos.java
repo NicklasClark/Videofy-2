@@ -16,6 +16,9 @@ import java.util.ArrayList;
 @SuppressWarnings("WeakerAccess, unused")
 public class Pojos {
 
+    public static final int ACCOUNT_TYPE_PRIVATE = 1;
+    public static final int ACCOUNT_TYPE_PUBLIC = 2;
+
     public static class Application {
 
         public static class ReportTypeList {
@@ -685,7 +688,7 @@ public class Pojos {
                 return next_page;
             }
 
-            public ArrayList<TaggedUser> getTagged_users() {
+            public ArrayList<TaggedUser> getTaggedUsers() {
                 return tagged_users;
             }
         }
@@ -855,7 +858,7 @@ public class Pojos {
         public static class PostReaction implements Parcelable {
             private int react_id;
             private int post_id;
-            private String title;
+            private String react_title;
             private int post_owner_id;
             private int likes;
             private int views;
@@ -865,11 +868,11 @@ public class Pojos {
             private MiniProfile react_owner;
             private String reacted_at;
 
-            public PostReaction(int react_id, int post_id, String title, int post_owner_id, int likes, int views, boolean can_like,
+            public PostReaction(int react_id, int post_id, String react_title, int post_owner_id, int likes, int views, boolean can_like,
                                 boolean can_delete, ReactionMediaDetail media_detail, MiniProfile react_owner, String reacted_at) {
                 this.react_id = react_id;
                 this.post_id = post_id;
-                this.title = title;
+                this.react_title = react_title;
                 this.post_owner_id = post_owner_id;
                 this.likes = likes;
                 this.views = views;
@@ -888,8 +891,8 @@ public class Pojos {
                 return post_id;
             }
 
-            public String getTitle() {
-                return title;
+            public String getReact_title() {
+                return react_title;
             }
 
             public int getPostOwnerId() {
@@ -980,57 +983,47 @@ public class Pojos {
         }
     }
 
-
-
     public static class User {
 
         public static class Profile implements Parcelable {
-            private UserProfile user_profile;
+            private int total_videos;
+            private int account_type;
+            private boolean can_join;
+            private boolean has_send_join_request;
+            private int join_request_id;
+            private PrivateProfile private_profile;
+            private PublicProfile public_profile;
             private int followers;
             private int followings;
-            private int total_videos;
 
-            public Profile(UserProfile user_profile, int followers, int followings, int total_videos) {
-                this.user_profile = user_profile;
-                this.followers = followers;
-                this.followings = followings;
-                this.total_videos = total_videos;
+            protected Profile(Parcel in) {
+                total_videos = in.readInt();
+                account_type = in.readInt();
+                can_join = in.readByte() != 0;
+                has_send_join_request = in.readByte() != 0;
+                join_request_id = in.readInt();
+                private_profile = in.readParcelable(PrivateProfile.class.getClassLoader());
+                public_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+                followers = in.readInt();
+                followings = in.readInt();
             }
 
-            public UserProfile getUserProfile() {
-                return user_profile;
-            }
-
-            public int getFollowers() {
-                return followers;
-            }
-
-            public int getFollowings() {
-                return followings;
-            }
-
-            public int getTotalVideos() {
-                return total_videos;
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(total_videos);
+                dest.writeInt(account_type);
+                dest.writeByte((byte) (can_join ? 1 : 0));
+                dest.writeByte((byte) (has_send_join_request ? 1 : 0));
+                dest.writeInt(join_request_id);
+                dest.writeParcelable(private_profile, flags);
+                dest.writeParcelable(public_profile, flags);
+                dest.writeInt(followers);
+                dest.writeInt(followings);
             }
 
             @Override
             public int describeContents() {
                 return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeParcelable(user_profile, i);
-                parcel.writeInt(followers);
-                parcel.writeInt(followings);
-                parcel.writeInt(total_videos);
-            }
-
-            protected Profile(Parcel in) {
-                user_profile = in.readParcelable(UserProfile.class.getClassLoader());
-                followers = in.readInt();
-                followings = in.readInt();
-                total_videos = in.readInt();
             }
 
             public static final Creator<Profile> CREATOR = new Creator<Profile>() {
@@ -1044,9 +1037,45 @@ public class Pojos {
                     return new Profile[size];
                 }
             };
+
+            public int getTotalVideos() {
+                return total_videos;
+            }
+
+            public int getAccountType() {
+                return account_type;
+            }
+
+            public boolean canJoin() {
+                return can_join;
+            }
+
+            public boolean hasSentJoinRequest() {
+                return has_send_join_request;
+            }
+
+            public int getJoinRequestId() {
+                return join_request_id;
+            }
+
+            public PrivateProfile getPrivateProfile() {
+                return private_profile;
+            }
+
+            public PublicProfile getPublicProfile() {
+                return public_profile;
+            }
+
+            public int getFollowers() {
+                return followers;
+            }
+
+            public int getFollowings() {
+                return followings;
+            }
         }
 
-        public static class UserProfile implements Parcelable {
+        public static class PublicProfile implements Parcelable {
             private String user_id;
             private String user_name;
             private String first_name;
@@ -1055,7 +1084,9 @@ public class Pojos {
             private String email;
             private long phone_number;
             private int country_code;
+            private int gender;
             private boolean is_active;
+            private String description;
             private int account_type;
             private String created_at;
             private String updated_at;
@@ -1065,9 +1096,10 @@ public class Pojos {
             private String password;
             private String description;
 
-            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
-                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos,int gender,String description) {
+            public PublicProfile(String user_id, String user_name, String first_name, String last_name,
+                                 String email, long phone_number, int country_code, int gender, boolean is_active,
+                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
+                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
                 this.user_id = user_id;
                 this.user_name = user_name;
                 this.first_name = first_name;
@@ -1075,7 +1107,9 @@ public class Pojos {
                 this.email = email;
                 this.phone_number = phone_number;
                 this.country_code = country_code;
+                this.gender = gender;
                 this.is_active = is_active;
+                this.description = description;
                 this.account_type = account_type;
                 this.created_at = created_at;
                 this.updated_at = updated_at;
@@ -1087,6 +1121,7 @@ public class Pojos {
                 this.description=description;
             }
 
+<<<<<<< HEAD
             public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code,int gender,String description) {
                 this.user_name = user_name;
                 this.first_name = first_name;
@@ -1106,6 +1141,8 @@ public class Pojos {
                 this.email = email;
             }
 
+=======
+>>>>>>> amit_test
             public String getUserId() {
                 return user_id;
             }
@@ -1199,7 +1236,7 @@ public class Pojos {
                 parcel.writeString(description);
             }
 
-            protected UserProfile(Parcel in) {
+            protected PublicProfile(Parcel in) {
                 user_id = in.readString();
                 user_name = in.readString();
                 first_name = in.readString();
@@ -1218,17 +1255,92 @@ public class Pojos {
                 description = in.readString();
             }
 
-            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+            public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
                 @Override
-                public UserProfile createFromParcel(Parcel in) {
-                    return new UserProfile(in);
+                public PublicProfile createFromParcel(Parcel in) {
+                    return new PublicProfile(in);
                 }
 
                 @Override
-                public UserProfile[] newArray(int size) {
-                    return new UserProfile[size];
+                public PublicProfile[] newArray(int size) {
+                    return new PublicProfile[size];
                 }
             };
+        }
+
+        public static class PrivateProfile implements Parcelable {
+            private String user_id;
+            private String user_name;
+            private String first_name;
+            private String last_name;
+            private int gender;
+            private int account_type;
+            private boolean has_profile_media;
+            private ProfileMedia profile_media;
+
+            protected PrivateProfile(Parcel in) {
+                user_id = in.readString();
+                user_name = in.readString();
+                first_name = in.readString();
+                last_name = in.readString();
+                gender = in.readInt();
+                account_type = in.readInt();
+                has_profile_media = in.readByte() != 0;
+                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(user_id);
+                dest.writeString(user_name);
+                dest.writeString(first_name);
+                dest.writeString(last_name);
+                dest.writeInt(gender);
+                dest.writeInt(account_type);
+                dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeParcelable(profile_media, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<PrivateProfile> CREATOR = new Creator<PrivateProfile>() {
+                @Override
+                public PrivateProfile createFromParcel(Parcel in) {
+                    return new PrivateProfile(in);
+                }
+
+                @Override
+                public PrivateProfile[] newArray(int size) {
+                    return new PrivateProfile[size];
+                }
+            };
+
+            public String getUserId() {
+                return user_id;
+            }
+
+            public String getUsername() {
+                return user_name;
+            }
+
+            public String getFirstName() {
+                return first_name;
+            }
+
+            public String getLastName() {
+                return last_name;
+            }
+
+            public boolean hasProfileMedia() {
+                return has_profile_media;
+            }
+
+            public ProfileMedia getProfileMedia() {
+                return profile_media;
+            }
         }
 
         public static class UpdateProfile implements Parcelable {
@@ -1386,16 +1498,22 @@ public class Pojos {
         }
 
         public static class NotificationsList {
-            private ArrayList<Notifications> notifications;
+            private ArrayList<Notification> notifications;
+            private int unread_count;
             private boolean next_page;
 
-            public NotificationsList(ArrayList<Notifications> notifications, boolean next_page) {
+            public NotificationsList(ArrayList<Notification> notifications, int unread_count, boolean next_page) {
                 this.notifications = notifications;
+                this.unread_count = unread_count;
                 this.next_page = next_page;
             }
 
-            public ArrayList<Notifications> getNotifications() {
+            public ArrayList<Notification> getNotifications() {
                 return notifications;
+            }
+
+            public int getUnreadCount() {
+                return unread_count;
             }
 
             public boolean isNextPage() {
@@ -1403,29 +1521,75 @@ public class Pojos {
             }
         }
 
-        public static class Notifications implements Parcelable {
+        public static class Notification implements Parcelable {
             private int notification_id;
             private int notification_type;
             private int source_id;
-            private String meta_data;
+            private int account_type;
             private String title;
             private String message;
             private String created_at;
             private boolean has_profile_media;
             private ProfileMedia profile_media;
+            private ArrayList<String> highlights;
+            private MetaData meta_data;
 
-            public Notifications(int notification_id, int notification_type, int source_id, String meta_data, String title,
-                                 String message, String created_at, boolean has_profile_media, ProfileMedia profile_media) {
+            public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
+                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
+                                ArrayList<String> highlights, MetaData meta_data) {
                 this.notification_id = notification_id;
                 this.notification_type = notification_type;
                 this.source_id = source_id;
-                this.meta_data = meta_data;
+                this.account_type = account_type;
                 this.title = title;
                 this.message = message;
                 this.created_at = created_at;
                 this.has_profile_media = has_profile_media;
                 this.profile_media = profile_media;
+                this.highlights = highlights;
+                this.meta_data = meta_data;
             }
+
+            protected Notification(Parcel in) {
+                notification_id = in.readInt();
+                notification_type = in.readInt();
+                source_id = in.readInt();
+                account_type = in.readInt();
+                title = in.readString();
+                message = in.readString();
+                created_at = in.readString();
+                has_profile_media = in.readByte() != 0;
+                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+                highlights = in.createStringArrayList();
+                meta_data = in.readParcelable(MetaData.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(notification_id);
+                dest.writeInt(notification_type);
+                dest.writeInt(source_id);
+                dest.writeInt(account_type);
+                dest.writeString(title);
+                dest.writeString(message);
+                dest.writeString(created_at);
+                dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeParcelable(profile_media, flags);
+                dest.writeStringList(highlights);
+                dest.writeParcelable(meta_data, flags);
+            }
+
+            public static final Creator<Notification> CREATOR = new Creator<Notification>() {
+                @Override
+                public Notification createFromParcel(Parcel in) {
+                    return new Notification(in);
+                }
+
+                @Override
+                public Notification[] newArray(int size) {
+                    return new Notification[size];
+                }
+            };
 
             public int getNotificationId() {
                 return notification_id;
@@ -1439,8 +1603,8 @@ public class Pojos {
                 return source_id;
             }
 
-            public String getMetaData() {
-                return meta_data;
+            public int getAccountType() {
+                return account_type;
             }
 
             public String getTitle() {
@@ -1463,6 +1627,55 @@ public class Pojos {
                 return profile_media;
             }
 
+            public ArrayList<String> getHighlights() {
+                return highlights;
+            }
+
+            public MetaData getMetaData() {
+                return meta_data;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+        }
+
+        public static class MetaData implements Parcelable {
+            private int notification_type;
+            private String thumb_url;
+            private int from_id;
+            private int to_id;
+            private int source_id;
+
+            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id) {
+                this.notification_type = notification_type;
+                this.thumb_url = thumb_url;
+                this.from_id = from_id;
+                this.to_id = to_id;
+                this.source_id = source_id;
+            }
+
+            protected MetaData(Parcel in) {
+                notification_type = in.readInt();
+                thumb_url = in.readString();
+                from_id = in.readInt();
+                to_id = in.readInt();
+                source_id = in.readInt();
+            }
+
+            public static final Creator<MetaData> CREATOR = new Creator<MetaData>() {
+                @Override
+                public MetaData createFromParcel(Parcel in) {
+                    return new MetaData(in);
+                }
+
+                @Override
+                public MetaData[] newArray(int size) {
+                    return new MetaData[size];
+                }
+            };
+
             @Override
             public int describeContents() {
                 return 0;
@@ -1470,40 +1683,32 @@ public class Pojos {
 
             @Override
             public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(notification_id);
                 parcel.writeInt(notification_type);
+                parcel.writeString(thumb_url);
+                parcel.writeInt(from_id);
+                parcel.writeInt(to_id);
                 parcel.writeInt(source_id);
-                parcel.writeString(meta_data);
-                parcel.writeString(title);
-                parcel.writeString(message);
-                parcel.writeString(created_at);
-                parcel.writeByte((byte) (has_profile_media ? 1 : 0));
-                parcel.writeParcelable(profile_media, i);
             }
 
-            protected Notifications(Parcel in) {
-                notification_id = in.readInt();
-                notification_type = in.readInt();
-                source_id = in.readInt();
-                meta_data = in.readString();
-                title = in.readString();
-                message = in.readString();
-                created_at = in.readString();
-                has_profile_media = in.readByte() != 0;
-                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+            public int getNotificationType() {
+                return notification_type;
             }
 
-            public static final Creator<Notifications> CREATOR = new Creator<Notifications>() {
-                @Override
-                public Notifications createFromParcel(Parcel in) {
-                    return new Notifications(in);
-                }
+            public String getThumbUrl() {
+                return thumb_url;
+            }
 
-                @Override
-                public Notifications[] newArray(int size) {
-                    return new Notifications[size];
-                }
-            };
+            public int getFromId() {
+                return from_id;
+            }
+
+            public int getToId() {
+                return to_id;
+            }
+
+            public int getSourceId() {
+                return source_id;
+            }
         }
 
         public static class ReportUser implements Parcelable {
@@ -1648,22 +1853,16 @@ public class Pojos {
         };
     }
 
-    public static class TaggedUser extends MiniProfile implements Parcelable {
+    public static class TaggedUser {
         private int tag_id;
-
-        public TaggedUser(int tag_id, int user_id, String user_name, String first_name, String last_name, boolean following,
-                          boolean follower, boolean has_profile_media, ProfileMedia profile_media) {
-            super(user_id, user_name, first_name, last_name, following, follower, has_profile_media, profile_media);
-            this.tag_id = tag_id;
-        }
-
-        protected TaggedUser(Parcel in) {
-            super(in);
-        }
-
-        public int getTagId() {
-            return tag_id;
-        }
+        private int user_id;
+        private String user_name;
+        private String first_name;
+        private String last_name;
+        private boolean my_self;
+        private boolean is_blocked_you;
+        boolean has_profile_media;
+        ProfileMedia profile_media;
     }
 
     public static class ReactionMediaDetail implements Parcelable{
@@ -1671,15 +1870,15 @@ public class Pojos {
         private String react_media_url;
         private String react_thumb_url;
         private String react_duration;
-        private Dimension react_dimension;
+        private Dimension media_dimension;
         private boolean react_is_image;
 
-        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension react_dimension, boolean react_is_image) {
+        public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension media_dimension, boolean react_is_image) {
             this.media_id = media_id;
             this.react_media_url = react_media_url;
             this.react_thumb_url = react_thumb_url;
             this.react_duration = react_duration;
-            this.react_dimension = react_dimension;
+            this.media_dimension = media_dimension;
             this.react_is_image = react_is_image;
         }
 
@@ -1700,7 +1899,7 @@ public class Pojos {
         }
 
         public Dimension getReactDimension() {
-            return react_dimension;
+            return media_dimension;
         }
 
         public boolean hasImage() {
@@ -1718,7 +1917,7 @@ public class Pojos {
             parcel.writeString(react_media_url);
             parcel.writeString(react_thumb_url);
             parcel.writeString(react_duration);
-            parcel.writeParcelable(react_dimension, i);
+            parcel.writeParcelable(media_dimension, i);
             parcel.writeByte((byte) (react_is_image ? 1 : 0));
         }
 
@@ -1727,7 +1926,7 @@ public class Pojos {
             react_media_url = in.readString();
             react_thumb_url = in.readString();
             react_duration = in.readString();
-            react_dimension = in.readParcelable(Dimension.class.getClassLoader());
+            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
             react_is_image = in.readByte() != 0;
         }
 
@@ -1745,18 +1944,60 @@ public class Pojos {
     }
 
     public static class ProfileMedia implements Parcelable {
+        private int picture_id;
         private String media_url;
         private String thumb_url;
         private String duration;
         private Dimension media_dimension;
         private boolean is_image;
 
-        public ProfileMedia(String media_url, String thumb_url, String duration, Dimension dimension, boolean is_image) {
+        public ProfileMedia(int picture_id, String media_url, String thumb_url, String duration, Dimension media_dimension, boolean is_image) {
+            this.picture_id = picture_id;
             this.media_url = media_url;
             this.thumb_url = thumb_url;
             this.duration = duration;
-            this.media_dimension = dimension;
+            this.media_dimension = media_dimension;
             this.is_image = is_image;
+        }
+
+        protected ProfileMedia(Parcel in) {
+            picture_id = in.readInt();
+            media_url = in.readString();
+            thumb_url = in.readString();
+            duration = in.readString();
+            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
+            is_image = in.readByte() != 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(picture_id);
+            dest.writeString(media_url);
+            dest.writeString(thumb_url);
+            dest.writeString(duration);
+            dest.writeParcelable(media_dimension, flags);
+            dest.writeByte((byte) (is_image ? 1 : 0));
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ProfileMedia> CREATOR = new Creator<ProfileMedia>() {
+            @Override
+            public ProfileMedia createFromParcel(Parcel in) {
+                return new ProfileMedia(in);
+            }
+
+            @Override
+            public ProfileMedia[] newArray(int size) {
+                return new ProfileMedia[size];
+            }
+        };
+
+        public int getPictureId() {
+            return picture_id;
         }
 
         public String getMediaUrl() {
@@ -1778,42 +2019,7 @@ public class Pojos {
         public boolean isImage() {
             return is_image;
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(media_url);
-            parcel.writeString(thumb_url);
-            parcel.writeString(duration);
-            parcel.writeParcelable(media_dimension, i);
-            parcel.writeByte((byte) (is_image ? 1 : 0));
-        }
-
-        ProfileMedia(Parcel in) {
-            media_url = in.readString();
-            thumb_url = in.readString();
-            duration = in.readString();
-            media_dimension = in.readParcelable(Dimension.class.getClassLoader());
-            is_image = in.readByte() != 0;
-        }
-
-        public static final Creator<ProfileMedia> CREATOR = new Creator<ProfileMedia>() {
-            @Override
-            public ProfileMedia createFromParcel(Parcel in) {
-                return new ProfileMedia(in);
-            }
-
-            @Override
-            public ProfileMedia[] newArray(int size) {
-                return new ProfileMedia[size];
-            }
-        };
     }
-
 
     public static class Medias implements Parcelable {
         private int media_id;
@@ -2072,7 +2278,117 @@ public class Pojos {
         };
     }
 
+    public static class UploadParams implements Parcelable {
+        private String videoPath;
+        private boolean isReaction;
+        private String title;
+        private String location;
+        private double latitude;
+        private double longitude;
+        private String tags;
+        private String categories;
 
+        private int postId;
 
+        public UploadParams(String videoPath, boolean isReaction, String title, String location,
+                            double latitude, double longitude, String tags, String categories) {
+            this.videoPath = videoPath;
+            this.isReaction = isReaction;
+            this.title = title;
+            this.location = location;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.tags = tags;
+            this.categories = categories;
+        }
 
+        public UploadParams(String videoPath, boolean isReaction, String title, int postId) {
+            this.videoPath = videoPath;
+            this.isReaction = isReaction;
+            this.title = title;
+            this.postId = postId;
+        }
+
+        public UploadParams(String videoPath) {
+            this.videoPath = videoPath;
+        }
+
+        protected UploadParams(Parcel in) {
+            videoPath = in.readString();
+            isReaction = in.readByte() != 0;
+            title = in.readString();
+            location = in.readString();
+            latitude = in.readDouble();
+            longitude = in.readDouble();
+            tags = in.readString();
+            categories = in.readString();
+            postId = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(videoPath);
+            dest.writeByte((byte) (isReaction ? 1 : 0));
+            dest.writeString(title);
+            dest.writeString(location);
+            dest.writeDouble(latitude);
+            dest.writeDouble(longitude);
+            dest.writeString(tags);
+            dest.writeString(categories);
+            dest.writeInt(postId);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<UploadParams> CREATOR = new Creator<UploadParams>() {
+            @Override
+            public UploadParams createFromParcel(Parcel in) {
+                return new UploadParams(in);
+            }
+
+            @Override
+            public UploadParams[] newArray(int size) {
+                return new UploadParams[size];
+            }
+        };
+
+        public String getVideoPath() {
+            return videoPath;
+        }
+
+        public boolean isReaction() {
+            return isReaction;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public String getTags() {
+            return tags;
+        }
+
+        public String getCategories() {
+            return categories;
+        }
+
+        public int getPostId() {
+            return postId;
+        }
+    }
 }

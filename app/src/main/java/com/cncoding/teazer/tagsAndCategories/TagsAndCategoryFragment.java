@@ -125,7 +125,6 @@ public class TagsAndCategoryFragment extends Fragment {
                         getSelectedTags(tagsAdapter.getSelectedTags()), null);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
-
                 listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
                         getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
                         getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));

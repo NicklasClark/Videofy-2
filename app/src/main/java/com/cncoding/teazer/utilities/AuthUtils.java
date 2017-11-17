@@ -47,7 +47,6 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
-import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
@@ -190,7 +189,7 @@ public class AuthUtils {
         }
     }
 
-    private static boolean isPasswordValid(ProximaNovaRegularAutoCompleteTextView view) {
+    public static boolean isPasswordValid(ProximaNovaRegularAutoCompleteTextView view) {
         return view.getText().toString().length() >= 5;
     }
 
@@ -287,44 +286,6 @@ public class AuthUtils {
             }
         });
         animator.start();
-    }
-
-    public static void loginWithUsernameAndPassword(final Context context, String username,
-                                                    ProximaNovaRegularAutoCompleteTextView passwordView,
-                                                    int countryCode, CountryCodePicker countryCodePicker,
-                                                    final LoginInteractionListener mListener,
-                                                    final ProximaNovaSemiboldButton loginBtn) {
-        if (TextUtils.isDigitsOnly(username) && countryCode == -1) {
-            countryCodePicker.launchCountrySelectionDialog();
-            return;
-        }
-        if (AuthUtils.isPasswordValid(passwordView)) {
-            final Pojos.Authorize authorize = new Pojos.Authorize(
-                    getFcmToken(context),
-                    getDeviceId(context),
-                    DEVICE_TYPE_ANDROID,
-                    username,
-                    passwordView.getText().toString());
-            ApiCallingService.Auth.loginWithPassword(authorize)
-                    .enqueue(new Callback<ResultObject>() {
-                        @Override
-                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            if (response.code() == 200 && response.body().getStatus()) {
-                                SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
-                                mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
-                            } else
-                                ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
-                            loginBtn.setEnabled(true);
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                            ViewUtils.showSnackBar(loginBtn, t.getMessage());
-                            loginBtn.setEnabled(true);
-                        }
-                    });
-        } else
-            Snackbar.make(loginBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -428,18 +389,18 @@ public class AuthUtils {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            if (response.body().getStatus()) {
-                                SharedPrefs.resetAuthToken(context);
-                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
-                                if (activity != null) {
-                                    activity.startActivity(new Intent(activity, MainActivity.class));
-                                    activity.finish();
-                                }
-                            } else
-                                Toast.makeText(context, "Logout failed!", Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(context, response.code() + " : " + response.message(), Toast.LENGTH_SHORT).show();
+//                        if (response.code() == 200) {
+//                            if (response.body().getStatus()) {
+//                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                        else
+//                            Toast.makeText(context, "Logout failed, logging out manually...", Toast.LENGTH_SHORT).show();
+                        SharedPrefs.resetAuthToken(context);
+                        if (activity != null) {
+                            activity.startActivity(new Intent(activity, MainActivity.class));
+                            activity.finish();
+                        }
                     }
 
                     @Override
@@ -449,7 +410,7 @@ public class AuthUtils {
                 });
     }
 
-    //    public static void onLoginSuccessful(FragmentActivity activity) {
+//    public static void onLoginSuccessful(FragmentActivity activity) {
 //
 //    }
 //

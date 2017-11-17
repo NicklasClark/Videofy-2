@@ -55,7 +55,6 @@
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_8sp">8sp</dimen>
     <dimen name="margin_reaction_bubbles">12dp</dimen>
-    <dimen name="popup_corner_radius">40dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="padding_with_small_profile_pic">62dp</dimen>
     <dimen name="overlay_toolbar_height">80dp</dimen>

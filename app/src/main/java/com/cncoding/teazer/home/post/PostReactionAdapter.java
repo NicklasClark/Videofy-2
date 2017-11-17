@@ -2,13 +2,21 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
@@ -22,8 +30,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -31,13 +39,15 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
  */
 public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapter.ViewHolder> {
 
-    private final ArrayList<PostReaction> postReactions;
+    private SparseIntArray dimensionSparseArray;
+    private ArrayList<PostReaction> postReactions;
     private Context context;
     private PostReactionAdapterListener listener;
 
     PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
         this.postReactions = postReactions;
         this.context = context;
+        dimensionSparseArray = new SparseIntArray();
     }
 
     @Override
@@ -48,52 +58,86 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final PostReaction postReaction = postReactions.get(position);
         MiniProfile postOwner = postReaction.getReactOwner();
 
+        if (dimensionSparseArray.get(position) != 0)
+            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
+
         Glide.with(context)
                 .load(postReaction.getMediaDetail().getThumbUrl())
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .crossFade()
-//                .animate(android.R.anim.fade_in)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        if (!isFromMemoryCache) {
+                            Animation animation = AnimationUtils.loadAnimation(context, R.anim.float_up);
+                            animation.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    dimensionSparseArray.put(holder.getAdapterPosition(), holder.layout.getHeight());
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    holder.layout.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+                                }
+                            });
+                            holder.layout.startAnimation(animation);
+                        } else {
+                            holder.layout.animate().alpha(1).setDuration(280).start();
+                            holder.layout.setVisibility(View.VISIBLE);
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+//                .animate(R.anim.float_up)
                 .into(holder.postThumbnail);
 
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
-                    .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
                     .crossFade()
-//                    .animate(R.anim.zoom_in)
                     .into(holder.profilePic);
 
-        holder.caption.setText(postReaction.getTitle());
+        holder.caption.setText(postReaction.getReact_title());
         holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
         holder.likes.setText("  " + postReaction.getLikes());
         holder.views.setText("  " + postReaction.getViews());
 
         if (listener != null) {
-            View.OnClickListener viewPostDetails = new View.OnClickListener() {
+            View.OnClickListener viewReactionDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
+                    ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context);
                     listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
                 }
             };
-            View.OnClickListener viewProfile = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onPostReactionInteraction(ACTION_VIEW_PROFILE, postReaction);
-                }
-            };
+//            View.OnClickListener viewProfile = new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onPostReactionInteraction(ACTION_VIEW_PROFILE, postReaction);
+//                }
+//            };
 
-            holder.postThumbnail.setOnClickListener(viewPostDetails);
-            holder.likes.setOnClickListener(viewPostDetails);
-            holder.profilePic.setOnClickListener(viewProfile);
-            holder.name.setOnClickListener(viewProfile);
+            holder.postThumbnail.setOnClickListener(viewReactionDetails);
+            holder.likes.setOnClickListener(viewReactionDetails);
+//            holder.profilePic.setOnClickListener(viewProfile);
+//            holder.name.setOnClickListener(viewProfile);
         }
     }
 
@@ -104,7 +148,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.home_screen_post_layout) RelativeLayout layout;
+        @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.reaction_post_thumb) ImageView postThumbnail;
         @BindView(R.id.reaction_post_caption) ProximaNovaSemiboldTextView caption;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView profilePic;
@@ -139,6 +183,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         listener = null;
+//        postReactions = null;
+//        context = null;
     }
 
     public interface PostReactionAdapterListener {

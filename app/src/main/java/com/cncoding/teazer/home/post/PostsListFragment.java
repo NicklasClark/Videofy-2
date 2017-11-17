@@ -1,32 +1,34 @@
 package com.cncoding.teazer.home.post;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
-import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.AuthUtils;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,12 +36,20 @@ import retrofit2.Response;
 public class PostsListFragment extends BaseFragment {
     private static final String COLUMN_COUNT = "columnCount";
 
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.transition_pager) ViewPager pager;
     @BindView(R.id.transition_full_background)  View background;
+    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
-    private PostList postList;
+    public static boolean returningFromUpload = false;
+
+    private ArrayList<PostDetails> postList;
     private int columnCount = 2;
+    private PostsListAdapter postListAdapter;
+    private StaggeredGridLayoutManager manager;
 
     public PostsListFragment() {
         // Required empty public constructor
@@ -66,142 +76,120 @@ public class PostsListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
-        postList = new PostList(false, new ArrayList<PostDetails>());
+        postList = new ArrayList<>();
         ((BaseBottomBarActivity) getActivity()).updateToolbarTitle(null);
+
+        postListAdapter = new PostsListAdapter(postList, getContext(), this);
+        recyclerView.setAdapter(postListAdapter);
+        manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(manager);
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                if (page > 1)
+                    getHomePagePosts(page, false);
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                scrollListener.resetState();
+                getHomePagePosts(1, true);
+            }
+        });
+
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getHomePagePosts(1);
+    public void onResume() {
+        super.onResume();
+        if (postListAdapter != null && returningFromUpload) {
+            postListAdapter.notifyDataSetChanged();
+            returningFromUpload = false;
+        }
+        else if (postList != null && postList.size() == 0)
+            getHomePagePosts(1, false);
+
+        ((BaseBottomBarActivity) getActivity()).showAppBar();
     }
 
-    private void getHomePagePosts(final int pageNumber) {
-        ApiCallingService.Posts.getHomePagePosts(pageNumber, getContext())
+    private void getHomePagePosts(int page, final boolean isRefreshing) {
+        progressBar.setVisibility(View.VISIBLE);
+        if (page == 1) postList.clear();
+        ApiCallingService.Posts.getHomePagePosts(page, getContext())
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
                         switch (response.code()) {
                             case 200:
-//                            Posts came! now fetching the posts and checking if next page is true (More posts are available) or not.
-                                for (int i = 0; i < response.body().getPosts().size(); i++) {
-                                    postList.add(response.body().getPosts().get(i));
-                                }
-                                if (response.body().isNextPage()) {
-//                                More posts are available, so incrementing the page number and re-calling this method.
-                                    getHomePagePosts(pageNumber + 1);
-                                }
-                                else {
-//                                No more posts available. So populating the posts in the recyclerView.
-                                    if (postList.getPosts().size() > 0)
-                                        populateRecyclerView(postList.getPosts());
-                                    else populateDummyLists();
-                                }
-                                break;
-                            case 500:
-//                                User's auth token is no longer valid
-                                AuthUtils.logout(getContext(), getActivity());
-                                startActivity(new Intent(getActivity(), MainActivity.class));
-                                getActivity().finish();
+                                postList.addAll(response.body().getPosts());
+                                recyclerView.setVisibility(View.VISIBLE);
+                                postListAdapter.notifyDataSetChanged();
                                 break;
                             default:
-                                ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView,
-                                        response.code() +": " + response.message());
-                                populateDummyLists();
+                                showErrorMessage("Error " + response.code() +": " + response.message());
+                                AuthUtils.logout(getContext(), getActivity());
                                 break;
                         }
+                        if (isRefreshing)
+                            swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    private void showErrorMessage(String message) {
+                        dismissProgressBar();
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
+                        postLoadErrorLayout.setVisibility(View.VISIBLE);
+                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
                     }
 
                     @Override
                     public void onFailure(Call<PostList> call, Throwable t) {
-                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-//                        ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
+                        if (t.getMessage().contains("resolve"))
+                            showErrorMessage("No internet connection found!");
+                        else showErrorMessage("Error: " + t.getMessage());
+
+                        if (isRefreshing)
+                            swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
 
-    private void populateRecyclerView(List<PostDetails> posts) {
-        StaggeredGridLayoutManager manager;
-        manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new PostsListAdapter(posts, getContext()));
-
-//        recyclerView.addOnScrollListener(((BaseBottomBarActivity) getActivity()).recyclerViewScrollListener());
+    public void dismissProgressBar() {
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.animate().scaleX(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }, 400);
+        }
     }
 
-    private void populateDummyLists() {
-        StaggeredGridLayoutManager manager;
-        if (columnCount <= 1) {
-            manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        } else {
-            manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        }
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        ArrayList<Pojos.Medias> medias1 = new ArrayList<>();
-        medias1.add(new Pojos.Medias(0, "",
-                "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg",
-                "", new Pojos.Dimension(100, 100), false, 0, ""));
-        ArrayList<Pojos.Medias> medias2 = new ArrayList<>();
-        medias2.add(new Pojos.Medias(0, "",
-                "https://i.pinimg.com/736x/84/e1/57/84e15741767278781febecef51b8f6e7--portrait-photography-tips-people-photography.jpg",
-                "", new Pojos.Dimension(100, 100), false, 0, ""));
-        ArrayList<Pojos.Medias> medias3 = new ArrayList<>();
-        medias3.add(new Pojos.Medias(0, "",
-                "http://is5.mzstatic.com/image/thumb/Purple71/v4/90/ae/1b/90ae1b97-762d-82fa-1ff9-bcc76435ea88/source/1200x630bb.jpg",
-                "", new Pojos.Dimension(100, 100), false, 0, ""));
-        ArrayList<Pojos.Category> categories = new ArrayList<>();
-        categories.add(new Pojos.Category(1, "Fun"));
-        PostDetails postDetails1 = new PostDetails(12, 324, 456, 12, false, "Watch this!", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),
-                "", new Pojos.CheckIn(1, 12, 17, "Bangalore"),
-                medias1,
-                categories
-        );
-        PostDetails postDetails2 = new PostDetails(12, 324, 456, 12, false, "Weekend at Bahamas", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),
-                "", new Pojos.CheckIn(1, 12, 17, "Bangalore"),
-                medias2,
-                categories
-        );
-        PostDetails postDetails3 = new PostDetails(12, 324, 456, 12, false, "See this!", false, false, false,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),
-                "", new Pojos.CheckIn(1, 12, 17, "Bangalore"),
-                medias3,
-                categories
-        );
-        List<PostDetails> postDetailsList = new ArrayList<>();
-        for (int i = 0; i < 20; i ++) {
-            postDetailsList.add(postDetails1);
-            postDetailsList.add(postDetails2);
-            postDetailsList.add(postDetails3);
-        }
+    @OnClick(R.id.post_load_error_layout) public void reloadPosts() {
+        if (postListAdapter != null)
+            postListAdapter.notifyDataSetChanged();
+        scrollListener.resetState();
+        getHomePagePosts(1, false);
+    }
 
-        PostsListAdapter adapter = new PostsListAdapter(postDetailsList, getContext());
+    @OnClick(R.id.fab) public void changeLayoutManager() {
+        if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        } else
+            recyclerView.setLayoutManager(manager);
+    }
 
-        recyclerView.setAdapter(adapter);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        postListAdapter = null;
     }
 }

@@ -15,6 +15,7 @@ import android.view.View;
 public class NestedCoordinatorLayout extends CoordinatorLayout implements NestedScrollingChild {
 
     private NestedScrollingChildHelper mChildHelper;
+    private volatile boolean mPassToParent;
 
     public NestedCoordinatorLayout(Context context) {
         super(context);
@@ -34,12 +35,34 @@ public class NestedCoordinatorLayout extends CoordinatorLayout implements Nested
         setNestedScrollingEnabled(true);
     }
 
+    /**
+     * Locks the nested scrolling. Further scroll events will
+     * be passed to the nested scrolling parent.
+     */
+    public void lockNestedScrolling() {
+        mPassToParent = true;
+    }
+
+    /**
+     * Unlocks the nested scrolling. Further scroll events will
+     * be dispatched to this layout's own scrolling children.
+     */
+    public void unlockNestedScrolling() {
+        mPassToParent = false;
+    }
+
+    /*
+     * NestedScrollingParent implementation
+     */
+
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         /* Enable the scrolling behavior of our own children */
-        boolean tHandled = super.onStartNestedScroll(child, target, nestedScrollAxes);
+        super.onStartNestedScroll(child, target, nestedScrollAxes);
         /* Enable the scrolling behavior of the parent's other children  */
-        return startNestedScroll(nestedScrollAxes) || tHandled;
+        startNestedScroll(nestedScrollAxes);
+        /* Start tracking the current scroll */
+        return true;
     }
 
     @Override
@@ -52,35 +75,44 @@ public class NestedCoordinatorLayout extends CoordinatorLayout implements Nested
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        int[][] tConsumed = new int[2][2];
-        super.onNestedPreScroll(target, dx, dy, tConsumed[0]);
-        dispatchNestedPreScroll(dx, dy, tConsumed[1], null);
-        consumed[0] = tConsumed[0][0] + tConsumed[1][0];
-        consumed[1] = tConsumed[0][1] + tConsumed[1][1];
-//        if (consumed[1] == 0 && mChildHelper.isNestedScrollingEnabled()) {
-//            mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, null);
-//        }
+        if (mPassToParent) {
+            dispatchNestedPreScroll(dx, dy, consumed, null);
+        } else {
+            super.onNestedPreScroll(target, dx, dy, consumed);
+        }
     }
 
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed,
                                int dxUnconsumed, int dyUnconsumed) {
-        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
+        if (mPassToParent) {
+            dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
+        } else {
+            super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        }
     }
 
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        boolean tHandled = super.onNestedPreFling(target, velocityX, velocityY);
-        return dispatchNestedPreFling(velocityX, velocityY) || tHandled;
+        if (mPassToParent) {
+            return dispatchNestedPreFling(velocityX, velocityY);
+        } else {
+            return super.onNestedPreFling(target, velocityX, velocityY);
+        }
     }
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        boolean tHandled = super.onNestedFling(target, velocityX, velocityY, consumed);
-        return dispatchNestedFling(velocityX, velocityY, consumed) || tHandled;
+        if (mPassToParent) {
+            return dispatchNestedFling(velocityX, velocityY, consumed);
+        } else {
+            return super.onNestedFling(target, velocityX, velocityY, consumed);
+        }
     }
 
+    /*
+     * NestedScrollingChild implementation
+     */
     @Override
     public void setNestedScrollingEnabled(boolean enabled) {
         mChildHelper.setNestedScrollingEnabled(enabled);

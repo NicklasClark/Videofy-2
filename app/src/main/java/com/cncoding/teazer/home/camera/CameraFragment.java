@@ -17,6 +17,7 @@
 package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,14 +43,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.FragmentCompat;
-import android.support.v4.app.ActivityCompat;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -57,10 +58,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.Pojos;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,13 +83,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_ID;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
-public class CameraFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
+public class CameraFragment extends Fragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     public static final int ACTION_UPLOAD_VIDEO_POST = 20;
-    public static final int ACTION_UPLOAD_REACTION = 21;
+//    public static final int ACTION_UPLOAD_REACTION = 21;
     public static final int ACTION_SHOW_GALLERY = 22;
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
@@ -214,13 +221,15 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
     private OnCameraFragmentInteractionListener mListener;
     private String cameraId;
     private boolean isReaction;
+    private int postId = -1;
 
-    public static CameraFragment newInstance(boolean isReaction) {
+    public static CameraFragment newInstance(boolean isReaction, int postId) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
         args.putBoolean(IS_REACTION, isReaction);
+        args.putInt(POST_ID, postId);
         fragment.setArguments(args);
-        return new CameraFragment();
+        return fragment;
     }
 
     @Override
@@ -228,6 +237,8 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
+            if (isReaction)
+                postId = getArguments().getInt(POST_ID);
         }
         if (getActivity() instanceof OnCameraFragmentInteractionListener) {
             mListener = (OnCameraFragmentInteractionListener) getActivity();
@@ -605,6 +616,7 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
             case SENSOR_ORIENTATION_DEFAULT_DEGREES:
@@ -716,17 +728,20 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
             e.printStackTrace();
         }
         // Stop recording
-        mMediaRecorder.stop();
+        try {
+            mMediaRecorder.stop();
+        } catch (RuntimeException e) {
+            Log.e("MediaRecorder stop()", e.getMessage());
+        }
         mMediaRecorder.reset();
 
-        Activity activity = getActivity();
-        if (activity != null) {
-            Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath,
-                    Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(getActivity(), "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
 //        mNextVideoAbsolutePath = null;
 //        startPreview();
-        mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, mNextVideoAbsolutePath);
+        if (isReaction)
+            new ChooseOptionalTitle(getContext(), new Pojos.UploadParams(mNextVideoAbsolutePath));
+        else
+            mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, new Pojos.UploadParams(mNextVideoAbsolutePath));
     }
 
     /**
@@ -799,11 +814,49 @@ public class CameraFragment extends Fragment implements FragmentCompat.OnRequest
 
     }
 
+    private class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
+
+        ChooseOptionalTitle(@NonNull final Context context, final Pojos.UploadParams uploadParams) {
+            super(context);
+            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
+            dialogBuilder.setView(dialogView);
+
+            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
+
+            setupEditText(editText);
+
+            dialogBuilder.setCancelable(false);
+            dialogBuilder.setMessage(R.string.optional_title);
+            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    hideKeyboard(getActivity(), editText);
+                    performUpload(context,
+                            new Pojos.UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(), postId));
+                    getActivity().finish();
+                }
+            });
+            android.support.v7.app.AlertDialog b = dialogBuilder.create();
+            b.show();
+        }
+
+        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
+            editText.requestFocus();
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    hideKeyboard(getActivity(), textView);
+                    return true;
+                }
+            });
+        }
+    }
+
     public interface OnCameraFragmentInteractionListener {
         /**
          * @param action {@value #ACTION_UPLOAD_VIDEO_POST} or {@value #ACTION_SHOW_GALLERY}
-         * @param filePath the absolute path to the ".mp4" file that was created or chosen.
          */
-        void onCameraInteraction(int action, String filePath);
+        void onCameraInteraction(int action, Pojos.UploadParams uploadParams);
     }
 }

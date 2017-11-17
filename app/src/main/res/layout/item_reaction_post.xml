@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_card"
     android:layout_margin="@dimen/padding_thin"
-    android:visibility="visible"
+    android:visibility="invisible"
     android:animateLayoutChanges="true">
 
     <ImageView
@@ -69,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline"
+            app:drawableStartCompat="@drawable/ic_like_outline_small"
             android:gravity="end|center_vertical"
             android:paddingStart="@dimen/padding_thin"
             android:paddingEnd="0dp"
