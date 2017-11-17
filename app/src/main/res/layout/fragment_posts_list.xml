@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:background="@color/material_grey100"
+        android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:paddingTop="@dimen/padding_x_thin"
+        android:paddingBottom="@dimen/padding_with_navigation_bar_height"
+        android:clipToPadding="false"
+        app:layoutManager="StaggeredGridLayoutManager"
+        tools:context="com.cncoding.teazer.home.post.PostsListFragment"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/item_home_screen_post" />
+
+    <View
+        android:id="@+id/transition_full_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:visibility="invisible" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/transition_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

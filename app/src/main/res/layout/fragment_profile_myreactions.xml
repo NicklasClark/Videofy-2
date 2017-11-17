@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/nousertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#cfcfcf"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        android:maxLines="3"
+        android:text="You have not posted reaction on any video on teazer, to view the reactions post your reactions."
+        android:layout_centerInParent="true"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view"/>
+    </RelativeLayout>
+</RelativeLayout>

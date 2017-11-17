@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AutoGridLayout">
+        <attr name="columnWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomTextView">
+        <attr name="drawableStartCompat" format="reference"/>
+        <attr name="drawableEndCompat" format="reference"/>
+        <attr name="drawableTopCompat" format="reference"/>
+        <attr name="drawableBottomCompat" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CompoundButton">
+        <attr name="android:button" />
+        <attr name="drawable" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="ButtonIcon">
+        <attr name="iconSrc" format="reference" />
+        <attr name="iconSize" format="dimension" />
+        <attr name="iconPadding" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CircularAppCompatImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <!-- {@deprecated Use civ_circle_background_color instead.} -->
+        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_circle_background_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="FloatingActionButtonBehavior">
+        <attr name="finalYPosition" format="dimension"/>
+        <attr name="startXPosition" format="dimension"/>
+        <attr name="startToolbarPosition" format="dimension"/>
+        <attr name="startHeight" format="dimension"/>
+        <attr name="finalHeight" format="dimension"/>
+    </declare-styleable>
+
+    <!--<declare-styleable name="BottomNavigationView">
+        <attr name="bnv_item_icon_size" format="dimension" />
+        <attr name="bnv_item_icon_only_size" format="dimension" />
+        <attr name="bnv_item_text_size" format="dimension" />
+        <attr name="bnv_background_color" format="color" />
+        <attr name="bnv_button_color" format="color" />
+        <attr name="bnv_active_item_color" format="color" />
+        <attr name="bnv_inactive_item_color" format="color" />
+        <attr name="bnv_centre_button_icon" format="reference" />
+        <attr name="bnv_active_centre_button_icon_color" format="color" />
+        <attr name="bnv_inactive_centre_button_icon_color" format="color" />
+        <attr name="bnv_active_centre_button_background_color" format="color"/>
+        <attr name="bnv_centre_part_linear" format="boolean" />
+    </declare-styleable>-->
+</resources>

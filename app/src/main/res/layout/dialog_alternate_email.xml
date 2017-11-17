@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_query"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_half"
+    android:layout_margin="@dimen/padding_half"
+    android:textSize="@dimen/text_size_content_big"
+    android:maxLines="1"/>
