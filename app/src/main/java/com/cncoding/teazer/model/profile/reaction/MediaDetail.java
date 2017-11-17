@@ -23,15 +23,12 @@ public class MediaDetail {
     @SerializedName("react_duration")
     @Expose
     private String reactDuration;
-    @SerializedName("react_dimension")
-    @Expose
-    private String reactDimension;
     @SerializedName("react_is_image")
     @Expose
     private Boolean reactIsImage;
     @SerializedName("media_dimension")
     @Expose
-    private MediaDimension mediaDimension;
+    private MediaDimension_ mediaDimension;
 
     public Integer getMediaId() {
         return mediaId;
@@ -65,14 +62,6 @@ public class MediaDetail {
         this.reactDuration = reactDuration;
     }
 
-    public String getReactDimension() {
-        return reactDimension;
-    }
-
-    public void setReactDimension(String reactDimension) {
-        this.reactDimension = reactDimension;
-    }
-
     public Boolean getReactIsImage() {
         return reactIsImage;
     }
@@ -81,11 +70,11 @@ public class MediaDetail {
         this.reactIsImage = reactIsImage;
     }
 
-    public MediaDimension getMediaDimension() {
+    public MediaDimension_ getMediaDimension() {
         return mediaDimension;
     }
 
-    public void setMediaDimension(MediaDimension mediaDimension) {
+    public void setMediaDimension(MediaDimension_ mediaDimension) {
         this.mediaDimension = mediaDimension;
     }
 

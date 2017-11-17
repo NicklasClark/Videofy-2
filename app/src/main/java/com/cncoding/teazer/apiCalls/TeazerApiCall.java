@@ -13,11 +13,9 @@ import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
+import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
-import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -409,7 +407,7 @@ import retrofit2.http.Query;
         //Arif
 
         @GET("/api/v1/react/my/reactions/{page}")
-        Call<ProfileReactions> getMyReaction(@Path("page") int page);
+        Call<ProfileReaction> getMyReaction(@Path("page") int page);
         /**
          * Call this service to get the reactions of friends.
          * @return {@value RESPONSE_CODE_200} : If “nextPage” is true some more records present,

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
 import butterknife.BindView;
@@ -34,6 +35,7 @@ public class Settings extends AppCompatActivity {
     Context context;
     private static final  int PRIVATE_STATUS=1;
     private static final  int PUBLIC_STATUS=2;
+    boolean flag =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +58,31 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
-                onBackPressed();
+                if(flag==false) {
+                    onBackPressed();
+                }
+                else
+                {
+
+                    onBackPressed();
+
+                }
             }
         });
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
+        Intent intent=getIntent();
+        int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
+
+        if(accoutType==1)
+        {
+            simpleSwitch.setChecked(true);
+
+        }
+        else
+        {
+            simpleSwitch.setChecked(false);
+        }
+
         text_block.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,21 +94,18 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-
+                    flag=true;
                     publicprivateProfile(PRIVATE_STATUS);
                 } else {
-
+                    flag=true;
                     publicprivateProfile(PUBLIC_STATUS);
                 }
             }
         });
-
     }
     public void publicprivateProfile(final int status)
     {
-
-
-            ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
                 @Override
                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
 

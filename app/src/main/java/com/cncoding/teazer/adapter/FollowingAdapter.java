@@ -87,7 +87,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             if(myself) {
 
                 viewHolder.followingName.setTextColor(Color.BLUE);
-                viewHolder.follow.setVisibility(View.INVISIBLE);
+//                viewHolder.follow.setVisibility(View.INVISIBLE);
             }
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override

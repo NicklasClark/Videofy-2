@@ -87,36 +87,26 @@ public class ProfileFragment extends BaseFragment {
     int gender;
     int countrycode;
     String detail;
-//    @BindView(R.id.layout)
     CoordinatorLayout coordinatorLayout;
-
     ProgressBar progressbar;
-
     private OnFragmentInteractionListener mListener;
-
     public ProfileFragment() {
     }
-
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
-      //  ButterKnife.bind(getActivity());
         removeAppBar = (RemoveAppBar) context;
-
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -125,8 +115,8 @@ public class ProfileFragment extends BaseFragment {
         backbutton = view.findViewById(R.id.backbutton);
         settings = view.findViewById(R.id.settings);
         _toolbarusername = view.findViewById(R.id.toolbarusername);
-        _username = view.findViewById(R.id.username);
-        _name = view.findViewById(R.id.username_title);
+        _name = view.findViewById(R.id.username);
+        _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
         _followers = view.findViewById(R.id.followers);
         _following = view.findViewById(R.id.following);
@@ -136,7 +126,6 @@ public class ProfileFragment extends BaseFragment {
         btnedit = view.findViewById(R.id.btnedit);
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
-
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,6 +168,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, Settings.class);
+                intent.putExtra("AccountType",String.valueOf(accountType));
                 startActivity(intent);
             }
         });

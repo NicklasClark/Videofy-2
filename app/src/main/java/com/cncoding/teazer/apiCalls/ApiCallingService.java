@@ -17,8 +17,7 @@ import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileDetail;
+import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -421,7 +420,7 @@ public class ApiCallingService {
         }
 
 
-        public static Call<ProfileReactions> getMyReaction(int page, Context context) {
+        public static Call<ProfileReaction> getMyReaction(int page, Context context) {
             return getReactService(context).getMyReaction(page);
         }
 

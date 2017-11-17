@@ -21,9 +21,6 @@ public class ProfileMedia {
     @SerializedName("duration")
     @Expose
     private String duration;
-    @SerializedName("dimension")
-    @Expose
-    private String dimension;
     @SerializedName("is_image")
     @Expose
     private Boolean isImage;
@@ -55,14 +52,6 @@ public class ProfileMedia {
         this.duration = duration;
     }
 
-    public String getDimension() {
-        return dimension;
-    }
-
-    public void setDimension(String dimension) {
-        this.dimension = dimension;
-    }
-
     public Boolean getIsImage() {
         return isImage;
     }
@@ -78,5 +67,6 @@ public class ProfileMedia {
     public void setMediaDimension(MediaDimension mediaDimension) {
         this.mediaDimension = mediaDimension;
     }
+
 
 }

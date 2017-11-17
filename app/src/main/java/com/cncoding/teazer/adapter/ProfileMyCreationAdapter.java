@@ -59,13 +59,26 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final String videourl = cont.getMedias().get(0).getMediaUrl();
         final int videopostId = cont.getPostId();
         final String thumb_url = cont.getMedias().get(0).getThumbUrl();
+        final String duration = cont.getMedias().get(0).getDuration();
+        final String views = String.valueOf(cont.getMedias().get(0).getViews());
+        final String likes= String.valueOf(cont.getLikes());
+        final String reaction= String.valueOf(cont.getTotalReactions());
+        final String location=cont.getCheckIn().getLocation();
+
+
+        viewHolder.videoTitle.setText(videotitle);
+        viewHolder.txtlikes.setText(likes);
+        viewHolder.duration.setText(duration);
+        viewHolder.txtview.setText(views);
+        viewHolder.reactions.setText(reaction);
+        viewHolder.location.setText(location);
 
         Glide.with(context).load(thumb_url)
                 .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
 
-        viewHolder.videoTitle.setText(videotitle);
+
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +127,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView videoTitle;
+        private TextView duration;
+        private TextView txtlikes;
+        private TextView txtview;
+        private TextView reactions;
+        private TextView location;
         VideoView videoviewContainer;
         ImageView thumbimage;
         CardView cardView;
@@ -124,10 +142,14 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         public ViewHolder(View view) {
             super(view);
             videoTitle = view.findViewById(R.id.videodetails);
-            videoviewContainer = view.findViewById(R.id.flContainer);
+            duration = view.findViewById(R.id.duration);
+            txtlikes = view.findViewById(R.id.txtlikes);
+            txtview = view.findViewById(R.id.txtview);
+            reactions = view.findViewById(R.id.reactions);
             thumbimage = view.findViewById(R.id.demoimage);
             playvideo = view.findViewById(R.id.playvideo);
             cardView = view.findViewById(R.id.cardview);
+            location = view.findViewById(R.id.location);
             menu = view.findViewById(R.id.menu);
 
         }

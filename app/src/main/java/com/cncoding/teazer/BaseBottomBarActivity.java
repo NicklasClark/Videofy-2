@@ -73,7 +73,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
 //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
-
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
