@@ -105,7 +105,7 @@ public class FollowingListActivities extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
                         list = response.body().getFollowings();
-                        profileMyFollowingAdapter = new FollowingAdapter(context, list,100);
+                        profileMyFollowingAdapter = new FollowingAdapter(context, list);
                         recyclerView.setAdapter(profileMyFollowingAdapter);
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
