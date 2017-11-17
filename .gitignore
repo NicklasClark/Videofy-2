@@ -59,3 +59,4 @@ freeline_project_description.json
 
 teazer.iml
 app/src/main/java/com/cncoding/teazer/model/profile/reaction/ProfileReaction.java
+.idea/
