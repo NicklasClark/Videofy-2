@@ -9,6 +9,7 @@
     <!--<color name="colorAccent">#8D6E63</color>-->
     <color name="colorAccent2">#00c853</color>
     <color name="colorAccent3">#fb595b</color>
+    <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
     <color name="colorTranslucentBg">#dd212121</color>
     <color name="colorTranslucentButton">#5a000000</color>

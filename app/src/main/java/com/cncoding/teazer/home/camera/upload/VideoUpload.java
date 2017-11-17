@@ -108,6 +108,7 @@ import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTI
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
+import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -546,10 +547,7 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.float_up, R.anim.sink_down)
-                .replace(R.id.fragment_container, VideoPreview.newInstance(videoPath), TAG_VIDEO_PREVIEW)
-                .commit();
+        playVideo(this, videoPath, false);
     }
 
     @OnClick(R.id.video_upload_location) public void addLocation() {

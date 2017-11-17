@@ -17,7 +17,7 @@ public class SharedPrefs {
 
     private static final String AUTH_TOKEN = "authToken";
     private static final String FCM_TOKEN = "fcmToken";
-    public static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
+    private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);

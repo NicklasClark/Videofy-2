@@ -59,7 +59,7 @@ public class ProfileFragment extends BaseFragment {
     TextView _following;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    Pojos.User.UserProfile userprofile;
+    Pojos.User.PublicProfile userprofile;
     boolean hasProfleMedia;
     RemoveAppBar removeAppBar;
 
@@ -190,7 +190,7 @@ public class ProfileFragment extends BaseFragment {
                 if(response.code()==200)
                 {
                     try {
-                        Pojos.User.UserProfile userProfile = response.body().getUserProfile();
+                        Pojos.User.PublicProfile userProfile = response.body().getPublicProfile();
                         int totalfollowers = response.body().getFollowers();
                         int totalfollowing = response.body().getFollowings();
                         int totalvideos = response.body().getTotalVideos();
@@ -232,7 +232,7 @@ public class ProfileFragment extends BaseFragment {
                 else
                 {
 
-                    Toast.makeText(context,"UserProfile Detail not fetched",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"PublicProfile Detail not fetched",Toast.LENGTH_LONG).show();
                 }
             }
             @Override

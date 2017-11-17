@@ -2,6 +2,7 @@ package com.cncoding.teazer.home.notifications;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -24,9 +25,10 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.home.notifications.FollowingNotificationsTabFragment.OnListFragmentInteractionListener;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Notification} and makes a call to the
@@ -49,7 +52,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int BUTTON_TYPE_ACCEPT = 10;
     private static final int BUTTON_TYPE_FOLLOW = 11;
     private static final int BUTTON_TYPE_FOLLOWING = 12;
-    private static final int BUTTON_TYPE_NONE = 13;
+    private static final int BUTTON_TYPE_REQUESTED = 13;
+    private static final int BUTTON_TYPE_NONE = 14;
 
     private static final int STARTED_FOLLOWING = 1;
     private static final int ACCEPTED_REQUEST = 2;
@@ -103,7 +107,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder1.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder1.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                            .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
                             .crossFade()
                             .into(holder1.dp);
 
@@ -111,7 +115,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
-                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                        .placeholder(context.getResources().getDrawable(R.drawable.bg_placeholder, null))
                         .crossFade()
                         .into(holder1.thumbnail);
 
@@ -119,7 +123,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         if (mListener != null) {
-                            mListener.onNotificationsInteraction(isFollowingTab, holder1.notification);
+                            ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
+                                    .enqueue(new Callback<PostDetails>() {
+
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200)
+                                                mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                            else
+                                                Toast.makeText(context, response.code() + " : " + response.message(),
+                                                        Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }
                 });
@@ -131,7 +151,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder2.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder2.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                            .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
                             .crossFade()
                             .into(holder2.dp);
 
@@ -160,7 +180,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         switch (view.getId()) {
                             case R.id.root_layout:
                                 if (mListener != null) {
-                                    mListener.onNotificationsInteraction(isFollowingTab, holder2.notification);
+                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
+                                            .enqueue(new Callback<Profile>() {
+                                                @Override
+                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                                                    if (response.code() == 200)
+                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
+                                                    else
+                                                        Toast.makeText(context, response.code() + " : " + response.message(),
+                                                                Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Profile> call, Throwable t) {
+                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
                                 break;
                             case R.id.notification_action:
@@ -173,9 +208,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus()) {
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                        } else
-                                                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                            else
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                        } else {
+                                                            sendJoinRequest(holder2);
+                                                        }
                                                     } else
                                                         Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
                                                                 Toast.LENGTH_SHORT).show();
@@ -215,11 +254,53 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getFromId(),
+                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
                                                             context).enqueue(new Callback<ResultObject>() {
                                                         @Override
                                                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                            if (response.code() == 200) {
+                                                                if (response.body().getStatus()) {
+                                                                    setActionButton(holder2.action, null,
+                                                                            BUTTON_TYPE_FOLLOW);
+                                                                }
+                                                            }
+                                                        }
 
+                                                        @Override
+                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+                                else if (text.equals(context.getString(R.string.requested))) {
+                                    new AlertDialog.Builder(context)
+                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
+                                                    holder2.notification.getHighlights().get(0) + "?")
+                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
+                                                            context).enqueue(new Callback<ResultObject>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                            if (response.code() == 200) {
+                                                                if (response.body().getStatus()) {
+                                                                    setActionButton(holder2.action, null,
+                                                                            BUTTON_TYPE_FOLLOW);
+                                                                }
+                                                                else
+                                                                    Toast.makeText(context, response.body().getMessage(),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                            }
                                                         }
 
                                                         @Override
@@ -294,6 +375,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    private void sendJoinRequest(final RequestsViewHolder holder) {
+        ApiCallingService.Friends.sendJoinRequestByUserId(holder.notification.getMetaData().getSourceId(), context)
+                .enqueue(new Callback<ResultObject>() {
+                    @Override
+                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        if (response.code() == 200) {
+                            if (response.body().getStatus()) {
+                                if (holder.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                    setActionButton(holder.action, null, BUTTON_TYPE_FOLLOWING);
+                                else
+                                    setActionButton(holder.action, null, BUTTON_TYPE_REQUESTED);
+                            }
+                        } else
+                            Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private SpannableString getString(String boldText, String normalText) {
         normalText = normalText.replace(boldText, "");
         SpannableString string = new SpannableString(boldText + normalText);
@@ -309,23 +414,42 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         switch (type) {
             case BUTTON_TYPE_ACCEPT:
                 button.setText(R.string.accept);
+                button.setTextColor(Color.parseColor("#546E7A"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
                 button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                declineRequest.setVisibility(View.VISIBLE);
+                if (declineRequest != null)
+                    declineRequest.setVisibility(View.VISIBLE);
                 break;
             case BUTTON_TYPE_FOLLOW:
                 button.setText(R.string.follow);
+                button.setTextColor(Color.parseColor("#546E7A"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
                 button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                if (declineRequest != null)
+                    declineRequest.setVisibility(View.GONE);
                 break;
             case BUTTON_TYPE_FOLLOWING:
                 button.setText(R.string.following);
-                button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
+                button.setTextColor(Color.parseColor("#000000"));
+                button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);
+                if (declineRequest != null)
+                    declineRequest.setVisibility(View.GONE);
+                break;
+            case BUTTON_TYPE_REQUESTED:
+                button.setText(R.string.requested);
+                button.setTextColor(Color.parseColor("#000000"));
+                button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
+                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
+                        null, null, null);
+                if (declineRequest != null)
+                    declineRequest.setVisibility(View.GONE);
                 break;
             case BUTTON_TYPE_NONE:
                 button.setVisibility(View.GONE);
+                if (declineRequest != null)
+                    declineRequest.setVisibility(View.GONE);
                 break;
             default:
                 break;
@@ -388,7 +512,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mListener = null;
     }
 
-    interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowing, Notification notification);
+    public interface OnNotificationsInteractionListener {
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Profile body);
     }
 }

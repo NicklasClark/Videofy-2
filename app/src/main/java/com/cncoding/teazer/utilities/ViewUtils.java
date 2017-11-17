@@ -45,6 +45,17 @@ public class ViewUtils {
     public static final String POST_ID = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
 
+    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (isOnlineVideo) {
+            intent.setDataAndType(Uri.parse(videoPath), "video/*");
+        } else {
+            File file = new File(videoPath);
+            intent.setDataAndType(Uri.fromFile(file), "video/*");
+        }
+        context.startActivity(intent);
+    }
+
     /**
      * Used to show the snackbar above the bottom nav bar.
      * This assumes that the parent of each child activity is a coordinator layout.
@@ -58,9 +69,16 @@ public class ViewUtils {
         button.setTypeface(font);
         CoordinatorLayout.LayoutParams params
                 = (CoordinatorLayout.LayoutParams) snackbar.getView().getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin,
-                activity.getResources().getDimensionPixelSize(
-                        activity.getResources().getIdentifier("status_bar_height", "dimen", "android")));
+        int statusBarHeight = 0;
+        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+        }
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, statusBarHeight);
+
+//        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin,
+//                activity.getResources().getDimensionPixelSize(
+//                        activity.getResources().getIdentifier("status_bar_height", "dimen", "android")));
         snackbar.getView().setLayoutParams(params);
         snackbar.show();
     }

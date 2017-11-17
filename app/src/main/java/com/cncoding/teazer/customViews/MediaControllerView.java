@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
@@ -70,13 +69,13 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private String location;
     private String profileName;
     private String profilePicUrl;
-    private String likes;
-    private String views;
+    private int likes;
+    private int views;
     private String categories;
     private String duration;
     private boolean isPlaying;
 //    private String tagsCount;
-    private String reactionCount;
+    private int reactionCount;
     private String reaction1Url;
     private String reaction2Url;
     private String reaction3Url;
@@ -156,6 +155,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         initControllerView();
         isPlaying = true;
         show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hide();
+            }
+        }, 5000);
 
 //        this.textureView.setOnTouchListener(new OnTouchListener() {
 //            @Override
@@ -243,22 +248,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         reaction1Pic = findViewById(R.id.media_controller_reaction_1);
         reaction2Pic = findViewById(R.id.media_controller_reaction_2);
         reaction3Pic = findViewById(R.id.media_controller_reaction_3);
-        caption.setText(videoTitle);
-        locationView.setText(SPACE + location);
-        profileNameView.setText(profileName);
-        likesView.setText(SPACE + likes);
-        viewsView.setText(SPACE + views);
-        categoriesView.setText(categories);
-//        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
-        Glide.with(getContext())
-                .load(profilePicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
-                .into(profilePic);
 
-//        set remaining time of video.
+        refreshControllerView();
+
         playPauseButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,10 +283,37 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         formatter = new Formatter(formatBuilder, Locale.getDefault());
     }
 
+    private void refreshControllerView() {
+        caption.setText(videoTitle);
+        locationView.setText(SPACE + location);
+        profileNameView.setText(profileName);
+        likesView.setText(SPACE + likes);
+        viewsView.setText(SPACE + views);
+        categoriesView.setText(categories);
+
+        if (reactionCount > 4)
+            reactionCountView.setText(SPACE + "+" + (reactionCount - 3) + " R");
+        else
+            reactionCountView.setText(SPACE + reactionCount + " R");
+        Glide.with(getContext())
+                .load(profilePicUrl)
+                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
+                .crossFade(400)
+                .into(profilePic);
+    }
+
+    public void incrementLikes() {
+        likesView.setText(SPACE + ++likes);
+    }
+
+    public void decrementLikes() {
+        likesView.setText(SPACE + --likes);
+    }
+
     public void setReaction1Pic(String reaction1PicUrl) {
         Glide.with(getContext())
                 .load(reaction1PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
                 .crossFade(400)
                 .into(reaction1Pic);
     }
@@ -302,7 +321,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void setReaction2Pic(String reaction2PicUrl) {
         Glide.with(getContext())
                 .load(reaction2PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
                 .crossFade(400)
                 .into(reaction2Pic);
     }
@@ -310,13 +329,27 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void setReaction3Pic(String reaction3PicUrl) {
         Glide.with(getContext())
                 .load(reaction3PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
                 .crossFade(400)
                 .into(reaction3Pic);
     }
 
-    public void setReactionCount(String reactionCount) {
-        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
+    public void disappearReactionPic(int i) {
+        if (i == 0 || i == 1 || i == 2) {
+            switch (i) {
+                case 0:
+                    reaction1Pic.setVisibility(GONE);
+                    break;
+                case 1:
+                    reaction2Pic.setVisibility(GONE);
+                    break;
+                case 2:
+                    reaction3Pic.setVisibility(GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void toggleVolume() {
@@ -538,12 +571,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         private String location = "";
         private String profileName = "";
         private String profilePicUrl = "";
-        private String likes = "";
-        private String views = "";
+        private int likes;
+        private int views;
         private String categories = "";
         public String duration;
 //        private String tagsCount = "";
-        private String reactionCount = "";
+        private int reactionCount;
         private String reaction1Url = "";
         private String reaction2Url = "";
         private String reaction3Url = "";
@@ -597,12 +630,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder withLikes(String likes) {
+        public Builder withLikes(int likes) {
             this.likes = likes;
             return this;
         }
 
-        public Builder withViews(String views) {
+        public Builder withViews(int views) {
             this.views = views;
             return this;
         }
@@ -622,8 +655,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //            return this;
 //        }
 
-        public Builder withReactions(String reactions) {
-            this.reactionCount = reactions;
+        public Builder withReactionCount(int reactionCount) {
+            this.reactionCount = reactionCount;
             return this;
         }
 
@@ -723,8 +756,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     public void exit() {
 //        mediaPlayerControlListener.exit();
-        context.getContentResolver().registerContentObserver(
-                android.provider.Settings.System.CONTENT_URI, true, contentObserver);
+        context.getContentResolver().unregisterContentObserver(contentObserver);
     }
 
     /**

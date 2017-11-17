@@ -17,6 +17,7 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -268,7 +269,7 @@ public class ApiCallingService {
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-        public static Call<ResultObject> getOthersProfileInfo(int userId, Context context) {
+        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
 
@@ -545,7 +546,7 @@ public class ApiCallingService {
             return getUserService(context).setAccountVisibility(accountType);
         }
 
-        public static Call<Pojos.User.Profile> getUserProfile(Context context) {
+        public static Call<Profile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
         }
 
@@ -573,7 +574,7 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
-        public static Call<Pojos.User.Profile>getUserProfileDetail(Context context) {
+        public static Call<Profile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
 

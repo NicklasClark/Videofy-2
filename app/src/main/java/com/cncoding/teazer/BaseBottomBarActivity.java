@@ -8,6 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
@@ -26,6 +28,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.notifications.NotificationsAdapter;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.post.PostDetailsFragment;
 import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractionListener;
@@ -71,7 +74,8 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener,ProfileFragment.RemoveAppBar, ProgressRequestBody.UploadCallbacks {
+        PostReactionAdapterListener,ProfileFragment.RemoveAppBar,
+        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -95,6 +99,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
+    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
@@ -168,6 +173,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         if (response.body().getMessage().contains("own video")) {
 //                        USER IS REACTING ON HIS OWN VIDEO.
                             uploadingNotificationTextView.setText(response.body().getMessage());
+                            uploadingNotificationDismiss.setVisibility(VISIBLE);
                             deleteFile(uploadParams.getVideoPath());
                             SharedPrefs.finishVideoUploadSession(getApplicationContext());
                             new Handler().postDelayed(new Runnable() {
@@ -200,12 +206,14 @@ public class BaseBottomBarActivity extends BaseActivity
         if (!uploadParams.isReaction()) {
 //                UPLOADING POST VIDEO
             uploadingNotificationTextView.setText(R.string.uploading_your_video);
+            uploadingNotificationDismiss.setVisibility(View.GONE);
             ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
                     uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), this)
                     .enqueue(callback);
         } else {
 //                UPLOADING REACTION VIDEO
             uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            uploadingNotificationDismiss.setVisibility(View.GONE);
             ApiCallingService.React.uploadReaction(videoPartFile, uploadParams.getPostId(), this, title)
                     .enqueue(callback);
         }
@@ -419,6 +427,15 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
+        if (isFollowingTab) {
+            pushFragment(PostDetailsFragment.newInstance(2, postDetails, null));
+        } else {
+            Toast.makeText(this, "User Profile fetched, only need to populate it now.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void onProgressUpdate(int percentage) {
         progressBar.setProgress(percentage);
     }
@@ -427,6 +444,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onUploadError(Throwable throwable) {
         uploadingNotificationTextView.setText(throwable.getMessage());
         uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
+        uploadingNotificationDismiss.setVisibility(VISIBLE);
     }
 
     @Override

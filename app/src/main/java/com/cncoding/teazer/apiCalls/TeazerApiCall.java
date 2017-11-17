@@ -15,7 +15,9 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
+import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 
 import java.util.ArrayList;
 
@@ -292,7 +294,7 @@ import retrofit2.http.Query;
          *          Based on “account_type” you can read either private or public profile.
          * */
         @GET("/api/v1/friend/profile/{user_id}")
-        Call<ResultObject> getOthersProfileInfo(@Path("user_id") int userId);
+        Call<Profile> getOthersProfileInfo(@Path("user_id") int userId);
 
         /**
          * Call this service to Block/Unblock a user
@@ -511,14 +513,14 @@ import retrofit2.http.Query;
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
-        @GET("api//v1/post/video/details/{post_id}")
+        @GET("api/v1/post/video/details/{post_id}")
         Call<PostDetails> getPostDetails(@Path("post_id") int postId);
 
         /**
          * Call this service to get the tagged users of post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,
          *               If “next_page” is false no more records present.
-         *               Returns tagged user to {@link com.cncoding.teazer.utilities.Pojos.TaggedUser}
+         *               Returns tagged user to {@link TaggedUser}
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
@@ -607,10 +609,10 @@ import retrofit2.http.Query;
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link com.cncoding.teazer.utilities.Pojos.User.Profile}
+         * @return {@link Profile}
          * */
         @GET("/api/v1/user/profile")
-        Call<Pojos.User.Profile> getUserProfile();
+        Call<Profile> getUserProfile();
 
         /**
          * Update user profile

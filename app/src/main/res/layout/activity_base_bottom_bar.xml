@@ -64,16 +64,37 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                android:id="@+id/uploading_notification"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:foreground="@drawable/ripple_dark_no_rounded"
-                android:textSize="@dimen/text_size_content"
-                android:paddingTop="@dimen/padding_half"
-                android:paddingStart="@dimen/padding_default"
-                android:paddingEnd="@dimen/padding_default"/>
+                android:layout_gravity="center_vertical"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
+
+                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                    android:id="@+id/uploading_notification"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:foreground="@drawable/ripple_dark_no_rounded"
+                    android:textSize="@dimen/text_size_content"
+                    android:paddingTop="@dimen/padding_half"
+                    android:layout_weight="1"
+                    android:paddingStart="@dimen/padding_default"
+                    android:paddingEnd="@dimen/padding_default"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/dismiss"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:foreground="@drawable/ripple_dark_circle"
+                    android:src="@drawable/ic_delete"
+                    android:padding="@dimen/padding_half"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
 
             <ProgressBar
                 xmlns:android="http://schemas.android.com/apk/res/android"

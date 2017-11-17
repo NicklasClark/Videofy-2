@@ -63,7 +63,7 @@ public class FollowingActivities extends AppCompatActivity {
                 else
                 {
 
-                    Toast.makeText(context,"UserProfile Detail not fetched",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"PublicProfile Detail not fetched",Toast.LENGTH_LONG).show();
                 }
             }
             @Override

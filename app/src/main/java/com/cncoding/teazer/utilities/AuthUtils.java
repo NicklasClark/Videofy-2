@@ -389,13 +389,13 @@ public class AuthUtils {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            if (response.body().getStatus()) {
-                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else
-                            Toast.makeText(context, "Logout failed, logging out manually...", Toast.LENGTH_SHORT).show();
-
+//                        if (response.code() == 200) {
+//                            if (response.body().getStatus()) {
+//                                Toast.makeText(context, "Successfully logged out.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                        else
+//                            Toast.makeText(context, "Logout failed, logging out manually...", Toast.LENGTH_SHORT).show();
                         SharedPrefs.resetAuthToken(context);
                         if (activity != null) {
                             activity.startActivity(new Intent(activity, MainActivity.class));

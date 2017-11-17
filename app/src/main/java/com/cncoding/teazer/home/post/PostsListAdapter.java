@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -39,20 +39,6 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
  * specified {@link OnPostAdapterInteractionListener}.
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.ViewHolder> {
-
-//    private final String[] categories = new String[] {
-//            "Singing","Dancing","Movies","Adventure","Instruments","Comedy","Travel",
-//            "Videography","Acting","Technology","iOS","Android"
-//        ,"Apple","Fashion","Lifestyle","Sports","Restaurants","Wildlife","Nightlife",
-//            "Photography","Love","Health And Fitness","History"
-//        ,"Home Décor","Humour","Kids And Parenting","Men's Fashion","Outdoors",
-//            "Photography","Quotes","Science","Nature","Sports","Tattoos"
-//        ,"Technology","Travel","Weddings","Women's Fashion","Popular","Everything",
-//            "Animals And Pets","Architecture","Art"
-//        ,"Cars And Motorcycles","Celebrations And Events","Celebrities",
-//            "DIY And Crafts","Design","Education","Entertainment"
-//        ,"Food And Drink","Gardening","Geek","Hair And Beauty"
-//    };
 
     private SparseIntArray dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
@@ -176,10 +162,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     private byte[] getImage(ImageView imageView) {
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        return baos.toByteArray();
+        Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        return outputStream.toByteArray();
     }
 
     @Override
