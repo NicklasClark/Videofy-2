@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity
                         mediaPlayer.start();
                 break;
             case OPEN_CAMERA_ACTION:
-//                ViewUtils.launchReactionCamera(this, 37);
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, true);
                 break;
             default:
                 break;
