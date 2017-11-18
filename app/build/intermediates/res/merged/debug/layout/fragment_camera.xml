@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    app:umanoAnchorPoint="0.4"
+    sothree:umanoPanelHeight="0dp"
+    sothree:umanoShadowHeight="0dp"
+    tools:context=".home.camera.CameraFragment">
+
+    <!--CAMERA FRAGMENT-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@android:color/black">
+
+        <com.cncoding.teazer.customViews.AutoFitTextureView
+            android:id="@+id/camera_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            tools:ignore="RelativeOverlap" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/black"
+            android:minHeight="120dp">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/camera_files"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/padding_half"
+                android:layout_marginStart="@dimen/padding_half"
+                android:contentDescription="@string/show_videos_on_device"
+                android:foreground="@drawable/ripple_light_circle"
+                android:padding="@dimen/padding_double"
+                app:srcCompat="@drawable/ic_video_files" />
+
+            <FrameLayout
+                android:id="@+id/camera_record"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerInParent="true"
+                android:foreground="@drawable/ripple_light_circle">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/camera_record_outer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/padding_double"
+                    android:contentDescription="@string/record_video"
+                    app:srcCompat="@drawable/ic_record_outer" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/camera_record_inner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/record_video"
+                    app:srcCompat="@drawable/ic_record_inner" />
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularChronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_content_big"
+                    android:visibility="invisible" />
+
+            </FrameLayout>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/camera_gif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padding_half"
+                android:contentDescription="@string/flip_camera"
+                android:foreground="@drawable/ripple_light_circle"
+                android:padding="@dimen/padding_default"
+                app:srcCompat="@drawable/ic_gif" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/camera_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_flash_off"
+            android:foreground="@drawable/ripple_light_circle"
+            android:padding="@dimen/padding_default"
+            android:layout_toStartOf="@+id/camera_flip"
+            android:contentDescription="@string/camera_flash"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/camera_flip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/padding_half"
+            android:layout_marginStart="@dimen/padding_half"
+            android:contentDescription="@string/flip_camera"
+            android:foreground="@drawable/ripple_light_circle"
+            android:padding="@dimen/padding_default"
+            app:srcCompat="@drawable/ic_rotate" />
+
+    </RelativeLayout>
+
+    <!--VIDEO GALLERY CONTAINER THAT SLIDES UP-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/bg_sliding_up_panel">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/sliding_panel_arrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/padding_default"
+            app:srcCompat="@drawable/ic_up"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_gallery_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_gravity="center_horizontal"
+            android:numColumns="auto_fit"
+            android:padding="@dimen/padding_default"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_video_gallery"/>
+
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

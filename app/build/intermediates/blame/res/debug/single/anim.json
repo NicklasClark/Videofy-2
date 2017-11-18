@@ -1,0 +1,150 @@
+[
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/tooltip_exit.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/tooltip_exit.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_up_notifications.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_up_notifications.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/deselected.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/deselected.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/fast_fade_in.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/fast_fade_in.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_up_home.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_up_home.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_up_user_profile.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_up_user_profile.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_up_search.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_up_search.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/sink_up.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/sink_up.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/selected.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/selected.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/zoom_out.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/zoom_out.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/tooltip_enter.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/tooltip_enter.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/camera_outer_pulse.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/camera_outer_pulse.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/expand.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/expand.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_up.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_up.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/slide_out_left.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/slide_out_left.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/reveal_preview.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/reveal_preview.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/play_pause.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/play_pause.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/camera_inner_pulse.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/camera_inner_pulse.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/slide_out_right.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/slide_out_right.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/sink_down.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/sink_down.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/float_down.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/float_down.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/design_snackbar_out.xml",
+        "source": "/home/amit/.android/build-cache/7aba8440c680126a8e2501914fc9eb66b081d113/output/res/anim/design_snackbar_out.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/design_snackbar_in.xml",
+        "source": "/home/amit/.android/build-cache/7aba8440c680126a8e2501914fc9eb66b081d113/output/res/anim/design_snackbar_in.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/slide_in_right.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/slide_in_right.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/zoom_in.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/zoom_in.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/slide_in_left.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/slide_in_left.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/anim/fast_fade_out.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/anim/fast_fade_out.xml"
+    }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_bg_bitmap.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/mipmap-mdpi/ic_bg_bitmap.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher_round.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    }
+]

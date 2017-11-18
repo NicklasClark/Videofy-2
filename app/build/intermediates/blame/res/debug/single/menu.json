@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/menu/menu_profile.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/menu/menu_profile.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/menu/menu_post.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/menu/menu_post.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/menu/menu_other_profile.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/menu/menu_other_profile.xml"
+    }
+]

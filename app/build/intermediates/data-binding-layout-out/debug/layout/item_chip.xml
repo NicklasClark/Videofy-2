@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/padding_default"
+    android:paddingEnd="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_half"
+    android:paddingBottom="@dimen/padding_half"
+    android:layout_margin="@dimen/padding_half"
+    android:background="@drawable/chip_default"
+    android:layout_gravity="center_horizontal"
+    android:textSize="@dimen/text_size_content_big"
+    android:textColor="@android:color/white" />

@@ -1,0 +1,850 @@
+[
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_tick_circle_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_tick_circle_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/notification_bg.xml",
+        "source": "/home/amit/.android/build-cache/bd82577280a1810c643ae571c1043868c8f2cb0d/output/res/drawable/notification_bg.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_settings.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_done_white_48dp.png",
+        "source": "/home/amit/.android/build-cache/626fa22de631ab537b7c4c953435139f5cc17a4c/output/res/drawable/ic_done_white_48dp.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_bottom_drawer.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_bottom_drawer.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/popup_drawable.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/popup_drawable.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_textfield_search_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_textfield_search_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/likeimage.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/likeimage.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_right_curved.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_right_curved.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/tooltip_frame_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/tooltip_frame_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/notification_icon_background.xml",
+        "source": "/home/amit/.android/build-cache/bd82577280a1810c643ae571c1043868c8f2cb0d/output/res/drawable/notification_icon_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_facebook.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_facebook.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_cab_background_top_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_cab_background_top_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_settings_dark.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_settings_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_circle_white_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_white_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_like_background.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_button_like_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_warning_black_24dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_warning_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_item_background_holo_light.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_item_background_holo_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/below_shadow.xml",
+        "source": "/home/amit/.android/build-cache/495553aa6b9ea48955df04d4d850eadf974042c4/output/res/drawable/below_shadow.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/near_me.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/near_me.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_person.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_person.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_clear_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_clear_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_light.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_tagged_user.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_tagged_user.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_vector_test.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_vector_test.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_btn_radio_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_btn_radio_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_flash_off.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_flash_off.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/design_snackbar_background.xml",
+        "source": "/home/amit/.android/build-cache/7aba8440c680126a8e2501914fc9eb66b081d113/output/res/drawable/design_snackbar_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_placeholder.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_placeholder.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_edit.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_edit.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_card.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_card.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline_rounded_primary.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline_rounded_primary.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_circle_primary.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_primary.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_switch_thumb_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_switch_thumb_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_search_api_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_search_api_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_circle_dark_outlined.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_dark_outlined.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_error.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_error.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_play.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_play.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_folder_black_24dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_folder_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_disabled.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_primary_light.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_primary_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_light.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_light.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/arif_image.jpg",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/arif_image.jpg"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_voice_search_api_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_voice_search_api_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_volume_mute.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_volume_mute.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_sliding_up_panel.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_sliding_up_panel.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_instagram_disabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_instagram_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/line_drawable.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/line_drawable.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_track_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_seekbar_track_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_spinner_textfield_background_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_spinner_textfield_background_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_facebook_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_facebook_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_down.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_down.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/settings.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/settings.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_auth_dialog_background.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_auth_dialog_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_auth_dialog_header_background.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_auth_dialog_header_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_view_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_view_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_video_files.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_video_files.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_holo_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_btn_default_mtrl_shape.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_btn_default_mtrl_shape.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous_dark.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_previous_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_card_curved_corners.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_card_curved_corners.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_previous.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_go_search_api_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_go_search_api_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_error_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_error_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_search.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_search.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_card_no_margin.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_card_no_margin.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/border_layout.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/border_layout.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_check_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_check_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_primary.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_primary.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline_rounded_black.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline_rounded_black.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/notification_tile_bg.xml",
+        "source": "/home/amit/.android/build-cache/bd82577280a1810c643ae571c1043868c8f2cb0d/output/res/drawable/notification_tile_bg.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_light_outlined.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_light_outlined.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_background_transition_holo_light.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_background_transition_holo_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_view_filled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_view_filled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_up.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_up.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline_rounded.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline_rounded.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_dashboard_black.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_dashboard_black.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_save.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_save.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_volume.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_volume.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/shape_default.xml",
+        "source": "/home/amit/.android/build-cache/626fa22de631ab537b7c4c953435139f5cc17a4c/output/res/drawable/shape_default.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/above_shadow.xml",
+        "source": "/home/amit/.android/build-cache/495553aa6b9ea48955df04d4d850eadf974042c4/output/res/drawable/above_shadow.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_light_normal.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_light_normal.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_google.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_google.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_dark_focused.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_dark_focused.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_notifications.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_notifications.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_light_rounded_2dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_light_rounded_2dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_tab_indicator_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_tab_indicator_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_badge.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_badge.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_transition.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_transition.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_ab_back_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_ab_back_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_check_small.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_check_small.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_rounded_outline_blue.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_rounded_outline_blue.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_create_back_black.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_create_back_black.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/design_fab_background.xml",
+        "source": "/home/amit/.android/build-cache/7aba8440c680126a8e2501914fc9eb66b081d113/output/res/drawable/design_fab_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/chip.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/chip.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_arrow_back_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_arrow_back_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_btn_borderless_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_btn_borderless_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_like_filled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_like_filled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_progress_bar_linear.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_progress_bar_linear.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_text_cursor_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_text_cursor_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/chip_selected.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/chip_selected.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_disabled.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_play_big.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_play_big.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_google_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_google_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ratingbar_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ratingbar_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_login_silver_background.xml",
+        "source": "/home/amit/.android/build-cache/04100e479a4aa3d7267927bd49f6fecea12b9851/output/res/drawable/com_facebook_button_login_silver_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_pause.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_pause.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_like_outline.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_like_outline.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_arrowwhite.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_arrowwhite.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_background.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_button_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_person_black_.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_person_black_.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_instagram_enabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_instagram_enabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_circle_light_filled_outlined.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_light_filled_outlined.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ratingbar_small_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ratingbar_small_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_check.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_check.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_delete.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_delete.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/list_item_checked.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/list_item_checked.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_background_transition_holo_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_background_transition_holo_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/line.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/line.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/splash_screen.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/splash_screen.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_thumb_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_seekbar_thumb_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_dark.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/fastscroll__default_handle.xml",
+        "source": "/home/amit/.android/build-cache/bc9954cf3b71d9fb2558b9cbc7e9c8c1be5e9a15/output/res/drawable/fastscroll__default_handle.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_login_background.xml",
+        "source": "/home/amit/.android/build-cache/04100e479a4aa3d7267927bd49f6fecea12b9851/output/res/drawable/com_facebook_button_login_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_previous_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_light_normal.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_light_normal.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark_focused.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_dark_focused.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/playimages.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/playimages.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_record_outer.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_record_outer.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_otp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_otp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_icon.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_button_icon.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/viewimage.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/viewimage.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/borderimageview.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/borderimageview.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_rotate.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_rotate.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_vignette_bottom.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_vignette_bottom.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_light_focused.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_light_focused.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_chip.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_chip.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_cross.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_cross.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/navigation_empty_icon.xml",
+        "source": "/home/amit/.android/build-cache/7aba8440c680126a8e2501914fc9eb66b081d113/output/res/drawable/navigation_empty_icon.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_sad.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_sad.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_report.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_report.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_place_black_24dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_place_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_react.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_react.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_facebook_enabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_facebook_enabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/notification_bg_low.xml",
+        "source": "/home/amit/.android/build-cache/bd82577280a1810c643ae571c1043868c8f2cb0d/output/res/drawable/notification_bg_low.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_tags.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_tags.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_arrow_drop_right_black_24dp.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_arrow_drop_right_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_light_focused.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_light_focused.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_item_background_holo_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_item_background_holo_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_action_bar.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_action_bar.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_drag_handle.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_drag_handle.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_record_inner.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_record_inner.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_gif.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_gif.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/list_item_default.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/list_item_default.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_login.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_login.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_cancel_dark.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_cancel_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_image_whiter_outline_solid.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_image_whiter_outline_solid.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_dark.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_light.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_holo_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_twitter_disabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_twitter_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_navigation.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_navigation.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/fastscroll__default_bubble.xml",
+        "source": "/home/amit/.android/build-cache/bc9954cf3b71d9fb2558b9cbc7e9c8c1be5e9a15/output/res/drawable/fastscroll__default_bubble.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark_normal.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_dark_normal.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_like_outline_small.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_like_outline_small.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_reactions.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_reactions.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_twitter_enabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_twitter_enabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_vignette_top.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_vignette_top.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_play_circle_filled_black_24dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_play_circle_filled_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_menu.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_menu.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_dialog_material_background.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_dialog_material_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_btn_check_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_btn_check_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_person_white.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_person_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_favicon_blue.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_favicon_blue.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_flash_auto.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_flash_auto.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/material_flat.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/material_flat.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_google_enabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_google_enabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/thumb.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/thumb.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/tooltip_frame_light.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/tooltip_frame_light.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_facebook_disabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_facebook_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/thumb_drawable.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/thumb_drawable.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_checked_text_view.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_checked_text_view.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_dark_circle.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_dark_circle.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ratingbar_indicator_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ratingbar_indicator_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_grid.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_grid.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/list_item.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/list_item.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_dark_no_rounded.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_dark_no_rounded.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_button_login_logo.xml",
+        "source": "/home/amit/.android/build-cache/04100e479a4aa3d7267927bd49f6fecea12b9851/output/res/drawable/com_facebook_button_login_logo.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_tick_mark_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_seekbar_tick_mark_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_arrow_back_black_24dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_arrow_back_black_24dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/chip_default.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/chip_default.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_dark_normal.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_text_dark_normal.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_transparent.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_transparent.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_cab_background_internal_bg.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_cab_background_internal_bg.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_add_location.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_add_location.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_share.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_share.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ccp_down_arrow.png",
+        "source": "/home/amit/.android/build-cache/139636b6c70b9437b2a0682687e1fe39138e2875/output/res/drawable/ccp_down_arrow.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_upload.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_upload.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/pp.jpg",
+        "source": "/home/amit/.android/build-cache/139636b6c70b9437b2a0682687e1fe39138e2875/output/res/drawable/pp.jpg"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_flash_on.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_flash_on.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_home.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_home.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_google_disabled.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_google_disabled.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ripple_dark_rounded_4dp.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ripple_dark_rounded_4dp.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_menu_overflow_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_menu_overflow_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_left_curved.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_left_curved.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_cancel.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_cancel.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark.xml",
+        "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/drawable/common_google_signin_btn_icon_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_vignette.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_vignette.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_tick_circle.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_tick_circle.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/com_facebook_auth_dialog_cancel_background.xml",
+        "source": "/home/amit/.android/build-cache/42521427ab8311006e9e7e1d8a1b8eb3720c430a/output/res/drawable/com_facebook_auth_dialog_cancel_background.xml"
+    }
+]

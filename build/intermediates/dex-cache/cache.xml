@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/amit/Projects/android/teazer/app/libs/javax.mail-1.6.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="a055c648842c4954c1f7db7254f45d9ad565e278">
+        <dex dex="/home/amit/Projects/android/teazer/app/build/intermediates/transforms/dex/debug/folders/1000/2/javax.mail-1.6.0_c58e28dc3f156c7e4e016ff699e747aed3a53de4/classes.dex" />
+    </item>
+
+</items>

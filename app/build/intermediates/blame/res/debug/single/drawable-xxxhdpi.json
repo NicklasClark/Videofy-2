@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_react.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_react.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_user_dp_small.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_user_dp_small.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_add_video_black.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_add_video_black.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_person_black.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_person_black.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_notifications_black.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_notifications_black.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_retry.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_retry.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_home_black.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_home_black.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_binoculars_black.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_binoculars_black.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_add_user.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_add_user.png"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable-xxxhdpi/ic_add_profile_pic.png",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable-xxxhdpi/ic_add_profile_pic.png"
+    }
+]
