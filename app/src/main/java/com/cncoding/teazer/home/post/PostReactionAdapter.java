@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
@@ -123,7 +127,19 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 @Override
                 public void onClick(View view) {
                     playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
-                    ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context);
+                    ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
+                            .enqueue(new Callback<ResultObject>() {
+                                @Override
+                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                    if (response.code() == 200 && response.body().getStatus())
+                                        postReactions.get(holder.getAdapterPosition()).views++;
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                                }
+                            });
                     listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
                 }
             };

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -30,6 +31,7 @@ import com.cncoding.teazer.ui.fragment.activity.FollowersActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 
 import java.util.List;
 
@@ -69,12 +71,11 @@ public class ProfileFragment extends BaseFragment {
     public ProfileFragment() {
     }
     public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-//        Bundle args = new Bundle();
+        //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
 //        fragment.setArguments(args);
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
@@ -87,7 +88,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_profile, container, false);
@@ -184,13 +185,13 @@ public class ProfileFragment extends BaseFragment {
     }
     public void getProfileDetail()
     {
-        ApiCallingService.User.getUserProfileDetail(context).enqueue(new Callback<Pojos.User.Profile>() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<Pojos.User.Profile> call, Response<Pojos.User.Profile> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 if(response.code()==200)
                 {
                     try {
-                        Pojos.User.PublicProfile userProfile = response.body().getPublicProfile();
+                        Pojos.User.PublicProfile userProfile = response.body().getUserProfile();
                         int totalfollowers = response.body().getFollowers();
                         int totalfollowing = response.body().getFollowings();
                         int totalvideos = response.body().getTotalVideos();
@@ -236,7 +237,7 @@ public class ProfileFragment extends BaseFragment {
                 }
             }
             @Override
-            public void onFailure(Call<Pojos.User.Profile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
 
             }
         });

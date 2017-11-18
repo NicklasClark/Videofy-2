@@ -212,4 +212,7 @@
     <string name="unfollow_confirmation">Are you sure you want to unfollow&#160;</string>
     <string name="cancel_request_confirmation">Are you sure you want to cancel the request sent to&#160;</string>
     <string name="requested">&#160;&#160;Requested</string>
+    <string name="no_users_tagged_yet">No users tagged yet</string>
+    <string name="no_posts_available">No posts available</string>
+    <string name="all_caught_up">All caught up!</string>
 </resources>

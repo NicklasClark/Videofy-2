@@ -46,6 +46,7 @@ import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.util.Size;
@@ -64,10 +65,12 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +86,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_ID;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
@@ -207,13 +210,12 @@ public class CameraFragment extends Fragment {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            Activity activity = getActivity();
-            if (null != activity) {
-                activity.finish();
-            }
+            activity.finish();
         }
     };
 
+    private FragmentActivity activity;
+    private Context context;
     private Integer mSensorOrientation;
     private String mNextVideoAbsolutePath;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -221,13 +223,13 @@ public class CameraFragment extends Fragment {
     private OnCameraFragmentInteractionListener mListener;
     private String cameraId;
     private boolean isReaction;
-    private int postId = -1;
+    private PostDetails postDetails;
 
-    public static CameraFragment newInstance(boolean isReaction, int postId) {
+    public static CameraFragment newInstance(boolean isReaction, PostDetails postDetails) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
         args.putBoolean(IS_REACTION, isReaction);
-        args.putInt(POST_ID, postId);
+        args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
     }
@@ -235,21 +237,23 @@ public class CameraFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = getActivity();
+        context = getContext();
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
             if (isReaction)
-                postId = getArguments().getInt(POST_ID);
+                postDetails = getArguments().getParcelable(POST_DETAILS);
         }
-        if (getActivity() instanceof OnCameraFragmentInteractionListener) {
-            mListener = (OnCameraFragmentInteractionListener) getActivity();
+        if (activity instanceof OnCameraFragmentInteractionListener) {
+            mListener = (OnCameraFragmentInteractionListener) activity;
         } else {
-            throw new RuntimeException(getActivity().getLocalClassName()
+            throw new RuntimeException(activity.getLocalClassName()
                     + " must implement OnCameraFragmentInteractionListener");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
@@ -283,7 +287,7 @@ public class CameraFragment extends Fragment {
             stopRecordButtonAnimations();
             stopRecordingVideo();
         } else {
-            animateRecordButton(getActivity());
+            animateRecordButton(activity);
             startRecordingVideo();
         }
     }
@@ -341,7 +345,7 @@ public class CameraFragment extends Fragment {
      */
     private boolean shouldShowRequestPermissionRationale(String[] permissions) {
         for (String permission : permissions) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
                 return true;
             }
         }
@@ -350,7 +354,7 @@ public class CameraFragment extends Fragment {
 
     private boolean hasPermissionsGranted(String[] permissions) {
         for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), permission)
+            if (ActivityCompat.checkSelfPermission(activity, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
@@ -360,9 +364,9 @@ public class CameraFragment extends Fragment {
 
     private void requestVideoPermissions() {
         if (shouldShowRequestPermissionRationale(VIDEO_PERMISSIONS)) {
-            new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            ConfirmationDialog.newInstance(this).show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
+            ActivityCompat.requestPermissions(activity, VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
         }
     }
 
@@ -373,13 +377,13 @@ public class CameraFragment extends Fragment {
             if (grantResults.length == VIDEO_PERMISSIONS.length) {
                 for (int result : grantResults) {
                     if (result != PackageManager.PERMISSION_GRANTED) {
-                        ErrorDialog.newInstance(getString(R.string.permission_request))
+                        ErrorDialog.newInstance(getString(R.string.permission_request), this)
                                 .show(getChildFragmentManager(), FRAGMENT_DIALOG);
                         break;
                     }
                 }
             } else {
-                ErrorDialog.newInstance(getString(R.string.permission_request))
+                ErrorDialog.newInstance(getString(R.string.permission_request), this)
                         .show(getChildFragmentManager(), FRAGMENT_DIALOG);
             }
         } else {
@@ -395,10 +399,11 @@ public class CameraFragment extends Fragment {
             requestVideoPermissions();
             return;
         }
-        final Activity activity = getActivity();
-        if (null == activity || activity.isFinishing()) {
+
+        if (activity == null || activity.isFinishing()) {
             return;
         }
+
         CameraManager cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
@@ -424,7 +429,7 @@ public class CameraFragment extends Fragment {
                 }
                 configureTransform(width, height);
                 mMediaRecorder = new MediaRecorder();
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 cameraManager.openCamera(cameraId, mStateCallback, null);
@@ -435,7 +440,7 @@ public class CameraFragment extends Fragment {
         } catch (NullPointerException e) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-            ErrorDialog.newInstance(getString(R.string.camera_error)).show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            ErrorDialog.newInstance(getString(R.string.camera_error), this).show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.");
         }
@@ -487,10 +492,7 @@ public class CameraFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
-                    if (null != activity) {
-                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }, mBackgroundHandler);
         } catch (CameraAccessException e) {
@@ -577,7 +579,6 @@ public class CameraFragment extends Fragment {
      * @param viewHeight The height of `mTextureView`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
-        Activity activity = getActivity();
         if (mPreviewSize == null || activity == null) {
             return;
         }
@@ -600,15 +601,14 @@ public class CameraFragment extends Fragment {
     }
 
     private void setUpMediaRecorder() throws IOException {
-        final Activity activity = getActivity();
-        if (null == activity) {
+        if (activity == null) {
             return;
         }
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
-            mNextVideoAbsolutePath = getVideoFilePath(getActivity());
+            mNextVideoAbsolutePath = getVideoFilePath(activity);
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
         mMediaRecorder.setVideoEncodingBitRate(10000000);
@@ -685,7 +685,7 @@ public class CameraFragment extends Fragment {
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mIsRecordingVideo = true;
@@ -698,10 +698,7 @@ public class CameraFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
-                    if (null != activity) {
-                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }, mBackgroundHandler);
         } catch (CameraAccessException | IOException e) {
@@ -735,13 +732,13 @@ public class CameraFragment extends Fragment {
         }
         mMediaRecorder.reset();
 
-        Toast.makeText(getActivity(), "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
 //        mNextVideoAbsolutePath = null;
 //        startPreview();
         if (isReaction)
-            new ChooseOptionalTitle(getContext(), new Pojos.UploadParams(mNextVideoAbsolutePath));
+            new ChooseOptionalTitle(context, new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
         else
-            mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, new Pojos.UploadParams(mNextVideoAbsolutePath));
+            mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, new UploadParams(mNextVideoAbsolutePath, null));
     }
 
     /**
@@ -761,25 +758,27 @@ public class CameraFragment extends Fragment {
     public static class ErrorDialog extends DialogFragment {
 
         private static final String ARG_MESSAGE = "message";
+        private static WeakReference<CameraFragment> reference;
 
-        public static ErrorDialog newInstance(String message) {
+        public static ErrorDialog newInstance(String message, CameraFragment context) {
             ErrorDialog dialog = new ErrorDialog();
             Bundle args = new Bundle();
             args.putString(ARG_MESSAGE, message);
             dialog.setArguments(args);
+            reference = new WeakReference<>(context);
             return dialog;
         }
 
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
-            return new AlertDialog.Builder(activity)
+            //noinspection ConstantConditions
+            return new AlertDialog.Builder(reference.get().context)
                     .setMessage(getArguments().getString(ARG_MESSAGE))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            activity.finish();
+                            reference.get().activity.finish();
                         }
                     })
                     .create();
@@ -789,16 +788,22 @@ public class CameraFragment extends Fragment {
 
     public static class ConfirmationDialog extends DialogFragment {
 
+        private static WeakReference<CameraFragment> reference;
+
+        public static ConfirmationDialog newInstance(CameraFragment context) {
+            reference = new WeakReference<>(context);
+            return new ConfirmationDialog();
+        }
+
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Fragment parent = getParentFragment();
-            return new AlertDialog.Builder(getActivity())
+            return new AlertDialog.Builder(reference.get().activity)
                     .setMessage(R.string.permission_request)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(parent.getActivity(), VIDEO_PERMISSIONS,
+                            ActivityCompat.requestPermissions(reference.get().activity, VIDEO_PERMISSIONS,
                                     REQUEST_VIDEO_PERMISSIONS);
                         }
                     })
@@ -806,7 +811,7 @@ public class CameraFragment extends Fragment {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    parent.getActivity().finish();
+                                    reference.get().activity.finish();
                                 }
                             })
                     .create();
@@ -814,39 +819,42 @@ public class CameraFragment extends Fragment {
 
     }
 
-    private class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
+    static class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
 
-        ChooseOptionalTitle(@NonNull final Context context, final Pojos.UploadParams uploadParams) {
+        ChooseOptionalTitle(@NonNull final Context context, final UploadParams uploadParams, final Activity activity) {
             super(context);
             android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-            LayoutInflater inflater = getActivity().getLayoutInflater();
+            LayoutInflater inflater = activity.getLayoutInflater();
             @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
             dialogBuilder.setView(dialogView);
 
             final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
 
-            setupEditText(editText);
+            setupEditText(editText, activity);
 
             dialogBuilder.setCancelable(false);
             dialogBuilder.setMessage(R.string.optional_title);
             dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    hideKeyboard(getActivity(), editText);
+                    hideKeyboard(activity, editText);
+
                     performUpload(context,
-                            new Pojos.UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(), postId));
-                    getActivity().finish();
+                            new UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(),
+                                    uploadParams.getPostDetails()));
+
+                    activity.finish();
                 }
             });
             android.support.v7.app.AlertDialog b = dialogBuilder.create();
             b.show();
         }
 
-        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
+        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText, final Activity activity) {
             editText.requestFocus();
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    hideKeyboard(getActivity(), textView);
+                    hideKeyboard(activity, textView);
                     return true;
                 }
             });
@@ -857,6 +865,6 @@ public class CameraFragment extends Fragment {
         /**
          * @param action {@value #ACTION_UPLOAD_VIDEO_POST} or {@value #ACTION_SHOW_GALLERY}
          */
-        void onCameraInteraction(int action, Pojos.UploadParams uploadParams);
+        void onCameraInteraction(int action, UploadParams uploadParams);
     }
 }

@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.notifications;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
@@ -29,16 +31,14 @@ import retrofit2.Response;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
  */
 public class FollowingNotificationsTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
 
-    private OnListFragmentInteractionListener mListener;
+//    private OnListFragmentInteractionListener mListener;
     private NotificationsList notificationsList;
     private NotificationsAdapter adapter;
 
@@ -54,7 +54,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
@@ -106,8 +106,15 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
                         @Override
                         public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
                             if (response.code() == 200) {
-                                reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
-                                reference.get().adapter.notifyDataSetChanged();
+                                if (response.body().getNotifications().size() > 0) {
+                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    reference.get().noNotifications.setVisibility(View.GONE);
+                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
+                                    reference.get().adapter.notifyDataSetChanged();
+                                } else {
+                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
+                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
                                         Toast.LENGTH_SHORT).show();
@@ -128,9 +135,9 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        }
+//        if (context instanceof OnListFragmentInteractionListener) {
+//            mListener = (OnListFragmentInteractionListener) context;
+//        }
 //        else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnListFragmentInteractionListener");
@@ -140,7 +147,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        mListener = null;
     }
 
     @Override
@@ -149,17 +156,17 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         adapter = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Pojos.User.Notification item);
-    }
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     * <p/>
+//     * See the Android Training lesson <a href=
+//     * "http://developer.android.com/training/basics/fragments/communicating.html"
+//     * >Communicating with Other Fragments</a> for more information.
+//     */
+//    public interface OnListFragmentInteractionListener {
+//        void onListFragmentInteraction(Pojos.User.Notification item);
+//    }
 }

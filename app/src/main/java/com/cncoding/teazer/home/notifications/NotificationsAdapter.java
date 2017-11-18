@@ -24,7 +24,6 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.UniversalTextView;
-import com.cncoding.teazer.home.notifications.FollowingNotificationsTabFragment.OnListFragmentInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
@@ -42,8 +41,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Notification} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * {@link RecyclerView.Adapter} that can display a {@link Notification}
  */
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -179,24 +177,24 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onClick(View view) {
                         switch (view.getId()) {
                             case R.id.root_layout:
-                                if (mListener != null) {
-                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
-                                            .enqueue(new Callback<Profile>() {
-                                                @Override
-                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
-                                                    if (response.code() == 200)
-                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
-                                                    else
-                                                        Toast.makeText(context, response.code() + " : " + response.message(),
-                                                                Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<Profile> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
+//                                if (mListener != null) {
+//                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
+//                                            .enqueue(new Callback<Profile>() {
+//                                                @Override
+//                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
+//                                                    if (response.code() == 200)
+//                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
+//                                                    else
+//                                                        Toast.makeText(context, response.code() + " : " + response.message(),
+//                                                                Toast.LENGTH_SHORT).show();
+//                                                }
+//
+//                                                @Override
+//                                                public void onFailure(Call<Profile> call, Throwable t) {
+//                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            });
+//                                }
                                 break;
                             case R.id.notification_action:
                                 String text = holder2.action.getText().toString();

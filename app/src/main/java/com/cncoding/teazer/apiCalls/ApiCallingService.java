@@ -12,12 +12,14 @@ import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
 import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
+import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -157,9 +159,10 @@ public class ApiCallingService {
         /**
          * Call this service to get the my followings list
          * */
-        public static Call<Pojos.Friends.CircleList> getMyFollowings(int page, Context context) {
+        public static Call<CircleList> getMyFollowings(int page, Context context) {
             return getFriendsService(context).getMyFollowings(page);
         }
+
         public static Call<ProfileMyFollowing> getMyFollowing(int page, Context context) {
             return getFriendsService(context).getMyFollowing(page);
         }
@@ -197,7 +200,7 @@ public class ApiCallingService {
          * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.
          * If “next_page” is false no more records present.
          * */
-        public static Call<ResultObject> getMyCircle(int page, Context context) {
+        public static Call<CircleList> getMyCircle(int page, Context context) {
             return getFriendsService(context).getMyCircle(page);
         }
 
@@ -302,7 +305,7 @@ public class ApiCallingService {
             return getFriendsService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
         }
         
-        public static int isResponseOk(Response<Pojos.Friends.CircleList> response) {
+        public static int isResponseOk(Response<CircleList> response) {
             switch (response.code()) {
                 case 200:
                     if (response.body().isNextPage())
@@ -546,7 +549,7 @@ public class ApiCallingService {
             return getUserService(context).setAccountVisibility(accountType);
         }
 
-        public static Call<Profile> getUserProfile(Context context) {
+        public static Call<UserProfile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
         }
 
@@ -574,7 +577,7 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
-        public static Call<Profile>getUserProfileDetail(Context context) {
+        public static Call<UserProfile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
 
