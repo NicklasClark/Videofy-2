@@ -20,11 +20,11 @@ public final class R {
         public static final int green = 0x7f0e005b;
     }
     public static final class drawable {
-        public static final int ic_done_white_48dp = 0x7f0201b7;
-        public static final int shape_default = 0x7f02021d;
+        public static final int ic_done_white_48dp = 0x7f0201ba;
+        public static final int shape_default = 0x7f020222;
     }
     public static final class string {
-        public static final int app_name = 0x7f090055;
+        public static final int app_name = 0x7f090057;
     }
     public static final class styleable {
         public static final int[] CircularProgressButton = { 0x7f0100f3, 0x7f0100f4, 0x7f0100f5, 0x7f0100f6, 0x7f0100f7 };

@@ -35,6 +35,7 @@ import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +59,7 @@ public class ApiCallingService {
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     static final int FAIL = 3;
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
     public static class Application {
 
@@ -78,6 +80,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
         }
@@ -149,6 +152,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
@@ -281,13 +285,9 @@ public class ApiCallingService {
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-//<<<<<<< HEAD
         public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
-//=======
-//        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
-//>>>>>>> amit_test
             public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfoNoti(userId);
         }
@@ -663,6 +663,9 @@ public class ApiCallingService {
 
                 return chain.proceed(request);
             }
-        }).build();
+        }).addInterceptor(logging).build();
+    }
+    private static OkHttpClient getOkHttpClient() {
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
     }
 }

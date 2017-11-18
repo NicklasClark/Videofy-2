@@ -129,11 +129,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.cncoding.teazer.ui.fragment.activity.FollowersActivity"
+            android:name="com.cncoding.teazer.ui.fragment.activity.FollowersListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.cncoding.teazer.ui.fragment.activity.FollowingActivities"
+            android:name="com.cncoding.teazer.ui.fragment.activity.FollowingListActivities"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -178,6 +178,23 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
+        <activity
+            android:name="com.cncoding.teazer.ui.fragment.activity.EditProfile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.cncoding.teazer.ui.fragment.activity.FollowingProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.cncoding.teazer.ui.fragment.activity.BlockUserList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity android:name="com.facebook.CustomTabMainActivity" />
         <!--
          The initialization ContentProvider will call FacebookSdk.sdkInitialize automatically

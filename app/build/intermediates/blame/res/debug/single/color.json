@@ -28,12 +28,12 @@
         "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/color/abc_btn_colored_text_material.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/color/abc_tint_spinner.xml",
-        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/color/abc_tint_spinner.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/color/common_google_signin_btn_text_dark.xml",
         "source": "/home/amit/.android/build-cache/45a8615df9ec1ef290e10f77ccc7e605175df690/output/res/color/common_google_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/color/abc_tint_spinner.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/color/abc_tint_spinner.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/color/abc_btn_colored_borderless_text_material.xml",

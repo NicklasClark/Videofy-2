@@ -10,7 +10,151 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="" />
+    <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jp_wasabeef_blurry_2_1_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/1/debug_7a8f6ffda093230d165c95424080ec76e313920d/classes.dex" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/classes/debug/android/databinding/DataBinderMapper.class" afterPath="$PROJECT_DIR$/app/build/intermediates/classes/debug/android/databinding/DataBinderMapper.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/classes/debug/com/cncoding/teazer/authentication/LoginFragment.class" afterPath="$PROJECT_DIR$/app/build/intermediates/classes/debug/com/cncoding/teazer/authentication/LoginFragment.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/zip-cache/yyVn3mB+Ffmg2OgtRiDllL4S+WM=" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/zip-cache/yyVn3mB+Ffmg2OgtRiDllL4S+WM=" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/resources-debug.ap_" afterPath="$PROJECT_DIR$/app/build/intermediates/res/resources-debug.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/baseLibrary-2.3.3_fa6bc8f3b2294e5bd0f4b60570c3f663017d2e94/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/baseLibrary-2.3.3_fa6bc8f3b2294e5bd0f4b60570c3f663017d2e94/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_47b9c8119b95d2dfcafb0a8a53aeed24abf65f2f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_47b9c8119b95d2dfcafb0a8a53aeed24abf65f2f/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_2b4daff43fae2df5c9486a1c6b55839a87b97207/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_2b4daff43fae2df5c9486a1c6b55839a87b97207/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.5.1_0d22610970e830684d329a7ef3e2b2a5768cd008/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.5.1_0d22610970e830684d329a7ef3e2b2a5768cd008/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0c18cc96e9ee22b72aff4e73a88f393d80fef5e2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0c18cc96e9ee22b72aff4e73a88f393d80fef5e2/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0d16b2d2383d24ac71e76221949eae9c88ec4e80/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0d16b2d2383d24ac71e76221949eae9c88ec4e80/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1fa724ae40a0e5b1af8c8b36a79c549d50fcd40f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1fa724ae40a0e5b1af8c8b36a79c549d50fcd40f/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_23e2525c9afa0cbadb74153c515d99eb99144d6a/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_23e2525c9afa0cbadb74153c515d99eb99144d6a/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2a435880043bf6a856659ce0a8a31981d49e79e5/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2a435880043bf6a856659ce0a8a31981d49e79e5/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2b3897080e81661c82d28c2272a9640c589929b2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2b3897080e81661c82d28c2272a9640c589929b2/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2feacf8c07bd0eaada6fb75b5570fcc730cd1083/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2feacf8c07bd0eaada6fb75b5570fcc730cd1083/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3182c3060c34e15f382d650cba249fbd71847595/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3182c3060c34e15f382d650cba249fbd71847595/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3bd82b25a8a94be1ccfb48519d06fdf33fb8200b/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3bd82b25a8a94be1ccfb48519d06fdf33fb8200b/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3c8053857b571cd3e1b880d36082e87d438812ae/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3c8053857b571cd3e1b880d36082e87d438812ae/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4062150e3fbc4277bf3d04c0e3bfff0703be1823/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4062150e3fbc4277bf3d04c0e3bfff0703be1823/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4102ba6cdda154d67a8059492262d75ac021b53e/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4102ba6cdda154d67a8059492262d75ac021b53e/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_421a7b2327d2475a927ab2ffd017d8514f676704/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_421a7b2327d2475a927ab2ffd017d8514f676704/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_45c6be842e3bfd160b71a37a387ef0b78fd79bff/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_45c6be842e3bfd160b71a37a387ef0b78fd79bff/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aebf016259c3e357f0244fa37fbe510604ffe25/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aebf016259c3e357f0244fa37fbe510604ffe25/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4cbcfdbf8e7fb4d05e31655f80976b40ebb56e78/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4cbcfdbf8e7fb4d05e31655f80976b40ebb56e78/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_55aa6ebd9f0323b9afa711f70dda69371e33ef9c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_55aa6ebd9f0323b9afa711f70dda69371e33ef9c/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5621fe41132b2241c04390be07bae0a2b2698080/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5621fe41132b2241c04390be07bae0a2b2698080/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5871311fefdb5eb3cdaa08f62c9326bcf020865a/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5871311fefdb5eb3cdaa08f62c9326bcf020865a/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5b19d160eb06c3fbd5e0da12acabced733e066ef/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5b19d160eb06c3fbd5e0da12acabced733e066ef/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_69a3bcc3b963eed0c6b27353109ecde8b9ee7ae0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_69a3bcc3b963eed0c6b27353109ecde8b9ee7ae0/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6a9d045eda457046d5759e1d39b449cfb75993b8/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6a9d045eda457046d5759e1d39b449cfb75993b8/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ace8fe829fae07caff9961a404021cddd834a46/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ace8fe829fae07caff9961a404021cddd834a46/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_796ea99f39e300c0cc1b3cf637371ffdf1d13a4f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_796ea99f39e300c0cc1b3cf637371ffdf1d13a4f/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7ab8459fa7ec439ca1b7621c1e77766ae28f5845/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7ab8459fa7ec439ca1b7621c1e77766ae28f5845/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_847646a0415bb5dcd897bfb5e34730618b062d9b/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_847646a0415bb5dcd897bfb5e34730618b062d9b/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8bb0e9651cc82d1000dbcc0924203c8161aa3cc6/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8bb0e9651cc82d1000dbcc0924203c8161aa3cc6/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95ba767ae9475c4dcced7f177b84c3517e92a3e3/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95ba767ae9475c4dcced7f177b84c3517e92a3e3/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95c8101389f0ef92bf7b2fbe8b80a9bcaed2d41d/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95c8101389f0ef92bf7b2fbe8b80a9bcaed2d41d/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96732820ac882be86ba5b1794f8f2f3fa0d64f77/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96732820ac882be86ba5b1794f8f2f3fa0d64f77/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_974153f91857ee845e70dbd6d3db445075934c27/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_974153f91857ee845e70dbd6d3db445075934c27/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_97540c1fd0c3f1f3c5f59478c5d7d171d6544906/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_97540c1fd0c3f1f3c5f59478c5d7d171d6544906/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_aa456977cb7ece99504b52be10ada9ebd76a47cf/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_aa456977cb7ece99504b52be10ada9ebd76a47cf/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b7a518bac7807353b81c0b734c8d02890c530657/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b7a518bac7807353b81c0b734c8d02890c530657/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ba562bd60963478513b82379891fe9f87dd1ae73/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ba562bd60963478513b82379891fe9f87dd1ae73/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_be66013ca901bbf3373f3d7b892a3252820ef7af/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_be66013ca901bbf3373f3d7b892a3252820ef7af/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c14d769489c867d2baae82ff891b6dd418411be4/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c14d769489c867d2baae82ff891b6dd418411be4/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d5d8dfface713b8a029998a63715bb72baa8cc67/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d5d8dfface713b8a029998a63715bb72baa8cc67/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_de5b132f77c01bfa280253580fc64fbe4d6c571c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_de5b132f77c01bfa280253580fc64fbe4d6c571c/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e5c667f225f1dfe62f21725ff1d3165db52f50f0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e5c667f225f1dfe62f21725ff1d3165db52f50f0/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ea638c5afa0d665bdb0ecbd52540e2db8b876da2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ea638c5afa0d665bdb0ecbd52540e2db8b876da2/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f7457a65f9759e0b1e1924b8e2c711dc340d93f0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f7457a65f9759e0b1e1924b8e2c711dc340d93f0/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_fdc4ac62078c54cfbac7e804a96eee0ced7ed17c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_fdc4ac62078c54cfbac7e804a96eee0ced7ed17c/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_6cf9a70b6f63c84513d051ab346641fc93e878de/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_6cf9a70b6f63c84513d051ab346641fc93e878de/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-gson-2.0.1_f370a25f2032b83b297680a3d4c045d067504d54/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-gson-2.0.1_f370a25f2032b83b297680a3d4c045d067504d54/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-scalars-2.1.0_0537b452f8a6ff57d5ff46a46ea21d74d4f8cc8c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-scalars-2.1.0_0537b452f8a6ff57d5ff46a46ea21d74d4f8cc8c/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/core-3.3.0_b0125c4c7fa32b0e6300d90027ff686a52113184/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/core-3.3.0_b0125c4c7fa32b0e6300d90027ff686a52113184/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.7.0_3edf9c0bf71690a461b7884e07c8eb32093d5ff2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.7.0_3edf9c0bf71690a461b7884e07c8eb32093d5ff2/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.8.0_6e7a3495d5301b3984930a597ff9af8bf1cf32c7/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.8.0_6e7a3495d5301b3984930a597ff9af8bf1cf32c7/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/kotlin-stdlib-1.1.51_41f5396ce777c46f88d5ac9b395d4012decd1a99/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/kotlin-stdlib-1.1.51_41f5396ce777c46f88d5ac9b395d4012decd1a99/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/libphonenumber-8.8.2_546fc4f1f1defed213ad10f53cf5bdd8896438eb/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/libphonenumber-8.8.2_546fc4f1f1defed213ad10f53cf5bdd8896438eb/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-3.7.0_bc295bcd632b7e6e17ae04b33a713eed49e7930c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-3.7.0_bc295bcd632b7e6e17ae04b33a713eed49e7930c/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.12.0_8322ad67d3e603d241e4a73d614ce1e3206cdb55/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.12.0_8322ad67d3e603d241e4a73d614ce1e3206cdb55/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/renderscript-v8_e1d5cd5cac1d3ad5e32278e8a65856de142c1ffa/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/renderscript-v8_e1d5cd5cac1d3ad5e32278e8a65856de142c1ffa/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-2.1.0_531e05255a3849829e4ab4eef1ad6e0ba5d233a5/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-2.1.0_531e05255a3849829e4ab4eef1ad6e0ba5d233a5/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.2_03eecc1df4625564f8f7640e6153f99626d7a53e/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.2_03eecc1df4625564f8f7640e6153f99626d7a53e/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/2/javax.mail-1.6.0_c58e28dc3f156c7e4e016ff699e747aed3a53de4/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/2/javax.mail-1.6.0_c58e28dc3f156c7e4e016ff699e747aed3a53de4/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/outputs/apk/app-debug.apk" afterPath="$PROJECT_DIR$/app/build/outputs/apk/app-debug.apk" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/apt/debug/android/databinding/DataBinderMapper.java" afterPath="$PROJECT_DIR$/app/build/generated/source/apt/debug/android/databinding/DataBinderMapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/dataBinding/debug/android/databinding/layouts/DataBindingInfo.java" afterPath="$PROJECT_DIR$/app/build/generated/source/dataBinding/debug/android/databinding/layouts/DataBindingInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/compat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/compat/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreui/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreui/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreutils/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreutils/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/customtabs/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/customtabs/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/design/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/design/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/fragment/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/fragment/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/animated/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/animated/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/mediacompat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/mediacompat/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/transition/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/transition/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v13/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v13/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v4/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v4/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/appcompat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/appcompat/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/palette/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/palette/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/recyclerview/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/recyclerview/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/br/com/simplepass/loading_button_lib/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/br/com/simplepass/loading_button_lib/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/cncoding/teazer/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/cncoding/teazer/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/common/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/common/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/login/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/login/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/futuremind/recyclerviewfastscroll/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/futuremind/recyclerviewfastscroll/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/flexbox/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/flexbox/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/gms/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/gms/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/hbb20/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/hbb20/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/sothree/slidinguppanel/library/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/sothree/slidinguppanel/library/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi/values.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi/values.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/color.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/color.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-mdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-mdpi-v4.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-nodpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-nodpi-v4.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xhdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xhdpi-v4.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xxxhdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xxxhdpi-v4.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/layout.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/layout.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_base_bottom_bar.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_base_bottom_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_followers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_following_activities.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_following_activities.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_settings.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_followers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_following.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_following.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_mycreations.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_mycreations.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_myreactions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile_myreactions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/dex-renamer-state.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/dex-renamer-state.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/file-input-save-data.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/file-input-save-data.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/manifests/full/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_base_bottom_bar.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_base_bottom_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_followers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_following_activities.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_following_activities.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_settings.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_followers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_following.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_following.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_mycreations.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_mycreations.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_myreactions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile_myreactions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/symbols/debug/R.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/symbols/debug/R.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" afterPath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
+    </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/assets/" />
@@ -142,59 +286,53 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2574">
-              <caret line="182" column="83" lean-forward="false" selection-start-line="182" selection-start-column="83" selection-end-line="182" selection-end-column="83" />
+              <caret line="182" column="87" lean-forward="false" selection-start-line="182" selection-start-column="87" selection-end-line="182" selection-end-column="87" />
               <folding>
                 <element signature="imports" expanded="false" />
-                <marker date="1511005396856" expanded="true" signature="8838:9936" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="9017:9556" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="9719:9890" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="10523:12260" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="10712:11875" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="12043:12214" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="12643:14043" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="12832:13658" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="13826:13997" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="14574:16171" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="14742:16125" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="14991:16073" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="15196:15775" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="15959:16019" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="16291:16635" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="16459:16589" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="17224:19116" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="17392:19070" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="17641:19018" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="17846:18720" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="18904:18964" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="19236:19580" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="19404:19534" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="19973:23111" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="20154:22746" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="20755:21523" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="20963:21457" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="21663:22107" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="21871:22041" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="22906:23069" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="23736:24995" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="23908:24987" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="24041:24742" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="24854:24969" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="25071:25362" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="25427:25483" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="25597:27825" ph="{...}" />
-                <marker date="1511005396856" expanded="false" signature="27870:27881" ph=" { " />
-                <marker date="1511005396856" expanded="false" signature="27932:27938" ph=" }" />
-                <marker date="1511005396856" expanded="true" signature="28009:28568" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="28350:28428" ph="{...}" />
-                <marker date="1511005396856" expanded="false" signature="28480:28495" ph=" { " />
-                <marker date="1511005396856" expanded="false" signature="28552:28562" ph=" }" />
-                <marker date="1511005396856" expanded="true" signature="28638:29290" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="29072:29150" ph="{...}" />
-                <marker date="1511005396856" expanded="false" signature="29202:29217" ph=" { " />
-                <marker date="1511005396856" expanded="false" signature="29274:29284" ph=" }" />
-                <marker date="1511005396856" expanded="true" signature="29374:29586" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="29672:29761" ph="{...}" />
-                <marker date="1511005396856" expanded="true" signature="29819:29930" ph="{...}" />
+                <element signature="e#27941#27942#0" expanded="false" />
+                <element signature="e#28565#28566#0" expanded="false" />
+                <element signature="e#29287#29288#0" expanded="false" />
+                <marker date="1511005611576" expanded="true" signature="8842:9940" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="9021:9560" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="9723:9894" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="10716:11879" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="12047:12218" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="12836:13662" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="13830:14001" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="14578:16175" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="14746:16129" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="15200:15779" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="15963:16023" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="16295:16639" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="16463:16593" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="17228:19120" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="17396:19074" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="17850:18724" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="18908:18968" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="19240:19584" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="19408:19538" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="20158:22750" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="20759:21527" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="20967:21461" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="21667:22111" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="21875:22045" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="22910:23073" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="23740:24999" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="24045:24746" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="24858:24973" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="25075:25366" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="25431:25487" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="25601:27829" ph="{...}" />
+                <marker date="1511005611576" expanded="false" signature="27874:27885" ph=" { " />
+                <marker date="1511005611576" expanded="true" signature="28013:28572" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="28354:28432" ph="{...}" />
+                <marker date="1511005611576" expanded="false" signature="28484:28499" ph=" { " />
+                <marker date="1511005611576" expanded="true" signature="28642:29294" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="29076:29154" ph="{...}" />
+                <marker date="1511005611576" expanded="false" signature="29206:29221" ph=" { " />
+                <marker date="1511005611576" expanded="true" signature="29378:29590" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="29676:29765" ph="{...}" />
+                <marker date="1511005611576" expanded="true" signature="29823:29934" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -211,29 +349,29 @@
                 <element signature="e#16706#16707#0" expanded="false" />
                 <element signature="e#20561#20562#0" expanded="false" />
                 <element signature="e#20625#20626#0" expanded="false" />
-                <marker date="1511005396800" expanded="true" signature="32193:32257" ph="{...}" />
-                <marker date="1511005396800" expanded="false" signature="32305:32316" ph=" { " />
-                <marker date="1511005396800" expanded="false" signature="32332:32338" ph=" }" />
-                <marker date="1511005396800" expanded="true" signature="32395:33231" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="32936:33123" ph="{...}" />
-                <marker date="1511005396800" expanded="false" signature="33013:33044" ph=" { " />
-                <marker date="1511005396800" expanded="false" signature="33075:33101" ph=" }" />
-                <marker date="1511005396800" expanded="true" signature="33237:33276" ph="/**...*/" />
-                <marker date="1511005396800" expanded="true" signature="33347:33893" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="33933:34121" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="34257:35671" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="34874:34970" ph="//..." />
-                <marker date="1511005396800" expanded="true" signature="35706:36098" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36139:36504" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36293:36496" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36394:36478" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36550:36660" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36705:36768" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="36838:37142" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="37229:37368" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="37488:37871" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="37915:37989" ph="{...}" />
-                <marker date="1511005396800" expanded="true" signature="38037:38413" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="32422:32486" ph="{...}" />
+                <marker date="1511005611548" expanded="false" signature="32534:32545" ph=" { " />
+                <marker date="1511005611548" expanded="false" signature="32561:32567" ph=" }" />
+                <marker date="1511005611548" expanded="true" signature="32624:33460" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="33165:33352" ph="{...}" />
+                <marker date="1511005611548" expanded="false" signature="33242:33273" ph=" { " />
+                <marker date="1511005611548" expanded="false" signature="33304:33330" ph=" }" />
+                <marker date="1511005611548" expanded="true" signature="33466:33505" ph="/**...*/" />
+                <marker date="1511005611548" expanded="true" signature="33576:34122" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="34162:34350" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="34486:35900" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="35103:35199" ph="//..." />
+                <marker date="1511005611548" expanded="true" signature="35935:36327" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="36368:36733" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="36522:36725" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="36623:36707" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="36779:36889" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="36934:36997" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="37067:37371" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="37458:37597" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="37717:38100" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="38144:38218" ph="{...}" />
+                <marker date="1511005611548" expanded="true" signature="38266:38642" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -242,11 +380,10 @@
       <file leaf-file-name="ProfileMyCreationAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
-              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+            <state relative-caret-position="1080">
+              <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="false" />
-                <marker date="1511005396760" expanded="true" signature="1069:1075" ph="/**...*/" />
               </folding>
             </state>
           </provider>
@@ -283,16 +420,16 @@
       <file leaf-file-name="TeazerApiCall.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3633">
-              <caret line="298" column="11" lean-forward="false" selection-start-line="298" selection-start-column="11" selection-end-line="298" selection-end-column="11" />
+            <state relative-caret-position="3903">
+              <caret line="313" column="11" lean-forward="false" selection-start-line="313" selection-start-column="11" selection-end-line="313" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="false" />
-                <marker date="1511005396760" expanded="true" signature="26708:27787" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="26741:26815" ph="/**...*/" />
-                <marker date="1511005396760" expanded="true" signature="26968:27045" ph="/**...*/" />
-                <marker date="1511005396760" expanded="true" signature="27199:27274" ph="/**...*/" />
-                <marker date="1511005396760" expanded="true" signature="27552:27787" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="27564:27667" ph="/**...*/" />
+                <marker date="1511005611392" expanded="true" signature="27790:28869" ph="{...}" />
+                <marker date="1511005611392" expanded="true" signature="27823:27897" ph="/**...*/" />
+                <marker date="1511005611392" expanded="true" signature="28050:28127" ph="/**...*/" />
+                <marker date="1511005611392" expanded="true" signature="28281:28356" ph="/**...*/" />
+                <marker date="1511005611392" expanded="true" signature="28634:28869" ph="{...}" />
+                <marker date="1511005611392" expanded="true" signature="28646:28749" ph="/**...*/" />
               </folding>
             </state>
           </provider>
@@ -301,8 +438,8 @@
       <file leaf-file-name="BaseBottomBarActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="356" column="49" lean-forward="false" selection-start-line="356" selection-start-column="49" selection-end-line="356" selection-end-column="49" />
+            <state relative-caret-position="401">
+              <caret line="377" column="49" lean-forward="false" selection-start-line="377" selection-start-column="49" selection-end-line="377" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -313,27 +450,13 @@
       <file leaf-file-name="ApiCallingService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="635" column="10" lean-forward="false" selection-start-line="635" selection-start-column="10" selection-end-line="635" selection-end-column="10" />
+            <state relative-caret-position="439">
+              <caret line="671" column="1" lean-forward="true" selection-start-line="671" selection-start-column="1" selection-end-line="671" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1511005396760" expanded="true" signature="23677:25424" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="23717:23812" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="23936:24029" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="24140:24227" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="24336:24421" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="24538:24622" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="24704:24774" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="24849:24921" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="25002:25418" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="25418:25424" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="25694:26969" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="25749:26961" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="25866:26743" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="26839:26951" ph="{...}" />
-                <marker date="1511005396760" expanded="true" signature="27055:27630" ph="{...}" />
-                <marker date="1511005396760" expanded="false" signature="27114:27235" ph="(chain) → {" />
-                <marker date="1511005396760" expanded="false" signature="27599:27614" ph="}" />
+                <element signature="e#28704#29204#0" expanded="true" />
+                <element signature="e#29203#29204#0" expanded="true" />
+                <marker date="1511006743281" expanded="true" signature="27008:27014" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -342,8 +465,8 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="64" column="1" lean-forward="false" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+            <state relative-caret-position="237">
+              <caret line="65" column="60" lean-forward="false" selection-start-line="65" selection-start-column="60" selection-end-line="65" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -352,11 +475,11 @@
       <file leaf-file-name="OfflineUserProfile.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/OfflineUserProfile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1332">
-              <caret line="82" column="36" lean-forward="false" selection-start-line="82" selection-start-column="36" selection-end-line="82" selection-end-column="36" />
+            <state relative-caret-position="1368">
+              <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="false" />
-                <marker date="1511005396900" expanded="true" signature="9631:9660" ph="{...}" />
+                <marker date="1511005611860" expanded="true" signature="10879:10908" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -2896,7 +3019,6 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/profile/ProfileFragment.java" />
@@ -2905,6 +3027,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
       </list>
@@ -3079,7 +3202,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
-    <property name="device.picker.selection" value="ZY322D6H2R" />
+    <property name="device.picker.selection" value="ZW3228V89G" />
     <property name="sync.plugin.last.upgrade.timestamp" value="1510165652907" />
     <property name="VectorAssetImportPath" value="$APPLICATION_HOME_DIR$" />
     <property name="android.profiler.active" value="true" />
@@ -3088,7 +3211,7 @@
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="show.do.not.ask.upgrade.gradle.plugin" value="2.3.3" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="SearchEverywhereHistoryKey" value="CreationAd&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java&#10;PoJ&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java&#10;AndroidManif&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/AndroidManifest.xml&#10;BottomBa&#9;PSI&#9;JAVA://com.cncoding.teazer.BaseBottomBarActivity&#10;Bottom&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java&#10;Tea&#9;PSI&#9;JAVA://com.cncoding.teazer.apiCalls.TeazerApiCall&#10;LoginFra&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java&#10;VideoUplo&#9;PSI&#9;JAVA://com.cncoding.teazer.home.camera.upload.VideoUpload&#10;ProfileFra&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/home/profile/ProfileFragment.java&#10;Offline&#9;PSI&#9;JAVA://com.cncoding.teazer.utilities.OfflineUserProfile&#10;Pojos&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java&#10;fragment_profil&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/res/layout/fragment_profile.xml&#10;FollowingListActivities&#9;PSI&#9;JAVA://com.cncoding.teazer.ui.fragment.activity.FollowingListActivities" />
+    <property name="SearchEverywhereHistoryKey" value="Login&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java&#10;CreationAd&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java&#10;PoJ&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java&#10;AndroidManif&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/AndroidManifest.xml&#10;BottomBa&#9;PSI&#9;JAVA://com.cncoding.teazer.BaseBottomBarActivity&#10;Bottom&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java&#10;Tea&#9;PSI&#9;JAVA://com.cncoding.teazer.apiCalls.TeazerApiCall&#10;LoginFra&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java&#10;VideoUplo&#9;PSI&#9;JAVA://com.cncoding.teazer.home.camera.upload.VideoUpload&#10;ProfileFra&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/home/profile/ProfileFragment.java&#10;Offline&#9;PSI&#9;JAVA://com.cncoding.teazer.utilities.OfflineUserProfile&#10;Pojos&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/java/com/cncoding/teazer/utilities/Pojos.java&#10;fragment_profil&#9;FILE&#9;file:///home/amit/Projects/android/teazer/app/src/main/res/layout/fragment_profile.xml&#10;FollowingListActivities&#9;PSI&#9;JAVA://com.cncoding.teazer.ui.fragment.activity.FollowingListActivities" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_settings.xml" />
   </component>
   <component name="RecentsManager">
@@ -3119,7 +3242,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.teazer [signingReport]">
+  <component name="RunManager" selected="Android App.app">
     <configuration default="false" name="FollowingActivity" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false" temporary="true">
       <module name="app" />
       <option name="DEPLOY" value="true" />
@@ -3166,7 +3289,7 @@
       <option name="ACTIVITY_CLASS" value="com.cncoding.teazer.ui.fragment.activity.FollowingActivity" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511005445065" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750293" />
       </method>
     </configuration>
     <configuration default="false" name="com.cncoding.teazer.model.profile.othersfollowing in app" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
@@ -3283,7 +3406,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511005445066" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750295" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3331,7 +3454,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511005445067" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750295" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3514,7 +3637,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511005445069" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750299" />
       </method>
     </configuration>
     <list size="4">
@@ -3644,9 +3767,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1301" height="772" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.53846157" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.63897765" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.63897765" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3090615" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -3655,7 +3779,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.56971157" sideWeight="0.50858366" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.8656958" sideWeight="0.49721116" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290735" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32847896" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32847896" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.776699" sideWeight="0.4914163" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -3758,7 +3882,7 @@
       <breakpoints>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java</url>
-          <line>635</line>
+          <line>637</line>
           <properties />
           <option name="timeStamp" value="92" />
         </line-breakpoint>
@@ -3905,7 +4029,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
           <caret line="65" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#3079#3517#0" expanded="false" />
+            <element signature="e#3516#3517#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -4031,7 +4158,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="825">
           <caret line="73" column="46" lean-forward="false" selection-start-line="73" selection-start-column="46" selection-end-line="73" selection-end-column="46" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -4077,14 +4206,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="423" column="32" lean-forward="false" selection-start-line="423" selection-start-column="32" selection-end-line="423" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -4108,7 +4229,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="69">
           <caret line="66" column="24" lean-forward="false" selection-start-line="66" selection-start-column="24" selection-end-line="66" selection-end-column="24" />
-          <folding />
+          <folding>
+            <element signature="e#3077#3078#0" expanded="false" />
+            <element signature="e#3127#3128#0" expanded="false" />
+            <element signature="e#7520#7922#0" expanded="false" />
+            <element signature="e#7921#7922#0" expanded="false" />
+            <element signature="e#13139#13602#0" expanded="false" />
+            <element signature="e#13192#13225#0" expanded="false" />
+            <element signature="e#13601#13602#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -4122,22 +4251,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/OfflineUserProfile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1332">
-          <caret line="82" column="36" lean-forward="false" selection-start-line="82" selection-start-column="36" selection-end-line="82" selection-end-column="36" />
+        <state relative-caret-position="1368">
+          <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="false" />
-            <marker date="1511005396900" expanded="true" signature="9631:9660" ph="{...}" />
+            <marker date="1511005611860" expanded="true" signature="10879:10908" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+        <state relative-caret-position="1080">
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="false" />
-            <marker date="1511005396760" expanded="true" signature="1069:1075" ph="/**...*/" />
           </folding>
         </state>
       </provider>
@@ -4171,59 +4299,53 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2574">
-          <caret line="182" column="83" lean-forward="false" selection-start-line="182" selection-start-column="83" selection-end-line="182" selection-end-column="83" />
+          <caret line="182" column="87" lean-forward="false" selection-start-line="182" selection-start-column="87" selection-end-line="182" selection-end-column="87" />
           <folding>
             <element signature="imports" expanded="false" />
-            <marker date="1511005396856" expanded="true" signature="8838:9936" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="9017:9556" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="9719:9890" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="10523:12260" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="10712:11875" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="12043:12214" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="12643:14043" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="12832:13658" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="13826:13997" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="14574:16171" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="14742:16125" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="14991:16073" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="15196:15775" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="15959:16019" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="16291:16635" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="16459:16589" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="17224:19116" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="17392:19070" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="17641:19018" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="17846:18720" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="18904:18964" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="19236:19580" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="19404:19534" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="19973:23111" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="20154:22746" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="20755:21523" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="20963:21457" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="21663:22107" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="21871:22041" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="22906:23069" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="23736:24995" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="23908:24987" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="24041:24742" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="24854:24969" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="25071:25362" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="25427:25483" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="25597:27825" ph="{...}" />
-            <marker date="1511005396856" expanded="false" signature="27870:27881" ph=" { " />
-            <marker date="1511005396856" expanded="false" signature="27932:27938" ph=" }" />
-            <marker date="1511005396856" expanded="true" signature="28009:28568" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="28350:28428" ph="{...}" />
-            <marker date="1511005396856" expanded="false" signature="28480:28495" ph=" { " />
-            <marker date="1511005396856" expanded="false" signature="28552:28562" ph=" }" />
-            <marker date="1511005396856" expanded="true" signature="28638:29290" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="29072:29150" ph="{...}" />
-            <marker date="1511005396856" expanded="false" signature="29202:29217" ph=" { " />
-            <marker date="1511005396856" expanded="false" signature="29274:29284" ph=" }" />
-            <marker date="1511005396856" expanded="true" signature="29374:29586" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="29672:29761" ph="{...}" />
-            <marker date="1511005396856" expanded="true" signature="29819:29930" ph="{...}" />
+            <element signature="e#27941#27942#0" expanded="false" />
+            <element signature="e#28565#28566#0" expanded="false" />
+            <element signature="e#29287#29288#0" expanded="false" />
+            <marker date="1511005611576" expanded="true" signature="8842:9940" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="9021:9560" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="9723:9894" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="10716:11879" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="12047:12218" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="12836:13662" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="13830:14001" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="14578:16175" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="14746:16129" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="15200:15779" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="15963:16023" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="16295:16639" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="16463:16593" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="17228:19120" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="17396:19074" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="17850:18724" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="18908:18968" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="19240:19584" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="19408:19538" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="20158:22750" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="20759:21527" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="20967:21461" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="21667:22111" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="21875:22045" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="22910:23073" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="23740:24999" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="24045:24746" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="24858:24973" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="25075:25366" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="25431:25487" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="25601:27829" ph="{...}" />
+            <marker date="1511005611576" expanded="false" signature="27874:27885" ph=" { " />
+            <marker date="1511005611576" expanded="true" signature="28013:28572" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="28354:28432" ph="{...}" />
+            <marker date="1511005611576" expanded="false" signature="28484:28499" ph=" { " />
+            <marker date="1511005611576" expanded="true" signature="28642:29294" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="29076:29154" ph="{...}" />
+            <marker date="1511005611576" expanded="false" signature="29206:29221" ph=" { " />
+            <marker date="1511005611576" expanded="true" signature="29378:29590" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="29676:29765" ph="{...}" />
+            <marker date="1511005611576" expanded="true" signature="29823:29934" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -4238,72 +4360,45 @@
             <element signature="e#16706#16707#0" expanded="false" />
             <element signature="e#20561#20562#0" expanded="false" />
             <element signature="e#20625#20626#0" expanded="false" />
-            <marker date="1511005396800" expanded="true" signature="32193:32257" ph="{...}" />
-            <marker date="1511005396800" expanded="false" signature="32305:32316" ph=" { " />
-            <marker date="1511005396800" expanded="false" signature="32332:32338" ph=" }" />
-            <marker date="1511005396800" expanded="true" signature="32395:33231" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="32936:33123" ph="{...}" />
-            <marker date="1511005396800" expanded="false" signature="33013:33044" ph=" { " />
-            <marker date="1511005396800" expanded="false" signature="33075:33101" ph=" }" />
-            <marker date="1511005396800" expanded="true" signature="33237:33276" ph="/**...*/" />
-            <marker date="1511005396800" expanded="true" signature="33347:33893" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="33933:34121" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="34257:35671" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="34874:34970" ph="//..." />
-            <marker date="1511005396800" expanded="true" signature="35706:36098" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36139:36504" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36293:36496" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36394:36478" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36550:36660" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36705:36768" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="36838:37142" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="37229:37368" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="37488:37871" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="37915:37989" ph="{...}" />
-            <marker date="1511005396800" expanded="true" signature="38037:38413" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="32422:32486" ph="{...}" />
+            <marker date="1511005611548" expanded="false" signature="32534:32545" ph=" { " />
+            <marker date="1511005611548" expanded="false" signature="32561:32567" ph=" }" />
+            <marker date="1511005611548" expanded="true" signature="32624:33460" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="33165:33352" ph="{...}" />
+            <marker date="1511005611548" expanded="false" signature="33242:33273" ph=" { " />
+            <marker date="1511005611548" expanded="false" signature="33304:33330" ph=" }" />
+            <marker date="1511005611548" expanded="true" signature="33466:33505" ph="/**...*/" />
+            <marker date="1511005611548" expanded="true" signature="33576:34122" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="34162:34350" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="34486:35900" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="35103:35199" ph="//..." />
+            <marker date="1511005611548" expanded="true" signature="35935:36327" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="36368:36733" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="36522:36725" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="36623:36707" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="36779:36889" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="36934:36997" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="37067:37371" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="37458:37597" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="37717:38100" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="38144:38218" ph="{...}" />
+            <marker date="1511005611548" expanded="true" signature="38266:38642" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3633">
-          <caret line="298" column="11" lean-forward="false" selection-start-line="298" selection-start-column="11" selection-end-line="298" selection-end-column="11" />
+        <state relative-caret-position="3903">
+          <caret line="313" column="11" lean-forward="false" selection-start-line="313" selection-start-column="11" selection-end-line="313" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="false" />
-            <marker date="1511005396760" expanded="true" signature="26708:27787" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="26741:26815" ph="/**...*/" />
-            <marker date="1511005396760" expanded="true" signature="26968:27045" ph="/**...*/" />
-            <marker date="1511005396760" expanded="true" signature="27199:27274" ph="/**...*/" />
-            <marker date="1511005396760" expanded="true" signature="27552:27787" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="27564:27667" ph="/**...*/" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="635" column="10" lean-forward="false" selection-start-line="635" selection-start-column="10" selection-end-line="635" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1511005396760" expanded="true" signature="23677:25424" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="23717:23812" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="23936:24029" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="24140:24227" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="24336:24421" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="24538:24622" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="24704:24774" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="24849:24921" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="25002:25418" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="25418:25424" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="25694:26969" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="25749:26961" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="25866:26743" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="26839:26951" ph="{...}" />
-            <marker date="1511005396760" expanded="true" signature="27055:27630" ph="{...}" />
-            <marker date="1511005396760" expanded="false" signature="27114:27235" ph="(chain) → {" />
-            <marker date="1511005396760" expanded="false" signature="27599:27614" ph="}" />
+            <marker date="1511005611392" expanded="true" signature="27790:28869" ph="{...}" />
+            <marker date="1511005611392" expanded="true" signature="27823:27897" ph="/**...*/" />
+            <marker date="1511005611392" expanded="true" signature="28050:28127" ph="/**...*/" />
+            <marker date="1511005611392" expanded="true" signature="28281:28356" ph="/**...*/" />
+            <marker date="1511005611392" expanded="true" signature="28634:28869" ph="{...}" />
+            <marker date="1511005611392" expanded="true" signature="28646:28749" ph="/**...*/" />
           </folding>
         </state>
       </provider>
@@ -4313,6 +4408,7 @@
         <state relative-caret-position="334">
           <caret line="1095" column="0" lean-forward="false" selection-start-line="1095" selection-start-column="0" selection-end-line="1095" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="false" />
             <element signature="e#753#754#0" expanded="false" />
             <element signature="e#806#807#0" expanded="false" />
             <element signature="e#1122#1123#0" expanded="false" />
@@ -4511,26 +4607,363 @@
             <element signature="e#31520#31521#0" expanded="false" />
             <element signature="e#31606#31607#0" expanded="false" />
             <element signature="e#31675#31676#0" expanded="false" />
+            <element signature="e#33688#33689#0" expanded="false" />
+            <element signature="e#33728#33729#0" expanded="false" />
+            <element signature="e#33900#33901#0" expanded="false" />
+            <element signature="e#33962#33963#0" expanded="false" />
+            <element signature="e#34043#34044#0" expanded="false" />
+            <element signature="e#34107#34108#0" expanded="false" />
+            <element signature="e#34165#34166#0" expanded="false" />
+            <element signature="e#34216#34217#0" expanded="false" />
+            <element signature="e#34259#34260#0" expanded="false" />
+            <element signature="e#34310#34311#0" expanded="false" />
+            <element signature="e#34350#34351#0" expanded="false" />
+            <element signature="e#34397#34398#0" expanded="false" />
+            <element signature="e#34448#34449#0" expanded="false" />
+            <element signature="e#34508#34509#0" expanded="false" />
+            <element signature="e#34553#34554#0" expanded="false" />
+            <element signature="e#34607#34608#0" expanded="false" />
+            <element signature="e#34664#34665#0" expanded="false" />
+            <element signature="e#34718#34719#0" expanded="false" />
+            <element signature="e#34771#34772#0" expanded="false" />
+            <element signature="e#34824#34825#0" expanded="false" />
+            <element signature="e#34865#34866#0" expanded="false" />
+            <element signature="e#34913#34914#0" expanded="false" />
+            <element signature="e#34955#34956#0" expanded="false" />
+            <element signature="e#35004#35005#0" expanded="false" />
+            <element signature="e#38210#38211#0" expanded="false" />
+            <element signature="e#38260#38261#0" expanded="false" />
+            <element signature="e#38399#38400#0" expanded="false" />
+            <element signature="e#38445#38446#0" expanded="false" />
+            <element signature="e#38488#38489#0" expanded="false" />
+            <element signature="e#38536#38537#0" expanded="false" />
+            <element signature="e#38580#38581#0" expanded="false" />
+            <element signature="e#38629#38630#0" expanded="false" />
+            <element signature="e#38672#38673#0" expanded="false" />
+            <element signature="e#38720#38721#0" expanded="false" />
+            <element signature="e#38760#38761#0" expanded="false" />
+            <element signature="e#38804#38805#0" expanded="false" />
+            <element signature="e#38848#38849#0" expanded="false" />
+            <element signature="e#38899#38900#0" expanded="false" />
+            <element signature="e#38937#38938#0" expanded="false" />
+            <element signature="e#38982#38983#0" expanded="false" />
+            <element signature="e#39025#39026#0" expanded="false" />
+            <element signature="e#39076#39077#0" expanded="false" />
+            <element signature="e#39117#39118#0" expanded="false" />
+            <element signature="e#39165#39166#0" expanded="false" />
+            <element signature="e#39208#39209#0" expanded="false" />
+            <element signature="e#39259#39260#0" expanded="false" />
+            <element signature="e#39303#39304#0" expanded="false" />
+            <element signature="e#39352#39353#0" expanded="false" />
+            <element signature="e#39396#39397#0" expanded="false" />
+            <element signature="e#39445#39446#0" expanded="false" />
+            <element signature="e#39493#39494#0" expanded="false" />
+            <element signature="e#39549#39550#0" expanded="false" />
+            <element signature="e#39602#39603#0" expanded="false" />
+            <element signature="e#39654#39655#0" expanded="false" />
+            <element signature="e#39712#39713#0" expanded="false" />
+            <element signature="e#39761#39762#0" expanded="false" />
+            <element signature="e#39804#39805#0" expanded="false" />
+            <element signature="e#39851#39852#0" expanded="false" />
+            <element signature="e#39907#39908#0" expanded="false" />
+            <element signature="e#39963#39964#0" expanded="false" />
+            <element signature="e#40030#40031#0" expanded="false" />
+            <element signature="e#40070#40071#0" expanded="false" />
+            <element signature="e#42012#42013#0" expanded="false" />
+            <element signature="e#42078#42079#0" expanded="false" />
+            <element signature="e#42163#42164#0" expanded="false" />
+            <element signature="e#42231#42232#0" expanded="false" />
+            <element signature="e#43671#43672#0" expanded="false" />
+            <element signature="e#43711#43712#0" expanded="false" />
+            <element signature="e#43904#43905#0" expanded="false" />
+            <element signature="e#43973#43974#0" expanded="false" />
+            <element signature="e#44061#44062#0" expanded="false" />
+            <element signature="e#44132#44133#0" expanded="false" />
+            <element signature="e#44188#44189#0" expanded="false" />
+            <element signature="e#44234#44235#0" expanded="false" />
+            <element signature="e#44277#44278#0" expanded="false" />
+            <element signature="e#44325#44326#0" expanded="false" />
+            <element signature="e#44369#44370#0" expanded="false" />
+            <element signature="e#44418#44419#0" expanded="false" />
+            <element signature="e#44461#44462#0" expanded="false" />
+            <element signature="e#44509#44510#0" expanded="false" />
+            <element signature="e#44557#44558#0" expanded="false" />
+            <element signature="e#44613#44614#0" expanded="false" />
+            <element signature="e#44666#44667#0" expanded="false" />
+            <element signature="e#44718#44719#0" expanded="false" />
+            <element signature="e#45392#45393#0" expanded="false" />
+            <element signature="e#45441#45442#0" expanded="false" />
+            <element signature="e#45485#45486#0" expanded="false" />
+            <element signature="e#45533#45534#0" expanded="false" />
+            <element signature="e#45573#45574#0" expanded="false" />
+            <element signature="e#45617#45618#0" expanded="false" />
+            <element signature="e#45662#45663#0" expanded="false" />
+            <element signature="e#45713#45714#0" expanded="false" />
+            <element signature="e#45757#45758#0" expanded="false" />
+            <element signature="e#45808#45809#0" expanded="false" />
             <element signature="e#45875#45876#0" expanded="false" />
+            <element signature="e#45915#45916#0" expanded="false" />
+            <element signature="e#46716#46717#0" expanded="false" />
+            <element signature="e#46784#46785#0" expanded="false" />
+            <element signature="e#46871#46872#0" expanded="false" />
+            <element signature="e#46941#46942#0" expanded="false" />
+            <element signature="e#47356#47357#0" expanded="false" />
+            <element signature="e#47407#47408#0" expanded="false" />
+            <element signature="e#47454#47455#0" expanded="false" />
+            <element signature="e#47505#47506#0" expanded="false" />
+            <element signature="e#47572#47573#0" expanded="false" />
+            <element signature="e#47612#47613#0" expanded="false" />
+            <element signature="e#48165#48166#0" expanded="false" />
+            <element signature="e#48234#48235#0" expanded="false" />
+            <element signature="e#48322#48323#0" expanded="false" />
+            <element signature="e#48393#48394#0" expanded="false" />
+            <element signature="e#48585#48586#0" expanded="false" />
+            <element signature="e#48645#48646#0" expanded="false" />
+            <element signature="e#48690#48691#0" expanded="false" />
+            <element signature="e#48739#48740#0" expanded="false" />
+            <element signature="e#48806#48807#0" expanded="false" />
+            <element signature="e#48846#48847#0" expanded="false" />
+            <element signature="e#48931#48932#0" expanded="false" />
+            <element signature="e#48993#48994#0" expanded="false" />
+            <element signature="e#49046#49047#0" expanded="false" />
+            <element signature="e#49106#49107#0" expanded="false" />
+            <element signature="e#49466#49467#0" expanded="false" />
+            <element signature="e#49539#49540#0" expanded="false" />
+            <element signature="e#50090#50091#0" expanded="false" />
+            <element signature="e#50142#50143#0" expanded="false" />
+            <element signature="e#50185#50186#0" expanded="false" />
+            <element signature="e#50236#50237#0" expanded="false" />
+            <element signature="e#50279#50280#0" expanded="false" />
+            <element signature="e#50327#50328#0" expanded="false" />
+            <element signature="e#53228#53229#0" expanded="false" />
+            <element signature="e#53295#53296#0" expanded="false" />
+            <element signature="e#53381#53382#0" expanded="false" />
+            <element signature="e#53450#53451#0" expanded="false" />
+            <element signature="e#53511#53512#0" expanded="false" />
+            <element signature="e#53565#53566#0" expanded="false" />
+            <element signature="e#53613#53614#0" expanded="false" />
+            <element signature="e#53669#53670#0" expanded="false" />
+            <element signature="e#53709#53710#0" expanded="false" />
+            <element signature="e#53757#53758#0" expanded="false" />
+            <element signature="e#53800#53801#0" expanded="false" />
+            <element signature="e#53851#53852#0" expanded="false" />
+            <element signature="e#53891#53892#0" expanded="false" />
+            <element signature="e#53935#53936#0" expanded="false" />
+            <element signature="e#53977#53978#0" expanded="false" />
+            <element signature="e#54023#54024#0" expanded="false" />
+            <element signature="e#54067#54068#0" expanded="false" />
+            <element signature="e#54116#54117#0" expanded="false" />
+            <element signature="e#54164#54165#0" expanded="false" />
+            <element signature="e#54220#54221#0" expanded="false" />
+            <element signature="e#54273#54274#0" expanded="false" />
             <element signature="e#54325#54326#0" expanded="false" />
+            <element signature="e#54381#54382#0" expanded="false" />
+            <element signature="e#54430#54431#0" expanded="false" />
+            <element signature="e#54475#54476#0" expanded="false" />
+            <element signature="e#54523#54524#0" expanded="false" />
+            <element signature="e#54590#54591#0" expanded="false" />
+            <element signature="e#54630#54631#0" expanded="false" />
+            <element signature="e#55680#55681#0" expanded="false" />
+            <element signature="e#55743#55744#0" expanded="false" />
+            <element signature="e#55825#55826#0" expanded="false" />
+            <element signature="e#55890#55891#0" expanded="false" />
+            <element signature="e#55972#55973#0" expanded="false" />
+            <element signature="e#56012#56013#0" expanded="false" />
+            <element signature="e#56384#56385#0" expanded="false" />
+            <element signature="e#56440#56441#0" expanded="false" />
+            <element signature="e#56483#56484#0" expanded="false" />
+            <element signature="e#56531#56532#0" expanded="false" />
+            <element signature="e#56569#56570#0" expanded="false" />
+            <element signature="e#56615#56616#0" expanded="false" />
+            <element signature="e#56651#56652#0" expanded="false" />
+            <element signature="e#56695#56696#0" expanded="false" />
+            <element signature="e#56735#56736#0" expanded="false" />
+            <element signature="e#56783#56784#0" expanded="false" />
+            <element signature="e#57142#57143#0" expanded="false" />
+            <element signature="e#57188#57189#0" expanded="false" />
+            <element signature="e#57232#57233#0" expanded="false" />
+            <element signature="e#57285#57286#0" expanded="false" />
+            <element signature="e#57352#57353#0" expanded="false" />
+            <element signature="e#57392#57393#0" expanded="false" />
+            <element signature="e#57911#57912#0" expanded="false" />
+            <element signature="e#57976#57977#0" expanded="false" />
+            <element signature="e#58060#58061#0" expanded="false" />
+            <element signature="e#58127#58128#0" expanded="false" />
+            <element signature="e#59044#59045#0" expanded="false" />
+            <element signature="e#59082#59083#0" expanded="false" />
+            <element signature="e#59121#59122#0" expanded="false" />
+            <element signature="e#59161#59162#0" expanded="false" />
+            <element signature="e#59201#59202#0" expanded="false" />
+            <element signature="e#59242#59243#0" expanded="false" />
+            <element signature="e#59281#59282#0" expanded="false" />
+            <element signature="e#59321#59322#0" expanded="false" />
+            <element signature="e#59361#59362#0" expanded="false" />
+            <element signature="e#59401#59402#0" expanded="false" />
+            <element signature="e#59440#59441#0" expanded="false" />
+            <element signature="e#59479#59480#0" expanded="false" />
+            <element signature="e#59523#59524#0" expanded="false" />
+            <element signature="e#59571#59572#0" expanded="false" />
+            <element signature="e#59620#59621#0" expanded="false" />
+            <element signature="e#59664#59665#0" expanded="false" />
+            <element signature="e#59723#59724#0" expanded="false" />
+            <element signature="e#59755#59756#0" expanded="false" />
+            <element signature="e#60854#60855#0" expanded="false" />
+            <element signature="e#60912#60913#0" expanded="false" />
+            <element signature="e#60989#60990#0" expanded="false" />
+            <element signature="e#61049#61050#0" expanded="false" />
+            <element signature="e#62227#62228#0" expanded="false" />
+            <element signature="e#62266#62267#0" expanded="false" />
+            <element signature="e#62305#62306#0" expanded="false" />
+            <element signature="e#62351#62352#0" expanded="false" />
+            <element signature="e#62390#62391#0" expanded="false" />
+            <element signature="e#62436#62437#0" expanded="false" />
+            <element signature="e#62480#62481#0" expanded="false" />
+            <element signature="e#62525#62526#0" expanded="false" />
+            <element signature="e#62573#62574#0" expanded="false" />
+            <element signature="e#62619#62620#0" expanded="false" />
+            <element signature="e#62656#62657#0" expanded="false" />
+            <element signature="e#62701#62702#0" expanded="false" />
+            <element signature="e#62760#62761#0" expanded="false" />
+            <element signature="e#62792#62793#0" expanded="false" />
+            <element signature="e#65427#65428#0" expanded="false" />
+            <element signature="e#65459#65460#0" expanded="false" />
+            <element signature="e#65634#65635#0" expanded="false" />
+            <element signature="e#65693#65694#0" expanded="false" />
+            <element signature="e#65771#65772#0" expanded="false" />
+            <element signature="e#65832#65833#0" expanded="false" />
+            <element signature="e#65880#65881#0" expanded="false" />
+            <element signature="e#65921#65922#0" expanded="false" />
+            <element signature="e#65960#65961#0" expanded="false" />
+            <element signature="e#66000#66001#0" expanded="false" />
+            <element signature="e#66039#66040#0" expanded="false" />
+            <element signature="e#66079#66080#0" expanded="false" />
+            <element signature="e#66118#66119#0" expanded="false" />
+            <element signature="e#66157#66158#0" expanded="false" />
+            <element signature="e#66200#66201#0" expanded="false" />
+            <element signature="e#66246#66247#0" expanded="false" />
+            <element signature="e#66282#66283#0" expanded="false" />
+            <element signature="e#66321#66322#0" expanded="false" />
+            <element signature="e#67194#67195#0" expanded="false" />
+            <element signature="e#67233#67234#0" expanded="false" />
+            <element signature="e#67272#67273#0" expanded="false" />
+            <element signature="e#67312#67313#0" expanded="false" />
+            <element signature="e#67351#67352#0" expanded="false" />
+            <element signature="e#67391#67392#0" expanded="false" />
+            <element signature="e#67430#67431#0" expanded="false" />
+            <element signature="e#67469#67470#0" expanded="false" />
+            <element signature="e#67512#67513#0" expanded="false" />
+            <element signature="e#67558#67559#0" expanded="false" />
+            <element signature="e#67594#67595#0" expanded="false" />
+            <element signature="e#67633#67634#0" expanded="false" />
+            <element signature="e#67666#67667#0" expanded="false" />
+            <element signature="e#67702#67703#0" expanded="false" />
+            <element signature="e#67742#67743#0" expanded="false" />
+            <element signature="e#67783#67784#0" expanded="false" />
+            <element signature="e#67842#67843#0" expanded="false" />
+            <element signature="e#67874#67875#0" expanded="false" />
+            <element signature="e#68888#68889#0" expanded="false" />
+            <element signature="e#68941#68942#0" expanded="false" />
+            <element signature="e#69013#69014#0" expanded="false" />
+            <element signature="e#69068#69069#0" expanded="false" />
+            <element signature="e#69360#69361#0" expanded="false" />
+            <element signature="e#69397#69398#0" expanded="false" />
+            <element signature="e#69430#69431#0" expanded="false" />
+            <element signature="e#69466#69467#0" expanded="false" />
+            <element signature="e#69525#69526#0" expanded="false" />
+            <element signature="e#69557#69558#0" expanded="false" />
+            <element signature="e#70004#70005#0" expanded="false" />
+            <element signature="e#70060#70061#0" expanded="false" />
+            <element signature="e#70135#70136#0" expanded="false" />
+            <element signature="e#70193#70194#0" expanded="false" />
+            <element signature="e#70689#70690#0" expanded="false" />
+            <element signature="e#70730#70731#0" expanded="false" />
+            <element signature="e#70768#70769#0" expanded="false" />
+            <element signature="e#70807#70808#0" expanded="false" />
+            <element signature="e#70846#70847#0" expanded="false" />
+            <element signature="e#70886#70887#0" expanded="false" />
+            <element signature="e#70925#70926#0" expanded="false" />
+            <element signature="e#70964#70965#0" expanded="false" />
+            <element signature="e#71023#71024#0" expanded="false" />
+            <element signature="e#71055#71056#0" expanded="false" />
+            <element signature="e#71676#71677#0" expanded="false" />
+            <element signature="e#71730#71731#0" expanded="false" />
+            <element signature="e#71803#71804#0" expanded="false" />
+            <element signature="e#71859#71860#0" expanded="false" />
+            <element signature="e#72492#72493#0" expanded="false" />
+            <element signature="e#72534#72535#0" expanded="false" />
+            <element signature="e#72577#72578#0" expanded="false" />
+            <element signature="e#72621#72622#0" expanded="false" />
+            <element signature="e#72680#72681#0" expanded="false" />
+            <element signature="e#72712#72713#0" expanded="false" />
+            <element signature="e#73177#73178#0" expanded="false" />
+            <element signature="e#73232#73233#0" expanded="false" />
+            <element signature="e#73306#73307#0" expanded="false" />
+            <element signature="e#73363#73364#0" expanded="false" />
+            <element signature="e#74544#74545#0" expanded="false" />
+            <element signature="e#74594#74595#0" expanded="false" />
+            <element signature="e#75523#75524#0" expanded="false" />
+            <element signature="e#75555#75556#0" expanded="false" />
+            <element signature="e#75730#75731#0" expanded="false" />
+            <element signature="e#75789#75790#0" expanded="false" />
+            <element signature="e#75867#75868#0" expanded="false" />
+            <element signature="e#75928#75929#0" expanded="false" />
+            <element signature="e#75979#75980#0" expanded="false" />
+            <element signature="e#76019#76020#0" expanded="false" />
+            <element signature="e#76058#76059#0" expanded="false" />
+            <element signature="e#76099#76100#0" expanded="false" />
+            <element signature="e#76135#76136#0" expanded="false" />
+            <element signature="e#76171#76172#0" expanded="false" />
+            <element signature="e#76210#76211#0" expanded="false" />
+            <element signature="e#76249#76250#0" expanded="false" />
+            <element signature="e#76288#76289#0" expanded="false" />
+            <element signature="e#76327#76328#0" expanded="false" />
+            <element signature="e#76367#76368#0" expanded="false" />
+            <element signature="e#76407#76408#0" expanded="false" />
+            <element signature="e#76442#76443#0" expanded="false" />
+            <element signature="e#76477#76478#0" expanded="false" />
+            <element signature="e#76518#76519#0" expanded="false" />
+            <element signature="e#76559#76560#0" expanded="false" />
+            <element signature="e#76593#76594#0" expanded="false" />
+            <element signature="e#76630#76631#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="356" column="49" lean-forward="false" selection-start-line="356" selection-start-column="49" selection-end-line="356" selection-end-column="49" />
+        <state relative-caret-position="401">
+          <caret line="377" column="49" lean-forward="false" selection-start-line="377" selection-start-column="49" selection-end-line="377" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="141" column="38" lean-forward="false" selection-start-line="141" selection-start-column="38" selection-end-line="141" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="439">
+          <caret line="671" column="1" lean-forward="true" selection-start-line="671" selection-start-column="1" selection-end-line="671" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#28704#29204#0" expanded="true" />
+            <element signature="e#29203#29204#0" expanded="true" />
+            <marker date="1511006743281" expanded="true" signature="27008:27014" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="64" column="1" lean-forward="false" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+        <state relative-caret-position="237">
+          <caret line="65" column="60" lean-forward="false" selection-start-line="65" selection-start-column="60" selection-end-line="65" selection-end-column="60" />
           <folding />
         </state>
       </provider>

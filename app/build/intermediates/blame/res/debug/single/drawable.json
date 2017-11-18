@@ -36,12 +36,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_button_right_curved.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/tooltip_frame_dark.xml",
-        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/tooltip_frame_dark.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/notification_icon_background.xml",
         "source": "/home/amit/.android/build-cache/bd82577280a1810c643ae571c1043868c8f2cb0d/output/res/drawable/notification_icon_background.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/tooltip_frame_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/tooltip_frame_dark.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_button_facebook.xml",
@@ -124,12 +124,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_card.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline_rounded_primary.xml",
-        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline_rounded_primary.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_circle_primary.xml",
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_primary.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_outline_rounded_primary.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_outline_rounded_primary.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_switch_thumb_material.xml",
@@ -148,12 +148,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_circle_dark_outlined.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_error.xml",
-        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_error.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_play.xml",
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_play.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_error.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_error.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_folder_black_24dp.xml",
@@ -180,12 +180,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/arif_image.jpg"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_voice_search_api_material.xml",
-        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_voice_search_api_material.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_volume_mute.xml",
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_volume_mute.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_voice_search_api_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_voice_search_api_material.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/bg_sliding_up_panel.xml",
@@ -204,12 +204,12 @@
         "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_seekbar_track_material.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_spinner_textfield_background_material.xml",
-        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_spinner_textfield_background_material.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_facebook_white.xml",
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_facebook_white.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_spinner_textfield_background_material.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_spinner_textfield_background_material.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_down.xml",
@@ -236,12 +236,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_video_files.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_dark.xml",
-        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_holo_dark.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_btn_default_mtrl_shape.xml",
         "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_btn_default_mtrl_shape.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_dark.xml",
+        "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_list_selector_holo_dark.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous_dark.xml",
@@ -252,12 +252,12 @@
         "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/bg_card_curved_corners.xml"
     },
     {
-        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous.xml",
-        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_previous.xml"
-    },
-    {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/abc_ic_go_search_api_material.xml",
         "source": "/home/amit/.android/build-cache/0b2d242d10c8b3d23bcc1ed340ffe1d44d1afbea/output/res/drawable/abc_ic_go_search_api_material.xml"
+    },
+    {
+        "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_previous.xml",
+        "source": "/home/amit/Projects/android/teazer/app/src/main/res/drawable/ic_previous.xml"
     },
     {
         "merged": "/home/amit/Projects/android/teazer/app/build/intermediates/res/merged/debug/drawable/ic_error_outline.xml",
