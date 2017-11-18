@@ -137,6 +137,7 @@ public class LoginFragment extends Fragment {
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
 
+
         usernameView.setText("chaitanya");
         passwordView.setText("chaitanya");
     }

@@ -992,7 +992,7 @@ public class Pojos {
             private boolean has_send_join_request;
             private int join_request_id;
             private PrivateProfile private_profile;
-            private PublicProfile public_profile;
+            private UserProfile public_profile;
             private int followers;
             private int followings;
 
@@ -1003,7 +1003,7 @@ public class Pojos {
                 has_send_join_request = in.readByte() != 0;
                 join_request_id = in.readInt();
                 private_profile = in.readParcelable(PrivateProfile.class.getClassLoader());
-                public_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+                public_profile = in.readParcelable(UserProfile.class.getClassLoader());
                 followers = in.readInt();
                 followings = in.readInt();
             }
@@ -1062,7 +1062,7 @@ public class Pojos {
                 return private_profile;
             }
 
-            public PublicProfile getPublicProfile() {
+            public UserProfile getPublicProfile() {
                 return public_profile;
             }
 
@@ -1075,7 +1075,7 @@ public class Pojos {
             }
         }
 
-        public static class PublicProfile implements Parcelable {
+        public static class UserProfile implements Parcelable {
             private String user_id;
             private String user_name;
             private String first_name;
@@ -1094,10 +1094,16 @@ public class Pojos {
             private ArrayList<Category> categories;
             private String password;
 
-            public PublicProfile(String user_id, String user_name, String first_name, String last_name,
-                                 String email, long phone_number, int country_code, int gender, boolean is_active,
-                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
+//<<<<<<< HEAD
+            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
+                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
+                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos, int gender, String description) {
+//=======
+//            public UserProfile(String user_id, String user_name, String first_name, String last_name,
+//                                 String email, long phone_number, int country_code, int gender, boolean is_active,
+//                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
+//                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
+//>>>>>>> amit_test
                 this.user_id = user_id;
                 this.user_name = user_name;
                 this.first_name = first_name;
@@ -1115,6 +1121,27 @@ public class Pojos {
                 this.profile_media = profile_media;
                 this.categories = categories;
                 this.password = password;
+                this.gender=gender;
+                this.description=description;
+            }
+
+            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code, int gender, String description) {
+                this.user_name = user_name;
+                this.first_name = first_name;
+                this.last_name = last_name;
+                this.email = email;
+                this.phone_number = phone_number;
+                this.country_code = country_code;
+                this.gender=gender;
+                this.description=description;
+            }
+
+            public String getDescription() {
+                return description;
+            }
+
+            public UserProfile(String email) {
+                this.email = email;
             }
 
             public String getUserId() {
@@ -1139,6 +1166,10 @@ public class Pojos {
 
             public long getPhoneNumber() {
                 return phone_number;
+            }
+
+            public int getGender() {
+                return gender;
             }
 
             public int getCountryCode() {
@@ -1202,9 +1233,11 @@ public class Pojos {
                 parcel.writeByte((byte) (has_profile_media ? 1 : 0));
                 parcel.writeParcelable(profile_media, i);
                 parcel.writeTypedList(categories);
+                parcel.writeInt(gender);
+                parcel.writeString(description);
             }
 
-            protected PublicProfile(Parcel in) {
+            protected UserProfile(Parcel in) {
                 user_id = in.readString();
                 user_name = in.readString();
                 first_name = in.readString();
@@ -1219,17 +1252,19 @@ public class Pojos {
                 has_profile_media = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 categories = in.createTypedArrayList(Category.CREATOR);
+                gender = in.readInt();
+                description = in.readString();
             }
 
-            public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
+            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
                 @Override
-                public PublicProfile createFromParcel(Parcel in) {
-                    return new PublicProfile(in);
+                public UserProfile createFromParcel(Parcel in) {
+                    return new UserProfile(in);
                 }
 
                 @Override
-                public PublicProfile[] newArray(int size) {
-                    return new PublicProfile[size];
+                public UserProfile[] newArray(int size) {
+                    return new UserProfile[size];
                 }
             };
         }

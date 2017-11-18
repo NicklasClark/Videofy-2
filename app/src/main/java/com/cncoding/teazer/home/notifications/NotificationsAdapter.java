@@ -180,7 +180,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         switch (view.getId()) {
                             case R.id.root_layout:
                                 if (mListener != null) {
-                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
+                                    ApiCallingService.Friends.getOthersProfileInfoNoti(holder2.notification.getSourceId(), context)
                                             .enqueue(new Callback<Profile>() {
                                                 @Override
                                                 public void onResponse(Call<Profile> call, Response<Profile> response) {

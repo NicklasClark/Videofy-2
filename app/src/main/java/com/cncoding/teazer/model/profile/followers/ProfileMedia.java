@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.profile.followers;
 
+import com.cncoding.teazer.model.profile.followerprofile.MediaDimension;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

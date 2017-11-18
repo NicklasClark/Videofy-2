@@ -132,6 +132,7 @@
     <string name="share">Share</string>
     <string name="hide">Hide</string>
     <string name="delete">Delete</string>
+    <string name="block">Block</string>
     <string name="report">Report</string>
     <string name="title_activity_tab2">Tab2Activity</string>
     <string name="tab_text_1">Tab 1</string>
@@ -181,7 +182,8 @@
     <string name="logging_you_in">Logging you in…</string>
     <string name="expanded_placeholder_image">Expanded placeholder image</string>
     <string name="follow">Follow</string>
-    <string name="unfollow">UnFollow</string>
+    <string name="unblock">Unblock</string>
+    <string name="unfollow">Following</string>
     <string name="background_profile">Background profile</string>
     <string name="your_details">Your Details</string>
     <string name="edit_profile">Edit profile</string>
@@ -191,8 +193,20 @@
     <string name="link_accounts">Link Accounts</string>
     <string name="change_password">Change Password</string>
     <string name="personal_settings">PERSONAL SETTINGS</string>
+    <string name="deactivate_account">Deactivate Account</string>
+    <string name="account_logout">Logout</string>
+
+    <string name="community">COMMUNITY</string>
+    <string name="leagal">Leagal</string>
     <string name="my_block_list">My Block List</string>
+    <string name="followus_on_instagram">Follow us on Instagram</string>
+    <string name="like_on_facebook">Like us on facebook</string>
+    <string name="help_center">Help Center</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="termsofservice">Terms of Service</string>
+    <string name="Licence">Licence</string>
     <string name="private_account">Private Account</string>
+    <string name="private_account_detail">When your Account is private, only people you approve can see your posts.</string>
     <string name="this_is_embarrassing">This is embarrassing</string>
     <string name="the_username">The username&#160;</string>
     <string name="username_already_exists">&#160;already exists!\nPlease choose another username below.</string>

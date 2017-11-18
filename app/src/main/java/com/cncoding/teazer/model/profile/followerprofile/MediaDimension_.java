@@ -1,14 +1,13 @@
-package com.cncoding.teazer.model.profile.reaction;
+package com.cncoding.teazer.model.profile.followerprofile;
+
+/**
+ * Created by farazhabib on 13/11/17.
+ */
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- *
- * Created by farazhabib on 10/11/17.
- */
-
-public class MediaDimension {
+public class MediaDimension_ {
 
     @SerializedName("height")
     @Expose

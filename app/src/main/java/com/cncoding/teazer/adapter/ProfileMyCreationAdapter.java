@@ -32,7 +32,6 @@ import retrofit2.Response;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
- *
  * Created by farazhabib on 09/11/17.
  */
 
@@ -40,39 +39,56 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     private ArrayList<Pojos.Post.PostDetails> addressdetail_list;
     private Context context;
+    myCreationListener listener;
 
     public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> addressdetail_list) {
         this.context = context;
         this.addressdetail_list = addressdetail_list;
+        listener=(myCreationListener)context;
 
     }
+
     @Override
     public ProfileMyCreationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_mycreations, viewGroup, false);
         return new ProfileMyCreationAdapter.ViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
         final Pojos.Post.PostDetails cont = addressdetail_list.get(i);
-        final  String videotitle = cont.getTitle();
+        final String videotitle = cont.getTitle();
         final String videourl = cont.getMedias().get(0).getMediaUrl();
-        final int videopostId=cont.getPostId();
+        final int videopostId = cont.getPostId();
         final String thumb_url = cont.getMedias().get(0).getThumbUrl();
+        final String duration = cont.getMedias().get(0).getDuration();
+        final String views = String.valueOf(cont.getMedias().get(0).getViews());
+        final String likes= String.valueOf(cont.getLikes());
+        final String reaction= String.valueOf(cont.getTotalReactions());
+        final String location=cont.getCheckIn().getLocation();
+
+        viewHolder.videoTitle.setText(videotitle);
+        viewHolder.txtlikes.setText(likes);
+        viewHolder.duration.setText(duration);
+        viewHolder.txtview.setText(views);
+        viewHolder.reactions.setText(reaction);
+        viewHolder.location.setText(location);
+
 
         Glide.with(context).load(thumb_url)
                 .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
 
-        viewHolder.videoTitle.setText(videotitle);
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context, ProfileCreationVideos.class);
-                intent.putExtra("VideoURL",videourl);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-
+//                Intent intent = new Intent(context, ProfileCreationVideos.class);
+//                intent.putExtra("VideoURL", videourl);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+                listener.myCreationVideos(2,cont);
+               // Toast.makeText(context,"Hello",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -91,7 +107,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                         switch (item.getItemId()) {
                             case R.id.action_delete:
                                 deleteVideos(videopostId);
-                               // notifyItemRemoved(i);
+                                // notifyItemRemoved(i);
                                 viewHolder.cardView.setVisibility(View.GONE);
                                 break;
 
@@ -105,32 +121,43 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         });
 
     }
+
     @Override
     public int getItemCount() {
         return addressdetail_list.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView videoTitle;
+        private TextView duration;
+        private TextView txtlikes;
+        private TextView txtview;
+        private TextView reactions;
+        private TextView location;
         VideoView videoviewContainer;
         ImageView thumbimage;
         CardView cardView;
         View line;
         ImageView playvideo;
         CircularAppCompatImageView menu;
-
         public ViewHolder(View view) {
             super(view);
             videoTitle = view.findViewById(R.id.videodetails);
-            videoviewContainer = view.findViewById(R.id.flContainer);
+            duration = view.findViewById(R.id.duration);
+            txtlikes = view.findViewById(R.id.txtlikes);
+            txtview = view.findViewById(R.id.txtview);
+            reactions = view.findViewById(R.id.reactions);
             thumbimage = view.findViewById(R.id.demoimage);
             playvideo = view.findViewById(R.id.playvideo);
             cardView = view.findViewById(R.id.cardview);
+            location = view.findViewById(R.id.location);
             menu = view.findViewById(R.id.menu);
 
         }
     }
+
     private void deleteVideos(int deleteId) {
-        ApiCallingService.Posts.deletePosts(deleteId,context).enqueue(new Callback<DeleteMyVideos>() {
+        ApiCallingService.Posts.deletePosts(deleteId, context).enqueue(new Callback<DeleteMyVideos>() {
             @Override
             public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
                 try {
@@ -142,13 +169,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                         Toast.makeText(context, "Video has not been deleted", Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
-
             @Override
             public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
 
@@ -157,4 +181,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         });
     }
+
+    public  interface myCreationListener
+    {
+
+        public void  myCreationVideos ( int i, Pojos.Post.PostDetails postDetails);
+    }
+
 }

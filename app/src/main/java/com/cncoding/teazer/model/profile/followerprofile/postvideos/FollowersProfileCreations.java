@@ -1,4 +1,4 @@
-package com.cncoding.teazer.model.profile.reaction;
+package com.cncoding.teazer.model.profile.followerprofile.postvideos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,18 +6,17 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- *
- * Created by farazhabib on 10/11/17.
+ * Created by farazhabib on 11/11/17.
  */
 
-public class ProfileReactions {
+public class FollowersProfileCreations {
 
     @SerializedName("next_page")
     @Expose
     private Boolean nextPage;
-    @SerializedName("reactions")
+    @SerializedName("posts")
     @Expose
-    private List<Reaction> reactions = null;
+    private List<Post> posts = null;
 
     public Boolean getNextPage() {
         return nextPage;
@@ -27,12 +26,12 @@ public class ProfileReactions {
         this.nextPage = nextPage;
     }
 
-    public List<Reaction> getReactions() {
-        return reactions;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setReactions(List<Reaction> reactions) {
-        this.reactions = reactions;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
 }

@@ -1,11 +1,10 @@
-package com.cncoding.teazer.model.profile.following;
+package com.cncoding.teazer.model.profile.followerprofile;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- *
- * Created by farazhabib on 10/11/17.
+ * Created by farazhabib on 13/11/17.
  */
 
 public class MediaDimension {

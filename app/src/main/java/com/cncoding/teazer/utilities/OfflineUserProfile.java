@@ -37,6 +37,8 @@ public class OfflineUserProfile {
     private static final String FOLLOWERS = "followers";
     private static final String FOLLOWINGS = "followings";
     private static final String TOTAL_VIDEOS = "totalVideos";
+    private static final String GENDER = "gender";
+    private static final String DETAIL = "detail";
 
     private final SharedPreferences sharedPreferences;
 
@@ -66,8 +68,32 @@ public class OfflineUserProfile {
                 .setTotalVideos(userProfile.getTotalVideos());
     }
     
-//    public PublicProfile getOfflineUserProfile() {
-//        return new PublicProfile(
+//    public UserProfile getOfflineUserProfile() {
+//        return new UserProfile(
+//                getUserId(),
+//                getUsername(),
+//                getFirstName(),
+//                getLastName(),
+//                getEmail(),
+//                getPhoneNumber(),
+//                getCountryCode(),
+//                getPassword(),
+//                isActive(),
+//                getAccountType(),
+//                getCreatedAt(),
+//                getUpdatedAt(),
+//                hasProfileMedia(),
+//                getProfileMedia(),
+//                getCategories(),
+//                getFollowers(),
+//                getFollowings(),
+//                getTotalVideos(),
+//                getGender()
+//                ,getDetail());
+//
+//    }
+//    public UserProfile getOfflineUserProfile() {
+//        return new UserProfile(
 //                getUserId(),
 //                getUsername(),
 //                getFirstName(),
@@ -173,6 +199,16 @@ public class OfflineUserProfile {
     public String getUpdatedAt() {
         return getString(UPDATED_AT);
     }
+
+    public int getGender() {
+        return getInt(GENDER);
+    }
+    public String getDetail()
+    {
+        return getString(DETAIL);
+    }
+
+
 
     public boolean hasProfileMedia() {
         return sharedPreferences.getBoolean(HAS_PROFILE_MEDIA, false);
@@ -300,6 +336,14 @@ public class OfflineUserProfile {
 
     public OfflineUserProfile setTotalVideos(int total_videos) {
         putInt(TOTAL_VIDEOS, total_videos);
+        return this;
+    }
+    public OfflineUserProfile setGender(int gender) {
+        putInt(GENDER, gender);
+        return this;
+    }
+    public OfflineUserProfile setDetail(String detail) {
+        putString(DETAIL, detail);
         return this;
     }
 }

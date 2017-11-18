@@ -630,6 +630,8 @@ public class VideoUpload extends AppCompatActivity
         if (selectedPlace != null) {
             String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
             String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
+            String taggedFriends = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend;
             String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
             DecimalFormat df = new DecimalFormat("#.#######");
             if (location != null) {

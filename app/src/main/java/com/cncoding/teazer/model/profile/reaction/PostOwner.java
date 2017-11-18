@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.profile.reaction;
 
+import com.cncoding.teazer.model.profile.followerprofile.ProfileMedia_;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class PostOwner {
+
 
     @SerializedName("user_id")
     @Expose
@@ -27,7 +29,7 @@ public class PostOwner {
     private Boolean hasProfileMedia;
     @SerializedName("profile_media")
     @Expose
-    private ProfileMedia profileMedia;
+    private ProfileMedia_ profileMedia;
 
     public Integer getUserId() {
         return userId;
@@ -69,12 +71,11 @@ public class PostOwner {
         this.hasProfileMedia = hasProfileMedia;
     }
 
-    public ProfileMedia getProfileMedia() {
+    public ProfileMedia_ getProfileMedia() {
         return profileMedia;
     }
 
-    public void setProfileMedia(ProfileMedia profileMedia) {
+    public void setProfileMedia(ProfileMedia_ profileMedia) {
         this.profileMedia = profileMedia;
     }
-
 }
