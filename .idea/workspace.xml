@@ -11,149 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="097b01b6-a8a7-48f5-ae2a-3257ff293506" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jp_wasabeef_blurry_2_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/1/debug_7a8f6ffda093230d165c95424080ec76e313920d/classes.dex" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/classes/debug/android/databinding/DataBinderMapper.class" afterPath="$PROJECT_DIR$/app/build/intermediates/classes/debug/android/databinding/DataBinderMapper.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/classes/debug/com/cncoding/teazer/authentication/LoginFragment.class" afterPath="$PROJECT_DIR$/app/build/intermediates/classes/debug/com/cncoding/teazer/authentication/LoginFragment.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/zip-cache/yyVn3mB+Ffmg2OgtRiDllL4S+WM=" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/zip-cache/yyVn3mB+Ffmg2OgtRiDllL4S+WM=" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/resources-debug.ap_" afterPath="$PROJECT_DIR$/app/build/intermediates/res/resources-debug.ap_" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/baseLibrary-2.3.3_fa6bc8f3b2294e5bd0f4b60570c3f663017d2e94/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/baseLibrary-2.3.3_fa6bc8f3b2294e5bd0f4b60570c3f663017d2e94/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_47b9c8119b95d2dfcafb0a8a53aeed24abf65f2f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_47b9c8119b95d2dfcafb0a8a53aeed24abf65f2f/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_2b4daff43fae2df5c9486a1c6b55839a87b97207/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_2b4daff43fae2df5c9486a1c6b55839a87b97207/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.5.1_0d22610970e830684d329a7ef3e2b2a5768cd008/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.5.1_0d22610970e830684d329a7ef3e2b2a5768cd008/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0c18cc96e9ee22b72aff4e73a88f393d80fef5e2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0c18cc96e9ee22b72aff4e73a88f393d80fef5e2/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0d16b2d2383d24ac71e76221949eae9c88ec4e80/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0d16b2d2383d24ac71e76221949eae9c88ec4e80/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1fa724ae40a0e5b1af8c8b36a79c549d50fcd40f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1fa724ae40a0e5b1af8c8b36a79c549d50fcd40f/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_23e2525c9afa0cbadb74153c515d99eb99144d6a/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_23e2525c9afa0cbadb74153c515d99eb99144d6a/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2a435880043bf6a856659ce0a8a31981d49e79e5/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2a435880043bf6a856659ce0a8a31981d49e79e5/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2b3897080e81661c82d28c2272a9640c589929b2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2b3897080e81661c82d28c2272a9640c589929b2/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2feacf8c07bd0eaada6fb75b5570fcc730cd1083/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2feacf8c07bd0eaada6fb75b5570fcc730cd1083/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3182c3060c34e15f382d650cba249fbd71847595/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3182c3060c34e15f382d650cba249fbd71847595/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3bd82b25a8a94be1ccfb48519d06fdf33fb8200b/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3bd82b25a8a94be1ccfb48519d06fdf33fb8200b/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3c8053857b571cd3e1b880d36082e87d438812ae/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3c8053857b571cd3e1b880d36082e87d438812ae/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4062150e3fbc4277bf3d04c0e3bfff0703be1823/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4062150e3fbc4277bf3d04c0e3bfff0703be1823/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4102ba6cdda154d67a8059492262d75ac021b53e/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4102ba6cdda154d67a8059492262d75ac021b53e/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_421a7b2327d2475a927ab2ffd017d8514f676704/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_421a7b2327d2475a927ab2ffd017d8514f676704/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_45c6be842e3bfd160b71a37a387ef0b78fd79bff/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_45c6be842e3bfd160b71a37a387ef0b78fd79bff/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aebf016259c3e357f0244fa37fbe510604ffe25/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aebf016259c3e357f0244fa37fbe510604ffe25/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4cbcfdbf8e7fb4d05e31655f80976b40ebb56e78/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4cbcfdbf8e7fb4d05e31655f80976b40ebb56e78/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_55aa6ebd9f0323b9afa711f70dda69371e33ef9c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_55aa6ebd9f0323b9afa711f70dda69371e33ef9c/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5621fe41132b2241c04390be07bae0a2b2698080/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5621fe41132b2241c04390be07bae0a2b2698080/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5871311fefdb5eb3cdaa08f62c9326bcf020865a/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5871311fefdb5eb3cdaa08f62c9326bcf020865a/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5b19d160eb06c3fbd5e0da12acabced733e066ef/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5b19d160eb06c3fbd5e0da12acabced733e066ef/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_69a3bcc3b963eed0c6b27353109ecde8b9ee7ae0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_69a3bcc3b963eed0c6b27353109ecde8b9ee7ae0/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6a9d045eda457046d5759e1d39b449cfb75993b8/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6a9d045eda457046d5759e1d39b449cfb75993b8/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ace8fe829fae07caff9961a404021cddd834a46/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ace8fe829fae07caff9961a404021cddd834a46/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_796ea99f39e300c0cc1b3cf637371ffdf1d13a4f/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_796ea99f39e300c0cc1b3cf637371ffdf1d13a4f/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7ab8459fa7ec439ca1b7621c1e77766ae28f5845/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7ab8459fa7ec439ca1b7621c1e77766ae28f5845/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_847646a0415bb5dcd897bfb5e34730618b062d9b/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_847646a0415bb5dcd897bfb5e34730618b062d9b/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8bb0e9651cc82d1000dbcc0924203c8161aa3cc6/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8bb0e9651cc82d1000dbcc0924203c8161aa3cc6/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95ba767ae9475c4dcced7f177b84c3517e92a3e3/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95ba767ae9475c4dcced7f177b84c3517e92a3e3/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95c8101389f0ef92bf7b2fbe8b80a9bcaed2d41d/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95c8101389f0ef92bf7b2fbe8b80a9bcaed2d41d/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96732820ac882be86ba5b1794f8f2f3fa0d64f77/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96732820ac882be86ba5b1794f8f2f3fa0d64f77/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_974153f91857ee845e70dbd6d3db445075934c27/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_974153f91857ee845e70dbd6d3db445075934c27/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_97540c1fd0c3f1f3c5f59478c5d7d171d6544906/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_97540c1fd0c3f1f3c5f59478c5d7d171d6544906/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_aa456977cb7ece99504b52be10ada9ebd76a47cf/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_aa456977cb7ece99504b52be10ada9ebd76a47cf/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b7a518bac7807353b81c0b734c8d02890c530657/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b7a518bac7807353b81c0b734c8d02890c530657/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ba562bd60963478513b82379891fe9f87dd1ae73/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ba562bd60963478513b82379891fe9f87dd1ae73/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_be66013ca901bbf3373f3d7b892a3252820ef7af/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_be66013ca901bbf3373f3d7b892a3252820ef7af/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c14d769489c867d2baae82ff891b6dd418411be4/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c14d769489c867d2baae82ff891b6dd418411be4/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d5d8dfface713b8a029998a63715bb72baa8cc67/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d5d8dfface713b8a029998a63715bb72baa8cc67/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_de5b132f77c01bfa280253580fc64fbe4d6c571c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_de5b132f77c01bfa280253580fc64fbe4d6c571c/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e5c667f225f1dfe62f21725ff1d3165db52f50f0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e5c667f225f1dfe62f21725ff1d3165db52f50f0/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ea638c5afa0d665bdb0ecbd52540e2db8b876da2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ea638c5afa0d665bdb0ecbd52540e2db8b876da2/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f7457a65f9759e0b1e1924b8e2c711dc340d93f0/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f7457a65f9759e0b1e1924b8e2c711dc340d93f0/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_fdc4ac62078c54cfbac7e804a96eee0ced7ed17c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_fdc4ac62078c54cfbac7e804a96eee0ced7ed17c/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_6cf9a70b6f63c84513d051ab346641fc93e878de/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_6cf9a70b6f63c84513d051ab346641fc93e878de/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-gson-2.0.1_f370a25f2032b83b297680a3d4c045d067504d54/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-gson-2.0.1_f370a25f2032b83b297680a3d4c045d067504d54/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-scalars-2.1.0_0537b452f8a6ff57d5ff46a46ea21d74d4f8cc8c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-scalars-2.1.0_0537b452f8a6ff57d5ff46a46ea21d74d4f8cc8c/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/core-3.3.0_b0125c4c7fa32b0e6300d90027ff686a52113184/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/core-3.3.0_b0125c4c7fa32b0e6300d90027ff686a52113184/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.7.0_3edf9c0bf71690a461b7884e07c8eb32093d5ff2/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.7.0_3edf9c0bf71690a461b7884e07c8eb32093d5ff2/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.8.0_6e7a3495d5301b3984930a597ff9af8bf1cf32c7/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.8.0_6e7a3495d5301b3984930a597ff9af8bf1cf32c7/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/kotlin-stdlib-1.1.51_41f5396ce777c46f88d5ac9b395d4012decd1a99/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/kotlin-stdlib-1.1.51_41f5396ce777c46f88d5ac9b395d4012decd1a99/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/libphonenumber-8.8.2_546fc4f1f1defed213ad10f53cf5bdd8896438eb/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/libphonenumber-8.8.2_546fc4f1f1defed213ad10f53cf5bdd8896438eb/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-3.7.0_bc295bcd632b7e6e17ae04b33a713eed49e7930c/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-3.7.0_bc295bcd632b7e6e17ae04b33a713eed49e7930c/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.12.0_8322ad67d3e603d241e4a73d614ce1e3206cdb55/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.12.0_8322ad67d3e603d241e4a73d614ce1e3206cdb55/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/renderscript-v8_e1d5cd5cac1d3ad5e32278e8a65856de142c1ffa/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/renderscript-v8_e1d5cd5cac1d3ad5e32278e8a65856de142c1ffa/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-2.1.0_531e05255a3849829e4ab4eef1ad6e0ba5d233a5/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-2.1.0_531e05255a3849829e4ab4eef1ad6e0ba5d233a5/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.2_03eecc1df4625564f8f7640e6153f99626d7a53e/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.2_03eecc1df4625564f8f7640e6153f99626d7a53e/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/2/javax.mail-1.6.0_c58e28dc3f156c7e4e016ff699e747aed3a53de4/classes.dex" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dex/debug/folders/1000/2/javax.mail-1.6.0_c58e28dc3f156c7e4e016ff699e747aed3a53de4/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/outputs/apk/app-debug.apk" afterPath="$PROJECT_DIR$/app/build/outputs/apk/app-debug.apk" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/apt/debug/android/databinding/DataBinderMapper.java" afterPath="$PROJECT_DIR$/app/build/generated/source/apt/debug/android/databinding/DataBinderMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/dataBinding/debug/android/databinding/layouts/DataBindingInfo.java" afterPath="$PROJECT_DIR$/app/build/generated/source/dataBinding/debug/android/databinding/layouts/DataBindingInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/compat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/compat/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreui/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreui/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreutils/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/coreutils/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/customtabs/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/customtabs/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/design/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/design/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/fragment/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/fragment/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/animated/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/graphics/drawable/animated/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/mediacompat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/mediacompat/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/transition/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/transition/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v13/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v13/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v4/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v4/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/appcompat/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/appcompat/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/palette/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/palette/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/recyclerview/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/android/support/v7/recyclerview/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/br/com/simplepass/loading_button_lib/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/br/com/simplepass/loading_button_lib/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/cncoding/teazer/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/cncoding/teazer/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/common/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/common/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/login/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/facebook/login/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/futuremind/recyclerviewfastscroll/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/futuremind/recyclerviewfastscroll/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/flexbox/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/flexbox/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/gms/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/google/android/gms/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/hbb20/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/hbb20/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/sothree/slidinguppanel/library/R.java" afterPath="$PROJECT_DIR$/app/build/generated/source/r/debug/com/sothree/slidinguppanel/library/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi/values.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi/values.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/color.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/color.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-mdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-mdpi-v4.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-nodpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-nodpi-v4.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xhdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xhdpi-v4.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xxxhdpi-v4.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable-xxxhdpi-v4.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/drawable.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/layout.json" afterPath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/single/layout.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_base_bottom_bar.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_base_bottom_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_followers.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_following_activities.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_following_activities.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_settings.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/activity_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_followers.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_following.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_following.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_mycreations.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_mycreations.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/cardview_profile_myreactions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/fragment_profile_myreactions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/values/values.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/dex-renamer-state.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/dex-renamer-state.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/file-input-save-data.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/file-input-save-data.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/manifests/full/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_base_bottom_bar.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_base_bottom_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_followers.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_following_activities.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_following_activities.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_settings.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_followers.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_followers.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_following.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_following.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_mycreations.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_mycreations.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/cardview_profile_myreactions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile_myreactions.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/fragment_profile_myreactions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/values/values.xml" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/values/values.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/intermediates/symbols/debug/R.txt" afterPath="$PROJECT_DIR$/app/build/intermediates/symbols/debug/R.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" afterPath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
@@ -287,53 +147,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2574">
               <caret line="182" column="87" lean-forward="false" selection-start-line="182" selection-start-column="87" selection-end-line="182" selection-end-column="87" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#27941#27942#0" expanded="false" />
-                <element signature="e#28565#28566#0" expanded="false" />
-                <element signature="e#29287#29288#0" expanded="false" />
-                <marker date="1511005611576" expanded="true" signature="8842:9940" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="9021:9560" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="9723:9894" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="10716:11879" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="12047:12218" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="12836:13662" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="13830:14001" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="14578:16175" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="14746:16129" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="15200:15779" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="15963:16023" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="16295:16639" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="16463:16593" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="17228:19120" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="17396:19074" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="17850:18724" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="18908:18968" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="19240:19584" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="19408:19538" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="20158:22750" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="20759:21527" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="20967:21461" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="21667:22111" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="21875:22045" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="22910:23073" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="23740:24999" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="24045:24746" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="24858:24973" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="25075:25366" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="25431:25487" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="25601:27829" ph="{...}" />
-                <marker date="1511005611576" expanded="false" signature="27874:27885" ph=" { " />
-                <marker date="1511005611576" expanded="true" signature="28013:28572" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="28354:28432" ph="{...}" />
-                <marker date="1511005611576" expanded="false" signature="28484:28499" ph=" { " />
-                <marker date="1511005611576" expanded="true" signature="28642:29294" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="29076:29154" ph="{...}" />
-                <marker date="1511005611576" expanded="false" signature="29206:29221" ph=" { " />
-                <marker date="1511005611576" expanded="true" signature="29378:29590" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="29676:29765" ph="{...}" />
-                <marker date="1511005611576" expanded="true" signature="29823:29934" ph="{...}" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -343,36 +157,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="9216">
               <caret line="626" column="5" lean-forward="false" selection-start-line="626" selection-start-column="5" selection-end-line="626" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#16642#16643#0" expanded="false" />
-                <element signature="e#16706#16707#0" expanded="false" />
-                <element signature="e#20561#20562#0" expanded="false" />
-                <element signature="e#20625#20626#0" expanded="false" />
-                <marker date="1511005611548" expanded="true" signature="32422:32486" ph="{...}" />
-                <marker date="1511005611548" expanded="false" signature="32534:32545" ph=" { " />
-                <marker date="1511005611548" expanded="false" signature="32561:32567" ph=" }" />
-                <marker date="1511005611548" expanded="true" signature="32624:33460" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="33165:33352" ph="{...}" />
-                <marker date="1511005611548" expanded="false" signature="33242:33273" ph=" { " />
-                <marker date="1511005611548" expanded="false" signature="33304:33330" ph=" }" />
-                <marker date="1511005611548" expanded="true" signature="33466:33505" ph="/**...*/" />
-                <marker date="1511005611548" expanded="true" signature="33576:34122" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="34162:34350" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="34486:35900" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="35103:35199" ph="//..." />
-                <marker date="1511005611548" expanded="true" signature="35935:36327" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="36368:36733" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="36522:36725" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="36623:36707" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="36779:36889" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="36934:36997" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="37067:37371" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="37458:37597" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="37717:38100" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="38144:38218" ph="{...}" />
-                <marker date="1511005611548" expanded="true" signature="38266:38642" ph="{...}" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -382,9 +167,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1080">
               <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -394,25 +177,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="864">
               <caret line="106" column="39" lean-forward="false" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="39" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#8070#8894#0" expanded="false" />
-                <element signature="e#8419#8612#0" expanded="false" />
-                <element signature="e#8611#8612#0" expanded="false" />
-                <element signature="e#8893#8894#0" expanded="false" />
-                <element signature="e#8941#9126#0" expanded="false" />
-                <element signature="e#9125#9126#0" expanded="false" />
-                <element signature="e#14528#14681#0" expanded="false" />
-                <element signature="e#14680#14681#0" expanded="false" />
-                <element signature="e#14899#14900#0" expanded="false" />
-                <element signature="e#14952#14953#0" expanded="false" />
-                <element signature="e#24797#24798#0" expanded="false" />
-                <element signature="e#24866#24867#0" expanded="false" />
-                <element signature="e#24915#24916#0" expanded="false" />
-                <element signature="e#24948#24949#0" expanded="false" />
-                <element signature="e#25002#25003#0" expanded="false" />
-                <element signature="e#25026#25027#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -420,16 +185,11 @@
       <file leaf-file-name="TeazerApiCall.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3903">
+            <state relative-caret-position="4932">
               <caret line="313" column="11" lean-forward="false" selection-start-line="313" selection-start-column="11" selection-end-line="313" selection-end-column="11" />
               <folding>
-                <element signature="imports" expanded="false" />
                 <marker date="1511005611392" expanded="true" signature="27790:28869" ph="{...}" />
-                <marker date="1511005611392" expanded="true" signature="27823:27897" ph="/**...*/" />
-                <marker date="1511005611392" expanded="true" signature="28050:28127" ph="/**...*/" />
-                <marker date="1511005611392" expanded="true" signature="28281:28356" ph="/**...*/" />
                 <marker date="1511005611392" expanded="true" signature="28634:28869" ph="{...}" />
-                <marker date="1511005611392" expanded="true" signature="28646:28749" ph="/**...*/" />
               </folding>
             </state>
           </provider>
@@ -438,7 +198,7 @@
       <file leaf-file-name="BaseBottomBarActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
+            <state relative-caret-position="5526">
               <caret line="377" column="49" lean-forward="false" selection-start-line="377" selection-start-column="49" selection-end-line="377" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -450,22 +210,30 @@
       <file leaf-file-name="ApiCallingService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="671" column="1" lean-forward="true" selection-start-line="671" selection-start-column="1" selection-end-line="671" selection-end-column="1" />
+            <state relative-caret-position="275">
+              <caret line="645" column="21" lean-forward="true" selection-start-line="645" selection-start-column="21" selection-end-line="645" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#28704#29204#0" expanded="true" />
-                <element signature="e#29203#29204#0" expanded="true" />
-                <marker date="1511006743281" expanded="true" signature="27008:27014" ph="{...}" />
+                <marker date="1511006975488" expanded="true" signature="27014:27020" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="237">
+            <state relative-caret-position="1170">
               <caret line="65" column="60" lean-forward="false" selection-start-line="65" selection-start-column="60" selection-end-line="65" selection-end-column="60" />
               <folding />
             </state>
@@ -478,7 +246,6 @@
             <state relative-caret-position="1368">
               <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
               <folding>
-                <element signature="imports" expanded="false" />
                 <marker date="1511005611860" expanded="true" signature="10879:10908" ph="{...}" />
               </folding>
             </state>
@@ -3028,16 +2795,16 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="-4" />
-    <option name="width" value="1301" />
-    <option name="height" value="772" />
+    <option name="x" value="64" />
+    <option name="y" value="-11" />
+    <option name="width" value="1303" />
+    <option name="height" value="780" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -3057,122 +2824,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teazer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apiCalls" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
@@ -3198,6 +2849,106 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wrapper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teazer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -3289,7 +3040,7 @@
       <option name="ACTIVITY_CLASS" value="com.cncoding.teazer.ui.fragment.activity.FollowingActivity" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750293" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511085018834" />
       </method>
     </configuration>
     <configuration default="false" name="com.cncoding.teazer.model.profile.othersfollowing in app" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
@@ -3406,7 +3157,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750295" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511085018835" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3454,7 +3205,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750295" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511085018835" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3486,27 +3237,6 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -3637,7 +3367,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511006750299" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1511085018837" />
       </method>
     </configuration>
     <list size="4">
@@ -3766,38 +3496,37 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1301" height="772" extended-state="6" />
-    <editor active="true" />
+    <frame x="64" y="-11" width="1303" height="780" extended-state="6" />
     <layout>
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.63897765" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.53846157" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.63897765" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3090615" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.56971157" sideWeight="0.50858366" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.8656958" sideWeight="0.49721116" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290735" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.8656958" sideWeight="0.49721116" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32847896" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.776699" sideWeight="0.4914163" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.8656958" sideWeight="0.50278884" order="14" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.238247" sideWeight="0.49519232" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.238247" sideWeight="0.49519232" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908365" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39543268" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24320458" sideWeight="0.5048077" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24320458" sideWeight="0.5048077" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39543268" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find Sample Code" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286908" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3090615" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26466382" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286908" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
@@ -3913,16 +3642,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/cardview_profile_following.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="37" lean-forward="false" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="37" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/card_follower_profile_creation.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -4120,7 +3839,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="900">
           <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4128,7 +3846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="268">
           <caret line="183" column="16" lean-forward="false" selection-start-line="183" selection-start-column="16" selection-end-line="183" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4189,13 +3906,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
@@ -4207,14 +3917,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="181" column="19" lean-forward="false" selection-start-line="181" selection-start-column="19" selection-end-line="181" selection-end-column="19" />
           <folding />
         </state>
-      </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
@@ -4245,161 +3955,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/OfflineUserProfile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1368">
-          <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <marker date="1511005611860" expanded="true" signature="10879:10908" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="864">
-          <caret line="106" column="39" lean-forward="false" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#8070#8894#0" expanded="false" />
-            <element signature="e#8419#8612#0" expanded="false" />
-            <element signature="e#8611#8612#0" expanded="false" />
-            <element signature="e#8893#8894#0" expanded="false" />
-            <element signature="e#8941#9126#0" expanded="false" />
-            <element signature="e#9125#9126#0" expanded="false" />
-            <element signature="e#14528#14681#0" expanded="false" />
-            <element signature="e#14680#14681#0" expanded="false" />
-            <element signature="e#14899#14900#0" expanded="false" />
-            <element signature="e#14952#14953#0" expanded="false" />
-            <element signature="e#24797#24798#0" expanded="false" />
-            <element signature="e#24866#24867#0" expanded="false" />
-            <element signature="e#24915#24916#0" expanded="false" />
-            <element signature="e#24948#24949#0" expanded="false" />
-            <element signature="e#25002#25003#0" expanded="false" />
-            <element signature="e#25026#25027#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2574">
-          <caret line="182" column="87" lean-forward="false" selection-start-line="182" selection-start-column="87" selection-end-line="182" selection-end-column="87" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#27941#27942#0" expanded="false" />
-            <element signature="e#28565#28566#0" expanded="false" />
-            <element signature="e#29287#29288#0" expanded="false" />
-            <marker date="1511005611576" expanded="true" signature="8842:9940" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="9021:9560" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="9723:9894" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="10716:11879" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="12047:12218" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="12836:13662" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="13830:14001" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="14578:16175" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="14746:16129" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="15200:15779" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="15963:16023" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="16295:16639" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="16463:16593" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="17228:19120" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="17396:19074" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="17850:18724" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="18908:18968" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="19240:19584" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="19408:19538" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="20158:22750" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="20759:21527" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="20967:21461" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="21667:22111" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="21875:22045" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="22910:23073" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="23740:24999" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="24045:24746" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="24858:24973" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="25075:25366" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="25431:25487" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="25601:27829" ph="{...}" />
-            <marker date="1511005611576" expanded="false" signature="27874:27885" ph=" { " />
-            <marker date="1511005611576" expanded="true" signature="28013:28572" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="28354:28432" ph="{...}" />
-            <marker date="1511005611576" expanded="false" signature="28484:28499" ph=" { " />
-            <marker date="1511005611576" expanded="true" signature="28642:29294" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="29076:29154" ph="{...}" />
-            <marker date="1511005611576" expanded="false" signature="29206:29221" ph=" { " />
-            <marker date="1511005611576" expanded="true" signature="29378:29590" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="29676:29765" ph="{...}" />
-            <marker date="1511005611576" expanded="true" signature="29823:29934" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9216">
-          <caret line="626" column="5" lean-forward="false" selection-start-line="626" selection-start-column="5" selection-end-line="626" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#16642#16643#0" expanded="false" />
-            <element signature="e#16706#16707#0" expanded="false" />
-            <element signature="e#20561#20562#0" expanded="false" />
-            <element signature="e#20625#20626#0" expanded="false" />
-            <marker date="1511005611548" expanded="true" signature="32422:32486" ph="{...}" />
-            <marker date="1511005611548" expanded="false" signature="32534:32545" ph=" { " />
-            <marker date="1511005611548" expanded="false" signature="32561:32567" ph=" }" />
-            <marker date="1511005611548" expanded="true" signature="32624:33460" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="33165:33352" ph="{...}" />
-            <marker date="1511005611548" expanded="false" signature="33242:33273" ph=" { " />
-            <marker date="1511005611548" expanded="false" signature="33304:33330" ph=" }" />
-            <marker date="1511005611548" expanded="true" signature="33466:33505" ph="/**...*/" />
-            <marker date="1511005611548" expanded="true" signature="33576:34122" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="34162:34350" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="34486:35900" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="35103:35199" ph="//..." />
-            <marker date="1511005611548" expanded="true" signature="35935:36327" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="36368:36733" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="36522:36725" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="36623:36707" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="36779:36889" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="36934:36997" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="37067:37371" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="37458:37597" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="37717:38100" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="38144:38218" ph="{...}" />
-            <marker date="1511005611548" expanded="true" signature="38266:38642" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3903">
-          <caret line="313" column="11" lean-forward="false" selection-start-line="313" selection-start-column="11" selection-end-line="313" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <marker date="1511005611392" expanded="true" signature="27790:28869" ph="{...}" />
-            <marker date="1511005611392" expanded="true" signature="27823:27897" ph="/**...*/" />
-            <marker date="1511005611392" expanded="true" signature="28050:28127" ph="/**...*/" />
-            <marker date="1511005611392" expanded="true" signature="28281:28356" ph="/**...*/" />
-            <marker date="1511005611392" expanded="true" signature="28634:28869" ph="{...}" />
-            <marker date="1511005611392" expanded="true" signature="28646:28749" ph="/**...*/" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4929,16 +4484,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="377" column="49" lean-forward="false" selection-start-line="377" selection-start-column="49" selection-end-line="377" selection-end-column="49" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/authentication/LoginFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -4947,23 +4492,99 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="671" column="1" lean-forward="true" selection-start-line="671" selection-start-column="1" selection-end-line="671" selection-end-column="1" />
+        <state relative-caret-position="156">
+          <caret line="44" column="16" lean-forward="true" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/notifications/NotificationsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2574">
+          <caret line="182" column="87" lean-forward="false" selection-start-line="182" selection-start-column="87" selection-end-line="182" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/camera/upload/VideoUpload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9216">
+          <caret line="626" column="5" lean-forward="false" selection-start-line="626" selection-start-column="5" selection-end-line="626" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/adapter/ProfileMyCreationAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/home/post/PostDetailsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="864">
+          <caret line="106" column="39" lean-forward="false" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/TeazerApiCall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4932">
+          <caret line="313" column="11" lean-forward="false" selection-start-line="313" selection-start-column="11" selection-end-line="313" selection-end-column="11" />
+          <folding>
+            <marker date="1511005611392" expanded="true" signature="27790:28869" ph="{...}" />
+            <marker date="1511005611392" expanded="true" signature="28634:28869" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/BaseBottomBarActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5526">
+          <caret line="377" column="49" lean-forward="false" selection-start-line="377" selection-start-column="49" selection-end-line="377" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#28704#29204#0" expanded="true" />
-            <element signature="e#29203#29204#0" expanded="true" />
-            <marker date="1511006743281" expanded="true" signature="27008:27014" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
+        <state relative-caret-position="1170">
           <caret line="65" column="60" lean-forward="false" selection-start-line="65" selection-start-column="60" selection-end-line="65" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/utilities/OfflineUserProfile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1368">
+          <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
+          <folding>
+            <marker date="1511005611860" expanded="true" signature="10879:10908" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/cncoding/teazer/apiCalls/ApiCallingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="645" column="21" lean-forward="true" selection-start-line="645" selection-start-column="21" selection-end-line="645" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1511006975488" expanded="true" signature="27014:27020" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
