@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +22,9 @@ public class SearchFragment extends BaseFragment {
 
     @BindView(R.id.user_search) ProximaNovaRegularAutoCompleteTextView searSearchView;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
-    @BindView(R.id.most_popular_list) RecyclerView myInterestsList;
-    @BindView(R.id.most_popular_list) RecyclerView trandingList;
-    @BindView(R.id.most_popular_list) RecyclerView featuredVideosList;
+    @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
+    @BindView(R.id.trending_list) RecyclerView trendingList;
+    @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,6 +42,32 @@ public class SearchFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);
+
+        LinearLayoutManager horizontalLinearLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager horizontalLinearLayoutManager2 = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager verticalLinearLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
+                2, StaggeredGridLayoutManager.VERTICAL);
+
+        mostPopularList.setLayoutManager(horizontalLinearLayoutManager);
+        mostPopularList.setAdapter(new MostPopularListAdapter());
+
+        myInterestsList.setLayoutManager(verticalLinearLayoutManager);
+        myInterestsList.setAdapter(new MyInterestsListAdapter(getContext()));
+
+        trendingList.setLayoutManager(horizontalLinearLayoutManager2);
+        trendingList.setAdapter(new TrendingListAdapter());
+
+        featuredVideosList.setLayoutManager(staggeredGridLayoutManager);
+        featuredVideosList.setAdapter(new FeaturedVideosListAdapter());
+
+        mostPopularList.setNestedScrollingEnabled(false);
+        myInterestsList.setNestedScrollingEnabled(false);
+        trendingList.setNestedScrollingEnabled(false);
+        featuredVideosList.setNestedScrollingEnabled(false);
         return rootView;
     }
 

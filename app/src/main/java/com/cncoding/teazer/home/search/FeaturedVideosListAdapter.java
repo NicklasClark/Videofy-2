@@ -31,7 +31,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 10;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

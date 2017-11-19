@@ -1,11 +1,19 @@
 package com.cncoding.teazer.home.search;
 
+import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+
+import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  *
@@ -14,7 +22,11 @@ import com.cncoding.teazer.R;
 
 public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsListAdapter.ViewHolder> {
 
-    public MyInterestsListAdapter() {
+    private String[] titles = new String[] {"Dance", "Music", "VideoGraphy"};
+    private Context context;
+
+    public MyInterestsListAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -26,17 +38,25 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     @Override
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
+        holder.header.setText(titles[new Random().nextInt(titles.length - 1)]);
 
+        holder.recyclerView.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false));
+        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 3;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.interests_header) ProximaNovaSemiboldTextView header;
+        @BindView(R.id.item_my_interests_list) RecyclerView recyclerView;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

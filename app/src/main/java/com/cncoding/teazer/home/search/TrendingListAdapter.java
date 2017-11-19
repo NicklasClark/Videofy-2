@@ -6,6 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+
+import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  *
@@ -13,6 +19,8 @@ import com.cncoding.teazer.R;
  */
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.ViewHolder> {
+
+    private String[] titles = new String[]{"Singing", "Dance", "Comedy", "Videos"};
 
     public TrendingListAdapter() {
     }
@@ -26,17 +34,21 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     @Override
     public void onBindViewHolder(TrendingListAdapter.ViewHolder holder, int position) {
-
+        holder.title.setText(titles[new Random().nextInt(titles.length - 1)]);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 10;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_trending) ProximaNovaRegularTextView title;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

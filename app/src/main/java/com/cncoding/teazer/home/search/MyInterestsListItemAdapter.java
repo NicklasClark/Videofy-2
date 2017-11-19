@@ -14,7 +14,7 @@ import com.cncoding.teazer.R;
 
 public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterestsListItemAdapter.ViewHolder> {
 
-    public MyInterestsListItemAdapter() {
+    MyInterestsListItemAdapter() {
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 8;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
