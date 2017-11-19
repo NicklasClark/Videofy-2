@@ -64,7 +64,7 @@ import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
 public class PostDetailsFragment extends BaseFragment implements MediaControllerView.MediaPlayerControlListener,
         TextureView.SurfaceTextureListener, MediaPlayer.OnVideoSizeChangedListener {
-    private static final String ARG_COLUMN_COUNT = "columnCount";
+
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
@@ -91,7 +91,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     private Context context;
     private PostDetails postDetails;
-    private int columnCount = 1;
     private boolean isComplete;
     private byte[] image;
     private ArrayList<PostReaction> postReactions;
@@ -104,10 +103,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(int columnCount, PostDetails postDetails, byte[] image) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putParcelable(ARG_POST_DETAILS, postDetails);
         args.putByteArray(ARG_THUMBNAIL, image);
         fragment.setArguments(args);
@@ -119,7 +117,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         super.onCreate(savedInstanceState);
         postReactions = new ArrayList<>();
         if (getArguments() != null) {
-            columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
             image = getArguments().getByteArray(ARG_THUMBNAIL);
         }
@@ -156,7 +153,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         prepareController();
 
         postReactionAdapter = new PostReactionAdapter(postReactions, context);
-        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(columnCount, VERTICAL);
+        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(postReactionAdapter);
@@ -306,8 +303,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                                         } else
                                             controller.disappearReactionPic(2);
                                     }
-
-                                } else showNoReactionMessage();
+                                } else {
+                                    controller.disappearReactionPic(0);
+                                    controller.disappearReactionPic(1);
+                                    controller.disappearReactionPic(2);
+                                    controller.setNoReactions();
+                                    showNoReactionMessage();
+                                }
                                 break;
                             default:
                                 showErrorMessage("Error " + response.code() +": " + response.message());
@@ -320,7 +322,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //                        recyclerView.setVisibility(View.INVISIBLE);
                         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
+                        message = getString(R.string.could_not_load_posts) + message;
+                        postLoadErrorTextView.setText(message);
                         postLoadErrorSubtitle.setText(R.string.tap_to_retry);
                     }
 

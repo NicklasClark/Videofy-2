@@ -91,22 +91,6 @@ public class BaseBottomBarActivity extends BaseActivity
             R.drawable.ic_person_black
     };
 
-//<<<<<<< HEAD
-//    @BindArray(R.array.tab_name)
-//    String[] TABS;
-//    @BindView(R.id.app_bar)
-//    AppBarLayout appBar;
-//    @BindView(R.id.toolbar)
-//    Toolbar toolbar;
-//    @BindView(R.id.toolbar_title)
-//    SignPainterTextView toolbarTitle;
-//    @BindView(R.id.main_fragment_container)
-//    FrameLayout contentFrame;
-//    @BindView(R.id.bottom_tab_layout)
-//    TabLayout bottomTabLayout;
-//    @BindView(R.id.camera_btn)
-//    ImageButton cameraButton;
-    //    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -185,7 +169,7 @@ public class BaseBottomBarActivity extends BaseActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    pushFragment(PostDetailsFragment.newInstance(2, uploadParams.getPostDetails(), null));
+                    pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
                 }
             }, 500);
         }
@@ -211,7 +195,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             }, 1000);
                         }
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                    onUploadError(new Throwable(response.code() + " : " + response.body().getMessage()));
                 }
             }
 
@@ -407,13 +391,13 @@ public class BaseBottomBarActivity extends BaseActivity
                 return postListFragment;
             }
             case NavigationController.TAB2:
-                return new SearchFragment();
+                return SearchFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return new SearchFragment();
             case NavigationController.TAB4:
-                return new NotificationsFragment();
+                return NotificationsFragment.newInstance();
             case NavigationController.TAB5:
-                return new ProfileFragment();
+                return ProfileFragment.newInstance();
         }
         throw new IllegalArgumentException("Need to send an index that we know");
     }
@@ -433,7 +417,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(2, postDetails, image));
+                pushFragment(PostDetailsFragment.newInstance(postDetails, image));
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
@@ -467,8 +451,9 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(2, postDetails, null));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
+            pushFragment(ProfileFragment.newInstance());
             Toast.makeText(this, "User Profile fetched, only need to populate it now.", Toast.LENGTH_SHORT).show();
         }
     }

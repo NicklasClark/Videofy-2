@@ -34,7 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostsListFragment extends BaseFragment {
-    private static final String COLUMN_COUNT = "columnCount";
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list) RecyclerView recyclerView;
@@ -46,7 +45,6 @@ public class PostsListFragment extends BaseFragment {
     public static boolean returningFromUpload = false;
 
     private ArrayList<PostDetails> postList;
-    private int columnCount = 2;
     private PostsListAdapter postListAdapter;
     private StaggeredGridLayoutManager manager;
 
@@ -54,20 +52,8 @@ public class PostsListFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static PostsListFragment newInstance(int columnCount) {
-        PostsListFragment fragment = new PostsListFragment();
-        Bundle args = new Bundle();
-        args.putInt(COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            columnCount = getArguments().getInt(COLUMN_COUNT);
-        }
+    public static PostsListFragment newInstance() {
+        return new PostsListFragment();
     }
 
     @Override
@@ -82,7 +68,7 @@ public class PostsListFragment extends BaseFragment {
 
         postListAdapter = new PostsListAdapter(postList, getContext(), this);
         recyclerView.setAdapter(postListAdapter);
-        manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {

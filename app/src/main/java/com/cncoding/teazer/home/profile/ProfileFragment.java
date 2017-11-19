@@ -326,9 +326,4 @@ public class ProfileFragment extends BaseFragment {
     public interface RemoveAppBar {
         void removeAppbar();
     }
-
-
-
-
-
 }

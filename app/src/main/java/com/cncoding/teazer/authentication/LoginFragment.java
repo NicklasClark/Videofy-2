@@ -140,7 +140,6 @@ public class LoginFragment extends Fragment {
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
 
-
         usernameView.setText("amit");
         passwordView.setText("12345678");
     }
@@ -437,6 +436,12 @@ public class LoginFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement LoginInteractionListener");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ViewUtils.hideKeyboard(getActivity(), loginBtn);
     }
 
     @Override
