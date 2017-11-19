@@ -9,4 +9,5 @@
     android:paddingBottom="@dimen/padding_half"
     android:paddingStart="@dimen/padding_default"
     android:paddingEnd="@dimen/padding_default"
+    android:layout_margin="@dimen/padding_half"
     android:background="@drawable/bg_chip_outline"/>

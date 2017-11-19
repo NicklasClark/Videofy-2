@@ -2512,4 +2512,189 @@ public class Pojos {
             return postDetails;
         }
     }
+
+    public static class Discover {
+
+        public static class MostPopular {
+            private String title;
+            private int duration;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+            private String reaction1Url;
+            private String reaction2Url;
+            private String reaction3Url;
+            private int reactions;
+
+            public MostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
+                               int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+                this.title = title;
+                this.duration = duration;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+                this.reaction1Url = reaction1Url;
+                this.reaction2Url = reaction2Url;
+                this.reaction3Url = reaction3Url;
+                this.reactions = reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public String getReaction1Url() {
+                return reaction1Url;
+            }
+
+            public String getReaction2Url() {
+                return reaction2Url;
+            }
+
+            public String getReaction3Url() {
+                return reaction3Url;
+            }
+
+            public int getReactions() {
+                return reactions;
+            }
+        }
+
+        public static class MyInterests {
+            private String title;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+            private String reaction1Url;
+            private String reaction2Url;
+            private String reaction3Url;
+            private int reactions;
+
+            public MyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
+                               String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+                this.title = title;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+                this.reaction1Url = reaction1Url;
+                this.reaction2Url = reaction2Url;
+                this.reaction3Url = reaction3Url;
+                this.reactions = reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public String getReaction1Url() {
+                return reaction1Url;
+            }
+
+            public String getReaction2Url() {
+                return reaction2Url;
+            }
+
+            public String getReaction3Url() {
+                return reaction3Url;
+            }
+
+            public int getReactions() {
+                return reactions;
+            }
+        }
+
+        public static class FeaturedVideos {
+            private String title;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+
+            public FeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
+                this.title = title;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+        }
+    }
 }

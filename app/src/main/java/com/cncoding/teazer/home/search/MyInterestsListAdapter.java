@@ -24,9 +24,11 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     private String[] titles = new String[] {"Dance", "Music", "VideoGraphy"};
     private Context context;
+    private SearchFragment searchFragment;
 
-    public MyInterestsListAdapter(Context context) {
+    MyInterestsListAdapter(Context context, SearchFragment searchFragment) {
         this.context = context;
+        this.searchFragment = searchFragment;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         holder.header.setText(titles[new Random().nextInt(titles.length - 1)]);
 
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false));
-        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter());
+        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(searchFragment.getMyInterestsList(), context));
     }
 
     @Override

@@ -149,6 +149,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_alignParentEnd="true">
                 <TextView
+                    android:id="@+id/reactions"
                     android:layout_width="wrap_content"
                     android:text="+200 R"
                     android:textSize="12sp"
@@ -184,6 +185,7 @@
                 android:background="@drawable/bg_circle_white_outline">
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    android:id="@+id/image2"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="1dp"
@@ -200,6 +202,7 @@
                 android:background="@drawable/bg_circle_white_outline">
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    android:id="@+id/image3"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="1dp"

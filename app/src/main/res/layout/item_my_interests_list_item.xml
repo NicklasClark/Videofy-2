@@ -108,7 +108,7 @@
         android:layout_toEndOf="@+id/reaction_2"/>
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-        android:id="@+id/media_controller_reaction_count"
+        android:id="@+id/reaction_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_14sp"

@@ -39,7 +39,7 @@ import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
 public class MediaControllerView extends FrameLayout implements VideoGestureListener {
 
 //    private static final String TAG = "MediaControllerView";
-    private static final String SPACE = "  ";
+    public static final String SPACE = "  ";
 
     private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
