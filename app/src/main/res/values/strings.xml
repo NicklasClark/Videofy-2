@@ -229,4 +229,5 @@
     <string name="no_users_tagged_yet">No users tagged yet</string>
     <string name="no_posts_available">No posts available</string>
     <string name="all_caught_up">All caught up!</string>
+    <string name="location_rationale">Teazer need to access your location</string>
 </resources>

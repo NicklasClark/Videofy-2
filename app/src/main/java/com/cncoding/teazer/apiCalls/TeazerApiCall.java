@@ -17,7 +17,6 @@ import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
-import com.cncoding.teazer.utilities.Pojos.Friends.FollowersList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -27,7 +26,6 @@ import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 
 import java.util.ArrayList;
 
@@ -630,10 +628,10 @@ import retrofit2.http.Query;
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link UserProfile}
+         * @return {@link Pojos.User.UserProfile}
          * */
         @GET("/api/v1/user/profile")
-        Call<UserProfile> getUserProfile();
+        Call<Pojos.User.UserProfile> getUserProfile();
 
 
         @GET("/api/v1/user/profile")

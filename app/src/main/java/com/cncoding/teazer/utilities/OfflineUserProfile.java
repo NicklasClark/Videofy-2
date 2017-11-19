@@ -68,8 +68,8 @@ public class OfflineUserProfile {
                 .setTotalVideos(userProfile.getTotalVideos());
     }
     
-//    public UserProfile getOfflineUserProfile() {
-//        return new UserProfile(
+//    public PublicProfile getOfflineUserProfile() {
+//        return new PublicProfile(
 //                getUserId(),
 //                getUsername(),
 //                getFirstName(),
@@ -92,8 +92,8 @@ public class OfflineUserProfile {
 //                ,getDetail());
 //
 //    }
-//    public UserProfile getOfflineUserProfile() {
-//        return new UserProfile(
+//    public PublicProfile getOfflineUserProfile() {
+//        return new PublicProfile(
 //                getUserId(),
 //                getUsername(),
 //                getFirstName(),

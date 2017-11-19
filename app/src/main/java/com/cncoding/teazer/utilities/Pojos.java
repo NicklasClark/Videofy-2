@@ -1000,8 +1000,8 @@ public class Pojos {
                 this.total_videos = total_videos;
             }
 
+
             protected UserProfile(Parcel in) {
-                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
                 followers = in.readInt();
                 followings = in.readInt();
                 total_videos = in.readInt();
@@ -1009,7 +1009,6 @@ public class Pojos {
 
             @Override
             public void writeToParcel(Parcel dest, int flags) {
-                dest.writeParcelable(user_profile, flags);
                 dest.writeInt(followers);
                 dest.writeInt(followings);
                 dest.writeInt(total_videos);
@@ -1056,7 +1055,7 @@ public class Pojos {
             private boolean has_send_join_request;
             private int join_request_id;
             private PrivateProfile private_profile;
-            private UserProfile public_profile;
+            private PublicProfile public_profile;
             private int followers;
             private int followings;
 
@@ -1067,7 +1066,7 @@ public class Pojos {
                 has_send_join_request = in.readByte() != 0;
                 join_request_id = in.readInt();
                 private_profile = in.readParcelable(PrivateProfile.class.getClassLoader());
-                public_profile = in.readParcelable(UserProfile.class.getClassLoader());
+                public_profile = in.readParcelable(PublicProfile.class.getClassLoader());
                 followers = in.readInt();
                 followings = in.readInt();
             }
@@ -1126,7 +1125,7 @@ public class Pojos {
                 return private_profile;
             }
 
-            public UserProfile getPublicProfile() {
+            public PublicProfile getPublicProfile() {
                 return public_profile;
             }
 
@@ -1139,7 +1138,7 @@ public class Pojos {
             }
         }
 
-        public static class UserProfile implements Parcelable {
+        public static class PublicProfile implements Parcelable {
             private String user_id;
             private String user_name;
             private String first_name;
@@ -1159,14 +1158,14 @@ public class Pojos {
             private String password;
 
 //<<<<<<< HEAD
-            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
-                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos, int gender, String description) {
+//            public PublicProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
+//                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
+//                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos, int gender, String description) {
 //=======
-//            public UserProfile(String user_id, String user_name, String first_name, String last_name,
-//                                 String email, long phone_number, int country_code, int gender, boolean is_active,
-//                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
-//                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
+            public PublicProfile(String user_id, String user_name, String first_name, String last_name,
+                                 String email, long phone_number, int country_code, int gender, boolean is_active,
+                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
+                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
 //>>>>>>> amit_test
                 this.user_id = user_id;
                 this.user_name = user_name;
@@ -1189,7 +1188,7 @@ public class Pojos {
                 this.description=description;
             }
 
-            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code, int gender, String description) {
+            public PublicProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code, int gender, String description) {
                 this.user_name = user_name;
                 this.first_name = first_name;
                 this.last_name = last_name;
@@ -1204,7 +1203,7 @@ public class Pojos {
                 return description;
             }
 
-            public UserProfile(String email) {
+            public PublicProfile(String email) {
                 this.email = email;
             }
 
@@ -1301,7 +1300,7 @@ public class Pojos {
                 parcel.writeString(description);
             }
 
-            protected UserProfile(Parcel in) {
+            protected PublicProfile(Parcel in) {
                 user_id = in.readString();
                 user_name = in.readString();
                 first_name = in.readString();
@@ -1320,15 +1319,15 @@ public class Pojos {
                 description = in.readString();
             }
 
-            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+            public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
                 @Override
-                public UserProfile createFromParcel(Parcel in) {
-                    return new UserProfile(in);
+                public PublicProfile createFromParcel(Parcel in) {
+                    return new PublicProfile(in);
                 }
 
                 @Override
-                public UserProfile[] newArray(int size) {
-                    return new UserProfile[size];
+                public PublicProfile[] newArray(int size) {
+                    return new PublicProfile[size];
                 }
             };
         }

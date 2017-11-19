@@ -27,7 +27,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -573,7 +572,7 @@ public class ApiCallingService {
             return getUserService(context).setAccountVisibility(accountType);
         }
 
-        public static Call<UserProfile> getUserProfile(Context context) {
+        public static Call<Pojos.User.UserProfile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
 
         }
@@ -607,7 +606,7 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
-        public static Call<UserProfile>getUserProfileDetail(Context context) {
+        public static Call<Pojos.User.UserProfile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
 

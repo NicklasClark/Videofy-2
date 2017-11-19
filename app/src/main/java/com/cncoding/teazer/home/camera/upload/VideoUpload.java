@@ -84,12 +84,15 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,7 +119,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 public class VideoUpload extends AppCompatActivity
         implements NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
-        TagsAndCategoriesInteractionListener {
+        TagsAndCategoriesInteractionListener,
+        EasyPermissions.PermissionCallbacks{
 
     public static final String VIDEO_PATH = "videoPath";
 //    private static final String TAG_VIDEO_PREVIEW = "videoPreview";
@@ -129,6 +133,7 @@ public class VideoUpload extends AppCompatActivity
     private static final int REQUEST_CODE_CHECK_SETTINGS = 312;
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
+    private static final int RC_LOCATION_PERM = 123;
 
     @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
     @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
@@ -210,7 +215,7 @@ public class VideoUpload extends AppCompatActivity
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
+        getLastLocation(false);
         createLocationCallback();
         createLocationRequest();
 
@@ -247,7 +252,7 @@ public class VideoUpload extends AppCompatActivity
                 .into(thumbnailView);
     }
 
-    private void getLastLocation() {
+    private void getLastLocation(final boolean firstTime) {
         if (arePermissionsAllowed(this)) {
             if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -261,11 +266,14 @@ public class VideoUpload extends AppCompatActivity
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
-                                Toast.makeText(VideoUpload.this,
-                                        "FusedLocationProvider: "
-                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-                                        Toast.LENGTH_SHORT)
-                                        .show();
+//                                Toast.makeText(VideoUpload.this,
+//                                        "FusedLocationProvider: "
+//                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
+//                                        Toast.LENGTH_SHORT)
+//                                        .show();
+                                if (firstTime) {
+                                    new GetNearbyPlacesData(VideoUpload.this).execute(getNearbySearchUrl(currentLocation));
+                                }
                             }
                         }
                     });
@@ -279,9 +287,9 @@ public class VideoUpload extends AppCompatActivity
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
-                    Toast.makeText(VideoUpload.this,
-                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(VideoUpload.this,
+//                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
+//                            Toast.LENGTH_SHORT).show();
                     stopLocationUpdates();
                 }
             };
@@ -560,6 +568,44 @@ public class VideoUpload extends AppCompatActivity
             if (currentLocation != null)
                 new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else requestPermissions();
+//        startLocationService();
+    }
+
+    @AfterPermissionGranted(RC_LOCATION_PERM)
+    private void startLocationService() {
+
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
+                    RC_LOCATION_PERM, perms);
+        }
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        // Forward results to EasyPermissions
+//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+//    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d("HomeFragment", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+//            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
     @OnClick(R.id.video_upload_categories) public void getCategories() {
@@ -712,8 +758,9 @@ public class VideoUpload extends AppCompatActivity
                     if (fineLocationAccepted && coarseLocationAccepted && internetAccepted) {
 //                        permissions are granted
 //                        launchPlacePicker();
-                        if (currentLocation != null)
-                            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+                        getLastLocation(true);
+//                        if (currentLocation != null)
+//                            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
                         if (isRequestingLocationUpdates) {
                             startLocationUpdates();
                         }

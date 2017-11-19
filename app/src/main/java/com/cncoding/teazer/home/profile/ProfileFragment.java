@@ -36,7 +36,7 @@ import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
+import com.cncoding.teazer.utilities.Pojos.User.PublicProfile;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +65,7 @@ public class ProfileFragment extends BaseFragment {
     TextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    Pojos.User.UserProfile userprofile;
+    Pojos.User.PublicProfile userprofile;
     RemoveAppBar removeAppBar;
     Button btnedit;
     int totalfollowers;
@@ -78,7 +78,7 @@ public class ProfileFragment extends BaseFragment {
     String email;
     int accountType;
     boolean hasProfleMedia;
-//    Pojos.User.UserProfile userprofile;
+//    Pojos.User.PublicProfile userprofile;
     Long mobilenumber;
     int gender;
     int countrycode;
@@ -211,14 +211,14 @@ public class ProfileFragment extends BaseFragment {
 
     }
     public void getProfileDetail() {
-        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.Profile>() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
-                public void onResponse(Call<Pojos.User.Profile> call, Response<Pojos.User.Profile> response) {
+                public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
                 Log.d("Response",response.toString());
                 if (response.code() == 200) {
 
                     try {
-                        Pojos.User.UserProfile userProfile = response.body().getPublicProfile();
+                        PublicProfile userProfile = response.body().getUserProfile();
                         int totalfollowers = response.body().getFollowers();
                         int totalfollowing = response.body().getFollowings();
                         int totalvideos = response.body().getTotalVideos();
@@ -280,9 +280,8 @@ public class ProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {
+            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
 
-                Log.d("errror",t.getMessage());
             }
         });
 

@@ -21,7 +21,6 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 
@@ -123,7 +122,7 @@ public class PostsListFragment extends BaseFragment {
         }
     }
 
-    private void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
@@ -143,7 +142,7 @@ public class PostsListFragment extends BaseFragment {
                                 break;
                             default:
                                 showErrorMessage("Error " + response.code() +": " + response.message());
-                                AuthUtils.logout(getContext(), getActivity());
+//                                AuthUtils.logout(getContext(), getActivity());
                                 break;
                         }
                         if (isRefreshing)

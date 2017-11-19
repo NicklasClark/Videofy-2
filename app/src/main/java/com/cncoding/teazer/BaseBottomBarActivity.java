@@ -124,6 +124,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
     private Call<ResultObject> uploadCall;
+    private PostsListFragment postListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -401,8 +402,10 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
-            case TAB1:
-                return new PostsListFragment();
+            case TAB1: {
+                postListFragment =  new PostsListFragment();
+                return postListFragment;
+            }
             case NavigationController.TAB2:
                 return new SearchFragment();
 //            case NavigationController.TAB3:
@@ -492,6 +495,7 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+//        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
     @Override

@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -180,6 +180,9 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d2422b51820a55ad031bbe2f1d3657015affec36" />
     </application>
 
 </manifest>
