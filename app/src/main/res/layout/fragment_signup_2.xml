@@ -1,0 +1,76 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="com.cncoding.teazer.authentication.LoginFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/padding_default">
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/signup_page_header"
+                android:text="@string/you_are_almost_there"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/padding_default"
+                android:textSize="@dimen/text_size_content_big"
+                android:layout_marginTop="@dimen/padding_including_status_bar"
+                android:layout_marginBottom="@dimen/padding_double"
+                android:textColor="@color/colorIcons"/>
+
+<!--            <ImageView
+                android:id="@+id/signup_profile_pic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_add_profile_pic"
+                android:layout_marginBottom="@dimen/padding_default"
+                android:contentDescription="@string/add_user" />-->
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                android:id="@+id/signup_username"
+                style="@style/AppTheme.RoundedEditText"
+                android:hint="@string/username"
+                android:inputType="text"
+                android:imeOptions="actionNext" />
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                android:id="@+id/signup_password"
+                style="@style/AppTheme.RoundedEditText"
+                android:hint="@string/password"
+                android:maxLength="32"
+                android:inputType="textPassword"
+                android:imeOptions="actionNext" />
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                android:id="@+id/signup_confirm_password"
+                style="@style/AppTheme.RoundedEditText"
+                android:hint="@string/confirm_password"
+                android:maxLength="32"
+                android:inputType="textPassword"
+                android:imeOptions="actionGo" />
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                android:id="@+id/signup_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:text="@string/okay_let_s_roll"
+                android:layout_marginTop="@dimen/padding_double"
+                style="@style/AppTheme.RoundedMaterialButton" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

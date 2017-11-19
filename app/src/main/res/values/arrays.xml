@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="tab_name">
+        <item>Home</item>
+        <item>Search</item>
+        <item>Camera</item>
+        <item>Notifications</item>
+        <item>Profile</item>
+    </array>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_tagged_user"
+    android:layout_margin="@dimen/padding_thin"
+    android:paddingTop="@dimen/padding_thin"
+    android:paddingBottom="@dimen/padding_thin"
+    android:paddingStart="@dimen/padding_thin"
+    android:paddingEnd="@dimen/padding_default">
+
+    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        android:id="@+id/tagged_user_dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_circle_white_outline"
+        android:layout_marginEnd="@dimen/padding_half"
+        android:layout_gravity="center_vertical"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/tagged_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_vertical"/>
+
+</LinearLayout>
