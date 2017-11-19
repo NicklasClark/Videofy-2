@@ -15,6 +15,7 @@
         android:paddingStart="@dimen/padding_half"
         android:paddingEnd="@dimen/padding_default"
         android:hint="@string/search"
+        android:background="@drawable/bg_search"
         app:drawableStartCompat="@drawable/ic_search"/>
 
     <android.support.v7.widget.RecyclerView

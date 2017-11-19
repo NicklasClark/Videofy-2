@@ -192,7 +192,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             }, 1000);
                         }
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                    onUploadError(new Throwable(response.code() + " : " + response.body().getMessage()));
                 }
             }
 

@@ -140,8 +140,8 @@ public class LoginFragment extends Fragment {
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
 
-        usernameView.setText("chaitanya");
-        passwordView.setText("chaitanya");
+        usernameView.setText("premsuman8");
+        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
@@ -436,6 +436,12 @@ public class LoginFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement LoginInteractionListener");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ViewUtils.hideKeyboard(getActivity(), loginBtn);
     }
 
     @Override

@@ -306,8 +306,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                                         } else
                                             controller.disappearReactionPic(2);
                                     }
-
-                                } else showNoReactionMessage();
+                                } else {
+                                    controller.disappearReactionPic(0);
+                                    controller.disappearReactionPic(1);
+                                    controller.disappearReactionPic(2);
+                                    controller.setNoReactions();
+                                    showNoReactionMessage();
+                                }
                                 break;
                             default:
                                 showErrorMessage("Error " + response.code() +": " + response.message());
@@ -320,7 +325,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //                        recyclerView.setVisibility(View.INVISIBLE);
                         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
+                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + message);
                         postLoadErrorSubtitle.setText(R.string.tap_to_retry);
                     }
 

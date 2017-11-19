@@ -356,6 +356,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
     }
 
+    public void setNoReactions() {
+        reactionCountView.setText("");
+    }
+
     private void toggleVolume() {
         if (audioManager != null) {
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
