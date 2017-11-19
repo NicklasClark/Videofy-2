@@ -70,7 +70,7 @@ public class ProfileFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     public ProfileFragment() {
     }
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);

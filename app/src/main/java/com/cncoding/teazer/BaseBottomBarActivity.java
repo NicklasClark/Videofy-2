@@ -166,7 +166,7 @@ public class BaseBottomBarActivity extends BaseActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    pushFragment(PostDetailsFragment.newInstance(2, uploadParams.getPostDetails(), null));
+                    pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
                 }
             }, 500);
         }
@@ -381,15 +381,15 @@ public class BaseBottomBarActivity extends BaseActivity
     public Fragment getRootFragment(int index) {
         switch (index) {
             case TAB1:
-                return new PostsListFragment();
+                return PostsListFragment.newInstance();
             case NavigationController.TAB2:
-                return new SearchFragment();
+                return SearchFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return new SearchFragment();
             case NavigationController.TAB4:
-                return new NotificationsFragment();
+                return NotificationsFragment.newInstance();
             case NavigationController.TAB5:
-                return new ProfileFragment();
+                return ProfileFragment.newInstance();
         }
         throw new IllegalArgumentException("Need to send an index that we know");
     }
@@ -409,7 +409,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(2, postDetails, image));
+                pushFragment(PostDetailsFragment.newInstance(postDetails, image));
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
@@ -443,9 +443,9 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(2, postDetails, null));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
-            pushFragment(ProfileFragment.newInstance("", ""));
+            pushFragment(ProfileFragment.newInstance());
             Toast.makeText(this, "User Profile fetched, only need to populate it now.", Toast.LENGTH_SHORT).show();
         }
     }

@@ -215,4 +215,9 @@
     <string name="no_users_tagged_yet">No users tagged yet</string>
     <string name="no_posts_available">No posts available</string>
     <string name="all_caught_up">All caught up!</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="my_interests">My Interests</string>
+    <string name="trending">Trending</string>
+    <string name="featured_videos">Featured Videos</string>
+    <string name="view_all">View all</string>
 </resources>

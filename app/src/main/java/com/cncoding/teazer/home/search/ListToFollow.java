@@ -92,7 +92,7 @@ public class ListToFollow extends BaseFragment {
                         getUsersToFollow(page + 1);
                     }
                     else {
-//                                No more posts available. So populating the posts in the recyclerView.
+//                                No more posts available. So populating the posts in the mostPopularList.
                         if (usersList.size() > 0) {
                             recyclerView.setLayoutManager(
                                     new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

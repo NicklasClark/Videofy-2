@@ -17,14 +17,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchFragment extends BaseFragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     @BindView(R.id.user_search) ProximaNovaRegularAutoCompleteTextView searSearchView;
-    @BindView(R.id.list) RecyclerView recyclerView;
-
-    private String mParam1;
-    private String mParam2;
+    @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
+    @BindView(R.id.most_popular_list) RecyclerView myInterestsList;
+    @BindView(R.id.most_popular_list) RecyclerView trandingList;
+    @BindView(R.id.most_popular_list) RecyclerView featuredVideosList;
 
     private OnFragmentInteractionListener mListener;
 
@@ -32,22 +30,8 @@ public class SearchFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
     }
 
     @Override

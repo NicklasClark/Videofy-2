@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 
 import butterknife.BindView;
@@ -30,6 +29,10 @@ public class NotificationsFragment extends BaseFragment {
 
     public NotificationsFragment() {
         // Required empty public constructor
+    }
+
+    public static NotificationsFragment newInstance() {
+        return new NotificationsFragment();
     }
 
     @Override
