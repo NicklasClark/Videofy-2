@@ -90,9 +90,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:foreground="@drawable/ripple_dark_circle"
-                    android:src="@drawable/ic_delete"
-                    android:padding="@dimen/padding_half"
-                    android:visibility="gone"/>
+                    android:src="@drawable/ic_cancel_dark"
+                    android:padding="@dimen/padding_half"/>
 
             </LinearLayout>
 
@@ -120,13 +119,13 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@android:color/white" />
+        android:background="@drawable/bg_bottom_drawer" />
 
     <ImageButton
         android:id="@+id/camera_btn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:foreground="@drawable/ripple_dark_circle"
+        android:layout_width="85dp"
+        android:layout_height="80dp"
+        android:foreground="@drawable/ripple_camera_button"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="@dimen/padding_half"
         android:background="@drawable/bg_circle_light_filled_outlined"

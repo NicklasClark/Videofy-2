@@ -24,7 +24,6 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.UniversalTextView;
-import com.cncoding.teazer.home.notifications.FollowingNotificationsTabFragment.OnListFragmentInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
@@ -42,8 +41,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Notification} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * {@link RecyclerView.Adapter} that can display a {@link Notification}
  */
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

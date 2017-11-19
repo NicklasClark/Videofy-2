@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -35,6 +36,7 @@ import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,7 +97,7 @@ public class ProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -278,7 +280,7 @@ public class ProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<Pojos.User.Profile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
 
                 Log.d("errror",t.getMessage());
             }

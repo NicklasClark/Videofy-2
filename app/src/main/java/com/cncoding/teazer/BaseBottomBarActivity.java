@@ -123,6 +123,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
+    private Call<ResultObject> uploadCall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,19 +168,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private void checkIfAnyVideoIsUploading() {
         if (getVideoUploadSession(this) != null) {
-            resumeUpload(getVideoUploadSession(this));
+            resumeUpload(getVideoUploadSession(this), false);
         }
-        if (getIntent().getExtras() != null) {
-            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS));
+        else if (getIntent().getExtras() != null) {
+            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
         }
     }
 
-    private void resumeUpload(final UploadParams uploadParams) {
+    private void resumeUpload(final UploadParams uploadParams, boolean isResuming) {
         SharedPrefs.saveVideoUploadSession(BaseBottomBarActivity.this, uploadParams);
         uploadingStatusLayout.setVisibility(VISIBLE);
         progressBar.setIndeterminate(false);
 
-//            uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
+        if (uploadParams.isReaction() && isResuming) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pushFragment(PostDetailsFragment.newInstance(2, uploadParams.getPostDetails(), null));
+                }
+            }, 500);
+        }
+
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -191,15 +200,14 @@ public class BaseBottomBarActivity extends BaseActivity
                         if (response.body().getMessage().contains("own video")) {
 //                        USER IS REACTING ON HIS OWN VIDEO.
                             uploadingNotificationTextView.setText(response.body().getMessage());
-                            uploadingNotificationDismiss.setVisibility(VISIBLE);
                             deleteFile(uploadParams.getVideoPath());
-                            SharedPrefs.finishVideoUploadSession(getApplicationContext());
+                            finishVideoUploadSession(getApplicationContext());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     uploadingStatusLayout.setVisibility(View.GONE);
                                 }
-                            }, 1500);
+                            }, 1000);
                         }
                     }
                     onUploadError(new Throwable(response.code() + " : " + response.message()));
@@ -220,21 +228,19 @@ public class BaseBottomBarActivity extends BaseActivity
         File videoFile = new File(uploadParams.getVideoPath());
         ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
         MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
-        String title = uploadParams.getTitle().equals("") ? null : uploadParams.getTitle();
+        String title = uploadParams.getTitle();
         if (!uploadParams.isReaction()) {
 //                UPLOADING POST VIDEO
             uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            uploadingNotificationDismiss.setVisibility(View.GONE);
-            ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
-                    uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), this)
-                    .enqueue(callback);
+            uploadCall = ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
+                    uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), this);
         } else {
 //                UPLOADING REACTION VIDEO
             uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-            uploadingNotificationDismiss.setVisibility(View.GONE);
-            ApiCallingService.React.uploadReaction(videoPartFile, uploadParams.getPostId(), this, title)
-                    .enqueue(callback);
+            uploadCall = ApiCallingService.React.uploadReaction(videoPartFile,
+                    uploadParams.getPostDetails().getPostId(), this, title);
         }
+        uploadCall.enqueue(callback);
     }
 
     @OnClick(R.id.logout_btn) public void performLogout() {
@@ -245,8 +251,21 @@ public class BaseBottomBarActivity extends BaseActivity
     @OnClick(R.id.uploading_notification) public void retryUpload() {
         if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
             uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            resumeUpload(getVideoUploadSession(this));
+            resumeUpload(getVideoUploadSession(this), false);
         }
+    }
+
+    @OnClick(R.id.dismiss) public void cancelUpload() {
+        if (uploadCall != null) {
+            uploadCall.cancel();
+        }
+        finishVideoUploadSession(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadingStatusLayout.setVisibility(View.GONE);
+            }
+        }, 1000);
     }
 
     @Override
@@ -411,12 +430,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        pushFragment(PostDetailsFragment.newInstance(2, postDetails, image));
-                    }
-                }, 500);
+                pushFragment(PostDetailsFragment.newInstance(2, postDetails, image));
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
@@ -424,7 +438,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostDetailsInteraction(int action, int postId) {
+    public void onPostDetailsInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_DISMISS_PLACEHOLDER:
 //                expandedImage.animate().alpha(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
@@ -436,7 +450,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                }, 250);
                 break;
             case ACTION_OPEN_REACTION_CAMERA:
-                launchReactionCamera(this, postId);
+                launchReactionCamera(this, postDetails);
                 break;
             default:
                 break;
@@ -465,7 +479,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onUploadError(Throwable throwable) {
         uploadingNotificationTextView.setText(throwable.getMessage());
         uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
-        uploadingNotificationDismiss.setVisibility(VISIBLE);
     }
 
     @Override
@@ -477,7 +490,7 @@ public class BaseBottomBarActivity extends BaseActivity
             public void run() {
                 uploadingStatusLayout.setVisibility(View.GONE);
             }
-        }, 500);
+        }, 1000);
         finishVideoUploadSession(this);
     }
 

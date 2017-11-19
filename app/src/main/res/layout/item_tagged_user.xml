@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/bg_tagged_user"
+    android:layout_margin="@dimen/padding_thin"
     android:paddingTop="@dimen/padding_thin"
     android:paddingBottom="@dimen/padding_thin"
     android:paddingStart="@dimen/padding_thin"

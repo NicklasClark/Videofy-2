@@ -39,7 +39,7 @@ import android.widget.TextView;
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.authentication.BlurBuilder;
+import com.cncoding.teazer.utilities.BlurBuilder;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
@@ -65,6 +65,7 @@ import com.facebook.ProfileTracker;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
-    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
+//    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
 //    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
 //    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private TransitionDrawable transitionDrawable;
     private boolean loggingIn;
-    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,42 +223,49 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         if (!reverse) {
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected void onPreExecute() {
-                    if (mediaPlayer.isPlaying())
-                        mediaPlayer.pause();
-                    setFragment(tag, addToBackStack, null);
-                    bitmap = welcomeVideo.getBitmap();
-                }
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    bitmap = BlurBuilder.blur(MainActivity.this,
-                            Bitmap.createBitmap(bitmap,
-                                    bitmap.getWidth() / 5, bitmap.getHeight() / 5,
-                                    bitmap.getWidth() / 3, bitmap.getHeight() / 3));
-                    return null;
-                }
-
-                @SuppressWarnings("deprecation")
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    Drawable[] backgrounds = {getResources().getDrawable(R.drawable.bg_transparent),
-                            new BitmapDrawable(getResources(), bitmap)};
-                    transitionDrawable = new TransitionDrawable(backgrounds);
-                    transitionDrawable.setCrossFadeEnabled(true);
-                    mainFragmentContainer.setBackground(transitionDrawable);
-                    transitionDrawable.startTransition(400);
-                }
-            }.execute();
+            setFragment(tag, addToBackStack, null);
+            new Blur(this).execute();
         }
         else {
-            if (transitionDrawable != null)
-                transitionDrawable.reverseTransition(600);
+            mainFragmentContainer.setBackgroundColor(Color.TRANSPARENT);
+//            if (transitionDrawable != null)
+//                transitionDrawable.reverseTransition(600);
             if (mediaPlayer != null && !mediaPlayer.isPlaying())
                 mediaPlayer.start();
+        }
+    }
+
+    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
+
+        private WeakReference<MainActivity> reference;
+
+        Blur(MainActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (reference.get().mediaPlayer.isPlaying())
+                reference.get().mediaPlayer.pause();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            Bitmap bitmap = reference.get().welcomeVideo.getBitmap();
+            return BlurBuilder.blur(reference.get(),
+                    Bitmap.createBitmap(bitmap,
+                            bitmap.getWidth() / 5, bitmap.getHeight() / 5,
+                            bitmap.getWidth() / 3, bitmap.getHeight() / 3));
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            Drawable[] backgrounds = {reference.get().getResources().getDrawable(R.drawable.bg_transparent),
+                    new BitmapDrawable(reference.get().getResources(), bitmap)};
+            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
+            reference.get().transitionDrawable.setCrossFadeEnabled(true);
+            reference.get().mainFragmentContainer.setBackground(reference.get().transitionDrawable);
+            reference.get().transitionDrawable.startTransition(400);
         }
     }
 
@@ -329,7 +336,7 @@ public class MainActivity extends AppCompatActivity
                         mediaPlayer.start();
                 break;
             case OPEN_CAMERA_ACTION:
-//                ViewUtils.launchReactionCamera(this, 37);
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, true);
                 break;
             default:
                 break;
@@ -523,7 +530,7 @@ public class MainActivity extends AppCompatActivity
         successfullyLoggedIn();
     }
 
-    private void toggleUpBtnVisibility(int visibility) {
+    public void toggleUpBtnVisibility(int visibility) {
         switch (visibility) {
             case View.VISIBLE:
                 if (upBtn.getVisibility() != View.VISIBLE) {
@@ -552,11 +559,14 @@ public class MainActivity extends AppCompatActivity
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+        Bitmap bitmap = null;
+        if (drawable != null) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
 
         return bitmap;
     }

@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -118,7 +119,7 @@ public class VideoUpload extends AppCompatActivity
         TagsAndCategoriesInteractionListener {
 
     public static final String VIDEO_PATH = "videoPath";
-    private static final String TAG_VIDEO_PREVIEW = "videoPreview";
+//    private static final String TAG_VIDEO_PREVIEW = "videoPreview";
     private static final String TAG_NEARBY_PLACES = "nearbyPlaces";
     private static final String TAG_INTERESTS_FRAGMENT = "interestsFragment";
     private static final String TAG_TAGS_FRAGMENT = "tagsFragment";
@@ -194,6 +195,10 @@ public class VideoUpload extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         setContentView(R.layout.activity_video_upload);
         getBundleExtras();
         ButterKnife.bind(this);
@@ -592,7 +597,7 @@ public class VideoUpload extends AppCompatActivity
     }
 
     private void getMyFollowingsList(final int page) {
-        ApiCallingService.Friends.getMyFollowings(page, this).enqueue(new Callback<CircleList>() {
+        ApiCallingService.Friends.getMyCircle(page, this).enqueue(new Callback<CircleList>() {
             @Override
             public void onResponse(Call<CircleList> call, Response<CircleList> response) {
                 if (response.body().getCircles() != null) {
@@ -627,23 +632,19 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
+        String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
+        String location = null;
+        double latitude = 0;
+        double longitude = 0;
         if (selectedPlace != null) {
-            String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
-            String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
-            String taggedFriends = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend;
-            String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            DecimalFormat df = new DecimalFormat("#.#######");
-            if (location != null) {
-                performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
-                        Double.parseDouble(df.format(selectedPlace.getLatitude())),
-                        Double.parseDouble(df.format(selectedPlace.getLongitude())), tags, selectedCategoriesToSend));
-            } else {
-                Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
+            location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+            latitude = selectedPlace.getLatitude();
+            longitude = selectedPlace.getLongitude();
         }
+        String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+        DecimalFormat df = new DecimalFormat("#.#######");
+        performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
+                Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
     }
 
     @OnClick(R.id.video_upload_cancel_btn) public void retakeVideo() {
@@ -801,13 +802,13 @@ public class VideoUpload extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-//        videoViewPreview.stopPlayback();
     }
 
     @Override
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+            myFollowingsList.clear();
             if (fragmentManager.getBackStackEntryCount() == 0) {
                 toggleUpBtnVisibility(View.INVISIBLE);
             }

@@ -310,6 +310,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         likesView.setText(SPACE + --likes);
     }
 
+    public void incrementViews() {
+        viewsView.setText(SPACE + ++views);
+    }
+
     public void setReaction1Pic(String reaction1PicUrl) {
         Glide.with(getContext())
                 .load(reaction1PicUrl)

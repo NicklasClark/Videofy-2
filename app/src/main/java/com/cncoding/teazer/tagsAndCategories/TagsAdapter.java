@@ -55,8 +55,10 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                     .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                     .crossFade(400)
                     .into(holder.image);
-//            new ImageLoader().load(circle.getProfileMedia().getThumbUrl()).into(holder.image);
-        }
+        } else //noinspection ConstantConditions
+            Glide.with(fragment).load("")
+                .placeholder(fragment.getContext().getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                .into(holder.image);
 
         holder.nameView.setChecked(selectedTagsArray.get(holder.getAdapterPosition()));
 

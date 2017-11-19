@@ -150,17 +150,9 @@ public class SearchFragment extends BaseFragment {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {
-                                if (response.body().getStatus()) {
-                                    holder.addFriendBtn.setText(R.string.added);
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            usersList.remove(holder.getAdapterPosition());
-                                            userListAdapter.notifyItemRemoved(holder.getAdapterPosition());
-                                        }
-                                    }, 1500);
-                                } else {
-                                    holder.addFriendBtn.setText("Failed!");
+                                holder.addFriendBtn.setText(R.string.added);
+                                if (!response.body().getStatus()) {
+                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -169,6 +161,13 @@ public class SearchFragment extends BaseFragment {
                                         }
                                     }, 1500);
                                 }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        usersList.remove(holder.getAdapterPosition());
+                                        userListAdapter.notifyItemRemoved(holder.getAdapterPosition());
+                                    }
+                                }, 1000);
                             } else
                                 Toast.makeText(getContext(), response.code() + " : " + response.message(), Toast.LENGTH_SHORT).show();
                         }

@@ -1,11 +1,12 @@
 package com.cncoding.teazer.home.post;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -13,52 +14,52 @@ import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  *
  * Created by Prem $ on 11/17/2017.
  */
 
-public class TagListAdapter extends BaseAdapter {
+public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedViewHolder> {
 
+    private Context context;
     private ArrayList<TaggedUser> taggedUserList;
 
-    public TagListAdapter(ArrayList<TaggedUser> taggedUserList) {
+    TagListAdapter(Context context, ArrayList<TaggedUser> taggedUserList) {
+        this.context = context;
         this.taggedUserList = taggedUserList;
     }
 
     @Override
-    public int getCount() {
+    public TaggedViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_tagged_user, viewGroup, false);
+        return new TaggedViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(TaggedViewHolder holder, int i) {
+        holder.username.setText("@" + taggedUserList.get(i).getUserName());
+        Glide.with(context)
+                .load(taggedUserList.get(i).getProfileMedia().getThumbUrl())
+                .crossFade()
+                .into(holder.dp);
+    }
+
+    @Override
+    public int getItemCount() {
         return taggedUserList.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return taggedUserList.get(i);
-    }
+    class TaggedViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+        @BindView(R.id.tagged_user_dp) CircularAppCompatImageView dp;
+        @BindView(R.id.tagged_user_name) ProximaNovaRegularTextView username;
 
-    @SuppressLint("InflateParams")
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        TaggedViewHolder holder;
-        if (view == null) {
-            holder = new TaggedViewHolder();
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_tagged_user, null);
-            holder.dp = view.findViewById(R.id.tagged_user_dp);
-            holder.username = view.findViewById(R.id.tagged_user_name);
+        TaggedViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
-        else {
-            holder = (TaggedViewHolder) view.getTag();
-        }
-        return view;
-    }
-
-    static class TaggedViewHolder {
-        CircularAppCompatImageView dp;
-        ProximaNovaRegularTextView username;
     }
 }

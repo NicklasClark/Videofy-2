@@ -36,7 +36,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.VideoGalleryAdapter.VideoGalleryAdapterInteractionListener;
 import com.cncoding.teazer.home.camera.upload.VideoUpload;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.lang.ref.WeakReference;
@@ -51,7 +52,7 @@ import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_UPLOAD_VIDEO_POST;
 import static com.cncoding.teazer.home.camera.upload.VideoUpload.VIDEO_PATH;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_ID;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaDatabase;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
@@ -69,7 +70,7 @@ public class CameraActivity extends AppCompatActivity
     private ArrayList<Videos> videosList;
 
     private boolean isReaction = false;
-    private int postId = -1;
+    private PostDetails postDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class CameraActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isReaction = bundle.getBoolean(IS_REACTION);
-            postId = bundle.getInt(POST_ID);
+            postDetails = bundle.getParcelable(POST_DETAILS);
         }
 
         slidingUpPanelLayout.setOverlayed(true);
@@ -88,7 +89,7 @@ public class CameraActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postId))
+                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
                     .commit();
         }
     }
@@ -194,7 +195,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCameraInteraction(int action, Pojos.UploadParams uploadParams) {
+    public void onCameraInteraction(int action, UploadParams uploadParams) {
         switch (action) {
             case ACTION_UPLOAD_VIDEO_POST:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
@@ -219,7 +220,10 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onVideoGalleryAdapterInteraction(String videoPath) {
-        startVideoUploadActivity(videoPath);
+        if (!isReaction)
+            startVideoUploadActivity(videoPath);
+        else
+            new CameraFragment.ChooseOptionalTitle(this, new UploadParams(videoPath, postDetails), this);
     }
 
     @Override
