@@ -530,7 +530,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(2,postDetails, null));
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
 
     }
 
