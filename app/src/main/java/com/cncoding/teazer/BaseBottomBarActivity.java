@@ -445,6 +445,7 @@ public class BaseBottomBarActivity extends BaseActivity
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(2, postDetails, null));
         } else {
+            pushFragment(ProfileFragment.newInstance("", ""));
             Toast.makeText(this, "User Profile fetched, only need to populate it now.", Toast.LENGTH_SHORT).show();
         }
     }
