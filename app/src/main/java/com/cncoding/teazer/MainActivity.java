@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
+                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//1
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
+                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//2
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {

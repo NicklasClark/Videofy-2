@@ -36,6 +36,7 @@ import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractio
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.home.profile.ProfileFragmentNew;
 import com.cncoding.teazer.home.search.SearchFragment;
 import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
