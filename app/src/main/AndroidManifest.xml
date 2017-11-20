@@ -20,6 +20,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -38,6 +40,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.com.vansuita.pickimage.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/picker_provider_paths" />
+        </provider>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_places_api_key" />
@@ -162,6 +176,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
         <activity
             android:name=".ui.fragment.activity.EditProfile"
             android:screenOrientation="portrait"
@@ -170,12 +185,12 @@
             android:name=".ui.fragment.activity.FollowerFollowingProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".ui.fragment.activity.FollowingProfileActivity"
+        <activity
+            android:name=".ui.fragment.activity.FollowingProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".ui.fragment.activity.BlockUserList"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.fragment.activity.BlockUserList"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -183,6 +198,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d2422b51820a55ad031bbe2f1d3657015affec36" />
+        <activity android:name=".ui.fragment.activity.EditImageActivity"></activity>
     </application>
 
 </manifest>

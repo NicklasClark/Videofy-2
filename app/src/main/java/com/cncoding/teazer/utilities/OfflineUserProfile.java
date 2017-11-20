@@ -47,25 +47,25 @@ public class OfflineUserProfile {
     }
     
     public static void saveUserProfileOffline(Pojos.User.Profile userProfile, Context context) {
-        new OfflineUserProfile(context)
-                .setUserId(userProfile.getPublicProfile().getUserId())
-                .setUsername(userProfile.getPublicProfile().getUsername())
-                .setFirstName(userProfile.getPublicProfile().getFirstName())
-                .setLastName(userProfile.getPublicProfile().getLastName())
-                .setEmail(userProfile.getPublicProfile().getEmail())
-                .setPhoneNumber(userProfile.getPublicProfile().getPhoneNumber())
-                .setCountryCode(userProfile.getPublicProfile().getCountryCode())
-                .setPassword(userProfile.getPublicProfile().getPassword())
-                .setIsActive(userProfile.getPublicProfile().isActive())
-                .setAccountType(userProfile.getPublicProfile().getAccountType())
-                .setCreatedAt(userProfile.getPublicProfile().getCreatedAt())
-                .setUpdatedAt(userProfile.getPublicProfile().getUpdatedAt())
-                .setHasProfileMedia(userProfile.getPublicProfile().hasProfileMedia())
-                .setProfileMedia(userProfile.getPublicProfile().getProfileMedia())
-                .setCategories(userProfile.getPublicProfile().getCategories())
-                .setFollowers(userProfile.getFollowers())
-                .setFollowings(userProfile.getFollowings())
-                .setTotalVideos(userProfile.getTotalVideos());
+//        new OfflineUserProfile(context)
+//                .setUserId(userProfile.getPublicProfile().getUserId())
+//                .setUsername(userProfile.getPublicProfile().getUsername())
+//                .setFirstName(userProfile.getPublicProfile().getFirstName())
+//                .setLastName(userProfile.getPublicProfile().getLastName())
+//                .setEmail(userProfile.getPublicProfile().getEmail())
+//                .setPhoneNumber(userProfile.getPublicProfile().getPhoneNumber())
+//                .setCountryCode(userProfile.getPublicProfile().getCountryCode())
+//                .setPassword(userProfile.getPublicProfile().getPassword())
+//                .setIsActive(userProfile.getPublicProfile().isActive())
+//                .setAccountType(userProfile.getPublicProfile().getAccountType())
+//                .setCreatedAt(userProfile.getPublicProfile().getCreatedAt())
+//                .setUpdatedAt(userProfile.getPublicProfile().getUpdatedAt())
+//                .setHasProfileMedia(userProfile.getPublicProfile().hasProfileMedia())
+//                .setProfileMedia(userProfile.getPublicProfile().getProfileMedia())
+//                .setCategories(userProfile.getPublicProfile().getCategories())
+//                .setFollowers(userProfile.getFollowers())
+//                .setFollowings(userProfile.getFollowings())
+//                .setTotalVideos(userProfile.getTotalVideos());
     }
     
 //    public PublicProfile getOfflineUserProfile() {

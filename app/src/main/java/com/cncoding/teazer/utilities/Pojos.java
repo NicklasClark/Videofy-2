@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1138,141 +1139,229 @@ public class Pojos {
             }
         }
 
-        public static class PublicProfile implements Parcelable {
-            private String user_id;
-            private String user_name;
-            private String first_name;
-            private String last_name;
-            private String email;
-            private long phone_number;
-            private int country_code;
-            private int gender;
-            private boolean is_active;
-            private String description;
-            private int account_type;
-            private String created_at;
-            private String updated_at;
-            private boolean has_profile_media;
-            private ProfileMedia profile_media;
-            private ArrayList<Category> categories;
-            private String password;
 
-//<<<<<<< HEAD
-//            public PublicProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
+
+//        public static class UserProfile implements Parcelable {
+//            private String user_id;
+//            private String user_name;
+//            private String first_name;
+//            private String last_name;
+//            private String email;
+//            private long phone_number;
+//            private int country_code;
+//            private int gender;
+//            private boolean is_active;
+//            private String description;
+//            private int account_type;
+//            private String created_at;
+//            private String updated_at;
+//            private boolean has_profile_media;
+//            private ProfileMedia profile_media;
+//            private ArrayList<Category> categories;
+//            private String password;
+//
+////<<<<<<< HEAD
+//            public UserProfile(String user_id, String user_name, String first_name, String last_name, String email, long phone_number, int country_code,
 //                               String password, boolean is_active, int account_type, String created_at, String updated_at, boolean has_profile_media,
 //                               ProfileMedia profile_media, ArrayList<Category> categories, int followers, int followings, int total_videos, int gender, String description) {
-//=======
-            public PublicProfile(String user_id, String user_name, String first_name, String last_name,
-                                 String email, long phone_number, int country_code, int gender, boolean is_active,
-                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
-                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
-//>>>>>>> amit_test
-                this.user_id = user_id;
-                this.user_name = user_name;
-                this.first_name = first_name;
-                this.last_name = last_name;
-                this.email = email;
-                this.phone_number = phone_number;
-                this.country_code = country_code;
-                this.gender = gender;
-                this.is_active = is_active;
-                this.description = description;
-                this.account_type = account_type;
-                this.created_at = created_at;
-                this.updated_at = updated_at;
-                this.has_profile_media = has_profile_media;
-                this.profile_media = profile_media;
-                this.categories = categories;
-                this.password = password;
-                this.gender=gender;
-                this.description=description;
+////=======
+////            public UserProfile(String user_id, String user_name, String first_name, String last_name,
+////                                 String email, long phone_number, int country_code, int gender, boolean is_active,
+////                                 String description, int account_type, String created_at, String updated_at, boolean has_profile_media,
+////                                 ProfileMedia profile_media, ArrayList<Category> categories, String password) {
+////>>>>>>> amit_test
+//                this.user_id = user_id;
+//                this.user_name = user_name;
+//                this.first_name = first_name;
+//                this.last_name = last_name;
+//                this.email = email;
+//                this.phone_number = phone_number;
+//                this.country_code = country_code;
+//                this.gender = gender;
+//                this.is_active = is_active;
+//                this.description = description;
+//                this.account_type = account_type;
+//                this.created_at = created_at;
+//                this.updated_at = updated_at;
+//                this.has_profile_media = has_profile_media;
+//                this.profile_media = profile_media;
+//                this.categories = categories;
+//                this.password = password;
+//                this.gender=gender;
+//                this.description=description;
+//            }
+//
+//            public UserProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code, int gender, String description) {
+//                this.user_name = user_name;
+//                this.first_name = first_name;
+//                this.last_name = last_name;
+//                this.email = email;
+//                this.phone_number = phone_number;
+//                this.country_code = country_code;
+//                this.gender=gender;
+//                this.description=description;
+//            }
+//
+//            public String getDescription() {
+//                return description;
+//            }
+//
+//            public UserProfile(String email) {
+//                this.email = email;
+//            }
+//
+//            public String getUserId() {
+//                return user_id;
+//            }
+//
+//            public String getUsername() {
+//                return user_name;
+//            }
+//
+//            public String getFirstName() {
+//                return first_name;
+//            }
+//
+//            public String getLastName() {
+//                return last_name;
+//            }
+//
+//            public String getEmail() {
+//                return email;
+//            }
+//
+//            public long getPhoneNumber() {
+//                return phone_number;
+//            }
+//
+//            public int getGender() {
+//                return gender;
+//            }
+//
+//            public int getCountryCode() {
+//                return country_code;
+//            }
+//
+//            public boolean isActive() {
+//                return is_active;
+//            }
+//
+//            public int getAccountType() {
+//                return account_type;
+//            }
+//
+//            public String getCreatedAt() {
+//                return created_at;
+//            }
+//
+//            public String getUpdatedAt() {
+//                return updated_at;
+//            }
+//
+//            public boolean hasProfileMedia() {
+//                return has_profile_media;
+//            }
+//
+//            public ProfileMedia getProfileMedia() {
+//                return profile_media;
+//            }
+//
+//            public ArrayList<Category> getCategories() {
+//                return categories;
+//            }
+//
+//            public String getPassword() {
+//                return password;
+//            }
+//
+//            public void setPassword(String password) {
+//                this.password = password;
+//            }
+//
+//            @Override
+//            public int describeContents() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public void writeToParcel(Parcel parcel, int i) {
+//                parcel.writeString(user_id);
+//                parcel.writeString(user_name);
+//                parcel.writeString(first_name);
+//                parcel.writeString(last_name);
+//                parcel.writeString(email);
+//                parcel.writeLong(phone_number);
+//                parcel.writeInt(country_code);
+//                parcel.writeByte((byte) (is_active ? 1 : 0));
+//                parcel.writeInt(account_type);
+//                parcel.writeString(created_at);
+//                parcel.writeString(updated_at);
+//                parcel.writeByte((byte) (has_profile_media ? 1 : 0));
+//                parcel.writeParcelable(profile_media, i);
+//                parcel.writeTypedList(categories);
+//                parcel.writeInt(gender);
+//                parcel.writeString(description);
+//            }
+//
+//            protected UserProfile(Parcel in) {
+//                user_id = in.readString();
+//                user_name = in.readString();
+//                first_name = in.readString();
+//                last_name = in.readString();
+//                email = in.readString();
+//                phone_number = in.readLong();
+//                country_code = in.readInt();
+//                is_active = in.readByte() != 0;
+//                account_type = in.readInt();
+//                created_at = in.readString();
+//                updated_at = in.readString();
+//                has_profile_media = in.readByte() != 0;
+//                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+//                categories = in.createTypedArrayList(Category.CREATOR);
+//                gender = in.readInt();
+//                description = in.readString();
+//            }
+//
+//            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+//                @Override
+//                public UserProfile createFromParcel(Parcel in) {
+//                    return new UserProfile(in);
+//                }
+//
+//                @Override
+//                public UserProfile[] newArray(int size) {
+//                    return new UserProfile[size];
+//                }
+//            };
+//        }
+
+
+        public static class UserProfile implements Parcelable {
+            private PublicProfile user_profile;
+            private int followers;
+            private int followings;
+            private int total_videos;
+
+            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+                this.user_profile = user_profile;
+                this.followers = followers;
+                this.followings = followings;
+                this.total_videos = total_videos;
             }
 
-            public PublicProfile(String user_name, String first_name, String last_name, String email, long phone_number, int country_code, int gender, String description) {
-                this.user_name = user_name;
-                this.first_name = first_name;
-                this.last_name = last_name;
-                this.email = email;
-                this.phone_number = phone_number;
-                this.country_code = country_code;
-                this.gender=gender;
-                this.description=description;
+            protected UserProfile(Parcel in) {
+                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+                followers = in.readInt();
+                followings = in.readInt();
+                total_videos = in.readInt();
             }
 
-            public String getDescription() {
-                return description;
-            }
-
-            public PublicProfile(String email) {
-                this.email = email;
-            }
-
-            public String getUserId() {
-                return user_id;
-            }
-
-            public String getUsername() {
-                return user_name;
-            }
-
-            public String getFirstName() {
-                return first_name;
-            }
-
-            public String getLastName() {
-                return last_name;
-            }
-
-            public String getEmail() {
-                return email;
-            }
-
-            public long getPhoneNumber() {
-                return phone_number;
-            }
-
-            public int getGender() {
-                return gender;
-            }
-
-            public int getCountryCode() {
-                return country_code;
-            }
-
-            public boolean isActive() {
-                return is_active;
-            }
-
-            public int getAccountType() {
-                return account_type;
-            }
-
-            public String getCreatedAt() {
-                return created_at;
-            }
-
-            public String getUpdatedAt() {
-                return updated_at;
-            }
-
-            public boolean hasProfileMedia() {
-                return has_profile_media;
-            }
-
-            public ProfileMedia getProfileMedia() {
-                return profile_media;
-            }
-
-            public ArrayList<Category> getCategories() {
-                return categories;
-            }
-
-            public String getPassword() {
-                return password;
-            }
-
-            public void setPassword(String password) {
-                this.password = password;
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+            //    dest.writeParcelable(user_profile, flags);
+                dest.writeInt(followers);
+                dest.writeInt(followings);
+                dest.writeInt(total_videos);
             }
 
             @Override
@@ -1280,46 +1369,7 @@ public class Pojos {
                 return 0;
             }
 
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeString(user_id);
-                parcel.writeString(user_name);
-                parcel.writeString(first_name);
-                parcel.writeString(last_name);
-                parcel.writeString(email);
-                parcel.writeLong(phone_number);
-                parcel.writeInt(country_code);
-                parcel.writeByte((byte) (is_active ? 1 : 0));
-                parcel.writeInt(account_type);
-                parcel.writeString(created_at);
-                parcel.writeString(updated_at);
-                parcel.writeByte((byte) (has_profile_media ? 1 : 0));
-                parcel.writeParcelable(profile_media, i);
-                parcel.writeTypedList(categories);
-                parcel.writeInt(gender);
-                parcel.writeString(description);
-            }
-
-            protected PublicProfile(Parcel in) {
-                user_id = in.readString();
-                user_name = in.readString();
-                first_name = in.readString();
-                last_name = in.readString();
-                email = in.readString();
-                phone_number = in.readLong();
-                country_code = in.readInt();
-                is_active = in.readByte() != 0;
-                account_type = in.readInt();
-                created_at = in.readString();
-                updated_at = in.readString();
-                has_profile_media = in.readByte() != 0;
-                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
-                categories = in.createTypedArrayList(Category.CREATOR);
-                gender = in.readInt();
-                description = in.readString();
-            }
-
-            public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
+            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
                 @Override
                 public PublicProfile createFromParcel(Parcel in) {
                     return new PublicProfile(in);
@@ -1330,7 +1380,29 @@ public class Pojos {
                     return new PublicProfile[size];
                 }
             };
+
+            public PublicProfile getUserProfile() {
+                return user_profile;
+            }
+
+            public int getFollowers() {
+                return followers;
+            }
+
+            public int getFollowings() {
+                return followings;
+            }
+
+            public int getTotalVideos() {
+                return total_videos;
+            }
         }
+
+
+
+
+
+
 
         public static class PrivateProfile implements Parcelable {
             private String user_id;

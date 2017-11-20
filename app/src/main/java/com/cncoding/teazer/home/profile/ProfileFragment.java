@@ -2,16 +2,21 @@ package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -27,17 +32,29 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaCondensedTextView;
+import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
+import com.cncoding.teazer.model.profile.userProfile.UserProfile;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.User.PublicProfile;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URL;
+
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,13 +73,13 @@ public class ProfileFragment extends BaseFragment {
     LinearLayout mContainerView;
     Context context;
     AppBarLayout appBarLayout;
-    TextView _toolbarusername;
-    TextView _name;
-    TextView _username;
-    TextView _creations;
-    TextView _followers;
-    TextView _following;
-    TextView _detail;
+    ProximaNovaCondensedTextView _toolbarusername;
+    ProximaNovaCondensedTextView _name;
+    SignPainterTextView _username;
+     TextView _creations;
+     TextView _followers;
+     TextView _following;
+    ProximaNovaCondensedTextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.PublicProfile userprofile;
@@ -85,6 +102,7 @@ public class ProfileFragment extends BaseFragment {
     String detail;
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
+    CircularAppCompatImageView profile_id;
     private OnFragmentInteractionListener mListener;
     public ProfileFragment() {
     }
@@ -122,6 +140,8 @@ public class ProfileFragment extends BaseFragment {
         btnedit = view.findViewById(R.id.btnedit);
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
+        profile_id = view.findViewById(R.id.profile_id);
+
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,16 +226,17 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
         removeAppBar.removeAppbar();
-        dynamicToolbarColor();
+       // dynamicToolbarColor();
         getProfileDetail();
 
     }
+
     public void getProfileDetail() {
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
-                public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+                public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile >response) {
                 Log.d("Response",response.toString());
-                if (response.code() == 200) {
+
 
                     try {
                         PublicProfile userProfile = response.body().getUserProfile();
@@ -224,36 +245,26 @@ public class ProfileFragment extends BaseFragment {
                         int totalvideos = response.body().getTotalVideos();
                         String firstname=userProfile.getFirstName();
                         String lastname=userProfile.getLastName();
-                        String username=userProfile.getUsername();
+                        String username=userProfile.getUserName();
                         String email=userProfile.getEmail();
                         int accountType=userProfile.getAccountType();
-                        hasProfleMedia=userProfile.hasProfileMedia();
-
+                         hasProfleMedia=userProfile.getHasProfileMedia();
                         totalfollowers = response.body().getFollowers();
                         totalfollowing = response.body().getFollowings();
                         totalvideos = response.body().getTotalVideos();
-                        userId = userProfile.getUserId();
-                        firstname = userProfile.getFirstName();
-                        lastname = userProfile.getLastName();
-                        username = userProfile.getUsername();
+                        userId = String.valueOf(userProfile.getUserId());
                         gender=userProfile.getGender();
                         email = userProfile.getEmail();
-                        mobilenumber= userProfile.getPhoneNumber();
-                        accountType = userProfile.getAccountType();
-                        hasProfleMedia = userProfile.hasProfileMedia();
+                        Long mobilno= userProfile.getPhoneNumber();
+                        if(mobilno==null)
+                        {
+                            mobilenumber=0L;
+                        }
+                        else{
+                            mobilenumber=mobilno;
+                        }
                         countrycode = userProfile.getCountryCode();
                         detail=userProfile.getDescription();
-
-                        if (hasProfleMedia) {
-                            backgroundprofile.setBackgroundResource(R.drawable.material_flat);
-
-                            //                        Picasso.with(context).
-                            //                                load(newUrl)
-                            //                                .placeholder(ContextCompat.getDrawable(context, R.drawable.blankimage))
-                            //                                .into(imageView);
-                        } else {
-                            backgroundprofile.setBackgroundResource(R.drawable.material_flat);
-                        }
 
 //                        if (b != null) {
 //                            String thumburl = profile_media.getThumbUrl();
@@ -262,21 +273,45 @@ public class ProfileFragment extends BaseFragment {
                         _toolbarusername.setText(firstname);
                         _name.setText(firstname);
                         _username.setText(username);
-                       // _detail.setText(detail);
+                        _detail.setText(detail);
                         Log.d("Gender",detail);
                         _followers.setText(String.valueOf(totalfollowers) + " Follower");
                         _following.setText(String.valueOf(totalfollowing + " Following"));
                         _creations.setText(String.valueOf(totalvideos + " Creations"));
                         progressbar.setVisibility(View.GONE);
                         coordinatorLayout.setVisibility(View.VISIBLE);
+                        profileBlur();
+
+                        SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                        String imageUri =  prfs.getString("MYIMAGES", null);
+                        if(imageUri==null)
+                        {
+                            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+              Glide.with(context)
+                .load(pic)
+                .into(profile_id);
+                        }
+                        else
+                        {
+
+                            Picasso.with(context)
+                                    .load(Uri.parse(imageUri))
+                                    .into(profile_id);
+                        }
+                      if(hasProfleMedia)
+                      {
+
+
+
+                      }
+                      else {
+
+                      }
                     }
                     catch (Exception e) {
                         Log.d("Exception",e.getMessage());
                     }
-                } else {
 
-                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
-                }
             }
 
             @Override
@@ -285,6 +320,46 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
+    }
+
+
+    public void profileBlur()
+
+    {
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
+        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//        Glide.with(context)
+//                .load(pic)
+//                .into(profile_id);
+
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(final Void... params) {
+                Bitmap bitmap = null;
+                try {
+                    final URL url = new URL(pic);
+                    try {
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (Exception e) {
+
+                }
+
+                return bitmap;
+            }
+            @Override
+            protected void onPostExecute(final Bitmap result) {
+                Blurry.with(context).from(result).into(backgroundprofile);
+                progressbar.setVisibility(View.GONE);
+                coordinatorLayout.setVisibility(View.VISIBLE);
+
+
+            }
+        }.execute();
     }
     @Override
     public void onAttach(Context context) {
@@ -310,7 +385,7 @@ public class ProfileFragment extends BaseFragment {
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.material_flat);
+                    R.drawable.arif_image);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
                 @Override
@@ -320,6 +395,12 @@ public class ProfileFragment extends BaseFragment {
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
+        }
+
+        else
+        {
+
+
         }
     }
 

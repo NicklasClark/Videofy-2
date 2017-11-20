@@ -14,6 +14,7 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -308,6 +309,7 @@ import retrofit2.http.Query;
          * */
         @GET("/api/v1/friend/profile/{user_id}")
         Call<FollowersProfile> getOthersProfileInfo(@Path("user_id") int userId);
+
 
         @GET("/api/v1/friend/profile/{user_id}")
         Call<Profile> getOthersProfileInfoNoti(@Path("user_id") int userId);
@@ -604,6 +606,7 @@ import retrofit2.http.Query;
          * To update a user profile media
          * Call this service to update a user profile media
          * */
+        @Multipart
         @POST("/api/v1/user/update/profile/media")
         Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part file);
 
