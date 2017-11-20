@@ -279,8 +279,27 @@ public class ProfileFragment extends BaseFragment {
                         progressbar.setVisibility(View.GONE);
                         coordinatorLayout.setVisibility(View.VISIBLE);
                         profileBlur();
+
+                        SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                        String imageUri =  prfs.getString("MYIMAGES", null);
+                        if(imageUri==null)
+                        {
+                            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+              Glide.with(context)
+                .load(pic)
+                .into(profile_id);
+                        }
+                        else
+                        {
+
+                            Picasso.with(context)
+                                    .load(Uri.parse(imageUri))
+                                    .into(profile_id);
+                        }
                       if(hasProfleMedia)
                       {
+
+
 
                       }
                       else {
@@ -309,17 +328,9 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-        SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-        String imageUri =  prfs.getString("MYIMAGES", null);
-        if(imageUri==null)
-        {
-        }
-        else
-        {
-            Picasso.with(context)
-                    .load(Uri.parse(imageUri))
-                    .into(profile_image);
-        }
+//        Glide.with(context)
+//                .load(pic)
+//                .into(profile_id);
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override

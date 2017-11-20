@@ -239,6 +239,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     }
 
 
+
+
     public byte[] getBytes(InputStream inputStream) throws IOException {
 
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -271,6 +273,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             String imageUri =  prfs.getString("MYIMAGES", null);
             if(imageUri==null)
             {
+
+                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+                Glide.with(context)
+                        .load(pic)
+                        .into(profile_image);
             }
             else
             {
