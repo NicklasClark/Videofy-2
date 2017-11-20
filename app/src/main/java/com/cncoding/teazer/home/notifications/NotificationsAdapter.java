@@ -9,12 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -129,13 +129,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             if (response.code() == 200)
                                                 mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
                                             else
-                                                Toast.makeText(context, response.code() + " : " + response.message(),
-                                                        Toast.LENGTH_SHORT).show();
+                                                Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
                                         }
 
                                         @Override
                                         public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Log.d("FAIL - GET PostDetails", t.getMessage());
                                         }
                                     });
                         }
@@ -185,13 +184,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                                    if (response.code() == 200)
 //                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
 //                                                    else
-//                                                        Toast.makeText(context, response.code() + " : " + response.message(),
-//                                                                Toast.LENGTH_SHORT).show();
+//                                                        Log.d("GetOthersProfileInfo", response.code() + " : " + response.message());
 //                                                }
 //
 //                                                @Override
 //                                                public void onFailure(Call<Profile> call, Throwable t) {
-//                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                        Log.d("FAIL-GetOthrProfileInfo", t.getMessage());
 //                                                }
 //                                            });
 //                                }
@@ -214,13 +212,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                             sendJoinRequest(holder2);
                                                         }
                                                     } else
-                                                        Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d("FOLLOW BACK", response.code() + " : " + response.message());
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.d("FAIL - FOLLOW BACK", t.getMessage());
                                                 }
                                             });
                                 } else if (text.equals(context.getString(R.string.accept))) {
@@ -233,15 +230,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body().getStatus())
                                                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                                                         else
-                                                            Toast.makeText(context, "Failed: false status!", Toast.LENGTH_SHORT).show();
+                                                            Log.d("AcceptJoinRequest", response.code()
+                                                                    + " : " + response.body().getMessage());
                                                     } else
-                                                        Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d("AcceptJoinRequest", response.code()
+                                                                + " : " + response.body().getMessage());
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.d("FAIL- AcceptJoinRequest", t.getMessage());
                                                 }
                                             });
                                 }
@@ -266,7 +264,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                         @Override
                                                         public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
                                                         }
                                                     });
                                                 }
@@ -296,14 +294,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                             BUTTON_TYPE_FOLLOW);
                                                                 }
                                                                 else
-                                                                    Toast.makeText(context, response.body().getMessage(),
-                                                                            Toast.LENGTH_SHORT).show();
+                                                                    Log.d("CancelRequest", response.code()
+                                                                            + " : " + response.body().getMessage());
                                                             }
                                                         }
 
                                                         @Override
                                                         public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                                                            Log.d("FAIL - CancelRequest", t.getMessage());
                                                         }
                                                     });
                                                 }
@@ -345,15 +343,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 .show();
                                                     }
                                                     else
-                                                        Toast.makeText(context, "Failed: false status!", Toast.LENGTH_SHORT).show();
+                                                        Log.d("DeleteJoinRequest", response.code()
+                                                                + " : " + response.body().getMessage());
                                                 } else
-                                                    Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                            Toast.LENGTH_SHORT).show();
+                                                    Log.d("DeleteJoinRequest", response.code()
+                                                            + " : " + response.body().getMessage());
                                             }
 
                                             @Override
                                             public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Log.d("FAIL- DeleteJoinRequest", t.getMessage());
                                             }
                                         });
                                 break;
@@ -386,13 +385,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     setActionButton(holder.action, null, BUTTON_TYPE_REQUESTED);
                             }
                         } else
-                            Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d("SendJoinRequestByUserId", response.code()
+                                    + " : " + response.body().getMessage());
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("FAIL-SendJoinRqstUserId", t.getMessage());
                     }
                 });
     }
