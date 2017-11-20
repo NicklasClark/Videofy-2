@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 
-import java.util.Random;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,9 +18,15 @@ import butterknife.ButterKnife;
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.ViewHolder> {
 
-    private String[] titles = new String[]{"Singing", "Dance", "Comedy", "Videos"};
+    private String[] titles = new String[]{
+            "Singing", "Dance", "Comedy", "Videos", "Travel", "Photography", "Adventure", "Instruments", "Comedy", "Acting", "Technology", "iOS", "Android",
+            "Fashion", "Lifestyle", "Sports", "Restaurants", "Wildlife", "Nightlife", "Photography", "Love", "Health And Fitness", "History", "Home Décor", "Humour",
+            "Kids And Parenting", "Men's Fashion", "Outdoors", "Photography", "Quotes", "Science", "Nature", "Sports", "Tattoos", "Technology", "Travel", "Weddings",
+            "Women's Fashion", "Popular", "Everything", "Animals And Pets", "Architecture", "Art", "Cars And Motorcycles", "Celebrations And Events",
+            "Celebrities", "DIY And Crafts", "Design", "Education", "Entertainment", "Food And Drink", "Gardening", "Geek", "Hair And Beauty", "Crazy"
+    };
 
-    public TrendingListAdapter() {
+    TrendingListAdapter() {
     }
 
     @Override
@@ -34,12 +38,12 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     @Override
     public void onBindViewHolder(TrendingListAdapter.ViewHolder holder, int position) {
-        holder.title.setText(titles[new Random().nextInt(titles.length - 1)]);
+        holder.title.setText(titles[position]);
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 54;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

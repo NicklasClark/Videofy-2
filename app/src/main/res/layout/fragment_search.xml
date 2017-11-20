@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingTop="@dimen/padding_half"
         tools:context="com.cncoding.teazer.home.search.SearchFragment">
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
@@ -26,6 +27,7 @@
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
             android:padding="@dimen/padding_half"
             android:text="@string/most_popular"
             android:textSize="@dimen/text_size_content_big"/>
@@ -43,6 +45,7 @@
             android:id="@+id/my_interests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
             android:foreground="@drawable/ripple_dark_no_rounded"
             android:orientation="horizontal">
 
@@ -76,6 +79,7 @@
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
             android:padding="@dimen/padding_half"
             android:text="@string/trending"
             android:textSize="@dimen/text_size_content_big"/>
@@ -92,6 +96,7 @@
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
             android:padding="@dimen/padding_half"
             android:text="@string/featured_videos"
             android:textSize="@dimen/text_size_content_big"/>
