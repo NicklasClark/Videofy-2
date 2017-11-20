@@ -4,6 +4,7 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +48,7 @@ import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.utilities.FileUtils;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Utility;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -96,6 +99,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     Long mobilenumber;
     int gender;
     String detail;
+
 
     FloatingActionButton fab;
     ProgressBar simpleProgressBar;
@@ -208,12 +212,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 layoutdetail.setVisibility(View.GONE);
                 simpleProgressBar.setVisibility(View.VISIBLE);
 
-              // File files= FileUtils.getFile(this,r.getUri());
+                File files= FileUtils.getFile(this,r.getUri());
 
-              //  Log.d("Exception12",files.getName());
-                //RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
-               // MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
-                //saveDataToDatabase(body);
+                Log.d("Exception111",files.getName());
+                RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
+                MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
+                saveDataToDatabase(body);
 
             }
             catch (Exception e) {
@@ -224,11 +228,18 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             editor.putString("MYIMAGES", r.getUri().toString());
             editor.apply();
 
-            SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-            final String imageUri =  prfs.getString("MYIMAGES", "");
+            //SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+            final String imageUri =  preferences.getString("MYIMAGES", null);
             Picasso.with(this)
                     .load(Uri.parse(imageUri))
                     .into(profile_image);
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imageUri));
+                Blurry.with(this).radius(1).sampling(1).from(bitmap).into(bgImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             layoutdetail.setVisibility(View.VISIBLE);
             simpleProgressBar.setVisibility(View.GONE);
@@ -237,10 +248,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Toast.makeText(this, r.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
     public byte[] getBytes(InputStream inputStream) throws IOException {
 
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -285,6 +292,15 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Picasso.with(this)
                         .load(Uri.parse(imageUri))
                         .into(profile_image);
+
+
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imageUri));
+                    Blurry.with(this).radius(1).sampling(1).from(bitmap).into(bgImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -321,37 +337,38 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
 
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(final Void... params) {
-
-                Bitmap bitmap = null;
-                try {
-
-
-                    final URL url = new URL(pic);
-
-                    try {
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } catch (Exception e) {
-
-                }
-
-                return bitmap;
-            }
-
-            @Override
-            protected void onPostExecute(final Bitmap result) {
-                Blurry.with(context).from(result).into(bgImage);
-                layoutdetail.setVisibility(View.VISIBLE);
-                simpleProgressBar.setVisibility(View.GONE);
-            }
-        }.execute();
-
+//        new AsyncTask<Void, Void, Bitmap>() {
+//            @Override
+//            protected Bitmap doInBackground(final Void... params) {
+//
+//                Bitmap bitmap = null;
+//                try {
+//
+//
+//                    final URL url = new URL(pic);
+//
+//                    try {
+//                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                } catch (Exception e) {
+//
+//                }
+//
+//                return bitmap;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(final Bitmap result) {
+//                Blurry.with(context).from(result).into(bgImage);
+//                layoutdetail.setVisibility(View.VISIBLE);
+//                simpleProgressBar.setVisibility(View.GONE);
+//            }
+//        }.execute();
+        layoutdetail.setVisibility(View.VISIBLE);
+        simpleProgressBar.setVisibility(View.GONE);
 
     }
 
@@ -366,8 +383,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             @Override
             public void onResponse(Call<ProfileUpdate> call, Response<ProfileUpdate> response) {
 
-
-                Log.d("ResponseCode", String.valueOf(response.code()));
+                Log.d("on response", String.valueOf(response.toString()));
+                Log.d("ResponseCode", String.valueOf(response.toString()));
 
                 if (response.code() == 200) {
 
@@ -448,6 +465,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         });
 
     }
+
+
+
+
+
+
+
 
 
 
