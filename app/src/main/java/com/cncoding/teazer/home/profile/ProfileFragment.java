@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -30,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -41,14 +36,11 @@ import com.cncoding.teazer.customViews.ProximaNovaCondensedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.model.profile.userProfile.UserProfile;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.User.PublicProfile;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -76,13 +68,13 @@ public class ProfileFragment extends BaseFragment {
     ProximaNovaCondensedTextView _toolbarusername;
     ProximaNovaCondensedTextView _name;
     SignPainterTextView _username;
-     TextView _creations;
-     TextView _followers;
-     TextView _following;
+    TextView _creations;
+    TextView _followers;
+    TextView _following;
     ProximaNovaCondensedTextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    Pojos.User.PublicProfile userprofile;
+    Pojos.User.UserProfile userprofile;
     RemoveAppBar removeAppBar;
     Button btnedit;
     int totalfollowers;
@@ -95,7 +87,7 @@ public class ProfileFragment extends BaseFragment {
     String email;
     int accountType;
     boolean hasProfleMedia;
-//    Pojos.User.PublicProfile userprofile;
+    //    Pojos.User.UserProfile userprofile;
     Long mobilenumber;
     int gender;
     int countrycode;
@@ -104,18 +96,22 @@ public class ProfileFragment extends BaseFragment {
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     private OnFragmentInteractionListener mListener;
+
     public ProfileFragment() {
     }
+
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -155,8 +151,9 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("CountryCode", String.valueOf(countrycode));
                 if (detail == null)
                     intent.putExtra("Detail", "");
-                else
-                    {intent.putExtra("Detail", detail);}
+                else {
+                    intent.putExtra("Detail", detail);
+                }
                 startActivity(intent);
             }
         });
@@ -184,7 +181,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, Settings.class);
-                intent.putExtra("AccountType",String.valueOf(accountType));
+                intent.putExtra("AccountType", String.valueOf(accountType));
                 startActivity(intent);
             }
         });
@@ -220,13 +217,14 @@ public class ProfileFragment extends BaseFragment {
         });
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
         removeAppBar.removeAppbar();
-       // dynamicToolbarColor();
+        // dynamicToolbarColor();
         getProfileDetail();
 
     }
@@ -234,89 +232,82 @@ public class ProfileFragment extends BaseFragment {
     public void getProfileDetail() {
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
-                public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile >response) {
-                Log.d("Response",response.toString());
+            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+                Log.d("Response", response.toString());
 
 
-                    try {
-                        PublicProfile userProfile = response.body().getUserProfile();
-                        int totalfollowers = response.body().getFollowers();
-                        int totalfollowing = response.body().getFollowings();
-                        int totalvideos = response.body().getTotalVideos();
-                        String firstname=userProfile.getFirstName();
-                        String lastname=userProfile.getLastName();
-                        String username=userProfile.getUserName();
-                        String email=userProfile.getEmail();
-                        int accountType=userProfile.getAccountType();
-                         hasProfleMedia=userProfile.getHasProfileMedia();
-                        totalfollowers = response.body().getFollowers();
-                        totalfollowing = response.body().getFollowings();
-                        totalvideos = response.body().getTotalVideos();
-                        userId = String.valueOf(userProfile.getUserId());
-                        gender=userProfile.getGender();
-                        email = userProfile.getEmail();
-                        Long mobilno= userProfile.getPhoneNumber();
-                        if(mobilno==null)
-                        {
-                            mobilenumber=0L;
-                        }
-                        else{
-                            mobilenumber=mobilno;
-                        }
-                        countrycode = userProfile.getCountryCode();
-                        detail=userProfile.getDescription();
+                try {
+                    PublicProfile userProfile = response.body().getUserProfile();
+                    firstname = userProfile.getFirstName();
+                    lastname = userProfile.getLastName();
+                    username = userProfile.getUserName();
+                    email = userProfile.getEmail();
+                    accountType = userProfile.getAccountType();
+                    hasProfleMedia = userProfile.getHasProfileMedia();
+                    totalfollowers = response.body().getFollowers();
+                    totalfollowing = response.body().getFollowings();
+                    totalvideos = response.body().getTotalVideos();
+                    userId = String.valueOf(userProfile.getUserId());
+                    gender = userProfile.getGender();
+                    Long mobilno = userProfile.getPhoneNumber();
+                    if (mobilno == null) {
+                        mobilenumber = 0L;
+                    } else {
+                        mobilenumber = mobilno;
+                    }
+                    countrycode = userProfile.getCountryCode();
+                    detail = userProfile.getDescription();
+                    _toolbarusername.setText(firstname);
+                    _name.setText(firstname);
+                    _username.setText(username);
+                    _detail.setText(detail);
+                    Log.d("Gender", detail);
+                    _followers.setText(String.valueOf(totalfollowers) + " Follower");
+                    _following.setText(String.valueOf(totalfollowing + " Following"));
+                    _creations.setText(String.valueOf(totalvideos + " Creations"));
+                    progressbar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                    profileBlur();
 
-//                        if (b != null) {
-//                            String thumburl = profile_media.getThumbUrl();
-//                            String mediaurl = profile_media.getMediaUrl();
-//                        }
-                        _toolbarusername.setText(firstname);
-                        _name.setText(firstname);
-                        _username.setText(username);
-                        _detail.setText(detail);
-                        Log.d("Gender",detail);
-                        _followers.setText(String.valueOf(totalfollowers) + " Follower");
-                        _following.setText(String.valueOf(totalfollowing + " Following"));
-                        _creations.setText(String.valueOf(totalvideos + " Creations"));
-                        progressbar.setVisibility(View.GONE);
-                        coordinatorLayout.setVisibility(View.VISIBLE);
+                    SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                    String imageUri = prfs.getString("MYIMAGES", "");
+                    if (imageUri == null) {
+                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
+                        Glide.with(context)
+                                .load(pic)
+                                .into(profile_id);
                         profileBlur();
 
-                        SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-                        String imageUri =  prfs.getString("MYIMAGES", null);
-                        if(imageUri==null)
-                        {
-                            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-              Glide.with(context)
-                .load(pic)
-                .into(profile_id);
-                        }
-                        else
-                        {
+                    } else {
 
-                            Picasso.with(context)
-                                    .load(Uri.parse(imageUri))
-                                    .into(profile_id);
-                        }
-                      if(hasProfleMedia)
-                      {
+                        Picasso.with(context)
+                                .load(Uri.parse(imageUri))
+                                .into(profile_id);
+//                        try {
+//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
+//                            Blurry.with(context).radius(1).sampling(1).from(bitmap).into(bgImage);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
-
-
-                      }
-                      else {
-
-                      }
                     }
-                    catch (Exception e) {
-                        Log.d("Exception",e.getMessage());
+                    if (hasProfleMedia) {
+
+
+                    } else {
+
                     }
+                } catch (Exception e) {
+                    Log.d("Exception", e.getMessage());
+                }
 
             }
 
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
 
+                Log.d("errror", t.getMessage());
             }
         });
 
@@ -329,9 +320,6 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-//        Glide.with(context)
-//                .load(pic)
-//                .into(profile_id);
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
@@ -360,6 +348,11 @@ public class ProfileFragment extends BaseFragment {
 
             }
         }.execute();
+
+
+        progressbar.setVisibility(View.GONE);
+        coordinatorLayout.setVisibility(View.VISIBLE);
+
     }
     @Override
     public void onAttach(Context context) {
@@ -368,11 +361,13 @@ public class ProfileFragment extends BaseFragment {
             mListener = (OnFragmentInteractionListener) context;
         }
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
@@ -382,6 +377,7 @@ public class ProfileFragment extends BaseFragment {
         super.onResume();
 
     }
+
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
@@ -395,10 +391,7 @@ public class ProfileFragment extends BaseFragment {
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
-        }
-
-        else
-        {
+        } else {
 
 
         }
@@ -407,4 +400,6 @@ public class ProfileFragment extends BaseFragment {
     public interface RemoveAppBar {
         void removeAppbar();
     }
+
+
 }

@@ -3,13 +3,15 @@ package com.cncoding.teazer.utilities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+//import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
 /**
  *
@@ -1336,68 +1338,68 @@ public class Pojos {
 //        }
 
 
-        public static class UserProfile implements Parcelable {
-            private PublicProfile user_profile;
-            private int followers;
-            private int followings;
-            private int total_videos;
-
-            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
-                this.user_profile = user_profile;
-                this.followers = followers;
-                this.followings = followings;
-                this.total_videos = total_videos;
-            }
-
-            protected UserProfile(Parcel in) {
-                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
-                followers = in.readInt();
-                followings = in.readInt();
-                total_videos = in.readInt();
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-            //    dest.writeParcelable(user_profile, flags);
-                dest.writeInt(followers);
-                dest.writeInt(followings);
-                dest.writeInt(total_videos);
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
-                @Override
-                public PublicProfile createFromParcel(Parcel in) {
-                    return new PublicProfile(in);
-                }
-
-                @Override
-                public PublicProfile[] newArray(int size) {
-                    return new PublicProfile[size];
-                }
-            };
-
-            public PublicProfile getUserProfile() {
-                return user_profile;
-            }
-
-            public int getFollowers() {
-                return followers;
-            }
-
-            public int getFollowings() {
-                return followings;
-            }
-
-            public int getTotalVideos() {
-                return total_videos;
-            }
-        }
-
+//        public static class UserProfile implements Parcelable {
+//            private PublicProfile user_profile;
+//            private int followers;
+//            private int followings;
+//            private int total_videos;
+//
+//            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+//                this.user_profile = user_profile;
+//                this.followers = followers;
+//                this.followings = followings;
+//                this.total_videos = total_videos;
+//            }
+//
+//            protected UserProfile(Parcel in) {
+//                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+//                followers = in.readInt();
+//                followings = in.readInt();
+//                total_videos = in.readInt();
+//            }
+//
+//            @Override
+//            public void writeToParcel(Parcel dest, int flags) {
+//            //    dest.writeParcelable(user_profile, flags);
+//                dest.writeInt(followers);
+//                dest.writeInt(followings);
+//                dest.writeInt(total_videos);
+//            }
+//
+//            @Override
+//            public int describeContents() {
+//                return 0;
+//            }
+//
+//            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+//                @Override
+//                public PublicProfile createFromParcel(Parcel in) {
+//                    return new PublicProfile(in);
+//                }
+//
+//                @Override
+//                public PublicProfile[] newArray(int size) {
+//                    return new PublicProfile[size];
+//                }
+//            };
+//
+//            public PublicProfile getUserProfile() {
+//                return user_profile;
+//            }
+//
+//            public int getFollowers() {
+//                return followers;
+//            }
+//
+//            public int getFollowings() {
+//                return followings;
+//            }
+//
+//            public int getTotalVideos() {
+//                return total_videos;
+//            }
+//        }
+//
 
 
 
