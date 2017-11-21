@@ -15,6 +15,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
 
 import java.util.ArrayList;

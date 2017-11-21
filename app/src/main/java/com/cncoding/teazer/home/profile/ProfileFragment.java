@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -48,9 +47,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import jp.wasabeef.blurry.Blurry;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.CommonUtilities.getBitmapFromURL;
 
 public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -97,6 +100,11 @@ public class ProfileFragment extends BaseFragment {
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     private OnFragmentInteractionListener mListener;
+    private String imageUri;
+
+    private static final int RC_REQUEST_STORAGE = 1001;
+    private String userProfileThumbnail;
+    private String userProfileUrl;
 
     public ProfileFragment() {
     }
@@ -150,6 +158,8 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("MobileNumber", String.valueOf(mobilenumber));
                 intent.putExtra("Gender", String.valueOf(gender));
                 intent.putExtra("CountryCode", String.valueOf(countrycode));
+                intent.putExtra("ProfileThumb", userProfileThumbnail);
+                intent.putExtra("ProfileMedia", userProfileUrl);
                 if (detail == null)
                     intent.putExtra("Detail", "");
                 else {
@@ -221,7 +231,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getProfileDetail();
 
     }
     public void getProfileDetail() {
@@ -253,6 +263,11 @@ public class ProfileFragment extends BaseFragment {
                      }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
+                    if (userProfile.getHasProfileMedia()) {
+                        userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
+                        userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
+                    }
+
                     _toolbarusername.setText(firstname);
                     _detail.setText(detail);
                     _name.setText(firstname);
@@ -262,30 +277,24 @@ public class ProfileFragment extends BaseFragment {
                     _followers.setText(String.valueOf(totalfollowers) + " Follower");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
-                    profileBlur();
 
-                    SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-                    String imageUri = prfs.getString("MYIMAGES", "");
-                    if (imageUri == null) {
+//                    SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+//                    imageUri = prfs.getString("MYIMAGES", "");
+                    if (userProfileThumbnail == null) {
                         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
                         Glide.with(context)
                                 .load(pic)
                                 .into(profile_id);
-                        profileBlur();
-
+                        profileBlur(pic);
                     } else {
 
                         Picasso.with(context)
-                                .load(Uri.parse(imageUri))
+                                .load(Uri.parse(userProfileThumbnail))
                                 .into(profile_id);
-
-                    }
-                    if (hasProfleMedia) {
-
-                    } else {
+//                        profileBlur();
+                        Blurry.with(getContext()).radius(1).sampling(1).from(getBitmapFromURL(userProfileUrl)).into(bgImage);
                     }
 
                     progressbar.setVisibility(View.GONE);
@@ -298,50 +307,64 @@ public class ProfileFragment extends BaseFragment {
 
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
-
+                progressbar.setVisibility(View.GONE);
                 Log.d("errror", t.getMessage());
             }
         });
 
     }
-    public void profileBlur()
+
+    @AfterPermissionGranted(RC_REQUEST_STORAGE)
+    public void profileBlur(final String pic)
     {
 
-        progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
-        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (!EasyPermissions.hasPermissions(getContext(), perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    RC_REQUEST_STORAGE, perm);
+        }
+        else {
+            progressbar.setVisibility(View.VISIBLE);
+            coordinatorLayout.setVisibility(View.GONE);
+//            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(final Void... params) {
-                Bitmap bitmap = null;
-                try {
-                    final URL url = new URL(pic);
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(final Void... params) {
+                    Bitmap bitmap = null;
                     try {
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
+                        final URL url = new URL(pic);
+                        try {
+                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-
+                    return bitmap;
                 }
 
-                return bitmap;
-            }
-            @Override
-            protected void onPostExecute(final Bitmap result) {
-                Blurry.with(context).from(result).into(backgroundprofile);
-                progressbar.setVisibility(View.GONE);
-                coordinatorLayout.setVisibility(View.VISIBLE);
+                @Override
+                protected void onPostExecute(final Bitmap result) {
+//                Blurry.with(context).from(result).into(backgroundprofile);
+                    try {
+                        Blurry.with(getContext()).radius(1).sampling(1).from(result).into(backgroundprofile);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    progressbar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                }
+            }.execute();
 
 
-            }
-        }.execute();
-
-
-        progressbar.setVisibility(View.GONE);
-        coordinatorLayout.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.GONE);
+            coordinatorLayout.setVisibility(View.VISIBLE);
+        }
 
     }
     @Override
@@ -366,8 +389,8 @@ public class ProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
+        progressbar.setVisibility(View.GONE);
+//        coordinatorLayout.setVisibility(View.GONE);
         getProfileDetail();
 
     }
