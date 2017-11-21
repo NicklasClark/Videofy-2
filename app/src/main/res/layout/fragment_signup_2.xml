@@ -28,13 +28,13 @@
                 android:layout_marginBottom="@dimen/padding_double"
                 android:textColor="@color/colorIcons"/>
 
-            <ImageView
+<!--            <ImageView
                 android:id="@+id/signup_profile_pic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_add_profile_pic"
                 android:layout_marginBottom="@dimen/padding_default"
-                android:contentDescription="@string/add_user" />
+                android:contentDescription="@string/add_user" />-->
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_username"

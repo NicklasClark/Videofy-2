@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,12 +84,15 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -115,10 +119,11 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 public class VideoUpload extends AppCompatActivity
         implements NearbyPlacesList.OnNearbyPlacesInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener,
-        TagsAndCategoriesInteractionListener {
+        TagsAndCategoriesInteractionListener,
+        EasyPermissions.PermissionCallbacks{
 
     public static final String VIDEO_PATH = "videoPath";
-    private static final String TAG_VIDEO_PREVIEW = "videoPreview";
+//    private static final String TAG_VIDEO_PREVIEW = "videoPreview";
     private static final String TAG_NEARBY_PLACES = "nearbyPlaces";
     private static final String TAG_INTERESTS_FRAGMENT = "interestsFragment";
     private static final String TAG_TAGS_FRAGMENT = "tagsFragment";
@@ -128,6 +133,7 @@ public class VideoUpload extends AppCompatActivity
     private static final int REQUEST_CODE_CHECK_SETTINGS = 312;
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
+    private static final int RC_LOCATION_PERM = 123;
 
     @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
     @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
@@ -194,6 +200,10 @@ public class VideoUpload extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         setContentView(R.layout.activity_video_upload);
         getBundleExtras();
         ButterKnife.bind(this);
@@ -205,7 +215,7 @@ public class VideoUpload extends AppCompatActivity
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
+        getLastLocation(false);
         createLocationCallback();
         createLocationRequest();
 
@@ -242,7 +252,7 @@ public class VideoUpload extends AppCompatActivity
                 .into(thumbnailView);
     }
 
-    private void getLastLocation() {
+    private void getLastLocation(final boolean firstTime) {
         if (arePermissionsAllowed(this)) {
             if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -256,11 +266,14 @@ public class VideoUpload extends AppCompatActivity
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
-                                Toast.makeText(VideoUpload.this,
-                                        "FusedLocationProvider: "
-                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-                                        Toast.LENGTH_SHORT)
-                                        .show();
+//                                Toast.makeText(VideoUpload.this,
+//                                        "FusedLocationProvider: "
+//                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
+//                                        Toast.LENGTH_SHORT)
+//                                        .show();
+                                if (firstTime) {
+                                    new GetNearbyPlacesData(VideoUpload.this).execute(getNearbySearchUrl(currentLocation));
+                                }
                             }
                         }
                     });
@@ -274,9 +287,9 @@ public class VideoUpload extends AppCompatActivity
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
-                    Toast.makeText(VideoUpload.this,
-                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(VideoUpload.this,
+//                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
+//                            Toast.LENGTH_SHORT).show();
                     stopLocationUpdates();
                 }
             };
@@ -555,6 +568,44 @@ public class VideoUpload extends AppCompatActivity
             if (currentLocation != null)
                 new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else requestPermissions();
+//        startLocationService();
+    }
+
+    @AfterPermissionGranted(RC_LOCATION_PERM)
+    private void startLocationService() {
+
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
+                    RC_LOCATION_PERM, perms);
+        }
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        // Forward results to EasyPermissions
+//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+//    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d("HomeFragment", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+//            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
     @OnClick(R.id.video_upload_categories) public void getCategories() {
@@ -592,7 +643,7 @@ public class VideoUpload extends AppCompatActivity
     }
 
     private void getMyFollowingsList(final int page) {
-        ApiCallingService.Friends.getMyFollowings(page, this).enqueue(new Callback<CircleList>() {
+        ApiCallingService.Friends.getMyCircle(page, this).enqueue(new Callback<CircleList>() {
             @Override
             public void onResponse(Call<CircleList> call, Response<CircleList> response) {
                 if (response.body().getCircles() != null) {
@@ -627,23 +678,19 @@ public class VideoUpload extends AppCompatActivity
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
+        String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
+        String location = null;
+        double latitude = 0;
+        double longitude = 0;
         if (selectedPlace != null) {
-            String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
-            String location = selectedPlace.getPlaceName().equals("")? null : selectedPlace.getPlaceName();
-            String taggedFriends = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            String categories = selectedCategoriesToSend.equals("")? null : selectedCategoriesToSend;
-            String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-            DecimalFormat df = new DecimalFormat("#.#######");
-            if (location != null) {
-                performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
-                        Double.parseDouble(df.format(selectedPlace.getLatitude())),
-                        Double.parseDouble(df.format(selectedPlace.getLongitude())), tags, selectedCategoriesToSend));
-            } else {
-                Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Location is required for now", Toast.LENGTH_SHORT).show();
+            location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+            latitude = selectedPlace.getLatitude();
+            longitude = selectedPlace.getLongitude();
         }
+        String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+        DecimalFormat df = new DecimalFormat("#.#######");
+        performUpload(this, new Pojos.UploadParams(videoPath, false, title, location,
+                Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
     }
 
     @OnClick(R.id.video_upload_cancel_btn) public void retakeVideo() {
@@ -711,8 +758,9 @@ public class VideoUpload extends AppCompatActivity
                     if (fineLocationAccepted && coarseLocationAccepted && internetAccepted) {
 //                        permissions are granted
 //                        launchPlacePicker();
-                        if (currentLocation != null)
-                            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+                        getLastLocation(true);
+//                        if (currentLocation != null)
+//                            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
                         if (isRequestingLocationUpdates) {
                             startLocationUpdates();
                         }
@@ -801,13 +849,13 @@ public class VideoUpload extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-//        videoViewPreview.stopPlayback();
     }
 
     @Override
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+            myFollowingsList.clear();
             if (fragmentManager.getBackStackEntryCount() == 0) {
                 toggleUpBtnVisibility(View.INVISIBLE);
             }

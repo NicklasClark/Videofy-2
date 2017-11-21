@@ -1,7 +1,6 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -20,7 +19,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
-import com.cncoding.teazer.ui.fragment.activity.ProfileCreationVideos;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by farazhabib on 09/11/17.
@@ -56,16 +52,27 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     @Override
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
-        final Pojos.Post.PostDetails cont = addressdetail_list.get(i);
-        final String videotitle = cont.getTitle();
-        final String videourl = cont.getMedias().get(0).getMediaUrl();
-        final int videopostId = cont.getPostId();
-        final String thumb_url = cont.getMedias().get(0).getThumbUrl();
-        final String duration = cont.getMedias().get(0).getDuration();
-        final String views = String.valueOf(cont.getMedias().get(0).getViews());
-        final String likes= String.valueOf(cont.getLikes());
-        final String reaction= String.valueOf(cont.getTotalReactions());
-//        final String location=cont.getCheckIn().getLocation();
+        final Pojos.Post.PostDetails cont;
+        final String videotitle;
+        final int videopostId;
+        final String thumb_url;
+        final String duration;
+        final String views;
+        final String likes;
+        final String reaction;
+        final String location;
+        try {
+            cont = addressdetail_list.get(i);
+            videotitle = cont.getTitle();
+            final String videourl = cont.getMedias().get(0).getMediaUrl();
+            videopostId = cont.getPostId();
+            thumb_url = cont.getMedias().get(0).getThumbUrl();
+            duration = cont.getMedias().get(0).getDuration();
+            views = String.valueOf(cont.getMedias().get(0).getViews());
+            likes = String.valueOf(cont.getLikes());
+            reaction = String.valueOf(cont.getTotalReactions());
+            location = cont.getCheckIn().getLocation();
+
 
         viewHolder.videoTitle.setText(videotitle);
         viewHolder.txtlikes.setText(likes);
@@ -119,7 +126,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 popup.show();
             }
         });
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
