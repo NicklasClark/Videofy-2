@@ -150,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                        <TextView
+                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
@@ -267,14 +267,16 @@
                         android:layout_height="wrap_content"
 
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_weight="2"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <TextView
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
@@ -289,14 +291,10 @@
                             android:layout_width="0dp"
                             android:layout_weight="5"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
 
-                            <RadioGroup
-                                android:id="@+id/radio1"
-                                android:layout_width="match_parent"
-                                android:layout_height="60dp"
-                                android:orientation="horizontal">
+
                                 <!--<LinearLayout-->
 
 
@@ -314,18 +312,53 @@
 
                                     <!--android:background="@drawable/bg_image_whiter_outline_solid">-->
 
+                                <LinearLayout
+                                    android:layout_width="60dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
 
-                                    <RadioButton
-                                        android:id="@+id/male"
+                                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                                    android:id="@+id/male"
+                                    android:layout_width="wrap_content"
+                                    android:background="@drawable/ic_male_white"
+                                    android:layout_height="wrap_content"
+                              />
+
+                                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                        android:id="@+id/maletxt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Male"
+                                        android:textColor="#5b5b5b"
+                                        android:textSize="@dimen/text_size_14sp" />
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="60dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                                        android:id="@+id/female"
                                         android:layout_centerInParent="true"
-                                        android:drawableTop="@drawable/ic_create_back_black"
-                                        android:buttonTint="#ff0d00"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Male"
-                                        android:textSize="@dimen/text_size_12sp"
-                                        android:textColor="#797979"
-                                        android:onClick="onRadioButtonClicked"/>
+                                        android:background="@drawable/ic_female_white"/>
+                                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                        android:id="@+id/femaletxt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Femle"
+                                        android:textColor="#5b5b5b"
+                                        android:textSize="@dimen/text_size_14sp" />
+                                </LinearLayout>
 
                                 <!--</RelativeLayout>-->
 
@@ -356,18 +389,7 @@
                                     <!--android:background="@drawable/bg_image_whiter_outline_solid">-->
 
 
-                                <RadioButton
-                                    android:id="@+id/female"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginLeft="20dp"
-                                    android:drawableTop="@drawable/ic_create_back_black"
-                                    android:buttonTint="#ff0d00"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Female"
-                                    android:textSize="@dimen/text_size_12sp"
-                                    android:textColor="#797979"
-                                    android:onClick="onRadioButtonClicked"/>
+
                                 <!--</RelativeLayout>-->
 
                                     <!--<TextView-->
@@ -381,7 +403,7 @@
                                         <!--android:textSize="14dp" />-->
                                 <!--</LinearLayout>-->
 
-                            </RadioGroup>
+
 
 
                         </LinearLayout>
@@ -398,7 +420,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
@@ -434,7 +456,7 @@
 
 
 
-                    <TextView
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -459,7 +481,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                 android:id="@+id/mobileno"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -507,7 +529,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"

@@ -526,8 +526,10 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void removeAppbar() {
 
-        //   getSupportActionBar().hide();
+      appBar.setVisibility(View.GONE);
     }
+
+
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
