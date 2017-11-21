@@ -37,6 +37,7 @@ import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaCondensedTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
@@ -72,12 +73,12 @@ public class ProfileFragment extends BaseFragment {
     Context context;
     AppBarLayout appBarLayout;
     ProximaNovaCondensedTextView _toolbarusername;
-    ProximaNovaCondensedTextView _name;
+    ProximaNovaRegularCheckedTextView _name;
     SignPainterTextView _username;
     TextView _creations;
     TextView _followers;
     TextView _following;
-    ProximaNovaCondensedTextView _detail;
+    ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.UserProfile userprofile;
@@ -223,20 +224,14 @@ public class ProfileFragment extends BaseFragment {
         });
         return view;
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
-        removeAppBar.removeAppbar();
-        // dynamicToolbarColor();
-        getProfileDetail();
+
 
     }
-
-
     public void getProfileDetail() {
+
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
@@ -244,7 +239,7 @@ public class ProfileFragment extends BaseFragment {
 
 
                 try {
-                    PublicProfile userProfile = response.body().getUserProfile();
+                     PublicProfile userProfile = response.body().getUserProfile();
                      firstname = userProfile.getFirstName();
                      lastname = userProfile.getLastName();
                      username = userProfile.getUserName();
@@ -265,16 +260,17 @@ public class ProfileFragment extends BaseFragment {
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
                     _toolbarusername.setText(firstname);
+                    _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
-                    _detail.setText(detail);
+
                     Log.d("Gender", detail);
                     _followers.setText(String.valueOf(totalfollowers) + " Follower");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                     progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
-                     profileBlur();
+                    profileBlur();
 
                     SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                     String imageUri = prfs.getString("MYIMAGES", "");
@@ -291,20 +287,15 @@ public class ProfileFragment extends BaseFragment {
                         Picasso.with(context)
                                 .load(Uri.parse(imageUri))
                                 .into(profile_id);
-//                        try {
-//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
-//                            Blurry.with(context).radius(1).sampling(1).from(bitmap).into(bgImage);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
 
                     }
                     if (hasProfleMedia) {
 
-
                     } else {
-
                     }
+
+                    progressbar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Log.d("Exception", e.getMessage());
                 }
@@ -319,11 +310,9 @@ public class ProfileFragment extends BaseFragment {
         });
 
     }
-
-
-        public void profileBlur()
-
+    public void profileBlur()
     {
+
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
@@ -382,6 +371,10 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
+        getProfileDetail();
 
     }
 

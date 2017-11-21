@@ -167,8 +167,10 @@ public class FollowersListActivity extends AppCompatActivity {
                             nousertext.setVisibility(View.VISIBLE);
 
                         }
+
                         else {
                             profileMyFollowerAdapter = new FollowersAdapter(context, list);
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             recyclerView.setAdapter(profileMyFollowerAdapter);
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);

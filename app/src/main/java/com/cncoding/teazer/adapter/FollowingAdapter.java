@@ -56,8 +56,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             final String followingname = cont.getUserName();
             followerId = cont.getUserId();
             viewHolder.followingName.setText(followingname);
-
-
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -69,9 +67,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     context.startActivity(intent);
                 }
             });
-
         }
         else
+
         {
             final OtherUserFollowings cont = otherlist.get(i);
             final boolean  myself = cont.getMySelf();

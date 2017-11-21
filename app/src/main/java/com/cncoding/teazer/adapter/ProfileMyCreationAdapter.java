@@ -65,7 +65,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final String views = String.valueOf(cont.getMedias().get(0).getViews());
         final String likes= String.valueOf(cont.getLikes());
         final String reaction= String.valueOf(cont.getTotalReactions());
-//        final String location=cont.getCheckIn().getLocation();
+      //  final String location=cont.getCheckIn().getLocation();
 
         viewHolder.videoTitle.setText(videotitle);
         viewHolder.txtlikes.setText(likes);

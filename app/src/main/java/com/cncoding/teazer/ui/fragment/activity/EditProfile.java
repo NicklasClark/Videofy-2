@@ -178,6 +178,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
+
         if (gender == 1) {
             _male.setChecked(true);
         } else {
@@ -188,9 +189,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onClick(View view) {
                 String usernames = _username.getText().toString();
                 String firstname = _firstname.getText().toString();
-                String lastnames = "";
-                int countrycodes = countrycode;
-                long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
+                String lastnames = "abcdee";
+                Integer countrycodes = countrycode;
+                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
                 String emailid = _email.getText().toString();
                 String details = _bio.getText().toString();
                 ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, details);
@@ -369,37 +370,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         super.onResume();
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-
-//        new AsyncTask<Void, Void, Bitmap>() {
-//            @Override
-//            protected Bitmap doInBackground(final Void... params) {
-//
-//                Bitmap bitmap = null;
-//                try {
-//
-//
-//                    final URL url = new URL(pic);
-//
-//                    try {
-//                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                } catch (Exception e) {
-//
-//                }
-//
-//                return bitmap;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(final Bitmap result) {
-//                Blurry.with(context).from(result).into(bgImage);
-//                layoutdetail.setVisibility(View.VISIBLE);
-//                simpleProgressBar.setVisibility(View.GONE);
-//            }
-//        }.execute();
         layoutdetail.setVisibility(View.VISIBLE);
         simpleProgressBar.setVisibility(View.GONE);
 
@@ -417,7 +387,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onResponse(Call<ProfileUpdate> call, Response<ProfileUpdate> response) {
 
                 Log.d("on response", String.valueOf(response.toString()));
-                Log.d("ResponseCode", String.valueOf(response.toString()));
 
                 if (response.code() == 200) {
 
@@ -440,9 +409,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
-
                     }
-                } else {
+                }
+                else {
                     Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_LONG).show();
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
