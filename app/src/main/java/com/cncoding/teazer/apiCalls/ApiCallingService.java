@@ -20,6 +20,7 @@ import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -35,6 +36,7 @@ import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +60,7 @@ public class ApiCallingService {
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     static final int FAIL = 3;
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
     public static class Application {
 
@@ -78,6 +81,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
         }
@@ -149,6 +153,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
@@ -165,9 +170,10 @@ public class ApiCallingService {
         /**
          * Call this service to get the my followings list
          * */
-        public static Call<Pojos.Friends.CircleList> getMyFollowings(int page, Context context) {
+        public static Call<CircleList> getMyFollowings(int page, Context context) {
             return getFriendsService(context).getMyFollowings(page);
         }
+
         public static Call<ProfileMyFollowing> getMyFollowing(int page, Context context) {
             return getFriendsService(context).getMyFollowing(page);
         }
@@ -205,7 +211,7 @@ public class ApiCallingService {
          * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.
          * If “next_page” is false no more records present.
          * */
-        public static Call<ResultObject> getMyCircle(int page, Context context) {
+        public static Call<CircleList> getMyCircle(int page, Context context) {
             return getFriendsService(context).getMyCircle(page);
         }
 
@@ -281,13 +287,9 @@ public class ApiCallingService {
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-//<<<<<<< HEAD
         public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
-//=======
-//        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
-//>>>>>>> amit_test
             public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfoNoti(userId);
         }
@@ -321,7 +323,7 @@ public class ApiCallingService {
             return getFriendsService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
         }
         
-        public static int isResponseOk(Response<Pojos.Friends.CircleList> response) {
+        public static int isResponseOk(Response<CircleList> response) {
             switch (response.code()) {
                 case 200:
                     if (response.body().isNextPage())
@@ -665,6 +667,9 @@ public class ApiCallingService {
                 Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
-        }).build();
+        }).addInterceptor(logging).build();
+    }
+    private static OkHttpClient getOkHttpClient() {
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
     }
 }

@@ -4,11 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+//import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
 /**
  *
@@ -863,7 +866,7 @@ public class Pojos {
             private String react_title;
             private int post_owner_id;
             private int likes;
-            private int views;
+            public int views;
             private boolean can_like;
             private boolean can_delete;
             private ReactionMediaDetail media_detail;
@@ -987,6 +990,67 @@ public class Pojos {
 
     public static class User {
 
+        public static class UserProfile implements Parcelable {
+            private PublicProfile user_profile;
+            private int followers;
+            private int followings;
+            private int total_videos;
+
+            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+                this.user_profile = user_profile;
+                this.followers = followers;
+                this.followings = followings;
+                this.total_videos = total_videos;
+            }
+
+
+            protected UserProfile(Parcel in) {
+                followers = in.readInt();
+                followings = in.readInt();
+                total_videos = in.readInt();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(followers);
+                dest.writeInt(followings);
+                dest.writeInt(total_videos);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+                @Override
+                public UserProfile createFromParcel(Parcel in) {
+                    return new UserProfile(in);
+                }
+
+                @Override
+                public UserProfile[] newArray(int size) {
+                    return new UserProfile[size];
+                }
+            };
+
+            public PublicProfile getUserProfile() {
+                return user_profile;
+            }
+
+            public int getFollowers() {
+                return followers;
+            }
+
+            public int getFollowings() {
+                return followings;
+            }
+
+            public int getTotalVideos() {
+                return total_videos;
+            }
+        }
+
         public static class Profile implements Parcelable {
             private int total_videos;
             private int account_type;
@@ -994,7 +1058,7 @@ public class Pojos {
             private boolean has_send_join_request;
             private int join_request_id;
             private PrivateProfile private_profile;
-            private UserProfile public_profile;
+            private PublicProfile public_profile;
             private int followers;
             private int followings;
 
@@ -1005,7 +1069,7 @@ public class Pojos {
                 has_send_join_request = in.readByte() != 0;
                 join_request_id = in.readInt();
                 private_profile = in.readParcelable(PrivateProfile.class.getClassLoader());
-                public_profile = in.readParcelable(UserProfile.class.getClassLoader());
+                public_profile = in.readParcelable(PublicProfile.class.getClassLoader());
                 followers = in.readInt();
                 followings = in.readInt();
             }
@@ -1064,7 +1128,7 @@ public class Pojos {
                 return private_profile;
             }
 
-            public UserProfile getPublicProfile() {
+            public PublicProfile getPublicProfile() {
                 return public_profile;
             }
 
@@ -1076,7 +1140,6 @@ public class Pojos {
                 return followings;
             }
         }
-
 
 
 
@@ -1275,68 +1338,68 @@ public class Pojos {
 //        }
 
 
-        public static class UserProfile implements Parcelable {
-            private PublicProfile user_profile;
-            private int followers;
-            private int followings;
-            private int total_videos;
-
-            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
-                this.user_profile = user_profile;
-                this.followers = followers;
-                this.followings = followings;
-                this.total_videos = total_videos;
-            }
-
-            protected UserProfile(Parcel in) {
-                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
-                followers = in.readInt();
-                followings = in.readInt();
-                total_videos = in.readInt();
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-            //    dest.writeParcelable(user_profile, flags);
-                dest.writeInt(followers);
-                dest.writeInt(followings);
-                dest.writeInt(total_videos);
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
-                @Override
-                public UserProfile createFromParcel(Parcel in) {
-                    return new UserProfile(in);
-                }
-
-                @Override
-                public UserProfile[] newArray(int size) {
-                    return new UserProfile[size];
-                }
-            };
-
-            public PublicProfile getUserProfile() {
-                return user_profile;
-            }
-
-            public int getFollowers() {
-                return followers;
-            }
-
-            public int getFollowings() {
-                return followings;
-            }
-
-            public int getTotalVideos() {
-                return total_videos;
-            }
-        }
-
+//        public static class UserProfile implements Parcelable {
+//            private PublicProfile user_profile;
+//            private int followers;
+//            private int followings;
+//            private int total_videos;
+//
+//            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+//                this.user_profile = user_profile;
+//                this.followers = followers;
+//                this.followings = followings;
+//                this.total_videos = total_videos;
+//            }
+//
+//            protected UserProfile(Parcel in) {
+//                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+//                followers = in.readInt();
+//                followings = in.readInt();
+//                total_videos = in.readInt();
+//            }
+//
+//            @Override
+//            public void writeToParcel(Parcel dest, int flags) {
+//            //    dest.writeParcelable(user_profile, flags);
+//                dest.writeInt(followers);
+//                dest.writeInt(followings);
+//                dest.writeInt(total_videos);
+//            }
+//
+//            @Override
+//            public int describeContents() {
+//                return 0;
+//            }
+//
+//            public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+//                @Override
+//                public PublicProfile createFromParcel(Parcel in) {
+//                    return new PublicProfile(in);
+//                }
+//
+//                @Override
+//                public PublicProfile[] newArray(int size) {
+//                    return new PublicProfile[size];
+//                }
+//            };
+//
+//            public PublicProfile getUserProfile() {
+//                return user_profile;
+//            }
+//
+//            public int getFollowers() {
+//                return followers;
+//            }
+//
+//            public int getFollowings() {
+//                return followings;
+//            }
+//
+//            public int getTotalVideos() {
+//                return total_videos;
+//            }
+//        }
+//
 
 
 
@@ -1928,7 +1991,7 @@ public class Pojos {
         };
     }
 
-    public static class TaggedUser {
+    public static class TaggedUser implements Parcelable {
         private int tag_id;
         private int user_id;
         private String user_name;
@@ -1938,6 +2001,97 @@ public class Pojos {
         private boolean is_blocked_you;
         boolean has_profile_media;
         ProfileMedia profile_media;
+
+        public TaggedUser(int tag_id, int user_id, String user_name, String first_name, String last_name,
+                          boolean my_self, boolean is_blocked_you, boolean has_profile_media, ProfileMedia profile_media) {
+            this.tag_id = tag_id;
+            this.user_id = user_id;
+            this.user_name = user_name;
+            this.first_name = first_name;
+            this.last_name = last_name;
+            this.my_self = my_self;
+            this.is_blocked_you = is_blocked_you;
+            this.has_profile_media = has_profile_media;
+            this.profile_media = profile_media;
+        }
+
+        protected TaggedUser(Parcel in) {
+            tag_id = in.readInt();
+            user_id = in.readInt();
+            user_name = in.readString();
+            first_name = in.readString();
+            last_name = in.readString();
+            my_self = in.readByte() != 0;
+            is_blocked_you = in.readByte() != 0;
+            has_profile_media = in.readByte() != 0;
+            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(tag_id);
+            dest.writeInt(user_id);
+            dest.writeString(user_name);
+            dest.writeString(first_name);
+            dest.writeString(last_name);
+            dest.writeByte((byte) (my_self ? 1 : 0));
+            dest.writeByte((byte) (is_blocked_you ? 1 : 0));
+            dest.writeByte((byte) (has_profile_media ? 1 : 0));
+            dest.writeParcelable(profile_media, flags);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<TaggedUser> CREATOR = new Creator<TaggedUser>() {
+            @Override
+            public TaggedUser createFromParcel(Parcel in) {
+                return new TaggedUser(in);
+            }
+
+            @Override
+            public TaggedUser[] newArray(int size) {
+                return new TaggedUser[size];
+            }
+        };
+
+        public int getTagId() {
+            return tag_id;
+        }
+
+        public int getUserId() {
+            return user_id;
+        }
+
+        public String getUserName() {
+            return user_name;
+        }
+
+        public String getFirstName() {
+            return first_name;
+        }
+
+        public String getLastName() {
+            return last_name;
+        }
+
+        public boolean isMySelf() {
+            return my_self;
+        }
+
+        public boolean isBlockedYou() {
+            return is_blocked_you;
+        }
+
+        public boolean hasProfileMedia() {
+            return has_profile_media;
+        }
+
+        public ProfileMedia getProfileMedia() {
+            return profile_media;
+        }
     }
 
     public static class ReactionMediaDetail implements Parcelable{
@@ -2362,8 +2516,7 @@ public class Pojos {
         private double longitude;
         private String tags;
         private String categories;
-
-        private int postId;
+        private PostDetails postDetails;
 
         public UploadParams(String videoPath, boolean isReaction, String title, String location,
                             double latitude, double longitude, String tags, String categories) {
@@ -2377,15 +2530,16 @@ public class Pojos {
             this.categories = categories;
         }
 
-        public UploadParams(String videoPath, boolean isReaction, String title, int postId) {
+        public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {
             this.videoPath = videoPath;
             this.isReaction = isReaction;
             this.title = title;
-            this.postId = postId;
+            this.postDetails = postDetails;
         }
 
-        public UploadParams(String videoPath) {
+        public UploadParams(String videoPath, PostDetails postDetails) {
             this.videoPath = videoPath;
+            this.postDetails = postDetails;
         }
 
         protected UploadParams(Parcel in) {
@@ -2397,7 +2551,7 @@ public class Pojos {
             longitude = in.readDouble();
             tags = in.readString();
             categories = in.readString();
-            postId = in.readInt();
+            postDetails = in.readParcelable(PostDetails.class.getClassLoader());
         }
 
         @Override
@@ -2410,7 +2564,7 @@ public class Pojos {
             dest.writeDouble(longitude);
             dest.writeString(tags);
             dest.writeString(categories);
-            dest.writeInt(postId);
+            dest.writeParcelable(postDetails, flags);
         }
 
         @Override
@@ -2462,8 +2616,193 @@ public class Pojos {
             return categories;
         }
 
-        public int getPostId() {
-            return postId;
+        public PostDetails getPostDetails() {
+            return postDetails;
+        }
+    }
+
+    public static class Discover {
+
+        public static class MostPopular {
+            private String title;
+            private int duration;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+            private String reaction1Url;
+            private String reaction2Url;
+            private String reaction3Url;
+            private int reactions;
+
+            public MostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
+                               int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+                this.title = title;
+                this.duration = duration;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+                this.reaction1Url = reaction1Url;
+                this.reaction2Url = reaction2Url;
+                this.reaction3Url = reaction3Url;
+                this.reactions = reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public String getReaction1Url() {
+                return reaction1Url;
+            }
+
+            public String getReaction2Url() {
+                return reaction2Url;
+            }
+
+            public String getReaction3Url() {
+                return reaction3Url;
+            }
+
+            public int getReactions() {
+                return reactions;
+            }
+        }
+
+        public static class MyInterests {
+            private String title;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+            private String reaction1Url;
+            private String reaction2Url;
+            private String reaction3Url;
+            private int reactions;
+
+            public MyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
+                               String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+                this.title = title;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+                this.reaction1Url = reaction1Url;
+                this.reaction2Url = reaction2Url;
+                this.reaction3Url = reaction3Url;
+                this.reactions = reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public String getReaction1Url() {
+                return reaction1Url;
+            }
+
+            public String getReaction2Url() {
+                return reaction2Url;
+            }
+
+            public String getReaction3Url() {
+                return reaction3Url;
+            }
+
+            public int getReactions() {
+                return reactions;
+            }
+        }
+
+        public static class FeaturedVideos {
+            private String title;
+            private String thumbUrl;
+            private String profileThumbUrl;
+            private String name;
+            private int likes;
+            private int views;
+
+            public FeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
+                this.title = title;
+                this.thumbUrl = thumbUrl;
+                this.profileThumbUrl = profileThumbUrl;
+                this.name = name;
+                this.likes = likes;
+                this.views = views;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getThumbUrl() {
+                return thumbUrl;
+            }
+
+            public String getProfileThumbUrl() {
+                return profileThumbUrl;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
         }
     }
 }

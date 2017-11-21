@@ -15,6 +15,7 @@ import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -200,7 +201,7 @@ import retrofit2.http.Query;
          * Call this service to get the my followings list
          * */
         @GET("/api/v1/friend/my/followings/{page}")
-        Call<Pojos.Friends.CircleList> getMyFollowings(@Path("page") int page);
+        Call<CircleList> getMyFollowings(@Path("page") int page);
 
         //by arif
 
@@ -237,7 +238,7 @@ import retrofit2.http.Query;
          * If “next_page” is false no more records present.
          * */
         @GET("/api/v1/friend/my/circle/{page}")
-        Call<ResultObject> getMyCircle(@Path("page") int page);
+        Call<CircleList> getMyCircle(@Path("page") int page);
 
         /**
          * Call this service to get the my followings list with search term
@@ -628,7 +629,7 @@ import retrofit2.http.Query;
         /**
          * Get user profile
          * Call this service to get user profile details
-         * @return {@link Profile}
+         * @return {@link Pojos.User.UserProfile}
          * */
         @GET("/api/v1/user/profile")
         Call<Pojos.User.UserProfile> getUserProfile();

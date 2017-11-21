@@ -2,7 +2,7 @@ package com.cncoding.teazer.home.post;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +19,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 
@@ -34,20 +34,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostsListFragment extends BaseFragment {
-    private static final String COLUMN_COUNT = "columnCount";
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.transition_pager) ViewPager pager;
-    @BindView(R.id.transition_full_background)  View background;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+    @BindView(R.id.tap_to_retry) ProximaNovaRegularTextView tapToRetryBtn;
 
     public static boolean returningFromUpload = false;
 
     private ArrayList<PostDetails> postList;
-    private int columnCount = 2;
     private PostsListAdapter postListAdapter;
     private StaggeredGridLayoutManager manager;
 
@@ -55,33 +52,23 @@ public class PostsListFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static PostsListFragment newInstance(int columnCount) {
-        PostsListFragment fragment = new PostsListFragment();
-        Bundle args = new Bundle();
-        args.putInt(COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
+    public static PostsListFragment newInstance() {
+        return new PostsListFragment();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            columnCount = getArguments().getInt(COLUMN_COUNT);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
         postList = new ArrayList<>();
-        ((BaseBottomBarActivity) getActivity()).updateToolbarTitle(null);
+        if (getActivity() != null) {
+            ((BaseBottomBarActivity) getActivity()).updateToolbarTitle(null);
+        }
 
         postListAdapter = new PostsListAdapter(postList, getContext(), this);
         recyclerView.setAdapter(postListAdapter);
-        manager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -116,10 +103,12 @@ public class PostsListFragment extends BaseFragment {
         else if (postList != null && postList.size() == 0)
             getHomePagePosts(1, false);
 
-        ((BaseBottomBarActivity) getActivity()).showAppBar();
+        if (getActivity() != null) {
+            ((BaseBottomBarActivity) getActivity()).showAppBar();
+        }
     }
 
-    private void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
@@ -128,13 +117,18 @@ public class PostsListFragment extends BaseFragment {
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
                         switch (response.code()) {
                             case 200:
-                                postList.addAll(response.body().getPosts());
-                                recyclerView.setVisibility(View.VISIBLE);
-                                postListAdapter.notifyDataSetChanged();
+                                if (response.body().getPosts().size() > 0) {
+                                    postList.addAll(response.body().getPosts());
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    postListAdapter.notifyDataSetChanged();
+                                } else {
+                                    showErrorMessage(getString(R.string.no_posts_available));
+                                    tapToRetryBtn.setVisibility(View.INVISIBLE);
+                                }
                                 break;
                             default:
                                 showErrorMessage("Error " + response.code() +": " + response.message());
-                                AuthUtils.logout(getContext(), getActivity());
+//                                AuthUtils.logout(getContext(), getActivity());
                                 break;
                         }
                         if (isRefreshing)

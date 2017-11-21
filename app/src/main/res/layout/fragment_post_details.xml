@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cncoding.teazer.home.post.PostDetailsFragment"
+    android:background="@color/material_grey100"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -12,8 +13,7 @@
         android:id="@+id/video_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:background="@color/material_grey100">
+        android:animateLayoutChanges="true">
 
         <RelativeLayout
             android:id="@+id/relative_layout"
@@ -54,17 +54,18 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:theme="@style/ProgressBarTheme" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/post_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:animateLayoutChanges="true"
             android:layout_below="@+id/video_surface_container">
 
             <RelativeLayout
+                android:id="@+id/main_actions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true">
 
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                     android:id="@+id/react_btn"
@@ -78,7 +79,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_like_outline"
-                    android:foreground="@drawable/ripple_dark_circle"
                     android:layout_toStartOf="@+id/share"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/padding_half"
@@ -139,20 +139,41 @@
 
             </RelativeLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/horizontal_scroll_view"
+            <RelativeLayout
+                android:id="@+id/horizontal_list_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:layout_below="@+id/main_actions"
                 android:visibility="gone">
 
-                <ListView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    android:id="@+id/no_tagged_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_default"
+                    android:gravity="center"
+                    android:text="@string/no_users_tagged_yet"
+                    android:textSize="@dimen/text_size_content_big"
+                    android:textColor="@color/colorSecondary_text"
+                    android:visibility="gone"/>
+
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/tagged_user_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"/>
 
-            </HorizontalScrollView>
+                <TextView
+                    android:id="@+id/separator2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorDivider"/>
 
-        </LinearLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/separator"
@@ -214,8 +235,7 @@
             android:clipToPadding="false"
             android:layout_below="@+id/reactions_header"
             app:layoutManager="StaggeredGridLayoutManager"
-            tools:listitem="@layout/item_reaction_post"
-            android:visibility="invisible"/>
+            tools:listitem="@layout/item_reaction_post"/>
 
     </RelativeLayout>
 

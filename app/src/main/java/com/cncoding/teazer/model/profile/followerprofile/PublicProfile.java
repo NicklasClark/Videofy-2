@@ -4,11 +4,14 @@ package com.cncoding.teazer.model.profile.followerprofile;
  * Created by farazhabib on 13/11/17.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PublicProfile {
+public class PublicProfile implements Parcelable {
     @SerializedName("user_id")
     @Expose
     private Integer userId;
@@ -184,5 +187,15 @@ public class PublicProfile {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

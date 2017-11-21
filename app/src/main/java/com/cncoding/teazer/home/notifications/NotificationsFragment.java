@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.notifications;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,47 +21,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NotificationsFragment extends BaseFragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
-    private String mParam1;
-    private String mParam2;
-
-    private SectionsPagerAdapter sectionsPagerAdapter;
     private OnFragmentInteractionListener mListener;
 
     public NotificationsFragment() {
         // Required empty public constructor
     }
 
-    public static NotificationsFragment newInstance(String param1, String param2) {
-        NotificationsFragment fragment = new NotificationsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static NotificationsFragment newInstance() {
+        return new NotificationsFragment();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, rootView);
-        sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -72,8 +53,9 @@ public class NotificationsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        ((BaseBottomBarActivity) getActivity()).showAppBar();
+        if (getActivity() != null) {
+            ((BaseBottomBarActivity) getActivity()).showAppBar();
+        }
     }
 
     @Override

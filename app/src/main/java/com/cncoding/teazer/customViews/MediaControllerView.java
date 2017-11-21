@@ -39,7 +39,7 @@ import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
 public class MediaControllerView extends FrameLayout implements VideoGestureListener {
 
 //    private static final String TAG = "MediaControllerView";
-    private static final String SPACE = "  ";
+    public static final String SPACE = "  ";
 
     private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
@@ -310,6 +310,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         likesView.setText(SPACE + --likes);
     }
 
+    public void incrementViews() {
+        viewsView.setText(SPACE + ++views);
+    }
+
     public void setReaction1Pic(String reaction1PicUrl) {
         Glide.with(getContext())
                 .load(reaction1PicUrl)
@@ -350,6 +354,10 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                     break;
             }
         }
+    }
+
+    public void setNoReactions() {
+        reactionCountView.setText("");
     }
 
     private void toggleVolume() {

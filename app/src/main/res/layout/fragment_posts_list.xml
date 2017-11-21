@@ -28,6 +28,7 @@
             android:text="@string/could_not_load_posts"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/tap_to_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -63,18 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_marginTop="-12dp"/>
-
-    <View
-        android:id="@+id/transition_full_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:visibility="invisible" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/transition_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

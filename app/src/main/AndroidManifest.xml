@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature
@@ -191,7 +192,12 @@
         <activity
             android:name=".ui.fragment.activity.BlockUserList"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d2422b51820a55ad031bbe2f1d3657015affec36" />
         <activity android:name=".ui.fragment.activity.EditImageActivity"></activity>
     </application>
 
