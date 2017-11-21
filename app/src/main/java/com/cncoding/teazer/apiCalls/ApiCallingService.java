@@ -607,6 +607,12 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
+
+
+
+
+
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())

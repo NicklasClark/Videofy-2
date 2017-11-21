@@ -37,10 +37,12 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.Manifest;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
@@ -77,7 +79,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks{
+import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
+
+public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks,ProgressRequestBody.UploadCallbacks{
 
     Context context;
     ImageView bgImage;
@@ -111,6 +116,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     private static final int LIMIT = 1;
     private static final int READ_STORAGE_PERMISSION = 4000;
     private static final String TAG = "Edit Profile";
+    boolean flag=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +140,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
                 onBackPressed();
+
+
             }
         });
         context = EditProfile.this;
@@ -201,6 +210,17 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         initProfileImage();
 
     }
+    public String getPath(Uri uri)
+    {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int column_index =             cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String s=cursor.getString(column_index);
+        cursor.close();
+        return s;
+    }
     @Override
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
@@ -212,12 +232,21 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 layoutdetail.setVisibility(View.GONE);
                 simpleProgressBar.setVisibility(View.VISIBLE);
 
-                File files= FileUtils.getFile(this,r.getUri());
 
-                Log.d("Exception111",files.getName());
-                RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
-                MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
-                saveDataToDatabase(body);
+//                File file = new File(getPath(r.getUri()));
+//
+//
+//
+//
+//                File videoFile = new File(String.valueOf(r.getUri()));
+//                ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
+//                MultipartBody.Part media = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
+//
+//                File files= FileUtils.getFile(this,r.getUri());
+//                Log.d("Exception111",files.getName());
+//                RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
+//                MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
+//                saveDataToDatabase(body);
 
             }
             catch (Exception e) {
@@ -294,13 +323,17 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         .into(profile_image);
 
 
+//
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imageUri));
+//                    Blurry.with(this).radius(1).sampling(1).from(bitmap).into(bgImage);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imageUri));
-                    Blurry.with(this).radius(1).sampling(1).from(bitmap).into(bgImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+
+
             }
         }
     }
@@ -392,6 +425,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         if (response.body().getStatus()) {
 
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
+
+                            flag=true;
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         } else {
@@ -433,7 +468,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    Log.d("Response", response.toString());
+                    Log.d("Response message", response.toString());
 
                     Log.d("Response", String.valueOf(response.code()));
                     if(response.code()==200)
@@ -466,15 +501,22 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
     }
 
+    @Override
+    public void onProgressUpdate(int percentage) {
+
+    }
+
+    @Override
+    public void onUploadError(Throwable throwable) {
 
 
+    }
 
+    @Override
+    public void onUploadFinish() {
+        finishVideoUploadSession(this);
 
-
-
-
-
-
+    }
 
 
 //    public void saveDataToServer(Uri uri) {

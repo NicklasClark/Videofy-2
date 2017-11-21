@@ -36,7 +36,7 @@ public class FollowersListActivity extends AppCompatActivity {
 
     Context context;
     List<OtherFollowers> list;
-    List<Follower> list2;
+    List<Follower> userfollower;
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -101,7 +101,6 @@ public class FollowersListActivity extends AppCompatActivity {
             getUserfollowerList();
         }
     }
-
     public void getUserfollowerList()
     {
         int i=1;
@@ -111,22 +110,19 @@ public class FollowersListActivity extends AppCompatActivity {
                 if(response.code()==200)
                 {
                     try {
-                        list2 = response.body().getFollowers();
-                        if (list2 == null || list2.size() == 0) {
-                            Toast.makeText(context,"NO User Found", Toast.LENGTH_LONG).show();
+                        userfollower = response.body().getFollowers();
+                        if (userfollower == null || userfollower.size() == 0) {
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
-
                         }
                         else{
-                        profileMyFollowerAdapter = new FollowersAdapter(context, list2, 100);
-                        recyclerView.setAdapter(profileMyFollowerAdapter);
-                        layout.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
+                            profileMyFollowerAdapter = new FollowersAdapter(context, userfollower, 100);
+                            recyclerView.setAdapter(profileMyFollowerAdapter);
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
                     }
-
-
 
                     }
 

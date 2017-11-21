@@ -235,6 +235,7 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
+
     public void getProfileDetail() {
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
@@ -244,34 +245,25 @@ public class ProfileFragment extends BaseFragment {
 
                 try {
                     PublicProfile userProfile = response.body().getUserProfile();
-                    int totalfollowers = response.body().getFollowers();
-                    int totalfollowing = response.body().getFollowings();
-                    int totalvideos = response.body().getTotalVideos();
-                    String firstname = userProfile.getFirstName();
-                    String lastname = userProfile.getLastName();
-                    String username = userProfile.getUserName();
-                    String email = userProfile.getEmail();
-                    int accountType = userProfile.getAccountType();
-                    hasProfleMedia = userProfile.getHasProfileMedia();
-                    totalfollowers = response.body().getFollowers();
-                    totalfollowing = response.body().getFollowings();
-                    totalvideos = response.body().getTotalVideos();
-                    userId = String.valueOf(userProfile.getUserId());
-                    gender = userProfile.getGender();
-                    email = userProfile.getEmail();
-                    Long mobilno = userProfile.getPhoneNumber();
-                    if (mobilno == null) {
+                     firstname = userProfile.getFirstName();
+                     lastname = userProfile.getLastName();
+                     username = userProfile.getUserName();
+                     email = userProfile.getEmail();
+                     accountType = userProfile.getAccountType();
+                     hasProfleMedia = userProfile.getHasProfileMedia();
+                     totalfollowers = response.body().getFollowers();
+                     totalfollowing = response.body().getFollowings();
+                     totalvideos = response.body().getTotalVideos();
+                     userId = String.valueOf(userProfile.getUserId());
+                     gender = userProfile.getGender();
+                     Long mobilno = userProfile.getPhoneNumber();
+                     if (mobilno == null) {
                         mobilenumber = 0L;
-                    } else {
+                     } else {
                         mobilenumber = mobilno;
-                    }
+                     }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
-
-//                        if (b != null) {
-//                            String thumburl = profile_media.getThumbUrl();
-//                            String mediaurl = profile_media.getMediaUrl();
-//                        }
                     _toolbarusername.setText(firstname);
                     _name.setText(firstname);
                     _username.setText(username);
@@ -282,7 +274,7 @@ public class ProfileFragment extends BaseFragment {
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                     progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
-                    // profileBlur();
+                     profileBlur();
 
                     SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                     String imageUri = prfs.getString("MYIMAGES", "");
@@ -299,12 +291,12 @@ public class ProfileFragment extends BaseFragment {
                         Picasso.with(context)
                                 .load(Uri.parse(imageUri))
                                 .into(profile_id);
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
-                            Blurry.with(context).radius(1).sampling(1).from(bitmap).into(bgImage);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
+//                            Blurry.with(context).radius(1).sampling(1).from(bitmap).into(bgImage);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
                     }
                     if (hasProfleMedia) {

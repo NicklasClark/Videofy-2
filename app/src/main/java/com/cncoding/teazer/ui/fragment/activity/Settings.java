@@ -72,11 +72,9 @@ public class Settings extends AppCompatActivity {
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
         Intent intent=getIntent();
         int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
-
         if(accoutType==1)
         {
             simpleSwitch.setChecked(true);
-
         }
         else
         {
