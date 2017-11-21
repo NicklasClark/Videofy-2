@@ -1,30 +1,20 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -35,33 +25,23 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.Manifest;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.cncoding.teazer.utilities.FileUtils;
-import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickClick;
 import com.vansuita.pickimage.listeners.IPickResult;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
@@ -201,24 +181,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
 
-
-            try {
-
-
-                layoutdetail.setVisibility(View.GONE);
-                simpleProgressBar.setVisibility(View.VISIBLE);
-
-              // File files= FileUtils.getFile(this,r.getUri());
-
-              //  Log.d("Exception12",files.getName());
-                //RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
-               // MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
-                //saveDataToDatabase(body);
-
-            }
-            catch (Exception e) {
-               Log.d("Exception12",e.getMessage());
-            }
             SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("MYIMAGES", r.getUri().toString());
@@ -232,6 +194,25 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
             layoutdetail.setVisibility(View.VISIBLE);
             simpleProgressBar.setVisibility(View.GONE);
+
+            try {
+
+
+                layoutdetail.setVisibility(View.GONE);
+                simpleProgressBar.setVisibility(View.VISIBLE);
+
+                File profileImage= new File(r.getPath());
+
+                Log.d("Exception12",r.getPath());
+
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("upload", profileImage.getName(), reqFile);
+                saveDataToDatabase(body);
+
+            }
+            catch (Exception e) {
+                Log.d("Exception12",e.getMessage());
+            }
         } else {
 
             Toast.makeText(this, r.getError().getMessage(), Toast.LENGTH_LONG).show();
