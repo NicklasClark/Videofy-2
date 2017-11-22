@@ -14,7 +14,6 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -608,7 +607,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/user/update/profile/media")
-        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part file);
+        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part media);
 
         /**
          * Reset the FCM Token

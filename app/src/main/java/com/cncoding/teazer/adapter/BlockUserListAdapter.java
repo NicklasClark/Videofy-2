@@ -72,7 +72,6 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
         return list.size();
     }
 
-
     public void openAlert(final int blockuserId, final BlockUserListAdapter.ViewHolder viewHolder)
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);

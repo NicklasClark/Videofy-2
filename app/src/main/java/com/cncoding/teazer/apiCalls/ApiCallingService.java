@@ -19,7 +19,6 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -609,6 +608,12 @@ public class ApiCallingService {
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
+
+
+
+
+
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())

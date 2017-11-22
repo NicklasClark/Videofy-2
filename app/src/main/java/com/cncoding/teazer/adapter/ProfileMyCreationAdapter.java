@@ -52,6 +52,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     @Override
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
+
         final Pojos.Post.PostDetails cont;
         final String videotitle;
         final int videopostId;
@@ -73,13 +74,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             reaction = String.valueOf(cont.getTotalReactions());
             location = cont.getCheckIn().getLocation();
 
-
         viewHolder.videoTitle.setText(videotitle);
         viewHolder.txtlikes.setText(likes);
         viewHolder.duration.setText(duration);
         viewHolder.txtview.setText(views);
         viewHolder.reactions.setText(reaction);
-        viewHolder.location.setText(location);
+       // viewHolder.location.setText(location);
 
 
         Glide.with(context).load(thumb_url)

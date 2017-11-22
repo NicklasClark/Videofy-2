@@ -51,9 +51,7 @@ public class SharedPrefs {
                 .getString(FCM_TOKEN, null);
     }
 
-//    public static void resetFcmToken(Context context) {
-//        getSharedPreferences(context).edit().putString(FCM_TOKEN, null).apply();
-//    }
+
 
     public static void saveVideoUploadSession(Context context, UploadParams uploadParams) {
         getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
