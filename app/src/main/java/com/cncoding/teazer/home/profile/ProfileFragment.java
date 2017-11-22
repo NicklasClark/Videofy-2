@@ -233,6 +233,7 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
+       // removeAppBar.removeAppbar();
 
 
 
@@ -395,6 +396,7 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.GONE);
 //        coordinatorLayout.setVisibility(View.GONE);
         getProfileDetail();
+
 
     }
 
