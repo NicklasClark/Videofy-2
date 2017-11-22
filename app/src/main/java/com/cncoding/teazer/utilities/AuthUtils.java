@@ -1,21 +1,17 @@
 package com.cncoding.teazer.utilities;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -105,13 +101,16 @@ public class AuthUtils {
     @NonNull
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return Settings.Secure.ANDROID_ID;
-        }
-        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-        if (telephonyManager != null) {
-            return telephonyManager.getDeviceId();
-        } else return Settings.Secure.ANDROID_ID;
+//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            return Settings.Secure.ANDROID_ID;
+
+//        }
+//        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+//        if (telephonyManager != null) {
+//            return telephonyManager.getDeviceId();
+//        } else return Settings.Secure.ANDROID_ID;
+        return Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
     public static String getFcmToken(Context context) {

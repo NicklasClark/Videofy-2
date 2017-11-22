@@ -18,6 +18,7 @@
     <dimen name="text_size_h4">22sp</dimen>
     <dimen name="text_size_h5">18sp</dimen>
     <dimen name="text_size_content">16sp</dimen>
+    <dimen name="text_size_content10dp">10dp</dimen>
     <dimen name="text_size_content2">12sp</dimen>
     <dimen name="text_size_content3">14sp</dimen>
     <dimen name="text_size_content_big">18sp</dimen>
@@ -49,6 +50,7 @@
     <dimen name="view_bottom_margin">50dp</dimen>
     <dimen name="bottom_bar_with_shadow_height">70dp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_8sp">8sp</dimen>
@@ -56,5 +58,6 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="padding_with_small_profile_pic">62dp</dimen>
     <dimen name="overlay_toolbar_height">80dp</dimen>
+    <dimen name="textsize14">80dp</dimen>
 
 </resources>

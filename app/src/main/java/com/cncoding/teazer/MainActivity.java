@@ -39,7 +39,6 @@ import android.widget.TextView;
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.utilities.BlurBuilder;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
@@ -56,6 +55,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.utilities.BlurBuilder;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
+                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//1
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
+                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//2
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {

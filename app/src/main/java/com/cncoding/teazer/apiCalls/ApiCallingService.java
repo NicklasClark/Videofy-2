@@ -3,13 +3,23 @@ package com.cncoding.teazer.apiCalls;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
+import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
-import com.cncoding.teazer.model.profile.reaction.ProfileReactions;
+import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
+import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
+import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
+import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -19,7 +29,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
-import com.cncoding.teazer.utilities.Pojos.User.UserProfile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -29,6 +38,7 @@ import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +62,7 @@ public class ApiCallingService {
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     static final int FAIL = 3;
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
     public static class Application {
 
@@ -72,6 +83,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
         }
@@ -143,6 +155,7 @@ public class ApiCallingService {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
@@ -214,7 +227,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the friends followings list
          * */
-        public static Call<ResultObject> getFriendsFollowings(int page, int userId, Context context) {
+        public static Call<OthersFollowing> getFriendsFollowings(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowings(page, userId);
         }
 
@@ -245,7 +258,7 @@ public class ApiCallingService {
         /**
          * Call this service to get the friends followers list
          * */
-        public static Call<ResultObject> getFriendsFollowers(int page, int userId, Context context) {
+        public static Call<FreindFollower> getFriendsFollowers(int page, int userId, Context context) {
             return getFriendsService(context).getFriendsFollowers(page, userId);
         }
 
@@ -266,28 +279,35 @@ public class ApiCallingService {
             return getFriendsService(context).unfollowUser(userId);
         }
 
+        public static Call<ResultObject> followUser(int userId, Context context) {
+            return getFriendsService(context).followUser(userId);
+        }
+
         /**
          * Call this service to get other's profile information
          * @return “account_type” 1 is a Private account, 2 is a Public account.
          *          “can_join” tell whether you peoples are already friends.
          *          Based on “account_type” you can read either private or public profile.
          * */
-        public static Call<Profile> getOthersProfileInfo(int userId, Context context) {
+        public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
+        }
+            public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
+            return getFriendsService(context).getOthersProfileInfoNoti(userId);
         }
 
         /**
          * Call this service to Block/Unblock a user
          * @param status should be 1 for block and 2 for unblock.
          */
-        public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context){
+        public static Call<BlockUnBlockUser> blockUnblockUser(int userId, int status, Context context){
             return getFriendsService(context).blockUnblockUser(userId, status);
         }
 
         /**
          * Call this service to get blocked users list by you.
          */
-        public static Call<Pojos.Friends.FollowersList> getBlockedUsers(int page, Context context){
+        public static Call<BlockUsers> getBlockedUsers(int page, Context context){
             return getFriendsService(context).getBlockedUsers(page);
         }
 
@@ -419,7 +439,7 @@ public class ApiCallingService {
         }
 
 
-        public static Call<ProfileReactions> getMyReaction(int page, Context context) {
+        public static Call<ProfileReaction> getMyReaction(int page, Context context) {
             return getReactService(context).getMyReaction(page);
         }
 
@@ -514,6 +534,11 @@ public class ApiCallingService {
 
         public static Call<PostList> getVideosPostedByFriends(int page, int friendId, Context context) {
             return getPostalService(context).getVideosPostedByFriends(page, friendId);
+
+        }
+
+        public static Call<FollowersProfileCreations> getVideosPostedByFriend(int page, int friendId, Context context) {
+            return getPostalService(context).getVideosPostedByFriend(page, friendId);
         }
 
         public static Call<PostReactionsList> getReactionsOfPost(int postId, int page, Context context) {
@@ -549,11 +574,13 @@ public class ApiCallingService {
             return getUserService(context).setAccountVisibility(accountType);
         }
 
-        public static Call<UserProfile> getUserProfile(Context context) {
+        public static Call<Pojos.User.UserProfile> getUserProfile(Context context) {
             return getUserService(context).getUserProfile();
+
         }
 
-        public static Call<ResultObject> updateUserProfile(Pojos.User.UpdateProfile updateProfileDetails, Context context) {
+
+        public static Call<ProfileUpdate> updateUserProfiles(ProfileUpdateRequest updateProfileDetails, Context context) {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }
 
@@ -577,7 +604,7 @@ public class ApiCallingService {
             return getUserService(context).logout(header);
         }
 
-        public static Call<UserProfile>getUserProfileDetail(Context context) {
+        public static Call<Pojos.User.UserProfile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
         }
 
@@ -633,9 +660,12 @@ public class ApiCallingService {
                         .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
                         .method(original.method(), original.body())
                         .build();
-
+                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
-        }).build();
+        }).addInterceptor(logging).build();
+    }
+    private static OkHttpClient getOkHttpClient() {
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
     }
 }

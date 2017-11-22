@@ -37,6 +37,8 @@ public class OfflineUserProfile {
     private static final String FOLLOWERS = "followers";
     private static final String FOLLOWINGS = "followings";
     private static final String TOTAL_VIDEOS = "totalVideos";
+    private static final String GENDER = "gender";
+    private static final String DETAIL = "detail";
 
     private final SharedPreferences sharedPreferences;
 
@@ -45,27 +47,51 @@ public class OfflineUserProfile {
     }
     
     public static void saveUserProfileOffline(Pojos.User.Profile userProfile, Context context) {
-        new OfflineUserProfile(context)
-                .setUserId(userProfile.getPublicProfile().getUserId())
-                .setUsername(userProfile.getPublicProfile().getUsername())
-                .setFirstName(userProfile.getPublicProfile().getFirstName())
-                .setLastName(userProfile.getPublicProfile().getLastName())
-                .setEmail(userProfile.getPublicProfile().getEmail())
-                .setPhoneNumber(userProfile.getPublicProfile().getPhoneNumber())
-                .setCountryCode(userProfile.getPublicProfile().getCountryCode())
-                .setPassword(userProfile.getPublicProfile().getPassword())
-                .setIsActive(userProfile.getPublicProfile().isActive())
-                .setAccountType(userProfile.getPublicProfile().getAccountType())
-                .setCreatedAt(userProfile.getPublicProfile().getCreatedAt())
-                .setUpdatedAt(userProfile.getPublicProfile().getUpdatedAt())
-                .setHasProfileMedia(userProfile.getPublicProfile().hasProfileMedia())
-                .setProfileMedia(userProfile.getPublicProfile().getProfileMedia())
-                .setCategories(userProfile.getPublicProfile().getCategories())
-                .setFollowers(userProfile.getFollowers())
-                .setFollowings(userProfile.getFollowings())
-                .setTotalVideos(userProfile.getTotalVideos());
+//        new OfflineUserProfile(context)
+//                .setUserId(userProfile.getPublicProfile().getUserId())
+//                .setUsername(userProfile.getPublicProfile().getUsername())
+//                .setFirstName(userProfile.getPublicProfile().getFirstName())
+//                .setLastName(userProfile.getPublicProfile().getLastName())
+//                .setEmail(userProfile.getPublicProfile().getEmail())
+//                .setPhoneNumber(userProfile.getPublicProfile().getPhoneNumber())
+//                .setCountryCode(userProfile.getPublicProfile().getCountryCode())
+//                .setPassword(userProfile.getPublicProfile().getPassword())
+//                .setIsActive(userProfile.getPublicProfile().isActive())
+//                .setAccountType(userProfile.getPublicProfile().getAccountType())
+//                .setCreatedAt(userProfile.getPublicProfile().getCreatedAt())
+//                .setUpdatedAt(userProfile.getPublicProfile().getUpdatedAt())
+//                .setHasProfileMedia(userProfile.getPublicProfile().hasProfileMedia())
+//                .setProfileMedia(userProfile.getPublicProfile().getProfileMedia())
+//                .setCategories(userProfile.getPublicProfile().getCategories())
+//                .setFollowers(userProfile.getFollowers())
+//                .setFollowings(userProfile.getFollowings())
+//                .setTotalVideos(userProfile.getTotalVideos());
     }
     
+//    public PublicProfile getOfflineUserProfile() {
+//        return new PublicProfile(
+//                getUserId(),
+//                getUsername(),
+//                getFirstName(),
+//                getLastName(),
+//                getEmail(),
+//                getPhoneNumber(),
+//                getCountryCode(),
+//                getPassword(),
+//                isActive(),
+//                getAccountType(),
+//                getCreatedAt(),
+//                getUpdatedAt(),
+//                hasProfileMedia(),
+//                getProfileMedia(),
+//                getCategories(),
+//                getFollowers(),
+//                getFollowings(),
+//                getTotalVideos(),
+//                getGender()
+//                ,getDetail());
+//
+//    }
 //    public PublicProfile getOfflineUserProfile() {
 //        return new PublicProfile(
 //                getUserId(),
@@ -173,6 +199,16 @@ public class OfflineUserProfile {
     public String getUpdatedAt() {
         return getString(UPDATED_AT);
     }
+
+    public int getGender() {
+        return getInt(GENDER);
+    }
+    public String getDetail()
+    {
+        return getString(DETAIL);
+    }
+
+
 
     public boolean hasProfileMedia() {
         return sharedPreferences.getBoolean(HAS_PROFILE_MEDIA, false);
@@ -300,6 +336,14 @@ public class OfflineUserProfile {
 
     public OfflineUserProfile setTotalVideos(int total_videos) {
         putInt(TOTAL_VIDEOS, total_videos);
+        return this;
+    }
+    public OfflineUserProfile setGender(int gender) {
+        putInt(GENDER, gender);
+        return this;
+    }
+    public OfflineUserProfile setDetail(String detail) {
+        putString(DETAIL, detail);
         return this;
     }
 }

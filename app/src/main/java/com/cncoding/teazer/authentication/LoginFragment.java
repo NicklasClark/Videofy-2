@@ -140,8 +140,8 @@ public class LoginFragment extends Fragment {
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
 
-        usernameView.setText("premsuman8");
-        passwordView.setText("mynameis0");
+        usernameView.setText("amit");
+        passwordView.setText("12345678");
     }
 
     private void setOnCountryChangeListener() {

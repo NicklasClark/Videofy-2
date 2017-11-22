@@ -46,18 +46,15 @@ public class FragmentProfileMyCreations extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context=container.getContext();
-
         View view = inflater.inflate(R.layout.fragment_profile_mycreations, container, false);
-
         recyclerView=view.findViewById(R.id.recycler_view);
         return view;
+
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

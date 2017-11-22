@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -35,6 +36,7 @@ import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractio
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.home.profile.ProfileFragmentNew;
 import com.cncoding.teazer.home.search.SearchFragment;
 import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
@@ -75,7 +77,8 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener,ProfileFragment.RemoveAppBar,
-        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks {
+        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
+        ProfileMyCreationAdapter.myCreationListener{
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -106,6 +109,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
     private Call<ResultObject> uploadCall;
+    private PostsListFragment postListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         checkIfAnyVideoIsUploading();
 
-        Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null? "N/A" : getAuthToken(getApplicationContext()));
+        Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
 
         setSupportActionBar(toolbar);
 
@@ -257,7 +261,8 @@ public class BaseBottomBarActivity extends BaseActivity
         switchTab(0);
     }
 
-    @OnClick(R.id.camera_btn) public void startCamera() {
+    @OnClick(R.id.camera_btn)
+    public void startCamera() {
         launchVideoUploadCamera(this);
         finish();
     }
@@ -273,7 +278,8 @@ public class BaseBottomBarActivity extends BaseActivity
         ImageView view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
         if (position != 2)
             view.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[position]));
-        else cameraButton.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[2]));
+        else
+            cameraButton.setImageDrawable(BottomBarUtils.setDrawableSelector(this, mTabIconsSelected[2]));
         return view;
     }
 
@@ -282,8 +288,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //        updateToolbarTitle(position);
     }
 
-    private void updateTabSelection(int currentTab){
-        for (int i = 0; i <  TABS.length; i++) {
+    private void updateTabSelection(int currentTab) {
+        for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
             if (selectedTab != null) {
                 if (currentTab != i) {
@@ -320,8 +326,9 @@ public class BaseBottomBarActivity extends BaseActivity
 
     /**
      * Updates the toolbar title.
+     *
      * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
-     * */
+     */
     public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
         if (title == null) {
             toolbarTitle.animate().alpha(1).setDuration(250).start();
@@ -380,8 +387,10 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
-            case TAB1:
-                return PostsListFragment.newInstance();
+            case TAB1: {
+                postListFragment =  new PostsListFragment();
+                return postListFragment;
+            }
             case NavigationController.TAB2:
                 return SearchFragment.newInstance();
 //            case NavigationController.TAB3:
@@ -472,6 +481,7 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+//        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
     @Override
@@ -516,6 +526,13 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void removeAppbar() {
 
-  //   getSupportActionBar().hide();
+        //   getSupportActionBar().hide();
     }
+
+    @Override
+    public void myCreationVideos(int i, PostDetails postDetails) {
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+
+    }
+
 }

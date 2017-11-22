@@ -732,7 +732,7 @@ public class CameraFragment extends Fragment {
         }
         mMediaRecorder.reset();
 
-        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
 //        mNextVideoAbsolutePath = null;
 //        startPreview();
         if (isReaction)

@@ -108,7 +108,7 @@ public class PostsListFragment extends BaseFragment {
         }
     }
 
-    private void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())

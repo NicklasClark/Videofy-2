@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Reaction {
 
+
     @SerializedName("post_id")
     @Expose
     private Integer postId;
@@ -142,5 +143,6 @@ public class Reaction {
     public void setReactedAt(String reactedAt) {
         this.reactedAt = reactedAt;
     }
+
 
 }
