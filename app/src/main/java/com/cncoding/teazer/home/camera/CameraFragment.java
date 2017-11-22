@@ -479,7 +479,7 @@ public class CameraFragment extends Fragment {
     /**
      * Start the camera preview.
      */
-    private void startPreview() {
+    public void startPreview() {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;
         }
@@ -731,7 +731,7 @@ public class CameraFragment extends Fragment {
 
     }
 
-    private void closePreviewSession() {
+    public void closePreviewSession() {
         if (mPreviewSession != null) {
             mPreviewSession.close();
             mPreviewSession = null;

@@ -551,7 +551,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                     }
                 });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location");
+                parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
                 request.setParameters(parameters);
                 request.executeAsync();
             }

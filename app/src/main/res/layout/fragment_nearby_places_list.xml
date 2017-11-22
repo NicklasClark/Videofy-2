@@ -12,21 +12,33 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_default"
         android:hint="@string/find_a_location"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:imeOptions="actionGo"
         app:drawableStartCompat="@drawable/ic_search"
         android:layout_below="@+id/nearby_places_app_bar_layout"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cancel_dark_small"
+        android:foreground="@drawable/ripple_dark_circle"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:layout_alignEnd="@+id/nearby_places_search"
+        android:layout_alignTop="@+id/nearby_places_search"
+        android:layout_alignBottom="@+id/nearby_places_search"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/padding_thin"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/nearby_places_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:fastScrollEnabled="true"
         android:paddingTop="@dimen/padding_half"
         android:paddingBottom="@dimen/padding_half"
         android:clipToPadding="false"
-        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
         android:layout_below="@+id/nearby_places_search"/>
 
     <FrameLayout
@@ -42,16 +54,6 @@
             android:gravity="center"
             android:textSize="@dimen/text_size_h4"
             android:layout_gravity="center_vertical|start"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/search_nearby_places"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_search"
-            android:foreground="@drawable/ripple_dark_no_rounded"
-            android:paddingStart="@dimen/padding_default"
-            android:paddingEnd="@dimen/padding_default"
-            android:layout_gravity="end|center_vertical"/>
 
     </FrameLayout>
 

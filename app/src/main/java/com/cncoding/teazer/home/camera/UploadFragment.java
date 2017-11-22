@@ -49,13 +49,9 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.utilities.Pojos;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -64,8 +60,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -337,7 +331,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected Bitmap doInBackground(Void... voids) {
             Bitmap bitmap;
-            bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.MICRO_KIND);
+            bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.MINI_KIND);
             return bitmap;
         }
 
@@ -368,26 +362,26 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    void launchPlacePicker() {
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
-            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-            GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(), REQUEST_CODE_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
-        }
+//    void launchPlacePicker() {
 //        try {
-//            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//            Intent intent = intentBuilder.build(this);
-//            // Start the Intent by requesting a result, identified by a request code.
-//            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
+//            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
 //        } catch (GooglePlayServicesRepairableException e) {
-//            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(), REQUEST_PLACE_PICKER);
+//            GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(), REQUEST_CODE_PLACE_AUTOCOMPLETE);
 //        } catch (GooglePlayServicesNotAvailableException e) {
 //            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
 //        }
-    }
+////        try {
+////            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+////            Intent intent = intentBuilder.build(this);
+////            // Start the Intent by requesting a result, identified by a request code.
+////            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+////        } catch (GooglePlayServicesRepairableException e) {
+////            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(), REQUEST_PLACE_PICKER);
+////        } catch (GooglePlayServicesNotAvailableException e) {
+////            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
+////        }
+//    }
 
     private String getNearbySearchUrl(Location location) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
@@ -433,7 +427,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
-                        mListener.onUploadInteraction(false, TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
+                        mListener.onUploadInteraction(false,
+                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
                         Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
@@ -470,7 +465,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
-                            mListener.onUploadInteraction(false, TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
+                            mListener.onUploadInteraction(false,
+                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
                                     TAG_TAGS_FRAGMENT);
                             break;
                         default:
@@ -551,14 +547,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 createLocationRequest();
                 break;
             case NEARBY_PLACE_AUTOCOMPLETE_ACTION:
-                launchPlacePicker();
+//                launchPlacePicker();
                 break;
             default:
                 break;
         }
     }
 
-    public void onNearbyPlacesInteraction(SelectedPlace selectedPlace) {
+    public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
         addLocationText.setText(selectedPlace.getPlaceName());
     }
@@ -622,26 +618,26 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(activity, data);
-                    onNearbyPlacesInteraction(
-                            new SelectedPlace(
-                                    place.getName().toString(),
-                                    place.getLatLng().latitude,
-                                    place.getLatLng().longitude));
-                    mListener.onUploadInteraction(false, null, null);
-                }
-                else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(context, data);
-                    String message = status.getStatusMessage();
-                    if (message != null) {
-                        Snackbar.make(addLocationBtn, message, Snackbar.LENGTH_SHORT).show();
-                    } else
-                        Snackbar.make(addLocationBtn, "Oops! Something went wrong, please retry.", Snackbar.LENGTH_SHORT).show();
-
-                }
-                break;
+//            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
+//                if (resultCode == RESULT_OK) {
+//                    Place place = PlaceAutocomplete.getPlace(activity, data);
+//                    onNearbyPlacesAdapterInteraction(
+//                            new SelectedPlace(
+//                                    place.getName().toString(),
+//                                    place.getLatLng().latitude,
+//                                    place.getLatLng().longitude));
+//                    mListener.onUploadInteraction(false, null, null);
+//                }
+//                else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+//                    Status status = PlaceAutocomplete.getStatus(context, data);
+//                    String message = status.getStatusMessage();
+//                    if (message != null) {
+//                        Snackbar.make(addLocationBtn, message, Snackbar.LENGTH_SHORT).show();
+//                    } else
+//                        Snackbar.make(addLocationBtn, "Oops! Something went wrong, please retry.", Snackbar.LENGTH_SHORT).show();
+//
+//                }
+//                break;
             case REQUEST_CODE_CHECK_SETTINGS:
                 switch (resultCode) {
                     case RESULT_OK:
@@ -715,7 +711,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
             reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
-            reference.get().mListener.onUploadInteraction(false, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
+            reference.get().mListener.onUploadInteraction(false,
+                    NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
 
@@ -799,7 +796,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
-        mListener.onUploadInteraction(false, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
+        mListener.onUploadInteraction(false,
+                NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
     }
 
     private void stopLocationUpdates() {

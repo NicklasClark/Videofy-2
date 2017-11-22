@@ -32,18 +32,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
+import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.lang.ref.WeakReference;
@@ -68,8 +78,8 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDE
 
 public class CameraActivity extends AppCompatActivity
         implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
-        TagsAndCategoriesInteractionListener,
-        OnNearbyPlacesListInteractionListener, NearbyPlacesInteractionListener {
+        TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener,
+        NearbyPlacesInteractionListener, OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
     private static final String TAG_UPLOAD_FRAGMENT = "uploadFragment";
@@ -78,11 +88,13 @@ public class CameraActivity extends AppCompatActivity
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
 
+    private GoogleApiClient googleApiClient;
     private SlidingUpPanelLayout.PanelSlideListener panelSlideListener;
     private ArrayList<Videos> videosList;
 
     private boolean isReaction = false;
     private PostDetails postDetails;
+    private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
 
     @Override
@@ -113,11 +125,17 @@ public class CameraActivity extends AppCompatActivity
         slidingUpPanelLayout.setOverlayed(true);
         slidingUpPanelLayout.setScrollableView(recyclerView);
 
+        cameraFragment = CameraFragment.newInstance(isReaction, postDetails);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
+                    .replace(R.id.container, cameraFragment)
                     .commit();
         }
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 0 /* clientId */, this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
     }
 
     @Override
@@ -130,6 +148,9 @@ public class CameraActivity extends AppCompatActivity
         }
         else
             prepareVideoGallery();
+
+        if (googleApiClient!= null && !googleApiClient.isConnected())
+            googleApiClient.connect();
     }
 
     private void prepareVideoGallery() {
@@ -173,6 +194,7 @@ public class CameraActivity extends AppCompatActivity
                         .replace(R.id.uploading_container, uploadFragment, TAG_UPLOAD_FRAGMENT)
                         .addToBackStack(TAG_UPLOAD_FRAGMENT)
                         .commit();
+                cameraFragment.closePreviewSession();
             }
         }, 300);
     }
@@ -204,8 +226,8 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNearbyPlacesInteraction(SelectedPlace selectedPlace) {
-        uploadFragment.onNearbyPlacesInteraction(selectedPlace);
+    public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
+        uploadFragment.onNearbyPlacesAdapterInteraction(selectedPlace);
         getSupportFragmentManager().popBackStack();
 //        String name = getSupportFragmentManager().getBackStackEntryAt(0).getName();
 //        getSupportFragmentManager().popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -214,6 +236,42 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onNearbyPlacesListInteraction(int action) {
         uploadFragment.onNearbyPlacesListInteraction(action);
+    }
+
+    @Override
+    public void onPlaceClick(ArrayList<NearbyPlacesAdapter.PlaceAutocomplete> mResultList, int position) {
+        if(mResultList!=null){
+            try {
+                final String placeId = String.valueOf(mResultList.get(position).placeId);
+
+                /*
+                  Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
+                */
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(googleApiClient, placeId);
+                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                    @Override
+                    public void onResult(@NonNull PlaceBuffer places) {
+                        if(places.getCount()==1){
+                            //Do the things here on Click.....
+                            uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
+                                    places.get(0).getName().toString(),
+                                    places.get(0).getLatLng().latitude,
+                                    places.get(0).getLatLng().longitude
+                            ));
+                            getSupportFragmentManager().popBackStack();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            catch (Exception e){
+                Log.e("onPlaceClick()", e.getMessage());
+            }
+
+        }
     }
 
     @Override
@@ -246,6 +304,10 @@ public class CameraActivity extends AppCompatActivity
 //                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
 //                    .commit();
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
     private static class GetVideoGalleryData extends AsyncTask<Void, Void, Void> {
@@ -318,10 +380,22 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
+    public GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (googleApiClient != null && googleApiClient.isConnected())
+            googleApiClient.disconnect();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         uploadFragment = null;
+        cameraFragment = null;
         videosList.clear();
         videosList = null;
 //        gridLayoutManager.removeAndRecycleAllViews(recycler);
@@ -348,5 +422,7 @@ public class CameraActivity extends AppCompatActivity
                 finish();
             } else super.onBackPressed();
         }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
+            cameraFragment.startPreview();
     }
 }
