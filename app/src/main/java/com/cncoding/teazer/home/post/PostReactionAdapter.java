@@ -21,7 +21,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
@@ -71,8 +70,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
         Glide.with(context)
                 .load(postReaction.getMediaDetail().getThumbUrl())
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .crossFade()
+                .skipMemoryCache(false)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,

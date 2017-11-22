@@ -57,13 +57,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int STARTED_FOLLOWING = 1;
     private static final int ACCEPTED_REQUEST = 2;
     private static final int SENT_YOU_A_FOLLOW_REQUEST = 3;
-//    private static final int REACTED_TO_YOUR_VIDEO = 4;
-//    private static final int LIKED_YOUR_VIDEO = 5;
-//    private static final int LIKED_YOUR_REACTION = 6;
-//    private static final int POSTED_A_VIDEO = 7;
-//    private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
-//    private static final int TAGGED_YOU_IN_A_VIDEO = 9;
     private static final int ALSO_STARTED_FOLLOWING = 10;
+
+    private static final int LIKED_YOUR_VIDEO = 5;
+    private static final int POSTED_A_VIDEO = 7;
+    private static final int TAGGED_YOU_IN_A_VIDEO = 9;
+
+    private static final int REACTED_TO_YOUR_VIDEO = 4;
+    private static final int LIKED_YOUR_REACTION = 6;
+    private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
 
     private Context context;
     private boolean isFollowingTab;
@@ -122,24 +124,49 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         if (mListener != null) {
-                            ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
-                                    .enqueue(new Callback<PostDetails>() {
+                            if (holder1.notification.getNotificationType() == LIKED_YOUR_VIDEO ||
+                                    holder1.notification.getNotificationType() == POSTED_A_VIDEO ||
+                                    holder1.notification.getNotificationType() == TAGGED_YOU_IN_A_VIDEO) {
+                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
+                                        .enqueue(new Callback<PostDetails>() {
 
-                                        @Override
-                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                            if (response.code() == 200)
-                                                mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
-                                            else if(response.code() == 412 && response.message().contains("Precondition Failed"))
-                                                Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                            else
-                                                Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
-                                        }
+                                            @Override
+                                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                if (response.code() == 200)
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                            }
 
-                                        @Override
-                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Log.d("FAIL - GET PostDetails", t.getMessage());
-                                        }
-                                    });
+                                            @Override
+                                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                            }
+                                        });
+                            } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
+                                    holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
+                                    holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
+                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getPostId(), context)
+                                        .enqueue(new Callback<PostDetails>() {
+
+                                            @Override
+                                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                if (response.code() == 200)
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                            }
+                                        });
+                            }
                         }
                     }
                 });
@@ -211,6 +238,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                                                             else
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                            holder2.declineRequest.setVisibility(View.GONE);
                                                         } else {
                                                             sendJoinRequest(holder2);
                                                         }

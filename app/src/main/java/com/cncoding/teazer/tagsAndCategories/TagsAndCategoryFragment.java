@@ -102,6 +102,7 @@ public class TagsAndCategoryFragment extends Fragment {
                     recyclerView.setAdapter(tagsAdapter);
                 } else {
                     recyclerView.setVisibility(View.GONE);
+                    doneBtn.setVisibility(View.GONE);
                     noFriendsTextView.setVisibility(VISIBLE);
                 }
                 break;
@@ -129,13 +130,17 @@ public class TagsAndCategoryFragment extends Fragment {
     @OnClick(R.id.tags_categories_done) public void getResult() {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
-                listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                        getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                if (circles != null && circles.size() > 0) {
+                    listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
+                            getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                }
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
-                listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                        getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                        getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                if (categories != null && categories.size() > 0) {
+                    listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                            getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
+                            getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                }
                 break;
             default:
                 break;

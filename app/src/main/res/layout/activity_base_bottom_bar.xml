@@ -33,18 +33,6 @@
                 android:gravity="center"
                 tools:ignore="PrivateResource" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                android:id="@+id/logout_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/text_size_content"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:foreground="@drawable/ripple_dark"
-                android:paddingStart="@dimen/padding_default"
-                android:paddingEnd="@dimen/padding_default"
-                android:text="@string/logout"/>
-
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

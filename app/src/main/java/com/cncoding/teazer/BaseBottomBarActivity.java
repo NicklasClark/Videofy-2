@@ -63,7 +63,6 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
-import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
@@ -105,7 +104,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
     @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
-//    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
@@ -278,11 +276,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
             }
         }
-    }
-
-    @OnClick(R.id.logout_btn) public void performLogout() {
-        logout(getApplicationContext(), this);
-//        ApiCallingService.User.performLogout(SharedPrefs.getAuthToken(this), this);
     }
 
     @OnClick(R.id.uploading_notification) public void retryUpload() {

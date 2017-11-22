@@ -21,7 +21,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
@@ -120,7 +119,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
-                    .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
                     .crossFade()
                     .into(holder.profilePic);
         else
