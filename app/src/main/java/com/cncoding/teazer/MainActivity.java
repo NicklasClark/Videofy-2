@@ -360,15 +360,17 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//1
+                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                                     verificationSuccessful(true, null,
                                             facebookData, facebookProfile, button, false);
                                 }
                                 break;
                             case 200:
+                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(true, null,
                                             facebookData, facebookProfile, button, true);
@@ -406,15 +408,16 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//2
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                     verificationSuccessful(false, googleAccount,
                                             null, null, button, false);
                                 }
                                 break;
                             case 200:
+                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false, googleAccount,
                                             null, null, button, true);

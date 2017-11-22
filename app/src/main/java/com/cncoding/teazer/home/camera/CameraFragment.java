@@ -37,6 +37,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -94,9 +95,10 @@ public class CameraFragment extends Fragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
-    public static final int ACTION_UPLOAD_VIDEO_POST = 20;
-//    public static final int ACTION_UPLOAD_REACTION = 21;
+    public static final int ACTION_START_UPLOAD_FRAGMENT = 21;
     public static final int ACTION_SHOW_GALLERY = 22;
+    public static final int ACTION_EXIT = 23;
+
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
 
@@ -212,6 +214,13 @@ public class CameraFragment extends Fragment {
             mCameraDevice = null;
             activity.finish();
         }
+
+        @Override
+        public void onClosed(@NonNull CameraDevice camera) {
+            closeCamera();
+            stopBackgroundThread();
+            super.onClosed(camera);
+        }
     };
 
     private FragmentActivity activity;
@@ -257,7 +266,7 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
-        createVideoFolder();
+        new CreateVideoFolder(this).execute();
         return rootView;
     }
 
@@ -277,8 +286,8 @@ public class CameraFragment extends Fragment {
 
     @Override
     public void onPause() {
-        closeCamera();
-        stopBackgroundThread();
+//        closeCamera();
+//        stopBackgroundThread();
         super.onPause();
     }
 
@@ -327,13 +336,15 @@ public class CameraFragment extends Fragment {
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        mBackgroundThread.quitSafely();
-        try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (mBackgroundThread != null) {
+            mBackgroundThread.quitSafely();
+            try {
+                mBackgroundThread.join();
+                mBackgroundThread = null;
+                mBackgroundHandler = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -629,12 +640,25 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.prepare();
     }
 
-    private void createVideoFolder() {
-        File movieFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-        videoFolder = new File(movieFile, getString(R.string.app_name));
-        if (!videoFolder.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            videoFolder.mkdirs();
+    private static class CreateVideoFolder extends AsyncTask<Void, Void, Boolean> {
+
+        private WeakReference<CameraFragment> reference;
+
+        CreateVideoFolder(CameraFragment context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Boolean isCreated = false;
+            reference.get().videoFolder = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+                    reference.get().getString(R.string.app_name));
+
+            if (!reference.get().videoFolder.exists()) {
+                isCreated = reference.get().videoFolder.mkdirs();
+            }
+            return isCreated;
         }
     }
 
@@ -718,27 +742,32 @@ public class CameraFragment extends Fragment {
         // UI
         mIsRecordingVideo = false;
 
-        try {
-            mPreviewSession.stopRepeating();
-            mPreviewSession.abortCaptures();
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-        // Stop recording
-        try {
-            mMediaRecorder.stop();
-        } catch (RuntimeException e) {
-            Log.e("MediaRecorder stop()", e.getMessage());
-        }
-        mMediaRecorder.reset();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mPreviewSession.stopRepeating();
+                    mPreviewSession.abortCaptures();
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+                // Stop recording
+                try {
+                    mMediaRecorder.stop();
+                } catch (RuntimeException e) {
+                    Log.e("MediaRecorder stop()", e.getMessage());
+                }
+                mMediaRecorder.reset();
+
+            }
+        }).start();
 
 //        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
-//        mNextVideoAbsolutePath = null;
 //        startPreview();
         if (isReaction)
-            new ChooseOptionalTitle(context, new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
+            new ChooseOptionalTitle(new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
         else
-            mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, new UploadParams(mNextVideoAbsolutePath, null));
+            mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath, null));
     }
 
     /**
@@ -821,9 +850,9 @@ public class CameraFragment extends Fragment {
 
     static class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
 
-        ChooseOptionalTitle(@NonNull final Context context, final UploadParams uploadParams, final Activity activity) {
-            super(context);
-            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        ChooseOptionalTitle(final UploadParams uploadParams, final Activity activity) {
+            super(activity);
+            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(activity);
             LayoutInflater inflater = activity.getLayoutInflater();
             @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
             dialogBuilder.setView(dialogView);
@@ -838,11 +867,20 @@ public class CameraFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     hideKeyboard(activity, editText);
 
-                    performUpload(context,
+                    performUpload(activity,
                             new UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(),
                                     uploadParams.getPostDetails()));
 
                     activity.finish();
+                }
+            });
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+//                    //noinspection ResultOfMethodCallIgnored
+//                    new File(uploadParams.getVideoPath()).delete();
+//                    deleteFileFromMediaStoreDatabase(activity, uploadParams.getVideoPath());
+                    dialogInterface.dismiss();
                 }
             });
             android.support.v7.app.AlertDialog b = dialogBuilder.create();
@@ -862,9 +900,6 @@ public class CameraFragment extends Fragment {
     }
 
     public interface OnCameraFragmentInteractionListener {
-        /**
-         * @param action {@value #ACTION_UPLOAD_VIDEO_POST} or {@value #ACTION_SHOW_GALLERY}
-         */
         void onCameraInteraction(int action, UploadParams uploadParams);
     }
 }

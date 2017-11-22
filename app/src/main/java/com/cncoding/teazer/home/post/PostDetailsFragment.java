@@ -198,7 +198,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
             mediaPlayer.setDataSource(postDetails.getMedias().get(0).getMediaUrl());
             mediaPlayer.setSurface(surface);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+//            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
             e.printStackTrace();

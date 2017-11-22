@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
-    tools:context="com.cncoding.teazer.home.camera.upload.VideoUpload">
+    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -50,6 +50,15 @@
 
             </RelativeLayout>
 
+            <ProgressBar
+                android:id="@+id/top_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:indeterminate="true"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:theme="@style/ProgressBarTheme"
+                android:visibility="invisible" />
+
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +72,7 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:imeOptions="actionDone"
-                android:layout_marginTop="@dimen/height_24dp"
+                android:layout_marginTop="@dimen/padding_thin"
                 android:layout_marginStart="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default"/>
 
@@ -85,11 +94,9 @@
                     android:id="@+id/video_upload_location_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/padding_double"
-                    android:paddingStart="38dp"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    android:paddingEnd="0dp"
+                    android:gravity="center"
                     android:layout_alignStart="@+id/video_upload_location"
                     android:layout_alignEnd="@+id/video_upload_location"
                     android:layout_below="@+id/video_upload_location" />
@@ -112,11 +119,9 @@
                     android:id="@+id/video_upload_tag_friends_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/padding_double"
-                    android:paddingStart="38dp"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    android:paddingEnd="0dp"
+                    android:gravity="center"
                     android:layout_alignStart="@+id/video_upload_tag_friends"
                     android:layout_alignEnd="@+id/video_upload_tag_friends"
                     android:layout_below="@+id/video_upload_tag_friends" />
@@ -254,6 +259,7 @@
         app:srcCompat="@drawable/ic_previous"
         android:foreground="@drawable/ripple_dark"
         android:padding="@dimen/padding_default"
-        android:contentDescription="@string/up"/>
+        android:contentDescription="@string/up"
+        android:visibility="invisible"/>
 
 </FrameLayout>

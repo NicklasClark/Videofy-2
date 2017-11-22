@@ -10,18 +10,15 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
@@ -107,13 +104,12 @@ import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTI
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class VideoUpload extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     public static final String VIDEO_PATH = "videoPath";
     private static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -132,7 +128,8 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
     @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
     @BindView(R.id.progress_bar) ProgressBar thumbnailProgressBar;
-    @BindView(R.id.video_upload_cancel_btn) Button cancelBtn;
+    @BindView(R.id.top_progress_bar) ProgressBar topProgressBar;
+    @BindView(R.id.video_upload_retake_btn) Button cancelBtn;
     @BindView(R.id.video_upload_check_btn) Button uploadBtn;
     @BindView(R.id.video_upload_title) ProximaNovaRegularAutoCompleteTextView videoTitle;
     @BindView(R.id.video_upload_location) ProximaNovaBoldButton addLocationBtn;
@@ -143,12 +140,11 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
     @BindView(R.id.video_upload_categories_text) ProximaNovaRegularTextView uploadCategoriesText;
     @BindView(R.id.up_btn) AppCompatImageView upBtn;
 
-    private String videoPath;
-    private boolean isReaction;
-    private String selectedCategoriesToSend;
+    public String videoPath;
+    public boolean isReaction;
+    String selectedCategoriesToSend;
     private boolean isRequestingLocationUpdates;
     private ArrayList<Pojos.MiniProfile> myFollowingsList = new ArrayList<>();
-    private FragmentManager fragmentManager;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
     private LocationRequest locationRequest;
@@ -157,14 +153,14 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
     private Context context;
     private Activity activity;
 
-    private OnFragmentInteractionListener mListener;
+    private OnUploadFragmentInteractionListener mListener;
 
-    public VideoUpload() {
+    public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static VideoUpload newInstance(String videoPath, boolean isReaction) {
-        VideoUpload fragment = new VideoUpload();
+    public static UploadFragment newInstance(String videoPath, boolean isReaction) {
+        UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
@@ -208,11 +204,13 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
         StrictMode.setVmPolicy(builder.build());
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_video_upload, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_upload, container, false);
         ButterKnife.bind(this, rootView);
-        
+
         context = getContext();
         activity = getActivity();
+
+        new GetThumbnail(this).execute();
 
         new SetVideoDuration(this).execute();
 
@@ -224,31 +222,6 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
         createLocationRequest();
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);thumbnailProgressBar.setVisibility(VISIBLE);
-        Glide.with(this)
-                .load(getThumbnail(videoPath).toByteArray())
-                .asBitmap()
-//                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                .animate(R.anim.fast_fade_in)
-                .listener(new RequestListener<byte[], Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                        thumbnailProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        thumbnailProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(thumbnailView);
     }
 
     @Override
@@ -272,13 +245,13 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
-//                                Toast.makeText(VideoUpload.this,
+//                                Toast.makeText(UploadFragment.this,
 //                                        "FusedLocationProvider: "
 //                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
 //                                        Toast.LENGTH_SHORT)
 //                                        .show();
                                 if (firstTime) {
-                                    new GetNearbyPlacesData(VideoUpload.this).execute(getNearbySearchUrl(currentLocation));
+                                    new GetNearbyPlacesData(UploadFragment.this).execute(getNearbySearchUrl(currentLocation));
                                 }
                             }
                         }
@@ -293,7 +266,7 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
-//                    Toast.makeText(VideoUpload.this,
+//                    Toast.makeText(UploadFragment.this,
 //                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
 //                            Toast.LENGTH_SHORT).show();
                     stopLocationUpdates();
@@ -302,7 +275,7 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
         }
     }
 
-    protected void createLocationRequest() {
+    void createLocationRequest() {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(30000);
         locationRequest.setFastestInterval(5000);
@@ -353,19 +326,49 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
         }
     }
 
-    private ByteArrayOutputStream getThumbnail(String videoPath) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-        if (thumbnail.getHeight() > thumbnail.getWidth()) {
-            thumbnail = ThumbnailUtils.extractThumbnail(thumbnail,
-                    thumbnail.getWidth(),
-                    (thumbnail.getWidth() - (thumbnail.getWidth() / 3)));
+    private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
+
+        WeakReference<UploadFragment> reference;
+
+        GetThumbnail(UploadFragment context) {
+            reference = new WeakReference<>(context);
         }
-        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream;
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            Bitmap bitmap;
+            bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.MICRO_KIND);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            Glide.with(reference.get())
+                    .load(stream.toByteArray())
+                    .asBitmap()
+//                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                    .animate(R.anim.fast_fade_in)
+                    .listener(new RequestListener<byte[], Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+                            reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(reference.get().thumbnailView);
+        }
     }
 
-    private void launchPlacePicker() {
+    void launchPlacePicker() {
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
             startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
@@ -422,52 +425,39 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
 //        startLocationService();
     }
 
-    @AfterPermissionGranted(RC_LOCATION_PERM) private void startLocationService() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (EasyPermissions.hasPermissions(context, perms)) {
-            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
-        } else {
-            // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
-                    RC_LOCATION_PERM, perms);
-        }
-    }
-
     @OnClick(R.id.video_upload_categories) public void getCategories() {
+        toggleInteraction(false);
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Pojos.Category>> call, Response<ArrayList<Pojos.Category>> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
-                        fragmentManager.beginTransaction()
-                                .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                                .add(R.id.fragment_container,
-                                        TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
-//                                Interests.newInstance(Interests.LAUNCH_TYPE_UPLOAD),
-                                        TAG_INTERESTS_FRAGMENT)
-                                .addToBackStack(TAG_INTERESTS_FRAGMENT)
-                                .commit();
+                        mListener.onUploadInteraction(false, TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
+                                TAG_INTERESTS_FRAGMENT);
                     } else
                         Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
                                 Snackbar.LENGTH_SHORT).show();
                 } else
                     Snackbar.make(uploadCategoriesBtn, response.code() + " : " + response.message(),
                             Snackbar.LENGTH_SHORT).show();
+                toggleInteraction(true);
             }
 
             @Override
             public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
                 Log.e("getCategories", t.getMessage());
+                toggleInteraction(true);
             }
         });
     }
 
     @OnClick(R.id.video_upload_tag_friends) public void getMyFollowings() {
-        getMyFollowingsList(1);
+        toggleInteraction(false);
+        getMyCircle(1);
     }
 
-    private void getMyFollowingsList(final int page) {
+    private void getMyCircle(final int page) {
         ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<Pojos.Friends.CircleList>() {
             @Override
             public void onResponse(Call<Pojos.Friends.CircleList> call, Response<Pojos.Friends.CircleList> response) {
@@ -475,34 +465,32 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
                     switch (isResponseOk(response)) {
                         case SUCCESS_OK_TRUE:
                             myFollowingsList.addAll(response.body().getCircles());
-                            getMyFollowingsList(page + 1);
+                            getMyCircle(page + 1);
                             break;
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
-                            fragmentManager.beginTransaction()
-                                    .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out,
-                                            R.anim.fast_fade_in, R.anim.fast_fade_out)
-                                    .replace(R.id.fragment_container,
-                                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList), TAG_TAGS_FRAGMENT)
-                                    .addToBackStack(TAG_TAGS_FRAGMENT)
-                                    .commit();
+                            mListener.onUploadInteraction(false, TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
+                                    TAG_TAGS_FRAGMENT);
                             break;
                         default:
-                            Log.e("getMyFollowingsList", response.message());
+                            Log.e("getMyCircle", response.message());
                             break;
                     }
                 } else Toast.makeText(context, "No friends yet!", Toast.LENGTH_SHORT).show();
+                toggleInteraction(true);
             }
 
             @Override
             public void onFailure(Call<Pojos.Friends.CircleList> call, Throwable t) {
-                Log.e("getMyFollowingsList", t.getMessage());
+                Log.e("getMyCircle", t.getMessage());
+                toggleInteraction(true);
             }
         });
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
+        toggleInteraction(false);
         String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
         String location = null;
         double latitude = 0;
@@ -518,12 +506,22 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
                 Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
     }
 
-    @OnClick(R.id.video_upload_cancel_btn) public void retakeVideo() {
-        launchVideoUploadCamera(activity);
-//        finish();
+    @OnClick(R.id.video_upload_retake_btn) public void retakeVideo() {
+        mListener.onUploadInteraction(true, null, null);
     }
 
-    private void toggleUpBtnVisibility(int visibility) {
+    @AfterPermissionGranted(RC_LOCATION_PERM) private void startLocationService() {
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(context, perms)) {
+            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
+                    RC_LOCATION_PERM, perms);
+        }
+    }
+
+    public void toggleUpBtnVisibility(int visibility) {
         switch (visibility) {
             case VISIBLE:
                 if (upBtn.getVisibility() != VISIBLE) {
@@ -575,7 +573,34 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
                 uploadCategoriesText.setText(resultToShow);
                 break;
         }
-        fragmentManager.popBackStack();
+    }
+
+    public void toggleInteraction(boolean isEnabled) {
+        videoTitle.setEnabled(isEnabled);
+        addLocationBtn.setEnabled(isEnabled);
+        tagFriendsBtn.setEnabled(isEnabled);
+        uploadCategoriesBtn.setEnabled(isEnabled);
+        cancelBtn.setEnabled(isEnabled);
+        uploadBtn.setEnabled(isEnabled);
+        if (isEnabled)
+            topProgressBar.setVisibility(INVISIBLE);
+        else
+            topProgressBar.setVisibility(VISIBLE);
+        if (isEnabled) {
+            videoTitle.setAlpha(1);
+            addLocationBtn.setAlpha(1);
+            tagFriendsBtn.setAlpha(1);
+            uploadCategoriesBtn.setAlpha(1);
+            cancelBtn.setAlpha(1);
+            uploadBtn.setAlpha(1);
+        } else {
+            videoTitle.setAlpha(0.5f);
+            addLocationBtn.setAlpha(0.5f);
+            tagFriendsBtn.setAlpha(0.5f);
+            uploadCategoriesBtn.setAlpha(0.5f);
+            cancelBtn.setAlpha(0.5f);
+            uploadBtn.setAlpha(0.5f);
+        }
     }
 
     @Override
@@ -600,11 +625,12 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
             case REQUEST_CODE_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(activity, data);
-//                    onNearbyPlacesInteraction(
-//                            new SelectedPlace(
-//                                    place.getName().toString(),
-//                                    place.getLatLng().latitude,
-//                                    place.getLatLng().longitude));
+                    onNearbyPlacesInteraction(
+                            new SelectedPlace(
+                                    place.getName().toString(),
+                                    place.getLatLng().latitude,
+                                    place.getLatLng().longitude));
+                    mListener.onUploadInteraction(false, null, null);
                 }
                 else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(context, data);
@@ -662,10 +688,15 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
     private static class GetNearbyPlacesData extends AsyncTask<String, String, ArrayList<HashMap<String, String>>> {
 
         private String googlePlacesJsonData;
-        private WeakReference<VideoUpload> reference;
+        private WeakReference<UploadFragment> reference;
 
-        GetNearbyPlacesData(VideoUpload context) {
+        GetNearbyPlacesData(UploadFragment context) {
             reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            reference.get().toggleInteraction(false);
         }
 
         @Override
@@ -682,20 +713,17 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
 
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
+            reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
-            reference.get().fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                    .add(R.id.fragment_container, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES)
-                    .addToBackStack(TAG_NEARBY_PLACES)
-                    .commit();
+            reference.get().mListener.onUploadInteraction(false, NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
 
     private static class SetVideoDuration extends AsyncTask<Void, Void, String> {
 
-        private WeakReference<VideoUpload> reference;
+        private WeakReference<UploadFragment> reference;
 
-        SetVideoDuration(VideoUpload context) {
+        SetVideoDuration(UploadFragment context) {
             reference = new WeakReference<>(context);
         }
 
@@ -771,11 +799,7 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
 
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fast_fade_in, R.anim.fast_fade_out, R.anim.fast_fade_in, R.anim.fast_fade_out)
-                .add(R.id.fragment_container, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES)
-                .addToBackStack(TAG_NEARBY_PLACES)
-                .commit();
+        mListener.onUploadInteraction(false, NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
     }
 
     private void stopLocationUpdates() {
@@ -791,11 +815,11 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnUploadFragmentInteractionListener) {
+            mListener = (OnUploadFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnUploadFragmentInteractionListener");
         }
     }
 
@@ -811,7 +835,7 @@ public class VideoUpload extends Fragment implements EasyPermissions.PermissionC
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface OnUploadFragmentInteractionListener {
+        void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
     }
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -128,6 +129,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                             if (response.code() == 200)
                                                 mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                            else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                             else
                                                 Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
                                         }

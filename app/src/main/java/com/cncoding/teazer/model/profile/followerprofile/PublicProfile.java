@@ -7,9 +7,10 @@ package com.cncoding.teazer.model.profile.followerprofile;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class PublicProfile implements Parcelable {
     @SerializedName("user_id")
@@ -60,6 +61,57 @@ public class PublicProfile implements Parcelable {
     @SerializedName("categories")
     @Expose
     private List<Category> categories = null;
+
+    protected PublicProfile(Parcel in) {
+        if (in.readByte() == 0) {
+            userId = null;
+        } else {
+            userId = in.readInt();
+        }
+        userName = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        if (in.readByte() == 0) {
+            phoneNumber = null;
+        } else {
+            phoneNumber = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            countryCode = null;
+        } else {
+            countryCode = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            gender = null;
+        } else {
+            gender = in.readInt();
+        }
+        byte tmpIsActive = in.readByte();
+        isActive = tmpIsActive == 0 ? null : tmpIsActive == 1;
+        description = in.readString();
+        if (in.readByte() == 0) {
+            accountType = null;
+        } else {
+            accountType = in.readInt();
+        }
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        byte tmpHasProfileMedia = in.readByte();
+        hasProfileMedia = tmpHasProfileMedia == 0 ? null : tmpHasProfileMedia == 1;
+    }
+
+    public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
+        @Override
+        public PublicProfile createFromParcel(Parcel in) {
+            return new PublicProfile(in);
+        }
+
+        @Override
+        public PublicProfile[] newArray(int size) {
+            return new PublicProfile[size];
+        }
+    };
 
     public Integer getUserId() {
         return userId;
@@ -196,6 +248,44 @@ public class PublicProfile implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        if (userId == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(userId);
+        }
+        parcel.writeString(userName);
+        parcel.writeString(firstName);
+        parcel.writeString(lastName);
+        parcel.writeString(email);
+        if (phoneNumber == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(phoneNumber);
+        }
+        if (countryCode == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(countryCode);
+        }
+        if (gender == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(gender);
+        }
+        parcel.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
+        parcel.writeString(description);
+        if (accountType == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(accountType);
+        }
+        parcel.writeString(createdAt);
+        parcel.writeString(updatedAt);
+        parcel.writeByte((byte) (hasProfileMedia == null ? 0 : hasProfileMedia ? 1 : 2));
     }
 }

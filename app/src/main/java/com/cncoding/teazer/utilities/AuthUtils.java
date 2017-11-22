@@ -101,16 +101,7 @@ public class AuthUtils {
     @NonNull
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return Settings.Secure.ANDROID_ID;
-
-//        }
-//        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-//        if (telephonyManager != null) {
-//            return telephonyManager.getDeviceId();
-//        } else return Settings.Secure.ANDROID_ID;
-        return Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     public static String getFcmToken(Context context) {

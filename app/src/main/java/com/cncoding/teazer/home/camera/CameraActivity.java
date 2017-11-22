@@ -22,9 +22,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,8 +37,11 @@ import android.view.View;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
-import com.cncoding.teazer.home.camera.VideoGalleryAdapter.VideoGalleryAdapterInteractionListener;
-import com.cncoding.teazer.home.camera.upload.VideoUpload;
+import com.cncoding.teazer.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
+import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
+import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
+import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -48,20 +54,26 @@ import butterknife.ButterKnife;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.R.anim.fade_in;
+import static android.R.anim.fade_out;
+import static android.view.View.INVISIBLE;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
-import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_UPLOAD_VIDEO_POST;
-import static com.cncoding.teazer.home.camera.upload.VideoUpload.VIDEO_PATH;
+import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
-import static com.cncoding.teazer.utilities.ViewUtils.updateMediaDatabase;
+import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
 
 public class CameraActivity extends AppCompatActivity
-        implements OnCameraFragmentInteractionListener, VideoGalleryAdapterInteractionListener {
+        implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
+        TagsAndCategoriesInteractionListener,
+        OnNearbyPlacesListInteractionListener, NearbyPlacesInteractionListener {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
+    private static final String TAG_UPLOAD_FRAGMENT = "uploadFragment";
+
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
@@ -71,13 +83,27 @@ public class CameraActivity extends AppCompatActivity
 
     private boolean isReaction = false;
     private PostDetails postDetails;
+    private UploadFragment uploadFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .permitDiskWrites()
+                .penaltyLog()
+//                .penaltyDialog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+//                .penaltyLog()
+                .build());
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         videosList = new ArrayList<>();
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setAdapter(new VideoGalleryAdapter(this, videosList));
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isReaction = bundle.getBoolean(IS_REACTION);
@@ -135,6 +161,93 @@ public class CameraActivity extends AppCompatActivity
         new GetVideoGalleryData(this).execute();
     }
 
+    private void startVideoUploadFragment() {
+        slidingUpPanelLayout.setPanelState(COLLAPSED);
+//        uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), uploadParams.isReaction());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+                        .replace(R.id.uploading_container, uploadFragment, TAG_UPLOAD_FRAGMENT)
+                        .addToBackStack(TAG_UPLOAD_FRAGMENT)
+                        .commit();
+            }
+        }, 300);
+    }
+
+    @Override
+    public void onCameraInteraction(int action, UploadParams uploadParams) {
+        switch (action) {
+            case ACTION_START_UPLOAD_FRAGMENT:
+//                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
+                updateMediaStoreDatabase(this, uploadParams.getVideoPath());
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction);
+                startVideoUploadFragment();
+                break;
+            case ACTION_SHOW_GALLERY:
+                slidingUpPanelLayout.setPanelState(ANCHORED);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void onVideoGalleryAdapterInteraction(String videoPath) {
+        if (isReaction) {
+            new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
+        } else {
+            uploadFragment = UploadFragment.newInstance(videoPath, false);
+            startVideoUploadFragment();
+        }
+    }
+
+    @Override
+    public void onNearbyPlacesInteraction(SelectedPlace selectedPlace) {
+        uploadFragment.onNearbyPlacesInteraction(selectedPlace);
+        getSupportFragmentManager().popBackStack();
+//        String name = getSupportFragmentManager().getBackStackEntryAt(0).getName();
+//        getSupportFragmentManager().popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    @Override
+    public void onNearbyPlacesListInteraction(int action) {
+        uploadFragment.onNearbyPlacesListInteraction(action);
+    }
+
+    @Override
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
+        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag) {
+        if (!isBackToCamera) {
+            if (fragment != null && tag != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+                        .replace(R.id.helper_uploading_container, fragment, tag)
+                        .addToBackStack(tag)
+                        .commit();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
+        } else {
+            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
+                uploadFragment = null;
+                getSupportFragmentManager().popBackStack();
+            }
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+//                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
+//                    .commit();
+        }
+    }
+
     private static class GetVideoGalleryData extends AsyncTask<Void, Void, Void> {
 
         private WeakReference<CameraActivity> reference;
@@ -188,42 +301,9 @@ public class CameraActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            reference.get().recyclerView.setLayoutManager(new GridLayoutManager(reference.get(), 3));
-            reference.get().recyclerView.setAdapter(new VideoGalleryAdapter(reference.get().videosList, reference.get()));
+            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
             super.onPostExecute(aVoid);
         }
-    }
-
-    @Override
-    public void onCameraInteraction(int action, UploadParams uploadParams) {
-        switch (action) {
-            case ACTION_UPLOAD_VIDEO_POST:
-//                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
-                updateMediaDatabase(this, uploadParams.getVideoPath());
-                startVideoUploadActivity(uploadParams.getVideoPath());
-                break;
-            case ACTION_SHOW_GALLERY:
-                slidingUpPanelLayout.setPanelState(ANCHORED);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void startVideoUploadActivity(String videoPath) {
-        Intent intent = new Intent(this, VideoUpload.class);
-        intent.putExtra(VIDEO_PATH, videoPath);
-//        intent.putExtra(IS_REACTION, isReaction);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public void onVideoGalleryAdapterInteraction(String videoPath) {
-        if (!isReaction)
-            startVideoUploadActivity(videoPath);
-        else
-            new CameraFragment.ChooseOptionalTitle(this, new UploadParams(videoPath, postDetails), this);
     }
 
     @Override
@@ -239,10 +319,28 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        uploadFragment = null;
+        videosList.clear();
+        videosList = null;
+//        gridLayoutManager.removeAndRecycleAllViews(recycler);
+        recyclerView.removeAllViews();
+        if (panelSlideListener != null) {
+            slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
+            panelSlideListener = null;
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (slidingUpPanelLayout.getPanelState() == ANCHORED ||
                 slidingUpPanelLayout.getPanelState() == EXPANDED) {
             slidingUpPanelLayout.setPanelState(COLLAPSED);
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            uploadFragment.toggleUpBtnVisibility(INVISIBLE);
         }
         else {
             if (!isReaction) {

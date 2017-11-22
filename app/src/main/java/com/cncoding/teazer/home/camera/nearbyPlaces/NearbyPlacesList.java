@@ -36,7 +36,7 @@ public class NearbyPlacesList extends Fragment {
     @BindView(R.id.search_nearby_places) AppCompatImageView searchNearbyPlaces;
 
     private ArrayList<HashMap<String, String>> nearbyPlaces;
-    private OnNearbyPlacesInteractionListener mListener;
+    private OnNearbyPlacesListInteractionListener mListener;
 
     public static NearbyPlacesList newInstance(@Nullable ArrayList<HashMap<String, String>> nearbyPlaces) {
         NearbyPlacesList fragment = new NearbyPlacesList();
@@ -78,21 +78,21 @@ public class NearbyPlacesList extends Fragment {
     }
 
     @OnClick(R.id.turn_on_location_btn) public void onTurnOnLocationBtnClicked() {
-        mListener.onNearbyPlacesInteraction(TURN_ON_LOCATION_ACTION);
+        mListener.onNearbyPlacesListInteraction(TURN_ON_LOCATION_ACTION);
     }
 
     @OnClick(R.id.search_nearby_places) public void launchNearbyPlaceSearch() {
-        mListener.onNearbyPlacesInteraction(NEARBY_PLACE_AUTOCOMPLETE_ACTION);
+        mListener.onNearbyPlacesListInteraction(NEARBY_PLACE_AUTOCOMPLETE_ACTION);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnNearbyPlacesInteractionListener) {
-            mListener = (OnNearbyPlacesInteractionListener) context;
+        if (context instanceof OnNearbyPlacesListInteractionListener) {
+            mListener = (OnNearbyPlacesListInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnNearbyPlacesInteractionListener");
+                    + " must implement OnNearbyPlacesListInteractionListener");
         }
     }
 
@@ -102,7 +102,7 @@ public class NearbyPlacesList extends Fragment {
         mListener = null;
     }
 
-    public interface OnNearbyPlacesInteractionListener {
-        void onNearbyPlacesInteraction(int action);
+    public interface OnNearbyPlacesListInteractionListener {
+        void onNearbyPlacesListInteraction(int action);
     }
 }
