@@ -53,8 +53,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.getBitmapFromURL;
-
 public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -293,14 +291,12 @@ public class ProfileFragment extends BaseFragment {
                         Picasso.with(context)
                                 .load(Uri.parse(userProfileThumbnail))
                                 .into(profile_id);
-//                        profileBlur();
-                        Blurry.with(getContext()).radius(1).sampling(1).from(getBitmapFromURL(userProfileUrl)).into(bgImage);
+                        profileBlur(userProfileUrl);
                     }
 
                     progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
                 }
 
             }

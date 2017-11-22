@@ -607,7 +607,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/user/update/profile/media")
-        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part file);
+        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part media);
 
         /**
          * Reset the FCM Token

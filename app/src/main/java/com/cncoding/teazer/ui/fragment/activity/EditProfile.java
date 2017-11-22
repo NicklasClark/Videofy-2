@@ -57,7 +57,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.getBitmapFromURL;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks,ProgressRequestBody.UploadCallbacks{
@@ -214,9 +213,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             editor.putString("MYIMAGES", r.getUri().toString());
             editor.apply();
 
-            SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-            final String imageUri =  prfs.getString("MYIMAGES", "");
-
             try {
 
 
@@ -228,7 +224,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Log.d("Exception12",r.getPath());
 
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("upload", profileImage.getName(), reqFile);
+                String fileExt = profileImage.getAbsolutePath().substring(profileImage.getAbsolutePath().lastIndexOf("."));
+                Log.d("FILENAME", profileImage.getName() + fileExt);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);
 
             }
@@ -284,7 +282,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Picasso.with(context)
                         .load(Uri.parse(userProfileThumbnail))
                         .into(profile_image);
-//                        profileBlur();
+                        profileBlur(userProfileUrl);
             }
 
             }
@@ -382,31 +380,29 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
     public void saveDataToDatabase(MultipartBody.Part body)
-
     {
-
         ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    Log.d("Response message", response.toString());
+//                    Log.d("Response message", response.toString());
+//
+//                    Log.d("Response", String.valueOf(response.code()));
+//                        Log.d("Response", String.valueOf(response.body().getStatus()));
 
-                    Log.d("Response", String.valueOf(response.code()));
-                    if(response.code()==200)
-                    {
-                        String imageUri = "";
-                        Log.d("Response", String.valueOf(response.body().getStatus()));
+
+                        SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                        final String imageUri =  prfs.getString("MYIMAGES", "");
                         Picasso.with(EditProfile.this)
                                 .load(imageUri)
                                 .into(profile_image);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
+                        Blurry.with(EditProfile.this).radius(1).sampling(1).from(bitmap).into(bgImage);
 
+                        simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
-                        simpleProgressBar.setVisibility(View.GONE);
-                        Blurry.with(EditProfile.this).radius(1).sampling(1).from(getBitmapFromURL(imageUri)).into(bgImage);
-                        simpleProgressBar.setVisibility(View.GONE);
 
-                    }
-                    else if(response.code()==400)
+                    if(response.code()==400)
                     {
                         Log.d("Response2 ", String.valueOf(response.body().getMessage()));
                     }
@@ -417,14 +413,15 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-
-                Log.d("errror", t.getMessage());
+                simpleProgressBar.setVisibility(View.GONE);
+                layoutdetail.setVisibility(View.VISIBLE);
+                t.printStackTrace();
             }
         });
 
