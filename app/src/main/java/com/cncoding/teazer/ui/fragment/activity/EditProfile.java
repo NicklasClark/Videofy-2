@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -35,7 +34,6 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.squareup.picasso.Picasso;
@@ -44,10 +42,8 @@ import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -416,7 +412,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
 
-                    } else if (response.code() == 400) {
+                    if (response.code() == 400) {
                         Log.d("Response2 ", String.valueOf(response.body().getMessage()));
                     }
 
