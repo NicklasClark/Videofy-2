@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -230,6 +231,9 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
+       // removeAppBar.removeAppbar();
+
+
 
     }
     public void getProfileDetail() {
@@ -388,6 +392,7 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.GONE);
 //        coordinatorLayout.setVisibility(View.GONE);
         getProfileDetail();
+
 
     }
 

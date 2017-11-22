@@ -63,7 +63,7 @@
                                 android:id="@+id/username_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/name"
+                                android:text="Username"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginBottom="5dp"
                                 android:textColor="@color/colorIcons"
@@ -88,11 +88,10 @@
                                 android:layout_below="@+id/username_title"
                                 android:textColor="@color/colorIcons"
                                 android:textSize="@dimen/text_size_content"
-                                android:text="@string/username" />
+                                android:text="Name" />
 
 
                             <TextView
-
                                 android:id="@+id/hobby"
                                 android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"

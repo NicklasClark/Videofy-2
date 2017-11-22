@@ -99,9 +99,13 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     int accountType;
-    boolean can_join;
+    boolean requestRecieved;
     String status;
     boolean hassentrequest;
+    boolean isBlockedyou;
+    boolean isfollower;
+    boolean isfollowing;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +144,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                 if (_btnfollow.getText().equals("Follow")) {
                     followUser(followerfollowingid, context);
-
 
                 } else if (_btnfollow.getText().equals("Unfollow") || _btnfollow.getText().equals("Following") || _btnfollow.getText().equals("Requested")) {
 
@@ -195,7 +198,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (accountType == 1) {
-                    if (can_join == false) {
+                    if (requestRecieved == false) {
 
                         Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
                         intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
@@ -260,14 +263,17 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
 
-                        Toast.makeText(context,"back2",Toast.LENGTH_LONG).show();
                         FollowersProfile followersProfile = response.body();
                         accountType = followersProfile.getAccountType();
                         int follower = followersProfile.getFollowers();
                         int following = followersProfile.getFollowings();
                         int totalvideos = followersProfile.getTotalVideos();
-                        can_join = followersProfile.getCanJoin();
-                        hassentrequest = followersProfile.getHasSendJoinRequest();
+                        hassentrequest = followersProfile.getFollowInfo().getRequestSent();
+                        requestRecieved = followersProfile.getFollowInfo().getRequestReceived();
+                        isBlockedyou = followersProfile.getFollowInfo().getIsBlockedYou();
+                        isfollower = followersProfile.getFollowInfo().getFollower();
+                        isfollowing = followersProfile.getFollowInfo().getFollowing();
+                        Toast.makeText(context,"back3",Toast.LENGTH_LONG).show();
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
                         _creations.setText(totalvideos + " Creations");
@@ -303,50 +309,27 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                         } else if (accountType == 1) {
 
-                            if (can_join == true) {
+                            PrivateProfile privateProfile = response.body().getPrivateProfile();
+                            String username = privateProfile.getUserName();
+                            String firstName = privateProfile.getFirstName();
+                            String lastName = privateProfile.getLastName();
+                            int gender = privateProfile.getGender();
+                            Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
+                            if (hasProfileMedia) {
+                            } else {
 
-                                Toast.makeText(context, "can Join", Toast.LENGTH_LONG).show();
-                                PrivateProfile privateProfile = response.body().getPrivateProfile();
-                                String username = privateProfile.getUserName();
-                                String firstName = privateProfile.getFirstName();
-                                String lastName = privateProfile.getLastName();
-                                int gender = privateProfile.getGender();
-                                _usernameTitle.setText(username);
-                                Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                                if (hasProfileMedia) {
-                                } else {
-                                }
-
-                                if (hassentrequest == true) {
-                                    _btnfollow.setText("Requested");
-                                    Toast.makeText(context, "request sent", Toast.LENGTH_LONG).show();
-
-
-                                } else {
-                                    _btnfollow.setText("Follow");
-                                    Toast.makeText(context, "not sent", Toast.LENGTH_LONG).show();
-                                }
-                            } else if (can_join == false) {
-
-
-                                PrivateProfile privateProfile = response.body().getPrivateProfile();
-                                String username = privateProfile.getUserName();
-                                String firstName = privateProfile.getFirstName();
-                                String lastName = privateProfile.getLastName();
-                                int gender = privateProfile.getGender();
-                                Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                                if (hasProfileMedia) {
-                                } else {
-
-                                }
-                                _usernameTitle.setText(username);
-
-
-                                if (hassentrequest == true) {
-                                    _btnfollow.setText("Requested");
-                                } else {
-                                    //     _btnfollow.setText("Follow");
-                                }
+                            }
+                            _usernameTitle.setText(username);
+                            _username.setText(firstName);
+                            if (hassentrequest == true) {
+                                if (requestRecieved==true)
+                                    _btnfollow.getText().equals("Following");
+                                else
+                                _btnfollow.getText().equals("Requested");
+                            }
+                            else
+                            {
+                                _btnfollow.getText().equals("Follow");
 
                             }
                             layout.setVisibility(View.VISIBLE);
@@ -357,6 +340,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("EXception",e.getMessage());
                         Toast.makeText(getApplicationContext(), "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -485,7 +469,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
