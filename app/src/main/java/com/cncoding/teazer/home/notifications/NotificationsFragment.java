@@ -55,6 +55,7 @@ public class NotificationsFragment extends BaseFragment {
         super.onResume();
         if (getActivity() != null) {
             ((BaseBottomBarActivity) getActivity()).showAppBar();
+            ((BaseBottomBarActivity)getActivity()).hidesettings(false);
         }
     }
 

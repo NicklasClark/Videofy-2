@@ -42,6 +42,7 @@ import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -103,6 +104,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     private String userProfileUrl;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,13 +147,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         firstname = intent.getStringExtra("FirstName");
         lastname = intent.getStringExtra("LastName");
         String mobileno = intent.getStringExtra("MobileNumber");
-        userProfileThumbnail =intent.getStringExtra("ProfileThumb");
-        userProfileUrl =intent.getStringExtra("ProfileMedia");
+        userProfileThumbnail = intent.getStringExtra("ProfileThumb");
+        userProfileUrl = intent.getStringExtra("ProfileMedia");
 
-        if(mobileno==null) {}
-        else
-        {
-            mobilenumber=Long.parseLong(mobileno);
+        if (mobileno == null) {
+        } else {
+            mobilenumber = Long.parseLong(mobileno);
         }
         gender = Integer.parseInt(intent.getStringExtra("Gender"));
         emailId = intent.getStringExtra("EmailId");
@@ -248,12 +249,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
                 //layoutdetail.setVisibility(View.VISIBLE);
-               // simpleProgressBar.setVisibility(View.VISIBLE);
+                // simpleProgressBar.setVisibility(View.VISIBLE);
 
-                File profileImage= new File(r.getPath());
-                Log.d("Exception1",r.getPath());
+                File profileImage = new File(r.getPath());
+                Log.d("Exception1", r.getPath());
 
-                Log.d("Exception12",r.getPath());
+                Log.d("Exception12", r.getPath());
 
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
                 String fileExt = profileImage.getAbsolutePath().substring(profileImage.getAbsolutePath().lastIndexOf("."));
@@ -261,9 +262,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);
 
-            }
-            catch (Exception e) {
-                Log.d("Exception2",e.getMessage());
+            } catch (Exception e) {
+                Log.d("Exception2", e.getMessage());
             }
         } else {
 
@@ -292,16 +292,16 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Glide.with(context)
                         .load(pic)
                         .into(profile_image);
-                        profileBlur(pic);
+                profileBlur(pic);
             } else {
 
                 Picasso.with(context)
                         .load(Uri.parse(userProfileThumbnail))
                         .into(profile_image);
-                        profileBlur(userProfileUrl);
+                profileBlur(userProfileUrl);
             }
 
-            }
+        }
     }
 
     @Override
@@ -389,37 +389,26 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     }
 
 
-    public void saveDataToDatabase(MultipartBody.Part body)
-    {
+    public void saveDataToDatabase(MultipartBody.Part body) {
         ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-//                    Log.d("Response message", response.toString());
-//
-//                    Log.d("Response", String.valueOf(response.code()));
-//                        Log.d("Response", String.valueOf(response.body().getStatus()));
 
+                    SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                    final String imageUri = prfs.getString("MYIMAGES", "");
+                    Picasso.with(EditProfile.this)
+                            .load(imageUri)
+                            .into(profile_image);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
 
-                        SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-                        final String imageUri =  prfs.getString("MYIMAGES", "");
-                        Picasso.with(EditProfile.this)
-                                .load(imageUri)
-                                .into(profile_image);
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
-                        Blurry.with(EditProfile.this).radius(1).sampling(1).from(bitmap).into(bgImage);
-
-                        simpleProgressBar.setVisibility(View.GONE);
-                        layoutdetail.setVisibility(View.VISIBLE);
+                    Blurry.with(EditProfile.this).radius(1).sampling(1).from(bitmap).into(bgImage);
+                    simpleProgressBar.setVisibility(View.GONE);
+                    layoutdetail.setVisibility(View.VISIBLE);
 
                     if (response.code() == 400) {
                         Log.d("Response2 ", String.valueOf(response.body().getMessage()));
                     }
-
-
-                    // Log.d("Response", String.valueOf(response.body().getStatus()));
-                    // Log.d("Response", String.valueOf(response.body().getMessage()));
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -454,60 +443,57 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     }
 
 
-@AfterPermissionGranted(RC_REQUEST_STORAGE)
-public void profileBlur(final String pic)
-{
+    @AfterPermissionGranted(RC_REQUEST_STORAGE)
+    public void profileBlur(final String pic) {
 
-    String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
-    if (!EasyPermissions.hasPermissions(this, perm)) {
-        EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
-                RC_REQUEST_STORAGE, perm);
-    }
-
-    else {
-        simpleProgressBar.setVisibility(View.VISIBLE);
-        layoutdetail.setVisibility(View.GONE);
+        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (!EasyPermissions.hasPermissions(this, perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    RC_REQUEST_STORAGE, perm);
+        } else {
+            simpleProgressBar.setVisibility(View.VISIBLE);
+            layoutdetail.setVisibility(View.GONE);
 //            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(final Void... params) {
-                Bitmap bitmap = null;
-                try {
-                    final URL url = new URL(pic);
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(final Void... params) {
+                    Bitmap bitmap = null;
                     try {
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
+                        final URL url = new URL(pic);
+                        try {
+                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    return bitmap;
                 }
 
-                return bitmap;
-            }
+                @Override
+                protected void onPostExecute(final Bitmap result) {
 
-            @Override
-            protected void onPostExecute(final Bitmap result) {
-//                Blurry.with(context).from(result).into(backgroundprofile);
-                try {
-                    Blurry.with(EditProfile.this).radius(1).sampling(1).from(result).into(bgImage);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    try {
+                        Blurry.with(EditProfile.this).radius(1).sampling(1).from(result).into(bgImage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    simpleProgressBar.setVisibility(View.GONE);
+                    layoutdetail.setVisibility(View.VISIBLE);
                 }
-
-                simpleProgressBar.setVisibility(View.GONE);
-                layoutdetail.setVisibility(View.VISIBLE);
-            }
-        }.execute();
+            }.execute();
 
 
-        simpleProgressBar.setVisibility(View.GONE);
-        layoutdetail.setVisibility(View.VISIBLE);
+            simpleProgressBar.setVisibility(View.GONE);
+            layoutdetail.setVisibility(View.VISIBLE);
+        }
+
     }
-
-}
 }
 
 

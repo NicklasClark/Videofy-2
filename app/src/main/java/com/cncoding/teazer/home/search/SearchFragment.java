@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
@@ -162,6 +163,7 @@ public class SearchFragment extends BaseFragment {
 
         random = new Random();
 
+
         LinearLayoutManager horizontalLinearLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager horizontalLinearLayoutManager2 = new LinearLayoutManager(getContext(),
@@ -187,6 +189,8 @@ public class SearchFragment extends BaseFragment {
         myInterestsList.setNestedScrollingEnabled(false);
         trendingList.setNestedScrollingEnabled(false);
         featuredVideosList.setNestedScrollingEnabled(false);
+
+        ((BaseBottomBarActivity)getActivity()).hidesettings(false);
         return rootView;
     }
 

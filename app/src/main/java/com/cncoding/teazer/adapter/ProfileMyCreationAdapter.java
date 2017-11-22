@@ -5,11 +5,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -19,7 +21,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.profile.reaction.reactionpost.ReactionPost;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.Pojos;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,14 +38,18 @@ import retrofit2.Response;
 
 public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCreationAdapter.ViewHolder> {
 
-    private ArrayList<Pojos.Post.PostDetails> addressdetail_list;
+    private ArrayList<Pojos.Post.PostDetails> list;
+    private ArrayList<Pojos.Post.PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
+    final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-    public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> addressdetail_list) {
+
+
+    public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> list) {
         this.context = context;
-        this.addressdetail_list = addressdetail_list;
-        listener=(myCreationListener)context;
+        this.list = list;
+        listener = (myCreationListener) context;
 
     }
 
@@ -60,72 +69,69 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final String duration;
         final String views;
         final String likes;
-        final String reaction;
+        final int reactions;
         final String location;
+        final int postId;
+
+        boolean hasPrfileMedia;
+
+
         try {
-            cont = addressdetail_list.get(i);
+            cont = list.get(i);
             videotitle = cont.getTitle();
+            postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
             videopostId = cont.getPostId();
             thumb_url = cont.getMedias().get(0).getThumbUrl();
             duration = cont.getMedias().get(0).getDuration();
             views = String.valueOf(cont.getMedias().get(0).getViews());
             likes = String.valueOf(cont.getLikes());
-            reaction = String.valueOf(cont.getTotalReactions());
-            location = cont.getCheckIn().getLocation();
-
-        viewHolder.videoTitle.setText(videotitle);
-        viewHolder.txtlikes.setText(likes);
-        viewHolder.duration.setText(duration);
-        viewHolder.txtview.setText(views);
-        viewHolder.reactions.setText(reaction);
-       // viewHolder.location.setText(location);
+            String location2 = cont.getCheckIn().getLocation();
+            reactions = cont.getTotalReactions();
+            getPostReaction(viewHolder, postId);
 
 
-        Glide.with(context).load(thumb_url)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
-                .into(viewHolder.thumbimage);
+
+            viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
+            viewHolder.videoTitle.setText(videotitle);
+            viewHolder.txtlikes.setText(likes);
+            viewHolder.duration.setText(duration);
+            viewHolder.txtview.setText(views);
+
+            viewHolder.location.setText(location2);
 
 
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent intent = new Intent(context, ProfileCreationVideos.class);
-//                intent.putExtra("VideoURL", videourl);
-//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-//                context.startActivity(intent);
-                listener.myCreationVideos(2,cont);
-               // Toast.makeText(context,"Hello",Toast.LENGTH_LONG).show();
-            }
-        });
+            Glide.with(context).load(thumb_url)
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                    .into(viewHolder.thumbimage);
 
+            viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.myCreationVideos(2, cont);
+                }
+            });
+            viewHolder.menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+                    popup.inflate(R.menu.menu_profile);
 
-        viewHolder.menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //creating a popup menu
-                PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.menu_profile);
-                //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_delete:
-                                deleteVideos(videopostId);
-                                // notifyItemRemoved(i);
-                                viewHolder.cardView.setVisibility(View.GONE);
-                                break;
-
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.action_delete:
+                                    deleteVideos(videopostId);
+                                    viewHolder.cardView.setVisibility(View.GONE);
+                                    break;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                //displaying the popup
-                popup.show();
-            }
-        });
+                    });
+                    popup.show();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,7 +139,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     @Override
     public int getItemCount() {
-        return addressdetail_list.size();
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -145,10 +151,15 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         private TextView location;
         VideoView videoviewContainer;
         ImageView thumbimage;
+        RelativeLayout imagelayout1;
+        RelativeLayout imagelayout2;
+        RelativeLayout imagelayout3;
+        CircularAppCompatImageView image1, image2, image3;
         CardView cardView;
         View line;
         ImageView playvideo;
         CircularAppCompatImageView menu;
+
         public ViewHolder(View view) {
             super(view);
             videoTitle = view.findViewById(R.id.videodetails);
@@ -160,6 +171,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             playvideo = view.findViewById(R.id.playvideo);
             cardView = view.findViewById(R.id.cardview);
             location = view.findViewById(R.id.location);
+            image1 = view.findViewById(R.id.image1);
+            image2 = view.findViewById(R.id.image2);
+            image3 = view.findViewById(R.id.image3);
+            imagelayout1 = view.findViewById(R.id.image1_layout);
+            imagelayout2 = view.findViewById(R.id.image1_layout);
+            imagelayout3 = view.findViewById(R.id.image1_layout);
+
             menu = view.findViewById(R.id.menu);
 
         }
@@ -175,13 +193,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                         Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
 
                     } else {
-
-                        Toast.makeText(context, "Video has not been deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Some issue hass been occured please try again", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
 
@@ -190,11 +208,111 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         });
     }
+    public void getPostReaction(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId) {
+        int page = 1;
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+            @Override
+            public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
 
-    public  interface myCreationListener
-    {
+                Log.d("Tesponsecheck",response.message());
+                Log.d("Tesponsecheck",String.valueOf(response.code()));
+                if (response.code() == 200) {
 
-        public void  myCreationVideos ( int i, Pojos.Post.PostDetails postDetails);
+                    try {
+                        reactiolist = response.body().getReactions();
+                       // viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
+
+                        if (reactiolist.size() > 3) {
+                           // int counter=reactions-3;
+                          //  viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                                if (miniProfile.hasProfileMedia()) {
+                                    String profileurl = miniProfile.getProfileMedia().getThumbUrl();
+
+
+                                    switch (i) {
+                                        case 0:
+//                                            Picasso.with(context)
+//                                                    .load(profileurl)
+//                                                    .into(viewHolder.image1);
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+
+                                            break;
+                                        case 1:
+//                                            Picasso.with(context)
+//                                                    .load(profileurl)
+//                                                    .into(viewHolder.image2);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+
+
+                                            break;
+
+                                        case 2:
+//                                            Picasso.with(context)
+//                                                    .load(profileurl)
+//                                                    .into(viewHolder.image3);
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            break;
+
+                                        default:
+
+
+                                    }
+
+                                } else {
+
+                                    switch (0) {
+                                        case 0:
+
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+//                                            Picasso.with(context)
+//                                                    .load(pic)
+//                                                    .into(viewHolder.image1);
+                                            break;
+                                        case 1:
+
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+//                                            Picasso.with(context)
+//                                                    .load(pic)
+//                                                    .into(viewHolder.image3);
+                                            break;
+                                        case 2:
+
+                                            viewHolder.imagelayout3.setVisibility(View.VISIBLE);
+//                                            Picasso.with(context)
+//                                                    .load(pic)
+//                                                    .into(viewHolder.image3);
+                                            break;
+                                        default:
+
+
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    catch(Exception e)
+                        {
+
+                        }
+
+
+                    }
+                }
+                @Override
+                public void onFailure (Call < Pojos.Post.PostReactionsList > call, Throwable t){
+                }
+            });
+        }
+
+        public interface myCreationListener {
+
+            public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
+        }
+
     }
-
-}

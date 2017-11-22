@@ -63,12 +63,10 @@ public class ProfileFragment extends BaseFragment {
     ImageView profile_image;
     ImageView bgImage;
     ImageView settings;
-    ImageView backbutton;
     ImageView small_profile_icon;
     LinearLayout mContainerView;
     Context context;
     AppBarLayout appBarLayout;
-    ProximaNovaCondensedTextView _toolbarusername;
     ProximaNovaRegularCheckedTextView _name;
     SignPainterTextView _username;
     TextView _creations;
@@ -112,7 +110,6 @@ public class ProfileFragment extends BaseFragment {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,14 +122,14 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
         removeAppBar = (RemoveAppBar) context;
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        backbutton = view.findViewById(R.id.backbutton);
-        settings = view.findViewById(R.id.settings);
-        _toolbarusername = view.findViewById(R.id.toolbarusername);
+   //     Toolbar toolbar = view.findViewById(R.id.toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+       // backbutton = view.findViewById(R.id.backbutton);
+       // settings = view.findViewById(R.id.settings);
+       // _toolbarusername = view.findViewById(R.id.toolbarusername);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -187,56 +184,52 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, Settings.class);
-                intent.putExtra("AccountType", String.valueOf(accountType));
-                startActivity(intent);
-            }
-        });
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                getActivity().onBackPressed();
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+//        backbutton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                getActivity().onBackPressed();
+//            }
+//        });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        appBarLayout = view.findViewById(R.id.appbar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset < -530) {
-                    _toolbarusername.setVisibility(View.VISIBLE);
-
-                } else {
-                    _toolbarusername.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+//        appBarLayout = view.findViewById(R.id.appbar);
+//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                if (verticalOffset < -530) {
+//                    _toolbarusername.setVisibility(View.VISIBLE);
+//
+//                } else {
+//                    _toolbarusername.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
         return view;
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
-       // removeAppBar.removeAppbar();
-
-
+        ((BaseBottomBarActivity)getActivity()).hidesettings(true);
+      //  ((BaseBottomBarActivity)getActivity()).hidesettings(true);
 
     }
     public void getProfileDetail() {
+
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
+
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
@@ -270,7 +263,7 @@ public class ProfileFragment extends BaseFragment {
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
                     }
 
-                    _toolbarusername.setText(firstname);
+                   // _toolbarusername.setText(firstname);
                     _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
@@ -281,8 +274,6 @@ public class ProfileFragment extends BaseFragment {
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                     coordinatorLayout.setVisibility(View.VISIBLE);
 
-//                    SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-//                    imageUri = prfs.getString("MYIMAGES", "");
                     if (userProfileThumbnail == null) {
                         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
@@ -326,7 +317,6 @@ public class ProfileFragment extends BaseFragment {
         else {
             progressbar.setVisibility(View.VISIBLE);
             coordinatorLayout.setVisibility(View.GONE);
-//            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
@@ -349,7 +339,9 @@ public class ProfileFragment extends BaseFragment {
 
                 @Override
                 protected void onPostExecute(final Bitmap result) {
-//                Blurry.with(context).from(result).into(backgroundprofile);
+                    progressbar.setVisibility(View.VISIBLE);
+                    coordinatorLayout.setVisibility(View.GONE);
+
                     try {
                         Blurry.with(getContext()).radius(1).sampling(1).from(result).into(backgroundprofile);
                     } catch (Exception e) {
@@ -418,6 +410,8 @@ public class ProfileFragment extends BaseFragment {
     public interface RemoveAppBar {
         void removeAppbar();
     }
+
+
 
 
 }
