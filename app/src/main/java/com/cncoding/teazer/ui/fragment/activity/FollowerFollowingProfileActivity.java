@@ -1,20 +1,17 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.cncoding.teazer.R;
-
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,18 +21,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter;
-import com.cncoding.teazer.adapter.FollowingAdapter;
-import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
@@ -44,18 +40,15 @@ import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
-import com.cncoding.teazer.utilities.Pojos;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,7 +61,8 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     TextView _creations;
 
     @BindView(R.id.layoutDetail)
-    RelativeLayout layoutDetail;;
+    RelativeLayout layoutDetail;
+    ;
     @BindView(R.id.username)
     TextView _username;
     @BindView(R.id.following)
@@ -83,6 +77,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     CoordinatorLayout layout;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.nomessagetxt)
+    TextView nomessagetxt;
+    @BindView(R.id.background_profile)
+    ImageView background_profile;
+    @BindView(R.id.profile_id)
+    ImageView profile_id;
     Context context;
     FollowersProfile followersProfile;
     public static final int PRIVATE_ACCOUNT = 1;
@@ -95,12 +95,26 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
+    int accountType;
+    boolean requestRecieved;
+    String status;
+    boolean hassentrequest;
+    boolean isBlockedyou;
+    boolean isfollower;
+    boolean isfollowing;
+    private String userProfileThumbnail;
+    private String userProfileUrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follower_profile);
         ButterKnife.bind(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+        }
+
         context = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -117,50 +131,100 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         menu = findViewById(R.id.menu);
         Intent intent = getIntent();
+
         final int followerfollowingid = Integer.parseInt(getIntent().getStringExtra("FollowId"));
-        String username = intent.getStringExtra("username");
+        String username = intent.getStringExtra("Username");
         String userType = intent.getStringExtra("UserType");
         _username.setText(username);
-        if (userType.equals("Follower")) {
-            _btnfollow.setText("Follow");
-        } else {
-            _btnfollow.setText("Unfollow");
-        }
+        _btnfollow.setText(userType);
+
+
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (_btnfollow.getText().equals("Follow")) {
+
                     followUser(followerfollowingid, context);
-                } else if (_btnfollow.getText().equals("Unfollow")) {
+
+                } else if (_btnfollow.getText().equals("UnFollow") || _btnfollow.getText().equals("Following") || _btnfollow.getText().equals("Requested")) {
+
                     unFollowUser(followerfollowingid, context);
 
                 }
             }
         });
+
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
-                intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
-                intent.putExtra("Identifier", "Other");
-                startActivity(intent);
 
+                if (accountType == 1) {
+
+                    if (hassentrequest == true) {
+
+
+                        if (requestRecieved == true) {
+
+                            Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                            intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
+                            intent.putExtra("Identifier", "Other");
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else
+                        Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "public", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
+                    intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
+                    intent.putExtra("Identifier", "Other");
+                    startActivity(intent);
+                }
             }
+
         });
+
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
-                intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
-                intent.putExtra("Identifier", "Other");
-                startActivity(intent);
+                if (accountType == 1) {
+
+                    if (hassentrequest == true) {
+
+
+                        if (requestRecieved == true) {
+
+                            Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                            intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
+                            intent.putExtra("Identifier", "Other");
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "You can not view follower List", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+
+                    Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                    intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
+                    intent.putExtra("Identifier", "Other");
+                    startActivity(intent);
+                }
 
             }
         });
-        menu.setOnClickListener(new View.OnClickListener() {
+        menu.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(context, menu);
@@ -169,23 +233,27 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.action_report_block:
-                                openAlert(followerfollowingid);
+                            case R.id.action_profile_block:
+                                openBlockUser(followerfollowingid);
                                 break;
+                            case R.id.action_profile_report:
+
                         }
                         return false;
                     }
                 });
                 popup.show();
             }
+
         });
-        getProfilInformation(followerfollowingid);
+
+        getProfileInformation(followerfollowingid);
+
+
     }
 
-    public void getProfilInformation(final int followersid) {
+    public void getProfileInformation(final int followersid) {
 
-        layout.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
 
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<FollowersProfile>() {
             @Override
@@ -193,22 +261,24 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
 
-                        FollowersProfile followersProfile=response.body();
-                        int i = followersProfile.getAccountType();
-                        boolean b = followersProfile.getCanJoin();
+                        FollowersProfile followersProfile = response.body();
+                        accountType = followersProfile.getAccountType();
                         int follower = followersProfile.getFollowers();
                         int following = followersProfile.getFollowings();
-                        int totalvideos=followersProfile.getTotalVideos();
-                        boolean can_join=followersProfile.getCanJoin();
-                        boolean hassentrequest=followersProfile.getHasSendJoinRequest();
-                       // int joinRequest_id=followersProfile.getJoinRequestId();
+                        int totalvideos = followersProfile.getTotalVideos();
+                        hassentrequest = followersProfile.getFollowInfo().getRequestSent();
+                        requestRecieved = followersProfile.getFollowInfo().getRequestReceived();
+                        isBlockedyou = followersProfile.getFollowInfo().getIsBlockedYou();
+                        isfollower = followersProfile.getFollowInfo().getFollower();
+                        isfollowing = followersProfile.getFollowInfo().getFollowing();
 
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
                         _creations.setText(totalvideos + " Creations");
 
-                        if (i == PUBLIC_ACCOUNT) {
-                            Toast.makeText(getApplicationContext(), "public ", Toast.LENGTH_LONG).show();
+                        if (accountType == 2) {
+
+                     //       Toast.makeText(getApplicationContext(), "public", Toast.LENGTH_LONG).show();
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             String username = publicProfile.getUserName();
@@ -219,7 +289,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             _username.setText(username);
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
 
-                            if (!hasProfileMedia) {
+
+                            if (hasProfileMedia == true) {
+
+                                userProfileThumbnail = publicProfile.getProfileMedia().getThumbUrl();
+                                userProfileUrl = publicProfile.getProfileMedia().getMediaUrl();
+
                                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                                         R.drawable.material_flat);
                                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
@@ -232,34 +307,58 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+                            if (userProfileThumbnail == null) {
+                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-                            getProfileVideos(followersid);
-                        } else if (i == PRIVATE_ACCOUNT) {
+                                Glide.with(context)
+                                        .load(pic)
+                                        .into(profile_id);
+                                profileBlur(pic);
+                            } else {
 
-                            Toast.makeText(getApplicationContext(), "Private", Toast.LENGTH_LONG).show();
-                            PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            String username = privateProfile.getUserName();
-                            String firstName = privateProfile.getFirstName();
-                            String lastName = privateProfile.getLastName();
-                            int gender = privateProfile.getGender();
-                            _usernameTitle.setText(username);
-                            layoutDetail.setVisibility(View.GONE);
-                            Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                            if (hasProfileMedia) {}
-                            else {}
-                            if (b == FRIENDS) {
-                                Toast.makeText(getApplicationContext(), "Friends", Toast.LENGTH_LONG).show();
-                            } else if (b == NOTFRIEND) {
-                                Toast.makeText(getApplicationContext(), "NoTFriend", Toast.LENGTH_LONG).show();
+                                Picasso.with(context)
+                                        .load(Uri.parse(userProfileThumbnail))
+                                        .into(profile_id);
+                                profileBlur(userProfileUrl);
                             }
 
-                            layout.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
+                            getProfileVideos(followersid);
 
 
                         }
+                        else if (accountType == 1) {
+                        //    Toast.makeText(getApplicationContext(), "private", Toast.LENGTH_LONG).show();
+
+                            PrivateProfile privateProfile = response.body().getPrivateProfile();
+                            String username=privateProfile.getUserName();
+                            String firstName = privateProfile.getFirstName();
+                            String lastName = privateProfile.getLastName();
+                            int gender = privateProfile.getGender();
+                            Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
+                            if (hasProfileMedia) {
+                            } else {
+
+                            }
+                            _usernameTitle.setText(username);
+                            _username.setText(firstName);
+                            if (hassentrequest == true) {
+                                if (requestRecieved == true)
+                                    _btnfollow.getText().equals("Following");
+                                else
+                                    _btnfollow.getText().equals("Requested");
+                            } else {
+                                _btnfollow.getText().equals("Follow");
+
+                            }
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                        }
+
+                        layout.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("EXception", e.getMessage());
                         Toast.makeText(getApplicationContext(), "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -271,7 +370,64 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 Log.d("ShutDown", t.getMessage());
             }
         });
+
+        layout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+
     }
+
+
+    public void profileBlur(final String pic) {
+
+
+//            progressbar.setVisibility(View.VISIBLE);
+//            coordinatorLayout.setVisibility(View.GONE);
+
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(final Void... params) {
+                Bitmap bitmap = null;
+                try {
+                    final URL url = new URL(pic);
+                    try {
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(final Bitmap result) {
+//                    progressbar.setVisibility(View.VISIBLE);
+//                    coordinatorLayout.setVisibility(View.GONE);
+
+                try {
+                    Blurry.with(context).radius(1).sampling(1).from(result).into(background_profile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+//                    progressbar.setVisibility(View.GONE);
+//                    coordinatorLayout.setVisibility(View.VISIBLE);
+            }
+        }.execute();
+
+
+//            progressbar.setVisibility(View.GONE);
+//            coordinatorLayout.setVisibility(View.VISIBLE);
+    }
+
+
+
+
+
 
     public void getProfileVideos(int followerId) {
         int page = 1;
@@ -321,7 +477,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "User has been unfollowed", Toast.LENGTH_LONG).show();
-
                             _btnfollow.setText("Follow");
 
                         } else {
@@ -370,6 +525,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            _btnfollow.setText("UnFollow");
                             Toast.makeText(getApplicationContext(), "You are aleady following", Toast.LENGTH_LONG).show();
                         }
 
@@ -394,7 +550,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void openAlert(final int blockuserId) {
+    public void openBlockUser(final int blockuserId) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("Confirm Block...");
         alertDialog.setMessage("Are you sure you want to block this user");
@@ -415,7 +571,29 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void openReportUser(final int blockuserId) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle("Confirm Report...");
+        alertDialog.setMessage("Are you sure you want to report this user");
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                blockunBlock(blockuserId, BLOCK_STATUS);
+            }
+        });
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
     public void blockunBlock(int userId, int status) {
+
         layout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         Toast.makeText(getApplicationContext(), "block unblock", Toast.LENGTH_LONG).show();
@@ -445,6 +623,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onFailure(Call<BlockUnBlockUser> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
@@ -454,6 +633,5 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,11 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaCondensedTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
@@ -47,6 +48,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import jp.wasabeef.blurry.Blurry;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,18 +63,16 @@ public class ProfileFragment extends BaseFragment {
     ImageView profile_image;
     ImageView bgImage;
     ImageView settings;
-    ImageView backbutton;
     ImageView small_profile_icon;
     LinearLayout mContainerView;
     Context context;
     AppBarLayout appBarLayout;
-    ProximaNovaCondensedTextView _toolbarusername;
-    ProximaNovaCondensedTextView _name;
+    ProximaNovaRegularCheckedTextView _name;
     SignPainterTextView _username;
     TextView _creations;
     TextView _followers;
     TextView _following;
-    ProximaNovaCondensedTextView _detail;
+    ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.UserProfile userprofile;
@@ -96,6 +97,11 @@ public class ProfileFragment extends BaseFragment {
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     private OnFragmentInteractionListener mListener;
+    private String imageUri;
+
+    private static final int RC_REQUEST_STORAGE = 1001;
+    private String userProfileThumbnail;
+    private String userProfileUrl;
 
     public ProfileFragment() {
     }
@@ -104,7 +110,6 @@ public class ProfileFragment extends BaseFragment {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,14 +122,14 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
         removeAppBar = (RemoveAppBar) context;
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        backbutton = view.findViewById(R.id.backbutton);
-        settings = view.findViewById(R.id.settings);
-        _toolbarusername = view.findViewById(R.id.toolbarusername);
+   //     Toolbar toolbar = view.findViewById(R.id.toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+       // backbutton = view.findViewById(R.id.backbutton);
+       // settings = view.findViewById(R.id.settings);
+       // _toolbarusername = view.findViewById(R.id.toolbarusername);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -149,6 +154,8 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("MobileNumber", String.valueOf(mobilenumber));
                 intent.putExtra("Gender", String.valueOf(gender));
                 intent.putExtra("CountryCode", String.valueOf(countrycode));
+                intent.putExtra("ProfileThumb", userProfileThumbnail);
+                intent.putExtra("ProfileMedia", userProfileUrl);
                 if (detail == null)
                     intent.putExtra("Detail", "");
                 else {
@@ -177,59 +184,53 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, Settings.class);
-                intent.putExtra("AccountType", String.valueOf(accountType));
-                startActivity(intent);
-            }
-        });
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                getActivity().onBackPressed();
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+//        backbutton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                getActivity().onBackPressed();
+//            }
+//        });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        appBarLayout = view.findViewById(R.id.appbar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset < -530) {
-                    _toolbarusername.setVisibility(View.VISIBLE);
-
-                } else {
-                    _toolbarusername.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+//        appBarLayout = view.findViewById(R.id.appbar);
+//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                if (verticalOffset < -530) {
+//                    _toolbarusername.setVisibility(View.VISIBLE);
+//
+//                } else {
+//                    _toolbarusername.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
         return view;
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
-        removeAppBar.removeAppbar();
-        // dynamicToolbarColor();
         getProfileDetail();
+        ((BaseBottomBarActivity)getActivity()).hidesettings(true);
+      //  ((BaseBottomBarActivity)getActivity()).hidesettings(true);
 
     }
-
     public void getProfileDetail() {
+
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
+
+
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
@@ -237,121 +238,125 @@ public class ProfileFragment extends BaseFragment {
 
 
                 try {
-                    PublicProfile userProfile = response.body().getUserProfile();
-                    firstname = userProfile.getFirstName();
-                    lastname = userProfile.getLastName();
-                    username = userProfile.getUserName();
-                    email = userProfile.getEmail();
-                    accountType = userProfile.getAccountType();
-                    hasProfleMedia = userProfile.getHasProfileMedia();
-                    totalfollowers = response.body().getFollowers();
-                    totalfollowing = response.body().getFollowings();
-                    totalvideos = response.body().getTotalVideos();
-                    userId = String.valueOf(userProfile.getUserId());
-                    gender = userProfile.getGender();
-                    Long mobilno = userProfile.getPhoneNumber();
-                    if (mobilno == null) {
+                     PublicProfile userProfile = response.body().getUserProfile();
+                     firstname = userProfile.getFirstName();
+                     lastname = userProfile.getLastName();
+                     username = userProfile.getUserName();
+                     email = userProfile.getEmail();
+                     accountType = userProfile.getAccountType();
+                     hasProfleMedia = userProfile.getHasProfileMedia();
+                     totalfollowers = response.body().getFollowers();
+                     totalfollowing = response.body().getFollowings();
+                     totalvideos = response.body().getTotalVideos();
+                     userId = String.valueOf(userProfile.getUserId());
+                     gender = userProfile.getGender();
+                     Long mobilno = userProfile.getPhoneNumber();
+                     if (mobilno == null) {
                         mobilenumber = 0L;
-                    } else {
+                     } else {
                         mobilenumber = mobilno;
-                    }
+                     }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
-                    _toolbarusername.setText(firstname);
+                    if (userProfile.getHasProfileMedia()) {
+                        userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
+                        userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
+                    }
+
+                   // _toolbarusername.setText(firstname);
+                    _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
-                    _detail.setText(detail);
+
                     Log.d("Gender", detail);
                     _followers.setText(String.valueOf(totalfollowers) + " Follower");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
-                    profileBlur();
 
-                    SharedPreferences prfs = context.getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-                    String imageUri = prfs.getString("MYIMAGES", "");
-                    if (imageUri == null) {
+                    if (userProfileThumbnail == null) {
                         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
                         Glide.with(context)
                                 .load(pic)
                                 .into(profile_id);
-                        profileBlur();
-
+                        profileBlur(pic);
                     } else {
 
                         Picasso.with(context)
-                                .load(Uri.parse(imageUri))
+                                .load(Uri.parse(userProfileThumbnail))
                                 .into(profile_id);
-//                        try {
-//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
-//                            Blurry.with(context).radius(1).sampling(1).from(bitmap).into(bgImage);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-
+                        profileBlur(userProfileUrl);
                     }
-                    if (hasProfleMedia) {
 
-
-                    } else {
-
-                    }
+                    progressbar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
                 }
 
             }
 
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
-
+                progressbar.setVisibility(View.GONE);
                 Log.d("errror", t.getMessage());
             }
         });
 
     }
 
-
-    public void profileBlur()
-
+    @AfterPermissionGranted(RC_REQUEST_STORAGE)
+    public void profileBlur(final String pic)
     {
-        progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
-        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(final Void... params) {
-                Bitmap bitmap = null;
-                try {
-                    final URL url = new URL(pic);
+        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (!EasyPermissions.hasPermissions(getContext(), perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    RC_REQUEST_STORAGE, perm);
+        }
+        else {
+            progressbar.setVisibility(View.VISIBLE);
+            coordinatorLayout.setVisibility(View.GONE);
+
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(final Void... params) {
+                    Bitmap bitmap = null;
                     try {
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
+                        final URL url = new URL(pic);
+                        try {
+                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-
+                    return bitmap;
                 }
 
-                return bitmap;
-            }
-            @Override
-            protected void onPostExecute(final Bitmap result) {
-                Blurry.with(context).from(result).into(backgroundprofile);
-                progressbar.setVisibility(View.GONE);
-                coordinatorLayout.setVisibility(View.VISIBLE);
+                @Override
+                protected void onPostExecute(final Bitmap result) {
+                    progressbar.setVisibility(View.VISIBLE);
+                    coordinatorLayout.setVisibility(View.GONE);
+
+                    try {
+                        Blurry.with(getContext()).from(result).into(backgroundprofile);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    progressbar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                }
+            }.execute();
 
 
-            }
-        }.execute();
-
-
-        progressbar.setVisibility(View.GONE);
-        coordinatorLayout.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.GONE);
+            coordinatorLayout.setVisibility(View.VISIBLE);
+        }
 
     }
     @Override
@@ -375,6 +380,11 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        progressbar.setVisibility(View.GONE);
+//        coordinatorLayout.setVisibility(View.GONE);
+        getProfileDetail();
+
 
     }
 
@@ -400,6 +410,8 @@ public class ProfileFragment extends BaseFragment {
     public interface RemoveAppBar {
         void removeAppbar();
     }
+
+
 
 
 }

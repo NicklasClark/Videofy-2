@@ -589,7 +589,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 case R.id.action_delete:
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.action_report:
+                case R.id.action_profile_report:
                     Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
                     return true;
             }

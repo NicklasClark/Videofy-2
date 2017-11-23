@@ -14,6 +14,9 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
+import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -537,8 +540,10 @@ import retrofit2.http.Query;
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
-        @POST("/spi/v1/post/report")
+        @POST("/api/v1/post/report")
         Call<ResultObject> reportPost(@Body Pojos.Post.ReportPost reportPostDetails);
+
+
 
         /**
          * Call this service to like a video.
@@ -635,7 +640,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/user/update/profile/media")
-        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part file);
+        Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part media);
 
         /**
          * Reset the FCM Token
@@ -678,7 +683,13 @@ import retrofit2.http.Query;
          * Call this service to update account password.
          * */
         @PUT("/api/v1/user/update/password")
-        Call<ResultObject> updatePassword(@Body Pojos.User.UpdatePassword updatePasswordDetails);
+        Call<ResultObject> updatePassword(@Body UpdatePasswordRequest updatePasswordDetails);
+
+        /**
+         * Call this service to update account password.
+         * */
+        @PUT("api/v1/user/set/new/password")
+        Call<ResultObject> setPassword(@Body SetPasswordRequest setPasswordDetails);
 
         /**
          * Call this service to get Following Notification.
@@ -701,5 +712,8 @@ import retrofit2.http.Query;
          * */
         @DELETE("/api/v1/user/logout")
         Call<ResultObject> logout(@Header("Authorization") String header);
+
+        @POST("/api/v1/user/report")
+        Call<ResultObject> reportUser(@Body ReportUser reportuser);
     }
 }

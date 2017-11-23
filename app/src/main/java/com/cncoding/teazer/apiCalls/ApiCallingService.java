@@ -19,6 +19,9 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
+import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -345,6 +348,8 @@ public class ApiCallingService {
             return getFriendsService(context).blockUnblockUser(userId, status);
         }
 
+
+
         /**
          * Call this service to get blocked users list by you.
          */
@@ -625,8 +630,11 @@ public class ApiCallingService {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }
 
-        public static Call<ResultObject> updatePassword(Pojos.User.UpdatePassword updatePasswordDetails, Context context) {
+        public static Call<ResultObject> updatePassword(UpdatePasswordRequest updatePasswordDetails, Context context) {
             return getUserService(context).updatePassword(updatePasswordDetails);
+        }
+        public static Call<ResultObject> setPassword(SetPasswordRequest setPasswordDetails, Context context) {
+            return getUserService(context).setPassword(setPasswordDetails);
         }
 
         public static Call<Pojos.User.NotificationsList> getFollowingNotifications(int page, Context context){
@@ -649,7 +657,17 @@ public class ApiCallingService {
             return getUserService(context).getUserProfile();
         }
 
+        public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context){
+            return getUserService(context).reportUser(reportuser);
+        }
+
         private static TeazerApiCall.UserCalls getUserService(Context context) {
+
+
+
+
+
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())

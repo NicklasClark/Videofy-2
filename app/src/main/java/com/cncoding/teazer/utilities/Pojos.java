@@ -1227,12 +1227,14 @@ public class Pojos {
             private int followers;
             private int followings;
             private int total_videos;
+            private boolean can_change_password;
 
-            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
                 this.user_profile = user_profile;
                 this.followers = followers;
                 this.followings = followings;
                 this.total_videos = total_videos;
+                this.can_change_password = can_change_password;
             }
 
 
@@ -1280,6 +1282,14 @@ public class Pojos {
 
             public int getTotalVideos() {
                 return total_videos;
+            }
+
+            public boolean isCan_change_password() {
+                return can_change_password;
+            }
+
+            public void setCan_change_password(boolean can_change_password) {
+                this.can_change_password = can_change_password;
             }
         }
 

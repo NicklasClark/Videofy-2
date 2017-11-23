@@ -62,6 +62,7 @@ import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
+import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
@@ -295,6 +296,7 @@ public class LoginFragment extends Fragment {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
                                     SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
+                                    setCurrentPassword(getContext() ,passwordView.getText().toString());
                                     mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
                                 } else {
                                     ViewUtils.showSnackBar(loginBtn, response.body().getMessage());

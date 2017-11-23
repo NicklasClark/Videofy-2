@@ -80,10 +80,10 @@ public class FollowingProfileActivity extends AppCompatActivity {
                     try {
 
                         int i = response.body().getAccountType();
-                        boolean b = response.body().getCanJoin();
+                        boolean b =false;
+                       // boolean b = response.body().getCanJoin();
                         int following = response.body().getFollowers();
                         int follower = response.body().getFollowings();
-
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Followers");
 
