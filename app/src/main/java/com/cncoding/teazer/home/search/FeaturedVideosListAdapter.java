@@ -13,7 +13,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.Discover.FeaturedVideos;
+import com.cncoding.teazer.utilities.Pojos.DummyDiscover.DummyFeaturedVideos;
 
 import java.util.ArrayList;
 
@@ -27,10 +27,10 @@ import butterknife.ButterKnife;
 
 public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVideosListAdapter.ViewHolder> {
 
-    private final ArrayList<FeaturedVideos> featuredVideosArrayList;
+    private final ArrayList<DummyFeaturedVideos> featuredVideosArrayList;
     private final Context context;
 
-    FeaturedVideosListAdapter(ArrayList<FeaturedVideos> featuredVideosArrayList, Context context) {
+    FeaturedVideosListAdapter(ArrayList<DummyFeaturedVideos> featuredVideosArrayList, Context context) {
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
     }
@@ -83,7 +83,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView views;
         @BindView(R.id.reaction_post_thumb) ImageView thumbnail;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView dp;
-        FeaturedVideos featuredVideos;
+        DummyFeaturedVideos featuredVideos;
         
         public ViewHolder(View itemView) {
             super(itemView);

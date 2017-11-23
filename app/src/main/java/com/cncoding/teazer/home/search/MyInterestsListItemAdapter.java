@@ -13,7 +13,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.Discover.MyInterests;
+import com.cncoding.teazer.utilities.Pojos.DummyDiscover.MyDummyInterests;
 
 import java.util.ArrayList;
 
@@ -29,10 +29,10 @@ import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 
 public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterestsListItemAdapter.ViewHolder> {
 
-    private ArrayList<MyInterests> myInterestsList;
+    private ArrayList<MyDummyInterests> myInterestsList;
     private Context context;
 
-    MyInterestsListItemAdapter(ArrayList<MyInterests> myInterestsList, Context context) {
+    MyInterestsListItemAdapter(ArrayList<MyDummyInterests> myInterestsList, Context context) {
         this.myInterestsList = myInterestsList;
         this.context = context;
     }
@@ -99,7 +99,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
-        MyInterests myInterests;
+        MyDummyInterests myInterests;
         
         public ViewHolder(View itemView) {
             super(itemView);

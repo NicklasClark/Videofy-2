@@ -730,11 +730,31 @@ public class Pojos {
             private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
             private CheckIn check_in;
             private ArrayList<Medias> medias;
+            private ArrayList<ReactedUser> reacted_users;
             private ArrayList<Category> categories;
 
+            protected PostDetails(Parcel in) {
+                post_id = in.readInt();
+                posted_by = in.readInt();
+                likes = in.readInt();
+                total_reactions = in.readInt();
+                has_checkin = in.readByte() != 0;
+                title = in.readString();
+                can_react = in.readByte() != 0;
+                can_like = in.readByte() != 0;
+                can_delete = in.readByte() != 0;
+                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
+                created_at = in.readString();
+                check_in = in.readParcelable(CheckIn.class.getClassLoader());
+                medias = in.createTypedArrayList(Medias.CREATOR);
+                reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
+                categories = in.createTypedArrayList(Category.CREATOR);
+            }
+
             public PostDetails(int post_id, int posted_by, int likes, int total_reactions, boolean has_checkin,
-                               String title, boolean can_react, boolean can_like, boolean can_delete, MiniProfile post_owner,
-                               String created_at, CheckIn check_in, ArrayList<Medias> medias, ArrayList<Category> categories) {
+                               String title, boolean can_react, boolean can_like, boolean can_delete,
+                               MiniProfile post_owner, String created_at, CheckIn check_in, ArrayList<Medias> medias,
+                               ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories) {
                 this.post_id = post_id;
                 this.posted_by = posted_by;
                 this.likes = likes;
@@ -748,8 +768,45 @@ public class Pojos {
                 this.created_at = created_at;
                 this.check_in = check_in;
                 this.medias = medias;
+                this.reacted_users = reacted_users;
                 this.categories = categories;
             }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(post_id);
+                dest.writeInt(posted_by);
+                dest.writeInt(likes);
+                dest.writeInt(total_reactions);
+                dest.writeByte((byte) (has_checkin ? 1 : 0));
+                dest.writeString(title);
+                dest.writeByte((byte) (can_react ? 1 : 0));
+                dest.writeByte((byte) (can_like ? 1 : 0));
+                dest.writeByte((byte) (can_delete ? 1 : 0));
+                dest.writeParcelable(post_owner, flags);
+                dest.writeString(created_at);
+                dest.writeParcelable(check_in, flags);
+                dest.writeTypedList(medias);
+                dest.writeTypedList(reacted_users);
+                dest.writeTypedList(categories);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
+                @Override
+                public PostDetails createFromParcel(Parcel in) {
+                    return new PostDetails(in);
+                }
+
+                @Override
+                public PostDetails[] newArray(int size) {
+                    return new PostDetails[size];
+                }
+            };
 
             public int getPostId() {
                 return post_id;
@@ -803,61 +860,13 @@ public class Pojos {
                 return medias;
             }
 
+            public ArrayList<ReactedUser> getReactedUsers() {
+                return reacted_users;
+            }
+
             public ArrayList<Category> getCategories() {
                 return categories;
             }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(post_id);
-                parcel.writeInt(posted_by);
-                parcel.writeInt(likes);
-                parcel.writeInt(total_reactions);
-                parcel.writeByte((byte) (has_checkin ? 1 : 0));
-                parcel.writeString(title);
-                parcel.writeByte((byte) (can_react ? 1 : 0));
-                parcel.writeByte((byte) (can_like ? 1 : 0));
-                parcel.writeByte((byte) (can_delete ? 1 : 0));
-                parcel.writeParcelable(post_owner, i);
-                parcel.writeString(created_at);
-                parcel.writeParcelable(check_in, i);
-                parcel.writeTypedList(medias);
-                parcel.writeTypedList(categories);
-            }
-
-            protected PostDetails(Parcel in) {
-                post_id = in.readInt();
-                posted_by = in.readInt();
-                likes = in.readInt();
-                total_reactions = in.readInt();
-                has_checkin = in.readByte() != 0;
-                title = in.readString();
-                can_react = in.readByte() != 0;
-                can_like = in.readByte() != 0;
-                can_delete = in.readByte() != 0;
-                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-                created_at = in.readString();
-                check_in = in.readParcelable(CheckIn.class.getClassLoader());
-                medias = in.createTypedArrayList(Medias.CREATOR);
-                categories = in.createTypedArrayList(Category.CREATOR);
-            }
-
-            public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
-                @Override
-                public PostDetails createFromParcel(Parcel in) {
-                    return new PostDetails(in);
-                }
-
-                @Override
-                public PostDetails[] newArray(int size) {
-                    return new PostDetails[size];
-                }
-            };
         }
 
         public static class PostReaction implements Parcelable {
@@ -984,6 +993,229 @@ public class Pojos {
             public ReportPost(int post_id, int report_type_id) {
                 this.post_id = post_id;
                 this.report_type_id = report_type_id;
+            }
+        }
+
+        public static class ReactedUser implements Parcelable {
+
+            private Integer user_id;
+            private String user_name;
+            private String first_name;
+            private String last_name;
+            private boolean is_blocked_you;
+            private boolean my_self;
+            private boolean has_profile_media;
+            private ProfileMedia profile_media;
+
+            public ReactedUser(Integer user_id, String user_name, String first_name, String last_name,
+                               boolean is_blocked_you, boolean my_self, boolean has_profile_media, ProfileMedia profile_media) {
+                this.user_id = user_id;
+                this.user_name = user_name;
+                this.first_name = first_name;
+                this.last_name = last_name;
+                this.is_blocked_you = is_blocked_you;
+                this.my_self = my_self;
+                this.has_profile_media = has_profile_media;
+                this.profile_media = profile_media;
+            }
+
+            protected ReactedUser(Parcel in) {
+                if (in.readByte() == 0) {
+                    user_id = null;
+                } else {
+                    user_id = in.readInt();
+                }
+                user_name = in.readString();
+                first_name = in.readString();
+                last_name = in.readString();
+                is_blocked_you = in.readByte() != 0;
+                my_self = in.readByte() != 0;
+                has_profile_media = in.readByte() != 0;
+                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                if (user_id == null) {
+                    dest.writeByte((byte) 0);
+                } else {
+                    dest.writeByte((byte) 1);
+                    dest.writeInt(user_id);
+                }
+                dest.writeString(user_name);
+                dest.writeString(first_name);
+                dest.writeString(last_name);
+                dest.writeByte((byte) (is_blocked_you ? 1 : 0));
+                dest.writeByte((byte) (my_self ? 1 : 0));
+                dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeParcelable(profile_media, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<ReactedUser> CREATOR = new Creator<ReactedUser>() {
+                @Override
+                public ReactedUser createFromParcel(Parcel in) {
+                    return new ReactedUser(in);
+                }
+
+                @Override
+                public ReactedUser[] newArray(int size) {
+                    return new ReactedUser[size];
+                }
+            };
+
+            public Integer getUserId() {
+                return user_id;
+            }
+
+            public String getUserName() {
+                return user_name;
+            }
+
+            public String getFirstName() {
+                return first_name;
+            }
+
+            public String getLastName() {
+                return last_name;
+            }
+
+            public Boolean hasBlockedYou() {
+                return is_blocked_you;
+            }
+
+            public Boolean getMySelf() {
+                return my_self;
+            }
+
+            public Boolean hasProfileMedia() {
+                return has_profile_media;
+            }
+
+            public ProfileMedia getProfileMedia() {
+                return profile_media;
+            }
+        }
+
+        public static class LandingPosts implements Parcelable {
+            private ArrayList<PostDetails> most_popular;
+            private ArrayList<Category> user_interests;
+            private ArrayList<Category> trending_categories;
+            private MyInterests my_interests;
+
+            protected LandingPosts(Parcel in) {
+                most_popular = in.createTypedArrayList(PostDetails.CREATOR);
+                user_interests = in.createTypedArrayList(Category.CREATOR);
+                trending_categories = in.createTypedArrayList(Category.CREATOR);
+                my_interests = in.readParcelable(MyInterests.class.getClassLoader());
+            }
+
+            public LandingPosts(ArrayList<PostDetails> most_popular, ArrayList<Category> user_interests,
+                                ArrayList<Category> trending_categories, MyInterests my_interests) {
+                this.most_popular = most_popular;
+                this.user_interests = user_interests;
+                this.trending_categories = trending_categories;
+                this.my_interests = my_interests;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeTypedList(most_popular);
+                dest.writeTypedList(user_interests);
+                dest.writeTypedList(trending_categories);
+                dest.writeParcelable(my_interests, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<LandingPosts> CREATOR = new Creator<LandingPosts>() {
+                @Override
+                public LandingPosts createFromParcel(Parcel in) {
+                    return new LandingPosts(in);
+                }
+
+                @Override
+                public LandingPosts[] newArray(int size) {
+                    return new LandingPosts[size];
+                }
+            };
+
+            public ArrayList<PostDetails> getMostPopular() {
+                return most_popular;
+            }
+
+            public ArrayList<Category> getUserInterests() {
+                return user_interests;
+            }
+
+            public ArrayList<Category> getTrendingCategories() {
+                return trending_categories;
+            }
+
+            public MyInterests getMyInterests() {
+                return my_interests;
+            }
+        }
+
+        public static class MyInterests implements Parcelable {
+            private ArrayList<PostDetails> additionalProp1;
+            private ArrayList<PostDetails> additionalProp2;
+            private ArrayList<PostDetails> additionalProp3;
+
+            protected MyInterests(Parcel in) {
+                additionalProp1 = in.createTypedArrayList(PostDetails.CREATOR);
+                additionalProp2 = in.createTypedArrayList(PostDetails.CREATOR);
+                additionalProp3 = in.createTypedArrayList(PostDetails.CREATOR);
+            }
+
+            public MyInterests(ArrayList<PostDetails> additionalProp1, ArrayList<PostDetails> additionalProp2,
+                               ArrayList<PostDetails> additionalProp3) {
+                this.additionalProp1 = additionalProp1;
+                this.additionalProp2 = additionalProp2;
+                this.additionalProp3 = additionalProp3;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeTypedList(additionalProp1);
+                dest.writeTypedList(additionalProp2);
+                dest.writeTypedList(additionalProp3);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<MyInterests> CREATOR = new Creator<MyInterests>() {
+                @Override
+                public MyInterests createFromParcel(Parcel in) {
+                    return new MyInterests(in);
+                }
+
+                @Override
+                public MyInterests[] newArray(int size) {
+                    return new MyInterests[size];
+                }
+            };
+
+            public ArrayList<PostDetails> getAdditionalProp1() {
+                return additionalProp1;
+            }
+
+            public ArrayList<PostDetails> getAdditionalProp2() {
+                return additionalProp2;
+            }
+
+            public ArrayList<PostDetails> getAdditionalProp3() {
+                return additionalProp3;
             }
         }
     }
@@ -1258,7 +1490,7 @@ public class Pojos {
 //                return updated_at;
 //            }
 //
-//            public boolean hasProfileMedia() {
+//            public boolean has_profile_media() {
 //                return has_profile_media;
 //            }
 //
@@ -2622,9 +2854,9 @@ public class Pojos {
         }
     }
 
-    public static class Discover {
+    public static class DummyDiscover {
 
-        public static class MostPopular {
+        public static class DummyMostPopular {
             private String title;
             private int duration;
             private String thumbUrl;
@@ -2637,8 +2869,8 @@ public class Pojos {
             private String reaction3Url;
             private int reactions;
 
-            public MostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
-                               int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+            public DummyMostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
+                                    int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
                 this.title = title;
                 this.duration = duration;
                 this.thumbUrl = thumbUrl;
@@ -2697,7 +2929,7 @@ public class Pojos {
             }
         }
 
-        public static class MyInterests {
+        public static class MyDummyInterests {
             private String title;
             private String thumbUrl;
             private String profileThumbUrl;
@@ -2709,8 +2941,8 @@ public class Pojos {
             private String reaction3Url;
             private int reactions;
 
-            public MyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
-                               String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+            public MyDummyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
+                                    String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
                 this.title = title;
                 this.thumbUrl = thumbUrl;
                 this.profileThumbUrl = profileThumbUrl;
@@ -2764,7 +2996,7 @@ public class Pojos {
             }
         }
 
-        public static class FeaturedVideos {
+        public static class DummyFeaturedVideos {
             private String title;
             private String thumbUrl;
             private String profileThumbUrl;
@@ -2772,7 +3004,7 @@ public class Pojos {
             private int likes;
             private int views;
 
-            public FeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
+            public DummyFeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
                 this.title = title;
                 this.thumbUrl = thumbUrl;
                 this.profileThumbUrl = profileThumbUrl;

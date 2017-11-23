@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ public class SearchFragment extends BaseFragment {
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
 
     private OnFragmentInteractionListener mListener;
+    private LandingPosts landingPosts;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -36,6 +38,15 @@ public class SearchFragment extends BaseFragment {
     public static SearchFragment newInstance() {
         return new SearchFragment();
     }
+
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        landingPosts = new LandingPosts(
+////                new ArrayList<Pojos.Post.PostDetails>(), new ArrayList<Pojos.Category>(), new ArrayList<Pojos.Category>(),
+////                new Pojos.Post.MyInterests(new ArrayList<Pojos.Post.PostDetails>(),
+////                        new ArrayList<Pojos.Post.PostDetails>(), new ArrayList<Pojos.Post.PostDetails>()));
+//    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -66,6 +77,11 @@ public class SearchFragment extends BaseFragment {
         featuredVideosList.setAdapter(new FeaturedVideosListAdapter(getFeaturedVideosList(), getContext()));
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

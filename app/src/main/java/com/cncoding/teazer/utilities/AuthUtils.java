@@ -242,7 +242,7 @@ public class AuthUtils {
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
-                        logout(context, null);
+//                        logout(context, null);
                     }
                 });
     }

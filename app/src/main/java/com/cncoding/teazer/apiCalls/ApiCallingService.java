@@ -22,6 +22,7 @@ import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
+import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -160,6 +161,47 @@ public class ApiCallingService {
         }
     }
 
+    public static class Discover {
+
+        /**
+         * Call this service to get the discover page featured videos lists.
+         */
+        public static Call<PostList> getFeaturedPosts(int page, Context context){
+            return getDiscoverService(context).getFeaturedPosts(page);
+        }
+
+        /**
+         * Call this service to get the discover page interested category videos when user clicks "View all".
+         */
+        public static Call<PostList> getAllInterestedCategoriesVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getAllInterestedCategoriesVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get the discover page trending category videos of the respected category.
+         */
+        public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getTrendingVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get discover page landing posts.
+         */
+        public static Call<LandingPosts> getDiscoverPagePosts(Context context){
+            return getDiscoverService(context).getDiscoverPagePosts();
+        }
+
+        private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClientWithAuthToken(context))
+                    .build();
+            return retrofit.create(TeazerApiCall.DiscoverCalls.class);
+        }
+    }
+    
     public static class Friends {
         /**
          * Get the "my circle" with search term

@@ -146,39 +146,39 @@ public class DummyData {
         return new Random().nextInt(500);
     }
 
-    private static Pojos.Discover.MostPopular getMostPopular() {
-        return new Pojos.Discover.MostPopular(getRandomTitle(), getRandomDuration(), getRandomThumbUrl(), getRandomDp(),
+    private static Pojos.DummyDiscover.DummyMostPopular getMostPopular() {
+        return new Pojos.DummyDiscover.DummyMostPopular(getRandomTitle(), getRandomDuration(), getRandomThumbUrl(), getRandomDp(),
                 getRandomName(), getRandomNumber(), getRandomNumber(), getRandomDp(), getRandomDp(), getRandomDp(), getRandomNumber());
     }
 
-    private static Pojos.Discover.MyInterests getMyInterests() {
-        return new Pojos.Discover.MyInterests(getRandomTitle(), getRandomThumbUrl(), getRandomDp(), getRandomName(),
+    private static Pojos.DummyDiscover.MyDummyInterests getMyInterests() {
+        return new Pojos.DummyDiscover.MyDummyInterests(getRandomTitle(), getRandomThumbUrl(), getRandomDp(), getRandomName(),
                 getRandomNumber(), getRandomNumber(), getRandomDp(), getRandomDp(), getRandomDp(), getRandomNumber());
     }
 
-    private static Pojos.Discover.FeaturedVideos getFeaturedVideos() {
-        return new Pojos.Discover.FeaturedVideos(getRandomTitle(), getRandomThumbUrl(),
+    private static Pojos.DummyDiscover.DummyFeaturedVideos getFeaturedVideos() {
+        return new Pojos.DummyDiscover.DummyFeaturedVideos(getRandomTitle(), getRandomThumbUrl(),
                 getRandomDp(), getRandomName(), getRandomNumber(), getRandomNumber());
     }
 
-    static ArrayList<Pojos.Discover.MostPopular> getMostPopularList() {
-        ArrayList<Pojos.Discover.MostPopular> mostPopularArrayList = new ArrayList<>();
+    static ArrayList<Pojos.DummyDiscover.DummyMostPopular> getMostPopularList() {
+        ArrayList<Pojos.DummyDiscover.DummyMostPopular> mostPopularArrayList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             mostPopularArrayList.add(getMostPopular());
         }
         return mostPopularArrayList;
     }
 
-    static ArrayList<Pojos.Discover.MyInterests> getMyInterestsList() {
-        ArrayList<Pojos.Discover.MyInterests> myInterestsArrayList = new ArrayList<>();
+    static ArrayList<Pojos.DummyDiscover.MyDummyInterests> getMyInterestsList() {
+        ArrayList<Pojos.DummyDiscover.MyDummyInterests> myInterestsArrayList = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             myInterestsArrayList.add(getMyInterests());
         }
         return myInterestsArrayList;
     }
 
-    static ArrayList<Pojos.Discover.FeaturedVideos> getFeaturedVideosList() {
-        ArrayList<Pojos.Discover.FeaturedVideos> featuredVideosArrayList = new ArrayList<>();
+    static ArrayList<Pojos.DummyDiscover.DummyFeaturedVideos> getFeaturedVideosList() {
+        ArrayList<Pojos.DummyDiscover.DummyFeaturedVideos> featuredVideosArrayList = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             featuredVideosArrayList.add(getFeaturedVideos());
         }

@@ -13,7 +13,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.Discover.MostPopular;
+import com.cncoding.teazer.utilities.Pojos.DummyDiscover.DummyMostPopular;
 
 import java.util.ArrayList;
 
@@ -29,10 +29,10 @@ import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 
 class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter.ViewHolder> {
 
-    private ArrayList<MostPopular> mostPopularList;
+    private ArrayList<DummyMostPopular> mostPopularList;
     private Context context;
 
-    MostPopularListAdapter(ArrayList<MostPopular> mostPopularList, Context context) {
+    MostPopularListAdapter(ArrayList<DummyMostPopular> mostPopularList, Context context) {
         this.mostPopularList = mostPopularList;
         this.context = context;
     }
@@ -107,7 +107,7 @@ class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
         @BindView(R.id.reaction_3) CircularAppCompatImageView reactionImage3;
-        MostPopular mostPopular;
+        DummyMostPopular mostPopular;
 
         public ViewHolder(View itemView) {
             super(itemView);
