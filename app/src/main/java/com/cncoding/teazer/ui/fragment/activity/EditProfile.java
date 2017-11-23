@@ -154,13 +154,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             mobilenumber = Long.parseLong(mobileno);
         }
+
         gender = Integer.parseInt(intent.getStringExtra("Gender"));
         emailId = intent.getStringExtra("EmailId");
         countrycode = Integer.parseInt(intent.getStringExtra("CountryCode"));
         detail = intent.getStringExtra("Detail");
         _username.setText(username);
         _firstname.setText(firstname);
-        //  _lastName.setText(lastname);
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
@@ -201,15 +201,20 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String usernames = _username.getText().toString();
-                String firstname = _firstname.getText().toString();
-                String lastnames = "abcdee";
-                Integer countrycodes = countrycode;
-                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
-                String emailid = _email.getText().toString();
-                String details = _bio.getText().toString();
-                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, details);
-                ProfileUpdate(profileUpdateRequest);
+//                String usernames = _username.getText().toString();
+//                String firstname = _firstname.getText().toString();
+//                String lastnames = "abcdee";
+//                Integer countrycodes = countrycode;
+//                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
+//                String emailid = _email.getText().toString();
+//                  String details = _bio.getText().toString();
+                  validate();
+
+
+
+
+
+
             }
         });
         profile_image.setOnClickListener(new View.OnClickListener() {
@@ -490,6 +495,86 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             simpleProgressBar.setVisibility(View.GONE);
             layoutdetail.setVisibility(View.VISIBLE);
         }
+
+    }
+
+
+    public void validate() {
+
+
+
+
+        boolean valid = true;
+        String usernames = _username.getText().toString();
+        String firstname = _firstname.getText().toString();
+        String lastnames = "";
+        Integer countrycodes = countrycode;
+        String  mobilenumber = _mobileNumber.getText().toString();
+        String emailid = _email.getText().toString();
+        String details = _bio.getText().toString();
+
+        if (usernames.isEmpty()) {
+            _username.setError("enter username");
+            _username.requestFocus();
+            valid = false;
+
+        }
+        else {
+            _username.setError(null);
+        }
+        if (firstname.isEmpty()) {
+            _firstname.setError("enter your name");
+            _firstname.requestFocus();
+            valid = false;
+
+        } else {
+            _firstname.setError(null);
+        }
+        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.isEmpty()) {
+            _email.setError("enter a email address");
+            _email.requestFocus();
+            valid = false;
+
+        } else {
+            _email.setError(null);
+        }
+
+
+        if (mobilenumber.isEmpty()|| mobilenumber.length() < 10 || mobilenumber.length() > 10) {
+            _mobileNumber.setError("enter valid 10 digit mobile number");
+            _mobileNumber.requestFocus();
+            valid = false;
+
+        }
+
+
+            else
+            {
+                _mobileNumber.setError(null);
+
+            }
+
+            if (details.isEmpty()) {
+                _bio.setError("Pan number is required");
+                _bio.requestFocus();
+                 valid = false;
+
+            } else {
+                _bio.setError(null);
+            }
+
+
+
+
+        if(valid) {
+            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
+            ProfileUpdate(profileUpdateRequest);
+        }
+        else
+        {
+
+        }
+
 
     }
 }
