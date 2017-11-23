@@ -656,6 +656,7 @@ public class MainActivity extends AppCompatActivity
 //            button.setTextColor(Color.parseColor("#757575"));
 //            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#5a000000"));
 //            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#5a000000"));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
             dialog.show();
         }
 
