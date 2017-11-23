@@ -71,7 +71,7 @@ public class FragmentProfileMyReactions extends Fragment {
                     try {
                         list = response.body().getReactions();
                         if (list == null || list.size() == 0) {
-                        Toast.makeText(context, "No Reactions found", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(context, "No Reactions found", Toast.LENGTH_LONG).show();
                         }
                         else {
                             profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);

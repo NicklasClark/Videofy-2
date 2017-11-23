@@ -161,7 +161,7 @@ public class FollowersListActivity extends AppCompatActivity {
                     {
                         list= response.body().getFollowers();
                         if (list == null || list.size() == 0) {
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                       //     Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);

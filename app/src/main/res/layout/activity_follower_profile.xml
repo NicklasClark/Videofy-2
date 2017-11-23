@@ -109,7 +109,7 @@
 
 
                                         <com.cncoding.teazer.customViews.SignPainterTextView
-                                            android:id="@+id/username_title"
+                                            android:id="@+id/username"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
@@ -124,16 +124,16 @@
                                             android:id="@+id/bullets"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username_title"
+                                            android:layout_below="@+id/username"
                                             android:text="\u25CF"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12dp" />
 
                                         <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                            android:id="@+id/username"
+                                            android:id="@+id/name"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username_title"
+                                            android:layout_below="@+id/username"
                                             android:layout_marginStart="5dp"
                                             android:layout_toEndOf="@+id/bullets"
                                             android:text="@string/name"

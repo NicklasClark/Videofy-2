@@ -104,7 +104,7 @@ public class FollowingListActivities extends AppCompatActivity {
                     try {
                         list = response.body().getFollowings();
                         if (list == null || list.size() == 0) {
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                           // Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
@@ -144,7 +144,7 @@ public class FollowingListActivities extends AppCompatActivity {
                     try {
                         otherlist = response.body().getFollowings();
                         if (otherlist == null || otherlist.size() == 0) {
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                         //   Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);

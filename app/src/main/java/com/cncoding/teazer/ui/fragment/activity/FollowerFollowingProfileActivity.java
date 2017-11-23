@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
-    @BindView(R.id.username_title)
+    @BindView(R.id.username)
     TextView _usernameTitle;
     @BindView(R.id.creations)
     TextView _creations;
@@ -63,8 +63,8 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     @BindView(R.id.layoutDetail)
     RelativeLayout layoutDetail;
     ;
-    @BindView(R.id.username)
-    TextView _username;
+    @BindView(R.id.name)
+    TextView _name;
     @BindView(R.id.following)
     TextView _following;
     @BindView(R.id.followers)
@@ -139,7 +139,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         final int followerfollowingid = Integer.parseInt(getIntent().getStringExtra("FollowId"));
         String username = intent.getStringExtra("Username");
         String userType = intent.getStringExtra("UserType");
-        _username.setText(username);
+      //  _name.setText(username);
         _btnfollow.setText(userType);
 
 
@@ -180,8 +180,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "public", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
                     Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
                     intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                     intent.putExtra("Identifier", "Other");
@@ -285,9 +286,10 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
                             int gender = publicProfile.getGender();
-                            _usernameTitle.setText(firstName);
-                            _username.setText(username);
+                            _usernameTitle.setText(username);
+                            _name.setText(firstName);
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
+                            Log.d("JagdeshID",String.valueOf(followersid));
 
 
                             if (hasProfileMedia == true) {
@@ -340,14 +342,22 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                             }
                             _usernameTitle.setText(username);
-                            _username.setText(firstName);
+                            _name.setText(firstName);
+
                             if (hassentrequest == true) {
-                                if (requestRecieved == true)
-                                    _btnfollow.getText().equals("Following");
-                                else
-                                    _btnfollow.getText().equals("Requested");
+
+                                if (requestRecieved == true) {
+                                    //    _btnfollow.getText().equals("Following");
+                                }
+
+                                else {
+
+                                    //  _btnfollow.getText().equals("Requested");
+                                }
                             } else {
-                                _btnfollow.getText().equals("Follow");
+
+
+                               // _btnfollow.getText().equals("Follow");
 
                             }
                             layout.setVisibility(View.VISIBLE);
@@ -409,7 +419,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 //                    coordinatorLayout.setVisibility(View.GONE);
 
                 try {
-                    Blurry.with(context).radius(1).sampling(1).from(result).into(background_profile);
+                    Blurry.with(context).from(result).into(background_profile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -596,12 +606,10 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
         layout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        Toast.makeText(getApplicationContext(), "block unblock", Toast.LENGTH_LONG).show();
         ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<BlockUnBlockUser>() {
 
             @Override
             public void onResponse(Call<BlockUnBlockUser> call, Response<BlockUnBlockUser> response) {
-                Toast.makeText(getApplicationContext(), "block unblock2", Toast.LENGTH_LONG).show();
                 try {
                     boolean b = response.body().getStatus();
                     if (b == true) {
