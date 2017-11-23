@@ -100,15 +100,15 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .permitDiskWrites()
-                .penaltyLog()
-//                .penaltyDialog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .permitDiskWrites()
 //                .penaltyLog()
-                .build());
+////                .penaltyDialog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+////                .penaltyLog()
+//                .build());
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         videosList = new ArrayList<>();
@@ -205,7 +205,7 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction);
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -220,7 +220,7 @@ public class CameraActivity extends AppCompatActivity
         if (isReaction) {
             new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
         } else {
-            uploadFragment = UploadFragment.newInstance(videoPath, false);
+            uploadFragment = UploadFragment.newInstance(videoPath, false, true);
             startVideoUploadFragment();
         }
     }

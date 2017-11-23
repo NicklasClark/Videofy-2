@@ -93,9 +93,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             }
             else {
                 if (isfollowing == true) {
+
                     viewHolder.follow.setText("Following");
                     userType = "Following";
-
 
                 } else {
 

@@ -255,7 +255,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
     public void getProfileInformation(final int followersid) {
 
-
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<FollowersProfile>() {
             @Override
             public void onResponse(Call<FollowersProfile> call, Response<FollowersProfile> response) {
@@ -279,8 +278,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                         if (accountType == 2) {
 
-                     //       Toast.makeText(getApplicationContext(), "public", Toast.LENGTH_LONG).show();
-
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
@@ -288,6 +285,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             int gender = publicProfile.getGender();
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
+
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
                             Log.d("JagdeshID",String.valueOf(followersid));
 
@@ -337,13 +335,28 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                            if (hasProfileMedia) {
+                            if (hasProfileMedia)
+                            {
+                                userProfileThumbnail=   privateProfile.getProfileMedia().getMediaUrl();
+                                userProfileUrl= privateProfile.getProfileMedia().getThumbUrl();
+                            }
+
+                            if (userProfileThumbnail == null) {
+                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
+                                Glide.with(context)
+                                        .load(pic)
+                                        .into(profile_id);
+                                profileBlur(pic);
                             } else {
 
+                                Picasso.with(context)
+                                        .load(Uri.parse(userProfileThumbnail))
+                                        .into(profile_id);
+                                profileBlur(userProfileUrl);
                             }
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
-
                             if (hassentrequest == true) {
 
                                 if (requestRecieved == true) {
@@ -492,6 +505,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            _btnfollow.setText("Follow");
                             Toast.makeText(getApplicationContext(), "You have already unfollowed", Toast.LENGTH_LONG).show();
                         }
 

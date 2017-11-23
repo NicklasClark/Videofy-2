@@ -190,13 +190,14 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 201) {
                     onUploadFinish();
-                    deleteFile(uploadParams.getVideoPath());
+
+                        deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
                 } else {
                     if (response.code() == 200) {
                         if (response.body().getMessage().contains("own video")) {
 //                        USER IS REACTING ON HIS OWN VIDEO.
                             uploadingNotificationTextView.setText(response.body().getMessage());
-                            deleteFile(uploadParams.getVideoPath());
+                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
                             finishVideoUploadSession(getApplicationContext());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -211,10 +212,12 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
 
-            private void deleteFile(String path) {
-                deleteFileFromMediaStoreDatabase(BaseBottomBarActivity.this, path);
-                //noinspection ResultOfMethodCallIgnored
-                new File(path).delete();
+            private void deleteFile(String path, boolean isGallery) {
+                if (!isGallery) {
+                    deleteFileFromMediaStoreDatabase(BaseBottomBarActivity.this, path);
+                    //noinspection ResultOfMethodCallIgnored
+                    new File(path).delete();
+                }
             }
 
             @Override

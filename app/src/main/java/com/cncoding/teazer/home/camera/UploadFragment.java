@@ -97,6 +97,7 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEAR
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
+import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
@@ -149,16 +150,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private Activity activity;
 
     private OnUploadFragmentInteractionListener mListener;
+    private boolean isGallery;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
+        args.putBoolean(IS_GALLERY, isGallery);
         fragment.setArguments(args);
         return fragment;
     }
@@ -170,6 +173,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
+            isGallery = bundle.getBoolean(IS_GALLERY);
         }
     }
 
@@ -519,7 +523,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
         String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
         DecimalFormat df = new DecimalFormat("#.#######");
-        performUpload(activity, new Pojos.UploadParams(videoPath, false, title, location,
+        performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
                 Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
     }
 
@@ -748,13 +752,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected String doInBackground(Void... voids) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(reference.get().videoPath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long duration = Long.parseLong(time );
-            retriever.release();
-            return String.format(Locale.UK, "%02d:%02d",
-                    MILLISECONDS.toMinutes(duration),
-                    MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+            try {
+                retriever.setDataSource(reference.get().videoPath);
+                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long duration = Long.parseLong(time );
+                retriever.release();
+                return String.format(Locale.UK, "%02d:%02d",
+                        MILLISECONDS.toMinutes(duration),
+                        MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
