@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.cncoding.teazer.home.search.MyInterestsFragment">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/my_interests_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:tabMode="scrollable"
+        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="#F48FB1"
+        app:tabIndicatorHeight="@dimen/padding_thin"/>
+
+</FrameLayout>

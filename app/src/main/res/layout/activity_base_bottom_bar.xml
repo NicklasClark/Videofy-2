@@ -46,14 +46,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        android:id="@+id/search_page_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_content_big"
                         android:padding="@dimen/padding_thin"
                         android:layout_margin="@dimen/padding_half"
+                        android:layout_gravity="center_vertical"
                         android:textColor="@android:color/white"
                         android:layout_marginBottom="@dimen/padding_half"
                         android:text="@string/discover"/>

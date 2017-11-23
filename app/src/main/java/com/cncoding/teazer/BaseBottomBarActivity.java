@@ -27,6 +27,7 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter;
@@ -36,6 +37,7 @@ import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractio
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.home.search.MyInterestsFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -46,6 +48,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -77,6 +80,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener,ProfileFragment.RemoveAppBar,
+        SearchFragment.OnSearchInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
         ProfileMyCreationAdapter.myCreationListener{
 
@@ -105,6 +109,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
     @BindView(R.id.discover_toolbar_layout) LinearLayout discoverToolbarLayout;
+    @BindView(R.id.search_page_title) ProximaNovaSemiboldTextView searchPageTitle;
     @BindView(R.id.discover_search) ProximaNovaRegularAutoCompleteTextView discoverSearchBar;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
@@ -352,13 +357,16 @@ public class BaseBottomBarActivity extends BaseActivity
             }, 600);
 
         updateDiscoverToolbar(position == 1);
+
 //        updateToolbarTitle(position);
     }
 
     private void updateDiscoverToolbar(boolean isDiscoverPage) {
         if (isDiscoverPage) {
-            if (discoverToolbarLayout.getVisibility() != VISIBLE)
+            if (discoverToolbarLayout.getVisibility() != VISIBLE) {
                 discoverToolbarLayout.setVisibility(VISIBLE);
+                discoverSearchBar.setVisibility(VISIBLE);
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -369,12 +377,22 @@ public class BaseBottomBarActivity extends BaseActivity
         } else {
             if (toolbarTitle.getVisibility() != VISIBLE)
                 toolbarTitle.setVisibility(VISIBLE);
-            if (discoverToolbarLayout.getVisibility() != GONE)
+            if (discoverToolbarLayout.getVisibility() != GONE) {
                 discoverToolbarLayout.setVisibility(GONE);
+//                searchPageTitle.setVisibility(GONE);
+            }
         }
     }
 
-    private void updateTabSelection(int currentTab) {
+    public void disappearSearchBar() {
+        discoverSearchBar.setVisibility(GONE);
+    }
+
+    public void reappearSearchBar() {
+        discoverSearchBar.setVisibility(VISIBLE);
+    }
+
+    public void updateTabSelection(int currentTab) {
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
             if (selectedTab != null) {
@@ -535,6 +553,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
+    public void onSearchInteraction(int action, ArrayList<Pojos.Category> categories) {
+        disappearSearchBar();
+        pushFragment(MyInterestsFragment.newInstance(categories));
+    }
+
+    @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null));
@@ -580,6 +604,9 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         if (!navigationController.isRootFragment()) {
+            if (navigationController.getCurrentFragment().getTag().contains("MyInterestsFragment"))
+                reappearSearchBar();
+
             navigationController.popFragment();
         } else {
             if (fragmentHistory.isEmpty()) {

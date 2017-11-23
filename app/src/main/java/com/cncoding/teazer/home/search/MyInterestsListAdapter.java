@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.cncoding.teazer.home.search.DummyData.getMyInterestsList;
 
 /**
  *
@@ -22,10 +25,14 @@ import static com.cncoding.teazer.home.search.DummyData.getMyInterestsList;
 
 public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsListAdapter.ViewHolder> {
 
-    private String[] titles = new String[] {"Dance", "Music", "VideoGraphy"};
+    private ArrayList<Category> myInterestsCategoriesArrayList;
+    private Map<String, ArrayList<PostDetails>> myInterests;
     private Context context;
 
-    MyInterestsListAdapter(Context context) {
+    MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList,
+                           Map<String, ArrayList<PostDetails>> myInterests, Context context) {
+        this.myInterestsCategoriesArrayList = myInterestsCategoriesArrayList;
+        this.myInterests = myInterests;
         this.context = context;
     }
 
@@ -38,15 +45,18 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     @Override
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
-        holder.header.setText(titles[position]);
+        if (position < 3) {
+            holder.header.setText(myInterestsCategoriesArrayList.get(position).getCategoryName());
 
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(getMyInterestsList(), context));
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
+                    myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return myInterestsCategoriesArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

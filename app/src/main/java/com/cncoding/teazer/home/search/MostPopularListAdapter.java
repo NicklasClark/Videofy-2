@@ -13,7 +13,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.DummyDiscover.DummyMostPopular;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.ArrayList;
 
@@ -29,10 +29,10 @@ import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 
 class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter.ViewHolder> {
 
-    private ArrayList<DummyMostPopular> mostPopularList;
+    private ArrayList<PostDetails> mostPopularList;
     private Context context;
 
-    MostPopularListAdapter(ArrayList<DummyMostPopular> mostPopularList, Context context) {
+    MostPopularListAdapter(ArrayList<PostDetails> mostPopularList, Context context) {
         this.mostPopularList = mostPopularList;
         this.context = context;
     }
@@ -50,43 +50,57 @@ class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter
         holder.mostPopular = mostPopularList.get(position);
 
         holder.title.setText(holder.mostPopular.getTitle());
-        holder.name.setText(holder.mostPopular.getName());
-        holder.duration.setText(holder.mostPopular.getDuration() + " secs");
+        holder.name.setText(holder.mostPopular.getPostOwner().getUserName());
+        holder.duration.setText(holder.mostPopular.getMedias().get(0).getDuration() + " secs");
         holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
-        holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getViews()));
-        holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getReactions()) + " R");
-
-        if (holder.mostPopular.getThumbUrl().contains(".gif")) {
-            Glide.with(context)
-                    .load(holder.mostPopular.getThumbUrl())
-                    .asGif()
-                    .crossFade()
-                    .into(holder.thumbnail);
-        } else
-            Glide.with(context)
-                    .load(holder.mostPopular.getThumbUrl())
-                    .crossFade()
-                    .into(holder.thumbnail);
+        holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews()));
+        holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getTotalReactions()) + " R");
 
         Glide.with(context)
-                .load(holder.mostPopular.getProfileThumbUrl())
+                .load(holder.mostPopular.getMedias().get(0).getThumbUrl())
+                .asGif()
+                .crossFade()
+                .into(holder.thumbnail);
+
+        if (holder.mostPopular.getPostOwner().hasProfileMedia())
+            Glide.with(context)
+                .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
+                .placeholder(R.drawable.ic_user_dp_small)
                 .crossFade()
                 .into(holder.dp);
+        else
+            Glide.with(context)
+                    .load("")
+                    .placeholder(R.drawable.ic_user_dp_small)
+                    .crossFade()
+                    .into(holder.dp);
 
-        Glide.with(context)
-                .load(holder.mostPopular.getReaction1Url())
-                .crossFade()
-                .into(holder.reactionImage1);
+        if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
+            holder.reactionImage1.setVisibility(View.VISIBLE);
+            Glide.with(context)
+                    .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                    .placeholder(R.drawable.ic_user_dp_small)
+                    .crossFade()
+                    .into(holder.reactionImage1);
 
-        Glide.with(context)
-                .load(holder.mostPopular.getReaction2Url())
-                .crossFade()
-                .into(holder.reactionImage2);
+            if (holder.mostPopular.getReactedUsers().size() > 1) {
+                holder.reactionImage2.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_dp_small)
+                        .crossFade()
+                        .into(holder.reactionImage2);
+            }
 
-        Glide.with(context)
-                .load(holder.mostPopular.getReaction3Url())
-                .crossFade()
-                .into(holder.reactionImage3);
+            if (holder.mostPopular.getReactedUsers().size() > 2) {
+                holder.reactionImage3.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_dp_small)
+                        .crossFade()
+                        .into(holder.reactionImage3);
+            }
+        }
     }
 
     @Override
@@ -107,7 +121,7 @@ class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
         @BindView(R.id.reaction_3) CircularAppCompatImageView reactionImage3;
-        DummyMostPopular mostPopular;
+        PostDetails mostPopular;
 
         public ViewHolder(View itemView) {
             super(itemView);

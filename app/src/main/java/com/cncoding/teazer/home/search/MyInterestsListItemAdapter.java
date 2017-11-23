@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.search;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.DummyDiscover.MyDummyInterests;
+import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.ArrayList;
 
@@ -21,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 /**
  *
@@ -29,11 +29,11 @@ import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 
 public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterestsListItemAdapter.ViewHolder> {
 
-    private ArrayList<MyDummyInterests> myInterestsList;
+    private ArrayList<PostDetails> postDetailsArrayList;
     private Context context;
 
-    MyInterestsListItemAdapter(ArrayList<MyDummyInterests> myInterestsList, Context context) {
-        this.myInterestsList = myInterestsList;
+    MyInterestsListItemAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
+        this.postDetailsArrayList = postDetailsArrayList;
         this.context = context;
     }
 
@@ -44,48 +44,64 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         return new MyInterestsListItemAdapter.ViewHolder(itemView);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(MyInterestsListItemAdapter.ViewHolder holder, int position) {
-        holder.myInterests = myInterestsList.get(position);
+        holder.postDetails = postDetailsArrayList.get(position);
 
-        holder.title.setText(holder.myInterests.getTitle());
-        holder.name.setText(holder.myInterests.getName());
-        holder.likes.setText(SPACE + String.valueOf(holder.myInterests.getLikes()));
-        holder.views.setText(SPACE + String.valueOf(holder.myInterests.getViews()));
-        holder.reactions.setText(SPACE + String.valueOf(holder.myInterests.getReactions()) + " R");
+        /*Setting title*/
+        holder.title.setText(holder.postDetails.getTitle());
 
-        if (holder.myInterests.getThumbUrl().contains(".gif")) {
+        /*Setting name*/
+        String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+        holder.name.setText(name);
+
+        /*Setting likes*/
+        String likes = SPACE + String.valueOf(holder.postDetails.getLikes());
+        holder.likes.setText(likes);
+
+        /*Setting views*/
+        String views = SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
+        holder.views.setText(views);
+
+        /*Setting reactions*/
+        String reactions = SPACE + String.valueOf(holder.postDetails.getTotalReactions()) + " R";
+        holder.reactions.setText(reactions);
+
+        if (holder.postDetails.getPostOwner().hasProfileMedia())
             Glide.with(context)
-                    .load(holder.myInterests.getThumbUrl())
-                    .asGif()
+                    .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
+                    .placeholder(R.drawable.ic_user_dp_small)
                     .crossFade()
                     .into(holder.thumbnail);
-        } else
+        else
             Glide.with(context)
-                    .load(holder.myInterests.getThumbUrl())
+                    .load("")
+                    .placeholder(R.drawable.ic_user_dp_small)
                     .crossFade()
                     .into(holder.thumbnail);
 
-        Glide.with(context)
-                .load(holder.myInterests.getProfileThumbUrl())
-                .crossFade()
-                .into(holder.dp);
+        if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getReactedUsers().size() > 0) {
+            holder.reactionImage1.setVisibility(View.VISIBLE);
+            Glide.with(context)
+                    .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                    .crossFade()
+                    .into(holder.reactionImage1);
 
-        Glide.with(context)
-                .load(holder.myInterests.getReaction1Url())
-                .crossFade()
-                .into(holder.reactionImage1);
-
-        Glide.with(context)
-                .load(holder.myInterests.getReaction2Url())
-                .crossFade()
-                .into(holder.reactionImage2);
+            if (holder.postDetails.getReactedUsers().size() > 1) {
+                holder.reactionImage2.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                        .crossFade()
+                        .into(holder.reactionImage2);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return myInterestsList.size();
+        return postDetailsArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,7 +115,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
-        MyDummyInterests myInterests;
+        PostDetails postDetails;
         
         public ViewHolder(View itemView) {
             super(itemView);

@@ -40,6 +40,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
+    public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";

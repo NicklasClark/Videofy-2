@@ -5,11 +5,14 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 //import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
@@ -1101,51 +1104,33 @@ public class Pojos {
             }
         }
 
-        public static class LandingPosts implements Parcelable {
+        public static class LandingPosts {
             private ArrayList<PostDetails> most_popular;
             private ArrayList<Category> user_interests;
             private ArrayList<Category> trending_categories;
-            private MyInterests my_interests;
-
-            protected LandingPosts(Parcel in) {
-                most_popular = in.createTypedArrayList(PostDetails.CREATOR);
-                user_interests = in.createTypedArrayList(Category.CREATOR);
-                trending_categories = in.createTypedArrayList(Category.CREATOR);
-                my_interests = in.readParcelable(MyInterests.class.getClassLoader());
-            }
+            @SerializedName("my_interests")
+            @Expose
+            private Map<String, ArrayList<PostDetails>> my_interests;
 
             public LandingPosts(ArrayList<PostDetails> most_popular, ArrayList<Category> user_interests,
-                                ArrayList<Category> trending_categories, MyInterests my_interests) {
+                                ArrayList<Category> trending_categories, Map<String, ArrayList<PostDetails>> my_interests) {
                 this.most_popular = most_popular;
                 this.user_interests = user_interests;
                 this.trending_categories = trending_categories;
                 this.my_interests = my_interests;
             }
 
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeTypedList(most_popular);
-                dest.writeTypedList(user_interests);
-                dest.writeTypedList(trending_categories);
-                dest.writeParcelable(my_interests, flags);
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            public static final Creator<LandingPosts> CREATOR = new Creator<LandingPosts>() {
-                @Override
-                public LandingPosts createFromParcel(Parcel in) {
-                    return new LandingPosts(in);
+            public void clearData() {
+                if (most_popular != null)
+                    most_popular.clear();
+                if (user_interests != null)
+                    user_interests.clear();
+                if (trending_categories != null)
+                    trending_categories.clear();
+                if (my_interests != null) {
+                    my_interests.clear();
                 }
-
-                @Override
-                public LandingPosts[] newArray(int size) {
-                    return new LandingPosts[size];
-                }
-            };
+            }
 
             public ArrayList<PostDetails> getMostPopular() {
                 return most_popular;
@@ -1159,63 +1144,8 @@ public class Pojos {
                 return trending_categories;
             }
 
-            public MyInterests getMyInterests() {
+            public Map<String, ArrayList<PostDetails>> getMyInterests() {
                 return my_interests;
-            }
-        }
-
-        public static class MyInterests implements Parcelable {
-            private ArrayList<PostDetails> additionalProp1;
-            private ArrayList<PostDetails> additionalProp2;
-            private ArrayList<PostDetails> additionalProp3;
-
-            protected MyInterests(Parcel in) {
-                additionalProp1 = in.createTypedArrayList(PostDetails.CREATOR);
-                additionalProp2 = in.createTypedArrayList(PostDetails.CREATOR);
-                additionalProp3 = in.createTypedArrayList(PostDetails.CREATOR);
-            }
-
-            public MyInterests(ArrayList<PostDetails> additionalProp1, ArrayList<PostDetails> additionalProp2,
-                               ArrayList<PostDetails> additionalProp3) {
-                this.additionalProp1 = additionalProp1;
-                this.additionalProp2 = additionalProp2;
-                this.additionalProp3 = additionalProp3;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeTypedList(additionalProp1);
-                dest.writeTypedList(additionalProp2);
-                dest.writeTypedList(additionalProp3);
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            public static final Creator<MyInterests> CREATOR = new Creator<MyInterests>() {
-                @Override
-                public MyInterests createFromParcel(Parcel in) {
-                    return new MyInterests(in);
-                }
-
-                @Override
-                public MyInterests[] newArray(int size) {
-                    return new MyInterests[size];
-                }
-            };
-
-            public ArrayList<PostDetails> getAdditionalProp1() {
-                return additionalProp1;
-            }
-
-            public ArrayList<PostDetails> getAdditionalProp2() {
-                return additionalProp2;
-            }
-
-            public ArrayList<PostDetails> getAdditionalProp3() {
-                return additionalProp3;
             }
         }
     }
