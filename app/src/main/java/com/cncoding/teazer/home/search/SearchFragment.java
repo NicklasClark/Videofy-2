@@ -16,8 +16,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 
-import java.util.Random;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,7 +56,7 @@ public class SearchFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);
 
-        random = new Random();
+//        random = new Random();
 
 
         LinearLayoutManager horizontalLinearLayoutManager = new LinearLayoutManager(getContext(),
