@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    android:layout_height="290dp">
+    android:layout_height="280dp">
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:background="@drawable/material_flat"
-            android:layout_height="290dp" />
+            android:layout_height="280dp" />
     <RelativeLayout
 
         android:layout_width="match_parent"
@@ -177,12 +177,13 @@
                 android:layout_marginBottom="10dp"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@+id/reactiontext"
                 android:background="@drawable/bg_circle_white_outline"
                 >
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
-                    android:id="@+id/home_screen_post_dp"
+                    android:id="@+id/image1"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="1dp"
@@ -192,6 +193,7 @@
             <RelativeLayout
                 android:id="@+id/image2_layout"
                 android:layout_width="35dp"
+                android:visibility="gone"
                 android:layout_height="35dp"
                 android:layout_marginBottom="10dp"
                 android:layout_centerVertical="true"
@@ -216,12 +218,14 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp"
+                android:visibility="gone"
                 android:layout_toStartOf="@+id/image2_layout"
                 android:layout_marginStart="@dimen/padding_half"
                 android:background="@drawable/bg_circle_white_outline">
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
                     android:id="@+id/image3"
+
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="1dp"

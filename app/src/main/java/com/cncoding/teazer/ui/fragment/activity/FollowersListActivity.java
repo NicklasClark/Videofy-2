@@ -112,7 +112,7 @@ public class FollowersListActivity extends AppCompatActivity {
                     try {
                         userfollower = response.body().getFollowers();
                         if (userfollower == null || userfollower.size() == 0) {
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context,"No User Found", Toast.LENGTH_SHORT).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
@@ -170,7 +170,6 @@ public class FollowersListActivity extends AppCompatActivity {
 
                         else {
                             profileMyFollowerAdapter = new FollowersAdapter(context, list);
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             recyclerView.setAdapter(profileMyFollowerAdapter);
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
