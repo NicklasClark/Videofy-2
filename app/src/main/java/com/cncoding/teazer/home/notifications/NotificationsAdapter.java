@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,13 +57,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int STARTED_FOLLOWING = 1;
     private static final int ACCEPTED_REQUEST = 2;
     private static final int SENT_YOU_A_FOLLOW_REQUEST = 3;
-//    private static final int REACTED_TO_YOUR_VIDEO = 4;
-//    private static final int LIKED_YOUR_VIDEO = 5;
-//    private static final int LIKED_YOUR_REACTION = 6;
-//    private static final int POSTED_A_VIDEO = 7;
-//    private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
-//    private static final int TAGGED_YOU_IN_A_VIDEO = 9;
     private static final int ALSO_STARTED_FOLLOWING = 10;
+
+    private static final int LIKED_YOUR_VIDEO = 5;
+    private static final int POSTED_A_VIDEO = 7;
+    private static final int TAGGED_YOU_IN_A_VIDEO = 9;
+
+    private static final int REACTED_TO_YOUR_VIDEO = 4;
+    private static final int LIKED_YOUR_REACTION = 6;
+    private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
 
     private Context context;
     private boolean isFollowingTab;
@@ -80,10 +83,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         View view;
         switch (viewType) {
             case TYPE_FOLLOWING:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_following_notifications, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_following, parent, false);
                 return new FollowingViewHolder(view);
             case TYPE_REQUESTS:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_request_notifications, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_request, parent, false);
                 return new RequestsViewHolder(view);
             default:
                 return null;
@@ -121,23 +124,49 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         if (mListener != null) {
-                            ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
-                                    .enqueue(new Callback<PostDetails>() {
+                            if (holder1.notification.getNotificationType() == LIKED_YOUR_VIDEO ||
+                                    holder1.notification.getNotificationType() == POSTED_A_VIDEO ||
+                                    holder1.notification.getNotificationType() == TAGGED_YOU_IN_A_VIDEO) {
+                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
+                                        .enqueue(new Callback<PostDetails>() {
 
-                                        @Override
-                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                            if (response.code() == 200)
-                                                mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
-                                            else
-                                                Toast.makeText(context, response.code() + " : " + response.message(),
-                                                        Toast.LENGTH_SHORT).show();
-                                        }
+                                            @Override
+                                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                if (response.code() == 200)
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                            }
 
-                                        @Override
-                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                            @Override
+                                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                            }
+                                        });
+                            } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
+                                    holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
+                                    holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
+                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getPostId(), context)
+                                        .enqueue(new Callback<PostDetails>() {
+
+                                            @Override
+                                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                if (response.code() == 200)
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                            }
+                                        });
+                            }
                         }
                     }
                 });
@@ -177,24 +206,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onClick(View view) {
                         switch (view.getId()) {
                             case R.id.root_layout:
-                                if (mListener != null) {
-                                    ApiCallingService.Friends.getOthersProfileInfoNoti(holder2.notification.getSourceId(), context)
-                                            .enqueue(new Callback<Profile>() {
-                                                @Override
-                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
-                                                    if (response.code() == 200)
-                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
-                                                    else
-                                                        Toast.makeText(context, response.code() + " : " + response.message(),
-                                                                Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<Profile> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
+//                                if (mListener != null) {
+//                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
+//                                            .enqueue(new Callback<Profile>() {
+//                                                @Override
+//                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
+//                                                    if (response.code() == 200)
+//                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
+//                                                    else
+//                                                        Log.d("GetOthersProfileInfo", response.code() + " : " + response.message());
+//                                                }
+//
+//                                                @Override
+//                                                public void onFailure(Call<Profile> call, Throwable t) {
+//                                                        Log.d("FAIL-GetOthrProfileInfo", t.getMessage());
+//                                                }
+//                                            });
+//                                }
                                 break;
                             case R.id.notification_action:
                                 String text = holder2.action.getText().toString();
@@ -210,17 +238,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                                                             else
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                            holder2.declineRequest.setVisibility(View.GONE);
                                                         } else {
                                                             sendJoinRequest(holder2);
                                                         }
                                                     } else
-                                                        Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d("FOLLOW BACK", response.code() + " : " + response.message());
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.d("FAIL - FOLLOW BACK", t.getMessage());
                                                 }
                                             });
                                 } else if (text.equals(context.getString(R.string.accept))) {
@@ -233,15 +261,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body().getStatus())
                                                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                                                         else
-                                                            Toast.makeText(context, "Failed: false status!", Toast.LENGTH_SHORT).show();
+                                                            Log.d("AcceptJoinRequest", response.code()
+                                                                    + " : " + response.body().getMessage());
                                                     } else
-                                                        Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d("AcceptJoinRequest", response.code()
+                                                                + " : " + response.body().getMessage());
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.d("FAIL- AcceptJoinRequest", t.getMessage());
                                                 }
                                             });
                                 }
@@ -266,7 +295,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                         @Override
                                                         public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
                                                         }
                                                     });
                                                 }
@@ -296,14 +325,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                             BUTTON_TYPE_FOLLOW);
                                                                 }
                                                                 else
-                                                                    Toast.makeText(context, response.body().getMessage(),
-                                                                            Toast.LENGTH_SHORT).show();
+                                                                    Log.d("CancelRequest", response.code()
+                                                                            + " : " + response.body().getMessage());
                                                             }
                                                         }
 
                                                         @Override
                                                         public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                                                            Log.d("FAIL - CancelRequest", t.getMessage());
                                                         }
                                                     });
                                                 }
@@ -345,15 +374,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 .show();
                                                     }
                                                     else
-                                                        Toast.makeText(context, "Failed: false status!", Toast.LENGTH_SHORT).show();
+                                                        Log.d("DeleteJoinRequest", response.code()
+                                                                + " : " + response.body().getMessage());
                                                 } else
-                                                    Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                                            Toast.LENGTH_SHORT).show();
+                                                    Log.d("DeleteJoinRequest", response.code()
+                                                            + " : " + response.body().getMessage());
                                             }
 
                                             @Override
                                             public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Log.d("FAIL- DeleteJoinRequest", t.getMessage());
                                             }
                                         });
                                 break;
@@ -386,13 +416,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     setActionButton(holder.action, null, BUTTON_TYPE_REQUESTED);
                             }
                         } else
-                            Toast.makeText(context, response.code() + " : " + response.body().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d("SendJoinRequestByUserId", response.code()
+                                    + " : " + response.body().getMessage());
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("FAIL-SendJoinRqstUserId", t.getMessage());
                     }
                 });
     }

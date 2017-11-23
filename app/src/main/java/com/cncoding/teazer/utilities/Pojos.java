@@ -995,12 +995,14 @@ public class Pojos {
             private int followers;
             private int followings;
             private int total_videos;
+            private boolean can_change_password;
 
-            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
                 this.user_profile = user_profile;
                 this.followers = followers;
                 this.followings = followings;
                 this.total_videos = total_videos;
+                this.can_change_password = can_change_password;
             }
 
 
@@ -1048,6 +1050,14 @@ public class Pojos {
 
             public int getTotalVideos() {
                 return total_videos;
+            }
+
+            public boolean isCan_change_password() {
+                return can_change_password;
+            }
+
+            public void setCan_change_password(boolean can_change_password) {
+                this.can_change_password = can_change_password;
             }
         }
 
@@ -1140,8 +1150,6 @@ public class Pojos {
                 return followings;
             }
         }
-
-
 
 //        public static class UserProfile implements Parcelable {
 //            private String user_id;
@@ -1400,11 +1408,6 @@ public class Pojos {
 //            }
 //        }
 //
-
-
-
-
-
 
         public static class PrivateProfile implements Parcelable {
             private String user_id;
@@ -1785,13 +1788,15 @@ public class Pojos {
             private int from_id;
             private int to_id;
             private int source_id;
+            private int post_id;
 
-            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id) {
+            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id, int post_id) {
                 this.notification_type = notification_type;
                 this.thumb_url = thumb_url;
                 this.from_id = from_id;
                 this.to_id = to_id;
                 this.source_id = source_id;
+                this.post_id = post_id;
             }
 
             protected MetaData(Parcel in) {
@@ -1800,6 +1805,22 @@ public class Pojos {
                 from_id = in.readInt();
                 to_id = in.readInt();
                 source_id = in.readInt();
+                post_id = in.readInt();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(notification_type);
+                dest.writeString(thumb_url);
+                dest.writeInt(from_id);
+                dest.writeInt(to_id);
+                dest.writeInt(source_id);
+                dest.writeInt(post_id);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
             }
 
             public static final Creator<MetaData> CREATOR = new Creator<MetaData>() {
@@ -1814,18 +1835,8 @@ public class Pojos {
                 }
             };
 
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(notification_type);
-                parcel.writeString(thumb_url);
-                parcel.writeInt(from_id);
-                parcel.writeInt(to_id);
-                parcel.writeInt(source_id);
+            public int getPostId() {
+                return post_id;
             }
 
             public int getNotificationType() {

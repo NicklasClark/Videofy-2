@@ -74,11 +74,11 @@
                     app:drawableStartCompat="@drawable/ic_react"
                     android:layout_alignParentStart="true"/>
 
-                <CheckedTextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                     android:id="@+id/like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_like_outline"
+                    app:drawableTopCompat="@drawable/ic_like_outline"
                     android:layout_toStartOf="@+id/share"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/padding_half"
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_person"
+                    app:srcCompat="@drawable/ic_person_default"
                     android:foreground="@drawable/ripple_dark_circle"
                     android:layout_toStartOf="@+id/menu"
                     android:layout_centerVertical="true"
@@ -121,7 +121,7 @@
                     android:ellipsize="end"
                     android:textSize="@dimen/text_size_10sp"
                     android:background="@drawable/bg_circle_primary"
-                    android:layout_marginTop="@dimen/padding_default"
+                    android:layout_marginTop="@dimen/padding_half"
                     android:layout_alignTop="@+id/tags"
                     android:layout_alignEnd="@+id/tags"/>
 

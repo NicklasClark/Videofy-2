@@ -67,7 +67,7 @@ public class NotificationsFragment extends BaseFragment {
         }
 //        else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnUploadFragmentInteractionListener");
 //        }
     }
 

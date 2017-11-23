@@ -2,8 +2,8 @@ package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,15 +15,9 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
-import com.cncoding.teazer.adapter.FollowersAdapter;
-import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
-import com.cncoding.teazer.model.profile.followers.Follower;
-import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
-import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.List;
 

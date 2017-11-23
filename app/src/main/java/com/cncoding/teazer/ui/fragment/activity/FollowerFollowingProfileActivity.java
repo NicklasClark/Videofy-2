@@ -1,30 +1,22 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.bumptech.glide.Glide;
-import com.cncoding.teazer.R;
-
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,12 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter;
-import com.cncoding.teazer.adapter.FollowingAdapter;
-import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
@@ -50,23 +40,15 @@ import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
-import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.blurry.Blurry;
-import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -251,12 +233,11 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.action_report_block:
-                                openAlert(followerfollowingid);
+                            case R.id.action_profile_block:
+                                openBlockUser(followerfollowingid);
                                 break;
-                                case R.id.action_report_report:
-                                openAlert(followerfollowingid);
-                                break;
+                            case R.id.action_profile_report:
+
                         }
                         return false;
                     }
@@ -266,12 +247,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
         });
 
-        getProfilInformation(followerfollowingid);
+        getProfileInformation(followerfollowingid);
 
 
     }
 
-    public void getProfilInformation(final int followersid) {
+    public void getProfileInformation(final int followersid) {
 
 
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<FollowersProfile>() {
@@ -569,10 +550,31 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void openAlert(final int blockuserId) {
+    public void openBlockUser(final int blockuserId) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("Confirm Block...");
         alertDialog.setMessage("Are you sure you want to block this user");
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                blockunBlock(blockuserId, BLOCK_STATUS);
+            }
+        });
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
+    public void openReportUser(final int blockuserId) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle("Confirm Report...");
+        alertDialog.setMessage("Are you sure you want to report this user");
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 

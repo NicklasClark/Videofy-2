@@ -109,16 +109,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".home.camera.upload.VideoUpload"
-            android:label="@string/title_activity_video_upload"
-            android:parentActivityName=".home.camera.CameraActivity"
-            android:theme="@style/VideoUploadTheme"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".home.camera.CameraActivity" />
-        </activity>
-        <activity
             android:name=".ui.fragment.activity.Settings"
             android:label="@string/settings"
             android:screenOrientation="portrait"

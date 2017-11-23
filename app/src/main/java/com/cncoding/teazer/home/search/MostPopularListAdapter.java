@@ -54,7 +54,7 @@ class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter
         holder.duration.setText(holder.mostPopular.getDuration() + " secs");
         holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
         holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getViews()));
-        holder.reactions.setText(SPACE + String.valueOf(holder.mostPopular.getReactions()));
+        holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getReactions()) + " R");
 
         if (holder.mostPopular.getThumbUrl().contains(".gif")) {
             Glide.with(context)

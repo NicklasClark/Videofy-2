@@ -19,6 +19,8 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
+import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
@@ -586,8 +588,11 @@ public class ApiCallingService {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }
 
-        public static Call<ResultObject> updatePassword(Pojos.User.UpdatePassword updatePasswordDetails, Context context) {
+        public static Call<ResultObject> updatePassword(UpdatePasswordRequest updatePasswordDetails, Context context) {
             return getUserService(context).updatePassword(updatePasswordDetails);
+        }
+        public static Call<ResultObject> setPassword(SetPasswordRequest setPasswordDetails, Context context) {
+            return getUserService(context).setPassword(setPasswordDetails);
         }
 
         public static Call<Pojos.User.NotificationsList> getFollowingNotifications(int page, Context context){

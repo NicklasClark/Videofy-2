@@ -16,6 +16,7 @@ import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 public class SharedPrefs {
 
     private static final String AUTH_TOKEN = "authToken";
+    private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
 
@@ -63,5 +64,13 @@ public class SharedPrefs {
 
     public static UploadParams getVideoUploadSession(Context context) {
         return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
+    }
+
+    public static void setCurrentPassword(Context context, String password) {
+        getSharedPreferences(context).edit().putString(CURRENT_PASSWORD, password).apply();
+    }
+
+    public static String getCurrentPassword(Context context) {
+        return getSharedPreferences(context).getString(CURRENT_PASSWORD, null);
     }
 }

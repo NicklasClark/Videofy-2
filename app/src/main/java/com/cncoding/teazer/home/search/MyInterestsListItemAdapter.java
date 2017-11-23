@@ -53,7 +53,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         holder.name.setText(holder.myInterests.getName());
         holder.likes.setText(SPACE + String.valueOf(holder.myInterests.getLikes()));
         holder.views.setText(SPACE + String.valueOf(holder.myInterests.getViews()));
-        holder.reactions.setText(SPACE + String.valueOf(holder.myInterests.getReactions()) + " R");
+        holder.reactions.setText(SPACE + String.valueOf(holder.myInterests.getReactions()) + " reactions");
 
         if (holder.myInterests.getThumbUrl().contains(".gif")) {
             Glide.with(context)

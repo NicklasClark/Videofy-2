@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#26C6DA</color>-->
-    <color name="colorPrimary">#546E7A</color>
+    <color name="colorPrimary">#26C6DA</color>
+    <!--<color name="colorPrimary">#546E7A</color>-->
     <color name="colorPrimaryTranslucent">#dd546e7a</color>
-    <color name="colorPrimaryDark">#37474F</color>
-    <color name="colorPrimaryLight">#B0BEC5</color>
+    <!--<color name="colorPrimaryDark">#37474F</color>-->
+    <color name="colorPrimaryDark">#00838F</color>
+    <color name="colorPrimaryLight">#80DEEA</color>
     <color name="colorAccent">#4CAF50</color>
     <!--<color name="colorAccent">#8D6E63</color>-->
     <color name="colorAccent2">#00c853</color>
@@ -30,7 +31,8 @@
     <color name="colorlines">#D8D8D8</color>
     <color name="colorReactBtn">#26C6DA</color>
     <color name="statusbar">#0fcfe7</color>
-    <color name="blur">#8b121212</color>
+    <color name="blur">#63121212</color>
+    <color name="colorTranslucentWhite">#88000000</color>
 
     <!--    <color name="space_background_color">#757575</color>
         <color name="space_transparent">#00000000</color>

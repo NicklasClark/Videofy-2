@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,7 @@ import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
+import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
@@ -87,7 +89,7 @@ public class LoginFragment extends Fragment {
     private String username;
     private int countryCode = -1;
     private String enteredText;
-    private boolean isEmail;
+//    private boolean isEmail;
     private boolean isComingFromResetPassword = false;
 
     private LoginInteractionListener mListener;
@@ -112,13 +114,13 @@ public class LoginFragment extends Fragment {
         if (getArguments() != null) {
             enteredText = getArguments().getString(ENTERED_TEXT);
             countryCode = getArguments().getInt(COUNTRY_CODE);
-            isEmail = getArguments().getBoolean(IS_EMAIL);
+//            isEmail = getArguments().getBoolean(IS_EMAIL);
             isComingFromResetPassword = true;
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
@@ -129,7 +131,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (isComingFromResetPassword) {
             usernameView.setText(enteredText);
@@ -140,8 +142,13 @@ public class LoginFragment extends Fragment {
         }
         countryCodePicker.setCountryForPhoneCode(countryCode);
 
-        usernameView.setText("amit");
-        passwordView.setText("12345678");
+//        if (isEmail) {
+//            usernameView.setText(enteredText);
+//            countryCodePicker.setCountryForPhoneCode(countryCode);
+//        }
+
+        usernameView.setText("premsuman8");
+        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
@@ -283,11 +290,13 @@ public class LoginFragment extends Fragment {
                     passwordView.getText().toString());
             ApiCallingService.Auth.loginWithPassword(authorize)
                     .enqueue(new Callback<ResultObject>() {
+                        @SuppressWarnings("ConstantConditions")
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getContext(), response.body().getAuthToken());
+                                    SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
+                                    setCurrentPassword(getContext() ,passwordView.getText().toString());
                                     mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
                                 } else {
                                     ViewUtils.showSnackBar(loginBtn, response.body().getMessage());

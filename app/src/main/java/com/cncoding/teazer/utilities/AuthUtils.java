@@ -14,7 +14,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -102,22 +101,11 @@ public class AuthUtils {
     @NonNull
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
-
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return Settings.Secure.ANDROID_ID;
-
-//        }
-//        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-//        if (telephonyManager != null) {
-//            return telephonyManager.getDeviceId();
-//        } else return Settings.Secure.ANDROID_ID;
-        return Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     public static String getFcmToken(Context context) {
-        Log.d("FCM Token", FirebaseInstanceId.getInstance().getToken());
+//        Log.d("FCM Token", FirebaseInstanceId.getInstance().getToken());
         return SharedPrefs.getFcmToken(context) == null ? FirebaseInstanceId.getInstance().getToken() : SharedPrefs.getFcmToken(context);
 
 
