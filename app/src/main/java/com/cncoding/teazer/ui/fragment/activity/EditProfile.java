@@ -1,8 +1,6 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,18 +11,13 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -35,35 +28,28 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.Manifest;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.cncoding.teazer.utilities.FileUtils;
-import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickClick;
 import com.vansuita.pickimage.listeners.IPickResult;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -74,7 +60,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks{
+import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
+
+public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
 
     Context context;
     ImageView bgImage;
@@ -86,8 +74,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     EditText _email;
     EditText _mobileNumber;
     EditText _bio;
-    RadioButton _male;
-    RadioButton _female;
     String username;
     String firstname;
     String lastname;
@@ -96,22 +82,34 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     Long mobilenumber;
     int gender;
     String detail;
+    @BindView(R.id.male)
+    CircularAppCompatImageView male;
+    @BindView(R.id.female)
+    CircularAppCompatImageView female;
 
+    @BindView(R.id.maletxt)
+    ProximaNovaRegularCheckedTextView maletext;
+    @BindView(R.id.femaletxt)
+    ProximaNovaRegularCheckedTextView femaletxt;
     FloatingActionButton fab;
     ProgressBar simpleProgressBar;
     ScrollView layoutdetail;
 
     private static final int RC_REQUEST_STORAGE = 1001;
-
-
     private static final int LIMIT = 1;
     private static final int READ_STORAGE_PERMISSION = 4000;
     private static final String TAG = "Edit Profile";
+    boolean flag = false;
+    private String userProfileThumbnail;
+    private String userProfileUrl;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
         }
@@ -129,14 +127,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
                 onBackPressed();
+
             }
         });
         context = EditProfile.this;
         bgImage = findViewById(R.id.profile_id2);
         simpleProgressBar = findViewById(R.id.simpleProgressBar);
         layoutdetail = findViewById(R.id.layoutdetail);
-        _male = findViewById(R.id.male);
-        _female = findViewById(R.id.female);
         _username = findViewById(R.id.username);
         _firstname = findViewById(R.id.firstname);
         profile_image = findViewById(R.id.profile_id);
@@ -149,11 +146,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         username = intent.getStringExtra("UserName");
         firstname = intent.getStringExtra("FirstName");
         lastname = intent.getStringExtra("LastName");
-        String mobileno =intent.getStringExtra("MobileNumber");
-        if(mobileno==null) {}
-        else
-        {
-         mobilenumber=Long.parseLong(mobileno);
+        String mobileno = intent.getStringExtra("MobileNumber");
+        userProfileThumbnail = intent.getStringExtra("ProfileThumb");
+        userProfileUrl = intent.getStringExtra("ProfileMedia");
+
+        if (mobileno == null) {
+        } else {
+            mobilenumber = Long.parseLong(mobileno);
         }
         gender = Integer.parseInt(intent.getStringExtra("Gender"));
         emailId = intent.getStringExtra("EmailId");
@@ -165,26 +164,54 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
+
+
         if (gender == 1) {
-            _male.setChecked(true);
+            male.setBackgroundResource(R.drawable.ic_male_sel);
+            female.setBackgroundResource(R.drawable.ic_female_white);
+            maletext.setTextColor(Color.parseColor("#2196F3"));
+            femaletxt.setTextColor(Color.parseColor("#333333"));
         } else {
-            _female.setChecked(true);
+            female.setBackgroundResource(R.drawable.ic_female_sel);
+            male.setBackgroundResource(R.drawable.ic_male_white);
+            femaletxt.setTextColor(Color.parseColor("#2196F3"));
+            maletext.setTextColor(Color.parseColor("#333333"));
         }
+
+        male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                male.setBackgroundResource(R.drawable.ic_male_sel);
+                female.setBackgroundResource(R.drawable.ic_female_white);
+                maletext.setTextColor(Color.parseColor("#2196F3"));
+                femaletxt.setTextColor(Color.parseColor("#333333"));
+                gender = 1;
+            }
+        });
+        female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                female.setBackgroundResource(R.drawable.ic_female_sel);
+                male.setBackgroundResource(R.drawable.ic_male_white);
+                femaletxt.setTextColor(Color.parseColor("#2196F3"));
+                maletext.setTextColor(Color.parseColor("#333333"));
+                gender = 2;
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String usernames = _username.getText().toString();
                 String firstname = _firstname.getText().toString();
-                String lastnames = "";
-                int countrycodes = countrycode;
-                long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
+                String lastnames = "abcdee";
+                Integer countrycodes = countrycode;
+                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
                 String emailid = _email.getText().toString();
                 String details = _bio.getText().toString();
                 ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, details);
                 ProfileUpdate(profileUpdateRequest);
             }
         });
-
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,62 +224,51 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         initProfileImage();
 
     }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String s = cursor.getString(column_index);
+        cursor.close();
+        return s;
+    }
+
     @Override
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
 
-
-            try {
-
-
-                layoutdetail.setVisibility(View.GONE);
-                simpleProgressBar.setVisibility(View.VISIBLE);
-
-              // File files= FileUtils.getFile(this,r.getUri());
-
-              //  Log.d("Exception12",files.getName());
-                //RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(r.getUri())),files);
-               // MultipartBody.Part body=MultipartBody.Part.createFormData( "photo",files.getName(),requestBody);
-                //saveDataToDatabase(body);
-
-            }
-            catch (Exception e) {
-               Log.d("Exception12",e.getMessage());
-            }
             SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("MYIMAGES", r.getUri().toString());
             editor.apply();
 
-            SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-            final String imageUri =  prfs.getString("MYIMAGES", "");
-            Picasso.with(this)
-                    .load(Uri.parse(imageUri))
-                    .into(profile_image);
+            try {
 
-            layoutdetail.setVisibility(View.VISIBLE);
-            simpleProgressBar.setVisibility(View.GONE);
+
+
+                File profileImage = new File(r.getPath());
+                Log.d("Exception1", r.getPath());
+
+                Log.d("Exception12", r.getPath());
+
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                String fileExt = profileImage.getAbsolutePath().substring(profileImage.getAbsolutePath().lastIndexOf("."));
+                Log.d("FILENAME", profileImage.getName() + fileExt);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
+                saveDataToDatabase(body);
+
+            } catch (Exception e) {
+                Log.d("Exception2", e.getMessage());
+            }
         } else {
 
             Toast.makeText(this, r.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-
-
-
-    public byte[] getBytes(InputStream inputStream) throws IOException {
-
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -266,28 +282,26 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         if (!EasyPermissions.hasPermissions(this, perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
-        }
+        } else {
 
-        else {
-            SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-            String imageUri =  prfs.getString("MYIMAGES", null);
-            if(imageUri==null)
-            {
-
+            if (userProfileThumbnail == null) {
                 final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
                 Glide.with(context)
                         .load(pic)
                         .into(profile_image);
-            }
-            else
-            {
+                profileBlur(pic);
+            } else {
 
-                Picasso.with(this)
-                        .load(Uri.parse(imageUri))
+                Picasso.with(context)
+                        .load(Uri.parse(userProfileThumbnail))
                         .into(profile_image);
+                profileBlur(userProfileUrl);
             }
+
         }
     }
+
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
@@ -298,6 +312,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
     }
+
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -319,43 +334,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     protected void onResume() {
         super.onResume();
         final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-
-
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(final Void... params) {
-
-                Bitmap bitmap = null;
-                try {
-
-
-                    final URL url = new URL(pic);
-
-                    try {
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } catch (Exception e) {
-
-                }
-
-                return bitmap;
-            }
-
-            @Override
-            protected void onPostExecute(final Bitmap result) {
-                Blurry.with(context).from(result).into(bgImage);
-                layoutdetail.setVisibility(View.VISIBLE);
-                simpleProgressBar.setVisibility(View.GONE);
-            }
-        }.execute();
-
+        layoutdetail.setVisibility(View.VISIBLE);
+        simpleProgressBar.setVisibility(View.GONE);
 
     }
-
-
 
 
     public void ProfileUpdate(ProfileUpdateRequest profileUpdateRequest) {
@@ -366,19 +348,17 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             @Override
             public void onResponse(Call<ProfileUpdate> call, Response<ProfileUpdate> response) {
 
-
-                Log.d("ResponseCode", String.valueOf(response.code()));
+                Log.d("on response", String.valueOf(response.toString()));
 
                 if (response.code() == 200) {
 
                     try {
                         if (response.body().getStatus()) {
-
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
+                            flag = true;
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         } else {
-
                             Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_LONG).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
@@ -388,7 +368,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
-
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_LONG).show();
@@ -396,6 +375,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     layoutdetail.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onFailure(Call<ProfileUpdate> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
@@ -407,209 +387,112 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     }
 
 
-
-    public void saveDataToDatabase(MultipartBody.Part body)
-
-    {
-
+    public void saveDataToDatabase(MultipartBody.Part body) {
         ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    Log.d("Response", response.toString());
 
-                    Log.d("Response", String.valueOf(response.code()));
-                    if(response.code()==200)
-                    {
-                        Log.d("Response", String.valueOf(response.body().getStatus()));
+                    SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                    final String imageUri = prfs.getString("MYIMAGES", "");
+                    Picasso.with(EditProfile.this)
+                            .load(imageUri)
+                            .into(profile_image);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
 
+                    Blurry.with(EditProfile.this).radius(1).sampling(1).from(bitmap).into(bgImage);
+                    simpleProgressBar.setVisibility(View.GONE);
+                    layoutdetail.setVisibility(View.VISIBLE);
 
-                    }
-                    else if(response.code()==400)
-                    {
+                    if (response.code() == 400) {
                         Log.d("Response2 ", String.valueOf(response.body().getMessage()));
                     }
 
-
-                    // Log.d("Response", String.valueOf(response.body().getStatus()));
-                    // Log.d("Response", String.valueOf(response.body().getMessage()));
-
-
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-
-                Log.d("errror", t.getMessage());
+                simpleProgressBar.setVisibility(View.GONE);
+                layoutdetail.setVisibility(View.VISIBLE);
+                t.printStackTrace();
             }
         });
 
     }
 
-
-
-
-
-//    public void saveDataToServer(Uri uri) {
-//
-//        String filePath = getRealPathFromUri(uri);
-//        if (filePath != null && !filePath.isEmpty()) {
-//            File file = new File(filePath);
-//            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-//            // MultipartBody.Part is used to send also the actual filename
-//            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-//            // adds another part within the multipart request
-//            String descriptionString = "Sample description";
-//            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), descriptionString);
-//
-//
-//            ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
-//                @Override
-//                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-//                    try {
-//                        Log.d("Response", response.toString());
-//
-//                        Log.d("Response", String.valueOf(response.code()));
-//                        if(response.code()==200)
-//                        {
-//                             Log.d("Response", String.valueOf(response.body().getStatus()));
-//
-//
-//                        }
-//                        else if(response.code()==400)
-//                        {
-//                            Log.d("Response2 ", String.valueOf(response.body().getMessage()));
-//                        }
-//
-//
-//                       // Log.d("Response", String.valueOf(response.body().getStatus()));
-//                       // Log.d("Response", String.valueOf(response.body().getMessage()));
-//
-//
-//                        Toast.makeText(context, "Success", Toast.LENGTH_LONG).show();
-//
-//                    } catch (Exception e) {
-//                        Log.d("Exception", e.getMessage());
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ResultObject> call, Throwable t) {
-//
-//                    Log.d("errror", t.getMessage());
-//                }
-//            });
-//
-//        }
-//    }
-//
-//
-//        public String getRealPathFromUri(final Uri uri) {
-//        // DocumentProvider
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-//            // ExternalStorageProvider
-//            if (isExternalStorageDocument(uri)) {
-//                final String docId = DocumentsContract.getDocumentId(uri);
-//                final String[] split = docId.split(":");
-//                final String type = split[0];
-//
-//                if ("primary".equalsIgnoreCase(type)) {
-//                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-//                }
-//            }
-//            // DownloadsProvider
-//            else if (isDownloadsDocument(uri)) {
-//
-//                final String id = DocumentsContract.getDocumentId(uri);
-//                final Uri contentUri = ContentUris.withAppendedId(
-//                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-//
-//                return getDataColumn(context, contentUri, null, null);
-//            }
-//            // MediaProvider
-//            else if (isMediaDocument(uri)) {
-//                final String docId = DocumentsContract.getDocumentId(uri);
-//                final String[] split = docId.split(":");
-//                final String type = split[0];
-//
-//                Uri contentUri = null;
-//                if ("image".equals(type)) {
-//                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-//                } else if ("video".equals(type)) {
-//                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-//                } else if ("audio".equals(type)) {
-//                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//                }
-//
-//                final String selection = "_id=?";
-//                final String[] selectionArgs = new String[]{
-//                        split[1]
-//                };
-//
-//                return getDataColumn(context, contentUri, selection, selectionArgs);
-//            }
-//        }
-//        // MediaStore (and general)
-//        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-//
-//            // Return the remote address
-//            if (isGooglePhotosUri(uri))
-//                return uri.getLastPathSegment();
-//
-//            return getDataColumn(context, uri, null, null);
-//        }
-//        // File
-//        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-//            return uri.getPath();
-//        }
-//
-//        return null;
-//    }
-//
-//
-//    private String getDataColumn(Context context, Uri uri, String selection,
-//                                 String[] selectionArgs) {
-//
-//        Cursor cursor = null;
-//        final String column = "_data";
-//        final String[] projection = {
-//                column
-//        };
-//
-//        try {
-//            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-//                    null);
-//            if (cursor != null && cursor.moveToFirst()) {
-//                final int index = cursor.getColumnIndexOrThrow(column);
-//                return cursor.getString(index);
-//            }
-//        } finally {
-//            if (cursor != null)
-//                cursor.close();
-//        }
-//        return null;
-//    }
-//
-//    private boolean isExternalStorageDocument(Uri uri) {
-//        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-//    }
-//
-//    private boolean isDownloadsDocument(Uri uri) {
-//        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-//    }
-//
-//    private boolean isMediaDocument(Uri uri) {
-//        return "com.android.providers.media.documents".equals(uri.getAuthority());
-//    }
-//
-//    private boolean isGooglePhotosUri(Uri uri) {
-//        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-//    }
+    @Override
+    public void onProgressUpdate(int percentage) {
 
     }
+
+    @Override
+    public void onUploadError(Throwable throwable) {
+
+
+    }
+
+    @Override
+    public void onUploadFinish() {
+        finishVideoUploadSession(this);
+
+    }
+
+
+    @AfterPermissionGranted(RC_REQUEST_STORAGE)
+    public void profileBlur(final String pic) {
+
+        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (!EasyPermissions.hasPermissions(this, perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    RC_REQUEST_STORAGE, perm);
+        } else {
+            simpleProgressBar.setVisibility(View.VISIBLE);
+            layoutdetail.setVisibility(View.GONE);
+//            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(final Void... params) {
+                    Bitmap bitmap = null;
+                    try {
+                        final URL url = new URL(pic);
+                        try {
+                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    return bitmap;
+                }
+
+                @Override
+                protected void onPostExecute(final Bitmap result) {
+
+                    try {
+                        Blurry.with(EditProfile.this).from(result).into(bgImage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    simpleProgressBar.setVisibility(View.GONE);
+                    layoutdetail.setVisibility(View.VISIBLE);
+                }
+            }.execute();
+
+
+            simpleProgressBar.setVisibility(View.GONE);
+            layoutdetail.setVisibility(View.VISIBLE);
+        }
+
+    }
+}
 
 
 

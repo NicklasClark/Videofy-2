@@ -31,19 +31,22 @@
         android:layout_centerInParent="true"
         />
 
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="No User in your block list"
+        android:id="@+id/blockusertex"
+        android:visibility="gone"
+        android:textSize="20dp"
+        android:layout_centerInParent="true"/>
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_below="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <android.support.v7.widget.RecyclerView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recycler_view"/>
-
     </RelativeLayout>
-
 </RelativeLayout>

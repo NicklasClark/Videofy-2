@@ -78,11 +78,15 @@ public class FollowingListActivities extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+
         if (identifier.equals("User")) {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             getUserfollowinglist();
         }
+
+
         else if (identifier.equals("Other"))
         {
             layout.setVisibility(View.GONE);
@@ -96,6 +100,7 @@ public class FollowingListActivities extends AppCompatActivity {
             @Override
             public void onResponse(Call<ProfileMyFollowing> call, Response<ProfileMyFollowing> response) {
                 if (response.code() == 200) {
+
                     try {
                         list = response.body().getFollowings();
                         if (list == null || list.size() == 0) {

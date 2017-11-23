@@ -1,5 +1,6 @@
 package com.cncoding.teazer;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,7 @@ import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.MyInterestsFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
+import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
@@ -117,6 +119,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
+    @BindView(R.id.settings) ImageView settings;
     @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 
     private NavigationController navigationController;
@@ -162,6 +165,14 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BaseBottomBarActivity.this, Settings.class);
+                intent.putExtra("AccountType", String.valueOf(1));
+                startActivity(intent);
             }
         });
     }
@@ -640,12 +651,33 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void removeAppbar() {
 
-        //   getSupportActionBar().hide();
+       getSupportActionBar().hide();
     }
+
+
+
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
         pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+
+    }
+
+    public void hidesettings(boolean flag)
+
+    {
+        if(flag==true)
+        {
+            settings.setVisibility(View.VISIBLE);
+        }
+
+        else
+        {
+            settings.setVisibility(View.GONE);
+
+        }
+
+
 
     }
 

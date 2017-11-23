@@ -102,7 +102,10 @@ public class AuthUtils {
     }
 
     public static String getFcmToken(Context context) {
+//        Log.d("FCM Token", FirebaseInstanceId.getInstance().getToken());
         return SharedPrefs.getFcmToken(context) == null ? FirebaseInstanceId.getInstance().getToken() : SharedPrefs.getFcmToken(context);
+
+
     }
 
     /**

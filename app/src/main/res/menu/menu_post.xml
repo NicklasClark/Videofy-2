@@ -19,7 +19,7 @@
         app:showAsAction="withText"
         android:visible="true" />
 
-    <item android:id="@+id/action_report"
+    <item android:id="@+id/action_profile_report"
         android:title="@string/report"
         app:showAsAction="withText"
         android:visible="true" />

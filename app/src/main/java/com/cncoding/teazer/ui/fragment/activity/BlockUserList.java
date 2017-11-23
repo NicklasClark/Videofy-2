@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -38,6 +39,8 @@ public class BlockUserList extends AppCompatActivity {
     ProgressBar progress_bar;
     @BindView(R.id.layout)
     RelativeLayout layout;
+    @BindView(R.id.blockusertex)
+    TextView blockusertex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +82,25 @@ public class BlockUserList extends AppCompatActivity {
                 if(response.code()==200)
                 {
                     try
+
                     {
                         list= response.body().getFollowers();
-                        adapter=new BlockUserListAdapter(context,list);
-                        recyclerView.setAdapter(adapter);
-                        layout.setVisibility(View.VISIBLE);
-                        progress_bar.setVisibility(View.GONE);
+                        if(list==null||list.size()==0) {
+                            blockusertex.setVisibility(View.VISIBLE);
+
+                            layout.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+
+                            adapter = new BlockUserListAdapter(context, list);
+                            recyclerView.setAdapter(adapter);
+                            layout.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
+                            }
                     }
+
                     catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();

@@ -15,15 +15,6 @@ public class FollowersProfile {
     @SerializedName("account_type")
     @Expose
     private Integer accountType;
-    @SerializedName("can_join")
-    @Expose
-    private Boolean canJoin;
-    @SerializedName("has_send_join_request")
-    @Expose
-    private Boolean hasSendJoinRequest;
-    @SerializedName("join_request_id")
-    @Expose
-    private Integer joinRequestId;
     @SerializedName("private_profile")
     @Expose
     private PrivateProfile privateProfile;
@@ -36,6 +27,9 @@ public class FollowersProfile {
     @SerializedName("followings")
     @Expose
     private Integer followings;
+    @SerializedName("follow_info")
+    @Expose
+    private FollowInfo followInfo;
 
     public Integer getTotalVideos() {
         return totalVideos;
@@ -51,30 +45,6 @@ public class FollowersProfile {
 
     public void setAccountType(Integer accountType) {
         this.accountType = accountType;
-    }
-
-    public Boolean getCanJoin() {
-        return canJoin;
-    }
-
-    public void setCanJoin(Boolean canJoin) {
-        this.canJoin = canJoin;
-    }
-
-    public Boolean getHasSendJoinRequest() {
-        return hasSendJoinRequest;
-    }
-
-    public void setHasSendJoinRequest(Boolean hasSendJoinRequest) {
-        this.hasSendJoinRequest = hasSendJoinRequest;
-    }
-
-    public Integer getJoinRequestId() {
-        return joinRequestId;
-    }
-
-    public void setJoinRequestId(Integer joinRequestId) {
-        this.joinRequestId = joinRequestId;
     }
 
     public PrivateProfile getPrivateProfile() {
@@ -108,5 +78,15 @@ public class FollowersProfile {
     public void setFollowings(Integer followings) {
         this.followings = followings;
     }
+
+    public FollowInfo getFollowInfo() {
+        return followInfo;
+    }
+
+    public void setFollowInfo(FollowInfo followInfo) {
+        this.followInfo = followInfo;
+    }
+
+
 
 }
