@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
-
 /**
  *
  * Created by Prem $ on 11/19/2017.
@@ -51,8 +49,8 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
         holder.title.setText(holder.featuredVideos.getTitle());
         holder.name.setText(holder.featuredVideos.getName());
-        holder.likes.setText(SPACE + String.valueOf(holder.featuredVideos.getLikes()));
-        holder.views.setText(SPACE + String.valueOf(holder.featuredVideos.getViews()));
+        holder.likes.setText(" " + String.valueOf(holder.featuredVideos.getLikes()));
+        holder.views.setText(" " + String.valueOf(holder.featuredVideos.getViews()));
 
         if (holder.featuredVideos.getThumbUrl().contains(".gif")) {
             Glide.with(context)

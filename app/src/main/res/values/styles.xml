@@ -330,6 +330,14 @@
         <!--<item name="android:textSize">25sp</item>-->
     </style>
 
+    <style name="BottomTabLayout.RecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/padding_half</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:nestedScrollingEnabled">false</item>
+    </style>
+
     <style name="CustomProfileFAB" parent="Widget.Design.FloatingActionButton">
         <item name="colorAccent">@android:color/transparent</item>
     </style>

@@ -1,19 +1,19 @@
 package com.cncoding.teazer.home.search;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-
-import java.util.Random;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.cncoding.teazer.home.search.DummyData.getMyInterestsList;
 
 /**
  *
@@ -24,11 +24,9 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     private String[] titles = new String[] {"Dance", "Music", "VideoGraphy"};
     private Context context;
-    private SearchFragment searchFragment;
 
-    MyInterestsListAdapter(Context context, SearchFragment searchFragment) {
+    MyInterestsListAdapter(Context context) {
         this.context = context;
-        this.searchFragment = searchFragment;
     }
 
     @Override
@@ -40,10 +38,10 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     @Override
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
-        holder.header.setText(titles[new Random().nextInt(titles.length - 1)]);
+        holder.header.setText(titles[position]);
 
-        holder.recyclerView.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false));
-        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(searchFragment.getMyInterestsList(), context));
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(getMyInterestsList(), context));
     }
 
     @Override
@@ -53,7 +51,7 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.interests_header) ProximaNovaSemiboldTextView header;
+        @BindView(R.id.interests_header) ProximaNovaRegularTextView header;
         @BindView(R.id.item_my_interests_list) RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {

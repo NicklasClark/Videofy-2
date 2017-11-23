@@ -53,7 +53,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         holder.name.setText(holder.myInterests.getName());
         holder.likes.setText(SPACE + String.valueOf(holder.myInterests.getLikes()));
         holder.views.setText(SPACE + String.valueOf(holder.myInterests.getViews()));
-        holder.reactions.setText(SPACE + String.valueOf(holder.myInterests.getReactions()) + " reactions");
+        holder.reactions.setText(SPACE + String.valueOf(holder.myInterests.getReactions()) + " R");
 
         if (holder.myInterests.getThumbUrl().contains(".gif")) {
             Glide.with(context)
@@ -81,11 +81,6 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                 .load(holder.myInterests.getReaction2Url())
                 .crossFade()
                 .into(holder.reactionImage2);
-
-        Glide.with(context)
-                .load(holder.myInterests.getReaction3Url())
-                .crossFade()
-                .into(holder.reactionImage3);
     }
 
     @Override
@@ -104,7 +99,6 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
-        @BindView(R.id.reaction_3) CircularAppCompatImageView reactionImage3;
         MyInterests myInterests;
         
         public ViewHolder(View itemView) {

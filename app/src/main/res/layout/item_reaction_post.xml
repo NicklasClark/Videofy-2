@@ -44,8 +44,8 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/padding_default"
-        android:layout_marginStart="@dimen/padding_half"
+        android:layout_marginBottom="@dimen/padding_thin"
+        android:layout_marginStart="@dimen/padding_thin"
         android:layout_marginEnd="@dimen/padding_thin"
         android:src="@drawable/ic_user_dp_small"
         android:layout_alignBottom="@+id/reaction_post_thumb"
@@ -55,7 +55,6 @@
         android:id="@+id/reaction_post_name_popularity_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/padding_thin"
         android:paddingEnd="@dimen/padding_half"
         android:layout_toEndOf="@+id/reaction_post_dp"
         android:layout_alignBottom="@+id/reaction_post_dp">
@@ -71,7 +70,8 @@
             android:text="Prem Suman"
             android:textColor="@android:color/white"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/reaction_post_likes"
@@ -79,11 +79,11 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_small"
+            app:drawableStartCompat="@drawable/ic_like_outline_smaller"
             android:gravity="end|center_vertical"
             android:text="  102"
-            android:paddingStart="@dimen/padding_thin"
             android:paddingEnd="0dp"
+            android:paddingTop="@dimen/padding_x_thin"
             android:layout_below="@+id/reaction_post_name"
             android:layout_alignParentStart="true"
             tools:ignore="HardcodedText" />
@@ -94,14 +94,18 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_view_outline"
-            android:gravity="end|center_vertical"
+            app:drawableStartCompat="@drawable/ic_view_outline_smaller"
+            android:gravity="start|center_vertical"
             android:paddingStart="@dimen/padding_thin"
             android:paddingEnd="0dp"
             android:text="  0"
             android:paddingTop="@dimen/padding_x_thin"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:layout_below="@+id/reaction_post_name"
             android:layout_toEndOf="@+id/reaction_post_likes"
+            android:layout_alignParentEnd="true"
             tools:ignore="HardcodedText" />
 
     </RelativeLayout>

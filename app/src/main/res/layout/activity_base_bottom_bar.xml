@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     tools:context="com.cncoding.teazer.BaseBottomBarActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -38,14 +39,14 @@
                     android:layout_centerInParent="true"
                     android:textSize="@dimen/text_size_h3"
                     android:gravity="center"
-                    tools:ignore="PrivateResource"
-                    android:visibility="gone"/>
+                    tools:ignore="PrivateResource"/>
 
                 <LinearLayout
                     android:id="@+id/discover_toolbar_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                         android:layout_width="match_parent"

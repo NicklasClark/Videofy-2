@@ -343,7 +343,13 @@ public class BaseBottomBarActivity extends BaseActivity
     private void switchTab(final int position) {
         if (position != 1)
             navigationController.switchTab(position);
-
+        else
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    navigationController.switchTab(position);
+                }
+            }, 600);
 
         updateDiscoverToolbar(position == 1);
 //        updateToolbarTitle(position);
@@ -353,14 +359,13 @@ public class BaseBottomBarActivity extends BaseActivity
         if (isDiscoverPage) {
             if (discoverToolbarLayout.getVisibility() != VISIBLE)
                 discoverToolbarLayout.setVisibility(VISIBLE);
-            toolbarTitle.animate().alpha(0).setDuration(180).start();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (toolbarTitle.getVisibility() != GONE)
                         toolbarTitle.setVisibility(GONE);
                 }
-            }, 180);
+            }, 280);
         } else {
             if (toolbarTitle.getVisibility() != VISIBLE)
                 toolbarTitle.setVisibility(VISIBLE);

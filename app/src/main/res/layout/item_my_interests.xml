@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="328dp"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/interests_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_half"
+        android:textColor="@android:color/black"
+        android:paddingTop="@dimen/padding_half"
+        android:paddingStart="@dimen/padding_half"
+        android:paddingEnd="@dimen/padding_half"
         android:textAllCaps="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/item_my_interests_list"
-        android:background="@color/material_grey100"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_half"
+        android:paddingBottom="@dimen/padding_half"
         android:clipToPadding="false" />
 
 </LinearLayout>
