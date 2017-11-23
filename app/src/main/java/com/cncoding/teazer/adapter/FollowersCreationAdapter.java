@@ -57,56 +57,45 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
     @Override
     public void onBindViewHolder(final FollowersCreationAdapter.ViewHolder viewHolder, final int i) {
-        final Post cont = _list.get(i);
-        final String videotitle = cont.getTitle();
-        final String videourl = cont.getMedias().get(0).getMediaUrl();
-        final int videopostId = cont.getPostId();
-        final String thumb_url = cont.getMedias().get(0).getThumbUrl();
-
-        Glide.with(context).load(thumb_url)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
-                .into(viewHolder.thumbimage);
 
 
-        viewHolder.videoTitle.setText(videotitle);
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ProfileCreationVideos.class);
-                intent.putExtra("VideoURL", videourl);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-
+        try {
+            final Post cont = _list.get(i);
+            final String videotitle = cont.getTitle();
+            final String videourl = cont.getMedias().get(0).getMediaUrl();
+            final int videopostId = cont.getPostId();
+            final String thumb_url = cont.getMedias().get(0).getThumbUrl();
+            final boolean hasCheckIn = cont.getHasCheckin();
+            final Integer likes = cont.getLikes();
+            if(hasCheckIn)
+            {
+                final String location=cont.getCheckIn().getLocation();
+                viewHolder.location.setText(location);
             }
-        });
+            else
+            {
+                viewHolder.location.setText("");
+            }
+            Glide.with(context).load(thumb_url)
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                    .into(viewHolder.thumbimage);
+            viewHolder.videoTitle.setText(videotitle);
+            viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ProfileCreationVideos.class);
+                    intent.putExtra("VideoURL", videourl);
+                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+
+                }
+            });
 
 
-//        viewHolder.menu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //creating a popup menu
-//                PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-//                //inflating menu from xml resource
-//                popup.inflate(R.menu.menu_profile);
-//                //adding click listener
-//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.action_delete:
-//                                deleteVideos(videopostId);
-//                                // notifyItemRemoved(i);
-//                                viewHolder.cardView.setVisibility(View.GONE);
-//                                break;
-//
-//                        }
-//                        return false;
-//                    }
-//                });
-//                //displaying the popup
-//                popup.show();
-//            }
-//        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context,"Something went wrong please try again",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -123,6 +112,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         TextView toatalReaction;
         TextView hascheckin;
         TextView totalLikes;
+        TextView location;
 
         View line;
         ImageView playvideo;
@@ -136,14 +126,13 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             thumbimage = view.findViewById(R.id.demoimage);
             playvideo = view.findViewById(R.id.playvideo);
             cardView = view.findViewById(R.id.cardview);
+            location = view.findViewById(R.id.location);
             menu = view.findViewById(R.id.menu);
 
         }
     }
 
     public void deleteVideos(int deleteid) {
-
-
         ApiCallingService.Posts.deletePosts(deleteid, context).enqueue(new Callback<DeleteMyVideos>() {
             @Override
             public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
