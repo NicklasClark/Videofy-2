@@ -287,10 +287,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
             }
         }
-    @OnClick(R.id.logout_btn)
-    public void performLogout() {
-        logout(getApplicationContext(), this);
-//        ApiCallingService.User.performLogout(SharedPrefs.getAuthToken(this), this);
     }
 
     @OnClick(R.id.uploading_notification) public void retryUpload() {
