@@ -254,6 +254,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             case R.id.action_report_block:
                                 openAlert(followerfollowingid);
                                 break;
+                                case R.id.action_report_report:
+                                openAlert(followerfollowingid);
+                                break;
                         }
                         return false;
                     }

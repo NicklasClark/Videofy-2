@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_report_profile"
+    <item android:id="@+id/action_report_report"
         android:title="@string/report"
         app:showAsAction="withText"
         android:visible="true" />

@@ -19,6 +19,7 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -302,6 +303,8 @@ public class ApiCallingService {
         public static Call<BlockUnBlockUser> blockUnblockUser(int userId, int status, Context context){
             return getFriendsService(context).blockUnblockUser(userId, status);
         }
+
+
 
         /**
          * Call this service to get blocked users list by you.
@@ -605,6 +608,10 @@ public class ApiCallingService {
 
         public static Call<Pojos.User.UserProfile>getUserProfileDetail(Context context) {
             return getUserService(context).getUserProfile();
+        }
+
+        public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context){
+            return getUserService(context).reportUser(reportuser);
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {

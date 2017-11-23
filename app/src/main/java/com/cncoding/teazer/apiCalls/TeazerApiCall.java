@@ -14,6 +14,7 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -509,8 +510,10 @@ import retrofit2.http.Query;
          *      or 401 : Un-Authorized access
          *      or 412 : Validation Failed
          * */
-        @POST("/spi/v1/post/report")
+        @POST("/api/v1/post/report")
         Call<ResultObject> reportPost(@Body Pojos.Post.ReportPost reportPostDetails);
+
+
 
         /**
          * Call this service to like a video.
@@ -673,5 +676,8 @@ import retrofit2.http.Query;
          * */
         @DELETE("/api/v1/user/logout")
         Call<ResultObject> logout(@Header("Authorization") String header);
+
+        @POST("/api/v1/user/report")
+        Call<ResultObject> reportUser(@Body ReportUser reportuser);
     }
 }
