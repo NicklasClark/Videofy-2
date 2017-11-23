@@ -184,6 +184,7 @@ public class ConfirmOtpFragment extends Fragment {
             otp3EditText.requestFocus();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void verifyOtp() {
         ViewUtils.hideKeyboard(getActivity(), otp4EditText);
         switch (launchAction) {
@@ -200,10 +201,10 @@ public class ConfirmOtpFragment extends Fragment {
                         getFcmToken(getContext()),
                         getDeviceId(getContext()),
                         DEVICE_TYPE_ANDROID);
-                performFinalSignup(getContext(), verify, countDownTimer, otpVerifiedTextView, mListener);
+                performFinalSignup(getActivity().getApplicationContext(), verify, countDownTimer, otpVerifiedTextView, mListener);
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                verifyOtpLogin(getContext(), userSignUpDetails, getOtp(), countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
+                verifyOtpLogin(getActivity().getApplicationContext(), userSignUpDetails, getOtp(), countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
                 break;
             default:
                 break;

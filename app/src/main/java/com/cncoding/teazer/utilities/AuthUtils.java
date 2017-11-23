@@ -102,6 +102,7 @@ public class AuthUtils {
     @NonNull
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
+<<<<<<< HEAD
 
 //        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 //            return Settings.Secure.ANDROID_ID;
@@ -114,6 +115,9 @@ public class AuthUtils {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
+=======
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+>>>>>>> prem_dev
     }
 
     public static String getFcmToken(Context context) {

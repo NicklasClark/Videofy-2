@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
@@ -157,6 +159,7 @@ public class ViewUtils {
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
+        ((AppCompatActivity) packageContext).finish();
     }
 
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
@@ -202,11 +205,16 @@ public class ViewUtils {
         }
     }
 
-    public static void updateMediaDatabase(Context context, String videoPath) {
+    public static void updateMediaStoreDatabase(Context context, String videoPath) {
         context.sendBroadcast(
                 new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                         .setData(Uri.fromFile(new File(videoPath)))
         );
+    }
+
+    public static void deleteFileFromMediaStoreDatabase(Context context, String videoPath) {
+        Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(videoPath);  // Change file types here
+        context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{videoPath});
     }
 
 //    /**

@@ -10,20 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
-import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
 import java.util.List;

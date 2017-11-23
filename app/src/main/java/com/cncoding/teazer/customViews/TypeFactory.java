@@ -12,7 +12,7 @@ public class TypeFactory {
 
     public Typeface bold;
     public Typeface condensed;
-    public  Typeface regular;
+    public Typeface regular;
     public Typeface semiBold;
     public Typeface signPainter;
 

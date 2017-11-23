@@ -8,15 +8,6 @@
     android:paddingEnd="0dp"
     android:foreground="@drawable/ripple_dark_no_rounded">
 
-<!--    <com.cncoding.teazer.customViews.CircularImageView
-        android:id="@+id/nearby_place_side_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="@dimen/padding_half"
-        android:background="@drawabg_circle_light_outlinedline"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/nearby_place_side_image" />-->
-
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/nearby_place_name"
         android:layout_width="match_parent"
@@ -41,12 +32,12 @@
         android:textSize="14sp"
         android:textColor="@color/colorSecondary_text"/>
 
-<!--    <TextView
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorSecondary_text_light"
         android:layout_marginStart="@dimen/padding_default"
-        android:layout_toEndOf="@+id/nearby_place_side_image"
-        android:layout_below="@+id/nearby_place_address"/>-->
+        android:layout_marginEnd="@dimen/padding_default"
+        android:layout_below="@+id/nearby_place_address"
+        android:background="@color/colorDivider"/>
 
 </RelativeLayout>

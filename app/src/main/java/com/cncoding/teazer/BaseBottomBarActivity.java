@@ -1,6 +1,7 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -36,7 +37,6 @@ import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractio
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.home.profile.ProfileFragmentNew;
 import com.cncoding.teazer.home.search.SearchFragment;
 import com.cncoding.teazer.utilities.BottomBarUtils;
 import com.cncoding.teazer.utilities.FragmentHistory;
@@ -47,6 +47,7 @@ import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -62,12 +63,12 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
-import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.ViewUtils.deleteFileFromMediaStoreDatabase;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
@@ -103,13 +104,12 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
     @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
-//    @BindView(R.id.logout_btn) ProximaNovaRegularTextView logoutBtn;
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private ActionBar actionBar;
     private Call<ResultObject> uploadCall;
-    private PostsListFragment postListFragment;
+    private Callback<ResultObject> callback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,29 +153,19 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void checkIfAnyVideoIsUploading() {
+
         if (getVideoUploadSession(this) != null) {
-            resumeUpload(getVideoUploadSession(this), false);
+            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
+//            resumeUpload(getVideoUploadSession(this), false);
         }
         else if (getIntent().getExtras() != null) {
-            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
+            new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
+//            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
         }
     }
 
-    private void resumeUpload(final UploadParams uploadParams, boolean isResuming) {
-        SharedPrefs.saveVideoUploadSession(BaseBottomBarActivity.this, uploadParams);
-        uploadingStatusLayout.setVisibility(VISIBLE);
-        progressBar.setIndeterminate(false);
-
-        if (uploadParams.isReaction() && isResuming) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
-                }
-            }, 500);
-        }
-
-        Callback<ResultObject> callback = new Callback<ResultObject>() {
+    private void defineUploadCallback(final UploadParams uploadParams) {
+        callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 201) {
@@ -195,12 +185,14 @@ public class BaseBottomBarActivity extends BaseActivity
                                 }
                             }, 1000);
                         }
+                        return;
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.body().getMessage()));
+                    onUploadError(new Throwable(response.code() + " : " + response.message()));
                 }
             }
 
             private void deleteFile(String path) {
+                deleteFileFromMediaStoreDatabase(BaseBottomBarActivity.this, path);
                 //noinspection ResultOfMethodCallIgnored
                 new File(path).delete();
             }
@@ -210,34 +202,87 @@ public class BaseBottomBarActivity extends BaseActivity
                 onUploadError(t);
             }
         };
-
-        File videoFile = new File(uploadParams.getVideoPath());
-        ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
-        MultipartBody.Part videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
-        String title = uploadParams.getTitle();
-        if (!uploadParams.isReaction()) {
-//                UPLOADING POST VIDEO
-            uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            uploadCall = ApiCallingService.Posts.uploadVideo(videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
-                    uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), this);
-        } else {
-//                UPLOADING REACTION VIDEO
-            uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-            uploadCall = ApiCallingService.React.uploadReaction(videoPartFile,
-                    uploadParams.getPostDetails().getPostId(), this, title);
-        }
-        uploadCall.enqueue(callback);
     }
 
-    @OnClick(R.id.logout_btn) public void performLogout() {
-        logout(getApplicationContext(), this);
-//        ApiCallingService.User.performLogout(SharedPrefs.getAuthToken(this), this);
+    private static class ResumeUpload extends AsyncTask<Void, Void, Callback<ResultObject>> {
+
+        private WeakReference<BaseBottomBarActivity> reference;
+        private boolean isResuming;
+        private UploadParams uploadParams;
+        private MultipartBody.Part videoPartFile;
+
+        ResumeUpload(BaseBottomBarActivity context, UploadParams uploadParams, boolean isResuming) {
+            reference = new WeakReference<>(context);
+            this.uploadParams = uploadParams;
+            this.isResuming = isResuming;
+            reference.get().defineUploadCallback(uploadParams);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            reference.get().uploadingStatusLayout.setVisibility(VISIBLE);
+            reference.get().progressBar.setIndeterminate(false);
+            if (!uploadParams.isReaction())
+//                UPLOADING POST VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+            else
+//                UPLOADING REACTION VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+        }
+
+        @Override
+        protected Callback<ResultObject> doInBackground(Void... voids) {
+            SharedPrefs.saveVideoUploadSession(reference.get(), uploadParams);
+
+            File videoFile = new File(uploadParams.getVideoPath());
+            ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, reference.get());
+            videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
+            String title = uploadParams.getTitle();
+            if (!uploadParams.isReaction()) {
+//                UPLOADING POST VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                reference.get().uploadCall = ApiCallingService.Posts.uploadVideo(
+                        videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
+                        uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), reference.get());
+            } else {
+//                UPLOADING REACTION VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+                reference.get().uploadCall = ApiCallingService.React.uploadReaction(videoPartFile,
+                        uploadParams.getPostDetails().getPostId(), reference.get(), title);
+            }
+            return reference.get().callback;
+        }
+
+        @Override
+        protected void onPostExecute(Callback<ResultObject> resultObjectCallback) {
+            super.onPostExecute(resultObjectCallback);
+            String title = uploadParams.getTitle();
+            if (!uploadParams.isReaction()) {
+//                UPLOADING POST VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                reference.get().uploadCall = ApiCallingService.Posts.uploadVideo(
+                        videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
+                        uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), reference.get());
+            } else {
+//                UPLOADING REACTION VIDEO
+                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+                reference.get().uploadCall = ApiCallingService.React.uploadReaction(videoPartFile,
+                        uploadParams.getPostDetails().getPostId(), reference.get(), title);
+            }
+            reference.get().uploadCall.enqueue(resultObjectCallback);
+
+            if (uploadParams.isReaction() && isResuming) {
+                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
+            }
+        }
     }
 
     @OnClick(R.id.uploading_notification) public void retryUpload() {
         if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
             uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            resumeUpload(getVideoUploadSession(this), false);
+            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
+//            resumeUpload(getVideoUploadSession(this), false);
         }
     }
 
@@ -388,8 +433,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public Fragment getRootFragment(int index) {
         switch (index) {
             case TAB1: {
-                postListFragment =  new PostsListFragment();
-                return postListFragment;
+                return PostsListFragment.newInstance();
             }
             case NavigationController.TAB2:
                 return SearchFragment.newInstance();
@@ -481,12 +525,14 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+
 //        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        callback = null;
 //        ViewUtils.unbindDrawables(contentFrame);
     }
 

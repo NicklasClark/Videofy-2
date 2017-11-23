@@ -20,7 +20,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
             SharedPrefs.saveFcmToken(getApplicationContext(), FirebaseInstanceId.getInstance().getToken());
     }
 
-    private void sendRegistrationToServer(String token) {
-        //You can implement this method to store the token on your server
-    }
+//    private void sendRegistrationToServer(String token) {
+//        //You can implement this method to store the token on your server
+//    }
 }

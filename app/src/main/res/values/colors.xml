@@ -30,7 +30,12 @@
     <color name="colorlines">#D8D8D8</color>
     <color name="colorReactBtn">#26C6DA</color>
     <color name="statusbar">#0fcfe7</color>
+<<<<<<< HEAD
     <color name="blur">#8b121212</color>
+=======
+    <color name="blur">#63121212</color>
+    <color name="colorTranslucentWhite">#88000000</color>
+>>>>>>> prem_dev
 
     <!--    <color name="space_background_color">#757575</color>
         <color name="space_transparent">#00000000</color>

@@ -128,7 +128,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal|top"
         android:background="@drawable/bg_sliding_up_panel">
 
         <android.support.v7.widget.AppCompatImageView
@@ -136,7 +136,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/padding_default"
             app:srcCompat="@drawable/ic_up"/>
 
         <android.support.v7.widget.RecyclerView
@@ -146,7 +145,6 @@
             android:scrollbars="none"
             android:layout_gravity="center_horizontal"
             android:numColumns="auto_fit"
-            android:padding="@dimen/padding_default"
             android:clipToPadding="false"
             tools:listitem="@layout/item_video_gallery"/>
 

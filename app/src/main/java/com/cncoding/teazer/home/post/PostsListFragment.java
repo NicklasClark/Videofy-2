@@ -51,7 +51,7 @@ public class PostsListFragment extends BaseFragment {
     public PostsListFragment() {
         // Required empty public constructor
     }
-
+    
     public static PostsListFragment newInstance() {
         return new PostsListFragment();
     }

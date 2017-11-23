@@ -21,7 +21,6 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class ListToFollow extends BaseFragment {
             if (miniProfile.hasProfileMedia())
                 Glide.with(context)
                         .load(miniProfile.getProfileMedia().getThumbUrl())
-                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
                         .crossFade()
                         .into(holder.profilePic);
             holder.profileName.setText(miniProfile.getFirstName() + " " + miniProfile.getLastName());
@@ -219,7 +218,7 @@ public class ListToFollow extends BaseFragment {
         }
 //        else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnUploadFragmentInteractionListener");
 //        }
     }
 

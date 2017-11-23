@@ -3,6 +3,7 @@ package com.cncoding.teazer.tagsAndCategories;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
@@ -37,6 +39,7 @@ public class TagsAndCategoryFragment extends Fragment {
     @BindView(R.id.headerTextView) ProximaNovaRegularTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_done) FloatingActionButton doneBtn;
+    @BindView(R.id.no_friends_text_view) ProximaNovaBoldTextView noFriendsTextView;
 
     private String action;
     private ArrayList<Category> categories;
@@ -80,7 +83,7 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_tags_and_categories, container, false);
@@ -94,8 +97,14 @@ public class TagsAndCategoryFragment extends Fragment {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 headerTextView.setText(R.string.tag_your_friends);
-                tagsAdapter = new TagsAdapter(circles, this);
-                recyclerView.setAdapter(tagsAdapter);
+                if (circles.size() > 0) {
+                    tagsAdapter = new TagsAdapter(circles, this);
+                    recyclerView.setAdapter(tagsAdapter);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    doneBtn.setVisibility(View.GONE);
+                    noFriendsTextView.setVisibility(VISIBLE);
+                }
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
@@ -121,13 +130,17 @@ public class TagsAndCategoryFragment extends Fragment {
     @OnClick(R.id.tags_categories_done) public void getResult() {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
-                listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                        getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                if (circles != null && circles.size() > 0) {
+                    listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
+                            getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                }
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
-                listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                        getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                        getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                if (categories != null && categories.size() > 0) {
+                    listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                            getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
+                            getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                }
                 break;
             default:
                 break;

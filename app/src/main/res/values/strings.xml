@@ -217,7 +217,9 @@
     <string name="no_reactions_yet">No reactions yet</string>
     <string name="be_the_first_one_to_react">Be the first one to react!</string>
     <string name="finished">Finished!</string>
-    <string name="optional_title">Set a title if you wish to (OPTIONAL)</string>
+    <string name="optional_title">
+        Set an optional title if you wish to.
+    </string>
     <string name="uploading_your_reaction">Uploading your reaction…</string>
     <string name="requests">Requests</string>
     <string name="accept">Accept</string>
@@ -236,4 +238,5 @@
     <string name="featured_videos">Featured Videos</string>
     <string name="view_all">View all</string>
     <string name="rationale_storage">App requires external storage permission</string>
+    <string name="no_friends_yet">No friends yet?</string>
 </resources>

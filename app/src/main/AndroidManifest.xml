@@ -19,8 +19,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -33,6 +31,7 @@
     <uses-feature android:name="android.hardware.camera.flash" />
 
     <application
+        android:name=".TeazerApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -113,7 +112,7 @@
             android:name=".home.camera.upload.VideoUpload"
             android:label="@string/title_activity_video_upload"
             android:parentActivityName=".home.camera.CameraActivity"
-            android:theme="@style/VideoUploadTheme"
+            android:theme="@style/AppTheme.FullScreen"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
