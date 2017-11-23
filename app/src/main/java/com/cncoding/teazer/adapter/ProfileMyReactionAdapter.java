@@ -84,6 +84,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileCreationVideos.class);
                 intent.putExtra("VideoURL", videourl);
+                intent.putExtra("Likes", String.valueOf(likes));
+                intent.putExtra("Views",String.valueOf( views));
+                intent.putExtra("Title", videotitle);
+
+
                 context.startActivity(intent);
             }
         });
