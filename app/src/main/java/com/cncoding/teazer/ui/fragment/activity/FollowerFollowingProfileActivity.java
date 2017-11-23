@@ -24,6 +24,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,6 +132,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
         }
+
         context = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -148,7 +150,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             }
         });
 
-
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         menu = findViewById(R.id.menu);
         Intent intent = getIntent();
@@ -158,6 +159,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         String userType = intent.getStringExtra("UserType");
         _username.setText(username);
         _btnfollow.setText(userType);
+
 
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,6 +294,8 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                         if (accountType == 2) {
 
+                     //       Toast.makeText(getApplicationContext(), "public", Toast.LENGTH_LONG).show();
+
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
@@ -337,10 +341,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             getProfileVideos(followersid);
 
 
-                        } else if (accountType == 1) {
+                        }
+                        else if (accountType == 1) {
+                        //    Toast.makeText(getApplicationContext(), "private", Toast.LENGTH_LONG).show();
 
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            String username = privateProfile.getUserName();
+                            String username=privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();

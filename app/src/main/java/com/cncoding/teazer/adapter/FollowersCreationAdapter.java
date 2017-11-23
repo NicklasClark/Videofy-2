@@ -120,6 +120,10 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         VideoView videoviewContainer;
         ImageView thumbimage;
         CardView cardView;
+        TextView toatalReaction;
+        TextView hascheckin;
+        TextView totalLikes;
+
         View line;
         ImageView playvideo;
         CircularAppCompatImageView menu;
