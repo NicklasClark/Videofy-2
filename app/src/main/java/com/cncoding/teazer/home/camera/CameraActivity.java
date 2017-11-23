@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
@@ -100,15 +99,15 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .permitDiskWrites()
-                .penaltyLog()
-//                .penaltyDialog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .permitDiskWrites()
 //                .penaltyLog()
-                .build());
+////                .penaltyDialog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+////                .penaltyLog()
+//                .build());
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         videosList = new ArrayList<>();

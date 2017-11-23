@@ -240,11 +240,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
-//                                Toast.makeText(UploadFragment.this,
-//                                        "FusedLocationProvider: "
-//                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-//                                        Toast.LENGTH_SHORT)
-//                                        .show();
                                 if (firstTime) {
                                     new GetNearbyPlacesData(UploadFragment.this).execute(getNearbySearchUrl(currentLocation));
                                 }
@@ -261,9 +256,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
-//                    Toast.makeText(UploadFragment.this,
-//                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-//                            Toast.LENGTH_SHORT).show();
                     stopLocationUpdates();
                 }
             };
