@@ -71,8 +71,6 @@ dependencies {
     compile 'jp.wasabeef:blurry:2.1.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     compile 'pub.devrel:easypermissions:0.3.1'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }

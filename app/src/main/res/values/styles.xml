@@ -55,9 +55,11 @@
     </style>
 
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
-        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
     </style>
@@ -213,16 +215,16 @@
 
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <!--<item name="android:paddingTop">@dimen/padding_half</item>-->
         <!--<item name="android:paddingBottom">@dimen/padding_half</item>-->
-        <!--<item name="android:paddingStart">@dimen/padding_half</item>-->
+        <item name="android:paddingStart">@dimen/padding_thin</item>
         <item name="android:paddingEnd">@dimen/padding_default</item>
         <item name="android:layout_margin">@dimen/padding_half</item>
         <item name="android:background">@drawable/bg_button_react</item>
         <item name="android:foreground">@drawable/ripple_dark</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <style name="AppTheme.TransparentButton" parent="Widget.AppCompat.Button.Colored">
@@ -289,7 +291,11 @@
         <item name="android:textSize">0sp</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimary</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

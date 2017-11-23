@@ -6,8 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
+        <!--<item name="android:windowLightStatusBar">true</item>-->
+        <!--<item name="android:statusBarColor">@android:color/white</item>-->
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>

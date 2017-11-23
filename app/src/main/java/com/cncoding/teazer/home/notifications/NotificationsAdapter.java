@@ -83,10 +83,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         View view;
         switch (viewType) {
             case TYPE_FOLLOWING:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_following_notifications, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_following, parent, false);
                 return new FollowingViewHolder(view);
             case TYPE_REQUESTS:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_request_notifications, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_request, parent, false);
                 return new RequestsViewHolder(view);
             default:
                 return null;

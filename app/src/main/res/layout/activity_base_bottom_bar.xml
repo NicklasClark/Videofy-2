@@ -17,51 +17,58 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:contentInsetStart="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@color/colorSecondary_text">
+            app:titleTextColor="@android:color/white">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-            <com.cncoding.teazer.customViews.SignPainterTextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/app_name"
-                android:textColor="@color/colorPrimary"
-                android:layout_gravity="center"
-                android:layout_centerHorizontal="true"
-                android:textSize="@dimen/text_size_h3"
-                android:gravity="center"/>
+                android:animateLayoutChanges="true">
 
+                <com.cncoding.teazer.customViews.SignPainterTextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/white"
+                    android:layout_centerInParent="true"
+                    android:textSize="@dimen/text_size_h3"
+                    android:gravity="center"
+                    tools:ignore="PrivateResource"
+                    android:visibility="gone"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                android:id="@+id/logout_btn"
-                android:layout_width="wrap_content"
-                android:layout_toLeftOf="@+id/settings"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/text_size_content"
-                android:gravity="center"
-                android:foreground="@drawable/ripple_dark"
-                android:paddingStart="@dimen/padding_default"
-                android:paddingEnd="@dimen/padding_default"
-                android:visibility="gone"
-                android:text="@string/logout"/>
+                <LinearLayout
+                    android:id="@+id/discover_toolbar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_content_big"
+                        android:padding="@dimen/padding_thin"
+                        android:layout_margin="@dimen/padding_half"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="@dimen/padding_half"
+                        android:text="@string/discover"/>
 
-            <ImageView
-                android:id="@+id/settings"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_settings_dark" />
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                        android:id="@+id/discover_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/search_videos_or_places"
+                        android:layout_margin="@dimen/padding_thin"
+                        android:textColorHint="@color/colorSecondary_text"
+                        android:textColor="#333333"
+                        app:drawableStartCompat="@drawable/ic_search_padded"
+                        android:background="@drawable/bg_card_curved_corners"/>
+
+                </LinearLayout>
+
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -140,15 +147,42 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@drawable/bg_bottom_drawer" />
+        android:background="@drawable/bg_bottom_drawer">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_home" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_binoculars" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_notifications" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_person" />
+
+    </android.support.design.widget.TabLayout>
 
     <ImageButton
         android:id="@+id/camera_btn"
-        android:layout_width="68dp"
-        android:layout_height="70dp"
+        android:layout_width="62dp"
+        android:layout_height="64dp"
         android:foreground="@drawable/ripple_camera_button"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/padding_half"
+        android:src="@drawable/ic_add_video"
+        android:layout_marginBottom="@dimen/padding_10dp"
         android:background="@drawable/bg_circle_light_filled_outlined"
         android:contentDescription="@string/record_video" />
 
