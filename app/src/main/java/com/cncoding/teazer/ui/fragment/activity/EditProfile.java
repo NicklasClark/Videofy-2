@@ -248,8 +248,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             try {
 
 
-                //layoutdetail.setVisibility(View.VISIBLE);
-                // simpleProgressBar.setVisibility(View.VISIBLE);
 
                 File profileImage = new File(r.getPath());
                 Log.d("Exception1", r.getPath());
@@ -478,7 +476,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 protected void onPostExecute(final Bitmap result) {
 
                     try {
-                        Blurry.with(EditProfile.this).radius(1).sampling(1).from(result).into(bgImage);
+                        Blurry.with(EditProfile.this).from(result).into(bgImage);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

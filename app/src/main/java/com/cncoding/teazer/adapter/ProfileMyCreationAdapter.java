@@ -86,20 +86,27 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             duration = cont.getMedias().get(0).getDuration();
             views = String.valueOf(cont.getMedias().get(0).getViews());
             likes = String.valueOf(cont.getLikes());
-            String location2 = cont.getCheckIn().getLocation();
+
             reactions = cont.getTotalReactions();
             getPostReaction(viewHolder, postId);
 
 
 
             viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
+
             viewHolder.videoTitle.setText(videotitle);
             viewHolder.txtlikes.setText(likes);
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
 
-            viewHolder.location.setText(location2);
-
+            String location2 = cont.getCheckIn().getLocation();
+            if(location2.equals("")||location2==null)
+            {
+                viewHolder.location.setText("");
+            }
+            else {
+                viewHolder.location.setText(location2);
+            }
 
             Glide.with(context).load(thumb_url)
                     .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))

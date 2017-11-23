@@ -343,7 +343,7 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.GONE);
 
                     try {
-                        Blurry.with(getContext()).radius(1).sampling(1).from(result).into(backgroundprofile);
+                        Blurry.with(getContext()).from(result).into(backgroundprofile);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

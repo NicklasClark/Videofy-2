@@ -45,7 +45,6 @@ public class FragmentProfileMyReactions extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //  mPage = getArguments().getInt(ARG_PAGE);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class FragmentProfileMyReactions extends Fragment {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-      //  super.onViewCreated(view, savedInstanceState);
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         getProfileVideos();
@@ -73,7 +71,7 @@ public class FragmentProfileMyReactions extends Fragment {
                     try {
                         list = response.body().getReactions();
                         if (list == null || list.size() == 0) {
-                       //     Toast.makeText(context, "No Reactions found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "No Reactions found", Toast.LENGTH_LONG).show();
                         }
                         else {
                             profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);

@@ -83,7 +83,7 @@
                     android:background="@drawable/bg_circle_white_outline"
                     >
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
-
+                        android:id="@+id/userReactionImage"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_margin="1dp"
