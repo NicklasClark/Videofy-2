@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Discover.FeaturedVideos;
 import com.cncoding.teazer.utilities.Pojos.Discover.MostPopular;
@@ -26,7 +25,6 @@ import butterknife.ButterKnife;
 
 public class SearchFragment extends BaseFragment {
 
-    @BindView(R.id.user_search) ProximaNovaRegularAutoCompleteTextView searSearchView;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
     @BindView(R.id.trending_list) RecyclerView trendingList;
