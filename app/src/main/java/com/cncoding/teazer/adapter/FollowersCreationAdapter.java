@@ -96,8 +96,12 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ProfileCreationVideos.class);
                     intent.putExtra("VideoURL", videourl);
+                    intent.putExtra("Likes", String.valueOf(likes));
+                    intent.putExtra("Views", String.valueOf(txtview));
+                    intent.putExtra("Title", videotitle);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+
 
                 }
             });
@@ -182,7 +186,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 Log.d("Tesponsecheck",response.message());
                 Log.d("Tesponsecheck",String.valueOf(response.code()));
-                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
                 if (response.code() == 200) {
 
                     try {

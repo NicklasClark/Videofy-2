@@ -204,7 +204,7 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction);
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -219,7 +219,7 @@ public class CameraActivity extends AppCompatActivity
         if (isReaction) {
             new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
         } else {
-            uploadFragment = UploadFragment.newInstance(videoPath, false);
+            uploadFragment = UploadFragment.newInstance(videoPath, false, true);
             startVideoUploadFragment();
         }
     }

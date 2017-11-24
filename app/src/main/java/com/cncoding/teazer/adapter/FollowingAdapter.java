@@ -30,6 +30,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     private List<Following> list;
     private List<OtherUserFollowings> otherlist;
     private Context context;
+    String userType;
     int counter;
 
     public FollowingAdapter(Context context, List<OtherUserFollowings> otherlist) {
@@ -54,16 +55,16 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
             final Following cont = list.get(i);
             final String followingname = cont.getUserName();
-            followerId = cont.getUserId();
-            viewHolder.followingName.setText(followingname);
+            userType="Following";
+
+            followerId = cont.getUserId();viewHolder.followingName.setText(followingname);
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
                     intent.putExtra("Username", followingname);
                     intent.putExtra("FollowId", String.valueOf(followerId));
-                    intent.putExtra("UserType", "Following");
+                    intent.putExtra("UserType", userType);
                     context.startActivity(intent);
                 }
             });
@@ -71,12 +72,15 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         else
 
         {
+
             final OtherUserFollowings cont = otherlist.get(i);
             final boolean  myself = cont.getMySelf();
             final String followername = cont.getUserName();
             followerId = cont.getUserId();
             viewHolder.followingName.setText(followername);
             final boolean isblockedyou=cont.getIsBlockedYou();
+            final boolean isfollower=cont.getFollower();
+            final boolean isfollowing=cont.getFollower();
 
             if(isblockedyou) {
                 viewHolder.followingName.setTextColor(Color.GRAY);
@@ -85,8 +89,28 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             if(myself) {
 
                 viewHolder.followingName.setTextColor(Color.BLUE);
-//                viewHolder.follow.setVisibility(View.INVISIBLE);
+                viewHolder.follow.setVisibility(View.INVISIBLE);
             }
+            else {
+                if (isfollowing == true) {
+
+                    viewHolder.follow.setText("Following");
+                    userType = "Following";
+
+                } else {
+
+                    if (isfollower == true) {
+                        viewHolder.follow.setText("Follower");
+                        userType = "Following";
+
+                    } else {
+                        viewHolder.follow.setText("Follow");
+                        userType = "Follow";
+                    }
+
+                }
+            }
+
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,7 +129,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
                             intent.putExtra("Username", followername);
                             intent.putExtra("FollowId", String.valueOf(followerId));
-                            intent.putExtra("UserType", "Following");
+                            intent.putExtra("UserType", userType);
                             context.startActivity(intent);
                         }
                     }
@@ -132,6 +156,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         public ViewHolder(View view) {
             super(view);
             followingName = view.findViewById(R.id.following_name);
+            follow = view.findViewById(R.id.follow_button);
             cardview = view.findViewById(R.id.cardview);
 
         }

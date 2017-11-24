@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
-    @BindView(R.id.username_title)
+    @BindView(R.id.username)
     TextView _usernameTitle;
     @BindView(R.id.creations)
     TextView _creations;
@@ -63,8 +63,8 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     @BindView(R.id.layoutDetail)
     RelativeLayout layoutDetail;
     ;
-    @BindView(R.id.username)
-    TextView _username;
+    @BindView(R.id.name)
+    TextView _name;
     @BindView(R.id.following)
     TextView _following;
     @BindView(R.id.followers)
@@ -139,7 +139,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         final int followerfollowingid = Integer.parseInt(getIntent().getStringExtra("FollowId"));
         String username = intent.getStringExtra("Username");
         String userType = intent.getStringExtra("UserType");
-        _username.setText(username);
+      //  _name.setText(username);
         _btnfollow.setText(userType);
 
 
@@ -180,8 +180,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "public", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
                     Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
                     intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                     intent.putExtra("Identifier", "Other");
@@ -254,7 +255,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
     public void getProfileInformation(final int followersid) {
 
-
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<FollowersProfile>() {
             @Override
             public void onResponse(Call<FollowersProfile> call, Response<FollowersProfile> response) {
@@ -278,16 +278,16 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                         if (accountType == 2) {
 
-                     //       Toast.makeText(getApplicationContext(), "public", Toast.LENGTH_LONG).show();
-
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
                             int gender = publicProfile.getGender();
-                            _usernameTitle.setText(firstName);
-                            _username.setText(username);
+                            _usernameTitle.setText(username);
+                            _name.setText(firstName);
+
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
+                            Log.d("JagdeshID",String.valueOf(followersid));
 
 
                             if (hasProfileMedia == true) {
@@ -335,19 +335,42 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                            if (hasProfileMedia) {
+                            if (hasProfileMedia)
+                            {
+                                userProfileThumbnail=   privateProfile.getProfileMedia().getMediaUrl();
+                                userProfileUrl= privateProfile.getProfileMedia().getThumbUrl();
+                            }
+
+                            if (userProfileThumbnail == null) {
+                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
+                                Glide.with(context)
+                                        .load(pic)
+                                        .into(profile_id);
+                                profileBlur(pic);
                             } else {
 
+                                Picasso.with(context)
+                                        .load(Uri.parse(userProfileThumbnail))
+                                        .into(profile_id);
+                                profileBlur(userProfileUrl);
                             }
                             _usernameTitle.setText(username);
-                            _username.setText(firstName);
+                            _name.setText(firstName);
                             if (hassentrequest == true) {
-                                if (requestRecieved == true)
-                                    _btnfollow.getText().equals("Following");
-                                else
-                                    _btnfollow.getText().equals("Requested");
+
+                                if (requestRecieved == true) {
+                                    //    _btnfollow.getText().equals("Following");
+                                }
+
+                                else {
+
+                                    //  _btnfollow.getText().equals("Requested");
+                                }
                             } else {
-                                _btnfollow.getText().equals("Follow");
+
+
+                               // _btnfollow.getText().equals("Follow");
 
                             }
                             layout.setVisibility(View.VISIBLE);
@@ -409,7 +432,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 //                    coordinatorLayout.setVisibility(View.GONE);
 
                 try {
-                    Blurry.with(context).radius(1).sampling(1).from(result).into(background_profile);
+                    Blurry.with(context).from(result).into(background_profile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -482,6 +505,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            _btnfollow.setText("Follow");
                             Toast.makeText(getApplicationContext(), "You have already unfollowed", Toast.LENGTH_LONG).show();
                         }
 
@@ -596,12 +620,10 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
         layout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        Toast.makeText(getApplicationContext(), "block unblock", Toast.LENGTH_LONG).show();
         ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<BlockUnBlockUser>() {
 
             @Override
             public void onResponse(Call<BlockUnBlockUser> call, Response<BlockUnBlockUser> response) {
-                Toast.makeText(getApplicationContext(), "block unblock2", Toast.LENGTH_LONG).show();
                 try {
                     boolean b = response.body().getStatus();
                     if (b == true) {

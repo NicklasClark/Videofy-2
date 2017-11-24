@@ -75,6 +75,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
+              //  final boolean requestreceived=cont
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
                 viewHolder.followersname.setText(followername);
