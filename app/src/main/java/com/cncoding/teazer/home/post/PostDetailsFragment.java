@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
@@ -590,7 +592,11 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_profile_report:
-                    Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
+                    FragmentManager fm = getFragmentManager();
+                    ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance("Some Title");
+                    // SETS the target fragment for use later when sending results
+                    reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 300);
+                    reportPostDialogFragment.show(fm, "fragment_report_post");
                     return true;
             }
             return false;

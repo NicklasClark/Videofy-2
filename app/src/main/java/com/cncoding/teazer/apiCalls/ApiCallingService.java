@@ -19,9 +19,10 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
-import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -35,6 +36,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -68,7 +70,7 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
             return getApplicationService().getPostReportTypes();
         }
 
