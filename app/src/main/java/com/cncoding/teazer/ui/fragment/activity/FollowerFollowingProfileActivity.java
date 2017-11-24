@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
+import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -238,6 +240,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                                 openBlockUser(followerfollowingid);
                                 break;
                             case R.id.action_profile_report:
+                            {
+                                FragmentManager fm = getSupportFragmentManager();
+                                ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(followerfollowingid);
+                                reportUserDialogFragment.show(fm, "fragment_report_user");
+
+                            }
 
                         }
                         return false;

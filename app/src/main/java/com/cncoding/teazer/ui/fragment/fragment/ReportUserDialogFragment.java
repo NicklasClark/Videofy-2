@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
+import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 
 import java.util.List;
 
@@ -30,27 +30,25 @@ import retrofit2.Response;
  * Created by amit on 24/11/17.
  */
 
-public class ReportPostDialogFragment extends DialogFragment implements ReportPostSubtitleFragment.ReportSubTitleSelected,
-        ReportPostTitleAdapter.TitleSelectedInterface{
+public class ReportUserDialogFragment extends DialogFragment implements ReportUserTitleAdapter.TitleSelectedInterface {
 
     @BindView(R.id.reportTitlesRecyclerView)
     RecyclerView reportTitlesRecyclerView;
-    ReportPostTitleAdapter reportPostTitleAdapter = null;
+    ReportUserTitleAdapter reportuserTitleAdapter = null;
     private Integer selectedReportId;
-    private int postId;
+    private int userId;
     private boolean canReact;
 
-    public ReportPostDialogFragment() {
+    public ReportUserDialogFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
 
-    public static ReportPostDialogFragment newInstance(Integer postId, boolean canReact) {
-        ReportPostDialogFragment frag = new ReportPostDialogFragment();
+    public static ReportUserDialogFragment newInstance(Integer userId) {
+        ReportUserDialogFragment frag = new ReportUserDialogFragment();
         Bundle args = new Bundle();
-        args.putInt("postId", postId);
-        args.putBoolean("canReact", canReact);
+        args.putInt("userId", userId);
         frag.setArguments(args);
         return frag;
     }
@@ -58,8 +56,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        postId = getArguments().getInt("postId");
-        canReact = getArguments().getBoolean("canReact");
+        userId = getArguments().getInt("userId");
     }
 
     @Override
@@ -80,13 +77,13 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void getPostReportTypes()
     {
-        ApiCallingService.Application.getPostReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
+        ApiCallingService.Application.getProfileReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
             @Override
             public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
-                        reportPostTitleAdapter = new ReportPostTitleAdapter(response.body(), getContext(), ReportPostDialogFragment.this);
-                        reportTitlesRecyclerView.setAdapter(reportPostTitleAdapter);
+                        reportuserTitleAdapter = new ReportUserTitleAdapter(response.body().get(0).getSubReports(), getContext(), ReportUserDialogFragment.this);
+                        reportTitlesRecyclerView.setAdapter(reportuserTitleAdapter);
                     }
                 }
             }
@@ -104,34 +101,28 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
         super.onDestroyView();
     }
 
-    @Override
-    public void onSubTitleSelected(ReportPostSubTitleResponse reportPostSubTitleResponse) {
-        selectedReportId = reportPostSubTitleResponse.getReportTypeId();
-        reportPostServiceCall();
-    }
-
 
     @Override
-    public void titleSelected(ReportPostTitlesResponse value) {
+    public void titleSelected(ReportPostSubTitleResponse value) {
         selectedReportId = value.getReportTypeId();
-        reportPostServiceCall();
+        reportUserServiceCall();
     }
 
-    private void reportPostServiceCall() {
+    private void reportUserServiceCall() {
 
-        ApiCallingService.Posts.reportPost(new ReportPostRequest(postId, selectedReportId), getContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.reportUsers(new ReportUser(userId, selectedReportId), getContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
-                    Toast.makeText(getContext(), "Post reported", Toast.LENGTH_SHORT).show();
-                    ReportPostDialogFragment.this.dismiss();
+                    Toast.makeText(getContext(), "User reported", Toast.LENGTH_SHORT).show();
+                    ReportUserDialogFragment.this.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                ReportPostDialogFragment.this.dismiss();
+                ReportUserDialogFragment.this.dismiss();
             }
         });
     }

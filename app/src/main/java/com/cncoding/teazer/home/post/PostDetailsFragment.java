@@ -592,11 +592,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_profile_report:
-                    FragmentManager fm = getFragmentManager();
-                    ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance("Some Title");
-                    // SETS the target fragment for use later when sending results
-                    reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 300);
-                    reportPostDialogFragment.show(fm, "fragment_report_post");
+                    if (postDetails.canReact()) {
+                        FragmentManager fm = getFragmentManager();
+                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(postDetails.getPostId(), postDetails.canReact());
+                        // SETS the target fragment for use later when sending results
+                        reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
+                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                    } else {
+                        Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
             }
             return false;

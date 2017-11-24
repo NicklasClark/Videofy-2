@@ -1,27 +1,26 @@
-package com.cncoding.teazer.model.profile.reportuser;
+package com.cncoding.teazer.model.profile.reportPost;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by farazhabib on 23/11/17.
+ * Created by amit on 24/11/17.
  */
 
-public class ReportUser {
-
-    @SerializedName("user_id")
+public class ReportPostRequest {
+    @SerializedName("post_id")
     @Expose
-    private Integer userId;
+    private Integer postId;
     @SerializedName("report_type_id")
     @Expose
     private Integer reportTypeId;
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getPostId() {
+        return postId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPostId(Integer postId) {
+        this.postId = postId;
     }
 
     public Integer getReportTypeId() {
@@ -32,8 +31,8 @@ public class ReportUser {
         this.reportTypeId = reportTypeId;
     }
 
-    public ReportUser(Integer userId, Integer reportTypeId) {
-        this.userId = userId;
+    public ReportPostRequest(Integer postId, Integer reportTypeId) {
+        this.postId = postId;
         this.reportTypeId = reportTypeId;
     }
 }

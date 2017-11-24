@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
+import com.cncoding.teazer.adapter.ReportPostSubtitleAdapter;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,11 +22,12 @@ import butterknife.ButterKnife;
  * Created by amit on 24/11/17.
  */
 
-public class ReportPostSubtitleFragment extends DialogFragment {
+public class ReportPostSubtitleFragment extends DialogFragment implements ReportPostSubtitleAdapter.SubTitleSelectedInterface {
 
     @BindView(R.id.reportTitlesRecyclerView)
     RecyclerView reportTitlesRecyclerView;
-    ReportPostTitleAdapter reportPostTitleAdapter = null;
+    ReportPostSubtitleAdapter reportPostSubtitleAdapter = null;
+    private ReportPostTitlesResponse reportPostTitlesResponse;
 
     public ReportPostSubtitleFragment() {
         // Empty constructor is required for DialogFragment
@@ -32,12 +35,18 @@ public class ReportPostSubtitleFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static ReportPostSubtitleFragment newInstance(String title) {
+    public static ReportPostSubtitleFragment newInstance(ReportPostTitlesResponse reportPostTitlesResponse) {
         ReportPostSubtitleFragment frag = new ReportPostSubtitleFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putParcelable("report", reportPostTitlesResponse);
         frag.setArguments(args);
         return frag;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        reportPostTitlesResponse = getArguments().getParcelable("report");
     }
 
     @Override
@@ -60,12 +69,24 @@ public class ReportPostSubtitleFragment extends DialogFragment {
 
     private void getPostSubReportTypes()
     {
+        reportPostSubtitleAdapter = new ReportPostSubtitleAdapter(reportPostTitlesResponse.getSubReports(), getContext(), ReportPostSubtitleFragment.this);
+        reportTitlesRecyclerView.setAdapter(reportPostSubtitleAdapter);
     }
 
 
 
+    public interface ReportSubTitleSelected {
+        void onSubTitleSelected(ReportPostSubTitleResponse reportPostSubTitleResponse);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void subtitleSelected(ReportPostSubTitleResponse value) {
+        ReportSubTitleSelected listener = (ReportSubTitleSelected) getTargetFragment();
+        listener.onSubTitleSelected(value);
+        dismiss();
     }
 }

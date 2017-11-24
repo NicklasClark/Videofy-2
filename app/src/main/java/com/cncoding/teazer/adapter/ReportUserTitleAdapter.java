@@ -14,9 +14,11 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
+import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -28,20 +30,20 @@ import butterknife.ButterKnife;
  * Created by amit on 24/11/17.
  */
 
-public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitleAdapter.ViewHolder> {
+public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitleAdapter.ViewHolder> {
 
-    private final List<ReportPostTitlesResponse> reportsType;
-    private final ReportPostDialogFragment fragmentContext;
+    private final List<ReportPostSubTitleResponse> reportsType;
+    private final ReportUserDialogFragment fragmentContext;
     private Context context;
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
 
-    public ReportPostTitleAdapter(List<ReportPostTitlesResponse> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment) {
+    public ReportUserTitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportUserDialogFragment reportUserDialogFragment) {
         this.reportsType = reportsType;
         this.context = context;
-        this.fragmentContext = reportPostDialogFragment;
+        this.fragmentContext = reportUserDialogFragment;
         try {
-            this.mAdapterCallback = reportPostDialogFragment;
+            this.mAdapterCallback = reportUserDialogFragment;
         } catch (ClassCastException e) {
             throw new ClassCastException("Fragment must implement AdapterCallback.");
         }
@@ -53,28 +55,20 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
     }
 
     @Override
-    public ReportPostTitleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReportUserTitleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_report_post, parent, false);
-        return new ReportPostTitleAdapter.ViewHolder(view);
+        return new ReportUserTitleAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ReportPostTitleAdapter.ViewHolder holder, int position) {
-        final ReportPostTitlesResponse report = reportsType.get(position);
+    public void onBindViewHolder(final ReportUserTitleAdapter.ViewHolder holder, int position) {
+        final ReportPostSubTitleResponse report = reportsType.get(position);
         holder.reportTitle.setText(report.getTitle());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (report.getSubReports().size()>0) {
-                    FragmentManager fm = fragmentContext.getFragmentManager();
-                    ReportPostSubtitleFragment reportPostSubTitleDialogFragment = ReportPostSubtitleFragment.newInstance(report);
-                    // SETS the target fragment for use later when sending results
-                    reportPostSubTitleDialogFragment.setTargetFragment(fragmentContext, 300);
-                    reportPostSubTitleDialogFragment.show(fm, "fragment_report_post");
-                } else {
                     mAdapterCallback.titleSelected(report);
-                }
 
             }
         });
@@ -95,7 +89,8 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.reportTitleLayout) RelativeLayout layout;
+        @BindView(R.id.reportTitleLayout)
+        RelativeLayout layout;
         @BindView(R.id.reportTitle)
         TextView reportTitle;
 
@@ -108,6 +103,6 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
 
     public interface TitleSelectedInterface
     {
-        void titleSelected(ReportPostTitlesResponse value);
+        void titleSelected(ReportPostSubTitleResponse value);
     }
 }

@@ -6,13 +6,14 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by amit on 24/11/17.
  */
 
-public class ReportPostSubTitleResponse implements Parcelable{
+public class ReportPostSubTitleResponse implements Parcelable {
     @SerializedName("report_type_id")
     @Expose
     private Integer reportTypeId;
@@ -53,7 +54,31 @@ public class ReportPostSubTitleResponse implements Parcelable{
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.reportTypeId);
+        dest.writeString(this.title);
+        dest.writeList(this.subReports);
     }
+
+    public ReportPostSubTitleResponse() {
+    }
+
+    protected ReportPostSubTitleResponse(Parcel in) {
+        this.reportTypeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.title = in.readString();
+        this.subReports = new ArrayList<Object>();
+        in.readList(this.subReports, Object.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ReportPostSubTitleResponse> CREATOR = new Parcelable.Creator<ReportPostSubTitleResponse>() {
+        @Override
+        public ReportPostSubTitleResponse createFromParcel(Parcel source) {
+            return new ReportPostSubTitleResponse(source);
+        }
+
+        @Override
+        public ReportPostSubTitleResponse[] newArray(int size) {
+            return new ReportPostSubTitleResponse[size];
+        }
+    };
 }
