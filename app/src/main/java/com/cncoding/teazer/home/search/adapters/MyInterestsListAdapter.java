@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.search.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -29,8 +30,8 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
     private Map<String, ArrayList<PostDetails>> myInterests;
     private Context context;
 
-    MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList,
-                           Map<String, ArrayList<PostDetails>> myInterests, Context context) {
+    public MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList,
+                                  Map<String, ArrayList<PostDetails>> myInterests, Context context) {
         this.myInterestsCategoriesArrayList = myInterestsCategoriesArrayList;
         this.myInterests = myInterests;
         this.context = context;
@@ -48,20 +49,27 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         if (position < 3) {
             holder.header.setText(myInterestsCategoriesArrayList.get(position).getCategoryName());
 
-            holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
-                    myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context));
+            if (!myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()).isEmpty()) {
+                holder.recyclerView.setVisibility(View.VISIBLE);
+                holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
+                        myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context));
+            } else {
+                holder.recyclerView.setVisibility(View.GONE);
+                holder.noMyInterests.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return myInterestsCategoriesArrayList.size();
+        return myInterestsCategoriesArrayList.size() >=3 ? 3 : myInterestsCategoriesArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.interests_header) ProximaNovaRegularTextView header;
+        @BindView(R.id.no_my_interests_posts) ProximaNovaBoldTextView noMyInterests;
         @BindView(R.id.item_my_interests_list) RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {

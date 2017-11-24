@@ -6,22 +6,22 @@
         android:toXDelta="0"
         android:fromYDelta="-100"
         android:toYDelta="0"
-        android:duration="500"
+        android:duration="300"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
 
-    <scale
+<!--    <scale
         android:fromXScale="0"
         android:fromYScale="0"
         android:toXScale="1"
         android:toYScale="1"
         android:pivotX="50%"
         android:pivotY="0%"
-        android:duration="500"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+        android:duration="400"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator" />-->
 
     <alpha
         android:fromAlpha="0"
         android:toAlpha="1"
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:duration="600" />
+        android:duration="500" />
 </set>

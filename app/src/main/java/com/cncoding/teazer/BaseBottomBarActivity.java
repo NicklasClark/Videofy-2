@@ -1,6 +1,9 @@
 package com.cncoding.teazer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +16,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -27,7 +31,6 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
@@ -38,14 +41,19 @@ import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractio
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.home.search.MyInterestsFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
+import com.cncoding.teazer.home.search.SearchFragment.OnSearchInteractionListener;
+import com.cncoding.teazer.home.search.SubSearchFragment;
+import com.cncoding.teazer.home.search.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
+import com.cncoding.teazer.home.search.adapters.TrendingListAdapter.TrendingListInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
@@ -62,12 +70,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
+import static com.cncoding.teazer.home.search.SearchFragment.ACTION_VIEW_TRENDING;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
+import static com.cncoding.teazer.utilities.NavigationController.TAB2;
+import static com.cncoding.teazer.utilities.NavigationController.TAB4;
+import static com.cncoding.teazer.utilities.NavigationController.TAB5;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
@@ -81,8 +92,8 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener,ProfileFragment.RemoveAppBar,
-        SearchFragment.OnSearchInteractionListener,
+        PostReactionAdapterListener, ProfileFragment.RemoveAppBar,
+        OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
         ProfileMyCreationAdapter.myCreationListener{
 
@@ -109,10 +120,8 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_title) SignPainterTextView toolbarTitle;
-    @BindView(R.id.discover_toolbar_layout) LinearLayout discoverToolbarLayout;
-    @BindView(R.id.search_page_title) ProximaNovaSemiboldTextView searchPageTitle;
-    @BindView(R.id.discover_search) ProximaNovaRegularAutoCompleteTextView discoverSearchBar;
+    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarTitle;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
@@ -124,7 +133,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private ActionBar actionBar;
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
 
@@ -138,7 +146,11 @@ public class BaseBottomBarActivity extends BaseActivity
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
 
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
@@ -158,13 +170,23 @@ public class BaseBottomBarActivity extends BaseActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Drawable icon = tab.getIcon();
+                if (icon != null)
+                icon.setTint(Color.BLACK);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
+            }
+        });
+        LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
+        tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +197,13 @@ public class BaseBottomBarActivity extends BaseActivity
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+//        initTab();
+        switchTab(0);
     }
 
     private void checkIfAnyVideoIsUploading() {
@@ -324,13 +353,6 @@ public class BaseBottomBarActivity extends BaseActivity
         }, 1000);
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-//        initTab();
-        switchTab(0);
-    }
-
     @OnClick(R.id.camera_btn)
     public void startCamera() {
         launchVideoUploadCamera(this);
@@ -357,51 +379,54 @@ public class BaseBottomBarActivity extends BaseActivity
 //    }
 
     private void switchTab(final int position) {
-        if (position != 1)
-            navigationController.switchTab(position);
-        else
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    navigationController.switchTab(position);
-                }
-            }, 600);
-
-        updateDiscoverToolbar(position == 1);
-
-//        updateToolbarTitle(position);
+        navigationController.switchTab(position);
+        updateTabFocus(position);
+        updateIfDiscoverToolbar(position == 1);
     }
 
-    private void updateDiscoverToolbar(boolean isDiscoverPage) {
-        if (isDiscoverPage) {
-            if (discoverToolbarLayout.getVisibility() != VISIBLE) {
-                discoverToolbarLayout.setVisibility(VISIBLE);
-                discoverSearchBar.setVisibility(VISIBLE);
-            }
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (toolbarTitle.getVisibility() != GONE)
-                        toolbarTitle.setVisibility(GONE);
-                }
-            }, 280);
-        } else {
-            if (toolbarTitle.getVisibility() != VISIBLE)
-                toolbarTitle.setVisibility(VISIBLE);
-            if (discoverToolbarLayout.getVisibility() != GONE) {
-                discoverToolbarLayout.setVisibility(GONE);
-//                searchPageTitle.setVisibility(GONE);
+    @SuppressWarnings("ConstantConditions")
+    private void updateTabFocus(int position) {
+        for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
+            if (i != 2) {
+                if (i == position)
+                    bottomTabLayout.getTabAt(position).getIcon().setTint(Color.parseColor("#26C6DA"));
+                else
+                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.parseColor("#333333"));
             }
         }
     }
 
-    public void disappearSearchBar() {
-        discoverSearchBar.setVisibility(GONE);
+    public void updateIfDiscoverToolbar(boolean isDiscoverPage) {
+        if (isDiscoverPage && navigationController.isRootFragment()) {
+            if (appBar.getElevation() != 0.0)
+                appBar.setElevation(0.0f);
+            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
+                updateToolbarTitle(getString(R.string.discover));
+                toolbarPlainTitle.setVisibility(VISIBLE);
+            }
+            if (toolbarTitle.getVisibility() != GONE)
+                toolbarTitle.setVisibility(GONE);
+        } else {
+            if (appBar.getElevation() != 12.0)
+                appBar.setElevation(12.0f);
+            if (toolbarTitle.getVisibility() != VISIBLE)
+                toolbarTitle.setVisibility(VISIBLE);
+            if (toolbarPlainTitle.getVisibility() != GONE) {
+                toolbarPlainTitle.setVisibility(GONE);
+            }
+        }
     }
 
-    public void reappearSearchBar() {
-        discoverSearchBar.setVisibility(VISIBLE);
-    }
+//    public void disappearSearchBar() {
+//        if (toolbarTitle.getVisibility() != GONE)
+//            toolbarTitle.setVisibility(GONE);
+//        if (settings.getVisibility() != GONE)
+//            settings.setVisibility(GONE);
+//    }
+//
+//    public void reappearSearchBar() {
+//        toolbarPlainTitle.setVisibility(VISIBLE);
+//    }
 
     public void updateTabSelection(int currentTab) {
         for (int i = 0; i < TABS.length; i++) {
@@ -431,7 +456,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void updateToolbar() {
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
@@ -444,20 +469,12 @@ public class BaseBottomBarActivity extends BaseActivity
      *
      * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
      */
-    public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
-        if (title == null) {
-            toolbarTitle.animate().alpha(1).setDuration(250).start();
-            toolbarTitle.setVisibility(VISIBLE);
-        } else {
-            toolbarTitle.animate().alpha(0).setDuration(250).start();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toolbarTitle.setVisibility(INVISIBLE);
-                    actionBar.setTitle("    " + title);
-                }
-            }, 250);
-        }
+    public void updateToolbarTitle(String title) {
+        toolbarPlainTitle.setText(title);
+    }
+
+    public String getToolbarTitle() {
+        return toolbarPlainTitle.getText().toString();
     }
 
     public AppBarLayout.OnOffsetChangedListener appBarOffsetChangeListener() {
@@ -502,16 +519,15 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
-            case TAB1: {
+            case TAB1:
                 return PostsListFragment.newInstance();
-            }
-            case NavigationController.TAB2:
+            case TAB2:
                 return SearchFragment.newInstance();
 //            case NavigationController.TAB3:
-//                return new SearchFragment();
-            case NavigationController.TAB4:
+//                return null;
+            case TAB4:
                 return NotificationsFragment.newInstance();
-            case NavigationController.TAB5:
+            case TAB5:
                 return ProfileFragment.newInstance();
         }
         throw new IllegalArgumentException("Need to send an index that we know");
@@ -564,13 +580,24 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onSearchInteraction(int action, ArrayList<Pojos.Category> categories) {
-        disappearSearchBar();
-        pushFragment(MyInterestsFragment.newInstance(categories));
+    public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList) {
+        pushFragment(SubSearchFragment.newInstance(action, categories, postDetailsArrayList));
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
+    public void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage) {
+        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage));
+    }
+
+    @Override
+    public void onTrendingListInteraction(int categoryId) {
+        ArrayList<Category> categories = new ArrayList<>();
+        categories.add(new Category(categoryId, null));
+        pushFragment(SubSearchFragment.newInstance(ACTION_VIEW_TRENDING, categories, null));
+    }
+
+    @Override
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, Profile profile) {
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
@@ -605,6 +632,34 @@ public class BaseBottomBarActivity extends BaseActivity
 //        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
+    public void hideAppBar() {
+        appBar.setExpanded(false, true);
+    }
+
+    public void showAppBar() {
+        appBar.setExpanded(true, true);
+    }
+
+    @Override
+    public void removeAppbar() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
+    }
+
+    @Override
+    public void myCreationVideos(int i, PostDetails postDetails) {
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+    }
+
+    public void hideSettings(boolean flag) {
+        if(flag) {
+            settings.setVisibility(View.VISIBLE);
+        }
+        else {
+            settings.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -615,9 +670,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         if (!navigationController.isRootFragment()) {
-            if (navigationController.getCurrentFragment().getTag().contains("MyInterestsFragment"))
-                reappearSearchBar();
-
             navigationController.popFragment();
         } else {
             if (fragmentHistory.isEmpty()) {
@@ -639,46 +691,4 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }
     }
-
-    public void hideAppBar() {
-        appBar.setExpanded(false, true);
-    }
-
-    public void showAppBar() {
-        appBar.setExpanded(true, true);
-    }
-
-    @Override
-    public void removeAppbar() {
-
-       getSupportActionBar().hide();
-    }
-
-
-
-
-    @Override
-    public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
-
-    }
-
-    public void hidesettings(boolean flag)
-
-    {
-        if(flag==true)
-        {
-            settings.setVisibility(View.VISIBLE);
-        }
-
-        else
-        {
-            settings.setVisibility(View.GONE);
-
-        }
-
-
-
-    }
-
 }

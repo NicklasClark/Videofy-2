@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.search.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,7 +33,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     private final ArrayList<PostDetails> featuredVideosArrayList;
     private final Context context;
 
-    FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context) {
+    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context) {
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
     }

@@ -17,6 +17,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.search.adapters.FeaturedVideosListAdapter;
+import com.cncoding.teazer.home.search.adapters.MostPopularListAdapter;
+import com.cncoding.teazer.home.search.adapters.MyInterestsListAdapter;
+import com.cncoding.teazer.home.search.adapters.TrendingListAdapter;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -35,13 +39,17 @@ import retrofit2.Response;
 
 public class SearchFragment extends BaseFragment {
 
+    public static final int ACTION_VIEW_MY_INTERESTS = 1;
+    public static final int ACTION_VIEW_MOST_POPULAR = 2;
+    public static final int ACTION_VIEW_TRENDING = 3;
+
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
 //    @BindView(R.id.my_interests_view_all) ProximaNovaBoldTextView viewAllMyInterests;
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
-    @BindView(R.id.no_my_interests) ProximaNovaBoldTextView noMyInterests;
+//    @BindView(R.id.no_my_interests) ProximaNovaBoldTextView noMyInterests;
     @BindView(R.id.no_trending) ProximaNovaBoldTextView noTrending;
     @BindView(R.id.no_featured_videos) ProximaNovaBoldTextView noFeaturedVideos;
 
@@ -68,6 +76,7 @@ public class SearchFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getParentActivity().updateIfDiscoverToolbar(true);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);
@@ -99,14 +108,18 @@ public class SearchFragment extends BaseFragment {
                 landingPosts.getUserInterests(), landingPosts.getMyInterests(), getContext()));
 
         trendingList.setLayoutManager(horizontalLinearLayoutManager2);
-        trendingList.setAdapter(new TrendingListAdapter(landingPosts.getTrendingCategories()));
+        trendingList.setAdapter(new TrendingListAdapter(landingPosts.getTrendingCategories(), getContext()));
 
         featuredVideosList.setLayoutManager(staggeredGridLayoutManager);
         featuredVideosList.setAdapter(new FeaturedVideosListAdapter(featuredPostsList, getContext()));
     }
 
     @OnClick(R.id.my_interests_view_all) public void viewAllMyInterests() {
-        mListener.onSearchInteraction(0, landingPosts.getUserInterests());
+        mListener.onSearchInteraction(ACTION_VIEW_MY_INTERESTS, landingPosts.getUserInterests(), null);
+    }
+
+    @OnClick(R.id.most_popular_view_all) public void viewAllMostPopular() {
+        mListener.onSearchInteraction(ACTION_VIEW_MOST_POPULAR, null, landingPosts.getMostPopular());
     }
 
     private void notifyLandingPostsDataSetChanged() {
@@ -114,10 +127,11 @@ public class SearchFragment extends BaseFragment {
             mostPopularList.setVisibility(View.GONE);
             noMostPopular.setVisibility(View.VISIBLE);
         }
-        if (landingPosts.getMyInterests().entrySet().isEmpty()) {
-            myInterestsList.setVisibility(View.GONE);
-            noMyInterests.setVisibility(View.VISIBLE);
-        }
+//        if (Collections.frequency(landingPosts.getMyInterests().values(), Collections.EMPTY_LIST)
+//                == landingPosts.getMyInterests().size()) {
+//            myInterestsList.setVisibility(View.GONE);
+//            noMyInterests.setVisibility(View.VISIBLE);
+//        }
         if (landingPosts.getTrendingCategories().isEmpty()) {
             trendingList.setVisibility(View.GONE);
             noTrending.setVisibility(View.VISIBLE);
@@ -222,6 +236,6 @@ public class SearchFragment extends BaseFragment {
     }
 
     public interface OnSearchInteractionListener {
-        void onSearchInteraction(int action, ArrayList<Category> categories);
+        void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList);
     }
 }

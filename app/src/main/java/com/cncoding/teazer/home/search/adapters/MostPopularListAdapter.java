@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.search.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,12 +27,12 @@ import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
  * Created by Prem $ on 11/19/2017.
  */
 
-class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter.ViewHolder> {
+public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularListAdapter.ViewHolder> {
 
     private ArrayList<PostDetails> mostPopularList;
     private Context context;
 
-    MostPopularListAdapter(ArrayList<PostDetails> mostPopularList, Context context) {
+    public MostPopularListAdapter(ArrayList<PostDetails> mostPopularList, Context context) {
         this.mostPopularList = mostPopularList;
         this.context = context;
     }

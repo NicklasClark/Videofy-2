@@ -1,5 +1,6 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.search.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,13 @@ import butterknife.ButterKnife;
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.ViewHolder> {
 
     private ArrayList<Category> trendingCategories;
+    private TrendingListInteractionListener mListener;
 
-    TrendingListAdapter(ArrayList<Category> trendingCategories) {
+    public TrendingListAdapter(ArrayList<Category> trendingCategories, Context context) {
         this.trendingCategories = trendingCategories;
+        if (context instanceof TrendingListInteractionListener) {
+            mListener = (TrendingListInteractionListener) context;
+        }
     }
 
     @Override
@@ -35,8 +40,16 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
     }
 
     @Override
-    public void onBindViewHolder(TrendingListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final TrendingListAdapter.ViewHolder holder, int position) {
         holder.title.setText(trendingCategories.get(position).getCategoryName());
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onTrendingListInteraction(trendingCategories.get(holder.getAdapterPosition()).getCategoryId());
+                }
+            }
+        });
     }
 
     @Override
@@ -52,5 +65,9 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface TrendingListInteractionListener {
+        void onTrendingListInteraction(int categoryId);
     }
 }
