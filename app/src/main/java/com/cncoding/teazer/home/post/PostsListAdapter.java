@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseIntArray;
@@ -84,8 +83,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                         return false;
                     }
-                };
-                View.OnClickListener viewProfile = new View.OnClickListener() {
+
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
