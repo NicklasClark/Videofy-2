@@ -229,12 +229,15 @@ public class LoginFragment extends Fragment {
                 else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
             case LOGIN_STATE_OTP:
-                if (!username.isEmpty()) {
+                if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
                     startCircularReveal();
                     loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, revealLayout,
                             null, null, false);
+                } else {
+                    setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                    Snackbar.make(usernameView, R.string.phone_number_invalid, Snackbar.LENGTH_SHORT)
+                            .show();
                 }
-                else setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                 break;
             default:
                 break;
@@ -250,6 +253,7 @@ public class LoginFragment extends Fragment {
 //            Toggle login through OTP
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
+        usernameView.setText("");
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(VISIBLE);

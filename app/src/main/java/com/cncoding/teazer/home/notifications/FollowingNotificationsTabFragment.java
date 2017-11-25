@@ -67,7 +67,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     new GetFollowingNotifications(FollowingNotificationsTabFragment.this).execute(page);
             }
         };
@@ -106,6 +106,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
                         @Override
                         public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
                             if (response.code() == 200) {
+                                reference.get().is_next_page = response.body().isNextPage();
                                 if (response.body().getNotifications().size() > 0) {
                                     reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     reference.get().noNotifications.setVisibility(View.GONE);

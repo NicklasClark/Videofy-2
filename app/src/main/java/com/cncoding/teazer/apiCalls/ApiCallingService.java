@@ -3,7 +3,6 @@ package com.cncoding.teazer.apiCalls;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
@@ -722,7 +721,7 @@ public class ApiCallingService {
                         .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
                         .method(original.method(), original.body())
                         .build();
-                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
+//                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
         }).addInterceptor(logging).build();

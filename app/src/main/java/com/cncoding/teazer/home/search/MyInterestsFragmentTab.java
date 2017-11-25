@@ -75,7 +75,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     new GetPosts(MyInterestsFragmentTab.this).execute(page);
             }
         };
@@ -112,6 +112,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
                             if (response.code() == 200) {
+                                reference.get().is_next_page = response.body().isNextPage();
                                 if (!response.body().getPosts().isEmpty()) {
                                     reference.get().postDetailsArrayList.addAll(response.body().getPosts());
                                     reference.get().recyclerView.getAdapter().notifyDataSetChanged();

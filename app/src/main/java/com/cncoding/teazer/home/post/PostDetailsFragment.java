@@ -170,7 +170,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     getPostReactions(postDetails.getPostId(), page);
             }
         };
@@ -292,42 +292,36 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 .enqueue(new Callback<PostReactionsList>() {
                     @Override
                     public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                        try {
-                            switch (response.code()) {
-                                case 200:
-                                    if (response.body().getReactions().size() > 0) {
-                                        postReactions.addAll(response.body().getReactions());
-    //                                    recyclerView.setVisibility(View.VISIBLE);
-                                        postReactionAdapter.notifyDataSetChanged();
-                                        if (postReactions.size() > 0) {
-                                            if (postReactions.size() >= 1) {
-                                                controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
-                                            } else
-                                                controller.disappearReactionPic(0);
-                                            if (postReactions.size() >= 2) {
-                                                controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                            } else
-                                                controller.disappearReactionPic(1);
-                                            if (postReactions.size() >= 3) {
-                                                controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                            } else
-                                                controller.disappearReactionPic(2);
-                                        }
-                                    } else {
-                                        controller.disappearReactionPic(0);
-                                        controller.disappearReactionPic(1);
-                                        controller.disappearReactionPic(2);
-                                        controller.setNoReactions();
-                                        showNoReactionMessage();
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getReactions().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1)
+                                        postReactions.clear();
+
+                                    postReactions.addAll(response.body().getReactions());
+//                                    recyclerView.setVisibility(View.VISIBLE);
+                                    postReactionAdapter.notifyDataSetChanged();
+                                    if (postReactions.size() > 0) {
+                                        if (postReactions.size() >= 1) {
+                                            controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                        } else
+                                            controller.disappearReactionPic(0);
+                                        if (postReactions.size() >= 2) {
+                                            controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                        } else
+                                            controller.disappearReactionPic(1);
+                                        if (postReactions.size() >= 3) {
+                                            controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                        } else
+                                            controller.disappearReactionPic(2);
                                     }
+                                }
                                     break;
                                 default:
                                     showErrorMessage("Error " + response.code() +": " + response.message());
                                     break;
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
 
                     private void showErrorMessage(String message) {

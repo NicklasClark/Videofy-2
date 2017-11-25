@@ -76,7 +76,7 @@ public class PostsListFragment extends BaseFragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 ((BaseBottomBarActivity)getActivity()).hideSettings(false);
 
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     getHomePagePosts(page, false);
             }
         };
@@ -108,32 +108,32 @@ public class PostsListFragment extends BaseFragment {
         }
     }
 
-    public void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(final int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
-                        try {
-                            switch (response.code()) {
-                                case 200:
-                                    if (response.body().getPosts().size() > 0) {
-                                        postList.addAll(response.body().getPosts());
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                        postListAdapter.notifyDataSetChanged();
-                                    } else {
-                                        showErrorMessage(getString(R.string.no_posts_available));
-                                        tapToRetryBtn.setVisibility(View.INVISIBLE);
-                                    }
-                                    break;
-                                default:
-                                    showErrorMessage("Error");
-    //                                AuthUtils.logout(getContext(), getActivity());
-                                    break;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getPosts().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (page == 1)
+                                        postList.clear();
+
+                                    postList.addAll(response.body().getPosts());
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    postListAdapter.notifyDataSetChanged();
+                                } else {
+                                    showErrorMessage(getString(R.string.no_posts_available));
+                                    tapToRetryBtn.setVisibility(View.INVISIBLE);
+                                }
+                                break;
+                            default:
+                                showErrorMessage("Error " + response.code() +": " + response.message());
+//                                AuthUtils.logout(getContext(), getActivity());
+                                break;
                         }
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
@@ -144,7 +144,8 @@ public class PostsListFragment extends BaseFragment {
                         recyclerView.setVisibility(View.INVISIBLE);
                         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
+                        String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
+                        postLoadErrorTextView.setText(errorString);
                     }
 
                     @Override

@@ -55,6 +55,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -216,12 +217,14 @@ public class CameraActivity extends AppCompatActivity
     }
 
     public void onVideoGalleryAdapterInteraction(String videoPath) {
-        if (isReaction) {
-            new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
-        } else {
-            uploadFragment = UploadFragment.newInstance(videoPath, false, true);
-            startVideoUploadFragment();
-        }
+        if (new File(videoPath).exists()) {
+            if (isReaction) {
+                new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
+            } else {
+                uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                startVideoUploadFragment();
+            }
+        } else Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
 
     @Override
