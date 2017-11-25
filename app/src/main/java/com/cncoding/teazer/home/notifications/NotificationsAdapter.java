@@ -29,7 +29,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;
 
@@ -135,7 +134,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            ViewUtils.getByteArrayFromImage(holder1.thumbnail), null);
+                                                            null, null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else
@@ -157,7 +156,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            ViewUtils.getByteArrayFromImage(holder1.thumbnail), null);
+                                                            null, null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else

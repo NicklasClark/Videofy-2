@@ -194,7 +194,7 @@ public class CameraActivity extends AppCompatActivity
                         .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
                         .replace(R.id.uploading_container, uploadFragment, TAG_UPLOAD_FRAGMENT)
                         .addToBackStack(TAG_UPLOAD_FRAGMENT)
-                        .commit();
+                        .commitAllowingStateLoss();
                 cameraFragment.closePreviewSession();
             }
         }, 300);

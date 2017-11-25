@@ -138,7 +138,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public String videoPath;
     public boolean isReaction;
-    String selectedCategoriesToSend;
+    String selectedCategoriesToSend = null;
     private boolean isRequestingLocationUpdates;
     private ArrayList<Pojos.MiniProfile> myFollowingsList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -508,8 +508,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
-        toggleInteraction(false);
-        String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
+        String title = videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString();
         String location = null;
         double latitude = 0;
         double longitude = 0;
@@ -520,8 +519,33 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
         String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
         DecimalFormat df = new DecimalFormat("#.#######");
-        performUpload(activity, new Pojos.UploadParams(videoPath, false, title, location,
-                Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
+        if (title != null && !title.equals("")) {
+            if (selectedCategoriesToSend != null) {
+                toggleInteraction(false);
+                performUpload(activity, new Pojos.UploadParams(videoPath, false, title, location,
+                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
+            } else {
+                uploadCategoriesText.setHint("Please select some categories");
+                uploadCategoriesText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadCategoriesText.setHint("");
+                        uploadCategoriesText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    }
+                }, 1000);
+            }
+        } else {
+            videoTitle.setHint("This field should not be blank");
+            videoTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    videoTitle.setHint(R.string.title);
+                    videoTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }, 1000);
+        }
     }
 
     @OnClick(R.id.video_upload_retake_btn) public void retakeVideo() {

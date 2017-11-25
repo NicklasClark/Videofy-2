@@ -14,7 +14,7 @@
         android:background="@drawable/bg_vignette_top"
         android:minHeight="42dp"
         android:paddingTop="@dimen/padding_half"
-        android:paddingStart="@dimen/padding_half"
+        android:paddingStart="14dp"
         android:paddingBottom="@dimen/padding_default"
         android:paddingEnd="@dimen/padding_half">
 
@@ -27,16 +27,16 @@
             android:paddingTop="@dimen/padding_half"
             android:paddingBottom="@dimen/padding_half"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_content" />
+            android:textSize="@dimen/text_size_content_big" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/media_controller_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:drawableStartCompat="@drawable/ic_add_location"
+            app:drawableStartCompat="@drawable/ic_place_black_24dp"
             android:layout_alignParentStart="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_14sp"
+            android:textSize="13sp"
             android:layout_below="@id/media_controller_caption"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -60,6 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:src="@drawable/ic_play_big"
         android:background="@android:color/transparent" />
 
     <RelativeLayout

@@ -25,7 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -217,9 +216,7 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
-        ((BaseBottomBarActivity)getActivity()).hideSettings(true);
-      //  ((BaseBottomBarActivity)getActivity()).hideSettings(true);
-
+        getParentActivity().hideSettings(true);
     }
     public void getProfileDetail() {
 
@@ -381,7 +378,7 @@ public class ProfileFragment extends BaseFragment {
 //        coordinatorLayout.setVisibility(View.GONE);
         getProfileDetail();
 
-
+        getParentActivity().showAppBar();
     }
 
     private void dynamicToolbarColor() {

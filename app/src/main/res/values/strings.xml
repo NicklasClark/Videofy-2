@@ -109,7 +109,7 @@
     <string name="title_activity_video_upload">Upload Video</string>
     <string name="action_settings">Settings</string>
     <string name="video_preview_thumbnail">Video preview thumbnail</string>
-    <string name="react_title">Title</string>
+    <string name="title">Title</string>
     <string name="share_with">Share with</string>
     <string name="retake">Retake</string>
     <string name="see_nearby_places">See nearby places</string>
@@ -244,4 +244,6 @@
     <string name="discover">Discover</string>
     <string name="search_videos_or_places">Search Videos or Places</string>
     <string name="phone_number_invalid"><![CDATA[Phone number should not be empty & only contain digits]]></string>
+    <string name="play_button">Play button</string>
+    <string name="post">Post</string>
 </resources>

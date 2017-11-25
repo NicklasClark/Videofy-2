@@ -299,6 +299,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="BottomTabLayout.NotificationTab">
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+    </style>
+
     <style name="SeekBarTheme" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">@android:color/white</item>
     </style>

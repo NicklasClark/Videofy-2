@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -223,10 +224,17 @@ public class ViewUtils {
     }
 
     public static byte[] getByteArrayFromImage(ImageView imageView) {
-        Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        return outputStream.toByteArray();
+        if (imageView.getDrawable() != null) {
+            Bitmap bitmap;
+            if (imageView.getDrawable() instanceof TransitionDrawable)
+                bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+            else
+                bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            return outputStream.toByteArray();
+        } else
+            return null;
     }
 
 //    /**

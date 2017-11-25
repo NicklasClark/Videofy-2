@@ -329,8 +329,7 @@ public class AuthUtils {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mListener.onOtpInteraction(
-                                                null, false);
+                                        mListener.onOtpInteraction(null, false);
                                     }
                                 }, 1000);
                             } else {

@@ -18,7 +18,7 @@ public class BaseFragment extends Fragment {
 
     public FragmentNavigation fragmentNavigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
-    protected boolean is_next_page;
+    protected boolean is_next_page = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

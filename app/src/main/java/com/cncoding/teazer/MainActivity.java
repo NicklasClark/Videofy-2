@@ -541,11 +541,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
-        if (isVerified)
-            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-        else {
-            setFragment(TAG_LOGIN_FRAGMENT, true,
-                    new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+        if (verificationDetails != null) {
+            if (isVerified)
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+            else {
+                setFragment(TAG_LOGIN_FRAGMENT, true,
+                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+            }
+        } else {
+            successfullyLoggedIn();
         }
     }
 
