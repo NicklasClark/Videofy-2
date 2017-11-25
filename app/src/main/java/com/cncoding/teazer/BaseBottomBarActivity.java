@@ -188,27 +188,31 @@ public class BaseBottomBarActivity extends BaseActivity
         callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 201) {
-                    onUploadFinish();
+                try {
+                    if (response.code() == 201) {
+                        onUploadFinish();
 
                         deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                } else {
-                    if (response.code() == 200) {
-                        if (response.body().getMessage().contains("own video")) {
-//                        USER IS REACTING ON HIS OWN VIDEO.
-                            uploadingNotificationTextView.setText(response.body().getMessage());
-                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                            finishVideoUploadSession(getApplicationContext());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    uploadingStatusLayout.setVisibility(GONE);
-                                }
-                            }, 1000);
-                        }
-                        return;
+                    } else {
+                        //                    if (response.code() == 200) {
+                        //                        if (response.body().getMessage().contains("own video")) {
+                        ////                        USER IS REACTING ON HIS OWN VIDEO.
+                        //                            uploadingNotificationTextView.setText(response.body().getMessage());
+                        //                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
+                        //                            finishVideoUploadSession(getApplicationContext());
+                        //                            new Handler().postDelayed(new Runnable() {
+                        //                                @Override
+                        //                                public void run() {
+                        //                                    uploadingStatusLayout.setVisibility(GONE);
+                        //                                }
+                        //                            }, 1000);
+                        //                        }
+                        //                        return;
+                        //                    }
+                        onUploadError(new Throwable(response.code() + " : " + response.message()));
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -246,12 +250,16 @@ public class BaseBottomBarActivity extends BaseActivity
             super.onPreExecute();
             reference.get().uploadingStatusLayout.setVisibility(VISIBLE);
             reference.get().progressBar.setIndeterminate(false);
-            if (!uploadParams.isReaction())
-//                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            else
-//                UPLOADING REACTION VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            try {
+                if (!uploadParams.isReaction())
+                    //                UPLOADING POST VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                else
+                    //                UPLOADING REACTION VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -493,8 +501,9 @@ public class BaseBottomBarActivity extends BaseActivity
                 return NotificationsFragment.newInstance();
             case NavigationController.TAB5:
                 return ProfileFragment.newInstance();
+            default:
+                return PostsListFragment.newInstance();
         }
-        throw new IllegalArgumentException("Need to send an index that we know");
     }
 
     @Override
@@ -622,7 +631,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void removeAppbar() {
 
-       getSupportActionBar().hide();
+        getSupportActionBar().hide();
     }
 
 

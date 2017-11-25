@@ -115,21 +115,25 @@ public class PostsListFragment extends BaseFragment {
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getPosts().size() > 0) {
-                                    postList.addAll(response.body().getPosts());
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    postListAdapter.notifyDataSetChanged();
-                                } else {
-                                    showErrorMessage(getString(R.string.no_posts_available));
-                                    tapToRetryBtn.setVisibility(View.INVISIBLE);
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-//                                AuthUtils.logout(getContext(), getActivity());
-                                break;
+                        try {
+                            switch (response.code()) {
+                                case 200:
+                                    if (response.body().getPosts().size() > 0) {
+                                        postList.addAll(response.body().getPosts());
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        postListAdapter.notifyDataSetChanged();
+                                    } else {
+                                        showErrorMessage(getString(R.string.no_posts_available));
+                                        tapToRetryBtn.setVisibility(View.INVISIBLE);
+                                    }
+                                    break;
+                                default:
+                                    showErrorMessage("Error");
+    //                                AuthUtils.logout(getContext(), getActivity());
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);

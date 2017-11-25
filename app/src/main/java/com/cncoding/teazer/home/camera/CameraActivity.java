@@ -393,15 +393,19 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        uploadFragment = null;
-        cameraFragment = null;
-        videosList.clear();
-        videosList = null;
+        try {
+            uploadFragment = null;
+            cameraFragment = null;
+            videosList.clear();
+            videosList = null;
 //        gridLayoutManager.removeAndRecycleAllViews(recycler);
-        recyclerView.removeAllViews();
-        if (panelSlideListener != null) {
-            slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
-            panelSlideListener = null;
+            recyclerView.removeAllViews();
+            if (panelSlideListener != null) {
+                slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
+                panelSlideListener = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

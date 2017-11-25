@@ -293,19 +293,23 @@ public class LoginFragment extends Fragment {
                         @SuppressWarnings("ConstantConditions")
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            if (response.code() == 200) {
-                                if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
-                                    setCurrentPassword(getContext() ,passwordView.getText().toString());
-                                    mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
-                                } else {
-                                    ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
-                                }
-                            } else
-                                ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
+                            try {
+                                if (response.code() == 200) {
+                                    if (response.body().getStatus()) {
+                                        SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
+                                        setCurrentPassword(getContext() ,passwordView.getText().toString());
+                                        mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
+                                    } else {
+                                        ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
+                                    }
+                                } else
+                                    ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
 
-                            stopCircularReveal();
-                            loginBtn.setEnabled(true);
+                                stopCircularReveal();
+                                loginBtn.setEnabled(true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         void stopCircularReveal() {

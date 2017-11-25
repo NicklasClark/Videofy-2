@@ -327,54 +327,65 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected Bitmap doInBackground(Void... voids) {
-            Bitmap bitmap;
-            bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-            return bitmap;
+            try {
+                Bitmap bitmap;
+                bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                return bitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Glide.with(reference.get())
-                        .load(stream.toByteArray())
-                        .asBitmap()
-//                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                        .animate(R.anim.fast_fade_in)
-                        .listener(new RequestListener<byte[], Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
+            try {
+                if (bitmap != null) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    if (stream != null) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        Glide.with(reference.get())
+                                .load(stream.toByteArray())
+                                .asBitmap()
+        //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                                .animate(R.anim.fast_fade_in)
+                                .listener(new RequestListener<byte[], Bitmap>() {
+                                    @Override
+                                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
 
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(reference.get().thumbnailView);
-            } else {
-                Glide.with(reference.get())
-                        .load(R.drawable.material_flat)
-                        .crossFade()
-                        .listener(new RequestListener<Integer, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
+                                    @Override
+                                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+                                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                })
+                                .into(reference.get().thumbnailView);
+                    }
+                } else {
+                    Glide.with(reference.get())
+                            .load(R.drawable.material_flat)
+                            .crossFade()
+                            .listener(new RequestListener<Integer, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
 
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(reference.get().thumbnailView);
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
+                            .into(reference.get().thumbnailView);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

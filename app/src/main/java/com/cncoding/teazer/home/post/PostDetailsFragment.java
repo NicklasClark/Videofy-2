@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -134,6 +135,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         ButterKnife.bind(this, rootView);
         context = getContext();
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
 
@@ -176,7 +184,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //            }
 //        });
 
-        return rootView;
     }
 
     @Override
@@ -285,37 +292,41 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 .enqueue(new Callback<PostReactionsList>() {
                     @Override
                     public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getReactions().size() > 0) {
-                                    postReactions.addAll(response.body().getReactions());
-//                                    recyclerView.setVisibility(View.VISIBLE);
-                                    postReactionAdapter.notifyDataSetChanged();
-                                    if (postReactions.size() > 0) {
-                                        if (postReactions.size() >= 1) {
-                                            controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(0);
-                                        if (postReactions.size() >= 2) {
-                                            controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(1);
-                                        if (postReactions.size() >= 3) {
-                                            controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(2);
+                        try {
+                            switch (response.code()) {
+                                case 200:
+                                    if (response.body().getReactions().size() > 0) {
+                                        postReactions.addAll(response.body().getReactions());
+    //                                    recyclerView.setVisibility(View.VISIBLE);
+                                        postReactionAdapter.notifyDataSetChanged();
+                                        if (postReactions.size() > 0) {
+                                            if (postReactions.size() >= 1) {
+                                                controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                            } else
+                                                controller.disappearReactionPic(0);
+                                            if (postReactions.size() >= 2) {
+                                                controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                            } else
+                                                controller.disappearReactionPic(1);
+                                            if (postReactions.size() >= 3) {
+                                                controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                            } else
+                                                controller.disappearReactionPic(2);
+                                        }
+                                    } else {
+                                        controller.disappearReactionPic(0);
+                                        controller.disappearReactionPic(1);
+                                        controller.disappearReactionPic(2);
+                                        controller.setNoReactions();
+                                        showNoReactionMessage();
                                     }
-                                } else {
-                                    controller.disappearReactionPic(0);
-                                    controller.disappearReactionPic(1);
-                                    controller.disappearReactionPic(2);
-                                    controller.setNoReactions();
-                                    showNoReactionMessage();
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

@@ -217,8 +217,8 @@ public class CameraFragment extends Fragment {
 
         @Override
         public void onClosed(@NonNull CameraDevice camera) {
-            closeCamera();
-            stopBackgroundThread();
+//            closeCamera();
+//            stopBackgroundThread();
             super.onClosed(camera);
         }
     };
@@ -286,8 +286,8 @@ public class CameraFragment extends Fragment {
 
     @Override
     public void onPause() {
-//        closeCamera();
-//        stopBackgroundThread();
+        closeCamera();
+        stopBackgroundThread();
         super.onPause();
     }
 
@@ -336,15 +336,19 @@ public class CameraFragment extends Fragment {
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        if (mBackgroundThread != null) {
-            mBackgroundThread.quitSafely();
-            try {
-                mBackgroundThread.join();
-                mBackgroundThread = null;
-                mBackgroundHandler = null;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        try {
+            if (mBackgroundThread != null) {
+                mBackgroundThread.quitSafely();
+                try {
+                    mBackgroundThread.join();
+                    mBackgroundThread = null;
+                    mBackgroundHandler = null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -421,7 +425,11 @@ public class CameraFragment extends Fragment {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             if (cameraManager != null) {
-                cameraId = cameraManager.getCameraIdList()[facing];
+                if (cameraManager.getCameraIdList().length > 1) {
+                    cameraId = cameraManager.getCameraIdList()[facing];
+                } else {
+                    cameraId = cameraManager.getCameraIdList()[0];
+                }
                 // Choose the sizes for camera preview and video recording
                 CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
 
