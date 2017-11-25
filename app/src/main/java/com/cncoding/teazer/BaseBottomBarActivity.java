@@ -704,38 +704,4 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void hideAppBar() {
-        appBar.setExpanded(false, true);
-    }
-
-    public void showAppBar() {
-        appBar.setExpanded(true, true);
-    }
-
-    @Override
-    public void removeAppbar() {
-
-        getSupportActionBar().hide();
-    }
-
-    @Override
-    public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
-
-    }
-
-    public void hidesettings(boolean flag)
-
-    {
-        if(flag==true)
-        {
-            settings.setVisibility(View.VISIBLE);
-        }
-
-        else
-        {
-            settings.setVisibility(View.GONE);
-
-        }
-    }
 }
