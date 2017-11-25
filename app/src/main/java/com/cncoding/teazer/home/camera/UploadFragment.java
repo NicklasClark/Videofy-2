@@ -140,7 +140,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public String videoPath;
     public boolean isReaction;
-    String selectedCategoriesToSend;
+    String selectedCategoriesToSend = null;
     private boolean isRequestingLocationUpdates;
     private ArrayList<Pojos.MiniProfile> myFollowingsList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;

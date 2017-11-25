@@ -12,7 +12,7 @@
     <color name="colorAccent3">#fb595b</color>
     <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
-    <color name="colorTranslucentBg">#dd212121</color>
+    <color name="colorTranslucentBg">#91212121</color>
     <color name="colorTranslucentButton">#5a000000</color>
     <color name="colorPrimary_text">#212121</color>
     <color name="colorSecondary_text">#757575</color>
@@ -21,7 +21,7 @@
     <color name="colorSecondary_text_light">#BDBDBD</color>
     <color name="colorDisabled">#E0E0E0</color>
     <color name="colorIcons">#FFFFFF</color>
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDivider">#e0e0e0</color>
     <color name="colorRippleLight">#bbffffff</color>
     <!--69f0ae-->
     <color name="colorRippleDark">#bb616161</color>

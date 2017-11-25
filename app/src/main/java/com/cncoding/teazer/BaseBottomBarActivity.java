@@ -120,7 +120,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarTitle;
+    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarCenterTitle;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
@@ -411,18 +411,18 @@ public class BaseBottomBarActivity extends BaseActivity
     public void updateIfDiscoverToolbar(boolean isDiscoverPage) {
         if (isDiscoverPage && navigationController.isRootFragment()) {
             if (appBar.getElevation() != 0.0)
-                appBar.setElevation(0.0f);
+            appBar.setElevation(0.0f);
             if (toolbarPlainTitle.getVisibility() != VISIBLE) {
                 updateToolbarTitle(getString(R.string.discover));
                 toolbarPlainTitle.setVisibility(VISIBLE);
             }
-            if (toolbarTitle.getVisibility() != GONE)
-                toolbarTitle.setVisibility(GONE);
+            if (toolbarCenterTitle.getVisibility() != GONE)
+                toolbarCenterTitle.setVisibility(GONE);
         } else {
             if (appBar.getElevation() != 12.0)
                 appBar.setElevation(12.0f);
-            if (toolbarTitle.getVisibility() != VISIBLE)
-                toolbarTitle.setVisibility(VISIBLE);
+            if (toolbarCenterTitle.getVisibility() != VISIBLE)
+                toolbarCenterTitle.setVisibility(VISIBLE);
             if (toolbarPlainTitle.getVisibility() != GONE) {
                 toolbarPlainTitle.setVisibility(GONE);
             }
@@ -430,8 +430,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
 //    public void disappearSearchBar() {
-//        if (toolbarTitle.getVisibility() != GONE)
-//            toolbarTitle.setVisibility(GONE);
+//        if (toolbarCenterTitle.getVisibility() != GONE)
+//            toolbarCenterTitle.setVisibility(GONE);
 //        if (settings.getVisibility() != GONE)
 //            settings.setVisibility(GONE);
 //    }
@@ -472,7 +472,7 @@ public class BaseBottomBarActivity extends BaseActivity
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_previous);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
     }
 
@@ -483,6 +483,10 @@ public class BaseBottomBarActivity extends BaseActivity
      */
     public void updateToolbarTitle(String title) {
         toolbarPlainTitle.setText(title);
+        if (toolbarPlainTitle.getVisibility() != VISIBLE)
+            toolbarPlainTitle.setVisibility(VISIBLE);
+        if (toolbarCenterTitle.getVisibility() != GONE)
+            toolbarCenterTitle.setVisibility(GONE);
     }
 
     public String getToolbarTitle() {

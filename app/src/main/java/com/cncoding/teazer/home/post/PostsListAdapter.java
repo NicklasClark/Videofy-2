@@ -8,8 +8,6 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -31,6 +29,7 @@ import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
+import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
 
 /**
@@ -66,107 +65,91 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            holder.layout.setVisibility(View.INVISIBLE);
-            final PostDetails postDetails = posts.get(position);
-            Pojos.MiniProfile postOwner = postDetails.getPostOwner();
+        holder.postDetails = posts.get(position);
+        Pojos.MiniProfile postOwner = holder.postDetails.getPostOwner();
 
-            if (dimensionSparseArray.get(position) != 0) {
-                StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.layout.getLayoutParams();
-                params.height = dimensionSparseArray.get(position);
-                holder.layout.setLayoutParams(params);
-            }
+        if (dimensionSparseArray.get(position) != 0) {
+            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.layout.getLayoutParams();
+            params.height = dimensionSparseArray.get(position);
+            holder.layout.setLayoutParams(params);
+        }
 
-            Glide.with(context)
-                    .load(postDetails.getMedias().get(0).getThumbUrl())
-                    .crossFade()
-                    .skipMemoryCache(false)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            if (!isFromMemoryCache) {
-                                Animation animation = AnimationUtils.loadAnimation(context, R.anim.float_down);
-                                animation.setAnimationListener(new Animation.AnimationListener() {
-                                    @Override
-                                    public void onAnimationStart(Animation animation) {
-                                        dimensionSparseArray.put(holder.getAdapterPosition(), holder.layout.getHeight());
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                        holder.layout.setVisibility(View.VISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animation animation) {
-                                    }
-                                });
-                                holder.layout.startAnimation(animation);
-                            } else {
-                                holder.layout.animate().alpha(1).setDuration(280).start();
-                                holder.layout.setVisibility(View.VISIBLE);
-                            }
-                            if (holder.getAdapterPosition() == 4 || holder.getAdapterPosition() == posts.size() - 1) {
-                                postsListFragment.dismissProgressBar();
-                            }
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(holder.postThumbnail);
-
-            if (postOwner.hasProfileMedia())
-                Glide.with(context)
-                        .load(postOwner.getProfileMedia().getThumbUrl())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
-                        .crossFade()
-                        .into(holder.profilePic);
-            else
-                Glide.with(context)
-                        .load(R.drawable.ic_user_dp_small)
-                        .crossFade()
-                        .skipMemoryCache(true)
-                        .into(holder.profilePic);
-
-            holder.caption.setText(postDetails.getTitle());
-            if (postDetails.getCategories().size() > 0)
-                holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
-            else
-                holder.category.setVisibility(View.GONE);
-
-            String name = "@" + postOwner.getUserName();
-            holder.name.setText(name);
-
-            String popularity = postDetails.getLikes() + " Likes | " + postDetails.getTotalReactions() + " Reactions";
-            holder.popularity.setText(popularity);
-
-            if (listener != null) {
-                View.OnClickListener viewPostDetails = new View.OnClickListener() {
+        Glide.with(context)
+                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                .crossFade()
+                .placeholder(R.drawable.bg_placeholder)
+                .skipMemoryCache(false)
+                .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
-                    public void onClick(View view) {
-                        listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
-                                holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
                     }
                 };
                 View.OnClickListener viewProfile = new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
-                                holder.layout, getByteArrayFromImage(holder.postThumbnail));
-                    }
-                };
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
+                        if (height < holder.layout.getWidth())
+                            height = holder.layout.getWidth();
 
-                holder.postThumbnail.setOnClickListener(viewPostDetails);
-                holder.profilePic.setOnClickListener(viewProfile);
-                holder.name.setOnClickListener(viewProfile);
-            }
-        } catch (Resources.NotFoundException e) {
-            e.printStackTrace();
+                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
+//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+                        holder.layout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+                .into(holder.postThumbnail);
+
+        if (postOwner.hasProfileMedia())
+            Glide.with(context)
+                    .load(postOwner.getProfileMedia().getThumbUrl())
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .into(holder.profilePic);
+        else
+            Glide.with(context)
+                    .load(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .skipMemoryCache(true)
+                    .into(holder.profilePic);
+
+        String title = holder.postDetails.getTitle();
+        holder.caption.setText(title);
+
+        if (holder.postDetails.getCategories().size() > 0)
+            holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
+        else
+            holder.category.setVisibility(View.GONE);
+
+        String name = postOwner.getUserName();
+        holder.name.setText(name);
+
+        String likes = BLANK_SPACE + String.valueOf(holder.postDetails.getLikes());
+        holder.likes.setText(likes);
+
+        String views = BLANK_SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
+        holder.views.setText(views);
+
+        if (listener != null) {
+            View.OnClickListener viewPostDetails = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPostInteraction(ACTION_VIEW_POST, holder.postDetails, holder.postThumbnail,
+                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                }
+            };
+            View.OnClickListener viewProfile = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPostInteraction(ACTION_VIEW_PROFILE, holder.postDetails, holder.postThumbnail,
+                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                }
+            };
+
+            holder.postThumbnail.setOnClickListener(viewPostDetails);
+            holder.profilePic.setOnClickListener(viewProfile);
+            holder.name.setOnClickListener(viewProfile);
         }
     }
 
@@ -183,7 +166,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
-        @BindView(R.id.home_screen_post_popularity) ProximaNovaRegularTextView popularity;
+        @BindView(R.id.likes) ProximaNovaRegularTextView likes;
+        @BindView(R.id.views) ProximaNovaRegularTextView views;
+        PostDetails postDetails;
 
         ViewHolder(View view) {
             super(view);

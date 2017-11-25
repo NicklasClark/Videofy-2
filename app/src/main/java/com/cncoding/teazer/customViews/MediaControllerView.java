@@ -44,7 +44,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
 //    private static final long PROGRESS_SEEK = 500;
-    private static final long ANIMATE_TIME = 500;
+    private static final long ANIMATE_TIME = 280;
 
 //    private SeekBar mSeekBar; //seek bar for video
 //    private boolean mIsDragging; //is dragging seekBar
@@ -154,13 +154,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
         initControllerView();
         isPlaying = true;
-        show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hide();
-            }
-        }, 5000);
+        show(true, false, true);
 
 //        this.textureView.setOnTouchListener(new OnTouchListener() {
 //            @Override
@@ -407,15 +401,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void toggleControllerView() {
         togglePlayPauseIcons();
         if (!isShowing()) {
-            show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isPlaying && isShowing)
-                        hide();
-                }
-            }, 5000);
+            show(true, false, true);
         } else {
+            hide();
             //animate out controller view
             Message msg = handler.obtainMessage(HANDLER_ANIMATE_OUT);
             //remove exist one first
@@ -441,22 +429,24 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     /**
      * show controller view
+     * @param autoHide whether to autoHide the media controller view.
+     * @param toggle whether to toggle play-pause icons.
+     * @param animate whether to aniate while showing.
      */
-    private void show() {
-
+    public void show(boolean autoHide, boolean toggle, boolean animate) {
         if (anchorView != null) {
             //add controller view to bottom of the AnchorView
             FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
             );
-//            anchorView.removeAllViews();
             anchorView.removeView(MediaControllerView.this);
             anchorView.addView(MediaControllerView.this, frameParams);
 
-            putOn(topLayout)
+            if (animate)
+                putOn(topLayout)
                     .waitForSize(new Listeners.Size() {
                         @Override
-                        public void onSize(com.cncoding.teazer.customViews.ViewAnimator viewAnimator) {
+                        public void onSize(ViewAnimator viewAnimator) {
                             viewAnimator.animate()
                                     .translationY(-topLayout.getHeight(), 0)
                                     .duration(ANIMATE_TIME)
@@ -476,15 +466,21 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                                     });
                         }
                     });
-        }
+            if (toggle)
+                togglePlayPauseIcons();
 
-//        if (mPauseButton != null) {
-//            mPauseButton.requestFocus();
-//        }
-//        togglePlayPauseIcons();
-//        toggleFullScreen();
-        //update progress
-        handler.sendEmptyMessage(HANDLER_UPDATE_PROGRESS);
+            if (autoHide)
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isShowing)
+                            hide();
+                    }
+                }, 5000);
+
+            //update progress
+            handler.sendEmptyMessage(HANDLER_UPDATE_PROGRESS);
+        }
     }
 
     /**
@@ -604,8 +600,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         public Builder(@Nullable Activity context, @Nullable MediaPlayerControlListener mediaControlListener){
             this.context = context;
             this.mediaPlayerControlListener = mediaControlListener;
-            playIcon = R.drawable.ic_play;
-            pauseIcon = R.drawable.ic_pause;
+            playIcon = R.drawable.ic_play_big;
+            pauseIcon = R.drawable.ic_pause_big;
         }
         public Builder with(@Nullable Activity context) {
             this.context = context;

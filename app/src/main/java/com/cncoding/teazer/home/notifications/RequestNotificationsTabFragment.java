@@ -67,12 +67,11 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1 && is_next_page)
+                if (is_next_page)
                     new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        new GetRequestNotifications(this).execute(1);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -83,6 +82,13 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
+            new GetRequestNotifications(this).execute(1);
     }
 
     private static class GetRequestNotifications extends AsyncTask<Integer, Void, Void> {
@@ -114,6 +120,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
                                     reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     reference.get().noNotifications.setVisibility(View.GONE);
                                     reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
+                                    reference.get().recyclerView.getRecycledViewPool().clear();
                                     reference.get().adapter.notifyDataSetChanged();
                                 } else {
                                     reference.get().swipeRefreshLayout.setVisibility(View.GONE);
