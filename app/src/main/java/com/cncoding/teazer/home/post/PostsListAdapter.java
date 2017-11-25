@@ -7,7 +7,6 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -93,7 +92,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                             height = holder.layout.getWidth();
 
                         dimensionSparseArray.put(holder.getAdapterPosition(), height);
-                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
                         holder.layout.setVisibility(View.VISIBLE);
                         return false;
                     }
