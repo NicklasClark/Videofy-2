@@ -40,7 +40,7 @@ public class NavigationController {
     static final int NO_TAB = -1;
     public static final int TAB1 = 0;
     public static final int TAB2 = 1;
-    public static final int TAB3 = 2;
+//    public static final int TAB3 = 2;
     public static final int TAB4 = 3;
     public static final int TAB5 = 4;
 
@@ -885,7 +885,7 @@ public class NavigationController {
     }
 
     //Declare the TabIndex annotation
-    @IntDef({NO_TAB, TAB1, TAB2, TAB3, TAB4, TAB5})
+    @IntDef({NO_TAB, TAB1, TAB2, TAB4, TAB5})// TAB3,
     @Retention(RetentionPolicy.SOURCE)
     public @interface TabIndex {
     }

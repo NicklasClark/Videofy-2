@@ -23,6 +23,7 @@ import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
+import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -191,6 +192,33 @@ import retrofit2.http.Query;
          * */
         @POST("/api/v1/authentication/password/reset")
         Call<ResultObject> resetPasswordByOtp(@Body Authorize resetPasswordDetails);
+    }
+
+    interface DiscoverCalls {
+
+        /**
+         * Call this service to get the discover page featured videos lists.
+         */
+        @GET("/api/v1/discover/featured/videos/{page}")
+        Call<PostList> getFeaturedPosts(@Path("page") int page);
+
+        /**
+         * Call this service to get the discover page interested category videos when user clicks "View all".
+         */
+        @GET("/api/v1/discover/interested/category/videos/{category_id}/{page}")
+        Call<PostList> getAllInterestedCategoriesVideos(@Path("page") int page, @Path("category_id") int categoryId);
+
+        /**
+         * Call this service to get the discover page trending category videos of the respected category.
+         */
+        @GET("/api/v1/discover/trending/category/videos/{category_id}/{page}")
+        Call<PostList> getTrendingVideos(@Path("page") int page, @Path("category_id") int categoryId);
+
+        /**
+         * Call this service to get discover page landing posts.
+         */
+        @GET("/api/v1/discover/landing")
+        Call<LandingPosts> getDiscoverPagePosts();
     }
 
     /**

@@ -62,9 +62,9 @@ public class PostsListFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
         postList = new ArrayList<>();
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).updateToolbarTitle(null);
-        }
+//        if (getActivity() != null) {
+//            ((BaseBottomBarActivity) getActivity()).updateToolbarTitle("");
+//        }
 
         postListAdapter = new PostsListAdapter(postList, getContext(), this);
         recyclerView.setAdapter(postListAdapter);
@@ -74,7 +74,7 @@ public class PostsListFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                ((BaseBottomBarActivity)getActivity()).hidesettings(false);
+                ((BaseBottomBarActivity)getActivity()).hideSettings(false);
 
                 if (page > 1)
                     getHomePagePosts(page, false);

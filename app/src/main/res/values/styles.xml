@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
     </style>
@@ -17,14 +17,14 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="colorPrimary">@android:color/white</item>-->
+        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
         <item name="windowActionBar">false</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <item name="actionMenuTextColor">@color/colorPrimary</item>
+        <item name="actionMenuTextColor">@color/colorPrimary_text</item>
         <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge
         </item>
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall
@@ -56,7 +56,7 @@
 
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
@@ -328,6 +328,14 @@
         <!--<item name="android:textColorPrimary">@color/colorSecondary_text</item>-->
         <item name="android:textColor">@color/colorSecondary_text</item>
         <!--<item name="android:textSize">25sp</item>-->
+    </style>
+
+    <style name="BottomTabLayout.RecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/padding_half</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:nestedScrollingEnabled">false</item>
     </style>
 
     <style name="CustomProfileFAB" parent="Widget.Design.FloatingActionButton">

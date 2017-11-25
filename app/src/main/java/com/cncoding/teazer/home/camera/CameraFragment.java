@@ -626,15 +626,16 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
             mNextVideoAbsolutePath = getVideoFilePath(activity);
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mMediaRecorder.setVideoFrameRate(30);
+//        mMediaRecorder.setPreviewDisplay();
+//        mMediaRecorder.setVideoEncodingBitRate(10000000);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {

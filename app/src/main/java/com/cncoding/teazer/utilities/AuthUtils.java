@@ -1,6 +1,5 @@
 package com.cncoding.teazer.utilities;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +15,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -248,37 +245,13 @@ public class AuthUtils {
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
-                        logout(context, null);
+//                        logout(context, null);
                     }
                 });
     }
 
-    private static void stopCircularReveal(final View revealLayout, View anchorButton) {
-        final Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-                (int) anchorButton.getX() + (anchorButton.getWidth() / 2),
-                (int) anchorButton.getY() + (anchorButton.getHeight() / 2),
-                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-        animator.setDuration(500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                revealLayout.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        animator.start();
+    private static void stopCircularReveal(View revealLayout) {
+        revealLayout.animate().alpha(0).setDuration(280).start();
     }
 
     /**
@@ -310,7 +283,7 @@ public class AuthUtils {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
+                        stopCircularReveal(revealLayout);
                     }
                 }, 1000);
             }
@@ -322,7 +295,7 @@ public class AuthUtils {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
+                        stopCircularReveal(revealLayout);
                     }
                 }, 1000);
             }

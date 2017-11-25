@@ -2,9 +2,6 @@
 <resources>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <!--<item name="android:windowLightStatusBar">true</item>-->
         <!--<item name="android:statusBarColor">@android:color/white</item>-->
