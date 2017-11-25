@@ -160,7 +160,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     getPostReactions(postDetails.getPostId(), page);
             }
         };
@@ -286,6 +286,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getReactions().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1)
+                                        postReactions.clear();
+
                                     postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
                                     postReactionAdapter.notifyDataSetChanged();

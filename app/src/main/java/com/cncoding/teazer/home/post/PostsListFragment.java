@@ -76,7 +76,7 @@ public class PostsListFragment extends BaseFragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 ((BaseBottomBarActivity)getActivity()).hideSettings(false);
 
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     getHomePagePosts(page, false);
             }
         };
@@ -108,7 +108,7 @@ public class PostsListFragment extends BaseFragment {
         }
     }
 
-    public void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(final int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
@@ -118,6 +118,10 @@ public class PostsListFragment extends BaseFragment {
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getPosts().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (page == 1)
+                                        postList.clear();
+
                                     postList.addAll(response.body().getPosts());
                                     recyclerView.setVisibility(View.VISIBLE);
                                     postListAdapter.notifyDataSetChanged();
@@ -140,7 +144,8 @@ public class PostsListFragment extends BaseFragment {
                         recyclerView.setVisibility(View.INVISIBLE);
                         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
+                        String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
+                        postLoadErrorTextView.setText(errorString);
                     }
 
                     @Override

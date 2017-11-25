@@ -67,6 +67,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -747,14 +748,25 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected String doInBackground(Void... voids) {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(reference.get().videoPath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long duration = Long.parseLong(time );
-            retriever.release();
-            return String.format(Locale.UK, "%02d:%02d",
-                    MILLISECONDS.toMinutes(duration),
-                    MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+            File file = new File(reference.get().videoPath);
+            if (file.exists()) {
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(reference.get().videoPath);
+                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long duration;
+                try {
+                    duration = Long.parseLong(time);
+                    retriever.release();
+                    return String.format(Locale.UK, "%02d:%02d",
+                            MILLISECONDS.toMinutes(duration),
+                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                } catch (NumberFormatException e) {
+                    if (e.getMessage() != null)
+                        Log.e("ErrorParsingDuration", e.getMessage());
+                    return "";
+                }
+            } else
+                return "";
         }
 
         @Override
