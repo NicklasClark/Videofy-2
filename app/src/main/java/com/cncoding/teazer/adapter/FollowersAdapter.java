@@ -235,7 +235,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             }
 
         } catch (Exception e) {
-            Log.d("EXCEPTION RECEIVED", e.getMessage());
+          e.printStackTrace();
         }
 
     }

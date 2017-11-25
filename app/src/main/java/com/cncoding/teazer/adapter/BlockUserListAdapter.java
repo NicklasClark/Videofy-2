@@ -49,16 +49,20 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
     @Override
     public void onBindViewHolder(final BlockUserListAdapter.ViewHolder viewHolder, int i) {
         Followers cont = list.get(i);
-        final String followername = cont.getUserName();
-        final int blockuserId = cont.getUserId();
-        viewHolder.blockusers.setText(followername);
-        viewHolder.unblock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openAlert(blockuserId,viewHolder);
-            }
-        });
-
+        try {
+            final String followername = cont.getUserName();
+            final int blockuserId = cont.getUserId();
+            viewHolder.blockusers.setText(followername);
+            viewHolder.unblock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openAlert(blockuserId, viewHolder);
+                }
+            });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     @Override
     public int getItemCount() {
@@ -117,7 +121,6 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
             @Override
             public void onFailure(Call<BlockUnBlockUser> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-                Log.d("ShutDown", t.getMessage());
                 ((BlockUserList)context).InVisibleVisibile();
             }
         });

@@ -10,12 +10,14 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -50,6 +52,11 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.utilities.Pojos;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -118,6 +125,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
+    private boolean checkefacebookeButtonPressed;
 
     @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
     @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
@@ -135,6 +143,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @BindView(R.id.video_upload_categories) ProximaNovaBoldButton uploadCategoriesBtn;
     @BindView(R.id.video_upload_categories_text) ProximaNovaRegularTextView uploadCategoriesText;
     @BindView(R.id.up_btn) AppCompatImageView upBtn;
+    @BindView(R.id.facebook_share_btn) AppCompatImageView facebook_share_btn;
 
     public String videoPath;
     public boolean isReaction;
@@ -220,9 +229,77 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         createLocationCallback();
         createLocationRequest();
 
+        facebook_share_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkefacebookeButtonPressed==false)
+                {
+                    checkefacebookeButtonPressed=true;
+                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_enabled);
+                    Toast.makeText(getContext(),"You have selected facbook to share your data",Toast.LENGTH_SHORT).show();
+                   // setupFacebookShareIntent();
+
+
+                }
+                else
+                {
+                    checkefacebookeButtonPressed=false;
+                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_disabled);
+                }
+
+            }
+        });
+
+
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
+
+
+    public void setupFacebookShareIntent() {
+
+//        if(checkefacebookeButtonPressed==true) {
+//            String s="https://www.youtube.com/";
+//            Uri videoFileUri = Uri.parse(s);
+//            ShareVideo shareVideo = new ShareVideo.Builder()
+//                    .setLocalUrl(videoFileUri)
+//                    .build();
+//            ShareVideoContent content = new ShareVideoContent.Builder()
+//                    .setVideo(shareVideo)
+//                    .build();
+//        }
+//        else
+//        {
+//            Toast.makeText(getContext(),"check not upload",Toast.LENGTH_SHORT).show();
+//
+//        }
+
+        try {
+            ShareDialog shareDialog;
+            FacebookSdk.sdkInitialize(getContext());
+            shareDialog = new ShareDialog(getActivity());
+            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
+
+
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(videoTitle.getText().toString())
+                    .setContentDescription(
+                            "Hello")
+                    .setContentUrl(Uri.parse(videoPath))
+                    .build();
+
+            shareDialog.show(linkContent);
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -510,8 +587,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         });
     }
 
+
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
         toggleInteraction(false);
+
+
         String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
         String location = null;
         double latitude = 0;
@@ -521,10 +601,15 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             latitude = selectedPlace.getLatitude();
             longitude = selectedPlace.getLongitude();
         }
+
         String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
         DecimalFormat df = new DecimalFormat("#.#######");
+
         performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
                 Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
+
+
+
     }
 
     @OnClick(R.id.video_upload_retake_btn) public void retakeVideo() {

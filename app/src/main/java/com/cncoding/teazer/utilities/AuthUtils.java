@@ -378,6 +378,7 @@ public class AuthUtils {
     }
 
     public static void logout(final Context context, @Nullable final Activity activity) {
+        SharedPrefs.finishVideoUploadSession(context);
         ApiCallingService.User.logout("Bearer " + SharedPrefs.getAuthToken(context), context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override

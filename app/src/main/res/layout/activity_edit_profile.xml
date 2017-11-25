@@ -72,13 +72,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/arif_image"
             android:transitionName="profile" />
         <RelativeLayout
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#6b262626"
+            android:background="#8b181818"
             android:orientation="vertical"/>
 
         <RelativeLayout
@@ -102,9 +101,6 @@
                 android:layout_height="84dp"
                 android:scaleType="centerCrop"
                 android:layout_margin="2dp"
-                android:src="@drawable/arif_image"
-
-
                 android:transitionName="profile" />
 
             <RelativeLayout

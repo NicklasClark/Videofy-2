@@ -47,7 +47,6 @@ public class PostsListFragment extends BaseFragment {
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
     private StaggeredGridLayoutManager manager;
-
     public PostsListFragment() {
         // Required empty public constructor
     }

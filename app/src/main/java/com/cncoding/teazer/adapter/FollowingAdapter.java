@@ -49,93 +49,94 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     }
     @Override
     public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder, int i) {
+        try {
 
-        final int followerId;
-        if (counter == 100) {
+            final int followerId;
+            if (counter == 100) {
 
-            final Following cont = list.get(i);
-            final String followingname = cont.getUserName();
-            userType="Following";
+                final Following cont = list.get(i);
+                final String followingname = cont.getUserName();
+                userType = "Following";
 
-            followerId = cont.getUserId();viewHolder.followingName.setText(followingname);
-            viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                    intent.putExtra("Username", followingname);
-                    intent.putExtra("FollowId", String.valueOf(followerId));
-                    intent.putExtra("UserType", userType);
-                    context.startActivity(intent);
+                followerId = cont.getUserId();
+                viewHolder.followingName.setText(followingname);
+                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+                        intent.putExtra("Username", followingname);
+                        intent.putExtra("FollowId", String.valueOf(followerId));
+                        intent.putExtra("UserType", userType);
+                        context.startActivity(intent);
+                    }
+                });
+            } else
+
+            {
+
+                final OtherUserFollowings cont = otherlist.get(i);
+                final boolean myself = cont.getMySelf();
+                final String followername = cont.getUserName();
+                followerId = cont.getUserId();
+                viewHolder.followingName.setText(followername);
+                final boolean isblockedyou = cont.getIsBlockedYou();
+                final boolean isfollower = cont.getFollower();
+                final boolean isfollowing = cont.getFollower();
+
+                if (isblockedyou) {
+                    viewHolder.followingName.setTextColor(Color.GRAY);
+                    viewHolder.follow.setVisibility(View.INVISIBLE);
                 }
-            });
-        }
-        else
+                if (myself) {
 
-        {
-
-            final OtherUserFollowings cont = otherlist.get(i);
-            final boolean  myself = cont.getMySelf();
-            final String followername = cont.getUserName();
-            followerId = cont.getUserId();
-            viewHolder.followingName.setText(followername);
-            final boolean isblockedyou=cont.getIsBlockedYou();
-            final boolean isfollower=cont.getFollower();
-            final boolean isfollowing=cont.getFollower();
-
-            if(isblockedyou) {
-                viewHolder.followingName.setTextColor(Color.GRAY);
-                viewHolder.follow.setVisibility(View.INVISIBLE);
-            }
-            if(myself) {
-
-                viewHolder.followingName.setTextColor(Color.BLUE);
-                viewHolder.follow.setVisibility(View.INVISIBLE);
-            }
-            else {
-                if (isfollowing == true) {
-
-                    viewHolder.follow.setText("Following");
-                    userType = "Following";
-
+                    viewHolder.followingName.setTextColor(Color.BLUE);
+                    viewHolder.follow.setVisibility(View.INVISIBLE);
                 } else {
+                    if (isfollowing == true) {
 
-                    if (isfollower == true) {
-                        viewHolder.follow.setText("Follower");
+                        viewHolder.follow.setText("Following");
                         userType = "Following";
 
                     } else {
-                        viewHolder.follow.setText("Follow");
-                        userType = "Follow";
-                    }
 
-                }
-            }
+                        if (isfollower == true) {
+                            viewHolder.follow.setText("Follower");
+                            userType = "Following";
 
-            viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (myself) {
-                        Intent intent = new Intent(context, BaseBottomBarActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        context.startActivity(intent);
-                    }
-                    else {
-                        if(isblockedyou)
-                        {
-                            Toast.makeText(context,"you can not view this user profile",Toast.LENGTH_LONG).show();
+                        } else {
+                            viewHolder.follow.setText("Follow");
+                            userType = "Follow";
                         }
-                        else
-                        {
-                            Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                            intent.putExtra("Username", followername);
-                            intent.putExtra("FollowId", String.valueOf(followerId));
-                            intent.putExtra("UserType", userType);
+
+                    }
+                }
+
+                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (myself) {
+                            Intent intent = new Intent(context, BaseBottomBarActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(intent);
+                        } else {
+                            if (isblockedyou) {
+                                Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
+                            } else {
+                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+                                intent.putExtra("Username", followername);
+                                intent.putExtra("FollowId", String.valueOf(followerId));
+                                intent.putExtra("UserType", userType);
+                                context.startActivity(intent);
+                            }
                         }
                     }
-                }
-            });
+                });
 
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
     @Override

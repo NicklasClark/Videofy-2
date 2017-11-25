@@ -63,12 +63,16 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
 
         try {
+
+
             final Post cont = _list.get(i);
             final String videotitle = cont.getTitle();
             final int postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
+
             final int videopostId = cont.getPostId();
             final String thumb_url = cont.getMedias().get(0).getThumbUrl();
+            Log.d("Video UrL",videourl);
             final String duration = cont.getMedias().get(0).getDuration();
             final Integer  txtview = cont.getMedias().get(0).getViews();
             final boolean hasCheckIn = cont.getHasCheckin();
@@ -89,7 +93,31 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             viewHolder.duration.setText(duration);
             viewHolder.totalLikes.setText(String.valueOf(likes));
             viewHolder.txtview.setText(String.valueOf(txtview));
+
             getPostReaction(viewHolder, postId);
+
+
+//            viewHolder.menu.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+//                    popup.inflate(R.menu.menu_profile);
+//
+//                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                        @Override
+//                        public boolean onMenuItemClick(MenuItem item) {
+//                            switch (item.getItemId()) {
+//                                case R.id.action_delete:
+//                                    deleteVideos(viewHolder,videopostId);
+//
+//                                    break;
+//                            }
+//                            return false;
+//                        }
+//                    });
+//                    popup.show();
+//                }
+//            });
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -103,10 +131,12 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     context.startActivity(intent);
 
 
+                    Toast.makeText(context,"hello 2",Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("Error Message",e.getMessage());
             Toast.makeText(context,"Something went wrong please try again",Toast.LENGTH_SHORT).show();
         }
 
@@ -145,18 +175,19 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             totalLikes = view.findViewById(R.id.txtlikes);
             txtview = view.findViewById(R.id.txtview);
             userReactionImage = view.findViewById(R.id.userReactionImage);
-            menu = view.findViewById(R.id.menu);
+           // menu = view.findViewById(R.id.menu);
         }
     }
 
-    public void deleteVideos(int deleteid) {
-        ApiCallingService.Posts.deletePosts(deleteid, context).enqueue(new Callback<DeleteMyVideos>() {
+    public void deleteVideos(final FollowersCreationAdapter.ViewHolder viewHolder, int deleteid) {
+        ApiCallingService.Posts.deletePosts( deleteid, context).enqueue(new Callback<DeleteMyVideos>() {
             @Override
             public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
                 try {
                     if (response.code() == 200) {
                         boolean status = response.body().getStatus();
                         Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
+                        viewHolder.cardView.setVisibility(View.GONE);
 
                     } else {
 
@@ -184,13 +215,11 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             @Override
             public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
 
-                Log.d("Tesponsecheck",response.message());
-                Log.d("Tesponsecheck",String.valueOf(response.code()));
                 if (response.code() == 200) {
 
                     try {
                         reactiolist = response.body().getReactions();
-                     for(int i=0;i<reactiolist.size();i++) {
+                        for(int i=0;i<reactiolist.size();i++) {
                          Integer totalviews = reactiolist.get(i).getViews();
                          viewHolder.txtview.setText(String.valueOf(totalviews));
                      }

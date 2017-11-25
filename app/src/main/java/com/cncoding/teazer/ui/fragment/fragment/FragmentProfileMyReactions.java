@@ -38,9 +38,11 @@ public class FragmentProfileMyReactions extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     Context context;
     List<Reaction>list;
+    int page=1;
     public static FragmentProfileMyReactions newInstance(int page) {
 
         return new FragmentProfileMyReactions();
+
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,31 +53,38 @@ public class FragmentProfileMyReactions extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_myreactions, container, false);
         context=container.getContext();
         recyclerView=view.findViewById(R.id.recycler_view);
-
+        list=new ArrayList<>();
         return view;
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        getProfileVideos();
+        getReactions();
     }
 
-    public void getProfileVideos() {
-        list=new ArrayList<>();
+    public void getReactions() {
+
         ApiCallingService.React.getMyReaction(1,context).enqueue(new Callback<ProfileReaction>() {
             @Override
             public void onResponse(Call<ProfileReaction> call, Response<ProfileReaction> response) {
 
                 if (response.code() == 200) {
                     try {
-                        list = response.body().getReactions();
-                        if (list == null || list.size() == 0) {
-                       // Toast.makeText(context, "No Reactions found", Toast.LENGTH_LONG).show();
+                        response.body().getReactions();
+                        if (response.body().getReactions() == null) {
+
                         }
                         else {
+                            boolean next=response.body().getNextPage();
+                            list.addAll(response.body().getReactions());
                             profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
                             recyclerView.setAdapter(profileMyReactionAdapter);
+                            if(next)
+                            {
+                                page++;
+                                getReactions();
+                            }
                         }
                     }
                     catch(Exception e)

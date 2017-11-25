@@ -35,6 +35,8 @@ dependencies {
     compile files('libs/javax.mail-1.6.0.jar')
     compile 'com.facebook.android:facebook-login:4.27.0'
     compile 'com.facebook.android:facebook-login:4.27.0'
+    compile 'com.facebook.android:facebook-share:[4,5)'
+    compile 'com.facebook.android:facebook-applinks:[4,5)'
     compile 'com.android.support:design:27.0.1'
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile "com.android.support:support-v13:27.0.1"
