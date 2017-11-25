@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
@@ -127,6 +128,12 @@ public class LoginFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         setOnCountryChangeListener();
         passwordView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(32)});
+        try {
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -147,8 +154,8 @@ public class LoginFragment extends Fragment {
 //            countryCodePicker.setCountryForPhoneCode(countryCode);
 //        }
 
-        usernameView.setText("premsuman8");
-        passwordView.setText("mynameis0");
+//        usernameView.setText("premsuman8");
+//        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
@@ -202,7 +209,7 @@ public class LoginFragment extends Fragment {
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event);
+        return togglePasswordVisibility(passwordView, event, getContext());
     }
 
     @OnEditorAction(R.id.login_password) public boolean onLoginByKeyboard(int actionId) {

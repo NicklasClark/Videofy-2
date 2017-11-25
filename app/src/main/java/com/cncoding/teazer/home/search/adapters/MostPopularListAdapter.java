@@ -49,57 +49,61 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mostPopular = mostPopularList.get(position);
 
-        holder.title.setText(holder.mostPopular.getTitle());
-        holder.name.setText(holder.mostPopular.getPostOwner().getUserName());
-        holder.duration.setText(holder.mostPopular.getMedias().get(0).getDuration() + " secs");
-        holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
-        holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews()));
-        holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getTotalReactions()) + " R");
+        try {
+            holder.title.setText(holder.mostPopular.getTitle());
+            holder.name.setText(holder.mostPopular.getPostOwner().getUserName());
+            holder.duration.setText(holder.mostPopular.getMedias().get(0).getDuration() + " secs");
+            holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
+            holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews()));
+            holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getTotalReactions()) + " R");
 
-        Glide.with(context)
-                .load(holder.mostPopular.getMedias().get(0).getThumbUrl())
-                .asGif()
-                .crossFade()
-                .into(holder.thumbnail);
+            Glide.with(context)
+                    .load(holder.mostPopular.getMedias().get(0).getThumbUrl())
+                    .asGif()
+                    .crossFade()
+                    .into(holder.thumbnail);
 
-        if (holder.mostPopular.getPostOwner().hasProfileMedia())
-            Glide.with(context)
-                .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
-                .placeholder(R.drawable.ic_user_dp_small)
-                .crossFade()
-                .into(holder.dp);
-        else
-            Glide.with(context)
-                    .load("")
+            if (holder.mostPopular.getPostOwner().hasProfileMedia())
+                Glide.with(context)
+                    .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
                     .placeholder(R.drawable.ic_user_dp_small)
                     .crossFade()
                     .into(holder.dp);
-
-        if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
-            holder.reactionImage1.setVisibility(View.VISIBLE);
-            Glide.with(context)
-                    .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_dp_small)
-                    .crossFade()
-                    .into(holder.reactionImage1);
-
-            if (holder.mostPopular.getReactedUsers().size() > 1) {
-                holder.reactionImage2.setVisibility(View.VISIBLE);
+            else
                 Glide.with(context)
-                        .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                        .load("")
                         .placeholder(R.drawable.ic_user_dp_small)
                         .crossFade()
-                        .into(holder.reactionImage2);
-            }
+                        .into(holder.dp);
 
-            if (holder.mostPopular.getReactedUsers().size() > 2) {
-                holder.reactionImage3.setVisibility(View.VISIBLE);
+            if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
+                holder.reactionImage1.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl())
+                        .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
                         .placeholder(R.drawable.ic_user_dp_small)
                         .crossFade()
-                        .into(holder.reactionImage3);
+                        .into(holder.reactionImage1);
+
+                if (holder.mostPopular.getReactedUsers().size() > 1) {
+                    holder.reactionImage2.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                            .placeholder(R.drawable.ic_user_dp_small)
+                            .crossFade()
+                            .into(holder.reactionImage2);
+                }
+
+                if (holder.mostPopular.getReactedUsers().size() > 2) {
+                    holder.reactionImage3.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl())
+                            .placeholder(R.drawable.ic_user_dp_small)
+                            .crossFade()
+                            .into(holder.reactionImage3);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

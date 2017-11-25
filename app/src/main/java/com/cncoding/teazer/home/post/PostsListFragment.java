@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -177,13 +176,6 @@ public class PostsListFragment extends BaseFragment {
             postListAdapter.notifyDataSetChanged();
         scrollListener.resetState();
         getHomePagePosts(1, false);
-    }
-
-    @OnClick(R.id.fab) public void changeLayoutManager() {
-        if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        } else
-            recyclerView.setLayoutManager(manager);
     }
 
     @Override

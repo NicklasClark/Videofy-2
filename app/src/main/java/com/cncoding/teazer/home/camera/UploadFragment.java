@@ -21,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -515,20 +516,37 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
-        toggleInteraction(false);
-        String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
-        String location = null;
-        double latitude = 0;
-        double longitude = 0;
-        if (selectedPlace != null) {
-            location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
-            latitude = selectedPlace.getLatitude();
-            longitude = selectedPlace.getLongitude();
+        if (validateFields()) {
+            toggleInteraction(false);
+            String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
+            String location = null;
+            double latitude = 0;
+            double longitude = 0;
+            if (selectedPlace != null) {
+                location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                latitude = selectedPlace.getLatitude();
+                longitude = selectedPlace.getLongitude();
+            }
+            String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+            DecimalFormat df = new DecimalFormat("#.#######");
+            performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
+                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
         }
-        String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-        DecimalFormat df = new DecimalFormat("#.#######");
-        performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
-                Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
+    }
+
+    private boolean validateFields() {
+        if(TextUtils.isEmpty(videoTitle.getText()))
+        {
+            videoTitle.setError(getString(R.string.required));
+            videoTitle.requestFocus();
+            return false;
+        }
+        else if(selectedCategoriesToSend == null || selectedCategoriesToSend.length() == 0)
+        {
+            Toast.makeText(context, getString(R.string.required_categories), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.video_upload_retake_btn) public void retakeVideo() {

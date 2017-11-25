@@ -10,6 +10,7 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -55,6 +56,12 @@ public class SignupFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         setTextLimits();
         setOnCountryChangeListener();
+        try {
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 

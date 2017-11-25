@@ -28,6 +28,7 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -58,17 +59,19 @@ public class AuthUtils {
         return SharedPrefs.getAuthToken(context) != null;
     }
 
-    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event) {
+    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event, Context context) {
         if (view.getCompoundDrawables()[2] != null) {
             if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width())) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
                         return true;
                     case MotionEvent.ACTION_UP:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                         view.setSelection(view.getText().length());
+                        view.setTypeface(new TypeFactory(context).regular);
                         return true;
                     default:
                         return false;

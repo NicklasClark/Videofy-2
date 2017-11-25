@@ -244,4 +244,6 @@
     <string name="discover">Discover</string>
     <string name="search_videos_or_places">Search Videos or Places</string>
     <string name="phone_number_invalid"><![CDATA[Phone number should not be empty & only contain digits]]></string>
+    <string name="required">This field is required</string>
+    <string name="required_categories">Please select a category to continue</string>
 </resources>

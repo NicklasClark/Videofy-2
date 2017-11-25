@@ -135,6 +135,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
+    private Fragment fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -529,20 +530,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public Fragment getRootFragment(int index) {
+        fragment = null;
         switch (index) {
             case TAB1:
-                return PostsListFragment.newInstance();
+                fragment = PostsListFragment.newInstance();
+                break;
             case TAB2:
-                return SearchFragment.newInstance();
+                fragment = SearchFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return null;
+                break;
             case TAB4:
-                return NotificationsFragment.newInstance();
+                fragment = NotificationsFragment.newInstance();
+                break;
             case TAB5:
-                return ProfileFragment.newInstance();
+                fragment = ProfileFragment.newInstance();
+                break;
             default:
-                return PostsListFragment.newInstance();
+                fragment = PostsListFragment.newInstance();
+                break;
         }
+        return fragment;
     }
 
     @Override
@@ -640,8 +648,11 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+        if(fragment instanceof PostsListFragment)
+        {
+            ((PostsListFragment)fragment).getHomePagePosts(1,false);
+        }
 
-//        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
     public void hideAppBar() {

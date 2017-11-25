@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseIntArray;
@@ -65,103 +66,107 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.layout.setVisibility(View.INVISIBLE);
-        final PostDetails postDetails = posts.get(position);
-        Pojos.MiniProfile postOwner = postDetails.getPostOwner();
+        try {
+            holder.layout.setVisibility(View.INVISIBLE);
+            final PostDetails postDetails = posts.get(position);
+            Pojos.MiniProfile postOwner = postDetails.getPostOwner();
 
-        if (dimensionSparseArray.get(position) != 0) {
-            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.layout.getLayoutParams();
-            params.height = dimensionSparseArray.get(position);
-            holder.layout.setLayoutParams(params);
-        }
+            if (dimensionSparseArray.get(position) != 0) {
+                StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.layout.getLayoutParams();
+                params.height = dimensionSparseArray.get(position);
+                holder.layout.setLayoutParams(params);
+            }
 
-        Glide.with(context)
-                .load(postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        if (!isFromMemoryCache) {
-                            Animation animation = AnimationUtils.loadAnimation(context, R.anim.float_down);
-                            animation.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                    dimensionSparseArray.put(holder.getAdapterPosition(), holder.layout.getHeight());
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    holder.layout.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-                                }
-                            });
-                            holder.layout.startAnimation(animation);
-                        } else {
-                            holder.layout.animate().alpha(1).setDuration(280).start();
-                            holder.layout.setVisibility(View.VISIBLE);
-                        }
-                        if (holder.getAdapterPosition() == 4 || holder.getAdapterPosition() == posts.size() - 1) {
-                            postsListFragment.dismissProgressBar();
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(holder.postThumbnail);
-
-        if (postOwner.hasProfileMedia())
             Glide.with(context)
-                    .load(postOwner.getProfileMedia().getThumbUrl())
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                    .load(postDetails.getMedias().get(0).getThumbUrl())
                     .crossFade()
-                    .into(holder.profilePic);
-        else
-            Glide.with(context)
-                    .load(R.drawable.ic_user_dp_small)
-                    .crossFade()
-                    .skipMemoryCache(true)
-                    .into(holder.profilePic);
+                    .skipMemoryCache(false)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            if (!isFromMemoryCache) {
+                                Animation animation = AnimationUtils.loadAnimation(context, R.anim.float_down);
+                                animation.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+                                        dimensionSparseArray.put(holder.getAdapterPosition(), holder.layout.getHeight());
+                                    }
 
-        holder.caption.setText(postDetails.getTitle());
-        if (postDetails.getCategories().size() > 0)
-            holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
-        else
-            holder.category.setVisibility(View.GONE);
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        holder.layout.setVisibility(View.VISIBLE);
+                                    }
 
-        String name = "@" + postOwner.getUserName();
-        holder.name.setText(name);
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+                                    }
+                                });
+                                holder.layout.startAnimation(animation);
+                            } else {
+                                holder.layout.animate().alpha(1).setDuration(280).start();
+                                holder.layout.setVisibility(View.VISIBLE);
+                            }
+                            if (holder.getAdapterPosition() == 4 || holder.getAdapterPosition() == posts.size() - 1) {
+                                postsListFragment.dismissProgressBar();
+                            }
+                            return false;
+                        }
 
-        String popularity = postDetails.getLikes() + " Likes | " + postDetails.getTotalReactions() + " Reactions";
-        holder.popularity.setText(popularity);
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(holder.postThumbnail);
 
-        if (listener != null) {
-            View.OnClickListener viewPostDetails = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
-                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
-                }
-            };
-            View.OnClickListener viewProfile = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
-                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
-                }
-            };
+            if (postOwner.hasProfileMedia())
+                Glide.with(context)
+                        .load(postOwner.getProfileMedia().getThumbUrl())
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                        .crossFade()
+                        .into(holder.profilePic);
+            else
+                Glide.with(context)
+                        .load(R.drawable.ic_user_dp_small)
+                        .crossFade()
+                        .skipMemoryCache(true)
+                        .into(holder.profilePic);
 
-            holder.postThumbnail.setOnClickListener(viewPostDetails);
-            holder.profilePic.setOnClickListener(viewProfile);
-            holder.name.setOnClickListener(viewProfile);
+            holder.caption.setText(postDetails.getTitle());
+            if (postDetails.getCategories().size() > 0)
+                holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
+            else
+                holder.category.setVisibility(View.GONE);
+
+            String name = "@" + postOwner.getUserName();
+            holder.name.setText(name);
+
+            String popularity = postDetails.getLikes() + " Likes | " + postDetails.getTotalReactions() + " Reactions";
+            holder.popularity.setText(popularity);
+
+            if (listener != null) {
+                View.OnClickListener viewPostDetails = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
+                                holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                    }
+                };
+                View.OnClickListener viewProfile = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
+                                holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                    }
+                };
+
+                holder.postThumbnail.setOnClickListener(viewPostDetails);
+                holder.profilePic.setOnClickListener(viewProfile);
+                holder.name.setOnClickListener(viewProfile);
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 

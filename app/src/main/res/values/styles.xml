@@ -141,6 +141,18 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="AppTheme.PhoneNumberEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <item name="android:paddingTop">@dimen/padding_default</item>
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <item name="android:paddingBottom">@dimen/padding_default</item>
+        <item name="android:layout_marginBottom">@dimen/padding_default</item>
+        <item name="android:background">@drawable/bg_button_right_curved</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="AppTheme.CountryCodeEditText" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">match_parent</item>
