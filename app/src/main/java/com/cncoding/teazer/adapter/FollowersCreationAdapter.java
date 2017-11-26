@@ -131,7 +131,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     context.startActivity(intent);
 
 
-                    Toast.makeText(context,"hello 2",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(context,"hello 2",Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {

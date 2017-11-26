@@ -34,6 +34,7 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
@@ -83,6 +84,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     ImageView background_profile;
     @BindView(R.id.profile_id)
     ImageView profile_id;
+    @BindView(R.id.hobby)
+    ProximaNovaRegularCheckedTextView hobby;
+
     Context context;
     FollowersProfile followersProfile;
     public static final int PRIVATE_ACCOUNT = 1;
@@ -138,7 +142,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         final int followerfollowingid = Integer.parseInt(getIntent().getStringExtra("FollowId"));
         String username = intent.getStringExtra("Username");
         String userType = intent.getStringExtra("UserType");
-      //  _name.setText(username);
         _btnfollow.setText(userType);
 
 
@@ -150,10 +153,13 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                     followUser(followerfollowingid, context);
 
-                } else if (_btnfollow.getText().equals("Unfollow") || _btnfollow.getText().equals("Following") || _btnfollow.getText().equals("Requested")) {
+                } else if (_btnfollow.getText().equals("Unfollow") || _btnfollow.getText().equals("Following")) {
 
                     unFollowUser(followerfollowingid, context);
 
+                } else if (_btnfollow.getText().equals("Requested")) {
+
+                    Toast.makeText(context, "You have already sent the request", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -179,9 +185,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
+                } else {
                     Intent intent = new Intent(getApplicationContext(), FollowingListActivities.class);
                     intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                     intent.putExtra("Identifier", "Other");
@@ -204,6 +208,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
                             intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                             intent.putExtra("Identifier", "Other");
+
                             startActivity(intent);
                         } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
@@ -213,6 +218,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     }
 
                 } else {
+
 
                     Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
                     intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
@@ -274,16 +280,24 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
                         _creations.setText(totalvideos + " Creations");
-                        if(response.body().getPrivateProfile()==null)
-                        {
+                        if (response.body().getPrivateProfile() == null) {
+
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
+                            String details=publicProfile.getDescription();
                             int gender = publicProfile.getGender();
+                            accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
-
+                            if(details==null||details.equals(""))
+                            {
+                                hobby.setVisibility(View.GONE);
+                            }
+                            else {
+                                hobby.setText(details);
+                            }
                             Boolean hasProfileMedia = publicProfile.getHasProfileMedia();
                             if (hasProfileMedia == true) {
 
@@ -317,22 +331,22 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                                 profileBlur(userProfileUrl);
                             }
 
+
                             getProfileVideos(followersid);
 
 
-                        }
-                        else  if(response.body().getPublicProfile()==null) {
+                        } else if (response.body().getPublicProfile() == null) {
 
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            String username=privateProfile.getUserName();
+                            accountType = privateProfile.getAccountType();
+                            String username = privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
-                            if (hasProfileMedia)
-                            {
-                                userProfileThumbnail=   privateProfile.getProfileMedia().getMediaUrl();
-                                userProfileUrl= privateProfile.getProfileMedia().getThumbUrl();
+                            if (hasProfileMedia) {
+                                userProfileThumbnail = privateProfile.getProfileMedia().getMediaUrl();
+                                userProfileUrl = privateProfile.getProfileMedia().getThumbUrl();
                             }
 
                             if (userProfileThumbnail == null) {
@@ -351,20 +365,19 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             }
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
+                            hobby.setVisibility(View.GONE);
                             if (hassentrequest == true) {
 
                                 if (requestRecieved == true) {
                                     //    _btnfollow.getText().equals("Following");
-                                }
-
-                                else {
+                                } else {
 
                                     //  _btnfollow.getText().equals("Requested");
                                 }
                             } else {
 
 
-                               // _btnfollow.getText().equals("Follow");
+                                // _btnfollow.getText().equals("Follow");
 
                             }
                             layout.setVisibility(View.VISIBLE);
@@ -396,7 +409,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
     public void profileBlur(final String pic) {
 
-
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(final Void... params) {
@@ -418,8 +430,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(final Bitmap result) {
-//                    progressbar.setVisibility(View.VISIBLE);
-//                    coordinatorLayout.setVisibility(View.GONE);
+
 
                 try {
                     Blurry.with(context).from(result).into(background_profile);
@@ -427,8 +438,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                    progressbar.setVisibility(View.GONE);
-//                    coordinatorLayout.setVisibility(View.VISIBLE);
+
             }
         }.execute();
 
@@ -438,19 +448,18 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     public void getProfileVideos(int followerId) {
+      //  Toast.makeText(getApplicationContext(), "Profile Videos", Toast.LENGTH_LONG).show();
+
+
         int page = 1;
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
-        Log.d("getProfileVideos","hello");
+        Log.d("getProfileVideos", "hello");
         ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<FollowersProfileCreations>() {
             @Override
             public void onResponse(Call<FollowersProfileCreations> call, Response<FollowersProfileCreations> response) {
-                Log.d("getProfileVideos",String.valueOf(response));
+                Log.d("getProfileVideos", String.valueOf(response));
                 if (response.code() == 200) {
                     try {
 
@@ -459,8 +468,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                         _recycler_view.setAdapter(followerCreationAdapter);
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                         layout.setVisibility(View.VISIBLE);
@@ -537,7 +545,16 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "You have started following", Toast.LENGTH_LONG).show();
-                            _btnfollow.setText("Unfollow");
+                           if(accountType==1)
+                           {
+                               _btnfollow.setText("Requested");
+                           }
+                           else
+                           {
+                               _btnfollow.setText("Unfollow");
+                           }
+
+
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
@@ -556,6 +573,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
