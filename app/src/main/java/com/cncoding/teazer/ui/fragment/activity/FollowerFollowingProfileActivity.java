@@ -139,6 +139,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
             }
         });
 
+      //  _btnfollow.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_follow));
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         menu = findViewById(R.id.menu);
         Intent intent = getIntent();
@@ -564,6 +565,8 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                            if(accountType==1)
                            {
                                _btnfollow.setText("Requested");
+                               _btnfollow.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_follow));
+
                            }
                            else
                            {
@@ -680,4 +683,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+      //  list.clear();
+    }
 }

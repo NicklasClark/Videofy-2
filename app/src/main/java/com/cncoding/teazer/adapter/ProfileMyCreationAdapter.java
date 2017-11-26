@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.reaction.reactionpost.ReactionPost;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
@@ -73,7 +74,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final int reactions;
         final String location;
         final int postId;
-
         boolean hasPrfileMedia;
 
 
@@ -104,11 +104,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             {
                 viewHolder.location.setText("");
             }
+
             getPostReaction(viewHolder, postId);
-
-
-
-            viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
+            if(reactions==0) viewHolder.reactions.setVisibility(View.GONE);
+            else viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
 
             viewHolder.videoTitle.setText(videotitle);
             viewHolder.txtlikes.setText(likes);
@@ -160,12 +159,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView videoTitle;
-        private TextView duration;
-        private TextView txtlikes;
-        private TextView txtview;
-        private TextView reactions;
-        private TextView location;
+        private ProximaNovaRegularCheckedTextView videoTitle;
+        private ProximaNovaRegularCheckedTextView duration;
+        private ProximaNovaRegularCheckedTextView txtlikes;
+        private ProximaNovaRegularCheckedTextView txtview;
+        private ProximaNovaRegularCheckedTextView reactions;
+        private ProximaNovaRegularCheckedTextView location;
         VideoView videoviewContainer;
         ImageView thumbimage;
         RelativeLayout imagelayout1;

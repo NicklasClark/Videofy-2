@@ -46,6 +46,7 @@ public class FragmentProfileMyCreations extends Fragment {
 
 
 
+
     public static FragmentProfileMyCreations newInstance(int page) {
         return new FragmentProfileMyCreations();
     }
@@ -55,7 +56,15 @@ public class FragmentProfileMyCreations extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        list.clear();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
