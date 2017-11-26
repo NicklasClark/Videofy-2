@@ -107,22 +107,17 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
 
                 } else {
-
-
                     if (following == true) {
                         viewHolder.follow.setText("Following");
                         usertype = "Following";
                         viewHolder.follow.setText("Following");
                     }
                     else {
-
                         if(requestsent==true)
                         {
-
                             viewHolder.follow.setText("Requested");
                             usertype = "Requested";
                         }
-
                         else {
 
                             viewHolder.follow.setText("Follow");
@@ -133,8 +128,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         }
                     }
                 }
-
-                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -227,7 +221,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         if (myself) {
-
                             Intent intent = new Intent(context, BaseBottomBarActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(intent);

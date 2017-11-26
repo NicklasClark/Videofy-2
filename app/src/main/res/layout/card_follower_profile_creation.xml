@@ -70,6 +70,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginLeft="16dp"
                         android:padding="5dp"
+                        android:visibility="invisible"
                         android:layout_marginRight="16dp"
                         android:layout_marginEnd="@dimen/padding_default"
                         />

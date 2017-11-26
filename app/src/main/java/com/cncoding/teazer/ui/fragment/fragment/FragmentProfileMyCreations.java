@@ -62,7 +62,7 @@ public class FragmentProfileMyCreations extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        list.clear();
+        list=new ArrayList<>();
     }
 
     @Override

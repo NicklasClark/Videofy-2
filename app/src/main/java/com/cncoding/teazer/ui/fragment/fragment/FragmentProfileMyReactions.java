@@ -100,4 +100,10 @@ public class FragmentProfileMyReactions extends Fragment {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        list.clear();
+    }
 }

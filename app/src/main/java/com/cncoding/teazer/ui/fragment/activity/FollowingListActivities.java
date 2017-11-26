@@ -45,6 +45,8 @@ public class FollowingListActivities extends AppCompatActivity {
     RelativeLayout layout;
     @BindView(R.id.nousertext)
     TextView nousertext;
+    int otherfollowingpage=1;
+    int userfollowingpage=1;
 
 
     @Override
@@ -95,16 +97,16 @@ public class FollowingListActivities extends AppCompatActivity {
         }
     }
     public void getUserfollowinglist() {
-        int i = 1;
-        ApiCallingService.Friends.getMyFollowing(i, context).enqueue(new Callback<ProfileMyFollowing>() {
+
+        ApiCallingService.Friends.getMyFollowing(userfollowingpage, context).enqueue(new Callback<ProfileMyFollowing>() {
             @Override
             public void onResponse(Call<ProfileMyFollowing> call, Response<ProfileMyFollowing> response) {
                 if (response.code() == 200) {
 
                     try {
+                        boolean next=response.body().getNextPage();
                         list = response.body().getFollowings();
                         if (list == null || list.size() == 0) {
-                           // Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
@@ -112,6 +114,11 @@ public class FollowingListActivities extends AppCompatActivity {
                         else {
                             profileMyFollowingAdapter = new FollowingAdapter(context, list, 100);
                             recyclerView.setAdapter(profileMyFollowingAdapter);
+                            if(next)
+                            {
+                                userfollowingpage++;
+                                getUserfollowinglist();
+                            }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                         }
@@ -135,24 +142,29 @@ public class FollowingListActivities extends AppCompatActivity {
         });
 
     }
-    public void getOthersFollowingList(int userId) {
-        int i = 1;
-        ApiCallingService.Friends.getFriendsFollowings(i, userId, context).enqueue(new Callback<OthersFollowing>() {
+    public void getOthersFollowingList(final int userId) {
+
+        ApiCallingService.Friends.getFriendsFollowings(otherfollowingpage, userId, context).enqueue(new Callback<OthersFollowing>() {
             @Override
             public void onResponse(Call<OthersFollowing> call, Response<OthersFollowing> response) {
                 if (response.code() == 200) {
                     try {
+                        boolean next=response.body().getNextPage();
                         otherlist = response.body().getFollowings();
                         if (otherlist == null || otherlist.size() == 0) {
-                         //   Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
-
                         }
                         else {
+
                             profileMyFollowingAdapter = new FollowingAdapter(context, otherlist);
                             recyclerView.setAdapter(profileMyFollowingAdapter);
+                            if(next)
+                            {
+                                otherfollowingpage++;
+                                getOthersFollowingList(userId);
+                            }
                             layout.setVisibility(View.VISIBLE);
                         }
                         progressBar.setVisibility(View.GONE);

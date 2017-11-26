@@ -41,12 +41,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
-        <provider android:authorities="com.facebook.app.FacebookContentProvider163105567761892"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="com.facebook.app.FacebookContentProvider163105567761892"
+            android:exported="true" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"
@@ -188,17 +186,18 @@
         <activity
             android:name=".ui.fragment.activity.BlockUserList"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d2422b51820a55ad031bbe2f1d3657015affec36" />
 
         <activity android:name=".ui.fragment.activity.EditImageActivity" />
-        <activity android:name=".ui.fragment.activity.PasswordChange"
+        <activity
+            android:name=".ui.fragment.activity.PasswordChange"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ui.fragment.activity.OthersPostDetails"></activity>
     </application>
 
 </manifest>

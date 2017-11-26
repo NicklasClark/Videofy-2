@@ -150,11 +150,9 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
         String userType = intent.getStringExtra("UserType");
         _btnfollow.setText(userType);
 
-
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (_btnfollow.getText().equals("Follow")) {
 
                     followUser(followerfollowingid, context);
@@ -180,7 +178,6 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
 
 
                         if (requestRecieved == true) {
-
                             Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
                             intent.putExtra("FollowerId", String.valueOf(followerfollowingid));
                             intent.putExtra("Identifier", "Other");
@@ -306,8 +303,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)_usernameTitle.getLayoutParams();
                             if(details==null||details.equals(""))
                             {
-                                hobby.setVisibility(View.GONE);
-                                lp.setMargins(0,0,0,20);
+                                hobby.setText("");
 
                             }
                             else {
@@ -382,7 +378,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             _name.setText(firstName);
                             RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)_usernameTitle.getLayoutParams();
 
-                                hobby.setVisibility(View.GONE);
+                                hobby.setText("");
                                 lp.setMargins(0,0,0,20);
 
                             if (hassentrequest == true) {

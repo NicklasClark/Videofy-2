@@ -24,6 +24,7 @@ import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
 import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,8 +36,8 @@ import retrofit2.Response;
 public class FollowersListActivity extends AppCompatActivity {
 
     Context context;
-    List<OtherFollowers> list;
-    List<Follower> userfollower;
+    List<OtherFollowers> list=new ArrayList<>();
+    List<Follower> userfollowerlist=new ArrayList<>();
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -46,6 +47,8 @@ public class FollowersListActivity extends AppCompatActivity {
     RelativeLayout layout;
     @BindView(R.id.nousertext)
     TextView nousertext;
+    int userfollowerpage=1;
+    int otherFollowerpage=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +78,13 @@ public class FollowersListActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        list.clear();
+        userfollowerlist.clear();
         Intent intent = getIntent();
         int followerid=  Integer.parseInt(intent.getStringExtra("FollowerId"));
         String identifier=intent.getStringExtra("Identifier");
@@ -92,7 +93,6 @@ public class FollowersListActivity extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(followerid);
-
         }
         else if(identifier.equals("User"))
         {
@@ -103,29 +103,30 @@ public class FollowersListActivity extends AppCompatActivity {
     }
     public void getUserfollowerList()
     {
-        int i=1;
-        ApiCallingService.Friends.getMyFollowers(i,context).enqueue(new Callback<ProfileMyFollowers>() {
+        ApiCallingService.Friends.getMyFollowers(userfollowerpage,context).enqueue(new Callback<ProfileMyFollowers>() {
             @Override
             public void onResponse(Call<ProfileMyFollowers> call, Response<ProfileMyFollowers> response) {
                 if(response.code()==200)
                 {
                     try {
-                        userfollower = response.body().getFollowers();
-                        if (userfollower == null || userfollower.size() == 0) {
-                            Toast.makeText(context,"No User Found", Toast.LENGTH_SHORT).show();
+                        userfollowerlist.addAll(response.body().getFollowers());
+                        boolean next=response.body().getNextPage();
+                        if (userfollowerlist == null || userfollowerlist.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
                         }
                         else{
-                            profileMyFollowerAdapter = new FollowersAdapter(context, userfollower, 100);
+                            profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, 100);
                             recyclerView.setAdapter(profileMyFollowerAdapter);
+                            if(next)
+                            {
+                                userfollowerpage++;
+                            }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                        }
                     }
-
-                    }
-
                     catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
@@ -134,7 +135,6 @@ public class FollowersListActivity extends AppCompatActivity {
                 }
                 else
                 {
-
                     layout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -151,26 +151,27 @@ public class FollowersListActivity extends AppCompatActivity {
     }
     public void getOthersFollowerDetails(int followerid)
     {
-        int i=1;
-        ApiCallingService.Friends.getFriendsFollowers(i,followerid,context).enqueue(new Callback<FreindFollower>() {
+        ApiCallingService.Friends.getFriendsFollowers(otherFollowerpage,followerid,context).enqueue(new Callback<FreindFollower>() {
             @Override
             public void onResponse(Call<FreindFollower> call, Response<FreindFollower> response) {
                 if(response.code()==200)
                 {
                     try
                     {
+                        boolean next=response.body().getNextPage();
                         list= response.body().getFollowers();
                         if (list == null || list.size() == 0) {
-                       //     Toast.makeText(context,"No User Found", Toast.LENGTH_LONG).show();
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
-
                         }
-
                         else {
                             profileMyFollowerAdapter = new FollowersAdapter(context, list);
                             recyclerView.setAdapter(profileMyFollowerAdapter);
+                            if (next)
+                            {
+                                otherFollowerpage++;
+                            }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                         }

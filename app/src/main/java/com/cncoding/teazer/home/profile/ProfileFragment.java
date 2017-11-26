@@ -107,6 +107,7 @@ public class ProfileFragment extends BaseFragment {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,14 +119,14 @@ public class ProfileFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
-   //     Toolbar toolbar = view.findViewById(R.id.toolbar);
+        //     Toolbar toolbar = view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-       // backbutton = view.findViewById(R.id.backbutton);
-       // settings = view.findViewById(R.id.settings);
-       // _toolbarusername = view.findViewById(R.id.toolbarusername);
+        // backbutton = view.findViewById(R.id.backbutton);
+        // settings = view.findViewById(R.id.settings);
+        // _toolbarusername = view.findViewById(R.id.toolbarusername);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -189,7 +190,7 @@ public class ProfileFragment extends BaseFragment {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBodyText = "Check it out. Your message goes here";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
                 startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
 
@@ -228,12 +229,14 @@ public class ProfileFragment extends BaseFragment {
 //        });
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
         getParentActivity().hideSettings(true);
     }
+
     public void getProfileDetail() {
 
         progressbar.setVisibility(View.VISIBLE);
@@ -245,24 +248,24 @@ public class ProfileFragment extends BaseFragment {
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
 
                 try {
-                     PublicProfile userProfile = response.body().getUserProfile();
-                     firstname = userProfile.getFirstName();
-                     lastname = userProfile.getLastName();
-                     username = userProfile.getUserName();
-                     email = userProfile.getEmail();
-                     accountType = userProfile.getAccountType();
-                     hasProfleMedia = userProfile.getHasProfileMedia();
-                     totalfollowers = response.body().getFollowers();
-                     totalfollowing = response.body().getFollowings();
-                     totalvideos = response.body().getTotalVideos();
-                     userId = String.valueOf(userProfile.getUserId());
-                     gender = userProfile.getGender();
-                     Long mobilno = userProfile.getPhoneNumber();
-                     if (mobilno == null) {
+                    PublicProfile userProfile = response.body().getUserProfile();
+                    firstname = userProfile.getFirstName();
+                    lastname = userProfile.getLastName();
+                    username = userProfile.getUserName();
+                    email = userProfile.getEmail();
+                    accountType = userProfile.getAccountType();
+                    hasProfleMedia = userProfile.getHasProfileMedia();
+                    totalfollowers = response.body().getFollowers();
+                    totalfollowing = response.body().getFollowings();
+                    totalvideos = response.body().getTotalVideos();
+                    userId = String.valueOf(userProfile.getUserId());
+                    gender = userProfile.getGender();
+                    Long mobilno = userProfile.getPhoneNumber();
+                    if (mobilno == null) {
                         mobilenumber = 0L;
-                     } else {
+                    } else {
                         mobilenumber = mobilno;
-                     }
+                    }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
                     if (userProfile.getHasProfileMedia()) {
@@ -309,15 +312,13 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
-    public void profileBlur(final String pic)
-    {
+    public void profileBlur(final String pic) {
 
         String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
         if (!EasyPermissions.hasPermissions(getContext(), perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
-        }
-        else {
+        } else {
             progressbar.setVisibility(View.VISIBLE);
             coordinatorLayout.setVisibility(View.GONE);
             new AsyncTask<Void, Void, Bitmap>() {
@@ -363,6 +364,7 @@ public class ProfileFragment extends BaseFragment {
         }
 
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -386,7 +388,6 @@ public class ProfileFragment extends BaseFragment {
         super.onResume();
         getProfileDetail();
 
-<<<<<<< HEAD
         getParentActivity().showAppBar();
     }
 
@@ -408,44 +409,4 @@ public class ProfileFragment extends BaseFragment {
 
         }
     }
-=======
-
->>>>>>> arif_dev_new
-
-    }
-
-//    private void dynamicToolbarColor() {
-//        if (!hasProfleMedia) {
-//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-//                    R.drawable.arif_image);
-//            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-//                @SuppressWarnings("ResourceType")
-//                @Override
-//                public void onGenerated(Palette palette) {
-//                    int vibrantColor = palette.getVibrantColor(R.color.profilebackground);
-//                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-//                    collapsingToolbarLayout.setStatusBarScrimColor(R.color.profilebackground);
-//                }
-//            });
-//        }
-//        else {
-//
-//
-//        }
-//    }
-
-
-//    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-//        int width = bm.getWidth();
-//        int height = bm.getHeight();
-//        float scaleWidth = ((float) newWidth) / width;
-//        float scaleHeight = ((float) newHeight) / height;
-//        Matrix matrix = new Matrix();
-//        matrix.postScale(scaleWidth, scaleHeight);
-//        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
-//                matrix, false);
-//
-//        return resizedBitmap;
-//    }
-
 }

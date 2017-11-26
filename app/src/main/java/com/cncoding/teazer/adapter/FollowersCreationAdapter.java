@@ -111,6 +111,31 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 }
             });
+
+
+            viewHolder.menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+                    popup.inflate(R.menu.menu_other_profile_post);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.action_delete:
+                                    //deleteVideos(videopostId);
+                                   // viewHolder.cardView.setVisibility(View.GONE);
+                                   // list.remove(i);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                    popup.show();
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("Error Message",e.getMessage());
@@ -152,7 +177,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             totalLikes = view.findViewById(R.id.txtlikes);
             txtview = view.findViewById(R.id.txtview);
             userReactionImage = view.findViewById(R.id.userReactionImage);
-           // menu = view.findViewById(R.id.menu);
+            menu = view.findViewById(R.id.menu);
         }
     }
 

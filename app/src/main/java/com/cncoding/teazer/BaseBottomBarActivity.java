@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.cncoding.teazer.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
@@ -110,7 +111,7 @@ public class BaseBottomBarActivity extends BaseActivity
         PostReactionAdapterListener,
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
-        ProfileMyCreationAdapter.myCreationListener {
+        ProfileMyCreationAdapter.myCreationListener{
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -348,6 +349,8 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         };
     }
+
+
 
     private static class ResumeUpload extends AsyncTask<Void, Void, Callback<ResultObject>> {
 
@@ -750,12 +753,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public void showAppBar() {
         appBar.setExpanded(true, true);
-    }
-
-    @Override
-    public void removeAppbar() {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().hide();
     }
 
     @Override
