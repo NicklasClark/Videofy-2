@@ -1,5 +1,6 @@
 package com.cncoding.teazer.tagsAndCategories;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
@@ -22,16 +24,18 @@ import java.util.ArrayList;
 
 class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
+    private final Context context;
     private ArrayList<Category> categories;
     private Fragment fragment;
     private SparseBooleanArray selectedCategoriesArray;
     private SparseArray<Category> selectedCategories;
 
-    CategoriesAdapter(ArrayList<Category> categories, Fragment fragment) {
+    CategoriesAdapter(ArrayList<Category> categories, Fragment fragment, Context context) {
         this.categories = categories;
         this.fragment = fragment;
         selectedCategoriesArray = new SparseBooleanArray();
         selectedCategories = new SparseArray<>();
+        this.context = context;
     }
 
     @Override
@@ -59,6 +63,7 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
                         selectedCategories.put(holder.getAdapterPosition(), category);
                     } else selectedCategories.delete(holder.getAdapterPosition());
                 } else {
+                    Toast.makeText(context, "Maximum 5 categories can be selected", Toast.LENGTH_SHORT).show();
                     holder.nameView.setChecked(false);
                     selectedCategories.delete(holder.getAdapterPosition());
                 }

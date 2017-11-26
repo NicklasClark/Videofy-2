@@ -31,12 +31,15 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
 
+
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/login_username"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/username_email_mobile"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"
+                android:maxLength="20"
+                android:layout_toRightOf="@+id/country_code_picker"
                 android:layout_marginTop="@dimen/padding_double"
                 android:layout_marginBottom="@dimen/padding_default"/>
 
@@ -58,7 +61,7 @@
                 app:ccp_showPhoneCode="true"
                 android:layout_alignTop="@+id/login_username"
                 android:layout_alignBottom="@+id/login_username"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

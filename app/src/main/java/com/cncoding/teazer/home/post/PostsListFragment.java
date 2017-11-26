@@ -112,15 +112,13 @@ public class PostsListFragment extends BaseFragment {
                             case 200:
                                 if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
                                     is_next_page = response.body().isNextPage();
-                                    if (page == 1)
-                                        postList.clear();
 
                                     postList.addAll(response.body().getPosts());
                                     recyclerView.getRecycledViewPool().clear();
                                     postListAdapter.notifyDataSetChanged();
                                     recyclerView.setVisibility(View.VISIBLE);
                                     dismissProgressBar();
-                                } else {
+                                } else if(page == 1){
                                     showErrorMessage(getString(R.string.no_posts_available));
                                     tapToRetryBtn.setVisibility(View.INVISIBLE);
                                 }

@@ -108,7 +108,7 @@ public class TagsAndCategoryFragment extends Fragment {
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
-                categoriesAdapter = new CategoriesAdapter(categories, this);
+                categoriesAdapter = new CategoriesAdapter(categories, this, getContext());
                 recyclerView.setAdapter(categoriesAdapter);
                 break;
             default:

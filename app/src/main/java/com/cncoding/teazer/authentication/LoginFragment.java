@@ -225,15 +225,15 @@ public class LoginFragment extends Fragment {
             ((MainActivity) getActivity()).toggleUpBtnVisibility(INVISIBLE);
         }
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
-        loginBtn.setEnabled(false);
+
         switch (getLoginState()) {
             case LOGIN_STATE_PASSWORD:
                 String password = passwordView.getText().toString();
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
-                    startCircularReveal();
                     loginWithUsernameAndPassword();
                 }
-                else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
+                else
+                    Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
@@ -261,6 +261,7 @@ public class LoginFragment extends Fragment {
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
+        usernameView.setTextAppearance(getContext(), R.style.AppTheme_PhoneNumberEditText);
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(VISIBLE);
@@ -293,6 +294,8 @@ public class LoginFragment extends Fragment {
             return;
         }
         if (AuthUtils.isPasswordValid(passwordView)) {
+            loginBtn.setEnabled(false);
+            startCircularReveal();
             final Pojos.Authorize authorize = new Pojos.Authorize(
                     getFcmToken(getContext()),
                     getDeviceId(getContext()),
