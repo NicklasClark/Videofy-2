@@ -96,6 +96,4 @@ public class PrivateProfile {
     public void setProfileMedia(ProfileMedia profileMedia) {
         this.profileMedia = profileMedia;
     }
-
-
 }

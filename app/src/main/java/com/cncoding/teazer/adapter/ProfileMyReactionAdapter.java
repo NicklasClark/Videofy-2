@@ -69,6 +69,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         } else {
             viewHolder.videoTitle.setText(videotitle);
         }
+
         viewHolder.post_owner.setText(postowner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
@@ -87,8 +88,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 intent.putExtra("Likes", String.valueOf(likes));
                 intent.putExtra("Views",String.valueOf( views));
                 intent.putExtra("Title", videotitle);
-
-
                 context.startActivity(intent);
             }
         });

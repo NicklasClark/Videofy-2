@@ -38,7 +38,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     private List<OtherFollowers> list;
     private List<Follower> userlist;
     private Context context;
-    public static final String UserType = "Follower";
+    //public static final String UserType = "Follower";
     List<Following> list2;
     int counter;
     final static int PrivateAccount = 1;
@@ -75,7 +75,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
-              //  final boolean requestreceived=cont
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
                 viewHolder.followersname.setText(followername);
@@ -88,8 +87,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         viewHolder.follow.setText("Following");
                         usertype = "Following";
                         viewHolder.follow.setText("Following");
-                    }
-                    else {
+                    } else {
 
                         if (requestsent == true) {
                             viewHolder.follow.setText("Requested");
@@ -110,17 +108,29 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                 } else {
 
+
                     if (following == true) {
                         viewHolder.follow.setText("Following");
                         usertype = "Following";
                         viewHolder.follow.setText("Following");
-                    } else {
-                        viewHolder.follow.setText("Follow");
-                        usertype = "Follow";
-                        viewHolder.follow.setText("Follow");
-                        viewHolder.follow.setTextColor(Color.WHITE);
-                        viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
+                    }
+                    else {
 
+                        if(requestsent==true)
+                        {
+
+                            viewHolder.follow.setText("Requested");
+                            usertype = "Requested";
+                        }
+
+                        else {
+
+                            viewHolder.follow.setText("Follow");
+                            usertype = "Follow";
+                            viewHolder.follow.setText("Follow");
+                            viewHolder.follow.setTextColor(Color.WHITE);
+                            viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
+                        }
                     }
                 }
 
@@ -136,10 +146,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
                 });
 
-            }
-
-
-            else {
+            } else {
                 final OtherFollowers cont = list.get(i);
                 final String usertype;
                 final int accounttype = cont.getAccountType();
@@ -155,18 +162,22 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 if (myself) {
                     viewHolder.followersname.setTextColor(Color.BLUE);
                     viewHolder.follow.setVisibility(View.INVISIBLE);
+                    usertype = "";
                 }
                 else {
 
                     if (isblockedyou) {
                         viewHolder.followersname.setTextColor(Color.GRAY);
                         viewHolder.follow.setVisibility(View.INVISIBLE);
+                        usertype = "";
+
                     }
-                    else {
+                    else
+                        {
+
                         if (accounttype == 1) {
 
                             if (following == true) {
-
                                 viewHolder.follow.setText("Following");
                                 usertype = "Following";
 
@@ -193,11 +204,17 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                 viewHolder.follow.setText("Following");
                                 usertype = "Following";
                             } else {
-                                viewHolder.follow.setText("Follow");
-                                usertype = "Follow";
-                                viewHolder.follow.setText("Follow");
-                                viewHolder.follow.setTextColor(Color.WHITE);
-                                viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
+                                if (requestsent == true) {
+                                    viewHolder.follow.setText("Requested");
+                                    usertype = "Requested";
+                                } else {
+                                    viewHolder.follow.setText("Follow");
+                                    usertype = "Follow";
+                                    viewHolder.follow.setTextColor(Color.WHITE);
+                                    viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
+
+                                }
+
 
                             }
                         }
@@ -220,12 +237,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
-                            }
-                            else {
+                            } else {
                                 Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
                                 intent.putExtra("Username", followername);
                                 intent.putExtra("FollowId", String.valueOf(followerId));
-                                intent.putExtra("UserType", "Follower");
+                                intent.putExtra("UserType", usertype);
                                 context.startActivity(intent);
                             }
                         }
@@ -235,7 +251,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             }
 
         } catch (Exception e) {
-            Log.d("EXCEPTION RECEIVED", e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -247,8 +263,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         if (counter == 100) {
 
             return userlist.size();
-        }
-        else {
+        } else {
             return list.size();
         }
 

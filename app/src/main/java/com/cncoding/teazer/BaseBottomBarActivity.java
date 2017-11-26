@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,10 +45,12 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
+<<<<<<< HEAD
 import com.cncoding.teazer.home.search.SearchFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.home.search.SubSearchFragment;
 import com.cncoding.teazer.home.search.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.search.adapters.TrendingListAdapter.TrendingListInteractionListener;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -55,15 +60,26 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
+import com.facebook.FacebookSdk;
+import com.facebook.share.ShareApi;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.net.URL;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.blurry.Blurry;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,7 +108,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener, ProfileFragment.RemoveAppBar,
+        PostReactionAdapterListener,
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
         ProfileMyCreationAdapter.myCreationListener{
@@ -208,12 +224,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void checkIfAnyVideoIsUploading() {
-
         if (getVideoUploadSession(this) != null) {
             new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
 //            resumeUpload(getVideoUploadSession(this), false);
         }
-        else if (getIntent().getExtras() != null) {
+        else if ((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
             new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
 //            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
         }
@@ -224,28 +239,97 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    if (response.code() == 201) {
-                        onUploadFinish();
+                if (response.code() == 201) {
 
-                        deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                    } else {
-                        //                    if (response.code() == 200) {
-                        //                        if (response.body().getMessage().contains("own video")) {
-                        ////                        USER IS REACTING ON HIS OWN VIDEO.
-                        //                            uploadingNotificationTextView.setText(response.body().getMessage());
-                        //                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                        //                            finishVideoUploadSession(getApplicationContext());
-                        //                            new Handler().postDelayed(new Runnable() {
-                        //                                @Override
-                        //                                public void run() {
-                        //                                    uploadingStatusLayout.setVisibility(GONE);
-                        //                                }
-                        //                            }, 1000);
-                        //                        }
-                        //                        return;
-                        //                    }
-                        onUploadError(new Throwable(response.code() + " : " + response.message()));
+                  //      ShareDialog shareDialog;
+                 //       FacebookSdk.sdkInitialize(getApplicationContext());
+                     //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+
+//                        Uri videoFileUri = Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE");
+//                        ShareVideo shareVideo = new ShareVideo.Builder()
+//                                .setLocalUrl(videoFileUri)
+//                                .build();
+//                        ShareVideoContent content = new ShareVideoContent.Builder()
+//                                .setVideo(shareVideo)
+//                                .build();
+//
+//                        shareDialog.show(content);
+
+
+
+                        final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
+                        new AsyncTask<Void, Void, Bitmap>() {
+                            @Override
+                            protected Bitmap doInBackground(final Void... params) {
+                                Bitmap bitmap = null;
+                                try {
+                                    final URL url = new URL(s);
+                                    try {
+                                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                return bitmap;
+                            }
+
+                            @Override
+                            protected void onPostExecute(final Bitmap result) {
+
+                                SharePhoto photo = new SharePhoto.Builder()
+                                        .setBitmap(result)
+                                        .build();
+                                SharePhotoContent content = new SharePhotoContent.Builder()
+                                        .addPhoto(photo)
+                                        .build();
+
+                                ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+                                shareDialog.show(content);
+                               // ShareApi.share(content, null);
+
+                            }
+                        }.execute();
+
+
+
+                       // Bitmap image = ...
+
+//
+//                        Uri videoFileUri = Uri.parse("https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939.mp4");
+//                        ShareVideo video = new ShareVideo.Builder()
+//                                .setLocalUrl(videoFileUri)
+//                                .build();
+//                        ShareVideoContent content = new ShareVideoContent.Builder()
+//                                .setVideo(video)
+//                                .build();
+//                        ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+//                        shareDialog.show(content);
+                    onUploadFinish();
+
+                    deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
+                } else {
+                    if (response.code() == 200) {
+                        if (response.body().getMessage().contains("own video")) {
+//                        USER IS REACTING ON HIS OWN VIDEO.
+
+
+                            uploadingNotificationTextView.setText(response.body().getMessage());
+                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
+                            finishVideoUploadSession(getApplicationContext());
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    uploadingStatusLayout.setVisibility(GONE);
+                                }
+                            }, 1000);
+                        }
+                        return;
                     }
+                }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -175,8 +175,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="@dimen/padding_thin"
-                    app:srcCompat="@drawable/ic_facebook_enabled"
-                    android:layout_toStartOf="@+id/google_share_btn" />
+                    android:background="@drawable/ic_facebook_disabled"
+                    android:layout_toStartOf="@+id/google_share_btn"
+                    />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/google_share_btn"
@@ -196,7 +197,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/padding_thin"
                     android:layout_marginEnd="@dimen/padding_default"
-                    app:srcCompat="@drawable/ic_instagram_enabled" />
+                    app:srcCompat="@drawable/ic_instagram_enabled"
+                    />
 
             </RelativeLayout>
 
