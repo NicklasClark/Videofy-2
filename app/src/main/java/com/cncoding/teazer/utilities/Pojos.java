@@ -1833,13 +1833,14 @@ public class Pojos {
             private String message;
             private String created_at;
             private boolean has_profile_media;
+            private boolean is_actioned;
             private ProfileMedia profile_media;
             private ArrayList<String> highlights;
             private MetaData meta_data;
 
             public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
-                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
-                                ArrayList<String> highlights, MetaData meta_data) {
+                                String message, String created_at, boolean has_profile_media, boolean is_actioned,
+                                ProfileMedia profile_media, ArrayList<String> highlights, MetaData meta_data) {
                 this.notification_id = notification_id;
                 this.notification_type = notification_type;
                 this.source_id = source_id;
@@ -1848,6 +1849,7 @@ public class Pojos {
                 this.message = message;
                 this.created_at = created_at;
                 this.has_profile_media = has_profile_media;
+                this.is_actioned = is_actioned;
                 this.profile_media = profile_media;
                 this.highlights = highlights;
                 this.meta_data = meta_data;
@@ -1862,6 +1864,7 @@ public class Pojos {
                 message = in.readString();
                 created_at = in.readString();
                 has_profile_media = in.readByte() != 0;
+                is_actioned = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 highlights = in.createStringArrayList();
                 meta_data = in.readParcelable(MetaData.class.getClassLoader());
@@ -1877,9 +1880,15 @@ public class Pojos {
                 dest.writeString(message);
                 dest.writeString(created_at);
                 dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeByte((byte) (is_actioned ? 1 : 0));
                 dest.writeParcelable(profile_media, flags);
                 dest.writeStringList(highlights);
                 dest.writeParcelable(meta_data, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
             }
 
             public static final Creator<Notification> CREATOR = new Creator<Notification>() {
@@ -1938,9 +1947,8 @@ public class Pojos {
                 return meta_data;
             }
 
-            @Override
-            public int describeContents() {
-                return 0;
+            public boolean isActioned() {
+                return is_actioned;
             }
         }
 

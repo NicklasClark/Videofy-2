@@ -381,7 +381,11 @@ public class BaseBottomBarActivity extends BaseActivity
     private void switchTab(final int position) {
         navigationController.switchTab(position);
         updateTabFocus(position);
-        updateIfDiscoverToolbar(position == 1);
+        updateToolbar(position == 1 || position == 3);
+        if (position == 1 || position == 3)
+            setAppBarElevation(0);
+        else
+            setAppBarElevation(12);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -396,25 +400,24 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void updateIfDiscoverToolbar(boolean isDiscoverPage) {
+    public void updateToolbar(boolean isDiscoverPage) {
         if (isDiscoverPage && navigationController.isRootFragment()) {
-            if (appBar.getElevation() != 0.0)
-            appBar.setElevation(0.0f);
-            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
-                updateToolbarTitle(getString(R.string.discover));
+            if (toolbarPlainTitle.getVisibility() != VISIBLE)
                 toolbarPlainTitle.setVisibility(VISIBLE);
-            }
             if (toolbarCenterTitle.getVisibility() != GONE)
                 toolbarCenterTitle.setVisibility(GONE);
-        } else {
-            if (appBar.getElevation() != 12.0)
-                appBar.setElevation(12.0f);
+        }
+        else {
             if (toolbarCenterTitle.getVisibility() != VISIBLE)
                 toolbarCenterTitle.setVisibility(VISIBLE);
-            if (toolbarPlainTitle.getVisibility() != GONE) {
+            if (toolbarPlainTitle.getVisibility() != GONE)
                 toolbarPlainTitle.setVisibility(GONE);
-            }
         }
+    }
+
+    public void setAppBarElevation(float elevation) {
+        if (appBar.getElevation() != elevation)
+            appBar.setElevation(elevation);
     }
 
 //    public void disappearSearchBar() {
@@ -470,11 +473,18 @@ public class BaseBottomBarActivity extends BaseActivity
      * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
      */
     public void updateToolbarTitle(String title) {
-        toolbarPlainTitle.setText(title);
-        if (toolbarPlainTitle.getVisibility() != VISIBLE)
-            toolbarPlainTitle.setVisibility(VISIBLE);
-        if (toolbarCenterTitle.getVisibility() != GONE)
-            toolbarCenterTitle.setVisibility(GONE);
+        if (title == null || title.equals("")) {
+            if (toolbarPlainTitle.getVisibility() != GONE)
+                toolbarPlainTitle.setVisibility(GONE);
+            if (toolbarCenterTitle.getVisibility() != VISIBLE)
+                toolbarCenterTitle.setVisibility(VISIBLE);
+        } else {
+            toolbarPlainTitle.setText(title);
+            if (toolbarPlainTitle.getVisibility() != VISIBLE)
+                toolbarPlainTitle.setVisibility(VISIBLE);
+            if (toolbarCenterTitle.getVisibility() != GONE)
+                toolbarCenterTitle.setVisibility(GONE);
+        }
     }
 
     public String getToolbarTitle() {

@@ -54,8 +54,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
         notificationsList = new NotificationsList(new ArrayList<Pojos.User.Notification>(), 0, false);

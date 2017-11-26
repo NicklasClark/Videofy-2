@@ -121,12 +121,12 @@ public class SubSearchAdapter extends RecyclerView.Adapter<SubSearchAdapter.View
         if (holder.postDetails.getPostOwner().hasProfileMedia()) {
             Glide.with(context)
                     .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.profilePic);
         } else {
             Glide.with(context)
-                    .load(R.drawable.ic_user_dp_small)
+                    .load(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.profilePic);
         }

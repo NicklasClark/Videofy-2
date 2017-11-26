@@ -70,13 +70,13 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         if (holder.postDetails.getPostOwner().hasProfileMedia())
             Glide.with(context)
                     .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.thumbnail);
         else
             Glide.with(context)
                     .load("")
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.thumbnail);
 
@@ -84,7 +84,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
             holder.reactionImage1.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.reactionImage1);
 
@@ -92,7 +92,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                 holder.reactionImage2.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.reactionImage2);
             }

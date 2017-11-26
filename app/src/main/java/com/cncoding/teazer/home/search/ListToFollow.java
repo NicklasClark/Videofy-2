@@ -134,7 +134,7 @@ public class ListToFollow extends BaseFragment {
             if (miniProfile.hasProfileMedia())
                 Glide.with(context)
                         .load(miniProfile.getProfileMedia().getThumbUrl())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.profilePic);
             holder.profileName.setText(miniProfile.getFirstName() + " " + miniProfile.getLastName());

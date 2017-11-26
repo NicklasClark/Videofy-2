@@ -115,6 +115,19 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="AppTheme.RoundedPasswordEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <!--<item name="android:paddingTop">@dimen/padding_default</item>-->
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <!--<item name="android:paddingBottom">@dimen/padding_default</item>-->
+        <item name="android:paddingStart">@dimen/padding_double</item>
+        <item name="android:layout_marginBottom">@dimen/padding_default</item>
+        <item name="android:background">@drawable/bg_button_white</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="AppTheme.FirstNameEditText" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -193,7 +206,7 @@
 
     <style name="AppTheme.RoundedMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
+        <item name="android:foreground">@drawable/ripple_dark_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>

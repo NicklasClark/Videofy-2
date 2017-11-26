@@ -65,13 +65,13 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
         if (holder.mostPopular.getPostOwner().hasProfileMedia())
             Glide.with(context)
                 .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
-                .placeholder(R.drawable.ic_user_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade()
                 .into(holder.dp);
         else
             Glide.with(context)
                     .load("")
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.dp);
 
@@ -79,7 +79,7 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
             holder.reactionImage1.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.reactionImage1);
 
@@ -87,7 +87,7 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                 holder.reactionImage2.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_dp_small)
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.reactionImage2);
             }
@@ -96,7 +96,7 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                 holder.reactionImage3.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_dp_small)
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.reactionImage3);
             }

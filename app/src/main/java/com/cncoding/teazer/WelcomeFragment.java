@@ -52,7 +52,6 @@ import butterknife.OnClick;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.OPEN_CAMERA_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_FACEBOOK_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_GOOGLE_ACTION;
@@ -460,10 +459,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         })
                 .setActionTextColor(Color.rgb(105, 240, 174));
         snackbar.show();
-    }
-
-    @OnClick(R.id.teazer_header) public void testBtnPressed() {
-        mListener.onWelcomeInteraction(OPEN_CAMERA_ACTION, null, null, null, null);
     }
 
     @OnClick(R.id.login_page_btn) public void onLoginBtnClick() {

@@ -112,7 +112,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.profilePic);
 
