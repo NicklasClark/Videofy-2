@@ -140,6 +140,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                 case R.id.action_delete:
                                     deleteVideos(videopostId);
                                     viewHolder.cardView.setVisibility(View.GONE);
+                                    list.remove(i);
                                     break;
                             }
                             return false;

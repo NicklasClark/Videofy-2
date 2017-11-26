@@ -97,27 +97,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             getPostReaction(viewHolder, postId);
 
 
-//            viewHolder.menu.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-//                    popup.inflate(R.menu.menu_profile);
-//
-//                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                        @Override
-//                        public boolean onMenuItemClick(MenuItem item) {
-//                            switch (item.getItemId()) {
-//                                case R.id.action_delete:
-//                                    deleteVideos(viewHolder,videopostId);
-//
-//                                    break;
-//                            }
-//                            return false;
-//                        }
-//                    });
-//                    popup.show();
-//                }
-//            });
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -130,8 +109,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 
-
-                   // Toast.makeText(context,"hello 2",Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
@@ -179,34 +156,34 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         }
     }
 
-    public void deleteVideos(final FollowersCreationAdapter.ViewHolder viewHolder, int deleteid) {
-        ApiCallingService.Posts.deletePosts( deleteid, context).enqueue(new Callback<DeleteMyVideos>() {
-            @Override
-            public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
-                try {
-                    if (response.code() == 200) {
-                        boolean status = response.body().getStatus();
-                        Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
-                        viewHolder.cardView.setVisibility(View.GONE);
-
-                    } else {
-
-                        Toast.makeText(context, "Video has not been deleted", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
-
-                Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-    }
+//    public void deleteVideos(final FollowersCreationAdapter.ViewHolder viewHolder, int deleteid) {
+//        ApiCallingService.Posts.deletePosts( deleteid, context).enqueue(new Callback<DeleteMyVideos>() {
+//            @Override
+//            public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
+//                try {
+//                    if (response.code() == 200) {
+//                        boolean status = response.body().getStatus();
+//                        Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
+//                        viewHolder.cardView.setVisibility(View.GONE);
+//
+//                    } else {
+//
+//                        Toast.makeText(context, "Video has not been deleted", Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
+//
+//                Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        });
+//    }
 
 
     public void getPostReaction(final FollowersCreationAdapter.ViewHolder viewHolder, int postId) {

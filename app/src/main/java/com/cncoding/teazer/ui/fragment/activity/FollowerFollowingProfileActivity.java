@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -45,6 +46,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,7 +96,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     public static final boolean FRIENDS = true;
     public static final boolean NOTFRIEND = false;
     CircularAppCompatImageView menu;
-    List<Post> list;
+    List<Post> list=new ArrayList<>();
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
@@ -108,6 +110,7 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     boolean isfollowing;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    int page = 1;
 
 
     @Override
@@ -291,9 +294,12 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
+                            RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)_usernameTitle.getLayoutParams();
                             if(details==null||details.equals(""))
                             {
                                 hobby.setVisibility(View.GONE);
+                                lp.setMargins(0,0,0,20);
+
                             }
                             else {
                                 hobby.setText(details);
@@ -365,7 +371,11 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                             }
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
-                            hobby.setVisibility(View.GONE);
+                            RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)_usernameTitle.getLayoutParams();
+
+                                hobby.setVisibility(View.GONE);
+                                lp.setMargins(0,0,0,20);
+
                             if (hassentrequest == true) {
 
                                 if (requestRecieved == true) {
@@ -448,11 +458,10 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
     }
 
 
-    public void getProfileVideos(int followerId) {
-      //  Toast.makeText(getApplicationContext(), "Profile Videos", Toast.LENGTH_LONG).show();
+    public void getProfileVideos(final int followerId) {
 
 
-        int page = 1;
+
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
         Log.d("getProfileVideos", "hello");
@@ -463,9 +472,16 @@ public class FollowerFollowingProfileActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
 
-                        list = response.body().getPosts();
+                        boolean next=response.body().getNextPage();
+                        list.addAll(response.body().getPosts());
                         followerCreationAdapter = new FollowersCreationAdapter(context, list);
                         _recycler_view.setAdapter(followerCreationAdapter);
+
+                        if(next)
+                        {
+                            page++;
+                            getProfileVideos(followerId);
+                        }
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
