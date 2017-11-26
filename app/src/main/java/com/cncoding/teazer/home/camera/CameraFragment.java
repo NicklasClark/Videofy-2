@@ -46,7 +46,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -320,10 +319,9 @@ public class CameraFragment extends Fragment {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @OnClick(R.id.camera_flash) public void actionFlash() {
         try {
-            if (cameraId.equals(CAMERA_BACK)) {
+            if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
                 if (true) {
                     if (isTorchOn) {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);

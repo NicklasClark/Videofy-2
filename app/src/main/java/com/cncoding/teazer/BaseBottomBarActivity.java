@@ -2,11 +2,10 @@ package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,12 +44,10 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
-<<<<<<< HEAD
 import com.cncoding.teazer.home.search.SearchFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.home.search.SubSearchFragment;
 import com.cncoding.teazer.home.search.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.search.adapters.TrendingListAdapter.TrendingListInteractionListener;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -60,26 +57,20 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.facebook.FacebookSdk;
-import com.facebook.share.ShareApi;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.model.ShareVideo;
-import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.net.URL;
+import java.util.ArrayList;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.blurry.Blurry;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -749,12 +740,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public void showAppBar() {
         appBar.setExpanded(true, true);
-    }
-
-    @Override
-    public void removeAppbar() {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().hide();
     }
 
     @Override

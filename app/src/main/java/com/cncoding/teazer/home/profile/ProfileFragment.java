@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,10 +14,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -386,7 +382,6 @@ public class ProfileFragment extends BaseFragment {
         super.onResume();
         getProfileDetail();
 
-<<<<<<< HEAD
         getParentActivity().showAppBar();
     }
 
@@ -408,44 +403,5 @@ public class ProfileFragment extends BaseFragment {
 
         }
     }
-=======
-
->>>>>>> arif_dev_new
 
     }
-
-//    private void dynamicToolbarColor() {
-//        if (!hasProfleMedia) {
-//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-//                    R.drawable.arif_image);
-//            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-//                @SuppressWarnings("ResourceType")
-//                @Override
-//                public void onGenerated(Palette palette) {
-//                    int vibrantColor = palette.getVibrantColor(R.color.profilebackground);
-//                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-//                    collapsingToolbarLayout.setStatusBarScrimColor(R.color.profilebackground);
-//                }
-//            });
-//        }
-//        else {
-//
-//
-//        }
-//    }
-
-
-//    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-//        int width = bm.getWidth();
-//        int height = bm.getHeight();
-//        float scaleWidth = ((float) newWidth) / width;
-//        float scaleHeight = ((float) newHeight) / height;
-//        Matrix matrix = new Matrix();
-//        matrix.postScale(scaleWidth, scaleHeight);
-//        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
-//                matrix, false);
-//
-//        return resizedBitmap;
-//    }
-
-}

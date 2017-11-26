@@ -58,7 +58,6 @@ freeline/
 freeline_project_description.json
 
 teazer.iml
-app/src/main/java/com/cncoding/teazer/model/profile/reaction/ProfileReaction.java
 .idea/
 .idea/libraries/__local_aars___D__AndroidStudio_Teazer_app_libs_javax_mail_1_6_0_jar_unspecified_jar.xml
 .idea/libraries/__local_aars___D__AndroidStudio_sdk_build_tools_27_0_1_renderscript_lib_renderscript_v8_jar_unspecified_jar.xml
