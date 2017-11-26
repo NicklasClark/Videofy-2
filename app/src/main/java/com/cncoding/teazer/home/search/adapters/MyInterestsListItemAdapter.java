@@ -66,27 +66,35 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
             holder.views.setText(views);
 
         /*Setting reactions*/
-            String reactions = SPACE + String.valueOf(holder.postDetails.getTotalReactions()) + " R";
-            holder.reactions.setText(reactions);
+        String reactions = SPACE + String.valueOf(holder.postDetails.getTotalReactions()) + " R";
+        holder.reactions.setText(reactions);
 
-            if (holder.postDetails.getPostOwner().hasProfileMedia())
-                Glide.with(context)
-                        .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_dp_small)
-                        .crossFade()
-                        .into(holder.thumbnail);
-            else
-                Glide.with(context)
-                        .load("")
-                        .placeholder(R.drawable.ic_user_dp_small)
-                        .crossFade()
-                        .into(holder.thumbnail);
+        if (holder.postDetails.getPostOwner().hasProfileMedia())
+            Glide.with(context)
+                    .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .into(holder.thumbnail);
+        else
+            Glide.with(context)
+                    .load("")
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .into(holder.thumbnail);
 
-            if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getReactedUsers().size() > 0) {
-                holder.reactionImage1.setVisibility(View.VISIBLE);
+        if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getReactedUsers().size() > 0) {
+            holder.reactionImage1.setVisibility(View.VISIBLE);
+            Glide.with(context)
+                    .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .into(holder.reactionImage1);
+
+            if (holder.postDetails.getReactedUsers().size() > 1) {
+                holder.reactionImage2.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                        .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.reactionImage1);
 

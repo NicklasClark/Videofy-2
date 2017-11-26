@@ -56,12 +56,12 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
             Glide.with(fragment)
                     .load(circle.getProfileMedia().getThumbUrl())
-                    .placeholder(fragment.getContext().getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade(400)
                     .into(holder.image);
         } else
             Glide.with(fragment).load("")
-                .placeholder(fragment.getContext().getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .into(holder.image);
 
         holder.nameView.setChecked(selectedTagsArray.get(holder.getAdapterPosition()));

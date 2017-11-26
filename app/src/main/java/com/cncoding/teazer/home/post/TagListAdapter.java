@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 
 import java.util.ArrayList;
@@ -40,9 +39,9 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
 
     @Override
     public void onBindViewHolder(TaggedViewHolder holder, int i) {
-        holder.username.setText("@" + taggedUserList.get(i).getUserName());
         Glide.with(context)
                 .load(taggedUserList.get(i).getProfileMedia().getThumbUrl())
+                .placeholder(R.drawable.ic_user_male_dp)
                 .crossFade()
                 .into(holder.dp);
     }
@@ -55,7 +54,6 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
     class TaggedViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tagged_user_dp) CircularAppCompatImageView dp;
-        @BindView(R.id.tagged_user_name) ProximaNovaRegularTextView username;
 
         TaggedViewHolder(View itemView) {
             super(itemView);

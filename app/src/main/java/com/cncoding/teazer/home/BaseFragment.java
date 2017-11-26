@@ -16,6 +16,7 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 
 public class BaseFragment extends Fragment {
 
+    protected String previousTitle;
     public FragmentNavigation fragmentNavigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;

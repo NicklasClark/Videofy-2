@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.media.AudioManager;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.DrawableRes;
@@ -109,7 +108,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     CircularAppCompatImageView reaction3Pic;
 
     private Handler handler = new ControllerViewHandler(this);
-    private CountDownTimer countDownTimer;
+//    private CountDownTimer countDownTimer;
     private GestureDetector gestureDetector;
     private int currentVolume;
 
@@ -279,75 +278,72 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     private void refreshControllerView() {
         caption.setText(videoTitle);
-        locationView.setText(SPACE + location);
+        String locationText = SPACE + location;
+        locationView.setText(locationText);
         profileNameView.setText(profileName);
-        likesView.setText(SPACE + likes);
-        viewsView.setText(SPACE + views);
+        String likesText = SPACE + likes;
+        likesView.setText(likesText);
+        String viewsText = SPACE + views;
+        viewsView.setText(viewsText);
         categoriesView.setText(categories);
 
-        if (reactionCount > 4)
-            reactionCountView.setText(SPACE + "+" + (reactionCount - 3) + " R");
-        else
-            reactionCountView.setText(SPACE + reactionCount + " R");
+        if (reactionCount > 4) {
+            String reactionText = SPACE + "+" + (reactionCount - 3) + " R";
+            reactionCountView.setText(reactionText);
+        } else if (reactionCount == 0){
+            setNoReactions();
+        }
+        else {
+            String reactionText = SPACE + reactionCount + " R";
+            reactionCountView.setText(reactionText);
+        }
         Glide.with(getContext())
                 .load(profilePicUrl)
-                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
                 .into(profilePic);
     }
 
     public void incrementLikes() {
-        likesView.setText(SPACE + ++likes);
+        String likesText = SPACE + ++likes;
+        likesView.setText(likesText);
     }
 
     public void decrementLikes() {
-        likesView.setText(SPACE + --likes);
+        String likesText = SPACE + --likes;
+        likesView.setText(likesText);
     }
 
     public void incrementViews() {
-        viewsView.setText(SPACE + ++views);
+        String viewsText = SPACE + ++views;
+        viewsView.setText(viewsText);
     }
 
     public void setReaction1Pic(String reaction1PicUrl) {
+        reaction1Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction1PicUrl)
-                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
                 .into(reaction1Pic);
     }
 
     public void setReaction2Pic(String reaction2PicUrl) {
+        reaction2Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction2PicUrl)
-                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
                 .into(reaction2Pic);
     }
 
     public void setReaction3Pic(String reaction3PicUrl) {
+        reaction3Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction3PicUrl)
-                .placeholder(getResources().getDrawable(R.drawable.ic_user_dp_small))
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
                 .into(reaction3Pic);
-    }
-
-    public void disappearReactionPic(int i) {
-        if (i == 0 || i == 1 || i == 2) {
-            switch (i) {
-                case 0:
-                    reaction1Pic.setVisibility(GONE);
-                    break;
-                case 1:
-                    reaction2Pic.setVisibility(GONE);
-                    break;
-                case 2:
-                    reaction3Pic.setVisibility(GONE);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     public void setNoReactions() {
@@ -384,15 +380,15 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
     }
 
-    /**
-     * setMediaPlayerControlListener update play state
-     *
-     * @param mediaPlayerListener self
-     */
-    public void setMediaPlayerControlListener(MediaPlayerControlListener mediaPlayerListener) {
-        this.mediaPlayerControlListener = mediaPlayerListener;
-//        togglePlayPause();
-    }
+//    /**
+//     * setMediaPlayerControlListener update play state
+//     *
+//     * @param mediaPlayerListener self
+//     */
+//    public void setMediaPlayerControlListener(MediaPlayerControlListener mediaPlayerListener) {
+//        this.mediaPlayerControlListener = mediaPlayerListener;
+////        togglePlayPause();
+//    }
 
     /**
      * toggle {@link MediaControllerView} show or not
@@ -401,7 +397,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void toggleControllerView() {
         togglePlayPauseIcons();
         if (!isShowing()) {
-            show(true, false, true);
+            show(false, false, true);
         } else {
             hide();
             //animate out controller view
@@ -527,10 +523,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         int position = mediaPlayerControlListener.getCurrentPosition();
         int duration = convert(mediaPlayerControlListener.getDuration() + ".");
 
-        remainingTime.setText(SPACE + stringToTime(duration - position));
+        String remainingTimeText;
+        remainingTimeText = SPACE + stringToTime(duration - position);
         if(mediaPlayerControlListener.isComplete()){
-            remainingTime.setText(SPACE + stringToTime(duration));
+            remainingTimeText = SPACE + stringToTime(duration);
         }
+        remainingTime.setText(remainingTimeText);
         return position;
     }
 
@@ -664,20 +662,20 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder withReaction1Url(@SuppressWarnings("SameParameterValue") String reaction1Url) {
-            this.reaction1Url = reaction1Url;
-            return this;
-        }
-
-        public Builder withReaction2Url(@SuppressWarnings("SameParameterValue") String reaction2Url) {
-            this.reaction2Url = reaction2Url;
-            return this;
-        }
-
-        public Builder withReaction3Url(@SuppressWarnings("SameParameterValue") String reaction3Url) {
-            this.reaction3Url = reaction3Url;
-            return this;
-        }
+//        public Builder withReaction1Url(@SuppressWarnings("SameParameterValue") String reaction1Url) {
+//            this.reaction1Url = reaction1Url;
+//            return this;
+//        }
+//
+//        public Builder withReaction2Url(@SuppressWarnings("SameParameterValue") String reaction2Url) {
+//            this.reaction2Url = reaction2Url;
+//            return this;
+//        }
+//
+//        public Builder withReaction3Url(@SuppressWarnings("SameParameterValue") String reaction3Url) {
+//            this.reaction3Url = reaction3Url;
+//            return this;
+//        }
 
         public Builder withVideoSurfaceView(@Nullable TextureView textureView){
             this.textureView = textureView;

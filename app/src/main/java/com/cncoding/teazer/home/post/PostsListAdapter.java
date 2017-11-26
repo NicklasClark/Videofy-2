@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,9 +67,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         Pojos.MiniProfile postOwner = holder.postDetails.getPostOwner();
 
         if (dimensionSparseArray.get(position) != 0) {
-            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.layout.getLayoutParams();
-            params.height = dimensionSparseArray.get(position);
-            holder.layout.setLayoutParams(params);
+            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
         }
 
         Glide.with(context)
@@ -90,6 +87,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                         int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
                         if (height < holder.layout.getWidth())
                             height = holder.layout.getWidth();
+
+                        holder.layout.getLayoutParams().height = height;
 
                         dimensionSparseArray.put(holder.getAdapterPosition(), height);
 //                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));

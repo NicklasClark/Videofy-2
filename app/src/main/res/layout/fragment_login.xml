@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
 
-
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/login_username"
                 style="@style/AppTheme.RoundedEditText"

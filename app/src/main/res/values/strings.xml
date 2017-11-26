@@ -214,7 +214,7 @@
     <string name="could_not_load_posts">\nCouldn\'t load posts!\n</string>
     <string name="tap_to_retry">Tap to retry</string>
     <string name="could_not_load_reactions">Couldn\'t load reactions!</string>
-    <string name="no_reactions_yet">No reactions yet</string>
+    <string name="no_reactions_yet">\nNo reactions yet</string>
     <string name="be_the_first_one_to_react">Be the first one to react!</string>
     <string name="finished">Finished!</string>
     <string name="optional_title">
@@ -248,4 +248,7 @@
     <string name="required_categories">Please select a category to continue</string>
     <string name="play_button">Play button</string>
     <string name="post">Post</string>
+    <string name="tagged">Tagged</string>
+    <string name="more">More</string>
+    <string name="wrong_otp">Otp entered is wrong! please try again.</string>
 </resources>

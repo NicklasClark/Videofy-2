@@ -153,13 +153,11 @@ public class LoginFragment extends Fragment {
 //            usernameView.setText(enteredText);
 //            countryCodePicker.setCountryForPhoneCode(countryCode);
 //        }
-
-//        usernameView.setText("premsuman8");
-//        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
         countryCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onCountrySelected() {
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
@@ -196,7 +194,7 @@ public class LoginFragment extends Fragment {
     @OnTextChanged(R.id.login_password) public void passwordTextChanged(CharSequence charSequence) {
         if (!charSequence.toString().equals("")) {
             if (passwordView.getCompoundDrawables()[2] == null)
-                passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                passwordView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
         } else {
             clearDrawables(passwordView);
         }
@@ -225,7 +223,6 @@ public class LoginFragment extends Fragment {
             ((MainActivity) getActivity()).toggleUpBtnVisibility(INVISIBLE);
         }
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
-
         switch (getLoginState()) {
             case LOGIN_STATE_PASSWORD:
                 String password = passwordView.getText().toString();
@@ -237,6 +234,7 @@ public class LoginFragment extends Fragment {
                 break;
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
+                    loginBtn.setEnabled(false);
                     startCircularReveal();
                     loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, revealLayout,
                             null, null, false);
@@ -327,34 +325,11 @@ public class LoginFragment extends Fragment {
                         }
 
                         void stopCircularReveal() {
+                            loginBtn.setEnabled(true);
                             if (getActivity() != null) {
                                 ((MainActivity) getActivity()).toggleUpBtnVisibility(VISIBLE);
                             }
-                            Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-                                    (int) loginBtn.getX() + (loginBtn.getWidth() / 2),
-                                    (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
-                                    (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-                            animator.setDuration(500);
-                            animator.setInterpolator(new DecelerateInterpolator());
-                            animator.addListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    revealLayout.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {
-                                }
-                            });
-                            animator.start();
+                            revealLayout.animate().alpha(0).setDuration(250).start();
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -362,18 +337,20 @@ public class LoginFragment extends Fragment {
                                             .setInterpolator(new DecelerateInterpolator()).start();
                                     progressBar.setVisibility(VISIBLE);
                                 }
-                            }, 680);
+                            }, 250);
                         }
 
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
                             stopCircularReveal();
-                            ViewUtils.showSnackBar(loginBtn, t.getMessage());
                             loginBtn.setEnabled(true);
+                            ViewUtils.showSnackBar(loginBtn, t.getMessage());
                         }
                     });
-        } else
+        } else {
+            loginBtn.setEnabled(true);
             Snackbar.make(loginBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private int getLoginState() {

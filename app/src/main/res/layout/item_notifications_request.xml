@@ -37,10 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_margin="14dp"
-            android:foreground="@drawable/ripple_dark_rounded_3dp"
+            android:foreground="@drawable/ripple_dark_rounded_2dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            style="@style/AppTheme.RoundedButtonWithBoundary"
+            android:background="@drawable/bg_outline_rounded_primary"
             android:contentDescription="@string/post_thumbnail" />
 
         <android.support.v7.widget.AppCompatImageView

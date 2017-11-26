@@ -53,14 +53,17 @@ public class PostsListFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
-        postList = new ArrayList<>();
+        if (postList == null)
+            postList = new ArrayList<>();
+        else
+            progressBar.setVisibility(View.GONE);
 
         postListAdapter = new PostsListAdapter(postList, getContext(), this);
         recyclerView.setAdapter(postListAdapter);
+        recyclerView.setSaveEnabled(true);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
@@ -117,14 +120,12 @@ public class PostsListFragment extends BaseFragment {
                                     postListAdapter.notifyDataSetChanged();
                                     recyclerView.setVisibility(View.VISIBLE);
                                     dismissProgressBar();
-                                } else if(page == 1){
+                                } else if (page == 1){
                                     showErrorMessage(getString(R.string.no_posts_available));
-                                    tapToRetryBtn.setVisibility(View.INVISIBLE);
                                 }
                                 break;
                             default:
                                 showErrorMessage("Error " + response.code() +": " + response.message());
-//                                AuthUtils.logout(getContext(), getActivity());
                                 break;
                         }
                         if (isRefreshing)
@@ -134,7 +135,6 @@ public class PostsListFragment extends BaseFragment {
                     private void showErrorMessage(String message) {
                         dismissProgressBar();
                         recyclerView.setVisibility(View.INVISIBLE);
-                        postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
                         String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
                         postLoadErrorTextView.setText(errorString);
@@ -144,7 +144,7 @@ public class PostsListFragment extends BaseFragment {
                     public void onFailure(Call<PostList> call, Throwable t) {
                         if (t.getMessage().contains("resolve"))
                             showErrorMessage("No internet connection found!");
-                        else showErrorMessage("Error: " + t.getMessage());
+                        else showErrorMessage(t.getMessage());
 
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);

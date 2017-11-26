@@ -26,7 +26,6 @@
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/text_size_14sp"
             app:font_name="sign_painter"
-            android:text="@string/following"
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem" />
 

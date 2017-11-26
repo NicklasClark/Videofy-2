@@ -73,13 +73,13 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         if (holder.featuredVideos.getPostOwner().hasProfileMedia())
             Glide.with(context)
                     .load(holder.featuredVideos.getPostOwner().getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.dp);
         else
             Glide.with(context)
                     .load("")
-                    .placeholder(R.drawable.ic_user_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade()
                     .into(holder.dp);
     }

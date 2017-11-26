@@ -41,6 +41,7 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
+import static com.cncoding.teazer.MainActivity.SIGNUP_FAILED_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
@@ -70,6 +71,7 @@ public class AuthUtils {
                         return true;
                     case MotionEvent.ACTION_UP:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                        view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
                         view.setTypeface(new TypeFactory(context).regular);
                         return true;
@@ -197,6 +199,13 @@ public class AuthUtils {
                     } else {
                         ViewUtils.showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mListener != null)
+                                            mListener.onFinalEmailSignupInteraction(SIGNUP_FAILED_ACTION, null);
+                                    }
+                                }, 2000);
                     }
                 } else
                     ViewUtils.showSnackBar(signupBtn, response.code() + " : " + response.message());
@@ -212,7 +221,8 @@ public class AuthUtils {
     }
 
     public static void performFinalSignup(final Context context, final Pojos.Authorize verify, final CountDownTimer countDownTimer,
-                                          final ProximaNovaRegularTextView otpVerifiedTextView, final OnOtpInteractionListener mListener) {
+                                          final ProximaNovaRegularTextView otpVerifiedTextView,
+                                          final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
         ApiCallingService.Auth.verifySignUp(verify)
 
                 .enqueue(new Callback<ResultObject>() {
@@ -230,13 +240,9 @@ public class AuthUtils {
 //                    Username, Email or Phone Number already exists
                             case 200:
                                 countDownTimer.cancel();
-                                otpVerifiedTextView.setText(R.string.already_exists);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mListener.onOtpInteraction(verify, false);
-                                    }
-                                }, 1500);
+                                otpVerifiedTextView.setText(R.string.wrong_otp);
+                                otpResendBtn.setEnabled(true);
+                                otpResendBtn.setAlpha(1);
                                 break;
 //                    Failed, Invalid JSON or validation failed
                             default:
@@ -283,24 +289,14 @@ public class AuthUtils {
                 } else
                     ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
                 loginBtn.setEnabled(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopCircularReveal(revealLayout);
-                    }
-                }, 1000);
+                stopCircularReveal(revealLayout);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 ViewUtils.showSnackBar(loginBtn, t.getMessage());
                 loginBtn.setEnabled(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopCircularReveal(revealLayout);
-                    }
-                }, 1000);
+                stopCircularReveal(revealLayout);
             }
         });
     }
@@ -332,7 +328,8 @@ public class AuthUtils {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mListener.onOtpInteraction(null, false);
+                                        if (mListener != null)
+                                            mListener.onOtpInteraction(null, true);
                                     }
                                 }, 1000);
                             } else {
@@ -341,13 +338,16 @@ public class AuthUtils {
                             }
                         } else
                             ViewUtils.showSnackBar(otpResendBtn, response.code() + " : " + response.message());
+
                         otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         ViewUtils.showSnackBar(otpResendBtn, t.getMessage());
                         otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                     }
                 });
     }

@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
+    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
@@ -329,16 +330,10 @@ public class MainActivity extends AppCompatActivity
             case SIGNUP_WITH_EMAIL_ACTION:
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
                 break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
-                break;
             case RESUME_WELCOME_VIDEO_ACTION:
                 if (mediaPlayer != null && loggingIn)
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
-                break;
-            case OPEN_CAMERA_ACTION:
-                startFragmentTransition(false, TAG_SELECT_INTERESTS, true);
                 break;
             default:
                 break;
@@ -553,7 +548,8 @@ public class MainActivity extends AppCompatActivity
                         new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
             }
         } else {
-            successfullyLoggedIn();
+            if (isVerified)
+                successfullyLoggedIn();
         }
     }
 

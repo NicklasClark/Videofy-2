@@ -100,6 +100,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+
+        View.OnClickListener profileListener;
+
         switch (viewHolder.getItemViewType()) {
             case TYPE_FOLLOWING:
                 final FollowingViewHolder holder1 = (FollowingViewHolder) viewHolder;
@@ -108,7 +111,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder1.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder1.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder1.dp);
 
@@ -120,7 +123,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .crossFade()
                         .into(holder1.thumbnail);
 
-                holder1.layout.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener postListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mListener != null) {
@@ -171,7 +174,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             }
                         }
                     }
-                });
+                };
+
+                profileListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                };
+
+                holder1.dp.setOnClickListener(profileListener);
+                holder1.content.setOnClickListener(postListener);
+                holder1.thumbnail.setOnClickListener(postListener);
                 break;
             case TYPE_REQUESTS:
                 final RequestsViewHolder holder2 = (RequestsViewHolder) viewHolder;
@@ -180,7 +194,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder2.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder2.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder2.dp);
 
@@ -188,7 +202,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 switch (holder2.notification.getNotificationType()) {
                     case STARTED_FOLLOWING:
-                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+//                        if (holder2.notification.isActioned())
+                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                         break;
                     case ACCEPTED_REQUEST:
                         setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
