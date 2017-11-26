@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
@@ -127,6 +128,12 @@ public class LoginFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         setOnCountryChangeListener();
         passwordView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(32)});
+        try {
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -147,8 +154,8 @@ public class LoginFragment extends Fragment {
 //            countryCodePicker.setCountryForPhoneCode(countryCode);
 //        }
 
-        usernameView.setText("premsuman8");
-        passwordView.setText("mynameis0");
+//        usernameView.setText("premsuman8");
+//        passwordView.setText("mynameis0");
     }
 
     private void setOnCountryChangeListener() {
@@ -202,7 +209,7 @@ public class LoginFragment extends Fragment {
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event);
+        return togglePasswordVisibility(passwordView, event, getContext());
     }
 
     @OnEditorAction(R.id.login_password) public boolean onLoginByKeyboard(int actionId) {
@@ -218,23 +225,26 @@ public class LoginFragment extends Fragment {
             ((MainActivity) getActivity()).toggleUpBtnVisibility(INVISIBLE);
         }
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
-        loginBtn.setEnabled(false);
+
         switch (getLoginState()) {
             case LOGIN_STATE_PASSWORD:
                 String password = passwordView.getText().toString();
                 if (username != null && !username.isEmpty() && !password.isEmpty()) {
-                    startCircularReveal();
                     loginWithUsernameAndPassword();
                 }
-                else Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
+                else
+                    Snackbar.make(loginBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
                 break;
             case LOGIN_STATE_OTP:
-                if (!username.isEmpty()) {
+                if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
                     startCircularReveal();
                     loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, revealLayout,
                             null, null, false);
+                } else {
+                    setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                    Snackbar.make(usernameView, R.string.phone_number_invalid, Snackbar.LENGTH_SHORT)
+                            .show();
                 }
-                else setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                 break;
             default:
                 break;
@@ -250,6 +260,8 @@ public class LoginFragment extends Fragment {
 //            Toggle login through OTP
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
+        usernameView.setText("");
+        usernameView.setTextAppearance(getContext(), R.style.AppTheme_PhoneNumberEditText);
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(VISIBLE);
@@ -282,6 +294,8 @@ public class LoginFragment extends Fragment {
             return;
         }
         if (AuthUtils.isPasswordValid(passwordView)) {
+            loginBtn.setEnabled(false);
+            startCircularReveal();
             final Pojos.Authorize authorize = new Pojos.Authorize(
                     getFcmToken(getContext()),
                     getDeviceId(getContext()),
@@ -293,19 +307,23 @@ public class LoginFragment extends Fragment {
                         @SuppressWarnings("ConstantConditions")
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            if (response.code() == 200) {
-                                if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
-                                    setCurrentPassword(getContext() ,passwordView.getText().toString());
-                                    mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
-                                } else {
-                                    ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
-                                }
-                            } else
-                                ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
+                            try {
+                                if (response.code() == 200) {
+                                    if (response.body().getStatus()) {
+                                        SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
+                                        setCurrentPassword(getContext() ,passwordView.getText().toString());
+                                        mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
+                                    } else {
+                                        ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
+                                    }
+                                } else
+                                    ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
 
-                            stopCircularReveal();
-                            loginBtn.setEnabled(true);
+                                stopCircularReveal();
+                                loginBtn.setEnabled(true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         void stopCircularReveal() {

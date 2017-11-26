@@ -87,7 +87,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
      * Clear List items
      */
     void clearList(){
-        if(resultList!=null && resultList.size()>0){
+        if(resultList != null && resultList.size() > 0){
             resultList.clear();
         }
     }
@@ -243,8 +243,12 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                 return resultList.size();
             else
                 return 0;
-        } else
-            return places.size();
+        } else {
+            if (places != null)
+                return places.size();
+            else
+                return 0;
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

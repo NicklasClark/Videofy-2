@@ -1,6 +1,5 @@
 package com.cncoding.teazer.utilities;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +15,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,6 +28,7 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -61,17 +59,19 @@ public class AuthUtils {
         return SharedPrefs.getAuthToken(context) != null;
     }
 
-    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event) {
+    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event, Context context) {
         if (view.getCompoundDrawables()[2] != null) {
             if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width())) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
                         return true;
                     case MotionEvent.ACTION_UP:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                         view.setSelection(view.getText().length());
+                        view.setTypeface(new TypeFactory(context).regular);
                         return true;
                     default:
                         return false;
@@ -248,37 +248,13 @@ public class AuthUtils {
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
-                        logout(context, null);
+//                        logout(context, null);
                     }
                 });
     }
 
-    private static void stopCircularReveal(final View revealLayout, View anchorButton) {
-        final Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-                (int) anchorButton.getX() + (anchorButton.getWidth() / 2),
-                (int) anchorButton.getY() + (anchorButton.getHeight() / 2),
-                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-        animator.setDuration(500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                revealLayout.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        animator.start();
+    private static void stopCircularReveal(View revealLayout) {
+        revealLayout.animate().alpha(0).setDuration(280).start();
     }
 
     /**
@@ -310,7 +286,7 @@ public class AuthUtils {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
+                        stopCircularReveal(revealLayout);
                     }
                 }, 1000);
             }
@@ -322,7 +298,7 @@ public class AuthUtils {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
+                        stopCircularReveal(revealLayout);
                     }
                 }, 1000);
             }
@@ -356,8 +332,7 @@ public class AuthUtils {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mListener.onOtpInteraction(
-                                                null, false);
+                                        mListener.onOtpInteraction(null, false);
                                     }
                                 }, 1000);
                             } else {

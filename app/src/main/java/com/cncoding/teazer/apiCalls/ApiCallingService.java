@@ -3,7 +3,6 @@ package com.cncoding.teazer.apiCalls;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
@@ -19,12 +18,15 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
-import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
+import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -35,6 +37,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -68,11 +71,11 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
             return getApplicationService().getPostReportTypes();
         }
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getProfileReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes() {
             return getApplicationService().getProfileReportTypes();
         }
 
@@ -163,6 +166,47 @@ public class ApiCallingService {
         }
     }
 
+    public static class Discover {
+
+        /**
+         * Call this service to get the discover page featured videos lists.
+         */
+        public static Call<PostList> getFeaturedPosts(int page, Context context){
+            return getDiscoverService(context).getFeaturedPosts(page);
+        }
+
+        /**
+         * Call this service to get the discover page interested category videos when user clicks "View all".
+         */
+        public static Call<PostList> getAllInterestedCategoriesVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getAllInterestedCategoriesVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get the discover page trending category videos of the respected category.
+         */
+        public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getTrendingVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get discover page landing posts.
+         */
+        public static Call<LandingPosts> getDiscoverPagePosts(Context context){
+            return getDiscoverService(context).getDiscoverPagePosts();
+        }
+
+        private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClientWithAuthToken(context))
+                    .build();
+            return retrofit.create(TeazerApiCall.DiscoverCalls.class);
+        }
+    }
+    
     public static class Friends {
         /**
          * Get the "my circle" with search term
@@ -508,7 +552,7 @@ public class ApiCallingService {
             return getPostalService(context).deletePostVideo(postId);
         }
 
-        public static Call<ResultObject> reportPost(Pojos.Post.ReportPost reportPostDetails, Context context) {
+        public static Call<ResultObject> reportPost(ReportPostRequest reportPostDetails, Context context) {
             return getPostalService(context).reportPost(reportPostDetails);
         }
 
@@ -677,7 +721,7 @@ public class ApiCallingService {
                         .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
                         .method(original.method(), original.body())
                         .build();
-                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
+//                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
         }).addInterceptor(logging).build();

@@ -2,9 +2,11 @@ package com.cncoding.teazer.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 
 /**
@@ -16,6 +18,7 @@ public class BaseFragment extends Fragment {
 
     public FragmentNavigation fragmentNavigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
+    protected boolean is_next_page = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +34,14 @@ public class BaseFragment extends Fragment {
 //                actionBar.setHomeAsUpIndicator(R.drawable.ic_previous);
 //        }
 //    }
+
+    @NonNull
+    public BaseBottomBarActivity getParentActivity() {
+        if (getActivity() != null && getActivity() instanceof BaseBottomBarActivity) {
+            return (BaseBottomBarActivity) getActivity();
+        }
+        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
+    }
 
     @Override
     public void onAttach(Context context) {

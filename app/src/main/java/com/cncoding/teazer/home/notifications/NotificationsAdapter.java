@@ -133,7 +133,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
-                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(),
+                                                            null, null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else
@@ -154,7 +155,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
-                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(), null);
+                                                    mListener.onNotificationsInteraction(isFollowingTab, response.body(),
+                                                            null, null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else
@@ -232,18 +234,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200) {
-                                                        if (response.body().getStatus()) {
-                                                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                            else
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                            holder2.declineRequest.setVisibility(View.GONE);
-                                                        } else {
-                                                            sendJoinRequest(holder2);
-                                                        }
-                                                    } else
-                                                        Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    try {
+                                                        if (response.code() == 200) {
+                                                            if (response.body().getStatus()) {
+                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                                else
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                                holder2.declineRequest.setVisibility(View.GONE);
+                                                            } else {
+                                                                sendJoinRequest(holder2);
+                                                            }
+                                                        } else
+                                                            Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
 
                                                 @Override
@@ -541,6 +547,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Profile body);
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, Profile profile);
     }
 }

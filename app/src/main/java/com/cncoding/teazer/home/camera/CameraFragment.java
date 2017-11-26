@@ -18,6 +18,7 @@ package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,12 +39,14 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -217,8 +220,8 @@ public class CameraFragment extends Fragment {
 
         @Override
         public void onClosed(@NonNull CameraDevice camera) {
-            closeCamera();
-            stopBackgroundThread();
+//            closeCamera();
+//            stopBackgroundThread();
             super.onClosed(camera);
         }
     };
@@ -233,6 +236,9 @@ public class CameraFragment extends Fragment {
     private String cameraId;
     private boolean isReaction;
     private PostDetails postDetails;
+    private CameraManager cameraManager;
+    private boolean isFlashSupported;
+    private boolean isTorchOn = false;
 
     public static CameraFragment newInstance(boolean isReaction, PostDetails postDetails) {
         CameraFragment fragment = new CameraFragment();
@@ -282,12 +288,16 @@ public class CameraFragment extends Fragment {
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+//        Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+//        isFlashSupported = available == null ? false : available;
+//
+//        setupFlashButton();
     }
 
     @Override
     public void onPause() {
-//        closeCamera();
-//        stopBackgroundThread();
+        closeCamera();
+        stopBackgroundThread();
         super.onPause();
     }
 
@@ -307,6 +317,44 @@ public class CameraFragment extends Fragment {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_FRONT);
         } else
             openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_BACK);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @OnClick(R.id.camera_flash) public void actionFlash() {
+        try {
+            if (cameraId.equals(CAMERA_BACK)) {
+                if (true) {
+                    if (isTorchOn) {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+//                        flashButton.setImageResource(R.drawable.ic_flash_off);
+                        isTorchOn = false;
+                    } else {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+//                        flashButton.setImageResource(R.drawable.ic_flash_on);
+                        isTorchOn = true;
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setupFlashButton() {
+        if (cameraId.equals(CAMERA_BACK) && isFlashSupported) {
+            cameraFlashView.setVisibility(View.VISIBLE);
+
+            if (isTorchOn) {
+                cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+            } else {
+                cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+            }
+
+        } else {
+            cameraFlashView.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.camera_files) public void showGallery() {
@@ -336,15 +384,19 @@ public class CameraFragment extends Fragment {
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        if (mBackgroundThread != null) {
-            mBackgroundThread.quitSafely();
-            try {
-                mBackgroundThread.join();
-                mBackgroundThread = null;
-                mBackgroundHandler = null;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        try {
+            if (mBackgroundThread != null) {
+                mBackgroundThread.quitSafely();
+                try {
+                    mBackgroundThread.join();
+                    mBackgroundThread = null;
+                    mBackgroundHandler = null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -415,13 +467,17 @@ public class CameraFragment extends Fragment {
             return;
         }
 
-        CameraManager cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             if (cameraManager != null) {
-                cameraId = cameraManager.getCameraIdList()[facing];
+                if (cameraManager.getCameraIdList().length > 1) {
+                    cameraId = cameraManager.getCameraIdList()[facing];
+                } else {
+                    cameraId = cameraManager.getCameraIdList()[0];
+                }
                 // Choose the sizes for camera preview and video recording
                 CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
 
@@ -618,15 +674,16 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
             mNextVideoAbsolutePath = getVideoFilePath(activity);
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mMediaRecorder.setVideoFrameRate(30);
+//        mMediaRecorder.setPreviewDisplay();
+//        mMediaRecorder.setVideoEncodingBitRate(10000000);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {

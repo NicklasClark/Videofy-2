@@ -14,8 +14,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,12 +28,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaCondensedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
@@ -41,7 +39,6 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
@@ -235,9 +232,7 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getProfileDetail();
-
-        ((BaseBottomBarActivity)getActivity()).hidesettings(true);
-
+        getParentActivity().hideSettings(true);
     }
     public void getProfileDetail() {
 
@@ -391,7 +386,31 @@ public class ProfileFragment extends BaseFragment {
         super.onResume();
         getProfileDetail();
 
+<<<<<<< HEAD
+        getParentActivity().showAppBar();
+    }
 
+    private void dynamicToolbarColor() {
+        if (!hasProfleMedia) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.arif_image);
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @SuppressWarnings("ResourceType")
+                @Override
+                public void onGenerated(Palette palette) {
+                    int vibrantColor = palette.getVibrantColor(R.color.colorPrimary);
+                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
+                    collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
+                }
+            });
+        } else {
+
+
+        }
+    }
+=======
+
+>>>>>>> arif_dev_new
 
     }
 

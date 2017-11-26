@@ -365,35 +365,39 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                        switch (response.code()) {
-                            case 201:
-                                if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, false);
-                                }
-                                break;
-                            case 200:
-                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, true);
-                                } else {
-                                    new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
-                                            facebookProfile, facebookData, button);
-                                }
-                                break;
-                            default:
-                                Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
-                                button.revertAnimation(new OnAnimationEndListener() {
-                                    @Override
-                                    public void onAnimationEnd() {
-                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
-                                                0, 0, 0);
+//                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                        try {
+                            switch (response.code()) {
+                                case 201:
+                                    if (response.body().getStatus()) {
+                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, false);
                                     }
-                                });
-                                break;
+                                    break;
+                                case 200:
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                    if (response.body().getStatus()) {
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, true);
+                                    } else {
+                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
+                                                facebookProfile, facebookData, button);
+                                    }
+                                    break;
+                                default:
+                                    Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
+                                    button.revertAnimation(new OnAnimationEndListener() {
+                                        @Override
+                                        public void onAnimationEnd() {
+                                            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                                    0, 0, 0);
+                                        }
+                                    });
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -541,11 +545,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
-        if (isVerified)
-            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-        else {
-            setFragment(TAG_LOGIN_FRAGMENT, true,
-                    new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+        if (verificationDetails != null) {
+            if (isVerified)
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+            else {
+                setFragment(TAG_LOGIN_FRAGMENT, true,
+                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+            }
+        } else {
+            successfullyLoggedIn();
         }
     }
 

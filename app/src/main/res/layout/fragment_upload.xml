@@ -14,6 +14,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:animateLayoutChanges="true"
             android:layout_height="wrap_content">
 
             <RelativeLayout
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
                 android:id="@+id/video_upload_title"
-                android:hint="@string/react_title"
+                android:hint="@string/title"
                 android:background="@drawable/bg_search"
                 android:maxLength="30"
                 android:maxLines="1"

@@ -6,9 +6,13 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -30,7 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -38,11 +42,13 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.MediaControllerView;
+import com.cncoding.teazer.customViews.MediaControllerView.MediaPlayerControlListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
@@ -62,14 +68,15 @@ import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
-public class PostDetailsFragment extends BaseFragment implements MediaControllerView.MediaPlayerControlListener,
-        TextureView.SurfaceTextureListener, MediaPlayer.OnVideoSizeChangedListener {
+public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
+        SurfaceTextureListener, OnVideoSizeChangedListener {
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
 
+    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.video_surface) TextureView textureView;
@@ -123,14 +130,20 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).hideAppBar();
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getParentActivity().hideAppBar();
+        getParentActivity().updateToolbarTitle(getString(R.string.post));
+
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
         context = getContext();
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
@@ -145,8 +158,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact())
+        if (!postDetails.canReact()) {
             reactBtn.setEnabled(false);
+            reactBtn.setAlpha(0.4f);
+        }
 
 //        tagsCountBadge.setText(postDetails.);
 
@@ -160,7 +175,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (page > 1 && is_next_page)
                     getPostReactions(postDetails.getPostId(), page);
             }
         };
@@ -174,7 +189,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //            }
 //        });
 
-        return rootView;
     }
 
     @Override
@@ -216,6 +230,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         placeholder.setVisibility(View.INVISIBLE);
                     }
                 }, 400);
+                controller.show(false, true, false);
 //                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
 //                Increment the video view count
@@ -266,6 +281,16 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                     .withReactionCount(postDetails.getTotalReactions())
                     .build(surfaceContainer);
         }
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY != 0) {
+                    if (!controller.isShowing())
+                        controller.show(true, false, true);
+                }
+            }
+        });
     }
 
     private String getUserCategories() {
@@ -286,6 +311,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getReactions().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1)
+                                        postReactions.clear();
+
                                     postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
                                     postReactionAdapter.notifyDataSetChanged();
@@ -303,18 +332,12 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                                         } else
                                             controller.disappearReactionPic(2);
                                     }
-                                } else {
-                                    controller.disappearReactionPic(0);
-                                    controller.disappearReactionPic(1);
-                                    controller.disappearReactionPic(2);
-                                    controller.setNoReactions();
-                                    showNoReactionMessage();
                                 }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
-                        }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
                     }
 
                     private void showErrorMessage(String message) {
@@ -509,8 +532,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
         if (controller != null)
             controller.toggleControllerView();
     }
@@ -590,7 +612,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_profile_report:
-                    Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
+                    if (postDetails.canReact()) {
+                        FragmentManager fm = getFragmentManager();
+                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(postDetails.getPostId(), postDetails.canReact());
+                        // SETS the target fragment for use later when sending results
+                        reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
+                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                    } else {
+                        Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
             }
             return false;

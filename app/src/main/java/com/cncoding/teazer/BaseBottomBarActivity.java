@@ -1,6 +1,9 @@
 package com.cncoding.teazer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,6 +19,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -30,7 +34,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter;
@@ -41,13 +45,19 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.search.SearchFragment;
+import com.cncoding.teazer.home.search.SearchFragment.OnSearchInteractionListener;
+import com.cncoding.teazer.home.search.SubSearchFragment;
+import com.cncoding.teazer.home.search.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
+import com.cncoding.teazer.home.search.adapters.TrendingListAdapter.TrendingListInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.facebook.FacebookSdk;
 import com.facebook.share.ShareApi;
@@ -61,6 +71,7 @@ import com.facebook.share.widget.ShareDialog;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.net.URL;
 
 import butterknife.BindArray;
@@ -74,12 +85,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
+import static com.cncoding.teazer.home.search.SearchFragment.ACTION_VIEW_TRENDING;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
+import static com.cncoding.teazer.utilities.NavigationController.TAB2;
+import static com.cncoding.teazer.utilities.NavigationController.TAB4;
+import static com.cncoding.teazer.utilities.NavigationController.TAB5;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
@@ -94,6 +108,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener,
+        OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
         ProfileMyCreationAdapter.myCreationListener {
 
@@ -117,40 +132,26 @@ public class BaseBottomBarActivity extends BaseActivity
 //            R.drawable.ic_person_selected
 //    };
 
-    @BindArray(R.array.tab_name)
-    String[] TABS;
-    @BindView(R.id.app_bar)
-    AppBarLayout appBar;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.toolbar_title)
-    SignPainterTextView toolbarTitle;
-    @BindView(R.id.discover_toolbar_layout)
-    LinearLayout discoverToolbarLayout;
-    @BindView(R.id.discover_search)
-    ProximaNovaRegularAutoCompleteTextView discoverSearchBar;
-    @BindView(R.id.main_fragment_container)
-    FrameLayout contentFrame;
-    @BindView(R.id.bottom_tab_layout)
-    TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn)
-    ImageButton cameraButton;
-    @BindView(R.id.uploading_status_layout)
-    LinearLayout uploadingStatusLayout;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-    @BindView(R.id.uploading_notification)
-    ProximaNovaBoldTextView uploadingNotificationTextView;
-    @BindView(R.id.settings)
-    ImageView settings;
-    @BindView(R.id.dismiss)
-    AppCompatImageView uploadingNotificationDismiss;
+
+    @BindArray(R.array.tab_name) String[] TABS;
+    @BindView(R.id.app_bar) AppBarLayout appBar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarCenterTitle;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn) ImageButton cameraButton;
+    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
+    @BindView(R.id.settings) ImageView settings;
+    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private ActionBar actionBar;
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
+    private Fragment fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,7 +163,11 @@ public class BaseBottomBarActivity extends BaseActivity
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
 
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
@@ -182,13 +187,23 @@ public class BaseBottomBarActivity extends BaseActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Drawable icon = tab.getIcon();
+                if (icon != null)
+                icon.setTint(Color.BLACK);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
+            }
+        });
+        LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
+        tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +214,13 @@ public class BaseBottomBarActivity extends BaseActivity
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+//        initTab();
+        switchTab(0);
     }
 
     private void checkIfAnyVideoIsUploading() {
@@ -215,12 +237,13 @@ public class BaseBottomBarActivity extends BaseActivity
         callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                try {
                 if (response.code() == 201) {
 
-                    try {
-                        //      ShareDialog shareDialog;
-                        //       FacebookSdk.sdkInitialize(getApplicationContext());
-                        //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+
+                  //      ShareDialog shareDialog;
+                 //       FacebookSdk.sdkInitialize(getApplicationContext());
+                     //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
 
 //                        Uri videoFileUri = Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE");
 //                        ShareVideo shareVideo = new ShareVideo.Builder()
@@ -283,9 +306,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                                .build();
 //                        ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
 //                        shareDialog.show(content);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
                     onUploadFinish();
 
                     deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
@@ -307,7 +328,9 @@ public class BaseBottomBarActivity extends BaseActivity
                         }
                         return;
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -345,12 +368,16 @@ public class BaseBottomBarActivity extends BaseActivity
             super.onPreExecute();
             reference.get().uploadingStatusLayout.setVisibility(VISIBLE);
             reference.get().progressBar.setIndeterminate(false);
-            if (!uploadParams.isReaction())
-//                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            else
-//                UPLOADING REACTION VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            try {
+                if (!uploadParams.isReaction())
+                    //                UPLOADING POST VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                else
+                    //                UPLOADING REACTION VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -423,13 +450,6 @@ public class BaseBottomBarActivity extends BaseActivity
         }, 1000);
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-//        initTab();
-        switchTab(0);
-    }
-
     @OnClick(R.id.camera_btn)
     public void startCamera() {
         launchVideoUploadCamera(this);
@@ -456,35 +476,56 @@ public class BaseBottomBarActivity extends BaseActivity
 //    }
 
     private void switchTab(final int position) {
-        if (position != 1)
-            navigationController.switchTab(position);
-
-
-        updateDiscoverToolbar(position == 1);
-//        updateToolbarTitle(position);
+        navigationController.switchTab(position);
+        updateTabFocus(position);
+        updateIfDiscoverToolbar(position == 1);
     }
 
-    private void updateDiscoverToolbar(boolean isDiscoverPage) {
-        if (isDiscoverPage) {
-            if (discoverToolbarLayout.getVisibility() != VISIBLE)
-                discoverToolbarLayout.setVisibility(VISIBLE);
-            toolbarTitle.animate().alpha(0).setDuration(180).start();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (toolbarTitle.getVisibility() != GONE)
-                        toolbarTitle.setVisibility(GONE);
-                }
-            }, 180);
-        } else {
-            if (toolbarTitle.getVisibility() != VISIBLE)
-                toolbarTitle.setVisibility(VISIBLE);
-            if (discoverToolbarLayout.getVisibility() != GONE)
-                discoverToolbarLayout.setVisibility(GONE);
+    @SuppressWarnings("ConstantConditions")
+    private void updateTabFocus(int position) {
+        for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
+            if (i != 2) {
+                if (i == position)
+                    bottomTabLayout.getTabAt(position).getIcon().setTint(Color.parseColor("#26C6DA"));
+                else
+                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.parseColor("#333333"));
+            }
         }
     }
 
-    private void updateTabSelection(int currentTab) {
+    public void updateIfDiscoverToolbar(boolean isDiscoverPage) {
+        if (isDiscoverPage && navigationController.isRootFragment()) {
+            if (appBar.getElevation() != 0.0)
+            appBar.setElevation(0.0f);
+            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
+                updateToolbarTitle(getString(R.string.discover));
+                toolbarPlainTitle.setVisibility(VISIBLE);
+            }
+            if (toolbarCenterTitle.getVisibility() != GONE)
+                toolbarCenterTitle.setVisibility(GONE);
+        } else {
+            if (appBar.getElevation() != 12.0)
+                appBar.setElevation(12.0f);
+            if (toolbarCenterTitle.getVisibility() != VISIBLE)
+                toolbarCenterTitle.setVisibility(VISIBLE);
+            if (toolbarPlainTitle.getVisibility() != GONE) {
+                toolbarPlainTitle.setVisibility(GONE);
+            }
+        }
+    }
+
+//    public void disappearSearchBar() {
+//        if (toolbarCenterTitle.getVisibility() != GONE)
+//            toolbarCenterTitle.setVisibility(GONE);
+//        if (settings.getVisibility() != GONE)
+//            settings.setVisibility(GONE);
+//    }
+//
+//    public void reappearSearchBar() {
+//        toolbarPlainTitle.setVisibility(VISIBLE);
+//    }
+
+    public void updateTabSelection(int currentTab) {
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
             if (selectedTab != null) {
@@ -512,11 +553,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void updateToolbar() {
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_previous);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
     }
 
@@ -525,20 +566,16 @@ public class BaseBottomBarActivity extends BaseActivity
      *
      * @param title The title to be set, if null is passed, then "Teazer" will be set in SignPainter font in the center.
      */
-    public void updateToolbarTitle(@SuppressWarnings("SameParameterValue") final String title) {
-        if (title == null) {
-            toolbarTitle.animate().alpha(1).setDuration(250).start();
-            toolbarTitle.setVisibility(VISIBLE);
-        } else {
-            toolbarTitle.animate().alpha(0).setDuration(250).start();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toolbarTitle.setVisibility(INVISIBLE);
-                    actionBar.setTitle("    " + title);
-                }
-            }, 250);
-        }
+    public void updateToolbarTitle(String title) {
+        toolbarPlainTitle.setText(title);
+        if (toolbarPlainTitle.getVisibility() != VISIBLE)
+            toolbarPlainTitle.setVisibility(VISIBLE);
+        if (toolbarCenterTitle.getVisibility() != GONE)
+            toolbarCenterTitle.setVisibility(GONE);
+    }
+
+    public String getToolbarTitle() {
+        return toolbarPlainTitle.getText().toString();
     }
 
     public AppBarLayout.OnOffsetChangedListener appBarOffsetChangeListener() {
@@ -582,20 +619,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public Fragment getRootFragment(int index) {
+        fragment = null;
         switch (index) {
-            case TAB1: {
-                return PostsListFragment.newInstance();
-            }
-            case NavigationController.TAB2:
-                return SearchFragment.newInstance();
+            case TAB1:
+                fragment = PostsListFragment.newInstance();
+                break;
+            case TAB2:
+                fragment = SearchFragment.newInstance();
 //            case NavigationController.TAB3:
-//                return new SearchFragment();
-            case NavigationController.TAB4:
-                return NotificationsFragment.newInstance();
-            case NavigationController.TAB5:
-                return ProfileFragment.newInstance();
+//                return null;
+                break;
+            case TAB4:
+                fragment = NotificationsFragment.newInstance();
+                break;
+            case TAB5:
+                fragment = ProfileFragment.newInstance();
+                break;
+            default:
+                fragment = PostsListFragment.newInstance();
+                break;
         }
-        throw new IllegalArgumentException("Need to send an index that we know");
+        return fragment;
     }
 
     @Override
@@ -645,7 +689,24 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, Pojos.User.Profile body) {
+    public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList) {
+        pushFragment(SubSearchFragment.newInstance(action, categories, postDetailsArrayList));
+    }
+
+    @Override
+    public void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage) {
+        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage));
+    }
+
+    @Override
+    public void onTrendingListInteraction(int categoryId) {
+        ArrayList<Category> categories = new ArrayList<>();
+        categories.add(new Category(categoryId, null));
+        pushFragment(SubSearchFragment.newInstance(ACTION_VIEW_TRENDING, categories, null));
+    }
+
+    @Override
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, Profile profile) {
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
@@ -676,8 +737,39 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+        if(fragment instanceof PostsListFragment)
+        {
+            ((PostsListFragment)fragment).getHomePagePosts(1,false);
+        }
 
-//        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
+    }
+
+    public void hideAppBar() {
+        appBar.setExpanded(false, true);
+    }
+
+    public void showAppBar() {
+        appBar.setExpanded(true, true);
+    }
+
+    @Override
+    public void removeAppbar() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
+    }
+
+    @Override
+    public void myCreationVideos(int i, PostDetails postDetails) {
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+    }
+
+    public void hideSettings(boolean flag) {
+        if(flag) {
+            settings.setVisibility(View.VISIBLE);
+        }
+        else {
+            settings.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -712,37 +804,4 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void hideAppBar() {
-        appBar.setExpanded(false, true);
-    }
-
-    public void showAppBar() {
-        appBar.setExpanded(true, true);
-    }
-
-
-    @Override
-    public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
-
-    }
-
-    public void hidesettings(boolean flag)
-
-    {
-        if (flag == true) {
-            settings.setVisibility(View.VISIBLE);
-        } else {
-            settings.setVisibility(View.GONE);
-
-        }
-
-
-    }
-
 }
-
-
-
-
-

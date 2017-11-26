@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
@@ -56,6 +55,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -193,7 +193,7 @@ public class CameraActivity extends AppCompatActivity
                         .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
                         .replace(R.id.uploading_container, uploadFragment, TAG_UPLOAD_FRAGMENT)
                         .addToBackStack(TAG_UPLOAD_FRAGMENT)
-                        .commit();
+                        .commitAllowingStateLoss();
                 cameraFragment.closePreviewSession();
             }
         }, 300);
@@ -217,12 +217,14 @@ public class CameraActivity extends AppCompatActivity
     }
 
     public void onVideoGalleryAdapterInteraction(String videoPath) {
-        if (isReaction) {
-            new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
-        } else {
-            uploadFragment = UploadFragment.newInstance(videoPath, false, true);
-            startVideoUploadFragment();
-        }
+        if (new File(videoPath).exists()) {
+            if (isReaction) {
+                new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
+            } else {
+                uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                startVideoUploadFragment();
+            }
+        } else Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -394,15 +396,19 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        uploadFragment = null;
-        cameraFragment = null;
-        videosList.clear();
-        videosList = null;
+        try {
+            uploadFragment = null;
+            cameraFragment = null;
+            videosList.clear();
+            videosList = null;
 //        gridLayoutManager.removeAndRecycleAllViews(recycler);
-        recyclerView.removeAllViews();
-        if (panelSlideListener != null) {
-            slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
-            panelSlideListener = null;
+            recyclerView.removeAllViews();
+            if (panelSlideListener != null) {
+                slidingUpPanelLayout.removePanelSlideListener(panelSlideListener);
+                panelSlideListener = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

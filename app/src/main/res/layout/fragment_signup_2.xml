@@ -1,5 +1,6 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cncoding.teazer.authentication.LoginFragment"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -40,6 +41,7 @@
                 android:id="@+id/signup_username"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/username"
+                android:maxLength="15"
                 android:inputType="text"
                 android:imeOptions="actionNext" />
 

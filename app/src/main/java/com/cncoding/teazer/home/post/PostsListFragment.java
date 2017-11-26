@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
@@ -46,7 +44,6 @@ public class PostsListFragment extends BaseFragment {
 
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
-    private StaggeredGridLayoutManager manager;
     public PostsListFragment() {
     }
     
@@ -60,21 +57,18 @@ public class PostsListFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
         postList = new ArrayList<>();
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).updateToolbarTitle(null);
-        }
 
         postListAdapter = new PostsListAdapter(postList, getContext(), this);
         recyclerView.setAdapter(postListAdapter);
-        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                ((BaseBottomBarActivity)getActivity()).hidesettings(false);
+                getParentActivity().hideSettings(false);
 
-                if (page > 1)
+                if (is_next_page)
                     getHomePagePosts(page, false);
             }
         };
@@ -83,8 +77,8 @@ public class PostsListFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.resetState();
                 getHomePagePosts(1, true);
+                scrollListener.resetState();
             }
         });
 
@@ -95,18 +89,17 @@ public class PostsListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (postListAdapter != null && returningFromUpload) {
+            recyclerView.getRecycledViewPool().clear();
             postListAdapter.notifyDataSetChanged();
             returningFromUpload = false;
         }
-        else if (postList != null && postList.size() == 0)
+        else if (postList != null && postList.isEmpty())
             getHomePagePosts(1, false);
 
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).showAppBar();
-        }
+        getParentActivity().showAppBar();
     }
 
-    public void getHomePagePosts(int page, final boolean isRefreshing) {
+    public void getHomePagePosts(final int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
         ApiCallingService.Posts.getHomePagePosts(page, getContext())
@@ -115,11 +108,15 @@ public class PostsListFragment extends BaseFragment {
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
                         switch (response.code()) {
                             case 200:
-                                if (response.body().getPosts().size() > 0) {
+                                if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+
                                     postList.addAll(response.body().getPosts());
-                                    recyclerView.setVisibility(View.VISIBLE);
+                                    recyclerView.getRecycledViewPool().clear();
                                     postListAdapter.notifyDataSetChanged();
-                                } else {
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    dismissProgressBar();
+                                } else if(page == 1){
                                     showErrorMessage(getString(R.string.no_posts_available));
                                     tapToRetryBtn.setVisibility(View.INVISIBLE);
                                 }
@@ -138,7 +135,8 @@ public class PostsListFragment extends BaseFragment {
                         recyclerView.setVisibility(View.INVISIBLE);
                         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                         postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        postLoadErrorTextView.setText(getString(R.string.could_not_load_posts) + "\n" + message);
+                        String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
+                        postLoadErrorTextView.setText(errorString);
                     }
 
                     @Override
@@ -167,16 +165,12 @@ public class PostsListFragment extends BaseFragment {
 
     @OnClick(R.id.post_load_error_layout) public void reloadPosts() {
         if (postListAdapter != null)
+            recyclerView.getRecycledViewPool().clear();
+        if (postListAdapter != null) {
             postListAdapter.notifyDataSetChanged();
+        }
         scrollListener.resetState();
         getHomePagePosts(1, false);
-    }
-
-    @OnClick(R.id.fab) public void changeLayoutManager() {
-        if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        } else
-            recyclerView.setLayoutManager(manager);
     }
 
     @Override

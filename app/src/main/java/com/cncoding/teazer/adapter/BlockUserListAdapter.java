@@ -48,6 +48,7 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
 
     @Override
     public void onBindViewHolder(final BlockUserListAdapter.ViewHolder viewHolder, int i) {
+        
         Followers cont = list.get(i);
         try {
             final String followername = cont.getUserName();

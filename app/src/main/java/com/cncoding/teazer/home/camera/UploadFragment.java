@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -147,7 +149,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public String videoPath;
     public boolean isReaction;
-    String selectedCategoriesToSend;
+    String selectedCategoriesToSend = null;
     private boolean isRequestingLocationUpdates;
     private ArrayList<Pojos.MiniProfile> myFollowingsList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -321,11 +323,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
-//                                Toast.makeText(UploadFragment.this,
-//                                        "FusedLocationProvider: "
-//                                                + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-//                                        Toast.LENGTH_SHORT)
-//                                        .show();
                                 if (firstTime) {
                                     new GetNearbyPlacesData(UploadFragment.this).execute(getNearbySearchUrl(currentLocation));
                                 }
@@ -342,9 +339,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
-//                    Toast.makeText(UploadFragment.this,
-//                            "LocationCallback\n" + currentLocation.getLatitude() + " : " + currentLocation.getLongitude(),
-//                            Toast.LENGTH_SHORT).show();
                     stopLocationUpdates();
                 }
             };
@@ -412,54 +406,65 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected Bitmap doInBackground(Void... voids) {
-            Bitmap bitmap;
-            bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-            return bitmap;
+            try {
+                Bitmap bitmap;
+                bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                return bitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Glide.with(reference.get())
-                        .load(stream.toByteArray())
-                        .asBitmap()
-//                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                        .animate(R.anim.fast_fade_in)
-                        .listener(new RequestListener<byte[], Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
+            try {
+                if (bitmap != null) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    if (stream != null) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        Glide.with(reference.get())
+                                .load(stream.toByteArray())
+                                .asBitmap()
+        //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                                .animate(R.anim.fast_fade_in)
+                                .listener(new RequestListener<byte[], Bitmap>() {
+                                    @Override
+                                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
 
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(reference.get().thumbnailView);
-            } else {
-                Glide.with(reference.get())
-                        .load(R.drawable.material_flat)
-                        .crossFade()
-                        .listener(new RequestListener<Integer, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
+                                    @Override
+                                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+                                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                })
+                                .into(reference.get().thumbnailView);
+                    }
+                } else {
+                    Glide.with(reference.get())
+                            .load(R.drawable.material_flat)
+                            .crossFade()
+                            .listener(new RequestListener<Integer, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
 
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(reference.get().thumbnailView);
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
+                            .into(reference.get().thumbnailView);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -589,27 +594,37 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
 
     @OnClick(R.id.video_upload_check_btn) public void onUploadBtnClick() {
-        toggleInteraction(false);
-
-
-        String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
-        String location = null;
-        double latitude = 0;
-        double longitude = 0;
-        if (selectedPlace != null) {
-            location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
-            latitude = selectedPlace.getLatitude();
-            longitude = selectedPlace.getLongitude();
+        if (validateFields()) {
+            toggleInteraction(false);
+            String title = videoTitle.getText().toString().equals("")? null : videoTitle.getText().toString();
+            String location = null;
+            double latitude = 0;
+            double longitude = 0;
+            if (selectedPlace != null) {
+                location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                latitude = selectedPlace.getLatitude();
+                longitude = selectedPlace.getLongitude();
+            }
+            String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
+            DecimalFormat df = new DecimalFormat("#.#######");
+            performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
+                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
         }
+    }
 
-        String tags = tagFriendsText.getText().toString().equals("")? null : tagFriendsText.getText().toString();
-        DecimalFormat df = new DecimalFormat("#.#######");
-
-        performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
-                Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
-
-
-
+    private boolean validateFields() {
+        if(TextUtils.isEmpty(videoTitle.getText()))
+        {
+            videoTitle.setError(getString(R.string.required));
+            videoTitle.requestFocus();
+            return false;
+        }
+        else if(selectedCategoriesToSend == null || selectedCategoriesToSend.length() == 0)
+        {
+            Toast.makeText(context, getString(R.string.required_categories), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.video_upload_retake_btn) public void retakeVideo() {
@@ -836,19 +851,25 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected String doInBackground(Void... voids) {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            try {
+            File file = new File(reference.get().videoPath);
+            if (file.exists()) {
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(reference.get().videoPath);
                 String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration = Long.parseLong(time );
-                retriever.release();
-                return String.format(Locale.UK, "%02d:%02d",
-                        MILLISECONDS.toMinutes(duration),
-                        MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-                return null;
-            }
+                long duration;
+                try {
+                    duration = Long.parseLong(time);
+                    retriever.release();
+                    return String.format(Locale.UK, "%02d:%02d",
+                            MILLISECONDS.toMinutes(duration),
+                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                } catch (NumberFormatException e) {
+                    if (e.getMessage() != null)
+                        Log.e("ErrorParsingDuration", e.getMessage());
+                    return "";
+                }
+            } else
+                return "";
         }
 
         @Override

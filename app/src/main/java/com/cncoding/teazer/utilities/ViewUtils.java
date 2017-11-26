@@ -3,7 +3,9 @@ package com.cncoding.teazer.utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -18,14 +20,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
@@ -40,6 +45,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
+    public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
@@ -216,6 +222,20 @@ public class ViewUtils {
     public static void deleteFileFromMediaStoreDatabase(Context context, String videoPath) {
         Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(videoPath);  // Change file types here
         context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{videoPath});
+    }
+
+    public static byte[] getByteArrayFromImage(ImageView imageView) {
+        if (imageView.getDrawable() != null) {
+            Bitmap bitmap;
+            if (imageView.getDrawable() instanceof TransitionDrawable)
+                bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+            else
+                bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            return outputStream.toByteArray();
+        } else
+            return null;
     }
 
 //    /**

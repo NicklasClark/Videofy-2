@@ -10,8 +10,13 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorAccent">
+        android:background="@color/colorPrimary"
+        style="@style/BottomTabLayout.NotificationTab"
+        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabIndicatorHeight="3dp"
+        android:elevation="8dp">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem"

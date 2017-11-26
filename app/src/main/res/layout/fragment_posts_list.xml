@@ -53,6 +53,7 @@
             android:paddingTop="@dimen/padding_x_thin"
             android:paddingBottom="@dimen/padding_with_navigation_bar_height"
             android:clipToPadding="false"
+            app:spanCount="2"
             app:layoutManager="StaggeredGridLayoutManager"
             tools:context="com.cncoding.teazer.home.post.PostsListFragment"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -64,15 +65,5 @@
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_marginTop="-12dp"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/padding_default"
-        android:src="@drawable/ic_video_files" />
 
 </RelativeLayout>

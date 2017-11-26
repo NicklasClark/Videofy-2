@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
@@ -75,6 +76,11 @@ public class SignupFragment2 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_signup_2, container, false);
         ButterKnife.bind(this, rootView);
         setTextLimits();
+        try {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -109,11 +115,11 @@ public class SignupFragment2 extends Fragment {
     }
 
     @OnTouch(R.id.signup_password) public boolean onSignupPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event);
+        return togglePasswordVisibility(passwordView, event, getContext());
     }
 
     @OnTouch(R.id.signup_confirm_password) public boolean onConfirmPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(confirmPasswordView, event);
+        return togglePasswordVisibility(confirmPasswordView, event, getContext());
     }
 
     @OnFocusChange(R.id.signup_username) public void onUsernameFocusChanged(boolean isFocused) {

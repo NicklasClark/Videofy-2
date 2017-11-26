@@ -31,4 +31,9 @@ public class ReportUser {
     public void setReportTypeId(Integer reportTypeId) {
         this.reportTypeId = reportTypeId;
     }
+
+    public ReportUser(Integer userId, Integer reportTypeId) {
+        this.userId = userId;
+        this.reportTypeId = reportTypeId;
+    }
 }

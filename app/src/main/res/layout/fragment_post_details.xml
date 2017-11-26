@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cncoding.teazer.home.post.PostDetailsFragment"
+    android:id="@+id/root_layout"
     android:background="@color/material_grey100"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
