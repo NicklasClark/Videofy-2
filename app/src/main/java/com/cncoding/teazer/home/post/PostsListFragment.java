@@ -17,7 +17,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +36,6 @@ public class PostsListFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-    @BindView(R.id.tap_to_retry) ProximaNovaRegularTextView tapToRetryBtn;
 
     public static boolean returningFromUpload = false;
 
@@ -166,16 +163,6 @@ public class PostsListFragment extends BaseFragment {
                 }
             }, 400);
         }
-    }
-
-    @OnClick(R.id.post_load_error_layout) public void reloadPosts() {
-        if (postListAdapter != null)
-            recyclerView.getRecycledViewPool().clear();
-        if (postListAdapter != null) {
-            postListAdapter.notifyDataSetChanged();
-        }
-        scrollListener.resetState();
-        getHomePagePosts(1, false);
     }
 
     @Override
