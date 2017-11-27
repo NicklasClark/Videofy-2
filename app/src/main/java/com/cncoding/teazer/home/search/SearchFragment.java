@@ -77,7 +77,7 @@ public class SearchFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         previousTitle = getParentActivity().getToolbarTitle();
-        getParentActivity().updateToolbarTitle(getString(R.string.title_notifications));
+        getParentActivity().updateToolbarTitle(getString(R.string.discover));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);

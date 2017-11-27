@@ -6,37 +6,6 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <LinearLayout
-        android:id="@+id/post_load_error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:paddingTop="@dimen/padding_default"
-        android:paddingBottom="@dimen/padding_double"
-        android:foreground="@drawable/ripple_dark_no_rounded"
-        android:layout_centerInParent="true">
-
-        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-            android:id="@+id/post_load_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAllCaps="true"
-            app:drawableTopCompat="@drawable/ic_sad"
-            android:textSize="@dimen/text_size_h5"
-            android:text="@string/could_not_load_posts"/>
-
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:id="@+id/tap_to_retry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_content_big"
-            android:text="@string/tap_to_retry"/>
-
-    </LinearLayout>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -60,6 +29,38 @@
             tools:listitem="@layout/item_home_screen_post" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/post_load_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="@dimen/padding_default"
+        android:paddingBottom="@dimen/padding_double"
+        android:foreground="@drawable/ripple_dark_no_rounded"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:id="@+id/post_load_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAllCaps="true"
+            app:drawableTopCompat="@drawable/ic_no_data_placeholder"
+            android:textSize="@dimen/text_size_h5"
+            android:text="@string/could_not_load_posts"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/tap_to_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_content_big"
+            android:text="@string/tap_to_retry"/>
+
+    </LinearLayout>
 
     <include layout="@layout/progress_bar_horizontal"
         android:layout_width="match_parent"
