@@ -3,7 +3,9 @@ package com.cncoding.teazer.utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
@@ -50,6 +52,18 @@ public class ViewUtils {
     public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
+
+    public static void enableView(View view) {
+        view.setEnabled(true);
+        view.setAlpha(1);
+        view.setBackgroundTintList(null);
+    }
+
+    public static void disableView(View view) {
+        view.setEnabled(false);
+        view.setAlpha(0.5f);
+        view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+    }
 
     public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
         Intent intent = new Intent(Intent.ACTION_VIEW);

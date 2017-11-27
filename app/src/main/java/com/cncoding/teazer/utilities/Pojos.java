@@ -724,6 +724,7 @@ public class Pojos {
             private int posted_by;
             private int likes;
             private int total_reactions;
+            private int total_tags;
             private boolean has_checkin;
             private String title;
             private boolean can_react;
@@ -736,32 +737,15 @@ public class Pojos {
             private ArrayList<ReactedUser> reacted_users;
             private ArrayList<Category> categories;
 
-            protected PostDetails(Parcel in) {
-                post_id = in.readInt();
-                posted_by = in.readInt();
-                likes = in.readInt();
-                total_reactions = in.readInt();
-                has_checkin = in.readByte() != 0;
-                title = in.readString();
-                can_react = in.readByte() != 0;
-                can_like = in.readByte() != 0;
-                can_delete = in.readByte() != 0;
-                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-                created_at = in.readString();
-                check_in = in.readParcelable(CheckIn.class.getClassLoader());
-                medias = in.createTypedArrayList(Medias.CREATOR);
-                reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
-                categories = in.createTypedArrayList(Category.CREATOR);
-            }
-
-            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, boolean has_checkin,
-                               String title, boolean can_react, boolean can_like, boolean can_delete,
+            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags,
+                               boolean has_checkin, String title, boolean can_react, boolean can_like, boolean can_delete,
                                MiniProfile post_owner, String created_at, CheckIn check_in, ArrayList<Medias> medias,
                                ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories) {
                 this.post_id = post_id;
                 this.posted_by = posted_by;
                 this.likes = likes;
                 this.total_reactions = total_reactions;
+                this.total_tags = total_tags;
                 this.has_checkin = has_checkin;
                 this.title = title;
                 this.can_react = can_react;
@@ -775,12 +759,32 @@ public class Pojos {
                 this.categories = categories;
             }
 
+            protected PostDetails(Parcel in) {
+                post_id = in.readInt();
+                posted_by = in.readInt();
+                likes = in.readInt();
+                total_reactions = in.readInt();
+                total_tags = in.readInt();
+                has_checkin = in.readByte() != 0;
+                title = in.readString();
+                can_react = in.readByte() != 0;
+                can_like = in.readByte() != 0;
+                can_delete = in.readByte() != 0;
+                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
+                created_at = in.readString();
+                check_in = in.readParcelable(CheckIn.class.getClassLoader());
+                medias = in.createTypedArrayList(Medias.CREATOR);
+                reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
+                categories = in.createTypedArrayList(Category.CREATOR);
+            }
+
             @Override
             public void writeToParcel(Parcel dest, int flags) {
                 dest.writeInt(post_id);
                 dest.writeInt(posted_by);
                 dest.writeInt(likes);
                 dest.writeInt(total_reactions);
+                dest.writeInt(total_tags);
                 dest.writeByte((byte) (has_checkin ? 1 : 0));
                 dest.writeString(title);
                 dest.writeByte((byte) (can_react ? 1 : 0));
@@ -825,6 +829,10 @@ public class Pojos {
 
             public int getTotalReactions() {
                 return total_reactions;
+            }
+
+            public int getTotalTags() {
+                return total_tags;
             }
 
             public boolean hasCheckin() {
