@@ -322,16 +322,16 @@ public class CameraFragment extends Fragment {
     @OnClick(R.id.camera_flash) public void actionFlash() {
         try {
             if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
-                if (true) {
+                if (isFlashSupported) {
                     if (isTorchOn) {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
                         mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-//                        flashButton.setImageResource(R.drawable.ic_flash_off);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
                         isTorchOn = false;
                     } else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
                         mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-//                        flashButton.setImageResource(R.drawable.ic_flash_on);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_on);
                         isTorchOn = true;
                     }
                 }
@@ -341,13 +341,13 @@ public class CameraFragment extends Fragment {
         }
     }
     public void setupFlashButton() {
-        if (cameraId.equals(CAMERA_BACK) && isFlashSupported) {
+        if (cameraId.equals(String.valueOf(CAMERA_BACK)) && isFlashSupported) {
             cameraFlashView.setVisibility(View.VISIBLE);
 
             if (isTorchOn) {
-                cameraFlashView.setImageResource(R.drawable.ic_flash_off);
-            } else {
                 cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+            } else {
+                cameraFlashView.setImageResource(R.drawable.ic_flash_off);
             }
 
         } else {
@@ -492,6 +492,12 @@ public class CameraFragment extends Fragment {
                 } else {
                     mTextureView.setAspectRatio(mPreviewSize.getHeight(), mPreviewSize.getWidth());
                 }
+
+                Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                isFlashSupported = available == null ? false : available;
+
+                setupFlashButton();
+
                 configureTransform(width, height);
                 mMediaRecorder = new MediaRecorder();
                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

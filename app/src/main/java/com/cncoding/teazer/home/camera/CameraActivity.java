@@ -296,10 +296,11 @@ public class CameraActivity extends AppCompatActivity
                 getSupportFragmentManager().popBackStack();
             }
         } else {
-            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
-                uploadFragment = null;
-                getSupportFragmentManager().popBackStack();
-            }
+//            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
+//                uploadFragment = null;
+//                getSupportFragmentManager().popBackStack();
+//            }
+            onBackPressed();
 //            getSupportFragmentManager()
 //                    .beginTransaction()
 //                    .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)

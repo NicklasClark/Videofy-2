@@ -51,7 +51,6 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -200,7 +199,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
 
-        return rootView;
     }
 
     @Override

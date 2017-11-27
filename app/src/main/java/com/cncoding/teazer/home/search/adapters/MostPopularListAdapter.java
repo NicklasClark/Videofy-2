@@ -47,47 +47,52 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mostPopular = mostPopularList.get(position);
+        try
+        {
+            holder.mostPopular = mostPopularList.get(position);
 
-        holder.title.setText(holder.mostPopular.getTitle());
-        holder.name.setText(holder.mostPopular.getPostOwner().getUserName());
-        holder.duration.setText(holder.mostPopular.getMedias().get(0).getDuration() + " secs");
-        holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
-        holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews()));
-        holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getTotalReactions()) + " R");
+            holder.title.setText(holder.mostPopular.getTitle());
+            holder.name.setText(holder.mostPopular.getPostOwner().getUserName());
+            holder.duration.setText(holder.mostPopular.getMedias().get(0).getDuration() + " secs");
+            holder.likes.setText(SPACE + String.valueOf(holder.mostPopular.getLikes()));
+            holder.views.setText(SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews()));
+            holder.reactions.setText("+" + String.valueOf(holder.mostPopular.getTotalReactions()) + " R");
 
-        Glide.with(context)
-                .load(holder.mostPopular.getMedias().get(0).getThumbUrl())
-                .asGif()
-                .crossFade()
-                .into(holder.thumbnail);
-
-        if (holder.mostPopular.getPostOwner().hasProfileMedia())
             Glide.with(context)
-                .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .into(holder.dp);
-        else
-            Glide.with(context)
-                    .load("")
-                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .load(holder.mostPopular.getMedias().get(0).getThumbUrl())
+                    .asGif()
                     .crossFade()
                     .into(holder.thumbnail);
 
-        if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
-            holder.reactionImage1.setVisibility(View.VISIBLE);
-            Glide.with(context)
-                    .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.dp);
+            if (holder.mostPopular.getPostOwner().hasProfileMedia())
+                Glide.with(context)
+                        .load(holder.mostPopular.getPostOwner().getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder.dp);
             else
+                Glide.with(context)
+                        .load("")
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder.thumbnail);
+
+            if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
+                holder.reactionImage1.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder.dp);
+            }
+            else
+            {
                 Glide.with(context)
                         .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
                         .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.dp);
+            }
 
             if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
                 holder.reactionImage1.setVisibility(View.VISIBLE);
@@ -110,7 +115,7 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                     holder.reactionImage3.setVisibility(View.VISIBLE);
                     Glide.with(context)
                             .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl())
-                            .placeholder(R.drawable.ic_user_dp_small)
+                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder.reactionImage3);
                 }

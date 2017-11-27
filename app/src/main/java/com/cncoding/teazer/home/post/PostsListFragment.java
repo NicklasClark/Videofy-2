@@ -110,23 +110,27 @@ public class PostsListFragment extends BaseFragment {
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
-                                    is_next_page = response.body().isNextPage();
+                        try {
+                            switch (response.code()) {
+                                case 200:
+                                    if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
+                                        is_next_page = response.body().isNextPage();
 
-                                    postList.addAll(response.body().getPosts());
-                                    recyclerView.getRecycledViewPool().clear();
-                                    postListAdapter.notifyDataSetChanged();
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    dismissProgressBar();
-                                } else if (page == 1){
-                                    showErrorMessage(getString(R.string.no_posts_available));
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
+                                        postList.addAll(response.body().getPosts());
+                                        recyclerView.getRecycledViewPool().clear();
+                                        postListAdapter.notifyDataSetChanged();
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        dismissProgressBar();
+                                    } else if (page == 1){
+                                        showErrorMessage(getString(R.string.no_posts_available));
+                                    }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
