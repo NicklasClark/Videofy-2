@@ -1,9 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -66,6 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 
 public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
         SurfaceTextureListener, OnVideoSizeChangedListener {
@@ -153,14 +152,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact()) {
-            reactBtn.setEnabled(false);
-            reactBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
-            reactBtn.setAlpha(0.4f);
-        }
+        if (!postDetails.canReact()) disableView(reactBtn);
 
-//        tagsCountBadge.setText(postDetails.getTotalReactions());
-        tagsCountBadge.setVisibility(View.INVISIBLE);
+        tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
 
         prepareController();
 
