@@ -137,6 +137,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
         context = getContext();
+        getParentActivity().hidesettingsReport();
 
         return rootView;
     }

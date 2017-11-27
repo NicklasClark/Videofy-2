@@ -29,7 +29,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.cncoding.teazer.adapter.FollowersAdapter;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter;
+import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
@@ -51,6 +53,9 @@ import com.cncoding.teazer.home.search.SubSearchFragment;
 import com.cncoding.teazer.home.search.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.search.adapters.TrendingListAdapter.TrendingListInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
+import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -110,8 +115,9 @@ public class BaseBottomBarActivity extends BaseActivity
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener,
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
-        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
-        ProfileMyCreationAdapter.myCreationListener{
+        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,FollowersAdapter.OtherProfileListener,
+        ProfileFragment.FollowerListListener,
+        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -146,6 +152,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
     @BindView(R.id.settings) ImageView settings;
+    @BindView(R.id.report) ImageView report;
     @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 
     private NavigationController navigationController;
@@ -207,10 +214,13 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
             }
         });
+
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BaseBottomBarActivity.this, Settings.class);
+
+
                 intent.putExtra("AccountType", String.valueOf(1));
                 startActivity(intent);
             }
@@ -350,6 +360,30 @@ public class BaseBottomBarActivity extends BaseActivity
         };
     }
 
+    @Override
+    public void onFollowerListListener(String id,String identifier) {
+         pushFragment(FollowersListActivity.newInstance(id, identifier));
+
+    }
+
+    @Override
+    public void onFollowingListListener(String id, String identifier) {
+        pushFragment(FollowingListActivities.newInstance(id, identifier));
+
+    }
+
+    @Override
+    public void viewOthersProfile(String id, String username, String type) {
+        pushFragment(FollowerFollowingProfileActivity.newInstance(id, type,username));
+
+    }
+
+    @Override
+    public void viewOthersProfileFollowing(String id, String username, String type) {
+
+        pushFragment(FollowerFollowingProfileActivity.newInstance2(id, type,username));
+
+    }
 
 
     private static class ResumeUpload extends AsyncTask<Void, Void, Callback<ResultObject>> {
@@ -761,14 +795,23 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void hideSettings(boolean flag) {
-        if(flag) {
-            settings.setVisibility(View.VISIBLE);
-        }
-        else {
+
             settings.setVisibility(View.GONE);
-        }
+            report.setVisibility(VISIBLE);
+
+
+    }
+    public void hidereport()
+    {
+        settings.setVisibility(View.VISIBLE);
+        report.setVisibility(GONE);
     }
 
+    public void hidesettingsReport()
+    {
+        settings.setVisibility(View.GONE);
+        report.setVisibility(GONE);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

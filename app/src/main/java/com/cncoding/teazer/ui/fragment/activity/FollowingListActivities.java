@@ -3,13 +3,17 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
@@ -32,7 +37,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowingListActivities extends AppCompatActivity {
+public class FollowingListActivities extends BaseFragment {
+    private static final String ARG_ID ="FollowingId" ;
+    private static final String ARG_IDENTIFIER ="identifier" ;
     Context context;
     List<Following> list;
     List<OtherUserFollowings> otherlist;
@@ -47,55 +54,68 @@ public class FollowingListActivities extends AppCompatActivity {
     TextView nousertext;
     int otherfollowingpage=1;
     int userfollowingpage=1;
+    String followerid;
+    String identifier;
+
+
+    public static FollowingListActivities newInstance(String id,String identifier) {
+        FollowingListActivities followersListActivity = new FollowingListActivities();
+
+        Bundle bundle=new Bundle();
+        bundle.putString(ARG_ID,id);
+        bundle.putString(ARG_IDENTIFIER,identifier);
+        followersListActivity.setArguments(bundle);
+        return followersListActivity;
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            followerid  = getArguments().getString(ARG_ID);
+            identifier = getArguments().getString(ARG_IDENTIFIER);
+        }
+
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_followers, container, false);
+        ButterKnife.bind(this,view);
+        context=container.getContext();
+
+//
+//        Intent intent = getIntent();
+//        String identifier = intent.getStringExtra("Identifier");
+//        int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        return view;
+
+    }
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_following_activities);
-        ButterKnife.bind(this);
-        context=this;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
-        }
-        Intent intent = getIntent();
-        String identifier = intent.getStringExtra("Identifier");
-        int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Following List</font>"));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_OK, null);
-                onBackPressed();
-            }
-        });
-        recyclerView = findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if (identifier.equals("User")) {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             getUserfollowinglist();
         }
-
-
         else if (identifier.equals("Other"))
         {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-            getOthersFollowingList(userID);
+            getOthersFollowingList(Integer.parseInt(followerid));
         }
     }
+
     public void getUserfollowinglist() {
 
         ApiCallingService.Friends.getMyFollowing(userfollowingpage, context).enqueue(new Callback<ProfileMyFollowing>() {

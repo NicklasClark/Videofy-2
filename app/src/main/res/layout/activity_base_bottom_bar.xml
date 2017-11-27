@@ -50,9 +50,25 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:scaleType="center"
+                    android:visibility="gone"
                     android:src="@drawable/ic_settings"
                     android:contentDescription="@string/settings"
-                    android:visibility="gone"/>
+                />
+                <ImageView
+                    android:id="@+id/report"
+                    android:layout_width="?android:attr/actionBarSize"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:foreground="@drawable/ripple_dark_circle"
+                    android:layout_centerVertical="true"
+
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_contextmenu"
+                    android:layout_toLeftOf="@+id/settings"
+                    android:contentDescription="@string/settings"
+                    android:visibility="gone"
+              />
 
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:id="@+id/toolbar_plain_title"

@@ -54,7 +54,8 @@ import retrofit2.http.Query;
  * Created by Prem $ on 10/3/2017.
  */
 
- class TeazerApiCall {
+ class TeazerApiCall
+{
 
     static final int RESPONSE_CODE_200 = 200;
     static final int RESPONSE_CODE_201 = 201;

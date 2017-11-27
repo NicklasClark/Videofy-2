@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.profile.followerprofile.postvideos;
 
+import com.cncoding.teazer.utilities.Pojos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +17,7 @@ public class FollowersProfileCreations {
     private Boolean nextPage;
     @SerializedName("posts")
     @Expose
-    private List<Post> posts = null;
+    private List<Pojos.Post.PostDetails> posts = null;
 
     public Boolean getNextPage() {
         return nextPage;
@@ -26,11 +27,11 @@ public class FollowersProfileCreations {
         this.nextPage = nextPage;
     }
 
-    public List<Post> getPosts() {
+    public List<Pojos.Post.PostDetails> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<Pojos.Post.PostDetails> posts) {
         this.posts = posts;
     }
 

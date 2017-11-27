@@ -94,7 +94,7 @@ public class ProfileFragment extends BaseFragment {
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
-    private OnFragmentInteractionListener mListener;
+    private FollowerListListener mListener;
     private String imageUri;
     private static final int RC_REQUEST_STORAGE = 1001;
     private String userProfileThumbnail;
@@ -166,20 +166,15 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, FollowersListActivity.class);
-                intent.putExtra("FollowerId", String.valueOf(0));
-                intent.putExtra("Identifier", "User");
-                startActivity(intent);
+                mListener.onFollowerListListener(String.valueOf(0),"User");
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, FollowingListActivities.class);
-                intent.putExtra("FollowerId", String.valueOf(0));
-                intent.putExtra("Identifier", "User");
-                startActivity(intent);
+
+                mListener.onFollowingListListener(String.valueOf(0),"User");
             }
         });
         btnshare.setOnClickListener(new View.OnClickListener() {
@@ -197,44 +192,22 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().onBackPressed();
-//            }
-//        });
-//        backbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                getActivity().onBackPressed();
-//            }
-//        });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-//        appBarLayout = view.findViewById(R.id.appbar);
-//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (verticalOffset < -530) {
-//                    _toolbarusername.setVisibility(View.VISIBLE);
-//
-//                } else {
-//                    _toolbarusername.setVisibility(View.INVISIBLE);
-//                }
-//            }
-//        });
+
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         getProfileDetail();
-        getParentActivity().hideSettings(true);
+        getParentActivity().hidereport();
+
     }
 
     public void getProfileDetail() {
@@ -368,8 +341,8 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FollowerListListener) {
+            mListener = (FollowerListListener) context;
         }
     }
 
@@ -379,8 +352,9 @@ public class ProfileFragment extends BaseFragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface FollowerListListener {
+        void onFollowerListListener(String id,String identifier);
+        void onFollowingListListener(String id,String identifier);
     }
 
     @Override

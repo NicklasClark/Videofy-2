@@ -86,6 +86,7 @@ public class SearchFragment extends BaseFragment {
         new GetDiscoverLandingPosts(this).execute();
 
         new GetFeaturedPosts(this, 1).execute();
+        getParentActivity().hidesettingsReport();
 
         return rootView;
     }

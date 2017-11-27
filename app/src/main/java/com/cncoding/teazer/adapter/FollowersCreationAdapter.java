@@ -42,13 +42,15 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCreationAdapter.ViewHolder> {
 
-    private List<Post> _list;
+    private List<Pojos.Post.PostDetails> _list;
     Context context;
     private ArrayList<Pojos.Post.PostReaction> reactiolist;
+    FollowerCreationListener listener;
 
-    public FollowersCreationAdapter(Context context, List<Post> _list) {
+    public FollowersCreationAdapter(Context context, List<Pojos.Post.PostDetails> _list) {
         this.context = context;
         this._list = _list;
+        listener = (FollowerCreationListener) context;
 
     }
 
@@ -65,7 +67,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         try {
 
 
-            final Post cont = _list.get(i);
+            final Pojos.Post.PostDetails cont = _list.get(i);
             final String videotitle = cont.getTitle();
             final int postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
@@ -75,7 +77,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             Log.d("Video UrL",videourl);
             final String duration = cont.getMedias().get(0).getDuration();
             final Integer  txtview = cont.getMedias().get(0).getViews();
-            final boolean hasCheckIn = cont.getHasCheckin();
+            final boolean hasCheckIn = cont.hasCheckin();
             final Integer likes = cont.getLikes();
             if(hasCheckIn)
             {
@@ -101,13 +103,14 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, ProfileCreationVideos.class);
-                    intent.putExtra("VideoURL", videourl);
-                    intent.putExtra("Likes", String.valueOf(likes));
-                    intent.putExtra("Views", String.valueOf(txtview));
-                    intent.putExtra("Title", videotitle);
-                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(context, ProfileCreationVideos.class);
+//                    intent.putExtra("VideoURL", videourl);
+//                    intent.putExtra("Likes", String.valueOf(likes));
+//                    intent.putExtra("Views", String.valueOf(txtview));
+//                    intent.putExtra("Title", videotitle);
+//                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+                    listener.myCreationVideos(2, cont);
 
                 }
             });
@@ -311,5 +314,9 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         });
     }
 
+    public interface FollowerCreationListener
 
+    {
+        public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
+    }
 }

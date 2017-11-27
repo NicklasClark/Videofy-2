@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
@@ -31,15 +32,23 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     private List<OtherUserFollowings> otherlist;
     private Context context;
     int counter=0;
+    OtherProfileListenerFollowing otherProfileListenerFollowing;
 
     public FollowingAdapter(Context context, List<OtherUserFollowings> otherlist) {
         this.context = context;
         this.otherlist = otherlist;
+
+        if (context instanceof ProfileFragment.FollowerListListener) {
+            otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
+        }
     }
     public FollowingAdapter(Context context, List<Following> list, int counter) {
         this.context = context;
         this.list = list;
         this.counter = counter;
+        if (context instanceof ProfileFragment.FollowerListListener) {
+            otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
+        }
     }
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -63,12 +72,15 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                        intent.putExtra("Username", followingname);
-                        intent.putExtra("FollowId", String.valueOf(followerId));
-                        intent.putExtra("UserType", userType);
-                        context.startActivity(intent);
-                       // Toast.makeText(context,"user following 111",Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+//                        intent.putExtra("Username", followingname);
+//                        intent.putExtra("FollowId", String.valueOf(followerId));
+//                        intent.putExtra("UserType", userType);
+//                        context.startActivity(intent);
+//                       // Toast.makeText(context,"user following 111",Toast.LENGTH_SHORT).show();
+
+                        otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId),userType,followingname);
+
                     }
                 });
             }
@@ -143,13 +155,14 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
-                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
-                                intent.putExtra("Username", followername);
-                                intent.putExtra("FollowId", String.valueOf(followerId));
-                                intent.putExtra("UserType", usertype);
-                             //   Toast.makeText(context,"other following",Toast.LENGTH_SHORT).show();
-
-                                context.startActivity(intent);
+//                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+//                                intent.putExtra("Username", followername);
+//                                intent.putExtra("FollowId", String.valueOf(followerId));
+//                                intent.putExtra("UserType", usertype);
+//                             //   Toast.makeText(context,"other following",Toast.LENGTH_SHORT).show();
+//
+//                                context.startActivity(intent);
+                                otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId),usertype,followername);
                             }
                         }
                     }
@@ -184,5 +197,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             cardview = view.findViewById(R.id.cardview);
 
         }
+    }
+    public  interface OtherProfileListenerFollowing
+    {
+        public void viewOthersProfileFollowing(String id, String username, String type);
+
     }
 }
