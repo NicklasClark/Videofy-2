@@ -18,6 +18,8 @@ import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
@@ -111,6 +114,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -210,6 +214,34 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //  super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_user_profile,menu);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+
+            case R.id.action_settings:
+              Intent intent=new Intent(context, Settings.class);
+                        intent.putExtra("AccountType",String.valueOf(accountType));
+              startActivity(intent);
+
+
+            case R.id.action_profile_block:
+               // openBlockUser(followerfollowingid);
+
+
+
+        }
+        return true;
+
+    }
     public void getProfileDetail() {
 
         progressbar.setVisibility(View.VISIBLE);

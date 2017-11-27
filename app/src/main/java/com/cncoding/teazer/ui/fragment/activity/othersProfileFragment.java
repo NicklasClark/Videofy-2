@@ -3,7 +3,6 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,19 +14,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -41,6 +39,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
@@ -48,7 +47,6 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
@@ -65,25 +63,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowerFollowingProfileActivity extends BaseFragment {
+public class othersProfileFragment extends BaseFragment {
 
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
     private static final String ARG_USERNAME = "UserName";
-    @BindView(R.id.username)
-    TextView _usernameTitle;
+    @BindView(R.id.username_title)
+    SignPainterTextView _usernameTitle;
     @BindView(R.id.creations)
-    TextView _creations;
+    ProximaNovaRegularCheckedTextView _creations;
 
     @BindView(R.id.layoutDetail)
     RelativeLayout layoutDetail;
-    ;
-    @BindView(R.id.name)
-    TextView _name;
+    @BindView(R.id.username)
+    ProximaNovaRegularCheckedTextView _name;
     @BindView(R.id.following)
-    TextView _following;
+    ProximaNovaRegularCheckedTextView _following;
     @BindView(R.id.followers)
-    TextView _followers;
+    ProximaNovaRegularCheckedTextView _followers;
     @BindView(R.id.recycler_view)
     RecyclerView _recycler_view;
     @BindView(R.id.btnfollow)
@@ -131,26 +128,26 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
     String userType;
 
 
-    public static FollowerFollowingProfileActivity newInstance(String id, String identifier, String username) {
-        FollowerFollowingProfileActivity followerFollowingProfileActivity = new FollowerFollowingProfileActivity();
+    public static othersProfileFragment newInstance(String id, String identifier, String username) {
+        othersProfileFragment othersProfileFragment = new othersProfileFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_IDENTIFIER, identifier);
         bundle.putString(ARG_USERNAME, username);
-        followerFollowingProfileActivity.setArguments(bundle);
-        return followerFollowingProfileActivity;
+        othersProfileFragment.setArguments(bundle);
+        return othersProfileFragment;
 
     }
 
-    public static FollowerFollowingProfileActivity newInstance2(String id, String identifier, String username) {
-        FollowerFollowingProfileActivity followerFollowingProfileActivity = new FollowerFollowingProfileActivity();
+    public static othersProfileFragment newInstance2(String id, String identifier, String username) {
+        othersProfileFragment othersProfileFragment = new othersProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_IDENTIFIER, identifier);
         bundle.putString(ARG_USERNAME, username);
-        followerFollowingProfileActivity.setArguments(bundle);
-        return followerFollowingProfileActivity;
+        othersProfileFragment.setArguments(bundle);
+        return othersProfileFragment;
 
     }
 
@@ -162,7 +159,11 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
             followerfollowingid = Integer.parseInt(getArguments().getString(ARG_ID));
             userType = getArguments().getString(ARG_IDENTIFIER);
             userType = getArguments().getString(ARG_USERNAME);
+            setHasOptionsMenu(true);
+
         }
+
+
 
     }
 
@@ -171,7 +172,7 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_follower_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
         context = container.getContext();
@@ -253,34 +254,34 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
 
             }
         });
-        menu.setOnClickListener(new View.OnClickListener()
-
-        {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(context, menu);
-                popup.inflate(R.menu.menu_other_profile);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_profile_block:
-                                openBlockUser(followerfollowingid);
-                                break;
-                            case R.id.action_profile_report: {
-                                FragmentManager fm = getChildFragmentManager();
-                                ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(followerfollowingid);
-                                reportUserDialogFragment.show(fm, "fragment_report_user");
-                            }
-
-                        }
-                        return false;
-                    }
-                });
-                popup.show();
-            }
-
-        });
+//        menu.setOnClickListener(new View.OnClickListener()
+//
+//        {
+//            @Override
+//            public void onClick(View view) {
+//                PopupMenu popup = new PopupMenu(context, menu);
+//                popup.inflate(R.menu.menu_other_profile);
+//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        switch (item.getItemId()) {
+//                            case R.id.action_profile_block:
+//                                openBlockUser(followerfollowingid);
+//                                break;
+//                            case R.id.action_profile_report: {
+//                                FragmentManager fm = getChildFragmentManager();
+//                                ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(followerfollowingid);
+//                                reportUserDialogFragment.show(fm, "fragment_report_user");
+//                            }
+//
+//                        }
+//                        return false;
+//                    }
+//                });
+//                popup.show();
+//            }
+//
+//        });
 
         getProfileInformation(followerfollowingid);
 
@@ -292,7 +293,6 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getParentActivity().hideSettings(true);
     }
 
@@ -497,6 +497,32 @@ public class FollowerFollowingProfileActivity extends BaseFragment {
 //            coordinatorLayout.setVisibility(View.VISIBLE);
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+      //  super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_other_profile,menu);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+
+            case R.id.action_profile_report:
+                openReportUser(followerfollowingid);
+
+
+            case R.id.action_profile_block:
+                openBlockUser(followerfollowingid);
+
+
+
+        }
+        return true;
+
+    }
 
     public void getProfileVideos(final int followerId) {
 

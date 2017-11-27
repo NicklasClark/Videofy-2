@@ -87,8 +87,9 @@ public class SearchFragment extends BaseFragment {
 
         new GetFeaturedPosts(this, 1).execute();
         getParentActivity().hidesettingsReport();
-
         return rootView;
+
+
     }
 
     private void initRecyclerViews() {

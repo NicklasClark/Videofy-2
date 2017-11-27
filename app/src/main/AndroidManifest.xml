@@ -175,8 +175,6 @@
             android:name=".ui.fragment.activity.EditProfile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".ui.fragment.activity.BlockUserList"
             android:screenOrientation="portrait"
@@ -190,8 +188,11 @@
         <activity
             android:name=".ui.fragment.activity.PasswordChange"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ui.fragment.activity.OthersPostDetails"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.fragment.activity.OthersPostDetails" />
+        <activity
+            android:name=".ui.fragment.activity.Main2Activity"
+            android:label="@string/title_activity_main2"></activity>
     </application>
 
 </manifest>

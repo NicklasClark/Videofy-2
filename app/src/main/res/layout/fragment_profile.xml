@@ -115,13 +115,16 @@
 
                                         <com.cncoding.teazer.customViews.SignPainterTextView
                                             android:id="@+id/username_title"
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
                                             android:layout_marginBottom="5dp"
+
+
                                             android:layout_marginTop="10dp"
-                                            android:gravity="center"
-                                            android:text="@string/username"
+                                            android:gravity="center_vertical"
+                                            android:maxLines="1"
+                                            android:text="usernamezp"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="32sp" />
                                         <LinearLayout
@@ -132,27 +135,27 @@
                                             android:layout_below="@+id/username_title"
                                             android:layout_height="wrap_content">
 
-                                        <TextView
-                                            android:id="@+id/bullets"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="\u25CF"
-                                            android:gravity="center_vertical"
-                                            android:textColor="#b1ffffff"
-                                            android:textSize="13dp" />
+                                            <TextView
+                                                android:id="@+id/bullets"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="\u25CF"
+                                                android:gravity="center_vertical"
+                                                android:textColor="#b1ffffff"
+                                                android:textSize="13dp" />
 
-                                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                            android:id="@+id/username"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:gravity="center_vertical"
-                                            android:layout_marginStart="5dp"
-                                            android:layout_toEndOf="@+id/bullets"
-                                            android:maxLines="1"
+                                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                                android:id="@+id/username"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:gravity="center_vertical"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_toEndOf="@+id/bullets"
+                                                android:maxLines="1"
 
-                                            android:text="@string/name"
-                                            android:textColor="@color/colorIcons"
-                                            android:textSize="12sp" />
+                                                android:text="@string/name"
+                                                android:textColor="@color/colorIcons"
+                                                android:textSize="12sp" />
                                         </LinearLayout>
 
                                         <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
@@ -165,6 +168,8 @@
                                             android:lineSpacingExtra="2dp"
                                             android:layout_marginTop="5dp"
                                             android:layout_marginRight="20dp"
+                                            android:maxLines="3"
+                                            android:ellipsize="end"
                                             android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />

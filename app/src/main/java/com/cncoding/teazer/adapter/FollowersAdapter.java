@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +15,12 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
-import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -240,7 +232,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
-//                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+//                                Intent intent = new Intent(context, othersProfileFragment.class);
 //                                intent.putExtra("Username", followername);
 //                                intent.putExtra("FollowId", String.valueOf(followerId));
 //                                intent.putExtra("UserType", usertype);

@@ -62,7 +62,7 @@ public class FragmentProfileMyCreations extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        list=new ArrayList<>();
+       // list=new ArrayList<>();
     }
 
     @Override
@@ -81,6 +81,7 @@ public class FragmentProfileMyCreations extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        list=new ArrayList<>();
         getProfileVideos();
 
     }

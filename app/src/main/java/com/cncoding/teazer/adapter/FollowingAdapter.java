@@ -16,9 +16,7 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
-import com.cncoding.teazer.ui.fragment.activity.FollowerFollowingProfileActivity;
 
 import java.util.List;
 
@@ -72,7 +70,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+//                        Intent intent = new Intent(context, othersProfileFragment.class);
 //                        intent.putExtra("Username", followingname);
 //                        intent.putExtra("FollowId", String.valueOf(followerId));
 //                        intent.putExtra("UserType", userType);
@@ -155,7 +153,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
-//                                Intent intent = new Intent(context, FollowerFollowingProfileActivity.class);
+//                                Intent intent = new Intent(context, othersProfileFragment.class);
 //                                intent.putExtra("Username", followername);
 //                                intent.putExtra("FollowId", String.valueOf(followerId));
 //                                intent.putExtra("UserType", usertype);
