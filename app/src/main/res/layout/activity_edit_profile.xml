@@ -51,6 +51,7 @@
     <ScrollView
         android:id="@+id/layoutdetail"
         android:layout_below="@+id/appBar"
+        android:layout_above="@+id/btnshare"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -193,6 +194,9 @@
                         android:layout_width="match_parent"
                             android:maxLines="1"
                             android:layout_marginRight="10dp"
+
+
+                            android:maxLength="30"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                             android:layout_marginLeft="10dp"
@@ -244,6 +248,7 @@
                                 android:layout_marginTop="5dp"
                                 android:layout_weight="1"
                                 android:maxLines="1"
+                                android:maxLength="30"
                                 android:textColor="#797979"
                                 android:textSize="@dimen/text_size_16sp"/>
 
@@ -437,7 +442,8 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_weight="1"
-                                android:maxLines="1"
+                                android:maxLines="3"
+                                android:maxLength="100"
                                 android:textColor="#797979"
                                 android:textSize="@dimen/text_size_16sp"/>
 
@@ -568,13 +574,13 @@
 
 
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="@dimen/fab_margin"
-                        android:src="@drawable/ic_folder_black_24dp" />
+                    <!--<android.support.design.widget.FloatingActionButton-->
+                        <!--android:id="@+id/fab"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="bottom|end"-->
+                        <!--android:layout_margin="@dimen/fab_margin"-->
+                        <!--android:src="@drawable/ic_folder_black_24dp" />-->
 
                 </LinearLayout>
 
@@ -589,8 +595,25 @@
 
 
 
+
+
 </RelativeLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="3dp"
+        android:paddingLeft="6dp"
+        android:text="Save"
+        android:textStyle="normal"
+        android:textAllCaps="false"
+        android:textColor="@color/colorIcons"
+        android:textSize="14sp" />
 
 
 

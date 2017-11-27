@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -91,7 +92,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProximaNovaRegularCheckedTextView maletext;
     @BindView(R.id.femaletxt)
     ProximaNovaRegularCheckedTextView femaletxt;
-    FloatingActionButton fab;
+    Button fab;
     ProgressBar simpleProgressBar;
     ScrollView layoutdetail;
 

@@ -103,6 +103,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             else
             {
                 viewHolder.location.setText("");
+                viewHolder.locationimage.setVisibility(View.GONE);
             }
 
             getPostReaction(viewHolder, postId);
@@ -170,7 +171,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         RelativeLayout imagelayout1;
         RelativeLayout imagelayout2;
         RelativeLayout imagelayout3;
-        CircularAppCompatImageView image1, image2, image3;
+        CircularAppCompatImageView image1, image2, image3,locationimage;
         CardView cardView;
         View line;
         ImageView playvideo;
@@ -193,7 +194,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             imagelayout1 = view.findViewById(R.id.image1_layout);
             imagelayout2 = view.findViewById(R.id.image1_layout);
             imagelayout3 = view.findViewById(R.id.image1_layout);
-
+            locationimage = view.findViewById(R.id.locationimage);
             menu = view.findViewById(R.id.menu);
 
         }

@@ -113,12 +113,16 @@ public class ProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
+
         //     Toolbar toolbar = view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -140,6 +144,7 @@ public class ProfileFragment extends BaseFragment {
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
+
 
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +212,7 @@ public class ProfileFragment extends BaseFragment {
 
         getProfileDetail();
         getParentActivity().hidereport();
+        getParentActivity().updateToolbarTitle("Profile");
 
     }
 
