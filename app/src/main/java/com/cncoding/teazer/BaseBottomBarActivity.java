@@ -2,6 +2,8 @@ package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -55,9 +57,14 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindArray;
@@ -92,7 +99,7 @@ public class BaseBottomBarActivity extends BaseActivity
         NavigationController.TransactionListener,
         NavigationController.RootFragmentListener,
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
-        PostReactionAdapterListener, ProfileFragment.RemoveAppBar,
+        PostReactionAdapterListener,
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
         ProfileMyCreationAdapter.myCreationListener{
@@ -135,6 +142,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
+    private Fragment fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,12 +215,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void checkIfAnyVideoIsUploading() {
-
         if (getVideoUploadSession(this) != null) {
             new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
 //            resumeUpload(getVideoUploadSession(this), false);
         }
-        else if (getIntent().getExtras() != null) {
+        else if ((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
             new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
 //            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
         }
@@ -222,15 +229,87 @@ public class BaseBottomBarActivity extends BaseActivity
         callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                try {
                 if (response.code() == 201) {
+
+                  //      ShareDialog shareDialog;
+                 //       FacebookSdk.sdkInitialize(getApplicationContext());
+                     //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+
+//                        Uri videoFileUri = Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE");
+//                        ShareVideo shareVideo = new ShareVideo.Builder()
+//                                .setLocalUrl(videoFileUri)
+//                                .build();
+//                        ShareVideoContent content = new ShareVideoContent.Builder()
+//                                .setVideo(shareVideo)
+//                                .build();
+//
+//                        shareDialog.show(content);
+
+
+
+                        final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
+                        new AsyncTask<Void, Void, Bitmap>() {
+                            @Override
+                            protected Bitmap doInBackground(final Void... params) {
+                                Bitmap bitmap = null;
+                                try {
+                                    final URL url = new URL(s);
+                                    try {
+                                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                return bitmap;
+                            }
+
+                            @Override
+                            protected void onPostExecute(final Bitmap result) {
+
+                                SharePhoto photo = new SharePhoto.Builder()
+                                        .setBitmap(result)
+                                        .build();
+                                SharePhotoContent content = new SharePhotoContent.Builder()
+                                        .addPhoto(photo)
+                                        .build();
+
+                                ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+                                shareDialog.show(content);
+                               // ShareApi.share(content, null);
+
+                            }
+                        }.execute();
+
+
+
+                       // Bitmap image = ...
+
+//
+//                        Uri videoFileUri = Uri.parse("https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939.mp4");
+//                        ShareVideo video = new ShareVideo.Builder()
+//                                .setLocalUrl(videoFileUri)
+//                                .build();
+//                        ShareVideoContent content = new ShareVideoContent.Builder()
+//                                .setVideo(video)
+//                                .build();
+//                        ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+//                        shareDialog.show(content);
                     onUploadFinish();
-                    deleteFile(uploadParams.getVideoPath());
+
+                    deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
                 } else {
                     if (response.code() == 200) {
                         if (response.body().getMessage().contains("own video")) {
 //                        USER IS REACTING ON HIS OWN VIDEO.
+
+
                             uploadingNotificationTextView.setText(response.body().getMessage());
-                            deleteFile(uploadParams.getVideoPath());
+                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
                             finishVideoUploadSession(getApplicationContext());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -241,14 +320,18 @@ public class BaseBottomBarActivity extends BaseActivity
                         }
                         return;
                     }
-                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+                }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
-            private void deleteFile(String path) {
-                deleteFileFromMediaStoreDatabase(BaseBottomBarActivity.this, path);
-                //noinspection ResultOfMethodCallIgnored
-                new File(path).delete();
+            private void deleteFile(String path, boolean isGallery) {
+                if (!isGallery) {
+                    deleteFileFromMediaStoreDatabase(BaseBottomBarActivity.this, path);
+                    //noinspection ResultOfMethodCallIgnored
+                    new File(path).delete();
+                }
             }
 
             @Override
@@ -277,12 +360,16 @@ public class BaseBottomBarActivity extends BaseActivity
             super.onPreExecute();
             reference.get().uploadingStatusLayout.setVisibility(VISIBLE);
             reference.get().progressBar.setIndeterminate(false);
-            if (!uploadParams.isReaction())
-//                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-            else
-//                UPLOADING REACTION VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            try {
+                if (!uploadParams.isReaction())
+                    //                UPLOADING POST VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+                else
+                    //                UPLOADING REACTION VIDEO
+                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -532,19 +619,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public Fragment getRootFragment(int index) {
+        fragment = null;
         switch (index) {
             case TAB1:
-                return PostsListFragment.newInstance();
+                fragment = PostsListFragment.newInstance();
+                break;
             case TAB2:
-                return SearchFragment.newInstance();
+                fragment = SearchFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return null;
+                break;
             case TAB4:
-                return NotificationsFragment.newInstance();
+                fragment = NotificationsFragment.newInstance();
+                break;
             case TAB5:
-                return ProfileFragment.newInstance();
+                fragment = ProfileFragment.newInstance();
+                break;
+            default:
+                fragment = PostsListFragment.newInstance();
+                break;
         }
-        throw new IllegalArgumentException("Need to send an index that we know");
+        return fragment;
     }
 
     @Override
@@ -642,8 +737,11 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
+        if(fragment instanceof PostsListFragment)
+        {
+            ((PostsListFragment)fragment).getHomePagePosts(1,false);
+        }
 
-//        ((PostsListFragment)postListFragment).getHomePagePosts(1,false);
     }
 
     public void hideAppBar() {
@@ -652,12 +750,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public void showAppBar() {
         appBar.setExpanded(true, true);
-    }
-
-    @Override
-    public void removeAppbar() {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().hide();
     }
 
     @Override
@@ -705,4 +797,5 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }
     }
+
 }

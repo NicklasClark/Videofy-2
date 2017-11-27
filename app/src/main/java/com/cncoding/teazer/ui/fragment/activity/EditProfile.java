@@ -154,13 +154,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             mobilenumber = Long.parseLong(mobileno);
         }
+
         gender = Integer.parseInt(intent.getStringExtra("Gender"));
         emailId = intent.getStringExtra("EmailId");
         countrycode = Integer.parseInt(intent.getStringExtra("CountryCode"));
         detail = intent.getStringExtra("Detail");
         _username.setText(username);
         _firstname.setText(firstname);
-        //  _lastName.setText(lastname);
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
@@ -201,15 +201,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String usernames = _username.getText().toString();
-                String firstname = _firstname.getText().toString();
-                String lastnames = "abcdee";
-                Integer countrycodes = countrycode;
-                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
-                String emailid = _email.getText().toString();
-                String details = _bio.getText().toString();
-                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, mobilenumber, countrycodes, gender, details);
-                ProfileUpdate(profileUpdateRequest);
+//                String usernames = _username.getText().toString();
+//                String firstname = _firstname.getText().toString();
+//                String lastnames = "abcdee";
+//                Integer countrycodes = countrycode;
+//                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
+//                String emailid = _email.getText().toString();
+//                  String details = _bio.getText().toString();
+                  validate();
             }
         });
         profile_image.setOnClickListener(new View.OnClickListener() {
@@ -220,22 +219,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             }
         });
 
-
         initProfileImage();
 
     }
-
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s = cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
-
     @Override
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
@@ -244,31 +230,20 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("MYIMAGES", r.getUri().toString());
             editor.apply();
-
             try {
-
-
-
                 File profileImage = new File(r.getPath());
-                Log.d("Exception1", r.getPath());
-
-                Log.d("Exception12", r.getPath());
-
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
                 String fileExt = profileImage.getAbsolutePath().substring(profileImage.getAbsolutePath().lastIndexOf("."));
-                Log.d("FILENAME", profileImage.getName() + fileExt);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);
 
             } catch (Exception e) {
-                Log.d("Exception2", e.getMessage());
+                e.printStackTrace();
             }
         } else {
-
-            Toast.makeText(this, r.getError().getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "oops something went wrong, please try again", Toast.LENGTH_LONG).show();
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -348,7 +323,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             @Override
             public void onResponse(Call<ProfileUpdate> call, Response<ProfileUpdate> response) {
 
-                Log.d("on response", String.valueOf(response.toString()));
 
                 if (response.code() == 200) {
 
@@ -358,13 +332,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             flag = true;
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_LONG).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         }
                     } catch (Exception e) {
-                        Log.d("Exception", e.getMessage());
+                        e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
@@ -378,7 +353,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
             @Override
             public void onFailure(Call<ProfileUpdate> call, Throwable t) {
-                Log.d("Failure", t.getMessage());
+                 t.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Network Issue Please check once again ", Toast.LENGTH_LONG).show();
                 simpleProgressBar.setVisibility(View.GONE);
                 layoutdetail.setVisibility(View.VISIBLE);
@@ -400,12 +375,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             .into(profile_image);
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
 
-                    Blurry.with(EditProfile.this).radius(1).sampling(1).from(bitmap).into(bgImage);
+                    Blurry.with(EditProfile.this).from(bitmap).into(bgImage);
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
 
                     if (response.code() == 400) {
-                        Log.d("Response2 ", String.valueOf(response.body().getMessage()));
                     }
 
                 } catch (Exception e) {
@@ -451,7 +425,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             simpleProgressBar.setVisibility(View.VISIBLE);
             layoutdetail.setVisibility(View.GONE);
-//            final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+
 
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
@@ -490,6 +464,82 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             simpleProgressBar.setVisibility(View.GONE);
             layoutdetail.setVisibility(View.VISIBLE);
         }
+
+    }
+
+
+    public void validate() {
+        boolean valid = true;
+        String usernames = _username.getText().toString();
+        String firstname = _firstname.getText().toString();
+        String lastnames = "";
+        Integer countrycodes = countrycode;
+        String  mobilenumber = _mobileNumber.getText().toString();
+        String emailid = _email.getText().toString();
+        String details = _bio.getText().toString();
+
+        if (usernames.isEmpty()) {
+            _username.setError("enter username");
+            _username.requestFocus();
+            valid = false;
+
+        }
+        else {
+            _username.setError(null);
+        }
+        if (firstname.isEmpty()) {
+            _firstname.setError("enter your name");
+            _firstname.requestFocus();
+            valid = false;
+
+        } else {
+            _firstname.setError(null);
+        }
+        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.isEmpty()) {
+            _email.setError("enter a email address");
+            _email.requestFocus();
+            valid = false;
+
+        } else {
+            _email.setError(null);
+        }
+
+
+        if (mobilenumber.isEmpty()|| mobilenumber.length() < 10 || mobilenumber.length() > 10) {
+            _mobileNumber.setError("enter valid 10 digit mobile number");
+            _mobileNumber.requestFocus();
+            valid = false;
+
+        }
+
+
+            else
+            {
+                _mobileNumber.setError(null);
+
+            }
+
+            if (details.isEmpty()) {
+                _bio.setError("Pan number is required");
+                _bio.requestFocus();
+                 valid = false;
+
+            } else {
+                _bio.setError(null);
+            }
+
+
+
+
+        if(valid) {
+            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), 91, gender, details);
+            ProfileUpdate(profileUpdateRequest);
+        }
+        else
+        {
+
+        }
+
 
     }
 }

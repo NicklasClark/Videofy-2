@@ -2706,9 +2706,11 @@ public class Pojos {
         private String tags;
         private String categories;
         private PostDetails postDetails;
+        private boolean isGallery;
 
-        public UploadParams(String videoPath, boolean isReaction, String title, String location,
+        public UploadParams(boolean isGallery, String videoPath, boolean isReaction, String title, String location,
                             double latitude, double longitude, String tags, String categories) {
+            this.isGallery = isGallery;
             this.videoPath = videoPath;
             this.isReaction = isReaction;
             this.title = title;
@@ -2731,6 +2733,7 @@ public class Pojos {
             this.postDetails = postDetails;
         }
 
+
         protected UploadParams(Parcel in) {
             videoPath = in.readString();
             isReaction = in.readByte() != 0;
@@ -2741,6 +2744,7 @@ public class Pojos {
             tags = in.readString();
             categories = in.readString();
             postDetails = in.readParcelable(PostDetails.class.getClassLoader());
+            isGallery = in.readByte() != 0;
         }
 
         @Override
@@ -2754,6 +2758,7 @@ public class Pojos {
             dest.writeString(tags);
             dest.writeString(categories);
             dest.writeParcelable(postDetails, flags);
+            dest.writeByte((byte) (isGallery ? 1 : 0));
         }
 
         @Override
@@ -2807,6 +2812,14 @@ public class Pojos {
 
         public PostDetails getPostDetails() {
             return postDetails;
+        }
+
+        public boolean isGallery() {
+            return isGallery;
+        }
+
+        public void setGallery(boolean gallery) {
+            isGallery = gallery;
         }
     }
 

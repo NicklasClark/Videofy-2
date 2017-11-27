@@ -5,12 +5,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +42,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private ArrayList<Pojos.Post.PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
+
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
 
@@ -86,8 +87,23 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             duration = cont.getMedias().get(0).getDuration();
             views = String.valueOf(cont.getMedias().get(0).getViews());
             likes = String.valueOf(cont.getLikes());
-
             reactions = cont.getTotalReactions();
+            boolean hascheckin=cont.hasCheckin();
+            if(hascheckin)
+            {
+                String location2 = cont.getCheckIn().getLocation();
+                if(location2.equals("")||location2==null)
+                {
+                    viewHolder.location.setText("");
+                }
+                else {
+                    viewHolder.location.setText(location2);
+                }
+            }
+            else
+            {
+                viewHolder.location.setText("");
+            }
             getPostReaction(viewHolder, postId);
 
 
@@ -99,14 +115,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
 
-            String location2 = cont.getCheckIn().getLocation();
-            if(location2.equals("")||location2==null)
-            {
-                viewHolder.location.setText("");
-            }
-            else {
-                viewHolder.location.setText(location2);
-            }
+
 
             Glide.with(context).load(thumb_url)
                     .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
@@ -131,6 +140,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                 case R.id.action_delete:
                                     deleteVideos(videopostId);
                                     viewHolder.cardView.setVisibility(View.GONE);
+                                    list.remove(i);
                                     break;
                             }
                             return false;
@@ -221,8 +231,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             @Override
             public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
 
-                Log.d("Tesponsecheck",response.message());
-                Log.d("Tesponsecheck",String.valueOf(response.code()));
                 if (response.code() == 200) {
 
                     try {

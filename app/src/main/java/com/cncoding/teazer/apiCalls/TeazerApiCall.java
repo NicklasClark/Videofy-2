@@ -14,9 +14,11 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
-import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -32,6 +34,7 @@ import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -74,13 +77,13 @@ import retrofit2.http.Query;
          * To get the post report types
          * */
         @GET("/api/v1/application/post/report/types")
-        Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes();
+        Call<List<ReportPostTitlesResponse>> getPostReportTypes();
 
         /**
          * To get the profile report types
          * */
         @GET("/api/v1/application/profile/report/types")
-        Call<ArrayList<Pojos.Application.ReportType>> getProfileReportTypes();
+        Call<List<ReportPostTitlesResponse>> getProfileReportTypes();
 
         /**
          * To get the categories list
@@ -541,7 +544,7 @@ import retrofit2.http.Query;
          *      or 412 : Validation Failed
          * */
         @POST("/api/v1/post/report")
-        Call<ResultObject> reportPost(@Body Pojos.Post.ReportPost reportPostDetails);
+        Call<ResultObject> reportPost(@Body ReportPostRequest reportPostDetails);
 
 
 

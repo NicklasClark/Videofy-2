@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
@@ -18,6 +19,8 @@ import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,10 +34,15 @@ public class FragmentProfileMyCreations extends Fragment {
 
     CircularAppCompatImageView menuitem;
     Context context;
-    ArrayList<Pojos.Post.PostDetails>list;
+    ArrayList<Pojos.Post.PostDetails> list = new ArrayList<>();
     RecyclerView recyclerView;
     ProfileMyCreationAdapter profileMyCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
+    ProgressBar progress_bar;
+    int page=1;
+
+
+
 
 
 
@@ -46,13 +54,16 @@ public class FragmentProfileMyCreations extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context=container.getContext();
         View view = inflater.inflate(R.layout.fragment_profile_mycreations, container, false);
+
         recyclerView=view.findViewById(R.id.recycler_view);
+        progress_bar=view.findViewById(R.id.progress_bar);
         return view;
 
     }
@@ -62,18 +73,31 @@ public class FragmentProfileMyCreations extends Fragment {
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         getProfileVideos();
+
     }
 
     public void getProfileVideos() {
-        list=new ArrayList<>();
-        ApiCallingService.Posts.getPostedVideos(context,1).enqueue(new Callback<Pojos.Post.PostList>() {
+
+        progress_bar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+
+        ApiCallingService.Posts.getPostedVideos(context,page).enqueue(new Callback<Pojos.Post.PostList>() {
             @Override
             public void onResponse(Call<Pojos.Post.PostList> call, Response<Pojos.Post.PostList> response) {
 
                 if (response.code() == 200) {
-                    list = response.body().getPosts();
+                    boolean next=response.body().isNextPage();
+                    list.addAll(response.body().getPosts());
                     profileMyCreationAdapter=new ProfileMyCreationAdapter(context,list);
                     recyclerView.setAdapter(profileMyCreationAdapter);
+
+                    if(next)
+                    {
+                         page++;
+                         getProfileVideos();
+                    }
+                    progress_bar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
             @Override

@@ -12,9 +12,6 @@ public class FollowersProfile {
     @SerializedName("total_videos")
     @Expose
     private Integer totalVideos;
-    @SerializedName("account_type")
-    @Expose
-    private Integer accountType;
     @SerializedName("private_profile")
     @Expose
     private PrivateProfile privateProfile;
@@ -37,14 +34,6 @@ public class FollowersProfile {
 
     public void setTotalVideos(Integer totalVideos) {
         this.totalVideos = totalVideos;
-    }
-
-    public Integer getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(Integer accountType) {
-        this.accountType = accountType;
     }
 
     public PrivateProfile getPrivateProfile() {
@@ -86,7 +75,5 @@ public class FollowersProfile {
     public void setFollowInfo(FollowInfo followInfo) {
         this.followInfo = followInfo;
     }
-
-
 
 }

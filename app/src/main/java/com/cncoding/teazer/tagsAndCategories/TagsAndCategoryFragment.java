@@ -108,7 +108,7 @@ public class TagsAndCategoryFragment extends Fragment {
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
-                categoriesAdapter = new CategoriesAdapter(categories, this);
+                categoriesAdapter = new CategoriesAdapter(categories, this, getContext());
                 recyclerView.setAdapter(categoriesAdapter);
                 break;
             default:
@@ -128,22 +128,26 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     @OnClick(R.id.tags_categories_done) public void getResult() {
-        switch (action) {
-            case ACTION_TAGS_FRAGMENT:
-                if (circles != null && circles.size() > 0) {
-                    listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                            getSelectedTags(tagsAdapter.getSelectedTags()), null);
-                }
-                break;
-            case ACTION_CATEGORIES_FRAGMENT:
-                if (categories != null && categories.size() > 0) {
-                    listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                            getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                            getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
-                }
-                break;
-            default:
-                break;
+        try {
+            switch (action) {
+                case ACTION_TAGS_FRAGMENT:
+                    if (circles != null && circles.size() > 0 && tagsAdapter != null) {
+                        listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
+                                getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                    }
+                    break;
+                case ACTION_CATEGORIES_FRAGMENT:
+                    if (categories != null && categories.size() > 0) {
+                        listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                                getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
+                                getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

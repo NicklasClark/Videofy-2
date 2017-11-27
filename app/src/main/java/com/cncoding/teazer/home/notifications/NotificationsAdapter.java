@@ -249,18 +249,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200) {
-                                                        if (response.body().getStatus()) {
-                                                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                            else
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                            holder2.declineRequest.setVisibility(View.GONE);
-                                                        } else {
-                                                            sendJoinRequest(holder2);
-                                                        }
-                                                    } else
-                                                        Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    try {
+                                                        if (response.code() == 200) {
+                                                            if (response.body().getStatus()) {
+                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                                else
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                                holder2.declineRequest.setVisibility(View.GONE);
+                                                            } else {
+                                                                sendJoinRequest(holder2);
+                                                            }
+                                                        } else
+                                                            Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
 
                                                 @Override

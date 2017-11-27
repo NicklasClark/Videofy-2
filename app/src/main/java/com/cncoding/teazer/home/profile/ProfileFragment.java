@@ -14,7 +14,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +70,8 @@ public class ProfileFragment extends BaseFragment {
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.UserProfile userprofile;
-    RemoveAppBar removeAppBar;
     Button btnedit;
+    Button btnshare;
     int totalfollowers;
     int totalfollowing;
     int totalvideos;
@@ -93,7 +92,6 @@ public class ProfileFragment extends BaseFragment {
     CircularAppCompatImageView profile_id;
     private OnFragmentInteractionListener mListener;
     private String imageUri;
-
     private static final int RC_REQUEST_STORAGE = 1001;
     private String userProfileThumbnail;
     private String userProfileUrl;
@@ -116,7 +114,6 @@ public class ProfileFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
-        removeAppBar = (RemoveAppBar) context;
    //     Toolbar toolbar = view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -134,6 +131,7 @@ public class ProfileFragment extends BaseFragment {
         backgroundprofile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         btnedit = view.findViewById(R.id.btnedit);
+        btnshare = view.findViewById(R.id.btnshare);
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
@@ -177,6 +175,20 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("FollowerId", String.valueOf(0));
                 intent.putExtra("Identifier", "User");
                 startActivity(intent);
+            }
+        });
+        btnshare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBodyText = "Check it out. Your message goes here";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
+                startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
+
             }
         });
 
@@ -227,8 +239,6 @@ public class ProfileFragment extends BaseFragment {
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
-                Log.d("Response", response.toString());
-
 
                 try {
                      PublicProfile userProfile = response.body().getUserProfile();
@@ -255,13 +265,9 @@ public class ProfileFragment extends BaseFragment {
                         userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
                     }
-
-                   // _toolbarusername.setText(firstname);
                     _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
-
-                    Log.d("Gender", detail);
                     _followers.setText(String.valueOf(totalfollowers) + " Follower");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
@@ -292,7 +298,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
-                Log.d("errror", t.getMessage());
+                t.printStackTrace();
             }
         });
 
@@ -310,7 +316,6 @@ public class ProfileFragment extends BaseFragment {
         else {
             progressbar.setVisibility(View.VISIBLE);
             coordinatorLayout.setVisibility(View.GONE);
-
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(final Void... params) {
@@ -336,7 +341,9 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.GONE);
 
                     try {
-                        Blurry.with(getContext()).from(result).into(backgroundprofile);
+                        Bitmap photobitmap = Bitmap.createScaledBitmap(result,
+                                260, 260, false);
+                        Blurry.with(getContext()).from(photobitmap).into(backgroundprofile);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -373,9 +380,6 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        progressbar.setVisibility(View.GONE);
-//        coordinatorLayout.setVisibility(View.GONE);
         getProfileDetail();
 
         getParentActivity().showAppBar();
@@ -400,11 +404,4 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
-    public interface RemoveAppBar {
-        void removeAppbar();
     }
-
-
-
-
-}

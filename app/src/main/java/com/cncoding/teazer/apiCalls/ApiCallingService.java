@@ -18,6 +18,8 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
@@ -35,6 +37,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -68,11 +71,11 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
             return getApplicationService().getPostReportTypes();
         }
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getProfileReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes() {
             return getApplicationService().getProfileReportTypes();
         }
 
@@ -549,7 +552,7 @@ public class ApiCallingService {
             return getPostalService(context).deletePostVideo(postId);
         }
 
-        public static Call<ResultObject> reportPost(Pojos.Post.ReportPost reportPostDetails, Context context) {
+        public static Call<ResultObject> reportPost(ReportPostRequest reportPostDetails, Context context) {
             return getPostalService(context).reportPost(reportPostDetails);
         }
 
