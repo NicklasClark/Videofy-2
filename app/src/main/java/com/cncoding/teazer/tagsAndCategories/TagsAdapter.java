@@ -90,7 +90,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
         @BindView(R.id.tags_item_layout) RelativeLayout rootLayout;
         @BindView(R.id.list_item_checked_thumbnail_image) CircularImageView image;
-        @BindView(R.id.list_item_checked) ProximaNovaRegularCheckedTextView nameView;
+        @BindView(R.id.chip) ProximaNovaRegularCheckedTextView nameView;
 
         ViewHolder(View view) {
             super(view);

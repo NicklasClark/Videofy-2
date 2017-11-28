@@ -252,4 +252,7 @@
     <string name="more">More</string>
     <string name="wrong_otp">Otp entered is wrong! please try again.</string>
     <string name="swipe_down_to_retry">Swipe down to retry</string>
+    <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
+    <string name="something_went_wrong">Something went wrong!\nPlease try again later.</string>
+    <string name="edit">EDIT</string>
 </resources>

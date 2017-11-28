@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search.adapters;
+package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +46,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onTrendingListInteraction(trendingCategories.get(holder.getAdapterPosition()).getCategoryId());
+                    mListener.onTrendingListInteraction(trendingCategories.get(holder.getAdapterPosition()));
                 }
             }
         });
@@ -68,6 +68,6 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
     }
 
     public interface TrendingListInteractionListener {
-        void onTrendingListInteraction(int categoryId);
+        void onTrendingListInteraction(Category category);
     }
 }

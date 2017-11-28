@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search.adapters;
+package com.cncoding.teazer.home.discover.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -32,10 +35,13 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
     private final ArrayList<PostDetails> featuredVideosArrayList;
     private final Context context;
+    private OnSearchInteractionListener mListener;
 
-    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context) {
+    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context,
+                                     OnSearchInteractionListener mListener) {
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
+        this.mListener = mListener;
     }
 
     @Override
@@ -47,41 +53,44 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(FeaturedVideosListAdapter.ViewHolder holder, int position) {
-        holder.featuredVideos = featuredVideosArrayList.get(position);
+    public void onBindViewHolder(final FeaturedVideosListAdapter.ViewHolder holder, int position) {
+        holder.featuredVideo = featuredVideosArrayList.get(position);
 
         /*Setting title*/
-        holder.title.setText(holder.featuredVideos.getTitle());
+        holder.title.setText(holder.featuredVideo.getTitle());
 
         /*Setting name*/
-        String name = holder.featuredVideos.getPostOwner().getFirstName() + BLANK_SPACE + holder.featuredVideos.getPostOwner().getLastName();
+        String name = holder.featuredVideo.getPostOwner().getFirstName() + BLANK_SPACE + holder.featuredVideo.getPostOwner().getLastName();
         holder.name.setText(name);
 
         /*Setting likes*/
-        String likes = SPACE + String.valueOf(holder.featuredVideos.getLikes());
+        String likes = SPACE + String.valueOf(holder.featuredVideo.getLikes());
         holder.likes.setText(likes);
 
         /*Setting views*/
-        String views = SPACE + String.valueOf(holder.featuredVideos.getMedias().get(0).getViews());
+        String views = SPACE + String.valueOf(holder.featuredVideo.getMedias().get(0).getViews());
         holder.views.setText(views);
 
         Glide.with(context)
-                .load(holder.featuredVideos.getMedias().get(0).getThumbUrl())
+                .load(holder.featuredVideo.getMedias().get(0).getThumbUrl())
+                .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
                 .into(holder.thumbnail);
 
-        if (holder.featuredVideos.getPostOwner().hasProfileMedia())
-            Glide.with(context)
-                    .load(holder.featuredVideos.getPostOwner().getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.dp);
-        else
-            Glide.with(context)
-                    .load("")
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.dp);
+        Glide.with(context)
+                .load(!holder.featuredVideo.getPostOwner().hasProfileMedia() ? R.drawable.ic_user_male_dp_small :
+                        holder.featuredVideo.getPostOwner().getProfileMedia().getThumbUrl())
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .into(holder.dp);
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
+                        holder.featuredVideo, null);
+            }
+        });
     }
 
     @Override
@@ -91,13 +100,14 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.reaction_post_caption) ProximaNovaSemiboldTextView title;
         @BindView(R.id.reaction_post_name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView views;
         @BindView(R.id.reaction_post_thumb) ImageView thumbnail;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView dp;
-        PostDetails featuredVideos;
+        PostDetails featuredVideo;
         
         public ViewHolder(View itemView) {
             super(itemView);

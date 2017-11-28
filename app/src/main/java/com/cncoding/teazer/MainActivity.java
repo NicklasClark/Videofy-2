@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 //    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int DEVICE_TYPE_ANDROID = 2;
-    public static final int OPEN_CAMERA_ACTION = 98;
+//    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
     private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
     private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
-    private static final String TAG_SELECT_INTERESTS = "selectInterests";
+    public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
@@ -213,7 +213,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
-                transaction.replace(R.id.main_fragment_container, Interests.newInstance(), TAG_SELECT_INTERESTS);
+                transaction.replace(R.id.main_fragment_container, Interests.newInstance(false, null),
+                        TAG_SELECT_INTERESTS);
                 break;
             default:
                 break;

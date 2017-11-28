@@ -132,6 +132,7 @@ public class PostsListFragment extends BaseFragment {
                         }
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
                     }
 
                     private void showErrorMessage(String message) {
@@ -150,6 +151,7 @@ public class PostsListFragment extends BaseFragment {
 
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
                     }
                 });
     }

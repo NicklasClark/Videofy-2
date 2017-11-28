@@ -1,11 +1,10 @@
-package com.cncoding.teazer.home.notifications;
+package com.cncoding.teazer.home.discover.search;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos;
@@ -32,54 +30,54 @@ import retrofit2.Response;
 /**
  * A fragment representing a list of Items.
  */
-public class RequestNotificationsTabFragment extends BaseFragment {
+public class VideosTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
 
 //    private OnListFragmentInteractionListener mListener;
-    private NotificationsList notificationsList;
-    private NotificationsAdapter adapter;
+    private boolean isSearchTerm;
+    private ArrayList<Pojos.MiniProfile> usersList;
+    private DiscoverSearchAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RequestNotificationsTabFragment() {
+    public VideosTabFragment() {
     }
 
-    public static RequestNotificationsTabFragment newInstance() {
-        return new RequestNotificationsTabFragment();
+    public static VideosTabFragment newInstance() {
+        return new VideosTabFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
-        notificationsList = new NotificationsList(new ArrayList<Pojos.User.Notification>(), 0, false);
+        usersList = new ArrayList<>();
 
-        adapter = new NotificationsAdapter(getContext(), false, notificationsList);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (is_next_page)
-                    new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(page);
-            }
-        };
-        recyclerView.addOnScrollListener(scrollListener);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                scrollListener.resetState();
-                new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(1);
-            }
-        });
+//        adapter = new DiscoverSearchAdapter(getContext(), true, null);
+//        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+//        recyclerView.setLayoutManager(manager);
+//        recyclerView.setAdapter(adapter);
+//        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                if (is_next_page)
+//                    new GetFollowingNotifications(VideosTabFragment.this).execute(page);
+//            }
+//        };
+//        recyclerView.addOnScrollListener(scrollListener);
+//
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                scrollListener.resetState();
+//                new GetFollowingNotifications(VideosTabFragment.this).execute(1);
+//            }
+//        });
 
         return rootView;
     }
@@ -87,15 +85,15 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
-            new GetRequestNotifications(this).execute(1);
+//        if (usersList != null && usersList.isEmpty())
+//            new GetFollowingNotifications(this).execute(1);
     }
 
-    private static class GetRequestNotifications extends AsyncTask<Integer, Void, Void> {
+    private static class GetFollowingNotifications extends AsyncTask<Integer, Void, Void> {
 
-        private WeakReference<RequestNotificationsTabFragment> reference;
+        private WeakReference<VideosTabFragment> reference;
 
-        GetRequestNotifications(RequestNotificationsTabFragment context) {
+        GetFollowingNotifications(VideosTabFragment context) {
             reference = new WeakReference<>(context);
         }
 
@@ -107,24 +105,24 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Integer... integers) {
             if (integers[0] == 1)
-                reference.get().notificationsList.getNotifications().clear();
+                reference.get().usersList.clear();
 
-            ApiCallingService.User.getRequestNotifications(integers[0], reference.get().getContext())
+            ApiCallingService.User.getFollowingNotifications(integers[0], reference.get().getContext())
                     .enqueue(new Callback<NotificationsList>() {
                         @Override
                         public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
                             if (response.code() == 200) {
-                                reference.get().is_next_page = response.body().isNextPage();
-                                if (response.body().getNotifications().size() > 0) {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    reference.get().noNotifications.setVisibility(View.GONE);
-                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
-                                    reference.get().recyclerView.getRecycledViewPool().clear();
-                                    reference.get().adapter.notifyDataSetChanged();
-                                } else {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
-                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
-                                }
+//                                reference.get().is_next_page = response.body().isNextPage();
+//                                if (response.body().getNotifications().size() > 0) {
+//                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
+//                                    reference.get().noNotifications.setVisibility(View.GONE);
+//                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
+//                                    reference.get().recyclerView.getRecycledViewPool().clear();
+//                                    reference.get().adapter.notifyDataSetChanged();
+//                                } else {
+//                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
+//                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
+//                                }
                             } else {
                                 Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
                                         Toast.LENGTH_SHORT).show();
@@ -177,6 +175,6 @@ public class RequestNotificationsTabFragment extends BaseFragment {
 //     * >Communicating with Other Fragments</a> for more information.
 //     */
 //    public interface OnListFragmentInteractionListener {
-//        void onListFragmentInteraction(Notification item);
+//        void onListFragmentInteraction(Pojos.User.Notification item);
 //    }
 }

@@ -62,9 +62,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/progress_bar_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginTop="-12dp"/>
+    <include layout="@layout/progress_bar_horizontal"/>
 
 </RelativeLayout>
