@@ -39,7 +39,7 @@ dependencies {
     compile 'com.facebook.android:facebook-applinks:[4,5)'
     compile 'com.android.support:design:27.0.1'
     compile 'com.android.support:appcompat-v7:27.0.1'
-    compile "com.android.support:support-v13:27.0.1"
+    compile 'com.android.support:support-v13:27.0.1'
     compile 'com.android.support:support-v4:27.0.1'
     compile 'com.android.support:palette-v7:27.0.1'
     compile 'com.android.support:recyclerview-v7:27.0.1'
@@ -76,6 +76,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
+    //    compile 'life.knowledge4:k4l-video-trimmer:1.0'
 }
 
 configurations.all {

@@ -16,6 +16,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
 
 
         if (isUserLoggedIn(getApplicationContext())) {
@@ -23,6 +24,7 @@ public class SplashScreen extends AppCompatActivity {
         } else {
             startActivity(new Intent(SplashScreen.this, MainActivity.class));
         }
+
         finish();
     }
 }
