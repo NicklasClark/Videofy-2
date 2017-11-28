@@ -4,7 +4,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="0.25dp"
+    android:layout_margin="7dp"
     android:background="@android:color/black"
     android:visibility="invisible">
 

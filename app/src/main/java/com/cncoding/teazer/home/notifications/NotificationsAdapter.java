@@ -482,7 +482,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case BUTTON_TYPE_FOLLOWING:
                 button.setText(R.string.following);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);
@@ -491,7 +491,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case BUTTON_TYPE_REQUESTED:
                 button.setText(R.string.requested);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);

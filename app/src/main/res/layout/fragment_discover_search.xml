@@ -41,9 +41,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/BottomTabLayout.NotificationTab"
+        android:layout_marginTop="-5dp"
+        android:background="@color/colorPrimary"
         app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/colorPrimaryOld"
+        app:tabIndicatorColor="@color/colorPrimaryOld"
         app:tabIndicatorHeight="3dp"
         android:elevation="4dp">
 

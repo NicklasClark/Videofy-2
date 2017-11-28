@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:indeterminate="true"
+        android:theme="@style/ProgressBarTheme"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_gravity="center"/>
 

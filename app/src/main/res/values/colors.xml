@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#26C6DA</color>
-    <!--<color name="colorPrimary">#546E7A</color>-->
-    <color name="colorPrimaryTranslucent">#dd546e7a</color>
+    <color name="colorPrimaryOld">#26C6DA</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <!--<color name="colorPrimaryTranslucent">#dd546e7a</color>-->
+    <color name="colorPrimaryTranslucent">#DDFFFFFF</color>
     <!--<color name="colorPrimaryDark">#37474F</color>-->
-    <color name="colorPrimaryDark">#00ACC1</color>
+    <!--<color name="colorPrimaryDark">#00ACC1</color>-->
+    <color name="colorPrimaryDark">#EFEBE9</color>
     <color name="profilebackground">#1d1d1d</color>
     <color name="colorPrimaryLight">#80DEEA</color>
     <color name="colorAccent">#4CAF50</color>
@@ -18,7 +20,7 @@
     <color name="colorPrimary_text">#333333</color>
     <color name="colorSecondary_text">#757575</color>
     <color name="material_grey100">#F5F5F5</color>
-    <color name="material_grey200">#EEEEEE</color>
+    <color name="material_grey200">#eeeeee</color>
     <color name="colorSecondary_text_light">#BDBDBD</color>
     <color name="colorDisabled">#E0E0E0</color>
     <color name="colorIcons">#FFFFFF</color>

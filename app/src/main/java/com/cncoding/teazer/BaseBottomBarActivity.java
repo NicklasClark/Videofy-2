@@ -59,6 +59,7 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -692,13 +693,16 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
+        ViewUtils.playVideo(this, postReaction.getMediaDetail().getMediaUrl(), true);
     }
 
     @Override
     public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
                                     PostDetails postDetails, byte[] image) {
-        if (action == ACTION_VIEW_MY_INTERESTS || action == ACTION_VIEW_MOST_POPULAR)
+        if (action == ACTION_VIEW_MY_INTERESTS)
             pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
+        else if (action == ACTION_VIEW_MOST_POPULAR)
+            pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
         else if (action == ACTION_VIEW_POST)
             pushFragment(PostDetailsFragment.newInstance(postDetails, image));
     }

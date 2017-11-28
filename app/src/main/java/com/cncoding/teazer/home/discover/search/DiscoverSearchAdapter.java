@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -90,6 +91,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder.username.setText(holder.user.getUserName());
                 String name = holder.user.getFirstName() + BLANK_SPACE + holder.user.getLastName();
                 holder.name.setText(name);
+
+                if (holder.user.hasProfileMedia() && holder.user.getProfileMedia() != null) {
+                    Glide.with(context)
+                            .load(holder.user.getProfileMedia().getThumbUrl())
+                            .placeholder(R.drawable.ic_user_male_dp_small)
+                            .crossFade()
+                            .into(holder.dp);
+                }
 
                 switch (holder.user.getAccountType()) {
                     case ACCOUNT_TYPE_PRIVATE:
@@ -209,14 +218,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case BUTTON_TYPE_FOLLOWING:
                 button.setText(R.string.following);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);
                 break;
             case BUTTON_TYPE_REQUESTED:
                 button.setText(R.string.requested);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);

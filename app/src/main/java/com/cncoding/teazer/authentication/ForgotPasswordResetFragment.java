@@ -106,60 +106,64 @@ public class ForgotPasswordResetFragment extends Fragment {
     }
 
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
-        Pojos.Authorize authorize;
-        if (isEmail) {
-            authorize = new Pojos.Authorize(
-                    resetConfirmPasswordView.getText().toString(),
-                    enteredText,
-                    -1,
-                    countryCode,
-                    Integer.parseInt(resetOtpView.getText().toString()));
-        } else {
-            authorize = new Pojos.Authorize(
-                    resetConfirmPasswordView.getText().toString(),
-                    null,
-                    Long.parseLong(enteredText),
-                    countryCode,
-                    Integer.parseInt(resetOtpView.getText().toString()));
-        }
-        ApiCallingService.Auth.changePassword(authorize).enqueue(new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    if (response.body().getStatus()) {
-                        resetPasswordStatusView.setText(R.string.password_successfully_reset);
-                        resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                                0, 0, R.drawable.ic_tick_circle, 0);
+        if (!resetOtpView.getText().toString().isEmpty()) {
+            Pojos.Authorize authorize;
+            if (isEmail) {
+                authorize = new Pojos.Authorize(
+                        resetConfirmPasswordView.getText().toString(),
+                        enteredText,
+                        -1,
+                        countryCode,
+                        Integer.parseInt(resetOtpView.getText().toString()));
+            } else {
+                authorize = new Pojos.Authorize(
+                        resetConfirmPasswordView.getText().toString(),
+                        null,
+                        Long.parseLong(enteredText),
+                        countryCode,
+                        Integer.parseInt(resetOtpView.getText().toString()));
+            }
+            ApiCallingService.Auth.changePassword(authorize).enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    if (response.code() == 200) {
+                        if (response.body().getStatus()) {
+                            resetPasswordStatusView.setText(R.string.password_successfully_reset);
+                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                    0, 0, R.drawable.ic_tick_circle, 0);
 
-                        changeFirebasePassword(isEmail);
+                            changeFirebasePassword(isEmail);
+                        } else {
+                            resetPasswordStatusView.setText(
+                                    "Resetting password failed!\n" + response.body().getMessage());
+                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                    0, R.drawable.ic_error, 0, 0);
+                        }
                     } else {
                         resetPasswordStatusView.setText(
-                                "Resetting password failed!\n" + response.body().getMessage());
+                                "Resetting password failed!\n" + response.code() + " : " + response.body().getMessage());
                         resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                 0, R.drawable.ic_error, 0, 0);
                     }
-                } else {
-                    resetPasswordStatusView.setText(
-                            "Resetting password failed!\n" + response.code() + " : " + response.body().getMessage());
-                    resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                            0, R.drawable.ic_error, 0, 0);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
+                        }
+                    }, 1000);
+    //                dismissMessage();
                 }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
-                    }
-                }, 1000);
-//                dismissMessage();
-            }
 
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                resetPasswordStatusView.setText("Resetting password failed!\n" + t.getMessage());
-                resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_error, 0, 0);
-                dismissMessage();
-            }
-        });
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    resetPasswordStatusView.setText("Resetting password failed!\n" + t.getMessage());
+                    resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_error, 0, 0);
+                    dismissMessage();
+                }
+            });
+        } else {
+
+        }
     }
 
     private void dismissMessage() {

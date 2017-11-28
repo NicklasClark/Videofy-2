@@ -10,11 +10,11 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         style="@style/BottomTabLayout.NotificationTab"
-        app:tabTextColor="@android:color/white"
-        app:tabSelectedTextColor="@android:color/white"
-        app:tabIndicatorColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        app:tabTextColor="@color/colorSecondary_text"
+        app:tabSelectedTextColor="@color/colorPrimaryOld"
+        app:tabIndicatorColor="@color/colorPrimaryOld"
         app:tabIndicatorHeight="3dp"
         android:elevation="4dp">
 

@@ -7,10 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -123,15 +123,18 @@ public class PeopleTabFragment extends BaseFragment {
                                     reference.get().noNotifications.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
-                                        Toast.LENGTH_SHORT).show();
+                                reference.get().noNotifications.setVisibility(View.VISIBLE);
+                                reference.get().noNotifications.setText(R.string.error_fetching_posts);
+                                reference.get().noNotifications.setCompoundDrawablesWithIntrinsicBounds(
+                                        0, R.drawable.ic_no_data_placeholder, 0, 0);
+                                Log.e("getUsersListToFollow", response.code() + "_" + response.message());
                             }
                             reference.get().swipeRefreshLayout.setRefreshing(false);
                         }
 
                         @Override
                         public void onFailure(Call<UsersList> call, Throwable t) {
-                            Toast.makeText(reference.get().getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("getUsersListToFollow", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
                             reference.get().swipeRefreshLayout.setRefreshing(false);
                         }
                     });

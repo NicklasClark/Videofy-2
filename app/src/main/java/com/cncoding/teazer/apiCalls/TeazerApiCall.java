@@ -209,6 +209,12 @@ import retrofit2.http.Query;
         Call<PostList> getAllInterestedCategoriesVideos(@Path("page") int page, @Path("category_id") int categoryId);
 
         /**
+         * Call this service to get the most popular videos. Call this service when user taps "View All".
+         */
+        @GET("/api/v1/discover/most/popular/videos/{page}")
+        Call<PostList> getAllMostPopularVideos(@Path("page") int page);
+
+        /**
          * Call this service to get the discover page trending category videos of the respected category.
          */
         @GET("/api/v1/discover/trending/category/videos/{category_id}/{page}")
@@ -223,14 +229,20 @@ import retrofit2.http.Query;
         /**
          * Call this service to get users list to send follow request.
          */
-        @GET("/api/v1/friend/application/users/{page}")
+        @GET("/api/v1/discover/users/{page}")
         Call<UsersList> getUsersListToFollow(@Path("page") int page);
 
         /**
          * Call this service to get users list to send follow request with search term.
          */
-        @GET("/api/v1/friend/application/users")
+        @GET("/api/v1/discover/users")
         Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        @GET("/api/v1/discover/videos")
+        Call<UsersList> getVideosWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**
