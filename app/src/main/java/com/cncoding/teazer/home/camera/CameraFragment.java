@@ -687,7 +687,8 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoFrameRate(30);
 //        mMediaRecorder.setPreviewDisplay();
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
+//        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        mMediaRecorder.setVideoEncodingBitRate(3000000);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
