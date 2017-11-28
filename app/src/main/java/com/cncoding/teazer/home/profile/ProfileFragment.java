@@ -15,6 +15,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -35,6 +38,7 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
@@ -90,7 +94,7 @@ public class ProfileFragment extends BaseFragment {
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
-    private OnFragmentInteractionListener mListener;
+    private FollowerListListener mListener;
     private String imageUri;
     private static final int RC_REQUEST_STORAGE = 1001;
     private String userProfileThumbnail;
@@ -103,25 +107,33 @@ public class ProfileFragment extends BaseFragment {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        //previousTitle=getParentActivity().getToolbarTitle();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+        getParentActivity().updateToolbarTitle("My Profile");
+
+
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
-   //     Toolbar toolbar = view.findViewById(R.id.toolbar);
+
+        //     Toolbar toolbar = view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-       // backbutton = view.findViewById(R.id.backbutton);
-       // settings = view.findViewById(R.id.settings);
-       // _toolbarusername = view.findViewById(R.id.toolbarusername);
+        // backbutton = view.findViewById(R.id.backbutton);
+        // settings = view.findViewById(R.id.settings);
+        // _toolbarusername = view.findViewById(R.id.toolbarusername);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -135,6 +147,7 @@ public class ProfileFragment extends BaseFragment {
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
+
 
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,20 +174,15 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, FollowersListActivity.class);
-                intent.putExtra("FollowerId", String.valueOf(0));
-                intent.putExtra("Identifier", "User");
-                startActivity(intent);
+                mListener.onFollowerListListener(String.valueOf(0),"User");
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, FollowingListActivities.class);
-                intent.putExtra("FollowerId", String.valueOf(0));
-                intent.putExtra("Identifier", "User");
-                startActivity(intent);
+
+                mListener.onFollowingListListener(String.valueOf(0),"User");
             }
         });
         btnshare.setOnClickListener(new View.OnClickListener() {
@@ -185,50 +193,59 @@ public class ProfileFragment extends BaseFragment {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBodyText = "Check it out. Your message goes here";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
                 startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
 
             }
         });
 
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().onBackPressed();
-//            }
-//        });
-//        backbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                getActivity().onBackPressed();
-//            }
-//        });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
         TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-//        appBarLayout = view.findViewById(R.id.appbar);
-//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (verticalOffset < -530) {
-//                    _toolbarusername.setVisibility(View.VISIBLE);
-//
-//                } else {
-//                    _toolbarusername.setVisibility(View.INVISIBLE);
-//                }
-//            }
-//        });
+
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         getProfileDetail();
-        getParentActivity().hideSettings(true);
+        getParentActivity().hidereport();
+        getParentActivity().updateToolbarTitle("Profile");
+
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //  super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_user_profile,menu);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+
+            case R.id.action_settings:
+              Intent intent=new Intent(context, Settings.class);
+                        intent.putExtra("AccountType",String.valueOf(accountType));
+              startActivity(intent);
+
+
+            case R.id.action_profile_block:
+               // openBlockUser(followerfollowingid);
+
+
+
+        }
+        return true;
+
     }
     public void getProfileDetail() {
 
@@ -241,24 +258,24 @@ public class ProfileFragment extends BaseFragment {
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
 
                 try {
-                     PublicProfile userProfile = response.body().getUserProfile();
-                     firstname = userProfile.getFirstName();
-                     lastname = userProfile.getLastName();
-                     username = userProfile.getUserName();
-                     email = userProfile.getEmail();
-                     accountType = userProfile.getAccountType();
-                     hasProfleMedia = userProfile.getHasProfileMedia();
-                     totalfollowers = response.body().getFollowers();
-                     totalfollowing = response.body().getFollowings();
-                     totalvideos = response.body().getTotalVideos();
-                     userId = String.valueOf(userProfile.getUserId());
-                     gender = userProfile.getGender();
-                     Long mobilno = userProfile.getPhoneNumber();
-                     if (mobilno == null) {
+                    PublicProfile userProfile = response.body().getUserProfile();
+                    firstname = userProfile.getFirstName();
+                    lastname = userProfile.getLastName();
+                    username = userProfile.getUserName();
+                    email = userProfile.getEmail();
+                    accountType = userProfile.getAccountType();
+                    hasProfleMedia = userProfile.getHasProfileMedia();
+                    totalfollowers = response.body().getFollowers();
+                    totalfollowing = response.body().getFollowings();
+                    totalvideos = response.body().getTotalVideos();
+                    userId = String.valueOf(userProfile.getUserId());
+                    gender = userProfile.getGender();
+                    Long mobilno = userProfile.getPhoneNumber();
+                    if (mobilno == null) {
                         mobilenumber = 0L;
-                     } else {
+                    } else {
                         mobilenumber = mobilno;
-                     }
+                    }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
                     if (userProfile.getHasProfileMedia()) {
@@ -305,15 +322,13 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
-    public void profileBlur(final String pic)
-    {
+    public void profileBlur(final String pic) {
 
         String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
         if (!EasyPermissions.hasPermissions(getContext(), perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
-        }
-        else {
+        } else {
             progressbar.setVisibility(View.VISIBLE);
             coordinatorLayout.setVisibility(View.GONE);
             new AsyncTask<Void, Void, Bitmap>() {
@@ -359,11 +374,12 @@ public class ProfileFragment extends BaseFragment {
         }
 
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FollowerListListener) {
+            mListener = (FollowerListListener) context;
         }
     }
 
@@ -371,10 +387,12 @@ public class ProfileFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+     //   getParentActivity().updateToolbarTitle(previousTitle);
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface FollowerListListener {
+        void onFollowerListListener(String id,String identifier);
+        void onFollowingListListener(String id,String identifier);
     }
 
     @Override
@@ -403,5 +421,4 @@ public class ProfileFragment extends BaseFragment {
 
         }
     }
-
-    }
+}

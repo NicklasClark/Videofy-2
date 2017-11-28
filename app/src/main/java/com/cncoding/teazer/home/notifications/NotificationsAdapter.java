@@ -28,7 +28,6 @@ import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
-import com.cncoding.teazer.utilities.Pojos.User.Profile;
 
 import java.util.ArrayList;
 
@@ -120,6 +119,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 holder1.content.setText(getString(getHighlights(holder1.notification.getHighlights()), holder1.notification.getMessage()));
 
+
+                holder1.dp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mListener.onNotificationsInteraction(false, null,
+                                null, holder1.notification.getMetaData().getFromId(),"");
+                    }
+                });
+
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
                         .placeholder(context.getResources().getDrawable(R.drawable.bg_placeholder, null))
@@ -136,20 +145,24 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                         .enqueue(new Callback<PostDetails>() {
 
+
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, null);
+                                                            null, -1,null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                                else
+                                                else{
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                            }
                                             }
 
                                             @Override
                                             public void onFailure(Call<PostDetails> call, Throwable t) {
                                                 Log.d("FAIL - GET PostDetails", t.getMessage());
+                                                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
@@ -162,16 +175,19 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, null);
+                                                            null, -1,null);
                                                 else if(response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                                else
+                                                else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
 
                                             @Override
                                             public void onFailure(Call<PostDetails> call, Throwable t) {
                                                 Log.d("FAIL - GET PostDetails", t.getMessage());
+                                                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }
@@ -203,46 +219,95 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 holder2.content.setText(getString(getHighlights(holder2.notification.getHighlights()), holder2.notification.getMessage()));
 
-                switch (holder2.notification.getNotificationType()) {
-                    case STARTED_FOLLOWING:
-//                        if (holder2.notification.isActioned())
+                holder2.isActiond=notificationsList.getNotifications().get(position).isActioned();
+                holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
+
+                if(holder2.isActiond==false) {
+                    switch (holder2.notification.getNotificationType()) {
+                        case STARTED_FOLLOWING:
                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                        break;
-                    case ACCEPTED_REQUEST:
-                        setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                        break;
-                    case SENT_YOU_A_FOLLOW_REQUEST:
-                        setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
-                        break;
-                    case ALSO_STARTED_FOLLOWING:
-                        setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                        break;
-                    default:
-                        break;
+                            break;
+                        case ACCEPTED_REQUEST:
+                            setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+                            break;
+                        case SENT_YOU_A_FOLLOW_REQUEST:
+                            setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
+                            break;
+                        case ALSO_STARTED_FOLLOWING:
+                            setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+                            break;
+                        default:
+                            break;
+                    }
                 }
+
+
+
+//                else {
+//                    if (holder2.accountType == 1) {
+//                        switch (holder2.notification.getNotificationType()) {
+//
+//
+//                            case STARTED_FOLLOWING:
+//                                //setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+//                                holder2.action.setText("Following");
+//                                break;
+//                            case ACCEPTED_REQUEST:
+//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+//                                holder2.action.setText("Requested");
+//                                break;
+//                            case SENT_YOU_A_FOLLOW_REQUEST:
+//                                setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
+//                                holder2.action.setText("Follow");
+//                                break;
+//                            case ALSO_STARTED_FOLLOWING:
+//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+//                                holder2.action.setText("Following");
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//
+//                    }
+//                     else
+//
+//                        {
+//
+//                        }
+//
+//                    }
+
+
+
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch (view.getId()) {
                             case R.id.root_layout:
-//                                if (mListener != null) {
-//                                    ApiCallingService.Friends.getOthersProfileInfo(holder2.notification.getSourceId(), context)
-//                                            .enqueue(new Callback<Profile>() {
-//                                                @Override
-//                                                public void onResponse(Call<Profile> call, Response<Profile> response) {
-//                                                    if (response.code() == 200)
-//                                                        mListener.onNotificationsInteraction(isFollowingTab, null, response.body());
-//                                                    else
-//                                                        Log.d("GetOthersProfileInfo", response.code() + " : " + response.message());
-//                                                }
-//
-//                                                @Override
-//                                                public void onFailure(Call<Profile> call, Throwable t) {
-//                                                        Log.d("FAIL-GetOthrProfileInfo", t.getMessage());
-//                                                }
-//                                            });
-//                                }
+                                if (mListener != null) {
+                                    String userType;
+
+                                    if( holder2.notification.getMetaData().getNotificationType()==1|| holder2.notification.getMetaData().getNotificationType()==2|| holder2.notification.getMetaData().getNotificationType()==10)
+                                    {
+                                        userType="Following";
+                                    }
+                                    if( holder2.notification.getMetaData().getNotificationType()==3)
+                                    {
+                                        userType="Accept";
+                                    }
+                                    else
+                                    {
+                                        userType="Accept";
+                                    }
+
+
+
+
+
+                                    mListener.onNotificationsInteraction(false, null,
+                                            null, holder2.notification.getMetaData().getFromId(),userType);
+                                }
                                 break;
                             case R.id.notification_action:
                                 String text = holder2.action.getText().toString();
@@ -287,10 +352,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         else
                                                             Log.d("AcceptJoinRequest", response.code()
                                                                     + " : " + response.body().getMessage());
-                                                    } else
-                                                        Log.d("AcceptJoinRequest", response.code()
-                                                                + " : " + response.body().getMessage());
-                                                }
+                                                    } else{
+//                                                        Log.d("AcceptJoinRequest", response.code()
+//                                                                + " : " + response.body().getMessage());
+                                                }}
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
@@ -332,44 +397,44 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             })
                                             .show();
                                 }
-                                else if (text.equals(context.getString(R.string.requested))) {
-                                    new AlertDialog.Builder(context)
-                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
-                                                    holder2.notification.getHighlights().get(0) + "?")
-                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
-                                                            context).enqueue(new Callback<ResultObject>() {
-                                                        @Override
-                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                            if (response.code() == 200) {
-                                                                if (response.body().getStatus()) {
-                                                                    setActionButton(holder2.action, null,
-                                                                            BUTTON_TYPE_FOLLOW);
-                                                                }
-                                                                else
-                                                                    Log.d("CancelRequest", response.code()
-                                                                            + " : " + response.body().getMessage());
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                            Log.d("FAIL - CancelRequest", t.getMessage());
-                                                        }
-                                                    });
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    dialogInterface.dismiss();
-                                                }
-                                            })
-                                            .show();
-                                }
-                                break;
+//                                else if (text.equals(context.getString(R.string.requested))) {
+//                                    new AlertDialog.Builder(context)
+//                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
+//                                                    holder2.notification.getHighlights().get(0) + "?")
+//                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
+//                                                            context).enqueue(new Callback<ResultObject>() {
+//                                                        @Override
+//                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                                                            if (response.code() == 200) {
+//                                                                if (response.body().getStatus()) {
+//                                                                    setActionButton(holder2.action, null,
+//                                                                            BUTTON_TYPE_FOLLOW);
+//                                                                }
+//                                                                else
+//                                                                    Log.d("CancelRequest", response.code()
+//                                                                            + " : " + response.body().getMessage());
+//                                                            }
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+//                                                            Log.d("FAIL - CancelRequest", t.getMessage());
+//                                                        }
+//                                                    });
+//                                                }
+//                                            })
+//                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    dialogInterface.dismiss();
+//                                                }
+//                                            })
+//                                            .show();
+//                                }
+                               // break;
                             case R.id.notification_decline:
                                 ApiCallingService.Friends.deleteJoinRequest(holder2.notification.getNotificationId(), context)
                                         .enqueue(new Callback<ResultObject>() {
@@ -538,6 +603,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.notification_action) ProximaNovaSemiboldButton action;
         @BindView(R.id.notification_decline) AppCompatImageView declineRequest;
         Notification notification;
+        boolean isActiond;
+        int accountType;
 
         RequestsViewHolder(View view) {
             super(view);
@@ -551,6 +618,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, Profile profile);
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId,String userType);
     }
 }

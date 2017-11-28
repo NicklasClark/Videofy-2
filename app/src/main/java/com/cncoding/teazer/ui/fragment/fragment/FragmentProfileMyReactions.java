@@ -37,7 +37,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProfileMyReactionAdapter profileMyReactionAdapter;
     RecyclerView.LayoutManager layoutManager;
     Context context;
-    List<Reaction>list=new ArrayList<>();
+    List<Reaction>list;
     int page=1;
     public static FragmentProfileMyReactions newInstance(int page) {
         return new FragmentProfileMyReactions();
@@ -57,6 +57,7 @@ public class FragmentProfileMyReactions extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        list=new ArrayList<>();
         getReactions();
     }
     public void getReactions() {
@@ -99,5 +100,12 @@ public class FragmentProfileMyReactions extends Fragment {
         });
 
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //getReactions();
+        //list.clear();
     }
 }

@@ -1,7 +1,6 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,8 +25,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import com.cncoding.teazer.adapter.FollowersAdapter;
+import com.cncoding.teazer.adapter.FollowersCreationAdapter;
+import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
@@ -50,15 +51,17 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.ui.fragment.activity.Settings;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
+import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
+import com.cncoding.teazer.ui.fragment.activity.othersProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
-import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
+import com.facebook.share.ShareApi;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -105,8 +108,9 @@ public class BaseBottomBarActivity extends BaseActivity
         OnPostAdapterInteractionListener, OnPostDetailsInteractionListener,
         PostReactionAdapterListener, OnInterestsInteractionListener, OnDiscoverSearchInteractionListener,
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
-        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,
-        ProfileMyCreationAdapter.myCreationListener{
+        NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,FollowersAdapter.OtherProfileListener,
+        ProfileFragment.FollowerListListener,
+        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
@@ -128,6 +132,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //            R.drawable.ic_person_selected
 //    };
 
+
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -139,7 +144,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
-    @BindView(R.id.settings) ImageView settings;
+
     @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 
     private NavigationController navigationController;
@@ -184,7 +189,7 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onTabUnselected(TabLayout.Tab tab) {
                 Drawable icon = tab.getIcon();
                 if (icon != null)
-                icon.setTint(Color.BLACK);
+                    icon.setTint(Color.BLACK);
             }
 
             @Override
@@ -201,14 +206,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
             }
         });
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(BaseBottomBarActivity.this, Settings.class);
-                intent.putExtra("AccountType", String.valueOf(1));
-                startActivity(intent);
-            }
-        });
+
+
     }
 
     @Override
@@ -234,11 +233,12 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                if (response.code() == 201) {
+                    if (response.code() == 201) {
 
-                  //      ShareDialog shareDialog;
-                 //       FacebookSdk.sdkInitialize(getApplicationContext());
-                     //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+
+                        //      ShareDialog shareDialog;
+                        //       FacebookSdk.sdkInitialize(getApplicationContext());
+                        //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
 
 //                        Uri videoFileUri = Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE");
 //                        ShareVideo shareVideo = new ShareVideo.Builder()
@@ -250,10 +250,46 @@ public class BaseBottomBarActivity extends BaseActivity
 //
 //                        shareDialog.show(content);
 
-                        final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-                        new ShowShareDialog(BaseBottomBarActivity.this).execute(s);
 
-                       // Bitmap image = ...
+                        final String s = "https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
+                        new AsyncTask<Void, Void, Bitmap>() {
+                            @Override
+                            protected Bitmap doInBackground(final Void... params) {
+                                Bitmap bitmap = null;
+                                try {
+                                    final URL url = new URL(s);
+                                    try {
+                                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                return bitmap;
+                            }
+
+                            @Override
+                            protected void onPostExecute(final Bitmap result) {
+
+                                SharePhoto photo = new SharePhoto.Builder()
+                                        .setBitmap(result)
+                                        .build();
+                                SharePhotoContent content = new SharePhotoContent.Builder()
+                                        .addPhoto(photo)
+                                        .build();
+
+                                ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+                                shareDialog.show(content);
+                                ShareApi.share(content, null);
+
+                            }
+                        }.execute();
+
+
+                        // Bitmap image = ...
 
 //                        Uri videoFileUri = Uri.parse("https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939.mp4");
 //                        ShareVideo video = new ShareVideo.Builder()
@@ -264,27 +300,29 @@ public class BaseBottomBarActivity extends BaseActivity
 //                                .build();
 //                        ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
 //                        shareDialog.show(content);
-                    onUploadFinish();
 
-                    deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                } else {
-                    if (response.code() == 200) {
-                        if (response.body().getMessage().contains("own video")) {
+                        onUploadFinish();
+
+                        deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
+                    } else {
+                        if (response.code() == 200) {
+                            if (response.body().getMessage().contains("own video")) {
 //                        USER IS REACTING ON HIS OWN VIDEO.
 
 
-                            uploadingNotificationTextView.setText(response.body().getMessage());
-                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                            finishVideoUploadSession(getApplicationContext());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    uploadingStatusLayout.setVisibility(GONE);
-                                }
-                            }, 1000);
+                                uploadingNotificationTextView.setText(response.body().getMessage());
+                                deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
+                                finishVideoUploadSession(getApplicationContext());
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 1000);
+                            }
+                            return;
                         }
                     }
-                }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -305,47 +343,31 @@ public class BaseBottomBarActivity extends BaseActivity
         };
     }
 
-    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
+    @Override
+    public void onFollowerListListener(String id,String identifier) {
+        pushFragment(FollowersListActivity.newInstance(id, identifier));
 
-        private WeakReference<BaseBottomBarActivity> reference;
-
-        ShowShareDialog(BaseBottomBarActivity context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap bitmap = null;
-            try {
-                final URL url = new URL(strings[0]);
-                try {
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(reference.get());
-            shareDialog.show(content);
-            // ShareApi.share(content, null);
-            super.onPostExecute(bitmap);
-        }
     }
+
+    @Override
+    public void onFollowingListListener(String id, String identifier) {
+        pushFragment(FollowingListActivities.newInstance(id, identifier));
+
+    }
+
+    @Override
+    public void viewOthersProfile(String id, String username, String type) {
+        pushFragment(othersProfileFragment.newInstance(id, type,username));
+
+    }
+
+    @Override
+    public void viewOthersProfileFollowing(String id, String username, String type) {
+
+        pushFragment(othersProfileFragment.newInstance2(id, type,username));
+
+    }
+
 
     private static class ResumeUpload extends AsyncTask<Void, Void, Callback<ResultObject>> {
 
@@ -425,7 +447,8 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    @OnClick(R.id.uploading_notification) public void retryUpload() {
+    @OnClick(R.id.uploading_notification)
+    public void retryUpload() {
         if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
             uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
@@ -433,7 +456,8 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    @OnClick(R.id.dismiss) public void cancelUpload() {
+    @OnClick(R.id.dismiss)
+    public void cancelUpload() {
         if (uploadCall != null) {
             uploadCall.cancel();
         }
@@ -495,16 +519,19 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public void updateToolbar(boolean isDiscoverPage) {
         if (isDiscoverPage && navigationController.isRootFragment()) {
-            if (toolbarPlainTitle.getVisibility() != VISIBLE)
+            if (appBar.getElevation() != 0.0)
+                appBar.setElevation(0.0f);
+            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
+                updateToolbarTitle(getString(R.string.discover));
                 toolbarPlainTitle.setVisibility(VISIBLE);
-            if (toolbarCenterTitle.getVisibility() != GONE)
-                toolbarCenterTitle.setVisibility(GONE);
-        }
-        else {
-            if (toolbarCenterTitle.getVisibility() != VISIBLE)
-                toolbarCenterTitle.setVisibility(VISIBLE);
-            if (toolbarPlainTitle.getVisibility() != GONE)
-                toolbarPlainTitle.setVisibility(GONE);
+                if (toolbarCenterTitle.getVisibility() != GONE)
+                    toolbarCenterTitle.setVisibility(GONE);
+            } else {
+                if (toolbarCenterTitle.getVisibility() != VISIBLE)
+                    toolbarCenterTitle.setVisibility(VISIBLE);
+                if (toolbarPlainTitle.getVisibility() != GONE)
+                    toolbarPlainTitle.setVisibility(GONE);
+            }
         }
     }
 
@@ -721,12 +748,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, Profile profile) {
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId,String userType) {
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
-            pushFragment(ProfileFragment.newInstance());
-            Toast.makeText(this, "User Profile fetched, only need to populate it now.", Toast.LENGTH_SHORT).show();
+
+            pushFragment(othersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
     }
 
@@ -779,14 +806,19 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void hideSettings(boolean flag) {
-        if(flag) {
-            settings.setVisibility(View.VISIBLE);
-        }
-        else {
-            settings.setVisibility(View.GONE);
-        }
+
+
+
+
+    }
+    public void hidereport()
+    {
+
     }
 
+    public void hidesettingsReport()
+    {
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

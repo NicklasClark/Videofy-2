@@ -280,8 +280,8 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingStart">@dimen/padding_default</item>
-        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <item name="android:paddingStart">@dimen/padding_half</item>
+        <item name="android:paddingEnd">@dimen/padding_half</item>
         <item name="android:textAllCaps">false</item>
     </style>
 

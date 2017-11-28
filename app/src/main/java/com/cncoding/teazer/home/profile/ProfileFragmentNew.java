@@ -82,7 +82,7 @@ public class ProfileFragmentNew extends BaseFragment {
     String detail;
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
-    private ProfileFragment.OnFragmentInteractionListener mListener;
+
 
     public ProfileFragmentNew() {
     }

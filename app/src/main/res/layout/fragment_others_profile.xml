@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.activity.FollowerFollowingProfileActivity">
+    tools:context=".ui.fragment.activity.othersProfileFragment">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -34,9 +34,10 @@
 
                 <RelativeLayout
 
+
                     android:id="@+id/profile_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="260dp"
+                    android:layout_height="220dp"
                     android:orientation="vertical">
 
                     <ImageView
@@ -50,7 +51,7 @@
                     <RelativeLayout
 
                         android:layout_width="match_parent"
-                        android:layout_height="260dp"
+                        android:layout_height="220dp"
                         android:background="@color/blur"
                         android:orientation="vertical" />
 
@@ -63,7 +64,7 @@
                             android:id="@+id/container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="?attr/actionBarSize"
+
                             android:orientation="horizontal"
                             android:paddingTop="10dp">
 
@@ -105,19 +106,21 @@
                                     <RelativeLayout
 
                                         android:layout_width="match_parent"
-                                        android:layout_marginLeft="5dp"
                                         android:layout_height="wrap_content">
 
 
                                         <com.cncoding.teazer.customViews.SignPainterTextView
-                                            android:id="@+id/username"
-                                            android:layout_width="wrap_content"
+                                            android:id="@+id/username_title"
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
                                             android:layout_marginBottom="5dp"
+
+
                                             android:layout_marginTop="10dp"
-                                            android:gravity="center"
-                                            android:text="@string/username"
+                                            android:gravity="center_vertical"
+                                            android:maxLines="1"
+                                            android:text="usernamezp"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="32sp" />
                                         <LinearLayout
@@ -125,28 +128,30 @@
                                             android:layout_width="match_parent"
                                             android:layout_centerVertical="true"
                                             android:gravity="center_vertical"
-                                            android:layout_below="@+id/username"
+                                            android:layout_below="@+id/username_title"
                                             android:layout_height="wrap_content">
 
-                                        <TextView
-                                            android:id="@+id/bullets"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username"
-                                            android:text="\u25CF"
-                                            android:textColor="#b1ffffff"
-                                            android:textSize="12dp" />
+                                            <TextView
+                                                android:id="@+id/bullets"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="\u25CF"
+                                                android:gravity="center_vertical"
+                                                android:textColor="#b1ffffff"
+                                                android:textSize="13dp" />
 
-                                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                            android:id="@+id/name"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username"
-                                            android:layout_marginStart="5dp"
-                                            android:layout_toEndOf="@+id/bullets"
-                                            android:text="@string/name"
-                                            android:textColor="@color/colorIcons"
-                                            android:textSize="12sp" />
+                                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                                android:id="@+id/username"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:gravity="center_vertical"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_toEndOf="@+id/bullets"
+                                                android:maxLines="1"
+
+                                                android:text="@string/name"
+                                                android:textColor="@color/colorIcons"
+                                                android:textSize="12sp" />
                                         </LinearLayout>
 
                                         <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
@@ -155,10 +160,12 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/bulletslayout"
-                                            android:layout_marginBottom="10dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:lineSpacingExtra="2dp"
                                             android:layout_marginTop="5dp"
                                             android:layout_marginRight="20dp"
-                                            android:lineSpacingExtra="2dp"
+                                            android:maxLines="3"
+                                            android:ellipsize="end"
                                             android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
@@ -171,7 +178,6 @@
                                             android:layout_below="@+id/hobby"
                                             android:layout_marginEnd="10dp"
                                             android:background="@drawable/border_layout"
-                                            android:drawableStart="@drawable/ic_check_24dp"
                                             android:paddingTop="5dp"
                                             android:paddingBottom="5dp"
                                             android:paddingRight="3dp"
@@ -207,7 +213,7 @@
 
                                 android:orientation="horizontal">
 
-                                <TextView
+                                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                     android:id="@+id/creations"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -244,7 +250,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <TextView
+                                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                     android:id="@+id/following"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -278,7 +284,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <TextView
+                                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                     android:id="@+id/followers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -407,6 +413,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="#26C6DA"
+                    android:visibility="gone"
                     app:layout_collapseMode="pin">
 
                     <RelativeLayout

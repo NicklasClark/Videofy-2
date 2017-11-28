@@ -31,7 +31,17 @@
                 android:background="@drawable/material_flat"
                 android:layout_height="280dp" />
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="290dp">
+                <ImageView
 
+                    android:layout_width="match_parent"
+                    android:background="@drawable/bg_vignette"
+                    android:layout_height="290dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp">
                 <RelativeLayout
@@ -51,16 +61,28 @@
                         android:layout_height="wrap_content"
                         />
 
-                    <TextView
+                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        android:id="@+id/menu"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_contextmenu"
+                        android:foreground="@drawable/ripple_dark_no_rounded"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:padding="5dp"
+                        android:visibility="invisible"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="@dimen/padding_default"
+                        />
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                         android:id="@+id/duration"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:text="48 secs"
-                        android:layout_marginTop="10dp"
-                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5dp"
                         android:textSize="14sp"
-                        android:layout_marginRight="10dp"
                         android:textColor="@color/cardview_light_background"
+
                         android:layout_toStartOf="@+id/menu"/>
 
                 </RelativeLayout>
@@ -72,8 +94,8 @@
 
                 <RelativeLayout
                     android:id="@+id/locationimage"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginStart="14dp"
 
                     android:layout_centerVertical="true"
@@ -84,8 +106,8 @@
                     >
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
                         android:id="@+id/userReactionImage"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_margin="1dp"
                         app:srcCompat="@drawable/arif_image" />
                 </RelativeLayout>
@@ -121,28 +143,27 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:layout_marginBottom="21dp"
-
                 android:layout_alignParentBottom="true">
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
                     android:id="@+id/likes"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
 
-                    app:srcCompat="@drawable/likeimage"
+                    app:srcCompat="@drawable/ic_like_outline_small"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="5dp"
                     />
-                <TextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                     android:layout_width="wrap_content"
                     android:id="@+id/txtlikes"
                     android:text="800"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/likes"/>
@@ -158,94 +179,97 @@
                     android:layout_marginEnd="5dp"
                     android:layout_toEndOf="@+id/txtlikes"
                     />
-                <TextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                     android:layout_width="wrap_content"
                     android:id="@+id/txtview"
                     android:text="1080"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/view"/>
+                <RelativeLayout
+                    android:id="@+id/reactiontext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true">
 
-                <!--<RelativeLayout-->
-                    <!--android:id="@+id/reactiontext"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:layout_marginEnd="16dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:layout_alignParentEnd="true">-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/reactions"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:text="+200 R"-->
-                        <!--android:textSize="12sp"-->
-                        <!--android:textColor="@color/cardview_light_background"-->
-                        <!--android:layout_height="wrap_content" />-->
-                <!--</RelativeLayout>-->
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                        android:id="@+id/reactions"
+                        android:layout_width="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/cardview_light_background"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
 
-                <!--<RelativeLayout-->
-                    <!--android:id="@+id/image1_layout"-->
-                    <!--android:layout_width="35dp"-->
-                    <!--android:layout_height="35dp"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:layout_marginEnd="10dp"-->
-                    <!--android:layout_toStartOf="@+id/reactiontext"-->
-                    <!--android:background="@drawable/bg_circle_white_outline"-->
-                    <!--&gt;-->
-                    <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
-                        <!--android:id="@+id/home_screen_post_dp"-->
-                        <!--android:layout_width="35dp"-->
-                        <!--android:layout_height="35dp"-->
-                        <!--android:layout_margin="1dp"-->
-                        <!--app:srcCompat="@drawable/arif_image" />-->
-                <!--</RelativeLayout>-->
+                <RelativeLayout
+                    android:id="@+id/image1_layout"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/reactiontext"
+                    android:background="@drawable/bg_circle_white_outline"
+                    >
+                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        android:id="@+id/image1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="1dp"
+                        app:srcCompat="@drawable/arif_image" />
+                </RelativeLayout>
 
-                <!--<RelativeLayout-->
-                    <!--android:id="@+id/image2_layout"-->
-                    <!--android:layout_width="35dp"-->
-                    <!--android:layout_height="35dp"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:layout_marginEnd="10dp"-->
-                    <!--android:layout_toStartOf="@+id/image1_layout"-->
-                    <!--android:layout_marginStart="@dimen/padding_half"-->
-                    <!--android:background="@drawable/bg_circle_white_outline">-->
+                <RelativeLayout
+                    android:id="@+id/image2_layout"
+                    android:layout_width="30dp"
+                    android:visibility="gone"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/image1_layout"
+                    android:layout_marginStart="@dimen/padding_half"
+                    android:background="@drawable/bg_circle_white_outline">
 
-                    <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
-                        <!--android:id="@+id/image2"-->
-                        <!--android:layout_width="35dp"-->
-                        <!--android:layout_height="35dp"-->
-                        <!--android:layout_margin="1dp"-->
-                        <!--app:srcCompat="@drawable/arif_image" />-->
+                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        android:id="@+id/image2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="1dp"
+                        app:srcCompat="@drawable/arif_image" />
 
-                <!--</RelativeLayout>-->
-                <!--<RelativeLayout-->
-                    <!--android:id="@+id/image3_layout"-->
-                    <!--android:layout_width="35dp"-->
-                    <!--android:layout_height="35dp"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:layout_toStartOf="@+id/image2_layout"-->
-                    <!--android:layout_marginStart="@dimen/padding_half"-->
-                    <!--android:background="@drawable/bg_circle_white_outline">-->
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/image3_layout"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    android:layout_toStartOf="@+id/image2_layout"
+                    android:layout_marginStart="@dimen/padding_half"
+                    android:background="@drawable/bg_circle_white_outline">
 
-                    <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
-                        <!--android:id="@+id/image3"-->
-                        <!--android:layout_width="35dp"-->
-                        <!--android:layout_height="35dp"-->
-                        <!--android:layout_margin="1dp"-->
-                        <!--app:srcCompat="@drawable/arif_image" />-->
+                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                        android:id="@+id/image3"
 
-                <!--</RelativeLayout>-->
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="1dp"
+                        app:srcCompat="@drawable/arif_image" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
