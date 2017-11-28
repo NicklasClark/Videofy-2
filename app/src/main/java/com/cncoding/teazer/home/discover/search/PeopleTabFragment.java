@@ -127,8 +127,6 @@ public class PeopleTabFragment extends BaseFragment {
                                         Toast.LENGTH_SHORT).show();
                             }
                             reference.get().swipeRefreshLayout.setRefreshing(false);
-                            if (response.raw().body() != null)
-                                response.raw().body().close();
                         }
 
                         @Override

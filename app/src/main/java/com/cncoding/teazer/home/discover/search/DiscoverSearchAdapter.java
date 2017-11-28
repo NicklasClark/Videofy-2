@@ -137,8 +137,6 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                         }
                                                     } else
                                                         Log.e("sendJoinRequest", response.code() + "_" + response.message());
-
-                                                    response.raw().body().close();
                                                 }
 
                                                 @Override
