@@ -255,4 +255,5 @@
     <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
     <string name="something_went_wrong">Something went wrong!\nPlease try again later.</string>
     <string name="edit">EDIT</string>
+    <string name="people">People</string>
 </resources>
