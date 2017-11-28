@@ -223,38 +223,42 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             break;
                     }
                 }
-                else {
-                    if (holder2.accountType == 1) {
-                        switch (holder2.notification.getNotificationType()) {
 
 
-                            case STARTED_FOLLOWING:
-                                //setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                                holder2.action.setText("Following");
-                                break;
-                            case ACCEPTED_REQUEST:
-                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                                holder2.action.setText("Requested");
-                                break;
-                            case SENT_YOU_A_FOLLOW_REQUEST:
-                                setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
-                                holder2.action.setText("Follow");
-                                break;
-                            case ALSO_STARTED_FOLLOWING:
-                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                                holder2.action.setText("Following");
-                                break;
-                            default:
-                                break;
-                        }
 
-                    }
-                     else
-
-                        {
-
-                        }
-                    }
+//                else {
+//                    if (holder2.accountType == 1) {
+//                        switch (holder2.notification.getNotificationType()) {
+//
+//
+//                            case STARTED_FOLLOWING:
+//                                //setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+//                                holder2.action.setText("Following");
+//                                break;
+//                            case ACCEPTED_REQUEST:
+//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+//                                holder2.action.setText("Requested");
+//                                break;
+//                            case SENT_YOU_A_FOLLOW_REQUEST:
+//                                setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
+//                                holder2.action.setText("Follow");
+//                                break;
+//                            case ALSO_STARTED_FOLLOWING:
+//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+//                                holder2.action.setText("Following");
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//
+//                    }
+//                     else
+//
+//                        {
+//
+//                        }
+//
+//                    }
 
 
 
@@ -331,10 +335,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         else
                                                             Log.d("AcceptJoinRequest", response.code()
                                                                     + " : " + response.body().getMessage());
-                                                    } else
-                                                        Log.d("AcceptJoinRequest", response.code()
-                                                                + " : " + response.body().getMessage());
-                                                }
+                                                    } else{
+//                                                        Log.d("AcceptJoinRequest", response.code()
+//                                                                + " : " + response.body().getMessage());
+                                                }}
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {

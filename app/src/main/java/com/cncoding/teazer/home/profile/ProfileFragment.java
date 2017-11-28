@@ -115,12 +115,14 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        //previousTitle=getParentActivity().getToolbarTitle();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+        getParentActivity().updateToolbarTitle("My Profile");
 
 
 
@@ -388,6 +390,7 @@ public class ProfileFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+     //   getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     public interface FollowerListListener {
