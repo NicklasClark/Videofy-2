@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.media.AudioManager;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.DrawableRes;
@@ -14,7 +13,7 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -22,7 +21,6 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
@@ -40,12 +38,12 @@ import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
 public class MediaControllerView extends FrameLayout implements VideoGestureListener {
 
 //    private static final String TAG = "MediaControllerView";
-    private static final String SPACE = "  ";
+    public static final String SPACE = "  ";
 
     private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
 //    private static final long PROGRESS_SEEK = 500;
-    private static final long ANIMATE_TIME = 500;
+    private static final long ANIMATE_TIME = 280;
 
 //    private SeekBar mSeekBar; //seek bar for video
 //    private boolean mIsDragging; //is dragging seekBar
@@ -70,19 +68,19 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private String location;
     private String profileName;
     private String profilePicUrl;
-    private String likes;
-    private String views;
+    private int likes;
+    private int views;
     private String categories;
     private String duration;
     private boolean isPlaying;
 //    private String tagsCount;
-    private String reactionCount;
+    private int reactionCount;
     private String reaction1Url;
     private String reaction2Url;
     private String reaction3Url;
     private MediaPlayerControlListener mediaPlayerControlListener;
     private ViewGroup anchorView;
-    private SurfaceView surfaceView;
+    private TextureView textureView;
     private MotionEvent event;
 
     @DrawableRes private int pauseIcon;
@@ -110,7 +108,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     CircularAppCompatImageView reaction3Pic;
 
     private Handler handler = new ControllerViewHandler(this);
-    private CountDownTimer countDownTimer;
+//    private CountDownTimer countDownTimer;
     private GestureDetector gestureDetector;
     private int currentVolume;
 
@@ -128,7 +126,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         videoTitle = builder.videoTitle;
         pauseIcon = builder.pauseIcon;
         playIcon = builder.playIcon;
-        surfaceView = builder.surfaceView;
+        textureView = builder.textureView;
         location = builder.location;
         profileName = builder.profileName;
         profilePicUrl = builder.profilePicUrl;
@@ -155,9 +153,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
         initControllerView();
         isPlaying = true;
-        show();
+        show(true, false, true);
 
-//        this.surfaceView.setOnTouchListener(new OnTouchListener() {
+//        this.textureView.setOnTouchListener(new OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent event) {
 //                toggleControllerView();
@@ -243,22 +241,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         reaction1Pic = findViewById(R.id.media_controller_reaction_1);
         reaction2Pic = findViewById(R.id.media_controller_reaction_2);
         reaction3Pic = findViewById(R.id.media_controller_reaction_3);
-        caption.setText(videoTitle);
-        locationView.setText(SPACE + location);
-        profileNameView.setText(profileName);
-        likesView.setText(SPACE + likes);
-        viewsView.setText(SPACE + views);
-        categoriesView.setText(categories);
-//        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
-        Glide.with(getContext())
-                .load(profilePicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
-                .into(profilePic);
 
-//        set remaining time of video.
+        refreshControllerView();
+
         playPauseButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,38 +276,78 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         formatter = new Formatter(formatBuilder, Locale.getDefault());
     }
 
+    private void refreshControllerView() {
+        caption.setText(videoTitle);
+        String locationText = SPACE + location;
+        locationView.setText(locationText);
+        profileNameView.setText(profileName);
+        String likesText = SPACE + likes;
+        likesView.setText(likesText);
+        String viewsText = SPACE + views;
+        viewsView.setText(viewsText);
+        categoriesView.setText(categories);
+
+        if (reactionCount > 4) {
+            String reactionText = SPACE + "+" + (reactionCount - 3) + " R";
+            reactionCountView.setText(reactionText);
+        } else if (reactionCount == 0){
+            setNoReactions();
+        }
+        else {
+            String reactionText = SPACE + reactionCount + " R";
+            reactionCountView.setText(reactionText);
+        }
+        Glide.with(getContext())
+                .load(profilePicUrl)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade(400)
+                .into(profilePic);
+    }
+
+    public void incrementLikes() {
+        String likesText = SPACE + ++likes;
+        likesView.setText(likesText);
+    }
+
+    public void decrementLikes() {
+        String likesText = SPACE + --likes;
+        likesView.setText(likesText);
+    }
+
+    public void incrementViews() {
+        String viewsText = SPACE + ++views;
+        viewsView.setText(viewsText);
+    }
+
     public void setReaction1Pic(String reaction1PicUrl) {
+        reaction1Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction1PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction1Pic);
     }
 
     public void setReaction2Pic(String reaction2PicUrl) {
+        reaction2Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction2PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction2Pic);
     }
 
     public void setReaction3Pic(String reaction3PicUrl) {
+        reaction3Pic.setVisibility(VISIBLE);
         Glide.with(getContext())
                 .load(reaction3PicUrl)
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade(400)
-//                .apply(RequestOptions.circleCropTransform())
-//                .apply(RequestOptions.bitmapTransform(new ColorFilterTransformation(PlaceHolderDrawableHelper.getColor())))
                 .into(reaction3Pic);
     }
 
-    public void setReactionCount(String reactionCount) {
-        reactionCountView.setText(SPACE + "+" + reactionCount + " R");
+    public void setNoReactions() {
+        reactionCountView.setText("");
     }
 
     private void toggleVolume() {
@@ -355,15 +380,15 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
     }
 
-    /**
-     * setMediaPlayerControlListener update play state
-     *
-     * @param mediaPlayerListener self
-     */
-    public void setMediaPlayerControlListener(MediaPlayerControlListener mediaPlayerListener) {
-        this.mediaPlayerControlListener = mediaPlayerListener;
-//        togglePlayPause();
-    }
+//    /**
+//     * setMediaPlayerControlListener update play state
+//     *
+//     * @param mediaPlayerListener self
+//     */
+//    public void setMediaPlayerControlListener(MediaPlayerControlListener mediaPlayerListener) {
+//        this.mediaPlayerControlListener = mediaPlayerListener;
+////        togglePlayPause();
+//    }
 
     /**
      * toggle {@link MediaControllerView} show or not
@@ -372,15 +397,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void toggleControllerView() {
         togglePlayPauseIcons();
         if (!isShowing()) {
-            show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isPlaying && isShowing)
-                        hide();
-                }
-            }, 5000);
+            show(false, false, true);
         } else {
+            hide();
             //animate out controller view
             Message msg = handler.obtainMessage(HANDLER_ANIMATE_OUT);
             //remove exist one first
@@ -406,22 +425,24 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     /**
      * show controller view
+     * @param autoHide whether to autoHide the media controller view.
+     * @param toggle whether to toggle play-pause icons.
+     * @param animate whether to aniate while showing.
      */
-    private void show() {
-
+    public void show(boolean autoHide, boolean toggle, boolean animate) {
         if (anchorView != null) {
             //add controller view to bottom of the AnchorView
             FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
             );
-//            anchorView.removeAllViews();
             anchorView.removeView(MediaControllerView.this);
             anchorView.addView(MediaControllerView.this, frameParams);
 
-            putOn(topLayout)
+            if (animate)
+                putOn(topLayout)
                     .waitForSize(new Listeners.Size() {
                         @Override
-                        public void onSize(com.cncoding.teazer.customViews.ViewAnimator viewAnimator) {
+                        public void onSize(ViewAnimator viewAnimator) {
                             viewAnimator.animate()
                                     .translationY(-topLayout.getHeight(), 0)
                                     .duration(ANIMATE_TIME)
@@ -441,15 +462,21 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                                     });
                         }
                     });
-        }
+            if (toggle)
+                togglePlayPauseIcons();
 
-//        if (mPauseButton != null) {
-//            mPauseButton.requestFocus();
-//        }
-//        togglePlayPauseIcons();
-//        toggleFullScreen();
-        //update progress
-        handler.sendEmptyMessage(HANDLER_UPDATE_PROGRESS);
+            if (autoHide)
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isShowing)
+                            hide();
+                    }
+                }, 5000);
+
+            //update progress
+            handler.sendEmptyMessage(HANDLER_UPDATE_PROGRESS);
+        }
     }
 
     /**
@@ -494,13 +521,25 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
 
         int position = mediaPlayerControlListener.getCurrentPosition();
-        int duration = mediaPlayerControlListener.getDuration();
+        int duration = convert(mediaPlayerControlListener.getDuration() + ".");
 
-        remainingTime.setText(SPACE + stringToTime(duration - position));
+        String remainingTimeText;
+        remainingTimeText = SPACE + stringToTime(duration - position);
         if(mediaPlayerControlListener.isComplete()){
-            remainingTime.setText(SPACE + stringToTime(duration));
+            remainingTimeText = SPACE + stringToTime(duration);
         }
+        remainingTime.setText(remainingTimeText);
         return position;
+    }
+
+    private int convert(String time) {
+        int quoteInd = time.indexOf(":");
+        int pointInd = time.indexOf(".");
+
+        int min = Integer.valueOf(time.substring(0, quoteInd));
+        int sec = Integer.valueOf(time.substring(++quoteInd, pointInd));
+
+        return (((min * 60) + sec) * 1000);
     }
 
     /**
@@ -534,18 +573,18 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         private String location = "";
         private String profileName = "";
         private String profilePicUrl = "";
-        private String likes = "";
-        private String views = "";
+        private int likes;
+        private int views;
         private String categories = "";
         public String duration;
 //        private String tagsCount = "";
-        private String reactionCount = "";
+        private int reactionCount;
         private String reaction1Url = "";
         private String reaction2Url = "";
         private String reaction3Url = "";
         private MediaPlayerControlListener mediaPlayerControlListener;
         private ViewGroup anchorView;
-        private SurfaceView surfaceView;
+        private TextureView textureView;
         @DrawableRes private int playIcon;
         @DrawableRes private int pauseIcon;
 //        private boolean canSeekVideo = true;
@@ -559,8 +598,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         public Builder(@Nullable Activity context, @Nullable MediaPlayerControlListener mediaControlListener){
             this.context = context;
             this.mediaPlayerControlListener = mediaControlListener;
-            playIcon = R.drawable.ic_play;
-            pauseIcon = R.drawable.ic_pause;
+            playIcon = R.drawable.ic_play_big;
+            pauseIcon = R.drawable.ic_pause_big;
         }
         public Builder with(@Nullable Activity context) {
             this.context = context;
@@ -593,12 +632,12 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return this;
         }
 
-        public Builder withLikes(String likes) {
+        public Builder withLikes(int likes) {
             this.likes = likes;
             return this;
         }
 
-        public Builder withViews(String views) {
+        public Builder withViews(int views) {
             this.views = views;
             return this;
         }
@@ -618,28 +657,28 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //            return this;
 //        }
 
-        public Builder withReactions(String reactions) {
-            this.reactionCount = reactions;
+        public Builder withReactionCount(int reactionCount) {
+            this.reactionCount = reactionCount;
             return this;
         }
 
-        public Builder withReaction1Url(@SuppressWarnings("SameParameterValue") String reaction1Url) {
-            this.reaction1Url = reaction1Url;
-            return this;
-        }
+//        public Builder withReaction1Url(@SuppressWarnings("SameParameterValue") String reaction1Url) {
+//            this.reaction1Url = reaction1Url;
+//            return this;
+//        }
+//
+//        public Builder withReaction2Url(@SuppressWarnings("SameParameterValue") String reaction2Url) {
+//            this.reaction2Url = reaction2Url;
+//            return this;
+//        }
+//
+//        public Builder withReaction3Url(@SuppressWarnings("SameParameterValue") String reaction3Url) {
+//            this.reaction3Url = reaction3Url;
+//            return this;
+//        }
 
-        public Builder withReaction2Url(@SuppressWarnings("SameParameterValue") String reaction2Url) {
-            this.reaction2Url = reaction2Url;
-            return this;
-        }
-
-        public Builder withReaction3Url(@SuppressWarnings("SameParameterValue") String reaction3Url) {
-            this.reaction3Url = reaction3Url;
-            return this;
-        }
-
-        public Builder withVideoSurfaceView(@Nullable SurfaceView surfaceView){
-            this.surfaceView = surfaceView;
+        public Builder withVideoSurfaceView(@Nullable TextureView textureView){
+            this.textureView = textureView;
             return this;
         }
 
@@ -719,8 +758,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     public void exit() {
 //        mediaPlayerControlListener.exit();
-        context.getContentResolver().registerContentObserver(
-                android.provider.Settings.System.CONTENT_URI, true, contentObserver);
+        context.getContentResolver().unregisterContentObserver(contentObserver);
     }
 
     /**
@@ -744,7 +782,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
          *
          * @return total time
          */
-        int getDuration();
+        String getDuration();
 
         /**
          * get video current position

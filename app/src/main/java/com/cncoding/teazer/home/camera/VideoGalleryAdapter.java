@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.camera;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +19,12 @@ import java.util.ArrayList;
 
 class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewHolder> {
 
+    private CameraActivity cameraActivity;
     private ArrayList<Videos> videos;
-    private Context context;
-    private VideoGalleryAdapterInteractionListener mListener;
 
-    VideoGalleryAdapter(ArrayList<Videos> videos, Context context) {
+    VideoGalleryAdapter(CameraActivity cameraActivity, ArrayList<Videos> videos) {
+        this.cameraActivity = cameraActivity;
         this.videos = videos;
-        this.context = context;
-
-        if (context instanceof VideoGalleryAdapterInteractionListener) {
-            mListener = (VideoGalleryAdapterInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement VideoGalleryAdapterInteractionListener");
-        }
     }
 
     @Override
@@ -44,7 +35,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Glide.with(context).load("file://" + videos.get(position).getThumbnail())
+        Glide.with(cameraActivity).load("file://" + videos.get(position).getThumbnail())
                 .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .crossFade(280)
                 .skipMemoryCache(false)
@@ -53,7 +44,7 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
         holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onVideoGalleryAdapterInteraction(videos.get(holder.getAdapterPosition()).getPath());
+                cameraActivity.onVideoGalleryAdapterInteraction(videos.get(holder.getAdapterPosition()).getPath());
             }
         });
     }
@@ -71,9 +62,5 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
             super(view);
             thumbnailView = view.findViewById(R.id.video_gallery_thumbnail);
         }
-    }
-
-    interface VideoGalleryAdapterInteractionListener {
-        void onVideoGalleryAdapterInteraction(String videoPath);
     }
 }

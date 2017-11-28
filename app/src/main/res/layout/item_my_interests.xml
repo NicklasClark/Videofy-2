@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/interests_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:paddingTop="@dimen/padding_half"
+        android:paddingStart="@dimen/padding_half"
+        android:paddingEnd="@dimen/padding_half"
+        android:textAllCaps="true" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+        android:id="@+id/no_my_interests_posts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="220dp"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_content_big"
+        android:text="@string/no_posts_available"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_my_interests_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_half"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

@@ -2,34 +2,55 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Matrix;
+import android.graphics.SurfaceTexture;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
+import android.view.Surface;
+import android.view.TextureView;
+import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.MediaControllerView;
+import com.cncoding.teazer.customViews.MediaControllerView.MediaPlayerControlListener;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.customViews.ResizableSurfaceView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
+import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
+import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
+import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.io.IOException;
@@ -42,39 +63,58 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostDetailsFragment extends BaseFragment implements MediaControllerView.MediaPlayerControlListener,
-        SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
-    private static final String ARG_COLUMN_COUNT = "columnCount";
-    private static final String ARG_POST_DETAILS = "postDetails";
-    public static final int ACTION_DISMISS_PLACEHOLDER = 10;
+import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 
+public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
+        SurfaceTextureListener, OnVideoSizeChangedListener {
+
+    private static final String ARG_POST_DETAILS = "postDetails";
+    private static final String ARG_THUMBNAIL = "thumbnail";
+    public static final int ACTION_DISMISS_PLACEHOLDER = 10;
+    public static final int ACTION_OPEN_REACTION_CAMERA = 11;
+
+    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.video_surface) ResizableSurfaceView surfaceView;
+    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
+    @BindView(R.id.video_surface) TextureView textureView;
+    @BindView(R.id.placeholder) ImageView placeholder;
     @BindView(R.id.video_surface_container) FrameLayout surfaceContainer;
     @BindView(R.id.loading) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
-    @BindView(R.id.menu) CircularAppCompatImageView menu;
+    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
+    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list) RecyclerView recyclerView;
+//    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
+    private Context context;
     private PostDetails postDetails;
-    private int videoWidth;
-    private int videoHeight;
-    private int columnCount = 1;
     private boolean isComplete;
+    private byte[] image;
     private ArrayList<PostReaction> postReactions;
+    private ArrayList<TaggedUser> taggedUsersList;
     private MediaControllerView controller;
     private MediaPlayer mediaPlayer;
     private OnPostDetailsInteractionListener mListener;
+    private PostReactionAdapter postReactionAdapter;
 
     public PostDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(int columnCount, PostDetails postDetails) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putParcelable(ARG_POST_DETAILS, postDetails);
+        args.putByteArray(ARG_THUMBNAIL, image);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,49 +123,126 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         postReactions = new ArrayList<>();
+        taggedUsersList = new ArrayList<>();
         if (getArguments() != null) {
-            columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
+            image = getArguments().getByteArray(ARG_THUMBNAIL);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getParentActivity().hideAppBar();
+        getParentActivity().updateToolbarTitle(getString(R.string.post));
+
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
+        context = getContext();
 
-        surfaceView.getHolder().addCallback(this);
+        updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
+                postDetails.getMedias().get(0).getDimension().getHeight());
+
+        if (image != null)
+            Glide.with(this)
+                    .load(image)
+                    .asBitmap()
+                    .into(placeholder);
+
         progressBar.setVisibility(View.VISIBLE);
+
+        likeAction(postDetails.canLike(), false);
+
+        if (!postDetails.canReact()) disableView(reactBtn);
+
+        tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
+
         prepareController();
-        prepareMediaPlayer();
-        getPostReactions(postDetails.getPostId(), 1);
+
+        postReactionAdapter = new PostReactionAdapter(postReactions, context);
+        CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, VERTICAL);
+        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(postReactionAdapter);
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (is_next_page)
+                    getPostReactions(postDetails.getPostId(), page);
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                scrollListener.resetState();
+//                getPostReactions(postDetails.getPostId(), 1);
+//            }
+//        });
+
+        taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
 
         return rootView;
     }
 
-    private void prepareMediaPlayer() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        textureView.setSurfaceTextureListener(this);
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            isComplete = false;
+            mediaPlayer.start();
+        }
+
+        if (postDetails != null) {
+            postReactions.clear();
+            getPostReactions(postDetails.getPostId(), 1);
+        }
+    }
+
+    private void prepareMediaPlayer(Surface surface) {
         mediaPlayer = new MediaPlayer();
         try {
-            mediaPlayer.setDataSource(getContext(), Uri.parse(
-                    postDetails.getMedias().get(0).getMediaUrl().equals("")?
-                            "android.resource://" + getActivity().getPackageName() + "/" + R.raw.welcome_video
-                            : postDetails.getMedias().get(0).getMediaUrl()));
+            mediaPlayer.setDataSource(postDetails.getMedias().get(0).getMediaUrl());
+            mediaPlayer.setSurface(surface);
+            mediaPlayer.setOnVideoSizeChangedListener(this);
+//            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        mediaPlayer.setOnVideoSizeChangedListener(this);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                progressBar.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.zoom_out));
-                progressBar.setVisibility(View.INVISIBLE);
+                dismissProgressBar();
                 isComplete = false;
                 mediaPlayer.start();
-                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
+                placeholder.animate().alpha(0).setDuration(400).start();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        placeholder.setVisibility(View.INVISIBLE);
+                    }
+                }, 400);
+                controller.show(false, true, false);
+//                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
 //                Increment the video view count
-                ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), getContext());
+                ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
+                        .enqueue(new Callback<ResultObject>() {
+                            @Override
+                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                if (response.code() == 200 && response.body().getStatus())
+                                    controller.incrementViews();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                            }
+                        });
             }
         });
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -139,8 +256,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     private void prepareController() {
-        String profilePicUrl = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-        if (postDetails.getPostOwner().getProfileMedia() != null)
+        String profilePicUrl = "";
+        if (postDetails.getPostOwner().hasProfileMedia())
             profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
         String location = "";
         if (postDetails.hasCheckin())
@@ -149,35 +266,27 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         if (postDetails != null) {
             controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
                     .withVideoTitle(postDetails.getTitle())
-                    .withVideoSurfaceView(surfaceView)
+                    .withVideoSurfaceView(textureView)
                     .withLocation(location)
                     .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
                     .withProfilePicUrl(profilePicUrl)
-                    .withLikes(String.valueOf(postDetails.getLikes()))
-                    .withViews(String.valueOf(postDetails.getMedias().get(0).getViews()))
+                    .withLikes(postDetails.getLikes())
+                    .withViews(postDetails.getMedias().get(0).getViews())
                     .withCategories(getUserCategories())
                     .withDuration(postDetails.getMedias().get(0).getDuration())
-                    .withReactions(String.valueOf(postDetails.getTotalReactions()))
+                    .withReactionCount(postDetails.getTotalReactions())
                     .build(surfaceContainer);
         }
-        else {
-            initDummyPostDetails();
-            controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
-                    .withVideoTitle(postDetails.getTitle())
-                    .withVideoSurfaceView(surfaceView)
-                    .withLocation("New Delhi")
-                    .withProfileName("Prem Suman")
-                    .withProfilePicUrl(postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                    .withLikes("123")
-                    .withViews("408")
-                    .withCategories("Dance, Music, Entertainment, EDM, VideoGraphy")
-                    .withDuration("00:32")
-                    .withReactions("215")
-                    .withReaction1Url("https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg")
-                    .withReaction2Url("https://i.pinimg.com/736x/84/e1/57/84e15741767278781febecef51b8f6e7--portrait-photography-tips-people-photography.jpg")
-                    .withReaction3Url("http://is5.mzstatic.com/image/thumb/Purple71/v4/90/ae/1b/90ae1b97-762d-82fa-1ff9-bcc76435ea88/source/1200x630bb.jpg")
-                    .build(surfaceContainer);
-        }
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY != 0) {
+                    if (!controller.isShowing())
+                        controller.show(true, false, true);
+                }
+            }
+        });
     }
 
     private String getUserCategories() {
@@ -191,155 +300,251 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
-        ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, getContext())
-                .enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context)
+                .enqueue(new Callback<PostReactionsList>() {
                     @Override
-                    public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
-                        if (response.code() == 200) {
-//                            Reactions came! now fetching the reactions and checking if next page is true (More reactions are available) or not.
-                            postReactions.addAll(response.body().getReactions());
-                            if (response.body().isNextPage()) {
-//                                More Reactions are available, so incrementing the page number and re-calling this method.
-                                getPostReactions(postId, pageNumber + 1);
-                            }
-                            else {
-//                                No more reactions available. So populating the reactions in the recyclerView.
-                                if (postReactions.size() > 0) {
-                                    populateRecyclerView(postReactions);
-                                    if (postReactions.size() >= 3) {
-                                        controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                    }
-                                    if (postReactions.size() >= 2) {
-                                        controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                    }
-                                    if (postReactions.size() >= 1) {
-                                        controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                    public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getReactions().size() > 0) {
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1)
+                                        postReactions.clear();
+
+                                    postReactions.addAll(response.body().getReactions());
+//                                    recyclerView.setVisibility(View.VISIBLE);
+                                    postReactionAdapter.notifyDataSetChanged();
+                                    if (postReactions.size() > 0) {
+                                        if (postReactions.size() >= 1) {
+                                            controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 2) {
+                                            controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 3) {
+                                            controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                        }
                                     }
                                 } else {
-                                    populateDummyReactions();
+                                    controller.setNoReactions();
+                                    showNoReactionMessage();
                                 }
-                            }
-                        } else {
-                            Toast.makeText(getContext(), response.code() +": " + response.message(), Toast.LENGTH_SHORT).show();
-                            populateDummyReactions();
+                                break;
+                            default:
+                                showErrorMessage("Error " + response.code() +": " + response.message());
+                                break;
                         }
                     }
 
+                    private void showErrorMessage(String message) {
+                        dismissProgressBar();
+//                        recyclerView.setVisibility(View.INVISIBLE);
+                        postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
+                        postLoadErrorLayout.setVisibility(View.VISIBLE);
+                        message = getString(R.string.could_not_load_posts) + message;
+                        postLoadErrorTextView.setText(message);
+                        postLoadErrorSubtitle.setText(R.string.tap_to_retry);
+                    }
+
                     @Override
-                    public void onFailure(Call<Pojos.Post.PostReactionsList> call, Throwable t) {
+                    public void onFailure(Call<PostReactionsList> call, Throwable t) {
                         ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
                     }
                 });
     }
 
-    private void populateRecyclerView(ArrayList<Pojos.Post.PostReaction> postReactions) {
-        CustomStaggeredGridLayoutManager manager;
-        manager = new CustomStaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new PostReactionAdapter(postReactions, getContext()));
-
-//        recyclerView.addOnScrollListener(((BaseBottomBarActivity) getActivity()).recyclerViewScrollListener());
+    private void showNoReactionMessage() {
+        dismissProgressBar();
+        reactionsHeader.setVisibility(View.GONE);
+//        recyclerView.setVisibility(View.INVISIBLE);
+        postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
+        postLoadErrorLayout.setVisibility(View.VISIBLE);
+        postLoadErrorTextView.setText(R.string.no_reactions_yet);
+        postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
     }
 
-    private void initDummyPostDetails() {
-        ArrayList<Pojos.Medias> medias1 = new ArrayList<>();
-        medias1.add(new Pojos.Medias(0, "",
-                "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg",
-                "", new Pojos.Dimension(100, 100),false, 0, ""));
-        ArrayList<Pojos.Category> categories = new ArrayList<>();
-        categories.add(new Pojos.Category(1, "Fun"));
-        postDetails = new PostDetails(0, 0, 121, 232, false, "Last night bash at Delhi fort",
-                false, false, false,
-                new Pojos.MiniProfile(324, "prem",
-                        "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )), "", new Pojos.CheckIn(1, 12, 17, "Bangalore"),
-                medias1, categories);
+    private void dismissProgressBar() {
+        progressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        }, 280);
     }
 
-    private void populateDummyReactions() {
-        CustomStaggeredGridLayoutManager manager;
-        manager = new CustomStaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        Pojos.ReactionMediaDetail mediaDetail1 = new Pojos.ReactionMediaDetail(0, "",
-                "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg",
-                "", new Pojos.Dimension(100, 100), false);
-        Pojos.ReactionMediaDetail mediaDetail2 = new Pojos.ReactionMediaDetail(0, "",
-                "https://i.pinimg.com/736x/84/e1/57/84e15741767278781febecef51b8f6e7--portrait-photography-tips-people-photography.jpg",
-                "", new Pojos.Dimension(100, 100), false);
-        Pojos.ReactionMediaDetail mediaDetail3 = new Pojos.ReactionMediaDetail(0, "",
-                "http://is5.mzstatic.com/image/thumb/Purple71/v4/90/ae/1b/90ae1b97-762d-82fa-1ff9-bcc76435ea88/source/1200x630bb.jpg",
-                "", new Pojos.Dimension(100, 100), false);
-        ArrayList<Pojos.Post.PostReaction> postReactions = new ArrayList<>();
-        Pojos.Post.PostReaction postReaction1 = new Pojos.Post.PostReaction(0, 0, "Dude please!", 0, 0, 0, false,
-                false, mediaDetail1,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),"");
-        Pojos.Post.PostReaction postReaction2 = new Pojos.Post.PostReaction(0, 0, "Wait till you see this", 0, 0, 0, false,
-                false, mediaDetail2,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),"");
-        Pojos.Post.PostReaction postReaction3 = new Pojos.Post.PostReaction(0, 0, "Mine is better", 0, 0, 0, false,
-                false, mediaDetail3,
-                new Pojos.MiniProfile(324, "prem", "Prem", "Suman", false, false, true,
-                        new Pojos.ProfileMedia(
-                                "",
-                                "https://timesofindia.indiatimes.com/thumb/msid-59564820,width-400,resizemode-4/59564820.jpg",
-                                "00:35",
-                                new Pojos.Dimension(100, 100),
-                                false
-                        )),"");
-        for (int i = 0; i < 20; i++) {
-            postReactions.add(postReaction3);
-            postReactions.add(postReaction2);
-            postReactions.add(postReaction1);
+    @OnClick(R.id.react_btn) public void react() {
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.pause();
+        mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails);
+    }
+
+    @OnClick(R.id.like) public void likePost() {
+        Callback<ResultObject> callback = new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() != 200) {
+                    if (response.body() != null)
+                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
+                    else
+                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        if (!likeBtn.isChecked()) {
+//            Like the post
+            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, context).enqueue(callback);
+        } else {
+//            Unlike the post
+            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, context).enqueue(callback);
         }
-
-        PostReactionAdapter adapter = new PostReactionAdapter(postReactions, getContext());
-
-        recyclerView.setAdapter(adapter);
+        likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor)
-    {
-        PopupMenu popupMenu = new PopupMenu(getContext(), anchor);
-        popupMenu.setOnDismissListener(new OnDismissListener());
+    @OnClick(R.id.tags) public void getTaggedList() {
+        if (horizontalListViewParent.getVisibility() == View.GONE) {
+            ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, context)
+                    .enqueue(new Callback<TaggedUsersList>() {
+
+                        @Override
+                        public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
+                            if (response.code() == 200) {
+                                horizontalListViewParent.setVisibility(View.VISIBLE);
+                                if (response.body().getTaggedUsers().size() > 0) {
+                                    taggedUsersList.addAll(response.body().getTaggedUsers());
+                                    taggedUserListView.getAdapter().notifyDataSetChanged();
+                                } else {
+                                     noTaggedUsers.setVisibility(View.VISIBLE);
+//                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
+//                                            LinearLayoutManager.HORIZONTAL, false));
+//                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            horizontalListViewParent.setVisibility(View.GONE);
+                                            noTaggedUsers.setVisibility(View.GONE);
+                                        }
+                                    }, 2000);
+                                }
+                            } else {
+                                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<TaggedUsersList> call, Throwable t) {
+                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            horizontalListViewParent.setVisibility(View.GONE);
+        }
+    }
+
+    private void likeAction(boolean isChecked, boolean animate) {
+        if (!isChecked) {
+            likeBtn.setChecked(true);
+            likeBtn.setText(R.string.liked);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
+            if (animate) {
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
+                controller.incrementLikes();
+            }
+
+        } else {
+            likeBtn.setChecked(false);
+            likeBtn.setText(R.string.like);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline, 0, 0);
+            if (animate) {
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
+                controller.decrementLikes();
+            }
+        }
+    }
+
+    @OnClick(R.id.menu) public void showMenu(View anchor) {
+        PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         popupMenu.inflate(R.menu.menu_post);
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.pause();
+        else mediaPlayer.start();
+
         if (controller != null)
             controller.toggleControllerView();
     }
 
-    private class OnDismissListener implements PopupMenu.OnDismissListener {
-        @Override
-        public void onDismiss(PopupMenu menu) {
-            Toast.makeText(getContext(), "Popup Menu is dismissed", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+        Surface surface = new Surface(surfaceTexture);
+//        mediaPlayer.setDisplay(surfaceHolder);
+        prepareMediaPlayer(surface);
+    }
 
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+//        textureView.setAspectRatio(width, height);
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        surfaceTexture.release();
+        resetMediaPlayer();
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+    }
+
+    private void updateTextureViewSize(int viewWidth, int viewHeight) {
+        if (getActivity() != null) {
+            int systemWidth = getActivity().getWindow().getDecorView().getWidth();
+            viewHeight = systemWidth * viewHeight / viewWidth;
+            viewWidth = systemWidth;
+            if (viewHeight < viewWidth) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+                //noinspection SuspiciousNameCombination
+                params.height = viewWidth;
+                relativeLayout.setLayoutParams(params);
+            }
+        }
+//        float scaleX = 1.0f;
+//        float scaleY = 1.0f;
+//
+//        if (videoWidth > viewWidth && videoHeight > viewHeight) {
+//            scaleX = videoWidth / viewWidth;
+//            scaleY = videoHeight / viewHeight;
+//        } else if (videoWidth < viewWidth && videoHeight < viewHeight) {
+//            scaleY = viewWidth / videoWidth;
+//            scaleX = viewHeight / videoHeight;
+//        } else if (viewWidth > videoWidth) {
+//            scaleY = (viewWidth / videoWidth) / (viewHeight / videoHeight);
+//        } else if (viewHeight > videoHeight) {
+//            scaleX = (viewHeight / videoHeight) / (viewWidth / videoWidth);
+//        }
+        /* Calculate pivot points, in our case crop from center*/
+        int pivotPointX = viewWidth / 2;
+        int pivotPointY = viewHeight / 2;
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(1, 1, pivotPointX, pivotPointY);
+
+        textureView.setTransform(matrix);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        textureView.setLayoutParams(params);
+        textureView.animate().alpha(1).setDuration(280).start();
+        textureView.setVisibility(View.VISIBLE);
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -347,13 +552,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_hide:
-                    Toast.makeText(getContext(), "Hide", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_delete:
-                    Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.action_report:
-                    Toast.makeText(getContext(), "Report", Toast.LENGTH_SHORT).show();
+                case R.id.action_profile_report:
+                    Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
                     return true;
             }
             return false;
@@ -380,15 +585,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            isComplete = false;
-            mediaPlayer.start();
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -400,6 +596,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     @Override
     public void onDestroy() {
         super.onDestroy();
+        postReactionAdapter = null;
     }
 
     private void resetMediaPlayer() {
@@ -413,19 +610,21 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-        videoHeight = mediaPlayer.getVideoHeight();
-        videoWidth = mediaPlayer.getVideoWidth();
-        if (videoHeight > 0 && videoWidth > 0)
-            surfaceView.adjustSize(videoContainer.getWidth(), videoContainer.getHeight(),
-                    this.mediaPlayer.getVideoWidth(), this.mediaPlayer.getVideoHeight());
+//        videoHeight = mediaPlayer.getVideoHeight();
+//        videoWidth = mediaPlayer.getVideoWidth();
+//        if (videoHeight > 0 && videoWidth > 0)
+//            textureView.setAspectRatio(this.mediaPlayer.getVideoWidth(), this.mediaPlayer.getVideoHeight());
+//            textureView.adjustSize(videoContainer.getWidth(), videoContainer.getHeight(),
+//                    this.mediaPlayer.getVideoWidth(), this.mediaPlayer.getVideoHeight());
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (videoWidth > 0 && videoHeight > 0)
-            surfaceView.adjustSize(ViewUtils.getDeviceWidth(getContext()), ViewUtils.getDeviceHeight(getContext()),
-                    surfaceView.getWidth(), surfaceView.getHeight());
+//        if (videoWidth > 0 && videoHeight > 0)
+//            textureView.setAspectRatio(textureView.getWidth(), textureView.getHeight());
+//            textureView.adjustSize(ViewUtils.getDeviceWidth(context), ViewUtils.getDeviceHeight(context),
+//                    textureView.getWidth(), textureView.getHeight());
     }
 
     @Override
@@ -443,11 +642,25 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     @Override
-    public int getDuration() {
-        if (mediaPlayer != null)
-            return mediaPlayer.getDuration();
-        return 0;
+    public String getDuration() {
+//        if (mediaPlayer != null)
+//            return convert(mediaPlayer.getDuration());
+//        else
+            return postDetails.getMedias().get(0).getDuration();
     }
+
+//    private String convert(final int duration) {
+//        int dur, min, sec, mil;
+//
+//        dur = duration;
+//        min = dur / 60000;
+//        dur -= min * 60000;
+//        sec = dur / 1000;
+//        dur -= sec * 1000;
+//        mil = dur;
+//
+//        return min + ":" + sec + "." + mil;
+//    }
 
     @Override
     public int getCurrentPosition() {
@@ -468,7 +681,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     @Override
     public int getBufferPercentage() {
-        return 0;
+        return 10;
     }
 
     @Override
@@ -477,21 +690,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         controller.exit();
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        mediaPlayer.setDisplay(surfaceHolder);
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        resetMediaPlayer();
-    }
-
     public interface OnPostDetailsInteractionListener {
-        void onPostDetailsInteraction(int action);
+        void onPostDetailsInteraction(int action, PostDetails postDetails);
     }
 }

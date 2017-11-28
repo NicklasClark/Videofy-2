@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -40,7 +40,6 @@ import android.widget.TextView;
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.authentication.BlurBuilder;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
@@ -57,6 +56,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.utilities.BlurBuilder;
 import com.cncoding.teazer.utilities.OfflineUserProfile;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
@@ -66,7 +66,9 @@ import com.facebook.ProfileTracker;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
+import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -99,12 +101,14 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
+//    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
 //    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
 //    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
+    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
@@ -123,20 +127,17 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private TransitionDrawable transitionDrawable;
     private boolean loggingIn;
-    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()
 //                .penaltyLog()
-//                .penaltyDialog()
+////                .penaltyDialog()
 //                .build());
 //        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
-//                .penaltyLog()
+////                .penaltyLog()
 //                .build());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -164,19 +165,9 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
-    private void successfullyLoggedIn(int delay) {
-        if (delay == 0) {
-            startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-            finish();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
-                    finish();
-                }
-            }, delay);
-        }
+    private void successfullyLoggedIn() {
+        startActivity(new Intent(MainActivity.this, BaseBottomBarActivity.class));
+        finish();
     }
 
     private void setFragment(String tag, boolean addToBackStack, Object[] args) {
@@ -235,43 +226,49 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         if (!reverse) {
-//            showCircularRevealAnimation(revealLayout, (int) touchCoordinates[0], (int) touchCoordinates[1], Color.argb(200, 0, 0, 0));
-//            revealLayout.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
-//            revealLayout.setVisibility(View.INVISIBLE);
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected void onPreExecute() {
-                    if (mediaPlayer.isPlaying())
-                        mediaPlayer.pause();
-                    setFragment(tag, addToBackStack, null);
-                    bitmap = welcomeVideo.getBitmap();
-                }
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    bitmap = BlurBuilder.blur(MainActivity.this,
-                            Bitmap.createBitmap(bitmap,
-                                    bitmap.getWidth() / 5, bitmap.getHeight() / 5,
-                                    bitmap.getWidth() / 3, bitmap.getHeight() / 3));
-                    return null;
-                }
-
-                @SuppressWarnings("deprecation")
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    Drawable[] backgrounds = {getResources().getDrawable(R.drawable.bg_transparent),
-                            new BitmapDrawable(getResources(), bitmap)};
-                    transitionDrawable = new TransitionDrawable(backgrounds);
-                    transitionDrawable.setCrossFadeEnabled(true);
-                    mainFragmentContainer.setBackground(transitionDrawable);
-                    transitionDrawable.startTransition(400);
-                }
-            }.execute();
+            setFragment(tag, addToBackStack, null);
+            new Blur(this).execute();
         }
         else {
-            if (transitionDrawable != null)
-                transitionDrawable.reverseTransition(600);
+            mainFragmentContainer.setBackgroundColor(Color.TRANSPARENT);
+//            if (transitionDrawable != null)
+//                transitionDrawable.reverseTransition(600);
+            if (mediaPlayer != null && !mediaPlayer.isPlaying())
+                mediaPlayer.start();
+        }
+    }
+
+    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
+
+        private WeakReference<MainActivity> reference;
+
+        Blur(MainActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (reference.get().mediaPlayer.isPlaying())
+                reference.get().mediaPlayer.pause();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            Bitmap bitmap = reference.get().welcomeVideo.getBitmap();
+            return BlurBuilder.blur(reference.get(),
+                    Bitmap.createBitmap(bitmap,
+                            bitmap.getWidth() / 5, bitmap.getHeight() / 5,
+                            bitmap.getWidth() / 3, bitmap.getHeight() / 3));
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            Drawable[] backgrounds = {reference.get().getResources().getDrawable(R.drawable.bg_transparent),
+                    new BitmapDrawable(reference.get().getResources(), bitmap)};
+            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
+            reference.get().transitionDrawable.setCrossFadeEnabled(true);
+            reference.get().mainFragmentContainer.setBackground(reference.get().transitionDrawable);
+            reference.get().transitionDrawable.startTransition(400);
         }
     }
 
@@ -299,7 +296,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
     }
 
     @Override
@@ -322,28 +318,22 @@ public class MainActivity extends AppCompatActivity
                 mediaPlayer.pause();
                 loggingIn = true;
                 if (facebookProfile != null && facebookData != null) {
-                    handleFacebookLogin(facebookProfile, facebookData, button);
+                    handleFacebookLogin(facebookProfile, facebookData, button, null);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
                 mediaPlayer.pause();
                 loggingIn = true;
                 if (googleAccount != null)
-                    handleGoogleSignIn(googleAccount, button);
+                    handleGoogleSignIn(googleAccount, button, null);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
-                break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
                 break;
             case RESUME_WELCOME_VIDEO_ACTION:
                 if (mediaPlayer != null && loggingIn)
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
-                break;
-            case OPEN_CAMERA_ACTION:
-                setFragment(TAG_SELECT_INTERESTS, true, null);
                 break;
             default:
                 break;
@@ -351,15 +341,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
-                                     final ProximaNovaSemiboldButton button) {
+                                     final ProximaNovaSemiboldButton button, String username) {
+
+        username = username == null ? facebookProfile.getName() : username;
+
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
-                getDeviceId(),
+                getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 facebookProfile.getId(),                                            //social ID
                 SOCIAL_LOGIN_TYPE_FACEBOOK,
                 facebookData.getString("email"),                               //email
-                facebookProfile.getName(),                                          //Username
+                username,                                                           //Username
                 facebookProfile.getFirstName(),
                 facebookProfile.getLastName()))
 
@@ -367,24 +360,34 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
+                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                         switch (response.code()) {
-                            case 200:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button);
-                                }
-                                break;
                             case 201:
                                 if (response.body().getStatus()) {
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                                     verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button);
+                                            facebookData, facebookProfile, button, false);
+                                }
+                                break;
+                            case 200:
+                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                if (response.body().getStatus()) {
+                                    verificationSuccessful(true, null,
+                                            facebookData, facebookProfile, button, true);
                                 } else {
                                     new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
-                                            facebookProfile, button);
+                                            facebookProfile, facebookData, button);
                                 }
                                 break;
                             default:
+                                Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
+                                button.revertAnimation(new OnAnimationEndListener() {
+                                    @Override
+                                    public void onAnimationEnd() {
+                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                                0, 0, 0);
+                                    }
+                                });
                                 break;
                         }
                     }
@@ -392,54 +395,84 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         loggingIn = false;
+                        Log.d("handleFacebookLogin()", t.getMessage());
+                        button.revertAnimation(new OnAnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0, 0, 0);
+                            }
+                        });
                     }
                 });
     }
 
-    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount,
-                                    final ProximaNovaSemiboldButton button) {
-        ApiCallingService.Auth.socialSignUp(new Authorize(
+    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button, String username) {
+
+        username = username == null ? googleAccount.getDisplayName() : username;
+
+        Authorize authorize = new Authorize(
                 getFcmToken(this),
-                getDeviceId(),
+                getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 googleAccount.getId(),              //Social ID
                 SOCIAL_LOGIN_TYPE_GOOGLE,
                 googleAccount.getEmail(),
-                googleAccount.getDisplayName(),     //Username
+                username,                           //Username
                 googleAccount.getGivenName(),       //First name
-                googleAccount.getFamilyName()))     //Last name
+                googleAccount.getFamilyName())   ;   //Last name
+
+        ApiCallingService.Auth.socialSignUp(authorize)
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());
                         switch (response.code()) {
+                            case 201:
+                                if (response.body().getStatus()) {
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
+                                    verificationSuccessful(false, googleAccount,
+                                            null, null, button, false);
+                                }
+                                break;
                             case 200:
+                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false, googleAccount,
+                                            null, null, button, true);
+                                } else {
+                                    new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
                                             null, null, button);
                                 }
                                 break;
-                            case 201:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(false, googleAccount,
-                                            null, null, button);
-                                } else {
-                                    new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
-                                            null, button);
-                                }
+                            default:
+                                Log.d("handleGoogleSignIn()", response.code() + "_" +response.message());
+                                button.revertAnimation(new OnAnimationEndListener() {
+                                    @Override
+                                    public void onAnimationEnd() {
+                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
+                                                0, 0, 0);
+                                    }
+                                });
+                                break;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         loggingIn = false;
+                        Log.d("handleGoogleSignIn()", t.getMessage());button.revertAnimation(new OnAnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0, 0, 0);
+                            }
+                        });
                     }
                 });
     }
 
-    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData, Profile facebookProfile, ProximaNovaSemiboldButton button) {
+    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData,
+                                        Profile facebookProfile, ProximaNovaSemiboldButton button, final boolean accountAlreadyExists) {
         if (isFacebookAccount) {
             saveUserProfile(MainActivity.this,
                     facebookProfile.getId(),
@@ -462,7 +495,15 @@ public class MainActivity extends AppCompatActivity
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         }
 
-        successfullyLoggedIn(500);
+            new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!accountAlreadyExists)
+                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+                else
+                    successfullyLoggedIn();
+            }
+        }, 500);
     }
 
     private void saveUserProfile(Context context, String id, String firstName,
@@ -480,7 +521,7 @@ public class MainActivity extends AppCompatActivity
     public void onLoginFragmentInteraction(int action, Authorize authorize) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-                successfullyLoggedIn(0);
+                successfullyLoggedIn();
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
@@ -495,11 +536,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
-        if (isVerified)
-            setFragment(TAG_SELECT_INTERESTS, true, null);
-        else {
-            setFragment(TAG_LOGIN_FRAGMENT, true,
-                    new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+        if (verificationDetails != null) {
+            if (isVerified)
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+            else {
+                setFragment(TAG_LOGIN_FRAGMENT, true,
+                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+            }
+        } else {
+            if (isVerified)
+                successfullyLoggedIn();
         }
     }
 
@@ -525,10 +571,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onInterestsInteraction() {
-        successfullyLoggedIn(0);
+        successfullyLoggedIn();
     }
 
-    private void toggleUpBtnVisibility(int visibility) {
+    public void toggleUpBtnVisibility(int visibility) {
         switch (visibility) {
             case View.VISIBLE:
                 if (upBtn.getVisibility() != View.VISIBLE) {
@@ -557,21 +603,24 @@ public class MainActivity extends AppCompatActivity
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+        Bitmap bitmap = null;
+        if (drawable != null) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
 
         return bitmap;
     }
 
     private class UserNameAlreadyAvailableDialog extends AlertDialog.Builder {
 
-        UserNameAlreadyAvailableDialog(boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
-                                       Profile facebookProfile, final ProximaNovaSemiboldButton button) {
+        UserNameAlreadyAvailableDialog(final boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
+                                       final Profile facebookProfile, final Bundle facebookData, final ProximaNovaSemiboldButton button) {
             super(context);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogTheme);
             LayoutInflater inflater = MainActivity.this.getLayoutInflater();
             @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
             dialogBuilder.setView(dialogView);
@@ -591,7 +640,10 @@ public class MainActivity extends AppCompatActivity
             dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     if (!editText.getText().toString().equals("")) {
-                        handleGoogleSignIn(googleAccount, button);
+                        if (isFacebook)
+                            handleFacebookLogin(facebookProfile, facebookData, button, editText.getText().toString());
+                        else
+                            handleGoogleSignIn(googleAccount, button, editText.getText().toString());
                     }
                 }
             });
@@ -600,8 +652,12 @@ public class MainActivity extends AppCompatActivity
                     fragmentManager.popBackStackImmediate();
                 }
             });
-            AlertDialog b = dialogBuilder.create();
-            b.show();
+            AlertDialog dialog = dialogBuilder.create();
+//            button.setTextColor(Color.parseColor("#757575"));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#5a000000"));
+//            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#5a000000"));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+            dialog.show();
         }
 
         private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
@@ -655,7 +711,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
     }
 
     @Override

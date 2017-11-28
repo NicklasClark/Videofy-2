@@ -46,10 +46,10 @@
                 app:ccpDialog_backgroundColor="@color/material_grey100"
                 app:ccpDialog_textColor="@color/colorSecondary_text"
                 app:ccp_showNameCode="false"
-                app:ccp_showPhoneCode="false"
+                app:ccp_showPhoneCode="true"
                 android:layout_alignTop="@+id/login_username"
                 android:layout_alignBottom="@+id/login_username"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/login_username"

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/BaseActivityTransition</item>
     </style>
@@ -17,16 +17,18 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="colorPrimary">@android:color/white</item>-->
+        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
         <item name="windowActionBar">false</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <item name="actionMenuTextColor">@color/colorPrimary</item>
-        <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge</item>
-        <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
+        <item name="actionMenuTextColor">@color/colorPrimary_text</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge
+        </item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall
+        </item>
         <item name="windowNoTitle">true</item>
     </style>
 
@@ -53,9 +55,11 @@
     </style>
 
     <style name="BaseActivityTheme" parent="AppTheme.NoActionBar">
-        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
     </style>
@@ -105,6 +109,19 @@
         <item name="android:paddingTop">@dimen/padding_default</item>
         <item name="android:paddingEnd">@dimen/padding_default</item>
         <item name="android:paddingBottom">@dimen/padding_default</item>
+        <item name="android:paddingStart">@dimen/padding_double</item>
+        <item name="android:layout_marginBottom">@dimen/padding_default</item>
+        <item name="android:background">@drawable/bg_button_white</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AppTheme.RoundedPasswordEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <!--<item name="android:paddingTop">@dimen/padding_default</item>-->
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <!--<item name="android:paddingBottom">@dimen/padding_default</item>-->
         <item name="android:paddingStart">@dimen/padding_double</item>
         <item name="android:layout_marginBottom">@dimen/padding_default</item>
         <item name="android:background">@drawable/bg_button_white</item>
@@ -189,7 +206,7 @@
 
     <style name="AppTheme.RoundedMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/bg_button_primary</item>
-        <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
+        <item name="android:foreground">@drawable/ripple_dark_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_content_big</item>
@@ -211,16 +228,16 @@
 
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <!--<item name="android:paddingTop">@dimen/padding_half</item>-->
         <!--<item name="android:paddingBottom">@dimen/padding_half</item>-->
-        <!--<item name="android:paddingStart">@dimen/padding_half</item>-->
+        <item name="android:paddingStart">@dimen/padding_thin</item>
         <item name="android:paddingEnd">@dimen/padding_default</item>
         <item name="android:layout_margin">@dimen/padding_half</item>
         <item name="android:background">@drawable/bg_button_react</item>
         <item name="android:foreground">@drawable/ripple_dark</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <style name="AppTheme.TransparentButton" parent="Widget.AppCompat.Button.Colored">
@@ -229,9 +246,10 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:foreground">@drawable/ripple_dark_no_rounded</item>
         <!--<item name="android:textColor">@android:color/white</item>-->
-        <item name="android:paddingTop">@dimen/padding_default</item>
-        <item name="android:paddingBottom">@dimen/padding_default</item>
-        <item name="android:paddingStart">@dimen/padding_double</item>
+        <item name="android:layout_marginTop">@dimen/padding_thin</item>
+        <item name="android:paddingTop">@dimen/padding_thin</item>
+        <item name="android:paddingBottom">@dimen/padding_thin</item>
+        <!--<item name="android:paddingStart">@dimen/padding_double</item>-->
         <item name="android:paddingEnd">@dimen/padding_default</item>
         <item name="android:textAllCaps">false</item>
     </style>
@@ -243,6 +261,17 @@
     </style>
 
     <style name="AppTheme.RoundedButtonWithBoundary" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/bg_outline_rounded_primary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingStart">@dimen/padding_default</item>
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AppTheme.RoundedButtonWithBoundaryFilled" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/bg_button_light_outlined</item>
@@ -275,9 +304,17 @@
         <item name="android:textSize">0sp</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimary</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="BottomTabLayout.NotificationTab">
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+    </style>
 
     <style name="SeekBarTheme" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">@android:color/white</item>
@@ -293,6 +330,10 @@
         <item name="android:textSize">16sp</item>
         <!--<item name="android:itemTextAppearance">@android:style/Widget.Holo.Light.TextView</item>-->
     </style>
+    
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorPrimaryDark</item>
+    </style>
 
     <style name="myPopupMenuTextAppearanceSmall" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
         <!--<item name="android:textColorPrimary">@color/colorSecondary_text</item>-->
@@ -304,6 +345,14 @@
         <!--<item name="android:textColorPrimary">@color/colorSecondary_text</item>-->
         <item name="android:textColor">@color/colorSecondary_text</item>
         <!--<item name="android:textSize">25sp</item>-->
+    </style>
+
+    <style name="BottomTabLayout.RecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/padding_half</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:nestedScrollingEnabled">false</item>
     </style>
 
     <style name="CustomProfileFAB" parent="Widget.Design.FloatingActionButton">
@@ -336,6 +385,7 @@
         <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
     </style>
+
     <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTabindicator</item>
@@ -351,4 +401,5 @@
     <style name="collapsedappbar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/material_grey100</item>
-    </style></resources>
+    </style>
+</resources>

@@ -9,7 +9,6 @@ import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyReactions;
 
 /**
- *
  * Created by MOHD ARIF on 07-11-2017.
  */
 

@@ -3,6 +3,9 @@ package com.cncoding.teazer.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.google.gson.Gson;
+
 import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 
 /**
@@ -13,7 +16,9 @@ import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 public class SharedPrefs {
 
     private static final String AUTH_TOKEN = "authToken";
+    private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
+    private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -42,12 +47,30 @@ public class SharedPrefs {
                 .apply();
     }
 
-    public static String getFcmToken(Context context) {
+    static String getFcmToken(Context context) {
         return getSharedPreferences(context)
                 .getString(FCM_TOKEN, null);
     }
 
-    public static void resetFcmToken(Context context) {
-        getSharedPreferences(context).edit().putString(FCM_TOKEN, null).apply();
+
+
+    public static void saveVideoUploadSession(Context context, UploadParams uploadParams) {
+        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+    }
+
+    public static void finishVideoUploadSession(Context context) {
+        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, null).apply();
+    }
+
+    public static UploadParams getVideoUploadSession(Context context) {
+        return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
+    }
+
+    public static void setCurrentPassword(Context context, String password) {
+        getSharedPreferences(context).edit().putString(CURRENT_PASSWORD, password).apply();
+    }
+
+    public static String getCurrentPassword(Context context) {
+        return getSharedPreferences(context).getString(CURRENT_PASSWORD, null);
     }
 }

@@ -104,8 +104,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
@@ -132,6 +131,7 @@ public class ConfirmOtpFragment extends Fragment {
                                         "New otp sent to " + userSignUpDetails.getPhoneNumber(),
                                         Snackbar.LENGTH_LONG).show();
                                 otpResendBtn.setEnabled(false);
+                                otpResendBtn.setAlpha(0.5f);
                                 countDownTimer = ViewUtils.startCountDownTimer(getContext(), otpVerifiedTextView, otpResendBtn).start();
                             }
                         }
@@ -141,6 +141,7 @@ public class ConfirmOtpFragment extends Fragment {
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         Snackbar.make(otpResendBtn, t.getMessage(), Snackbar.LENGTH_SHORT).show();
                         otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                     }
                 });
                 break;
@@ -184,7 +185,9 @@ public class ConfirmOtpFragment extends Fragment {
             otp3EditText.requestFocus();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void verifyOtp() {
+        otpVerifiedTextView.setText("");
         ViewUtils.hideKeyboard(getActivity(), otp4EditText);
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
@@ -198,12 +201,14 @@ public class ConfirmOtpFragment extends Fragment {
                         userSignUpDetails.getCountryCode(),
                         getOtp(),
                         getFcmToken(getContext()),
-                        getDeviceId(),
+                        getDeviceId(getContext()),
                         DEVICE_TYPE_ANDROID);
-                performFinalSignup(getContext(), verify, countDownTimer, otpVerifiedTextView, mListener);
+                performFinalSignup(getActivity().getApplicationContext(), verify, countDownTimer,
+                        otpVerifiedTextView, mListener, otpResendBtn);
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                verifyOtpLogin(getContext(), userSignUpDetails, getOtp(), countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
+                verifyOtpLogin(getActivity().getApplicationContext(), userSignUpDetails, getOtp(),
+                        countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
                 break;
             default:
                 break;

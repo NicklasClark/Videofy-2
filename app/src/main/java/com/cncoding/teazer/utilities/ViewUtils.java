@@ -1,30 +1,39 @@
 package com.cncoding.teazer.utilities;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Locale;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -38,7 +47,35 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
+    public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
+    public static final String POST_DETAILS = "postId";
+    public static final String UPLOAD_PARAMS = "uploadParams";
+
+    public static void enableView(View view) {
+        view.setEnabled(true);
+        view.setAlpha(1);
+        view.setBackgroundTintList(null);
+    }
+
+    public static void disableView(View view) {
+        view.setEnabled(false);
+        view.setAlpha(0.5f);
+        view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+    }
+
+    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (isOnlineVideo) {
+            intent.setDataAndType(Uri.parse(videoPath), "video/*");
+        } else {
+            File file = new File(videoPath);
+            intent.setDataAndType(Uri.fromFile(file), "video/*");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        context.startActivity(intent);
+    }
+
     /**
      * Used to show the snackbar above the bottom nav bar.
      * This assumes that the parent of each child activity is a coordinator layout.
@@ -52,9 +89,16 @@ public class ViewUtils {
         button.setTypeface(font);
         CoordinatorLayout.LayoutParams params
                 = (CoordinatorLayout.LayoutParams) snackbar.getView().getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin,
-                activity.getResources().getDimensionPixelSize(
-                        activity.getResources().getIdentifier("status_bar_height", "dimen", "android")));
+        int statusBarHeight = 0;
+        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+        }
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, statusBarHeight);
+
+//        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin,
+//                activity.getResources().getDimensionPixelSize(
+//                        activity.getResources().getIdentifier("status_bar_height", "dimen", "android")));
         snackbar.getView().setLayoutParams(params);
         snackbar.show();
     }
@@ -93,7 +137,7 @@ public class ViewUtils {
         view.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 
-    static void showSnackBar(View view, String message) {
+    public static void showSnackBar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -107,8 +151,6 @@ public class ViewUtils {
                         MILLISECONDS.toSeconds(millisUntilFinished) -
                                 MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
                 otpVerifiedTextView.setText(remainingTime);
-//                if (isAdded()) {
-//                }
             }
 
             @Override
@@ -125,53 +167,88 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void launchReactionCamera(Context packageContext) {
+    public static void launchReactionCamera(Context packageContext, Pojos.Post.PostDetails postDetails) {
         Intent intent = new Intent(packageContext, CameraActivity.class);
         intent.putExtra(IS_REACTION, true);
+        intent.putExtra(POST_DETAILS, postDetails);
         packageContext.startActivity(intent);
     }
 
-    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
-                                                   float startRadius, float endRadius, int duration, int color, final boolean isReversed){
-        mRevealView.setBackgroundColor(color);
-        Animator animator;
-        if (!isReversed)
-            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, startRadius, endRadius);
-        else
-            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, endRadius, startRadius);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(duration);
-        animator.start();
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                if (isReversed) {
-                    mRevealView.setVisibility(View.INVISIBLE);
-                    mRevealView.setBackgroundResource(android.R.color.transparent);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        if (!isReversed)
-            mRevealView.setVisibility(View.VISIBLE);
+    public static void performUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+        Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
+        intent.putExtra(UPLOAD_PARAMS, uploadParams);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        packageContext.startActivity(intent);
+        ((AppCompatActivity) packageContext).finish();
     }
+
+//    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
+//                                                   float startRadius, float endRadius, int duration, int color, final boolean isReversed){
+//        mRevealView.setBackgroundColor(color);
+//        Animator animator;
+//        if (!isReversed)
+//            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, startRadius, endRadius);
+//        else
+//            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, endRadius, startRadius);
+//        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+//        animator.setDuration(duration);
+//        animator.start();
+//        animator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animator) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animator) {
+//                if (isReversed) {
+//                    mRevealView.setVisibility(View.INVISIBLE);
+//                    mRevealView.setBackgroundResource(android.R.color.transparent);
+//                }
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animator) {
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animator) {
+//            }
+//        });
+//        if (!isReversed)
+//            mRevealView.setVisibility(View.VISIBLE);
+//    }
 
     public static void hideKeyboard(Activity activity, View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public static void updateMediaStoreDatabase(Context context, String videoPath) {
+        context.sendBroadcast(
+                new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+                        .setData(Uri.fromFile(new File(videoPath)))
+        );
+    }
+
+    public static void deleteFileFromMediaStoreDatabase(Context context, String videoPath) {
+        Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(videoPath);  // Change file types here
+        context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{videoPath});
+    }
+
+    public static byte[] getByteArrayFromImage(ImageView imageView) {
+        if (imageView.getDrawable() != null) {
+            Bitmap bitmap;
+            if (imageView.getDrawable() instanceof TransitionDrawable)
+                bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+            else
+                bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            return outputStream.toByteArray();
+        } else
+            return null;
     }
 
 //    /**

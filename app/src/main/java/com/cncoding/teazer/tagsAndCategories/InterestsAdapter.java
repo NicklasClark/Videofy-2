@@ -46,32 +46,42 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.chip.setText("+ " + interestsList.get(position).getCategoryName());
 
-        holder.chip.setChecked(selectedInterestsArray.get(holder.getAdapterPosition()));
+        holder.chip.setChecked(selectedInterestsArray.get(position));
+        checkAction(holder.chip, position, false);
 
         holder.chip.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                boolean isChecked = !holder.chip.isChecked();
-                selectedInterestsArray.put(holder.getAdapterPosition(), isChecked);
-                holder.chip.setChecked(isChecked);
-                if (isChecked) {
-                    selectedInterests.put(holder.getAdapterPosition(), interestsList.get(holder.getAdapterPosition()));
-                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
-                    view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
-                } else {
-                    selectedInterests.delete(holder.getAdapterPosition());
-                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
-                    view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
-                }
+                selectedInterestsArray.put(holder.getAdapterPosition(), !holder.chip.isChecked());
+                holder.chip.setChecked(!holder.chip.isChecked());
 
-                if (selectedInterests.size() >= 5 && !interests.isSaveBtnEnabled()) {
-                    interests.enableSaveBtn();
+                checkAction(holder.chip, holder.getAdapterPosition(), true);
+
+                if (selectedInterests.size() >= 5) {
+                    if (!interests.isSaveBtnEnabled())
+                        interests.enableSaveBtn();
                 } else {
                     if (interests.isSaveBtnEnabled())
                         interests.disableSaveBtn();
                 }
             }
         });
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean animate) {
+        if (view.isChecked()) {
+            selectedInterests.put(position, interestsList.get(position));
+            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
+            if (animate)
+                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+        } else {
+            selectedInterests.delete(position);
+            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
+            if (animate)
+                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
+        }
     }
 
     @Override

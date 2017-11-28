@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/padding_half">
+
+    <ImageView
+        android:id="@+id/video_thumbnail"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/material_flat"
+        android:contentDescription="@string/video_thumbnail" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/video_thumbnail"
+        android:layout_alignStart="@+id/video_thumbnail"
+        android:layout_alignEnd="@+id/video_thumbnail"
+        android:background="@drawable/bg_vignette_bottom">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="@dimen/padding_thin"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_user_male_dp_small"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_12sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_toEndOf="@+id/dp"
+            android:layout_alignParentEnd="true"
+            android:text="Aarti Yadav"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_8sp"
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_like_outline_smaller"
+            android:gravity="end|center_vertical"
+            android:paddingTop="1dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/padding_thin"
+            android:layout_below="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:text="  200"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_8sp"
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_view_outline_smaller"
+            android:gravity="start|center_vertical"
+            android:paddingTop="1dp"
+            android:paddingStart="@dimen/padding_thin"
+            android:paddingEnd="0dp"
+            android:layout_below="@+id/name"
+            android:layout_toEndOf="@+id/likes"
+            android:layout_alignParentEnd="true"
+            android:text="  400" />
+
+    </RelativeLayout>
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_size_12sp"
+        android:text="My one is better than you"
+        android:paddingTop="@dimen/padding_thin"
+        android:paddingBottom="@dimen/padding_thin"
+        android:layout_below="@+id/video_thumbnail"
+        android:layout_alignStart="@+id/video_thumbnail"
+        android:layout_alignEnd="@+id/video_thumbnail"/>
+
+    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        android:id="@+id/reaction_1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/arif_image"
+        android:layout_below="@+id/title"
+        android:visibility="gone"/>
+
+    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        android:id="@+id/reaction_2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="@dimen/padding_half"
+        android:src="@drawable/arif_image"
+        android:layout_below="@+id/title"
+        android:layout_toEndOf="@+id/reaction_1"
+        android:visibility="gone"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/reaction_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_14sp"
+        android:text="+320 R"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="@dimen/padding_half"
+        android:layout_below="@+id/title"
+        android:layout_toEndOf="@+id/reaction_2"
+        android:layout_alignEnd="@+id/video_thumbnail"/>
+
+</RelativeLayout>

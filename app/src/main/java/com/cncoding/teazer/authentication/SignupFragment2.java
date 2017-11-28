@@ -109,11 +109,11 @@ public class SignupFragment2 extends Fragment {
     }
 
     @OnTouch(R.id.signup_password) public boolean onSignupPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event);
+        return togglePasswordVisibility(passwordView, event, getContext());
     }
 
     @OnTouch(R.id.signup_confirm_password) public boolean onConfirmPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(confirmPasswordView, event);
+        return togglePasswordVisibility(confirmPasswordView, event, getContext());
     }
 
     @OnFocusChange(R.id.signup_username) public void onUsernameFocusChanged(boolean isFocused) {

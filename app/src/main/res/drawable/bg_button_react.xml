@@ -4,7 +4,7 @@
         <shape
             android:shape="rectangle" android:padding="10dp">
             <solid android:color="@color/colorReactBtn"/>
-            <corners android:radius="@dimen/rounded_edge_radius_40dp"/>
+            <corners android:radius="20dp"/>
         </shape>
     </item>
 <!--    <item android:gravity="start"

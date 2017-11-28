@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import static android.R.anim.fade_in;
+import static android.R.anim.fade_out;
+
 /**
  * The class is used to manage navigation through multiple stacks of fragments, as well as coordinate
  * fragments that may appear on screen
@@ -37,7 +40,7 @@ public class NavigationController {
     static final int NO_TAB = -1;
     public static final int TAB1 = 0;
     public static final int TAB2 = 1;
-    public static final int TAB3 = 2;
+//    public static final int TAB3 = 2;
     public static final int TAB4 = 3;
     public static final int TAB5 = 4;
 
@@ -161,6 +164,7 @@ public class NavigationController {
             FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
             detachCurrentFragment(ft);
+            ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
             ft.add(containerId, fragment, generateTag(fragment));
             ft.commit();
 
@@ -365,6 +369,7 @@ public class NavigationController {
             }
 
             String tag = generateTag(fragment);
+            ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
             ft.replace(containerId, fragment, tag);
 
             //Commit our transactions
@@ -854,9 +859,9 @@ public class NavigationController {
                 case TAB2:
                     switchTab(TAB2);
                     break;
-                case TAB3:
-                    switchTab(TAB3);
-                    break;
+//                case TAB3:
+//                    switchTab(TAB3);
+//                    break;
                 case TAB4:
                     switchTab(TAB4);
                     break;
@@ -880,7 +885,7 @@ public class NavigationController {
     }
 
     //Declare the TabIndex annotation
-    @IntDef({NO_TAB, TAB1, TAB2, TAB3, TAB4, TAB5})
+    @IntDef({NO_TAB, TAB1, TAB2, TAB4, TAB5})// TAB3,
     @Retention(RetentionPolicy.SOURCE)
     public @interface TabIndex {
     }

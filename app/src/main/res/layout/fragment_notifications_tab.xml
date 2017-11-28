@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+        android:id="@+id/no_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:textAllCaps="true"
+        app:drawableTopCompat="@drawable/ic_happy"
+        android:textSize="@dimen/text_size_h5"
+        android:text="@string/all_caught_up"
+        android:visibility="invisible"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:context="com.cncoding.teazer.home.notification.FollowingNotificationsTabFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list"
+            android:name="com.cncoding.teazer.home.notification.FollowingNotificationsTabFragment"
+            app:layoutManager="LinearLayoutManager" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

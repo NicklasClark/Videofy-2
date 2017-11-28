@@ -2,7 +2,7 @@ package com.cncoding.teazer.tagsAndCategories;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +10,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -43,6 +45,7 @@ public class Interests extends Fragment {
 //    private ActionBar actionBar;
     private InterestsAdapter interestsAdapter;
     private OnInterestsInteractionListener mListener;
+    private ArrayList<Category> interestList;
 
     public Interests() {
         // Required empty public constructor
@@ -53,29 +56,34 @@ public class Interests extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_interests, container, false);
         ButterKnife.bind(this, rootView);
+        interestList = new ArrayList<>();
+        interestsAdapter = new InterestsAdapter(interestList, this);
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
+        flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        recyclerView.setLayoutManager(flexboxLayoutManager);
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(
+                AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in), 0.04f)
+        );
+        recyclerView.setAdapter(interestsAdapter);
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-//        categoriesLimit = (launchType == LAUNCH_TYPE_UPLOAD)? 5 : 100;
-
+    public void onResume() {
+        super.onResume();
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
-                interestsAdapter = new InterestsAdapter(response.body(), Interests.this);
-                FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
-                flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
-//                flexboxLayoutManager.setAlignContent(AlignContent.FLEX_START);
-                flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
-                recyclerView.setLayoutManager(flexboxLayoutManager);
-                recyclerView.setAdapter(interestsAdapter);
+                if (response.code() == 200) {
+                    interestList.clear();
+                    interestList.addAll(response.body());
+                    interestsAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override

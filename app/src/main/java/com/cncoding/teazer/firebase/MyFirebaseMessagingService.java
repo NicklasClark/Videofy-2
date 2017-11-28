@@ -5,15 +5,23 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
-import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.SplashScreen;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.messaging.RemoteMessage.Notification;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  *
@@ -22,51 +30,51 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    private static final String TAG = "FirebaseMessagingSvc";
+    private NotificationManager notificationManager;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        //Displaying data in log
-        //It is optional
-//        Log.d(TAG, "From: " + remoteMessage.getFrom());
-//        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-
-        //Calling method to generate notification
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        Notification notification = remoteMessage.getNotification();
+        String imageUrl = remoteMessage.getData().get("image");
         if (notification != null) {
-            sendNotification(notification.getBody());
+            Log.d(TAG, "From: " + remoteMessage.getFrom());
+            Log.d(TAG, "Notification Message Body: " + notification.getBody());
+            sendNotification(notification.getBody(), getBitmapFromUrl(imageUrl));
         }
     }
 
     //This method is only generating push notification
     //It is same as we did in earlier posts
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(String messageBody, Bitmap bitmap) {
+        Intent intent = new Intent(this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        initChannels(getApplicationContext());
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        initChannels();
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Teazer Firebase Push Notification")
+                .setSmallIcon(R.drawable.ic_stat_notification_icon)
+                .setContentTitle("Teazer")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (bitmap != null)
+            notificationBuilder.setLargeIcon(bitmap);
 
         if (notificationManager != null) {
             notificationManager.notify(0, notificationBuilder.build());
         }
     }
 
-    public void initChannels(Context context) {
+    public void initChannels() {
         if (Build.VERSION.SDK_INT < 26) {
             return;
         }
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(
                 "default",
                 "TeazerNotificationChannel",
@@ -74,6 +82,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         channel.setDescription("Teazer notification");
         if (notificationManager != null) {
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /*
+    *To get a Bitmap image from the URL received
+    * */
+    public Bitmap getBitmapFromUrl(String imageUrl) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(imageUrl).openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

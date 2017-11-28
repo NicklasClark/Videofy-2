@@ -3,6 +3,12 @@ package com.cncoding.teazer.home.notifications;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +16,13 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.BaseFragment;
 
-public class NotificationsFragment extends BaseFragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private String mParam1;
-    private String mParam2;
+public class NotificationsFragment extends BaseFragment {
+
+    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.view_pager) ViewPager viewPager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -23,29 +30,31 @@ public class NotificationsFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static NotificationsFragment newInstance(String param1, String param2) {
-        NotificationsFragment fragment = new NotificationsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static NotificationsFragment newInstance() {
+        return new NotificationsFragment();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        previousTitle = getParentActivity().getToolbarTitle();
+        getParentActivity().updateToolbarTitle(getString(R.string.title_notifications));
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifications, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
+        ButterKnife.bind(this, rootView);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+
+        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentActivity().showAppBar();
+        getParentActivity().hideSettings(false);
     }
 
     @Override
@@ -56,7 +65,7 @@ public class NotificationsFragment extends BaseFragment {
         }
 //        else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnUploadFragmentInteractionListener");
 //        }
     }
 
@@ -64,6 +73,36 @@ public class NotificationsFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        getParentActivity().updateToolbarTitle(previousTitle);
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return FollowingNotificationsTabFragment.newInstance();
+                case 1:
+                    return RequestNotificationsTabFragment.newInstance();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            // Show 2 total pages.
+            return 2;
+        }
     }
 
     public interface OnFragmentInteractionListener {

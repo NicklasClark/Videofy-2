@@ -37,17 +37,21 @@ public class PlaceHolderDrawableHelper {
         return drawableBackgroundList.get(position % placeholderValues.length);
     }
 
-    public static Drawable getBackgroundDrawable() {
-        if(drawableBackgroundList==null || drawableBackgroundList.size()==0) {
-            drawableBackgroundList = new ArrayList<>(placeholderValues.length);
-            for (String placeholderValue : placeholderValues) {
-                int color = Color.parseColor(placeholderValue);
-                drawableBackgroundList.add(new ColorDrawable(color));
-            }
-        }
+//    public static Drawable getBackgroundDrawable() {
+//        if(drawableBackgroundList==null || drawableBackgroundList.size()==0) {
+//            drawableBackgroundList = new ArrayList<>(placeholderValues.length);
+//            for (String placeholderValue : placeholderValues) {
+//                int color = Color.parseColor(placeholderValue);
+//                drawableBackgroundList.add(new ColorDrawable(color));
+//            }
+//        }
+//
+//        return drawableBackgroundList.get(new Random().nextInt(23) % placeholderValues.length);
+//    }
 
-        return drawableBackgroundList.get(new Random().nextInt(23) % placeholderValues.length);
-    }
+//    public static String getBackgroundColor() {
+//        return placeholderValues[new Random().nextInt(placeholderValues.length - 1)];
+//    }
 
     public static int getColor() {
         return Color.parseColor(placeholderValues[new Random().nextInt(23)]);

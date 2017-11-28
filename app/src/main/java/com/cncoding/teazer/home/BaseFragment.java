@@ -2,8 +2,12 @@ package com.cncoding.teazer.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+
+import com.cncoding.teazer.BaseBottomBarActivity;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 
 /**
  *
@@ -12,7 +16,10 @@ import android.support.v4.app.Fragment;
 
 public class BaseFragment extends Fragment {
 
+    protected String previousTitle;
     public FragmentNavigation fragmentNavigation;
+    protected EndlessRecyclerViewScrollListener scrollListener;
+    protected boolean is_next_page = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,11 +36,28 @@ public class BaseFragment extends Fragment {
 //        }
 //    }
 
+    @NonNull
+    public BaseBottomBarActivity getParentActivity() {
+        if (getActivity() != null && getActivity() instanceof BaseBottomBarActivity) {
+            return (BaseBottomBarActivity) getActivity();
+        }
+        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof FragmentNavigation) {
             fragmentNavigation = (FragmentNavigation) context;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (scrollListener != null) {
+            scrollListener.resetState();
+            scrollListener = null;
         }
     }
 

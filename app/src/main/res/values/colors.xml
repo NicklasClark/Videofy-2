@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#26C6DA</color>-->
-    <color name="colorPrimary">#546E7A</color>
+    <color name="colorPrimary">#26C6DA</color>
+    <!--<color name="colorPrimary">#546E7A</color>-->
     <color name="colorPrimaryTranslucent">#dd546e7a</color>
-    <color name="colorPrimaryDark">#37474F</color>
-    <color name="colorPrimaryLight">#B0BEC5</color>
+    <!--<color name="colorPrimaryDark">#37474F</color>-->
+    <color name="colorPrimaryDark">#00ACC1</color>
+    <color name="colorPrimaryLight">#80DEEA</color>
     <color name="colorAccent">#4CAF50</color>
     <!--<color name="colorAccent">#8D6E63</color>-->
     <color name="colorAccent2">#00c853</color>
     <color name="colorAccent3">#fb595b</color>
+    <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
-    <color name="colorTranslucentBg">#dd212121</color>
+    <color name="colorTranslucentBg">#91212121</color>
     <color name="colorTranslucentButton">#5a000000</color>
-    <color name="colorPrimary_text">#212121</color>
+    <color name="colorPrimary_text">#333333</color>
     <color name="colorSecondary_text">#757575</color>
     <color name="material_grey100">#F5F5F5</color>
     <color name="material_grey200">#EEEEEE</color>
     <color name="colorSecondary_text_light">#BDBDBD</color>
     <color name="colorDisabled">#E0E0E0</color>
     <color name="colorIcons">#FFFFFF</color>
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDivider">#e0e0e0</color>
     <color name="colorRippleLight">#bbffffff</color>
     <!--69f0ae-->
     <color name="colorRippleDark">#bb616161</color>
@@ -28,6 +30,9 @@
     <color name="colorTabindicator">#26C6DA</color>
     <color name="colorlines">#D8D8D8</color>
     <color name="colorReactBtn">#26C6DA</color>
+    <color name="statusbar">#0fcfe7</color>
+    <color name="blur">#63121212</color>
+    <color name="colorTranslucentWhite">#88000000</color>
 
     <!--    <color name="space_background_color">#757575</color>
         <color name="space_transparent">#00000000</color>

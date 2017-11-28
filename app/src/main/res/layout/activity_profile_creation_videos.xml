@@ -3,8 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:background="#000000"
     tools:context=".ui.fragment.activity.ProfileCreationVideos">
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/backbutton"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_arrow_back_black_24dp"/>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="14dp"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textColor="@color/cardview_light_background"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+</LinearLayout>
+
 
     <VideoView
         android:id="@+id/flContainer"
@@ -12,5 +41,61 @@
         android:layout_centerInParent="true"
         android:layout_height="400dp">
     </VideoView>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="21dp"
+
+            android:layout_alignParentBottom="true">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/likes"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/likeimage"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="5dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/txtlikes"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            android:textColor="@color/cardview_light_background"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/likes"/>
+
+
+
+            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                android:id="@+id/view"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                app:srcCompat="@drawable/viewimage"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toEndOf="@+id/txtlikes"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/txtviews"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textSize="12sp"
+                android:textColor="@color/cardview_light_background"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/view"/>
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
