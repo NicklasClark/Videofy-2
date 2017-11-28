@@ -3,6 +3,7 @@ package com.cncoding.teazer.apiCalls;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
 import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
@@ -359,7 +360,7 @@ import retrofit2.http.Query;
          * Call this service to get blocked users list by you.
          */
         @GET("/api/v1/friend/blocked/users/{page}")
-        Call<BlockUsers> getBlockedUsers(@Path("page") int page);
+        Call<BlockUserResponse> getBlockedUsers(@Path("page") int page);
 
         /**
          * Call this service to get users list to send follow request.

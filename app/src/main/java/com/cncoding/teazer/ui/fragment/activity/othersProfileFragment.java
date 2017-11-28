@@ -158,7 +158,7 @@ public class othersProfileFragment extends BaseFragment {
         if (getArguments() != null) {
             followerfollowingid = Integer.parseInt(getArguments().getString(ARG_ID));
             userType = getArguments().getString(ARG_IDENTIFIER);
-            userType = getArguments().getString(ARG_USERNAME);
+            username = getArguments().getString(ARG_USERNAME);
             setHasOptionsMenu(true);
 
         }
@@ -183,7 +183,7 @@ public class othersProfileFragment extends BaseFragment {
 
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
-        _btnfollow.setText(userType);
+        //_btnfollow.setText(userType);
 
 
         _btnfollow.setOnClickListener(new View.OnClickListener() {
@@ -326,6 +326,7 @@ public class othersProfileFragment extends BaseFragment {
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
                         _creations.setText(totalvideos + " Creations");
+
                         if (response.body().getPrivateProfile() == null) {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
@@ -378,12 +379,35 @@ public class othersProfileFragment extends BaseFragment {
                             }
 
 
+                            if (isfollowing) {
+
+                                _btnfollow.setText("Following");
+
+                            } else {
+                                if (hassentrequest == true) {
+
+                                    if (requestRecieved == true) {
+
+                                        _btnfollow.setText("Following");
+
+                                    } else {
+                                        _btnfollow.setText("Requested");
+
+                                    }
+                                } else {
+                                    _btnfollow.setText("Follow");
+                                }
+                                layout.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                            }
+
                             getProfileVideos(followersid);
 
 
                         } else if (response.body().getPublicProfile() == null) {
 
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
+                            Toast.makeText(context,"PrivateProfile",Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
                             String username = privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
@@ -415,25 +439,29 @@ public class othersProfileFragment extends BaseFragment {
 
                             hobby.setText("");
                             lp.setMargins(0, 0, 0, 20);
+                            if (isfollowing) {
 
-                            if (hassentrequest == true) {
+                                _btnfollow.setText("Following");
 
-                                if (requestRecieved == true) {
-                                    //    _btnfollow.getText().equals("Following");
+                            } else {
+                                if (hassentrequest == true) {
+
+                                    if (requestRecieved == true) {
+                                        _btnfollow.setText("Following");
+                                    } else {
+
+                                        _btnfollow.setText("Requested");
+                                    }
                                 } else {
 
-                                    //  _btnfollow.getText().equals("Requested");
+
+                                    _btnfollow.setText("Follow");
+
                                 }
-                            } else {
-
-
-                                // _btnfollow.getText().equals("Follow");
-
+                                layout.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
                             }
-                            layout.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
                         }
-
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
@@ -627,7 +655,7 @@ public class othersProfileFragment extends BaseFragment {
                             Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             if (accountType == 1) {
                                 _btnfollow.setText("Requested");
-                                _btnfollow.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_follow));
+                                //_btnfollow.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_follow));
 
                             } else {
                                 _btnfollow.setText("Unfollow");
@@ -692,7 +720,7 @@ public class othersProfileFragment extends BaseFragment {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                blockunBlock(blockuserId, BLOCK_STATUS);
+              //  blockunBlock(blockuserId, BLOCK_STATUS);
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {

@@ -178,7 +178,6 @@
                                             android:layout_below="@+id/hobby"
                                             android:layout_marginEnd="10dp"
                                             android:background="@drawable/border_layout"
-                                            android:drawableStart="@drawable/ic_check_24dp"
                                             android:paddingTop="5dp"
                                             android:paddingBottom="5dp"
                                             android:paddingRight="3dp"
