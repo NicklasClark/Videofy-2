@@ -266,7 +266,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private void prepareController() {
         String profilePicUrl = "";
-        if (postDetails.getPostOwner().hasProfileMedia())
+        if (postDetails.getPostOwner().hasProfileMedia() && postDetails.getPostOwner().getProfileMedia() != null)
             profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
         String location = "";
         if (postDetails.hasCheckin())
@@ -299,13 +299,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     }
 
     private String getUserCategories() {
-        StringBuilder categories = new StringBuilder();
-        for (int i = 0; i < postDetails.getCategories().size(); i++) {
-            categories.append(postDetails.getCategories().get(i).getCategoryName());
-            if (i < postDetails.getCategories().size() - 1)
-                categories.append(", ");
-        }
-        return categories.toString();
+        if (postDetails.getCategories() != null) {
+            StringBuilder categories = new StringBuilder();
+            for (int i = 0; i < postDetails.getCategories().size(); i++) {
+                categories.append(postDetails.getCategories().get(i).getCategoryName());
+                if (i < postDetails.getCategories().size() - 1)
+                    categories.append(", ");
+            }
+            return categories.toString();
+        } else return null;
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
@@ -316,6 +318,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getReactions().size() > 0) {
+                                    postLoadErrorLayout.setVisibility(View.GONE);
                                     is_next_page = response.body().isNextPage();
                                     if (pageNumber == 1)
                                         postReactions.clear();
@@ -614,6 +617,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public void onDestroy() {
         super.onDestroy();
         postReactionAdapter = null;
+        getParentActivity().showAppBar();
     }
 
     private void resetMediaPlayer() {

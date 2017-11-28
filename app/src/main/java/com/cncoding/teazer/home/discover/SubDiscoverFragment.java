@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.discover;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,6 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,7 +25,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.search.adapters.SubSearchAdapter;
+import com.cncoding.teazer.home.discover.adapters.SubSearchAdapter;
+import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -36,11 +40,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.home.search.SearchFragment.ACTION_VIEW_MOST_POPULAR;
-import static com.cncoding.teazer.home.search.SearchFragment.ACTION_VIEW_MY_INTERESTS;
-import static com.cncoding.teazer.home.search.SearchFragment.ACTION_VIEW_TRENDING;
+import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
+import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
+import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
 
-public class SubSearchFragment extends BaseFragment {
+public class SubDiscoverFragment extends BaseFragment {
 
     private static final String ARG_CATEGORIES = "categories";
     private static final String ARG_POST_DETAILS = "postDetails";
@@ -57,13 +61,13 @@ public class SubSearchFragment extends BaseFragment {
     private ArrayList<PostDetails> postDetailsArrayList;
     private int action;
 
-    public SubSearchFragment() {
+    public SubDiscoverFragment() {
         // Required empty public constructor
     }
 
-    public static SubSearchFragment newInstance(int action, ArrayList<Category> categories,
-                                                ArrayList<PostDetails> postDetailsArrayList) {
-        SubSearchFragment fragment = new SubSearchFragment();
+    public static SubDiscoverFragment newInstance(int action, ArrayList<Category> categories,
+                                                  ArrayList<PostDetails> postDetailsArrayList) {
+        SubDiscoverFragment fragment = new SubDiscoverFragment();
         Bundle args = new Bundle();
         args.putInt(ACTION, action);
         args.putParcelableArrayList(ARG_CATEGORIES, categories);
@@ -80,18 +84,20 @@ public class SubSearchFragment extends BaseFragment {
             categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
             postDetailsArrayList = getArguments().getParcelableArrayList(ARG_POST_DETAILS);
         }
-        if (postDetailsArrayList == null)
-            postDetailsArrayList = new ArrayList<>();
-
         previousTitle = getParentActivity().getToolbarTitle();
+
+        if (action == ACTION_VIEW_MY_INTERESTS)
+            setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_sub_search, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the searchContainer for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_sub_discover, container, false);
         ButterKnife.bind(this, rootView);
+
+        if (postDetailsArrayList == null)
+            postDetailsArrayList = new ArrayList<>();
 
         switch (action) {
             case ACTION_VIEW_MOST_POPULAR:
@@ -99,11 +105,14 @@ public class SubSearchFragment extends BaseFragment {
                 prepareMostPopularLayout();
                 break;
             case ACTION_VIEW_MY_INTERESTS:
+                postDetailsArrayList.clear();
                 getParentActivity().updateToolbarTitle(getString(R.string.my_interests));
                 prepareMyInterestsLayout();
                 break;
             case ACTION_VIEW_TRENDING:
-                getParentActivity().updateToolbarTitle(getString(R.string.trending));
+                getParentActivity().updateToolbarTitle(getString(R.string.trending) +
+                        (categories != null && !categories.isEmpty() ?
+                                (" " + categories.get(0).getCategoryName()) + " " : " ") + getString(R.string.videos));
                 prepareTrendingLayout();
                 break;
             default:
@@ -114,6 +123,7 @@ public class SubSearchFragment extends BaseFragment {
 
     private void prepareMostPopularLayout() {
         if (!postDetailsArrayList.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(new SubSearchAdapter(postDetailsArrayList, getContext()));
             StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -135,6 +145,7 @@ public class SubSearchFragment extends BaseFragment {
     }
 
     private void prepareTrendingLayout() {
+        recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubSearchAdapter(postDetailsArrayList, getContext()));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -143,7 +154,7 @@ public class SubSearchFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (page > 1 && is_next_page)
-                    new GetTrendingVideos(SubSearchFragment.this).execute(page);
+                    new GetTrendingVideos(SubDiscoverFragment.this).execute(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -152,10 +163,10 @@ public class SubSearchFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetTrendingVideos(SubSearchFragment.this).execute(1);
+                new GetTrendingVideos(SubDiscoverFragment.this).execute(1);
             }
         });
-        new GetTrendingVideos(SubSearchFragment.this).execute(1);
+        new GetTrendingVideos(SubDiscoverFragment.this).execute(1);
     }
 
     private void populateTabs() {
@@ -165,9 +176,9 @@ public class SubSearchFragment extends BaseFragment {
 
     private static class GetTrendingVideos extends AsyncTask<Integer, Void, Void> {
 
-        private WeakReference<SubSearchFragment> reference;
+        private WeakReference<SubDiscoverFragment> reference;
 
-        GetTrendingVideos(SubSearchFragment context) {
+        GetTrendingVideos(SubDiscoverFragment context) {
             reference = new WeakReference<>(context);
         }
 
@@ -210,6 +221,22 @@ public class SubSearchFragment extends BaseFragment {
             super.onPostExecute(aVoid);
             reference.get().swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_my_interests, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_edit) {
+            getParentActivity().pushFragment(Interests.newInstance(true, categories));
+            return true;
+        }
+        return false;
     }
 
     @Override

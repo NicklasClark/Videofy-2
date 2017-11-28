@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.notifications;
+package com.cncoding.teazer.home.discover.search;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,8 +17,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
+import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -32,25 +32,26 @@ import retrofit2.Response;
 /**
  * A fragment representing a list of Items.
  */
-public class RequestNotificationsTabFragment extends BaseFragment {
+public class PeopleTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
 
 //    private OnListFragmentInteractionListener mListener;
-    private NotificationsList notificationsList;
-    private NotificationsAdapter adapter;
+    private boolean isSearchTerm;
+    private ArrayList<MiniProfile> usersList;
+    private DiscoverSearchAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RequestNotificationsTabFragment() {
+    public PeopleTabFragment() {
     }
 
-    public static RequestNotificationsTabFragment newInstance() {
-        return new RequestNotificationsTabFragment();
+    public static PeopleTabFragment newInstance() {
+        return new PeopleTabFragment();
     }
 
     @Override
@@ -58,9 +59,9 @@ public class RequestNotificationsTabFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
-        notificationsList = new NotificationsList(new ArrayList<Pojos.User.Notification>(), 0, false);
+        usersList = new ArrayList<>();
 
-        adapter = new NotificationsAdapter(getContext(), false, notificationsList);
+        adapter = new DiscoverSearchAdapter(getContext(), false, usersList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -68,7 +69,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(page);
+                    new GetUsersListToFollow(PeopleTabFragment.this).execute(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -77,7 +78,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(1);
+                new GetUsersListToFollow(PeopleTabFragment.this).execute(1);
             }
         });
 
@@ -87,38 +88,34 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
-            new GetRequestNotifications(this).execute(1);
+        if (usersList != null && usersList.isEmpty())
+            new GetUsersListToFollow(this).execute(1);
     }
 
-    private static class GetRequestNotifications extends AsyncTask<Integer, Void, Void> {
+    private static class GetUsersListToFollow extends AsyncTask<Integer, Void, Void> {
 
-        private WeakReference<RequestNotificationsTabFragment> reference;
+        private WeakReference<PeopleTabFragment> reference;
 
-        GetRequestNotifications(RequestNotificationsTabFragment context) {
+        GetUsersListToFollow(PeopleTabFragment context) {
             reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
         }
 
         @Override
         protected Void doInBackground(Integer... integers) {
             if (integers[0] == 1)
-                reference.get().notificationsList.getNotifications().clear();
+                reference.get().usersList.clear();
 
-            ApiCallingService.User.getRequestNotifications(integers[0], reference.get().getContext())
-                    .enqueue(new Callback<NotificationsList>() {
+            ApiCallingService.Discover.getUsersListToFollow(integers[0], reference.get().getContext())
+                    .enqueue(new Callback<UsersList>() {
                         @Override
-                        public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
+                        public void onResponse(Call<UsersList> call, Response<UsersList> response) {
                             if (response.code() == 200) {
-                                reference.get().is_next_page = response.body().isNextPage();
-                                if (response.body().getNotifications().size() > 0) {
+                                UsersList usersList = response.body();
+                                reference.get().is_next_page = usersList.isNextPage();
+                                if (usersList.getUsers().size() > 0) {
                                     reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     reference.get().noNotifications.setVisibility(View.GONE);
-                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
+                                    reference.get().usersList.addAll(usersList.getUsers());
                                     reference.get().recyclerView.getRecycledViewPool().clear();
                                     reference.get().adapter.notifyDataSetChanged();
                                 } else {
@@ -133,7 +130,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
                         }
 
                         @Override
-                        public void onFailure(Call<NotificationsList> call, Throwable t) {
+                        public void onFailure(Call<UsersList> call, Throwable t) {
                             Toast.makeText(reference.get().getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                             reference.get().swipeRefreshLayout.setRefreshing(false);
                         }

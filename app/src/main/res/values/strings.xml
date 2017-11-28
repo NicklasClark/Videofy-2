@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Teazer</string>
+    <string name="app_name" tools:override="true">Teazer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -23,7 +23,7 @@
     <string name="flip_camera">Flip camera</string>
     <string name="camera_flash">Camera flash</string>
     <string name="camera_settings">Camera settings</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel" tools:override="true">Cancel</string>
     <string name="check">Check</string>
     <string name="play_pause">Play/pause</string>
     <string name="video_thumbnail">Video thumbnail</string>
@@ -251,4 +251,9 @@
     <string name="tagged">Tagged</string>
     <string name="more">More</string>
     <string name="wrong_otp">Otp entered is wrong! please try again.</string>
+    <string name="swipe_down_to_retry">Swipe down to retry</string>
+    <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
+    <string name="something_went_wrong">Something went wrong!\nPlease try again later.</string>
+    <string name="edit">EDIT</string>
+    <string name="people">People</string>
 </resources>

@@ -84,7 +84,7 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
         ViewHolder(View view) {
             super(view);
             rootLayout = view.findViewById(R.id.categories_item_layout);
-            nameView = view.findViewById(R.id.list_item_checked);
+            nameView = view.findViewById(R.id.chip);
         }
     }
 

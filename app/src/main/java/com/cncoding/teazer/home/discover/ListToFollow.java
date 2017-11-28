@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.discover;
 
 import android.content.Context;
 import android.net.Uri;
@@ -71,8 +71,8 @@ public class ListToFollow extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        // Inflate the searchContainer for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         ButterKnife.bind(this, rootView);
         usersList = new ArrayList<>();
         getUsersToFollow(1);
@@ -80,7 +80,7 @@ public class ListToFollow extends BaseFragment {
     }
 
     private void getUsersToFollow(final int page) {
-        ApiCallingService.Friends.getUsersListToFollow(page, getContext()).enqueue(new Callback<Pojos.Friends.UsersList>() {
+        ApiCallingService.Discover.getUsersListToFollow(page, getContext()).enqueue(new Callback<Pojos.Friends.UsersList>() {
             @Override
             public void onResponse(Call<Pojos.Friends.UsersList> call, Response<Pojos.Friends.UsersList> response) {
                 if (response.code() == 200) {

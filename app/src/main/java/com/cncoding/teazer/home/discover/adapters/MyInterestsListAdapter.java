@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search.adapters;
+package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
@@ -29,12 +30,14 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
     private ArrayList<Category> myInterestsCategoriesArrayList;
     private Map<String, ArrayList<PostDetails>> myInterests;
     private Context context;
+    private DiscoverFragment.OnSearchInteractionListener mListener;
 
-    public MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList,
-                                  Map<String, ArrayList<PostDetails>> myInterests, Context context) {
+    public MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList, Map<String, ArrayList<PostDetails>> myInterests,
+                                  Context context, DiscoverFragment.OnSearchInteractionListener mListener) {
         this.myInterestsCategoriesArrayList = myInterestsCategoriesArrayList;
         this.myInterests = myInterests;
         this.context = context;
+        this.mListener = mListener;
     }
 
     @Override
@@ -53,10 +56,11 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
                 holder.recyclerView.setVisibility(View.VISIBLE);
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
-                        myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context));
+                        myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
             } else {
                 holder.recyclerView.setVisibility(View.GONE);
                 holder.noMyInterests.setVisibility(View.VISIBLE);
+                holder.noMyInterests.setText(R.string.sorry_message);
             }
         }
     }

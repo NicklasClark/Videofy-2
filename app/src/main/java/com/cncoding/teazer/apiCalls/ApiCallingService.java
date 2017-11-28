@@ -26,6 +26,7 @@ import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
+import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -196,6 +197,20 @@ public class ApiCallingService {
             return getDiscoverService(context).getDiscoverPagePosts();
         }
 
+        /**
+         * Call this service to get users list to send follow request.
+         */
+        public static Call<UsersList> getUsersListToFollow(int page, Context context){
+            return getDiscoverService(context).getUsersListToFollow(page);
+        }
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        public static Call<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
+            return getDiscoverService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
+        }
+
         private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -350,8 +365,6 @@ public class ApiCallingService {
             return getFriendsService(context).blockUnblockUser(userId, status);
         }
 
-
-
         /**
          * Call this service to get blocked users list by you.
          */
@@ -359,20 +372,6 @@ public class ApiCallingService {
             return getFriendsService(context).getBlockedUsers(page);
         }
 
-        /**
-         * Call this service to get users list to send follow request.
-         */
-        public static Call<Pojos.Friends.UsersList> getUsersListToFollow(int page, Context context){
-            return getFriendsService(context).getUsersListToFollow(page);
-        }
-
-        /**
-         * Call this service to get users list to send follow request with search term.
-         */
-        public static Call<Pojos.Friends.UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
-            return getFriendsService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
-        }
-        
         public static int isResponseOk(Response<CircleList> response) {
             switch (response.code()) {
                 case 200:

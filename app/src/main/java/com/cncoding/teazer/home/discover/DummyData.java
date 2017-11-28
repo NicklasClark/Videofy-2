@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.discover;
 
 import com.cncoding.teazer.utilities.Pojos;
 

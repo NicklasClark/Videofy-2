@@ -6,11 +6,10 @@
     android:foreground="@drawable/ripple_dark_no_rounded"
     android:paddingTop="@dimen/padding_half"
     android:paddingStart="@dimen/padding_default"
-    android:paddingEnd="0dp"
-    android:paddingBottom="@dimen/padding_half">
+    android:paddingEnd="0dp">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-        android:id="@+id/list_item_checked"
+        android:id="@+id/chip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_half"
@@ -23,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorDivider"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginStart="-16dp"
+        android:layout_marginTop="@dimen/padding_half"
+        android:layout_below="@+id/chip"/>
 
 </RelativeLayout>

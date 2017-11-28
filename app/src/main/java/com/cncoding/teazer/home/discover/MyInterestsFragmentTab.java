@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search;
+package com.cncoding.teazer.home.discover;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.search.adapters.SubSearchAdapter;
+import com.cncoding.teazer.home.discover.adapters.SubSearchAdapter;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 
@@ -60,14 +60,17 @@ public class MyInterestsFragmentTab extends BaseFragment {
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
         }
-        postDetailsArrayList = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the searchContainer for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_interests_tab, container, false);
         ButterKnife.bind(this, rootView);
+
+        if (postDetailsArrayList == null)
+            postDetailsArrayList = new ArrayList<>();
+        else postDetailsArrayList.clear();
 
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);

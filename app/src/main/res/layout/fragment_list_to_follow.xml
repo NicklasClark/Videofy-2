@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cncoding.teazer.home.search.SearchFragment">
+    tools:context="com.cncoding.teazer.home.discover.DiscoverFragment">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/user_search"

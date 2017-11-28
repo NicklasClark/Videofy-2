@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.search.adapters;
+package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -32,10 +35,12 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
     private ArrayList<PostDetails> postDetailsArrayList;
     private Context context;
+    private OnSearchInteractionListener mListener;
 
-    MyInterestsListItemAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
+    MyInterestsListItemAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context, OnSearchInteractionListener mListener) {
         this.postDetailsArrayList = postDetailsArrayList;
         this.context = context;
+        this.mListener = mListener;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
     }
 
     @Override
-    public void onBindViewHolder(MyInterestsListItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MyInterestsListItemAdapter.ViewHolder holder, int position) {
         holder.postDetails = postDetailsArrayList.get(position);
 
         try {
@@ -66,48 +71,60 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
             holder.views.setText(views);
 
         /*Setting reactions*/
-            String reactions = SPACE + String.valueOf(holder.postDetails.getTotalReactions()) + " R";
-            holder.reactions.setText(reactions);
-
-            if (holder.postDetails.getPostOwner().hasProfileMedia())
-                Glide.with(context)
-                        .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
-                        .into(holder.thumbnail);
+            holder.reactions.setVisibility(holder.postDetails.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
+            String reactionText;
+            if (holder.postDetails.getTotalReactions() > 4)
+                reactionText = "+" + String.valueOf(holder.postDetails.getTotalReactions() - 3) + " R";
             else
-                Glide.with(context)
-                        .load("")
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
-                        .into(holder.thumbnail);
+                reactionText = String.valueOf(holder.postDetails.getTotalReactions()) + " R";
+            holder.reactions.setText(reactionText);
 
-            if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getReactedUsers().size() > 0) {
+        /*Setting thumbnail*/
+            Glide.with(context)
+                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                    .placeholder(R.drawable.bg_placeholder)
+                    .crossFade()
+                    .into(holder.thumbnail);
+
+        /*Setting DP*/
+            Glide.with(context)
+                    .load(holder.postDetails.getPostOwner().hasProfileMedia() &&
+                            holder.postDetails.getPostOwner().getProfileMedia() != null ?
+                            holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .into(holder.dp);
+
+        /*Setting reaction thumbnails*/
+            if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getTotalReactions() > 0) {
                 holder.reactionImage1.setVisibility(View.VISIBLE);
-                Glide.with(context)
-                        .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
-                        .into(holder.reactionImage1);
-
-                if (holder.postDetails.getReactedUsers().size() > 1) {
-                    holder.reactionImage2.setVisibility(View.VISIBLE);
+                if (holder.postDetails.getReactedUsers().get(0).hasProfileMedia() &&
+                        holder.postDetails.getReactedUsers().get(0).getProfileMedia() != null)
                     Glide.with(context)
-                            .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                            .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder.reactionImage1);
 
-                    if (holder.postDetails.getReactedUsers().size() > 1) {
-                        holder.reactionImage2.setVisibility(View.VISIBLE);
+                if (holder.postDetails.getTotalReactions() > 1) {
+                    holder.reactionImage2.setVisibility(View.VISIBLE);
+                    if (holder.postDetails.getReactedUsers().get(1).hasProfileMedia() &&
+                            holder.postDetails.getReactedUsers().get(1).getProfileMedia() != null)
                         Glide.with(context)
                                 .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                                .placeholder(context.getResources().getDrawable(R.drawable.ic_user_dp_small, null))
+                                .placeholder(R.drawable.ic_user_male_dp_small)
                                 .crossFade()
                                 .into(holder.reactionImage2);
-                    }
                 }
             }
+
+            holder.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
+                            holder.postDetails, null);
+                }
+            });
         } catch(Resources.NotFoundException e){
             e.printStackTrace();
         }
@@ -120,6 +137,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;

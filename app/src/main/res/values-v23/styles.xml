@@ -8,6 +8,7 @@
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
         <item name="windowNoTitle">true</item>

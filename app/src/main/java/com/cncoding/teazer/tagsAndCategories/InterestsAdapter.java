@@ -26,25 +26,39 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 
     private ArrayList<Category> interestsList;
     private Interests interests;
+    private boolean isEditing;
     private SparseBooleanArray selectedInterestsArray;
     private SparseArray<Category> selectedInterests;
 
-    InterestsAdapter(ArrayList<Category> interestsList, Interests interests) {
+    InterestsAdapter(ArrayList<Category> interestsList, Interests interests, boolean isEditing, SparseBooleanArray categories) {
         this.interestsList = interestsList;
         this.interests = interests;
-        selectedInterestsArray = new SparseBooleanArray();
+        this.isEditing = isEditing;
+        if (isEditing) {
+            selectedInterestsArray = categories;
+        } else
+            selectedInterestsArray = new SparseBooleanArray();
         selectedInterests = new SparseArray<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chip, parent, false);
+        View view;
+        if (!isEditing)
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chip, parent, false);
+        else
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories, parent, false);
+
         return new InterestsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.chip.setText("+ " + interestsList.get(position).getCategoryName());
+        String categoryText;
+        if (!isEditing)
+            categoryText = "+ " + interestsList.get(position).getCategoryName();
+        else categoryText = interestsList.get(position).getCategoryName();
+        holder.chip.setText(categoryText);
 
         holder.chip.setChecked(selectedInterestsArray.get(position));
         checkAction(holder.chip, position, false);
@@ -73,14 +87,18 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean animate) {
         if (view.isChecked()) {
             selectedInterests.put(position, interestsList.get(position));
-            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
-            if (animate)
-                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+            if (!isEditing) {
+                view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
+                if (animate)
+                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+            }
         } else {
             selectedInterests.delete(position);
-            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
-            if (animate)
-                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
+            if (!isEditing) {
+                view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
+                if (animate)
+                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
+            }
         }
     }
 

@@ -15,7 +15,8 @@
         android:paddingTop="@dimen/padding_default"
         android:paddingBottom="@dimen/padding_double"
         android:foreground="@drawable/ripple_dark_no_rounded"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:visibility="gone">
 
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
             android:id="@+id/post_load_error"
@@ -23,17 +24,17 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAllCaps="true"
-            app:drawableTopCompat="@drawable/ic_sad"
+            app:drawableTopCompat="@drawable/ic_no_data_placeholder"
             android:textSize="@dimen/text_size_h5"
             android:text="@string/could_not_load_posts"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:id="@+id/tap_to_retry"
+            android:id="@+id/swipe_down_to_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="@dimen/text_size_content_big"
-            android:text="@string/tap_to_retry"/>
+            android:text="@string/swipe_down_to_retry"/>
 
     </LinearLayout>
 
@@ -61,9 +62,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/progress_bar_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginTop="-12dp"/>
+    <include layout="@layout/progress_bar_horizontal"/>
 
 </RelativeLayout>

@@ -10,7 +10,7 @@
     android:paddingBottom="@dimen/padding_half">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-        android:id="@+id/list_item_checked"
+        android:id="@+id/chip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_default"

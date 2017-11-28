@@ -92,9 +92,6 @@ import retrofit2.http.Query;
         Call<ArrayList<Pojos.Category>> getCategories();
     }
 
-    /**
-     * Authentication interfaces
-     */
     interface AuthenticationCalls {
 
         /**
@@ -194,6 +191,9 @@ import retrofit2.http.Query;
         Call<ResultObject> resetPasswordByOtp(@Body Authorize resetPasswordDetails);
     }
 
+    /**
+     * Discover interfaces
+     */
     interface DiscoverCalls {
 
         /**
@@ -219,6 +219,18 @@ import retrofit2.http.Query;
          */
         @GET("/api/v1/discover/landing")
         Call<LandingPosts> getDiscoverPagePosts();
+
+        /**
+         * Call this service to get users list to send follow request.
+         */
+        @GET("/api/v1/friend/application/users/{page}")
+        Call<UsersList> getUsersListToFollow(@Path("page") int page);
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        @GET("/api/v1/friend/application/users")
+        Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**
@@ -359,18 +371,6 @@ import retrofit2.http.Query;
          */
         @GET("/api/v1/friend/blocked/users/{page}")
         Call<BlockUsers> getBlockedUsers(@Path("page") int page);
-
-        /**
-         * Call this service to get users list to send follow request.
-         */
-        @GET("/api/v1/friend/application/users/{page}")
-        Call<UsersList> getUsersListToFollow(@Path("page") int page);
-
-        /**
-         * Call this service to get users list to send follow request with search term.
-         */
-        @GET("/api/v1/friend/application/users")
-        Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**
