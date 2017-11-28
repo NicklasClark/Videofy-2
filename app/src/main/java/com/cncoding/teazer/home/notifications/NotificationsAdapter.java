@@ -48,11 +48,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int TYPE_FOLLOWING = 0;
     private static final int TYPE_REQUESTS = 1;
-    private static final int BUTTON_TYPE_ACCEPT = 10;
-    private static final int BUTTON_TYPE_FOLLOW = 11;
-    private static final int BUTTON_TYPE_FOLLOWING = 12;
-    private static final int BUTTON_TYPE_REQUESTED = 13;
-    private static final int BUTTON_TYPE_NONE = 14;
+    public static final int BUTTON_TYPE_ACCEPT = 10;
+    public static final int BUTTON_TYPE_FOLLOW = 11;
+    public static final int BUTTON_TYPE_FOLLOWING = 12;
+    public static final int BUTTON_TYPE_REQUESTED = 13;
+    public static final int BUTTON_TYPE_NONE = 14;
 
     private static final int STARTED_FOLLOWING = 1;
     private static final int ACCEPTED_REQUEST = 2;
@@ -76,6 +76,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.context = context;
         this.isFollowingTab = isFollowingTab;
         this.notificationsList = notificationsList;
+        if (context instanceof OnNotificationsInteractionListener) {
+            mListener = ((OnNotificationsInteractionListener) context);
+        }
     }
 
     @Override
@@ -249,18 +252,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200) {
-                                                        if (response.body().getStatus()) {
-                                                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                            else
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                            holder2.declineRequest.setVisibility(View.GONE);
-                                                        } else {
-                                                            sendJoinRequest(holder2);
-                                                        }
-                                                    } else
-                                                        Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    try {
+                                                        if (response.code() == 200) {
+                                                            if (response.body().getStatus()) {
+                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                                else
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                                holder2.declineRequest.setVisibility(View.GONE);
+                                                            } else {
+                                                                sendJoinRequest(holder2);
+                                                            }
+                                                        } else
+                                                            Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
 
                                                 @Override
@@ -541,20 +548,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         public String toString() {
             return super.toString() + " '" + content.getText() + "'";
         }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        if (context instanceof OnNotificationsInteractionListener) {
-            mListener = ((OnNotificationsInteractionListener) context);
-        }
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        mListener = null;
     }
 
     public interface OnNotificationsInteractionListener {

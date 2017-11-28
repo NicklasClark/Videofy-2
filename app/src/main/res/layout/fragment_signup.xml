@@ -35,6 +35,7 @@
                 android:layout_marginTop="@dimen/padding_double"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/first_and_last_name"
+                android:maxLength="25"
                 android:inputType="text|textPersonName|textCapWords"
                 android:imeOptions="actionNext"/>
 
@@ -64,14 +65,16 @@
                     app:ccpDialog_backgroundColor="@color/material_grey100"
                     app:ccpDialog_textColor="@color/colorSecondary_text"
                     app:ccp_showNameCode="false"
-                    app:ccp_showPhoneCode="false"
+                    app:ccp_showPhoneCode="true"
                     android:layout_alignBottom="@+id/signup_phone_number"
                     android:layout_alignTop="@+id/signup_phone_number"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                     android:id="@+id/signup_phone_number"
-                    style="@style/AppTheme.LastNameEditText"
+                    style="@style/AppTheme.PhoneNumberEditText"
+                    android:layout_toRightOf="@+id/signup_country_code"
                     android:hint="@string/phone_number"
+                    android:textAlignment="textStart"
                     android:inputType="number|phone"
                     android:imeOptions="actionNext"
                     android:layout_toEndOf="@+id/signup_country_code"/>

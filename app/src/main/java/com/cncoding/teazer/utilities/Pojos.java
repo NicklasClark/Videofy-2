@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 //import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
@@ -1155,6 +1156,12 @@ public class Pojos {
             public Map<String, ArrayList<PostDetails>> getMyInterests() {
                 return my_interests;
             }
+
+            public boolean isEmpty() {
+                return getMostPopular().isEmpty() &&
+                        (getMyInterests().isEmpty() ||
+                                Collections.frequency(getMyInterests().values(), Collections.EMPTY_LIST) == getMyInterests().size());
+            }
         }
     }
 
@@ -2090,22 +2097,70 @@ public class Pojos {
         String user_name;
         String first_name;
         String last_name;
+        int account_type;
         boolean following;
         boolean follower;
+        boolean request_sent;
         boolean has_profile_media;
         ProfileMedia profile_media;
 
-        public MiniProfile(int user_id, String user_name, String first_name, String last_name,
-                           boolean following, boolean follower, boolean has_profile_media, ProfileMedia profile_media) {
+        public MiniProfile(int user_id, String user_name, String first_name, String last_name, int account_type, boolean following,
+                           boolean follower, boolean request_sent, boolean has_profile_media, ProfileMedia profile_media) {
             this.user_id = user_id;
             this.user_name = user_name;
             this.first_name = first_name;
             this.last_name = last_name;
+            this.account_type = account_type;
             this.following = following;
             this.follower = follower;
+            this.request_sent = request_sent;
             this.has_profile_media = has_profile_media;
             this.profile_media = profile_media;
         }
+
+        protected MiniProfile(Parcel in) {
+            user_id = in.readInt();
+            user_name = in.readString();
+            first_name = in.readString();
+            last_name = in.readString();
+            account_type = in.readInt();
+            following = in.readByte() != 0;
+            follower = in.readByte() != 0;
+            request_sent = in.readByte() != 0;
+            has_profile_media = in.readByte() != 0;
+            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(user_id);
+            dest.writeString(user_name);
+            dest.writeString(first_name);
+            dest.writeString(last_name);
+            dest.writeInt(account_type);
+            dest.writeByte((byte) (following ? 1 : 0));
+            dest.writeByte((byte) (follower ? 1 : 0));
+            dest.writeByte((byte) (request_sent ? 1 : 0));
+            dest.writeByte((byte) (has_profile_media ? 1 : 0));
+            dest.writeParcelable(profile_media, flags);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<MiniProfile> CREATOR = new Creator<MiniProfile>() {
+            @Override
+            public MiniProfile createFromParcel(Parcel in) {
+                return new MiniProfile(in);
+            }
+
+            @Override
+            public MiniProfile[] newArray(int size) {
+                return new MiniProfile[size];
+            }
+        };
 
         public int getUserId() {
             return user_id;
@@ -2123,12 +2178,20 @@ public class Pojos {
             return last_name;
         }
 
+        public int getAccountType() {
+            return account_type;
+        }
+
         public boolean isFollowing() {
             return following;
         }
 
         public boolean isFollower() {
             return follower;
+        }
+
+        public boolean isRequestSent() {
+            return request_sent;
         }
 
         public boolean hasProfileMedia() {
@@ -2138,46 +2201,6 @@ public class Pojos {
         public ProfileMedia getProfileMedia() {
             return profile_media;
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(user_id);
-            parcel.writeString(user_name);
-            parcel.writeString(first_name);
-            parcel.writeString(last_name);
-            parcel.writeByte((byte) (following ? 1 : 0));
-            parcel.writeByte((byte) (follower ? 1 : 0));
-            parcel.writeByte((byte) (has_profile_media ? 1 : 0));
-            parcel.writeParcelable(profile_media, i);
-        }
-
-        protected MiniProfile(Parcel in) {
-            user_id = in.readInt();
-            user_name = in.readString();
-            first_name = in.readString();
-            last_name = in.readString();
-            following = in.readByte() != 0;
-            follower = in.readByte() != 0;
-            has_profile_media = in.readByte() != 0;
-            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
-        }
-
-        public static final Creator<MiniProfile> CREATOR = new Creator<MiniProfile>() {
-            @Override
-            public MiniProfile createFromParcel(Parcel in) {
-                return new MiniProfile(in);
-            }
-
-            @Override
-            public MiniProfile[] newArray(int size) {
-                return new MiniProfile[size];
-            }
-        };
     }
 
     public static class TaggedUser implements Parcelable {
@@ -2706,9 +2729,11 @@ public class Pojos {
         private String tags;
         private String categories;
         private PostDetails postDetails;
+        private boolean isGallery;
 
-        public UploadParams(String videoPath, boolean isReaction, String title, String location,
+        public UploadParams(boolean isGallery, String videoPath, boolean isReaction, String title, String location,
                             double latitude, double longitude, String tags, String categories) {
+            this.isGallery = isGallery;
             this.videoPath = videoPath;
             this.isReaction = isReaction;
             this.title = title;
@@ -2731,6 +2756,7 @@ public class Pojos {
             this.postDetails = postDetails;
         }
 
+
         protected UploadParams(Parcel in) {
             videoPath = in.readString();
             isReaction = in.readByte() != 0;
@@ -2741,6 +2767,7 @@ public class Pojos {
             tags = in.readString();
             categories = in.readString();
             postDetails = in.readParcelable(PostDetails.class.getClassLoader());
+            isGallery = in.readByte() != 0;
         }
 
         @Override
@@ -2754,6 +2781,7 @@ public class Pojos {
             dest.writeString(tags);
             dest.writeString(categories);
             dest.writeParcelable(postDetails, flags);
+            dest.writeByte((byte) (isGallery ? 1 : 0));
         }
 
         @Override
@@ -2807,6 +2835,14 @@ public class Pojos {
 
         public PostDetails getPostDetails() {
             return postDetails;
+        }
+
+        public boolean isGallery() {
+            return isGallery;
+        }
+
+        public void setGallery(boolean gallery) {
+            isGallery = gallery;
         }
     }
 

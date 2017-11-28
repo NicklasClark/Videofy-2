@@ -35,18 +35,22 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Glide.with(cameraActivity).load("file://" + videos.get(position).getThumbnail())
-                .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
-                .crossFade(280)
-                .skipMemoryCache(false)
-                .into(holder.thumbnailView);
+        try {
+            Glide.with(cameraActivity).load("file://" + videos.get(position).getThumbnail())
+                    .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                    .crossFade(280)
+                    .skipMemoryCache(false)
+                    .into(holder.thumbnailView);
 
-        holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cameraActivity.onVideoGalleryAdapterInteraction(videos.get(holder.getAdapterPosition()).getPath());
-            }
-        });
+            holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cameraActivity.onVideoGalleryAdapterInteraction(videos.get(holder.getAdapterPosition()).getPath());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

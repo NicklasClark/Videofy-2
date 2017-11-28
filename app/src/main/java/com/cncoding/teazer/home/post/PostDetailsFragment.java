@@ -10,6 +10,8 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -46,6 +48,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -139,6 +142,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         ButterKnife.bind(this, rootView);
         context = getContext();
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
 
@@ -184,7 +194,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
 
-        return rootView;
     }
 
     @Override
@@ -257,7 +266,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private void prepareController() {
         String profilePicUrl = "";
-        if (postDetails.getPostOwner().hasProfileMedia())
+        if (postDetails.getPostOwner().hasProfileMedia() && postDetails.getPostOwner().getProfileMedia() != null)
             profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
         String location = "";
         if (postDetails.hasCheckin())
@@ -290,13 +299,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     }
 
     private String getUserCategories() {
-        StringBuilder categories = new StringBuilder();
-        for (int i = 0; i < postDetails.getCategories().size(); i++) {
-            categories.append(postDetails.getCategories().get(i).getCategoryName());
-            if (i < postDetails.getCategories().size() - 1)
-                categories.append(", ");
-        }
-        return categories.toString();
+        if (postDetails.getCategories() != null) {
+            StringBuilder categories = new StringBuilder();
+            for (int i = 0; i < postDetails.getCategories().size(); i++) {
+                categories.append(postDetails.getCategories().get(i).getCategoryName());
+                if (i < postDetails.getCategories().size() - 1)
+                    categories.append(", ");
+            }
+            return categories.toString();
+        } else return null;
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
@@ -307,6 +318,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getReactions().size() > 0) {
+                                    postLoadErrorLayout.setVisibility(View.GONE);
                                     is_next_page = response.body().isNextPage();
                                     if (pageNumber == 1)
                                         postReactions.clear();
@@ -329,11 +341,11 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                     controller.setNoReactions();
                                     showNoReactionMessage();
                                 }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
-                        }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
                     }
 
                     private void showErrorMessage(String message) {
@@ -558,7 +570,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_profile_report:
-                    Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
+                    if (postDetails.canReact()) {
+                        FragmentManager fm = getFragmentManager();
+                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(postDetails.getPostId(), postDetails.canReact());
+                        // SETS the target fragment for use later when sending results
+                        reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
+                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                    } else {
+                        Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
             }
             return false;
@@ -597,6 +617,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public void onDestroy() {
         super.onDestroy();
         postReactionAdapter = null;
+        getParentActivity().showAppBar();
     }
 
     private void resetMediaPlayer() {

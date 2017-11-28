@@ -29,7 +29,29 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:background="@drawable/material_flat"
-            android:layout_height="280dp" />
+            android:layout_height="290dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="290dp">
+        <ImageView
+
+            android:layout_width="match_parent"
+            android:background="@drawable/bg_vignette"
+
+            android:layout_height="290dp" />
+        <!--<ImageView-->
+           <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+
+            <!--android:layout_height="40dp" />-->
+
+
+
+    </RelativeLayout>
+
+
     <RelativeLayout
 
         android:layout_width="match_parent"

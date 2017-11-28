@@ -105,11 +105,12 @@
                                     <RelativeLayout
 
                                         android:layout_width="match_parent"
+                                        android:layout_marginLeft="5dp"
                                         android:layout_height="wrap_content">
 
 
                                         <com.cncoding.teazer.customViews.SignPainterTextView
-                                            android:id="@+id/username_title"
+                                            android:id="@+id/username"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
@@ -119,35 +120,45 @@
                                             android:text="@string/username"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="32sp" />
+                                        <LinearLayout
+                                            android:id="@+id/bulletslayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_centerVertical="true"
+                                            android:gravity="center_vertical"
+                                            android:layout_below="@+id/username"
+                                            android:layout_height="wrap_content">
 
                                         <TextView
                                             android:id="@+id/bullets"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username_title"
+                                            android:layout_below="@+id/username"
                                             android:text="\u25CF"
-                                            android:textColor="@color/colorIcons"
+                                            android:textColor="#b1ffffff"
                                             android:textSize="12dp" />
 
                                         <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                            android:id="@+id/username"
+                                            android:id="@+id/name"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@+id/username_title"
+                                            android:layout_below="@+id/username"
                                             android:layout_marginStart="5dp"
                                             android:layout_toEndOf="@+id/bullets"
                                             android:text="@string/name"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
+                                        </LinearLayout>
 
                                         <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
 
                                             android:id="@+id/hobby"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@+id/bullets"
+                                            android:layout_below="@+id/bulletslayout"
                                             android:layout_marginBottom="10dp"
                                             android:layout_marginTop="5dp"
+                                            android:layout_marginRight="20dp"
+                                            android:lineSpacingExtra="2dp"
                                             android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
@@ -155,18 +166,21 @@
 
                                         <Button
                                             android:id="@+id/btnfollow"
-                                            android:layout_width="80dp"
-                                            android:layout_height="30dp"
+                                            android:layout_width="85dp"
+                                            android:layout_height="26dp"
                                             android:layout_below="@+id/hobby"
                                             android:layout_marginEnd="10dp"
-                                            android:layout_marginTop="3dp"
                                             android:background="@drawable/border_layout"
-                                            android:padding="5dp"
-                                            android:text="Follow"
-                                            android:textStyle="normal"
+                                            android:drawableStart="@drawable/ic_check_24dp"
+                                            android:paddingTop="5dp"
+                                            android:paddingBottom="5dp"
+                                            android:paddingRight="3dp"
+                                            android:paddingLeft="6dp"
+                                            android:drawablePadding="-3dp"
                                             android:textAllCaps="false"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
+                                        />
 
                                     </RelativeLayout>
                                 </LinearLayout>
@@ -175,11 +189,14 @@
                             </LinearLayout>
                         </LinearLayout>
 
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:layout_marginLeft="10dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
                             android:layout_marginRight="10dp"
                             android:orientation="horizontal">
 
@@ -201,22 +218,23 @@
                                     android:drawableStart="@drawable/ic_creations"
                                     android:text="@string/creation"
                                     android:textColor="@color/colorIcons"
-                                    android:textSize="14sp" />
+                                    android:textSize="13sp" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".1"
+                                android:layout_marginStart="2dp"
 
                                 android:orientation="horizontal">
 
                                 <View
                                     android:layout_width="1dp"
-                                    android:layout_height="30dp"
+                                    android:layout_height="26dp"
                                     android:layout_below="@+id/username_title"
                                     android:layout_marginStart="2dp"
-                                    android:background="@color/colorIcons"
+                                    android:background="#64ffffff"
                                     android:textColor="@color/colorIcons" />
                             </LinearLayout>
 
@@ -237,20 +255,20 @@
                                     android:drawableStart="@drawable/ic_following"
                                     android:text="@string/following"
                                     android:textColor="@color/colorIcons"
-                                    android:textSize="14sp" />
+                                    android:textSize="13sp" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".1"
+                                android:layout_marginStart="2dp"
                                 android:orientation="horizontal">
 
                                 <View
                                     android:layout_width="1dp"
-                                    android:layout_height="30dp"
-                                    android:layout_marginStart="2dp"
-                                    android:background="@color/colorIcons" />
+                                    android:layout_height="26dp"
+                                    android:background="#64ffffff"/>
 
                             </LinearLayout>
 
@@ -268,12 +286,116 @@
                                     android:layout_marginStart="5dp"
                                     android:layout_toEndOf="@+id/bullets"
                                     android:drawablePadding="5dp"
+
                                     android:drawableStart="@drawable/ic_followers"
                                     android:text="@string/followers"
                                     android:textColor="@color/colorIcons"
-                                    android:textSize="14sp" />
+                                    android:textSize="13sp" />
                             </LinearLayout>
                         </LinearLayout>
+
+                        <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="20dp"-->
+                            <!--android:layout_marginLeft="10dp"-->
+                            <!--android:layout_marginRight="10dp"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight="1"-->
+
+                                <!--android:orientation="horizontal">-->
+
+                                <!--<TextView-->
+                                    <!--android:id="@+id/creations"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_below="@+id/username_title"-->
+                                    <!--android:layout_marginStart="5dp"-->
+                                    <!--android:layout_toEndOf="@+id/bullets"-->
+                                    <!--android:drawablePadding="5dp"-->
+                                    <!--android:drawableStart="@drawable/ic_creations"-->
+                                    <!--android:text="@string/creation"-->
+                                    <!--android:textColor="@color/colorIcons"-->
+                                    <!--android:textSize="14sp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight=".1"-->
+
+                                <!--android:orientation="horizontal">-->
+
+                                <!--<View-->
+                                    <!--android:layout_width="1dp"-->
+                                    <!--android:layout_height="30dp"-->
+                                    <!--android:layout_below="@+id/username_title"-->
+                                    <!--android:layout_marginStart="2dp"-->
+                                    <!--android:background="@color/colorIcons"-->
+                                    <!--android:textColor="@color/colorIcons" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:orientation="horizontal">-->
+
+                                <!--<TextView-->
+                                    <!--android:id="@+id/following"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_below="@+id/username_title"-->
+                                    <!--android:layout_marginStart="5dp"-->
+                                    <!--android:layout_toEndOf="@+id/bullets"-->
+                                    <!--android:drawablePadding="5dp"-->
+                                    <!--android:drawableStart="@drawable/ic_following"-->
+                                    <!--android:text="@string/following"-->
+                                    <!--android:textColor="@color/colorIcons"-->
+                                    <!--android:textSize="14sp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight=".1"-->
+                                <!--android:orientation="horizontal">-->
+
+                                <!--<View-->
+                                    <!--android:layout_width="1dp"-->
+                                    <!--android:layout_height="30dp"-->
+                                    <!--android:layout_marginStart="2dp"-->
+                                    <!--android:background="@color/colorIcons" />-->
+
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:orientation="horizontal">-->
+
+                                <!--<TextView-->
+                                    <!--android:id="@+id/followers"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_below="@+id/username_title"-->
+                                    <!--android:layout_marginStart="5dp"-->
+                                    <!--android:layout_toEndOf="@+id/bullets"-->
+                                    <!--android:drawablePadding="5dp"-->
+                                    <!--android:drawableStart="@drawable/ic_followers"-->
+                                    <!--android:text="@string/followers"-->
+                                    <!--android:textColor="@color/colorIcons"-->
+                                    <!--android:textSize="14sp" />-->
+                            <!--</LinearLayout>-->
+                        <!--</LinearLayout>-->
+
+
+
                     </LinearLayout>
 
 

@@ -102,7 +102,6 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            reference.get().notificationsList.getNotifications().clear();
         }
 
         @Override

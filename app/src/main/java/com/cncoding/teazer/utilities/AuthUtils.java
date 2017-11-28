@@ -73,6 +73,7 @@ public class AuthUtils {
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                         view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
+                        view.setTypeface(new TypeFactory(context).regular);
                         return true;
                     default:
                         return false;
@@ -352,6 +353,7 @@ public class AuthUtils {
     }
 
     public static void logout(final Context context, @Nullable final Activity activity) {
+        SharedPrefs.finishVideoUploadSession(context);
         ApiCallingService.User.logout("Bearer " + SharedPrefs.getAuthToken(context), context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override

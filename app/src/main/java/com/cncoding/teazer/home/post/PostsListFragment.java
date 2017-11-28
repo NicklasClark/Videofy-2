@@ -17,7 +17,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,13 +36,11 @@ public class PostsListFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-    @BindView(R.id.tap_to_retry) ProximaNovaRegularTextView tapToRetryBtn;
 
     public static boolean returningFromUpload = false;
 
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
-
     public PostsListFragment() {
         // Required empty public constructor
     }
@@ -55,6 +51,7 @@ public class PostsListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getParentActivity().updateToolbarTitle(null);
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
         if (postList == null)
@@ -111,28 +108,31 @@ public class PostsListFragment extends BaseFragment {
                 .enqueue(new Callback<PostList>() {
                     @Override
                     public void onResponse(Call<PostList> call, Response<PostList> response) {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
-                                    is_next_page = response.body().isNextPage();
-                                    if (page == 1)
-                                        postList.clear();
+                        try {
+                            switch (response.code()) {
+                                case 200:
+                                    if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
+                                        is_next_page = response.body().isNextPage();
 
-                                    postList.addAll(response.body().getPosts());
-                                    recyclerView.getRecycledViewPool().clear();
-                                    postListAdapter.notifyDataSetChanged();
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    dismissProgressBar();
-                                } else if (page == 1){
-                                    showErrorMessage(getString(R.string.no_posts_available));
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
+                                        postList.addAll(response.body().getPosts());
+                                        recyclerView.getRecycledViewPool().clear();
+                                        postListAdapter.notifyDataSetChanged();
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        dismissProgressBar();
+                                    } else if (page == 1){
+                                        showErrorMessage(getString(R.string.no_posts_available));
+                                    }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
                     }
 
                     private void showErrorMessage(String message) {
@@ -151,6 +151,7 @@ public class PostsListFragment extends BaseFragment {
 
                         if (isRefreshing)
                             swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
                     }
                 });
     }
@@ -165,16 +166,6 @@ public class PostsListFragment extends BaseFragment {
                 }
             }, 400);
         }
-    }
-
-    @OnClick(R.id.post_load_error_layout) public void reloadPosts() {
-        if (postListAdapter != null)
-            recyclerView.getRecycledViewPool().clear();
-        if (postListAdapter != null) {
-            postListAdapter.notifyDataSetChanged();
-        }
-        scrollListener.resetState();
-        getHomePagePosts(1, false);
     }
 
     @Override

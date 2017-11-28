@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -49,6 +50,7 @@ public class ViewUtils {
 
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
+    public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
 
@@ -225,6 +227,14 @@ public class ViewUtils {
         }
     }
 
+    public static void showKeyboard(Activity activity, View view) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
     public static void updateMediaStoreDatabase(Context context, String videoPath) {
         context.sendBroadcast(
                 new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
@@ -239,14 +249,20 @@ public class ViewUtils {
 
     public static byte[] getByteArrayFromImage(ImageView imageView) {
         if (imageView.getDrawable() != null) {
-            Bitmap bitmap;
-            if (imageView.getDrawable() instanceof TransitionDrawable)
-                bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
-            else
-                bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            return outputStream.toByteArray();
+            try {
+                Bitmap bitmap;
+                if (imageView.getDrawable() instanceof TransitionDrawable)
+                    bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+                else
+                    bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                return outputStream.toByteArray();
+            } catch (ClassCastException e) {
+                if (e.getMessage() != null)
+                    Log.e("Getting thumbnail", e.getMessage());
+                return null;
+            }
         } else
             return null;
     }

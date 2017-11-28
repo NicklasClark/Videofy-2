@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 //    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int DEVICE_TYPE_ANDROID = 2;
-    public static final int OPEN_CAMERA_ACTION = 98;
+//    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
     private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
     private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
-    private static final String TAG_SELECT_INTERESTS = "selectInterests";
+    public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
@@ -213,7 +213,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
-                transaction.replace(R.id.main_fragment_container, Interests.newInstance(), TAG_SELECT_INTERESTS);
+                transaction.replace(R.id.main_fragment_container, Interests.newInstance(false, null),
+                        TAG_SELECT_INTERESTS);
                 break;
             default:
                 break;
@@ -360,35 +361,39 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                        switch (response.code()) {
-                            case 201:
-                                if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, false);
-                                }
-                                break;
-                            case 200:
-                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, true);
-                                } else {
-                                    new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
-                                            facebookProfile, facebookData, button);
-                                }
-                                break;
-                            default:
-                                Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
-                                button.revertAnimation(new OnAnimationEndListener() {
-                                    @Override
-                                    public void onAnimationEnd() {
-                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
-                                                0, 0, 0);
+//                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                        try {
+                            switch (response.code()) {
+                                case 201:
+                                    if (response.body().getStatus()) {
+                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, false);
                                     }
-                                });
-                                break;
+                                    break;
+                                case 200:
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                    if (response.body().getStatus()) {
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, true);
+                                    } else {
+                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
+                                                facebookProfile, facebookData, button);
+                                    }
+                                    break;
+                                default:
+                                    Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
+                                    button.revertAnimation(new OnAnimationEndListener() {
+                                        @Override
+                                        public void onAnimationEnd() {
+                                            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                                    0, 0, 0);
+                                        }
+                                    });
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

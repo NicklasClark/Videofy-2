@@ -8,12 +8,12 @@ import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
@@ -38,7 +38,7 @@ public class PasswordChange extends AppCompatActivity {
     @BindView(R.id.save)
     Button save;
     @BindView(R.id.currentPasswordLayout)
-    ProximaNovaRegularCheckedTextView currentPasswordLayout;
+    LinearLayout currentPasswordLayout;
     private boolean canChangePassword;
     private String confirmPass;
     private String newPass;
@@ -158,6 +158,9 @@ public class PasswordChange extends AppCompatActivity {
                             currentPasswordLayout.setVisibility(View.VISIBLE);
                             oldPassword = getCurrentPassword(PasswordChange.this);
                         }
+                        else
+                            currentPasswordLayout.setVisibility(View.GONE);
+
                         save.setEnabled(true);
                     }
                 } catch (Exception e) {
