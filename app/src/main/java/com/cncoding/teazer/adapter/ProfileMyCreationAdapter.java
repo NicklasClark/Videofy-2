@@ -196,7 +196,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             imagelayout2 = view.findViewById(R.id.image1_layout);
             imagelayout3 = view.findViewById(R.id.image1_layout);
             locationimage = view.findViewById(R.id.locationimage);
-
             menu = view.findViewById(R.id.menu);
 
         }
