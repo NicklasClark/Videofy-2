@@ -262,12 +262,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
 
             if (userProfileThumbnail == null) {
-                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//
+//                Glide.with(context)
+//                        .load(pic)
+//                        .into(profile_image);
 
-                Glide.with(context)
-                        .load(pic)
-                        .into(profile_image);
-                profileBlur(pic);
+
+              //  profileBlur(pic);
             } else {
 
                 Picasso.with(context)
