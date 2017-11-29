@@ -76,6 +76,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
+    compile 'com.iceteck.silicompressorr:silicompressor:2.1'
     //    compile 'life.knowledge4:k4l-video-trimmer:1.0'
 }
 

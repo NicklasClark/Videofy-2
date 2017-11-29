@@ -1,6 +1,7 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -152,6 +153,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
     private Fragment fragment;
+    private static Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,6 +161,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
+        mContext = getApplicationContext();
         checkIfAnyVideoIsUploading();
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
@@ -405,12 +408,21 @@ public class BaseBottomBarActivity extends BaseActivity
             SharedPrefs.saveVideoUploadSession(reference.get(), uploadParams);
 
             File videoFile = new File(uploadParams.getVideoPath());
+            File compressedVideoFile = new File(uploadParams.getVideoPath());
+
+//            try {
+//                String filePath = SiliCompressor.with(mContext).compressVideo(uploadParams.getVideoPath(), videoFile.getParent());
+//                compressedVideoFile = new File(filePath);
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+
             ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, reference.get());
             videoPartFile = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
             String title = uploadParams.getTitle();
             if (!uploadParams.isReaction()) {
 //                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
+//                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
                 reference.get().uploadCall = ApiCallingService.Posts.uploadVideo(
                         videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
                         uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), reference.get());
