@@ -86,20 +86,12 @@ public class FollowingListActivities extends BaseFragment {
         View view = inflater.inflate(R.layout.activity_followers, container, false);
         ButterKnife.bind(this,view);
         context=container.getContext();
-
-//
-//        Intent intent = getIntent();
-//        String identifier = intent.getStringExtra("Identifier");
-//        int userID = Integer.parseInt(intent.getStringExtra("FollowerId"));
-
+        getParentActivity().updateToolbarTitle("Following List");
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         return view;
-
     }
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

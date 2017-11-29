@@ -51,7 +51,7 @@
     <ScrollView
         android:id="@+id/layoutdetail"
         android:layout_below="@+id/appBar"
-        android:layout_above="@+id/btnshare"
+        android:layout_above="@+id/fab"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -73,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    android:background="@drawable/ic_default_bg"
                     android:transitionName="profile" />
                 <RelativeLayout
 
@@ -101,6 +102,7 @@
                             android:layout_width="84dp"
                             android:layout_height="84dp"
                             android:scaleType="centerCrop"
+                            android:background="@drawable/ic_user_male_dp"
                             android:layout_margin="2dp"
                             android:transitionName="profile" />
 
@@ -559,7 +561,7 @@
     <Button
         android:id="@+id/fab"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:paddingTop="5dp"

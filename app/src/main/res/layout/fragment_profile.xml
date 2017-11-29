@@ -48,6 +48,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
+                        android:background="@drawable/ic_default_bg"
                         android:transitionName="profile" />
 
 
@@ -96,7 +97,7 @@
 
                                             android:fitsSystemWindows="true"
                                             android:scaleType="centerCrop"
-                                            android:src="@drawable/arif_image"
+                                            android:src="@drawable/ic_user_male_dp"
                                             app:layout_collapseMode="parallax" />
                                     </RelativeLayout>
                                 </LinearLayout>

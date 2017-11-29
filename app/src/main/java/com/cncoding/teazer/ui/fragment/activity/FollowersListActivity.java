@@ -79,6 +79,7 @@ public class FollowersListActivity extends BaseFragment{
         if (getArguments() != null) {
             followerid  = getArguments().getString(ARG_ID);
             identifier = getArguments().getString(ARG_IDENTIFIER);
+
         }
 
     }
@@ -96,6 +97,7 @@ public class FollowersListActivity extends BaseFragment{
         recyclerView=view.findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        getParentActivity().updateToolbarTitle("Follower List");
         return view;
 
     }

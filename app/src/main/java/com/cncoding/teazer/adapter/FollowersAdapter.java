@@ -15,12 +15,18 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -141,6 +147,21 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
                 });
 
+                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(viewHolder.follow.getText().equals("Follow"))
+
+                        {
+
+                            followUser(followerId, context, viewHolder,accounttype);
+
+                        }
+
+                    }
+                });
+
             } else {
                 final OtherFollowers cont = list.get(i);
                 final String usertype;
@@ -228,17 +249,26 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         } else
 
                         {
-
                             if (isblockedyou) {
+
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
-//                                Intent intent = new Intent(context, othersProfileFragment.class);
-//                                intent.putExtra("Username", followername);
-//                                intent.putExtra("FollowId", String.valueOf(followerId));
-//                                intent.putExtra("UserType", usertype);
-//                                context.startActivity(intent);
                                 otherProfileListener.viewOthersProfile(String.valueOf(followerId),usertype,followername);
                             }
+                        }
+                    }
+                });
+
+
+                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(viewHolder.follow.getText().equals("Follow"))
+                        {
+
+
+                            followUser(followerId, context, viewHolder,accounttype);
                         }
                     }
                 });
@@ -250,6 +280,60 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         }
 
     }
+
+    public void followUser(final int userId, final Context context,final ViewHolder viewHolder, final int accounttype) {
+
+        ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b == true) {
+
+
+                            if (accounttype == 1) {
+                                viewHolder.follow.setText("Requested");
+                                Toast.makeText(context, "You have sent following request", Toast.LENGTH_LONG).show();
+
+
+                            }
+                            else {
+                                Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
+                                viewHolder.follow.setText("Following");
+                            }
+
+
+                        }
+                        else {
+
+                            viewHolder.follow.setText("Following");
+                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
+
+
 
 
     @Override

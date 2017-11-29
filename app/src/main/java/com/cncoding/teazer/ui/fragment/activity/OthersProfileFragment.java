@@ -62,7 +62,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class othersProfileFragment extends BaseFragment {
+public class OthersProfileFragment extends BaseFragment {
 
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
@@ -127,8 +127,8 @@ public class othersProfileFragment extends BaseFragment {
     String userType;
 
 
-    public static othersProfileFragment newInstance(String id, String identifier, String username) {
-        othersProfileFragment othersProfileFragment = new othersProfileFragment();
+    public static OthersProfileFragment newInstance(String id, String identifier, String username) {
+        OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
@@ -139,17 +139,15 @@ public class othersProfileFragment extends BaseFragment {
 
     }
 
-    public static othersProfileFragment newInstance2(String id, String identifier, String username) {
-        othersProfileFragment othersProfileFragment = new othersProfileFragment();
+    public static OthersProfileFragment newInstance2(String id, String identifier, String username) {
+        OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_IDENTIFIER, identifier);
         bundle.putString(ARG_USERNAME, username);
         othersProfileFragment.setArguments(bundle);
         return othersProfileFragment;
-
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,18 +157,11 @@ public class othersProfileFragment extends BaseFragment {
             userType = getArguments().getString(ARG_IDENTIFIER);
             username = getArguments().getString(ARG_USERNAME);
             setHasOptionsMenu(true);
-
         }
-
-
-
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
@@ -179,11 +170,8 @@ public class othersProfileFragment extends BaseFragment {
             getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
         }
         getParentActivity().updateToolbarTitle("Profile");
-
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
-        //_btnfollow.setText(userType);
-
 
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,12 +351,13 @@ public class othersProfileFragment extends BaseFragment {
                                 });
                             }
                             if (userProfileThumbnail == null) {
-                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-                                Glide.with(context)
-                                        .load(pic)
-                                        .into(profile_id);
-                                profileBlur(pic);
+//                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//
+//                                Glide.with(context)
+//                                        .load(pic)
+//                                        .into(profile_id);
+//                                profileBlur(pic);
                             } else {
 
                                 Picasso.with(context)

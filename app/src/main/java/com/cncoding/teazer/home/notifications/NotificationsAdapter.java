@@ -120,14 +120,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder1.content.setText(getString(getHighlights(holder1.notification.getHighlights()), holder1.notification.getMessage()));
 
 
-                holder1.dp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        mListener.onNotificationsInteraction(false, null,
-                                null, holder1.notification.getMetaData().getFromId(),"");
-                    }
-                });
+//                holder1.dp.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                });
 
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
@@ -199,6 +197,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View view) {
 
+
+                        mListener.onNotificationsInteraction(false, null,
+                                null, holder1.notification.getMetaData().getFromId(),"");
                     }
                 };
 

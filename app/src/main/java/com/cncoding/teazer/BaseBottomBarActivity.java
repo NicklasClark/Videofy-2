@@ -53,7 +53,7 @@ import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.othersProfileFragment;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.Pojos;
@@ -357,14 +357,14 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewOthersProfile(String id, String username, String type) {
-        pushFragment(othersProfileFragment.newInstance(id, type,username));
+        pushFragment(OthersProfileFragment.newInstance(id, type,username));
 
     }
 
     @Override
     public void viewOthersProfileFollowing(String id, String username, String type) {
 
-        pushFragment(othersProfileFragment.newInstance2(id, type,username));
+        pushFragment(OthersProfileFragment.newInstance2(id, type,username));
 
     }
 
@@ -753,7 +753,7 @@ public class BaseBottomBarActivity extends BaseActivity
             pushFragment(PostDetailsFragment.newInstance(postDetails, null));
         } else {
 
-            pushFragment(othersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
+            pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
     }
 
