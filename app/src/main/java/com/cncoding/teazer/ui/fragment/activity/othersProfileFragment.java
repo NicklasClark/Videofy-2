@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
+import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
@@ -537,13 +539,10 @@ public class othersProfileFragment extends BaseFragment {
 
             case R.id.action_profile_report:
                 openReportUser(followerfollowingid);
-
-
+                break;
             case R.id.action_profile_block:
                 openBlockUser(followerfollowingid);
-
-
-
+                break;
         }
         return true;
 
@@ -709,24 +708,11 @@ public class othersProfileFragment extends BaseFragment {
     }
 
     public void openReportUser(final int blockuserId) {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("Confirm Report...");
-        alertDialog.setMessage("Are you sure you want to report this user");
-        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-
-              //  blockunBlock(blockuserId, BLOCK_STATUS);
-            }
-        });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+        FragmentManager fm = getFragmentManager();
+        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
+        // SETS the target fragment for use later when sending results
+        reportUserDialogFragment.setTargetFragment(othersProfileFragment.this, 301);
+        reportUserDialogFragment.show(fm, "fragment_report_post");
     }
 
     public void blockunBlock(int userId, int status) {
