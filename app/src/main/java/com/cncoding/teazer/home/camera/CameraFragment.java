@@ -745,6 +745,7 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
+            checkFlashStatus();
             closePreviewSession();
             setUpMediaRecorder();
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
@@ -793,6 +794,23 @@ public class CameraFragment extends Fragment {
 
     }
 
+    private void checkFlashStatus() {
+        try {
+            if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                if (isFlashSupported) {
+                    if (isTorchOn) {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+                        isTorchOn = false;
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void closePreviewSession() {
         if (mPreviewSession != null) {
             mPreviewSession.close();
@@ -810,6 +828,15 @@ public class CameraFragment extends Fragment {
                 try {
                     mPreviewSession.stopRepeating();
                     mPreviewSession.abortCaptures();
+                    if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                        if (isFlashSupported) {
+                            if (isTorchOn) {
+                                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                                isTorchOn = false;
+                            }
+                        }
+                    }
                 } catch (CameraAccessException e) {
                     e.printStackTrace();
                 }
@@ -824,8 +851,7 @@ public class CameraFragment extends Fragment {
             }
         }).start();
 
-//        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
-//        startPreview();
+        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
         if (isReaction)
             new ChooseOptionalTitle(new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
         else

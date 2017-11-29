@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
@@ -31,12 +32,12 @@ import retrofit2.Response;
 
 public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdapter.ViewHolder> {
 
-    private List<Followers> list;
+    private List<BlockedUser> list;
     private Context context;
     public static final int UNBLOCK_STATUS=2;
 
 
-    public BlockUserListAdapter(Context context, List<Followers> list) {
+    public BlockUserListAdapter(Context context, List<BlockedUser> list) {
         this.context = context;
         this.list = list;
     }
@@ -48,8 +49,8 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
 
     @Override
     public void onBindViewHolder(final BlockUserListAdapter.ViewHolder viewHolder, int i) {
-        
-        Followers cont = list.get(i);
+
+        BlockedUser cont = list.get(i);
         try {
             final String followername = cont.getUserName();
             final int blockuserId = cont.getUserId();

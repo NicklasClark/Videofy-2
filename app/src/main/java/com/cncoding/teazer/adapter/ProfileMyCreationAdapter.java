@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.reaction.reactionpost.ReactionPost;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
@@ -73,7 +74,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final int reactions;
         final String location;
         final int postId;
-
         boolean hasPrfileMedia;
 
 
@@ -95,6 +95,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 if(location2.equals("")||location2==null)
                 {
                     viewHolder.location.setText("");
+                    viewHolder.locationimage.setVisibility(View.GONE);
                 }
                 else {
                     viewHolder.location.setText(location2);
@@ -103,12 +104,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             else
             {
                 viewHolder.location.setText("");
+                viewHolder.locationimage.setVisibility(View.GONE);
             }
+
             getPostReaction(viewHolder, postId);
-
-
-
-            viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
+            if(reactions==0) viewHolder.reactions.setVisibility(View.GONE);
+            else viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
 
             viewHolder.videoTitle.setText(videotitle);
             viewHolder.txtlikes.setText(likes);
@@ -160,18 +161,18 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView videoTitle;
-        private TextView duration;
-        private TextView txtlikes;
-        private TextView txtview;
-        private TextView reactions;
-        private TextView location;
+        private ProximaNovaRegularCheckedTextView videoTitle;
+        private ProximaNovaRegularCheckedTextView duration;
+        private ProximaNovaRegularCheckedTextView txtlikes;
+        private ProximaNovaRegularCheckedTextView txtview;
+        private ProximaNovaRegularCheckedTextView reactions;
+        private ProximaNovaRegularCheckedTextView location;
         VideoView videoviewContainer;
         ImageView thumbimage;
         RelativeLayout imagelayout1;
         RelativeLayout imagelayout2;
         RelativeLayout imagelayout3;
-        CircularAppCompatImageView image1, image2, image3;
+        CircularAppCompatImageView image1, image2, image3,locationimage;
         CardView cardView;
         View line;
         ImageView playvideo;
@@ -194,7 +195,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             imagelayout1 = view.findViewById(R.id.image1_layout);
             imagelayout2 = view.findViewById(R.id.image1_layout);
             imagelayout3 = view.findViewById(R.id.image1_layout);
-
+            locationimage = view.findViewById(R.id.locationimage);
             menu = view.findViewById(R.id.menu);
 
         }

@@ -16,9 +16,12 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
 import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
+import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,7 +33,7 @@ import retrofit2.Response;
 public class BlockUserList extends AppCompatActivity {
 
     Context context;
-    List<Followers> list;
+    List<BlockedUser> list;
     RecyclerView recyclerView;
     BlockUserListAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -71,22 +74,24 @@ public class BlockUserList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         layout.setVisibility(View.GONE);
         progress_bar.setVisibility(View.VISIBLE);
+        list=new ArrayList<>();
         getBlockUserList();
     }
     public void getBlockUserList()
     {
         int i=1;
-        ApiCallingService.Friends.getBlockedUsers(i,context).enqueue(new Callback<BlockUsers>() {
+        ApiCallingService.Friends.getBlockedUsers(i,context).enqueue(new Callback<BlockUserResponse>() {
             @Override
-            public void onResponse(Call<BlockUsers> call, Response<BlockUsers> response) {
+            public void onResponse(Call<BlockUserResponse> call, Response<BlockUserResponse> response) {
                 if(response.code()==200)
                 {
                     try
 
                     {
-                        list= response.body().getFollowers();
+                        list= response.body().getBlockedUsers();
                         if(list==null||list.size()==0) {
-                            blockusertex.setVisibility(View.VISIBLE);
+
+                            //blockusertex.setVisibility(View.VISIBLE);
 
                             layout.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
@@ -117,7 +122,7 @@ public class BlockUserList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<BlockUsers> call, Throwable t) {
+            public void onFailure(Call<BlockUserResponse> call, Throwable t) {
 
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);

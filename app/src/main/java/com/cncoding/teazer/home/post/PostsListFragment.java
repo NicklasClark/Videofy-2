@@ -42,7 +42,6 @@ public class PostsListFragment extends BaseFragment {
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
     public PostsListFragment() {
-        // Required empty public constructor
     }
     
     public static PostsListFragment newInstance() {
@@ -68,7 +67,7 @@ public class PostsListFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                getParentActivity().hideSettings(false);
+             //   getParentActivity().hideSettings(false);
 
                 if (is_next_page)
                     getHomePagePosts(page, false);
@@ -84,6 +83,7 @@ public class PostsListFragment extends BaseFragment {
             }
         });
 
+        getParentActivity().hidesettingsReport();
         return rootView;
     }
 

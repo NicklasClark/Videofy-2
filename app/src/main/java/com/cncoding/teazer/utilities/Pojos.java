@@ -1852,10 +1852,11 @@ public class Pojos {
             private ProfileMedia profile_media;
             private ArrayList<String> highlights;
             private MetaData meta_data;
+            private boolean isActioned;
 
             public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
-                                String message, String created_at, boolean has_profile_media, boolean is_actioned,
-                                ProfileMedia profile_media, ArrayList<String> highlights, MetaData meta_data) {
+                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
+                                ArrayList<String> highlights, MetaData meta_data, boolean isActioned) {
                 this.notification_id = notification_id;
                 this.notification_type = notification_type;
                 this.source_id = source_id;
@@ -1868,6 +1869,7 @@ public class Pojos {
                 this.profile_media = profile_media;
                 this.highlights = highlights;
                 this.meta_data = meta_data;
+                this.isActioned = isActioned;
             }
 
             protected Notification(Parcel in) {
@@ -1883,6 +1885,7 @@ public class Pojos {
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 highlights = in.createStringArrayList();
                 meta_data = in.readParcelable(MetaData.class.getClassLoader());
+                isActioned = in.readByte() != 0;
             }
 
             @Override
@@ -1899,6 +1902,7 @@ public class Pojos {
                 dest.writeParcelable(profile_media, flags);
                 dest.writeStringList(highlights);
                 dest.writeParcelable(meta_data, flags);
+                dest.writeByte((byte) (isActioned ? 1 : 0));
             }
 
             @Override
@@ -1938,6 +1942,10 @@ public class Pojos {
                 return title;
             }
 
+            public boolean isActioned() {
+                return isActioned;
+            }
+
             public String getMessage() {
                 return message;
             }
@@ -1962,9 +1970,6 @@ public class Pojos {
                 return meta_data;
             }
 
-            public boolean isActioned() {
-                return is_actioned;
-            }
         }
 
         public static class MetaData implements Parcelable {

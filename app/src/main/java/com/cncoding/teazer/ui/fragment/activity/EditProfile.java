@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -91,7 +92,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProximaNovaRegularCheckedTextView maletext;
     @BindView(R.id.femaletxt)
     ProximaNovaRegularCheckedTextView femaletxt;
-    FloatingActionButton fab;
+
+    Button fab;
     ProgressBar simpleProgressBar;
     ScrollView layoutdetail;
 
@@ -288,22 +290,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
     }
 
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
 
-        switch (view.getId()) {
-            case R.id.male:
-                if (checked)
-                    gender = 1;
-                break;
-            case R.id.female:
-                if (checked)
-                    gender = 2;
-
-                break;
-
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -329,7 +316,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     try {
                         if (response.body().getStatus()) {
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
-                            flag = true;
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                             finish();
@@ -532,7 +518,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
         if(valid) {
-            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), 91, gender, details);
+            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
             ProfileUpdate(profileUpdateRequest);
         }
         else

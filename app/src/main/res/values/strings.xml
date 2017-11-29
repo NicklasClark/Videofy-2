@@ -257,4 +257,5 @@
     <string name="edit">EDIT</string>
     <string name="people">People</string>
     <string name="error_fetching_posts">There was an error fetching posts. Please try again later.</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

@@ -46,6 +46,7 @@ public class FragmentProfileMyCreations extends Fragment {
 
 
 
+
     public static FragmentProfileMyCreations newInstance(int page) {
         return new FragmentProfileMyCreations();
     }
@@ -55,7 +56,15 @@ public class FragmentProfileMyCreations extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+       // list=new ArrayList<>();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +81,7 @@ public class FragmentProfileMyCreations extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        list=new ArrayList<>();
         getProfileVideos();
 
     }
