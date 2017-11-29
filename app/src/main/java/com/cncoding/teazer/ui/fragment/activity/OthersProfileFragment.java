@@ -700,7 +700,7 @@ public class OthersProfileFragment extends BaseFragment {
         FragmentManager fm = getFragmentManager();
         ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
         // SETS the target fragment for use later when sending results
-        reportUserDialogFragment.setTargetFragment(othersProfileFragment.this, 301);
+        reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
         reportUserDialogFragment.show(fm, "fragment_report_post");
     }
 
