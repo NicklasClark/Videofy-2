@@ -19,6 +19,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
 
@@ -47,13 +48,17 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private Context context;
     private boolean isVideosTab;
-    private final ArrayList<MiniProfile> usersList;
+    private ArrayList<Videos> videosList;
+    private ArrayList<MiniProfile> usersList;
     private OnDiscoverSearchInteractionListener mListener;
 
-    DiscoverSearchAdapter(Context context, boolean isVideosTab, ArrayList<MiniProfile> usersList) {
+    DiscoverSearchAdapter(Context context, boolean isVideosTab, ArrayList<MiniProfile> usersList, ArrayList<Videos> videosList) {
         this.context = context;
         this.isVideosTab = isVideosTab;
-        this.usersList = usersList;
+        if (isVideosTab)
+            this.videosList = videosList;
+        else
+            this.usersList = usersList;
 
         if (context instanceof OnDiscoverSearchInteractionListener)
             mListener = (OnDiscoverSearchInteractionListener) context;
@@ -83,37 +88,46 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case TYPE_VIDEOS:
+                VideosViewHolder holder1 = (VideosViewHolder) viewHolder;
+                holder1.video = videosList.get(position);
+                holder1.content.setText(holder1.video.getTitle());
+
+                Glide.with(context)
+                        .load(holder1.video.getPostVideoInfo().getThumbUrl())
+                        .placeholder(R.drawable.bg_placeholder)
+                        .crossFade()
+                        .into(holder1.thumbnail);
                 break;
             case TYPE_PEOPLE:
-                final PeopleViewHolder holder = (PeopleViewHolder) viewHolder;
-                holder.user = usersList.get(position);
+                final PeopleViewHolder holder2 = (PeopleViewHolder) viewHolder;
+                holder2.user = usersList.get(position);
 
-                holder.username.setText(holder.user.getUserName());
-                String name = holder.user.getFirstName() + BLANK_SPACE + holder.user.getLastName();
-                holder.name.setText(name);
+                holder2.username.setText(holder2.user.getUserName());
+                String name = holder2.user.getFirstName() + BLANK_SPACE + holder2.user.getLastName();
+                holder2.name.setText(name);
 
-                if (holder.user.hasProfileMedia() && holder.user.getProfileMedia() != null) {
+                if (holder2.user.hasProfileMedia() && holder2.user.getProfileMedia() != null) {
                     Glide.with(context)
-                            .load(holder.user.getProfileMedia().getThumbUrl())
+                            .load(holder2.user.getProfileMedia().getThumbUrl())
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
-                            .into(holder.dp);
+                            .into(holder2.dp);
                 }
 
-                switch (holder.user.getAccountType()) {
+                switch (holder2.user.getAccountType()) {
                     case ACCOUNT_TYPE_PRIVATE:
-                        if (holder.user.isFollowing())
-                            setActionButton(holder.action, BUTTON_TYPE_FOLLOWING);
-                        else if (holder.user.isRequestSent())
-                            setActionButton(holder.action, BUTTON_TYPE_REQUESTED);
+                        if (holder2.user.isFollowing())
+                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
+                        else if (holder2.user.isRequestSent())
+                            setActionButton(holder2.action, BUTTON_TYPE_REQUESTED);
                         else
-                            setActionButton(holder.action, BUTTON_TYPE_FOLLOW);
+                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
                         break;
                     case ACCOUNT_TYPE_PUBLIC:
-                        if (holder.user.isFollowing())
-                            setActionButton(holder.action, BUTTON_TYPE_FOLLOWING);
+                        if (holder2.user.isFollowing())
+                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
                         else
-                            setActionButton(holder.action, BUTTON_TYPE_FOLLOW);
+                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
                         break;
                     default:
                         break;
@@ -125,21 +139,21 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         switch (view.getId()) {
                             case R.id.root_layout:
                                 if (mListener != null)
-                                    mListener.onDiscoverSearchInteraction(holder.user.getUserId());
+                                    mListener.onDiscoverSearchInteraction(holder2.user.getUserId());
                                 break;
                             case R.id.action:
-                                if (holder.action.getText().equals(context.getString(R.string.follow))) {
-                                    ApiCallingService.Friends.sendJoinRequestByUserId(holder.user.getUserId(), context)
+                                if (holder2.action.getText().equals(context.getString(R.string.follow))) {
+                                    ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), context)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
-                                                        switch (holder.user.getAccountType()) {
+                                                        switch (holder2.user.getAccountType()) {
                                                             case ACCOUNT_TYPE_PRIVATE:
-                                                                setActionButton(holder.action, BUTTON_TYPE_REQUESTED);
+                                                                setActionButton(holder2.action, BUTTON_TYPE_REQUESTED);
                                                                 break;
                                                             case ACCOUNT_TYPE_PUBLIC:
-                                                                setActionButton(holder.action, BUTTON_TYPE_FOLLOWING);
+                                                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
                                                                 break;
                                                             default:
                                                                 break;
@@ -155,20 +169,20 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                 }
                                             });
                                 }
-                                else if (holder.action.getText().equals(context.getString(R.string.following))) {
+                                else if (holder2.action.getText().equals(context.getString(R.string.following))) {
                                     new AlertDialog.Builder(context)
                                             .setMessage(context.getString(R.string.unfollow_confirmation) +
-                                                    holder.user.getUserName() + "?")
+                                                    holder2.user.getUserName() + "?")
                                             .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    ApiCallingService.Friends.unfollowUser(holder.user.getUserId(), context)
+                                                    ApiCallingService.Friends.unfollowUser(holder2.user.getUserId(), context)
                                                             .enqueue(new Callback<ResultObject>() {
                                                                 @Override
                                                                 public void onResponse(Call<ResultObject> call,
                                                                                        Response<ResultObject> response) {
                                                                     if (response.code() == 200) {
-                                                                        setActionButton(holder.action, BUTTON_TYPE_FOLLOW);
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
                                                                     } else
                                                                         Log.e("unfollowUser",
                                                                                 response.code() + "_" + response.message());
@@ -194,8 +208,8 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 };
 
-                holder.layout.setOnClickListener(listener);
-                holder.action.setOnClickListener(listener);
+                holder2.layout.setOnClickListener(listener);
+                holder2.action.setOnClickListener(listener);
                 break;
             default:
                 break;
@@ -240,13 +254,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return usersList.size();
+        return videosList != null ? videosList.size() : usersList.size();
     }
 
     public class VideosViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.content) ProximaNovaRegularTextView content;
         @BindView(R.id.thumbnail) ImageView thumbnail;
+        Videos video;
 
         VideosViewHolder(View view) {
             super(view);

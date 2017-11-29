@@ -65,8 +65,8 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
 
             holder.reactions.setVisibility(holder.mostPopular.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
             String reactionText;
-            if (holder.mostPopular.getTotalReactions() > 4)
-                reactionText = "+" + String.valueOf(holder.mostPopular.getTotalReactions() - 3) + " R";
+            if (holder.mostPopular.getTotalReactions() > 2)
+                reactionText = "+" + String.valueOf(holder.mostPopular.getTotalReactions() - 2) + " R";
             else
                 reactionText = String.valueOf(holder.mostPopular.getTotalReactions()) + " R";
             holder.reactions.setText(reactionText);
@@ -88,7 +88,6 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
             if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 2) {
                 holder.reactionImage1.setVisibility(View.VISIBLE);
                 holder.reactionImage2.setVisibility(View.VISIBLE);
-                holder.reactionImage3.setVisibility(View.VISIBLE);
                 holder.reactionImage1.post(new Runnable() {
                     @Override
                     public void run() {
@@ -109,17 +108,6 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                                 .placeholder(R.drawable.ic_user_male_dp_small)
                                 .crossFade()
                                 .into(holder.reactionImage2);
-                    }
-                });
-                holder.reactionImage3.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.with(context)
-                                .load(holder.mostPopular.getReactedUsers().get(2).getProfileMedia() != null ?
-                                        holder.mostPopular.getReactedUsers().get(2).getProfileMedia().getThumbUrl() : "")
-                                .placeholder(R.drawable.ic_user_male_dp_small)
-                                .crossFade()
-                                .into(holder.reactionImage3);
                     }
                 });
             }
@@ -154,7 +142,6 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;
         @BindView(R.id.reaction_2) CircularAppCompatImageView reactionImage2;
-        @BindView(R.id.reaction_3) CircularAppCompatImageView reactionImage3;
         PostDetails mostPopular;
 
         public ViewHolder(View itemView) {

@@ -251,10 +251,14 @@
             android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/padding_thin"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:clipToPadding="false"
             android:layout_below="@+id/reactions_header"
             app:layoutManager="StaggeredGridLayoutManager"
+            app:spanCount="2"
             tools:listitem="@layout/item_reaction_post"/>
 
     </RelativeLayout>

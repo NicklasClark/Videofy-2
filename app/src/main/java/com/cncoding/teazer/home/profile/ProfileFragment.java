@@ -36,8 +36,6 @@ import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
-import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
@@ -214,7 +212,7 @@ public class ProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getProfileDetail();
-        getParentActivity().hidereport();
+//        getParentActivity().hidereport();
         getParentActivity().updateToolbarTitle("Profile");
 
     }

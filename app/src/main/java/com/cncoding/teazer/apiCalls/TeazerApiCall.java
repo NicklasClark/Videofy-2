@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -22,6 +21,7 @@ import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
@@ -244,7 +244,7 @@ import retrofit2.http.Query;
          * Call this service to get users list to send follow request with search term.
          */
         @GET("/api/v1/discover/videos")
-        Call<UsersList> getVideosWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+        Call<VideosList> getVideosWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
     }
 
     /**

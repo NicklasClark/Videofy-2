@@ -1,7 +1,6 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -41,7 +40,7 @@ import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
-import com.cncoding.teazer.home.discover.adapters.SubSearchAdapter.OnSubSearchInteractionListener;
+import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingListInteractionListener;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscoverSearchInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter;
@@ -62,8 +61,6 @@ import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.cncoding.teazer.utilities.ViewUtils;
-import com.facebook.share.ShareApi;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -115,7 +112,7 @@ public class BaseBottomBarActivity extends BaseActivity
         ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
-    public static final int ACTION_VIEW_REACTION = 1;
+//    public static final int ACTION_VIEW_REACTION = 1;
     public static final int ACTION_VIEW_PROFILE = 2;
 
 //    private int[] mTabIconsDefault = {
@@ -507,9 +504,9 @@ public class BaseBottomBarActivity extends BaseActivity
         for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
             if (i != 2) {
                 if (i == position)
-                    bottomTabLayout.getTabAt(position).getIcon().setTint(Color.parseColor("#26C6DA"));
+                    bottomTabLayout.getTabAt(position).getIcon().setTint(getResources().getColor(R.color.colorAccent));
                 else
-                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.parseColor("#333333"));
+                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.parseColor("#999999"));
             }
         }
     }
@@ -610,7 +607,7 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 bottomTabLayout.setTranslationY((float) (-verticalOffset));
-                cameraButton.setTranslationY((float) -(verticalOffset * 1.6));
+                cameraButton.setTranslationY((float) -(verticalOffset * 2));
 //                int percentage = (Math.abs(verticalOffset)) * 100 / appBarLayout.getTotalScrollRange();
 //                if (percentage > 0) {
 //                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -801,13 +798,13 @@ public class BaseBottomBarActivity extends BaseActivity
         pushFragment(PostDetailsFragment.newInstance(postDetails, null));
     }
 
-    public void hideSettings(boolean flag) {
-    }
-    public void hidereport() {
-    }
+//    public void hideSettings(boolean flag) {
+//    }
+//    public void hidereport() {
+//    }
+//    public void hidesettingsReport() {
+//    }
 
-    public void hidesettingsReport() {
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

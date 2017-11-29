@@ -32,26 +32,26 @@ import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
  * Created by Prem $ on 11/24/2017.
  */
 
-public class SubSearchAdapter extends RecyclerView.Adapter<SubSearchAdapter.ViewHolder> {
+public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.ViewHolder> {
 
     private OnSubSearchInteractionListener mListener;
     private ArrayList<PostDetails> postDetailsArrayList;
     private SparseIntArray dimensionSparseArray;
     private Context context;
 
-    public SubSearchAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
+    public SubDiscoverAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
         this.postDetailsArrayList = postDetailsArrayList;
         this.context = context;
         dimensionSparseArray = new SparseIntArray();
         if (context instanceof OnSubSearchInteractionListener) {
-            mListener = (SubSearchAdapter.OnSubSearchInteractionListener) context;
+            mListener = (SubDiscoverAdapter.OnSubSearchInteractionListener) context;
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_my_interests_post, parent, false));
+                .inflate(R.layout.item_sub_discover_post, parent, false));
     }
 
     @Override
@@ -59,10 +59,12 @@ public class SubSearchAdapter extends RecyclerView.Adapter<SubSearchAdapter.View
         try {
             holder.postDetails = postDetailsArrayList.get(position);
 
-            if (dimensionSparseArray.get(position) != 0)
+            if (dimensionSparseArray.get(position) != 0) {
                 holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
+                holder.layout.setVisibility(View.VISIBLE);
+            }
 
-            holder.caption.setText(holder.postDetails.getTitle());
+            holder.title.setText(holder.postDetails.getTitle());
 
             holder.category.setVisibility(holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0 ?
                     View.VISIBLE : View.GONE);
@@ -141,7 +143,7 @@ public class SubSearchAdapter extends RecyclerView.Adapter<SubSearchAdapter.View
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.post_thumb) ImageView postThumbnail;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView caption;
+        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
         @BindView(R.id.dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;

@@ -19,10 +19,15 @@
         <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
             android:id="@+id/discover_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:hint="@string/search_videos_or_places"
             android:textSize="@dimen/text_size_14sp"
-            android:layout_margin="@dimen/padding_thin"
+            android:layout_marginTop="@dimen/padding_thin"
+            android:layout_marginBottom="@dimen/padding_thin"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="18dp"
             android:textColorHint="@color/colorSecondary_text"
             android:textColor="#333333"
             app:drawableStartCompat="@drawable/ic_search_padded"
@@ -44,8 +49,8 @@
         android:layout_marginTop="-5dp"
         android:background="@color/colorPrimary"
         app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorPrimaryOld"
-        app:tabIndicatorColor="@color/colorPrimaryOld"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabIndicatorColor="@color/colorAccent"
         app:tabIndicatorHeight="3dp"
         android:elevation="4dp">
 

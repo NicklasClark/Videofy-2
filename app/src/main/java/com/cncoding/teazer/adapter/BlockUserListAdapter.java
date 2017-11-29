@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
-import com.cncoding.teazer.model.profile.blockuser.Followers;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
 import java.util.List;

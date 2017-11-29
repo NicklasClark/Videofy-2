@@ -7,6 +7,6 @@
 
     <item
         android:gravity="center|clip_horizontal|clip_vertical"
-        android:drawable="@mipmap/ic_bg_bitmap"/>
+        android:drawable="@mipmap/ic_launcher"/>
 
 </layer-list>

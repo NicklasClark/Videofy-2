@@ -1,11 +1,8 @@
 package com.cncoding.teazer.home.discover;
 
-import android.animation.Animator;
 import android.content.Context;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -45,15 +41,13 @@ import retrofit2.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.utilities.ViewUtils.getDeviceHeight;
-import static com.cncoding.teazer.utilities.ViewUtils.getDeviceWidth;
 
 public class DiscoverFragment extends BaseFragment {
 
     public static final int ACTION_VIEW_MY_INTERESTS = 1;
     public static final int ACTION_VIEW_MOST_POPULAR = 2;
     public static final int ACTION_VIEW_TRENDING = 3;
-    private static final String TAG_DISCOVER_SEARCH_FRAGMENT = "discoverSearchFragment";
+//    private static final String TAG_DISCOVER_SEARCH_FRAGMENT = "discoverSearchFragment";
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.discover_posts_container) LinearLayout discoverPostsContainer;
@@ -68,10 +62,6 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
-    private int width;
-    private int height;
-    private TransitionDrawable transitionDrawable;
-    private Animator animator;
     public static boolean updateMyInterests = false;
     private OnSearchInteractionListener mListener;
     private ArrayList<PostDetails> featuredPostsList;
@@ -175,8 +165,6 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     @OnClick(R.id.discover_search) public void toggleSearch() {
-        width = getDeviceWidth(getContext());
-        height = getDeviceHeight(getContext());
         getParentActivity().pushFragment(DiscoverSearchFragment.newInstance());
     }
 
@@ -306,13 +294,7 @@ public class DiscoverFragment extends BaseFragment {
 
     public void dismissProgressBar() {
         if (progressBar.getVisibility() == VISIBLE) {
-            progressBar.animate().scaleX(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(GONE);
-                }
-            }, 400);
+            progressBar.setVisibility(View.GONE);
         }
     }
 

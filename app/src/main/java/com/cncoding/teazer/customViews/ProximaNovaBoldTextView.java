@@ -30,7 +30,7 @@ public class ProximaNovaBoldTextView extends android.support.v7.widget.AppCompat
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_bold.ttf");
+        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_bold.otf");
         setTypeface(customFont);
     }
 }

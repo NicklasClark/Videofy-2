@@ -13,10 +13,10 @@
         style="@style/BottomTabLayout.NotificationTab"
         android:background="@color/colorPrimary"
         app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorPrimaryOld"
-        app:tabIndicatorColor="@color/colorPrimaryOld"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabIndicatorColor="@color/colorAccent"
         app:tabIndicatorHeight="3dp"
-        android:elevation="4dp">
+        android:elevation="1dp">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem"

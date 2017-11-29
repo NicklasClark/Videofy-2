@@ -8,7 +8,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -26,6 +25,7 @@ import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
@@ -222,7 +222,7 @@ public class ApiCallingService {
         /**
          * Call this service to get users list to send follow request with search term.
          */
-        public static Call<UsersList> getVideosWithSearchTerm(int page, String searchTerm, Context context){
+        public static Call<VideosList> getVideosWithSearchTerm(int page, String searchTerm, Context context){
             return getDiscoverService(context).getVideosWithSearchTerm(page, searchTerm);
         }
 

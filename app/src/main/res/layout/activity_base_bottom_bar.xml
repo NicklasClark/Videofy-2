@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true">
+
                 <com.cncoding.teazer.customViews.SignPainterTextView
                     android:id="@+id/toolbar_center_title"
                     android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                     android:id="@+id/toolbar_plain_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_content_big"
+                    android:textSize="20sp"
                     android:padding="@dimen/padding_thin"
                     android:layout_margin="@dimen/padding_half"
                     android:layout_gravity="center_vertical"
@@ -208,7 +209,7 @@
         android:src="@drawable/ic_add_video"
         android:layout_marginBottom="@dimen/padding_10dp"
         android:background="@drawable/bg_circle_light_filled_outlined"
-        android:elevation="5dp"
+        android:elevation="6dp"
         android:contentDescription="@string/record_video" />
 
 </com.cncoding.teazer.customViews.NestedCoordinatorLayout>
