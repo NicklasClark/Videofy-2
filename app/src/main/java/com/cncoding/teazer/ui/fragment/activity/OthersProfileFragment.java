@@ -435,7 +435,9 @@ public class OthersProfileFragment extends BaseFragment {
                                 if (hassentrequest == true) {
 
                                     if (requestRecieved == true) {
+
                                         _btnfollow.setText("Following");
+
                                     } else {
 
                                         _btnfollow.setText("Requested");

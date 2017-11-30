@@ -37,6 +37,8 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.camera.EditPost;
+import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
@@ -51,6 +53,7 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -81,6 +84,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.R.anim.fade_in;
+import static android.R.anim.fade_out;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
@@ -110,11 +115,12 @@ public class BaseBottomBarActivity extends BaseActivity
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,FollowersAdapter.OtherProfileListener,
         ProfileFragment.FollowerListListener,
-        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener {
+        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener,ProfileMyCreationAdapter.EditPostListener, EditPost.OnEditPostInteractionListener,TagsAndCategoryFragment.TagsAndCategoriesInteractionListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_REACTION = 1;
     public static final int ACTION_VIEW_PROFILE = 2;
+    private UploadFragment uploadFragment;
 
 //    private int[] mTabIconsDefault = {
 //            R.drawable.ic_home_default,
@@ -366,6 +372,47 @@ public class BaseBottomBarActivity extends BaseActivity
 
         pushFragment(OthersProfileFragment.newInstance2(id, type,username));
 
+    }
+
+    @Override
+    public void editPost(String videoPath) {
+        pushFragment(EditPost.newInstance(videoPath));
+
+    }
+
+    @Override
+    public void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag) {
+
+        if (!isBackToCamera) {
+            if (fragment != null && tag != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+                        .replace(R.id.helper_uploading_container, fragment, tag)
+                        .addToBackStack(tag)
+                        .commit();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
+        } else {
+//            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
+//                uploadFragment = null;
+//                getSupportFragmentManager().popBackStack();
+//            }
+            onBackPressed();
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+//                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
+//                    .commit();
+        }
+
+    }
+
+    @Override
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
+        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
+        getSupportFragmentManager().popBackStack();
     }
 
 
