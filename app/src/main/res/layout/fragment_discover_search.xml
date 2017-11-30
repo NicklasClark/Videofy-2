@@ -30,6 +30,9 @@
             android:paddingEnd="18dp"
             android:textColorHint="@color/colorSecondary_text"
             android:textColor="#333333"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionGo"
             app:drawableStartCompat="@drawable/ic_search_padded"
             android:background="@drawable/bg_card_curved_corners"/>
 

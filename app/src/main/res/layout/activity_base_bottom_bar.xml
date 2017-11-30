@@ -21,8 +21,8 @@
             android:layout_height="@dimen/action_bar_height"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:contentInsetStart="0dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@android:color/white">
+            app:title="@null"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -161,8 +161,7 @@
         android:layout_gravity="bottom"
         android:foreground="@drawable/ripple_dark_no_rounded_with_top_margin"
         android:background="@drawable/bg_bottom_drawer"
-        app:tabBackground="?attr/selectableItemBackground"
-        android:elevation="5dp">
+        app:tabBackground="?attr/selectableItemBackground">
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
@@ -208,8 +207,9 @@
         android:layout_gravity="bottom|center_horizontal"
         android:src="@drawable/ic_add_video"
         android:layout_marginBottom="@dimen/padding_10dp"
+        android:scaleType="centerCrop"
         android:background="@drawable/bg_circle_light_filled_outlined"
-        android:elevation="6dp"
+        android:elevation="4dp"
         android:contentDescription="@string/record_video" />
 
 </com.cncoding.teazer.customViews.NestedCoordinatorLayout>

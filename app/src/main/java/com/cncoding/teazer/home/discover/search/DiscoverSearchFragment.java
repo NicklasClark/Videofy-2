@@ -12,8 +12,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
@@ -22,8 +24,11 @@ import com.cncoding.teazer.utilities.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
+import butterknife.OnTouch;
 
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.showKeyboard;
 
 public class DiscoverSearchFragment extends BaseFragment {
@@ -34,7 +39,6 @@ public class DiscoverSearchFragment extends BaseFragment {
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
-//    private IDataCallback iDataCallback = null;
     private Handler handler;
     private OnFragmentInteractionListener mListener;
     private String searchTerm;
@@ -43,11 +47,6 @@ public class DiscoverSearchFragment extends BaseFragment {
     public DiscoverSearchFragment() {
         // Required empty public constructor
     }
-
-//    public void setiDataCallback(IDataCallback iDataCallback) {
-//        this.iDataCallback = iDataCallback;
-//        iDataCallback.onFragmentCreated(listData);
-//    }
 
     public static DiscoverSearchFragment newInstance() {
         return new DiscoverSearchFragment();
@@ -59,9 +58,6 @@ public class DiscoverSearchFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_discover_search, container, false);
         ButterKnife.bind(this, rootView);
 
-        searchBtn.requestFocus();
-        showKeyboard(getParentActivity(), searchBtn);
-
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), searchTerm);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -70,7 +66,14 @@ public class DiscoverSearchFragment extends BaseFragment {
         return rootView;
     }
 
-    @OnTextChanged(R.id.discover_search) public void search(final CharSequence charSequence) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchBtn.requestFocus();
+        showKeyboard(getParentActivity());
+    }
+
+    @OnTextChanged(R.id.discover_search) public void performSearch(final CharSequence charSequence) {
         if (charSequence.length() > 0) {
             if (searchBtn.getCompoundDrawables()[2] == null)
                     searchBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded,
@@ -80,23 +83,48 @@ public class DiscoverSearchFragment extends BaseFragment {
                 searchBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded, 0, 0, 0);
         }
 
-        if (charSequence.length() > 2) {
-            searchTerm = charSequence.toString();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    sectionsPagerAdapter.setTextQueryChanged(searchTerm);
-                }
-            };
-            // only canceling the network calls will not help, you need to remove all callbacks as well
-            // otherwise the pending callbacks and messages will again invoke the handler and will send the request
-            if (handler != null) {
-                handler.removeCallbacksAndMessages(null);
-            } else {
-                handler = new Handler();
+        search(charSequence);
+    }
+
+    /**
+     * Performs search in {@link VideosTabFragment} and {@link PeopleTabFragment}
+     * @param charSequence The search term to search for.
+     * */
+    private void search(CharSequence charSequence) {
+        searchTerm = charSequence.toString();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                sectionsPagerAdapter.setTextQueryChanged(searchTerm);
             }
-            handler.postDelayed(runnable, 1000);
+        };
+        // only canceling the network calls will not help, you need to remove all callbacks as well
+        // otherwise the pending callbacks and messages will again invoke the handler and will send the request
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        } else {
+            handler = new Handler();
         }
+        handler.postDelayed(runnable, 200);
+    }
+
+    @OnEditorAction(R.id.discover_search) public boolean searchByKeyboard(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_GO) {
+            search(searchBtn.getText());
+            hideKeyboard(getParentActivity(), searchBtn);
+            return true;
+        }
+        return false;
+    }
+
+    @OnTouch(R.id.discover_search) public boolean clearText(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP && searchBtn.getCompoundDrawables()[2] != null &&
+                event.getRawX() >= searchBtn.getRight() - searchBtn.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+            searchBtn.setText("");
+            sectionsPagerAdapter.setTextQueryChanged("");
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -144,6 +172,11 @@ public class DiscoverSearchFragment extends BaseFragment {
         }
 
         @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
         public int getCount() {
             // Show 2 total pages.
             return 2;
@@ -151,8 +184,7 @@ public class DiscoverSearchFragment extends BaseFragment {
 
         void setTextQueryChanged(String newText) {
             searchTerm = newText;
-            getItem(0);
-            getItem(1);
+            notifyDataSetChanged();
         }
     }
 

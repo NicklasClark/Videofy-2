@@ -52,6 +52,7 @@ public class PostsListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        previousTitle = getParentActivity().getToolbarTitle();
         getParentActivity().updateToolbarTitle(null);
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
@@ -117,7 +118,8 @@ public class PostsListFragment extends BaseFragment {
                                     is_next_page = response.body().isNextPage();
                                     postList.addAll(response.body().getPosts());
                                     recyclerView.getRecycledViewPool().clear();
-                                    postListAdapter.notifyDataSetChanged();
+                                    postListAdapter.notifyItemRangeInserted(page * 10, response.body().getPosts().size());
+//                                    postListAdapter.notifyDataSetChanged();
                                     recyclerView.setVisibility(View.VISIBLE);
                                     dismissProgressBar();
                                 } else if (page == 1){
@@ -125,7 +127,7 @@ public class PostsListFragment extends BaseFragment {
                                 }
                                 break;
                             default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
+                                showErrorMessage("Error " + response.code() +" : " + response.message());
                                 break;
                         }
                     } catch (Exception e) {
@@ -144,11 +146,11 @@ public class PostsListFragment extends BaseFragment {
 
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
-                    if (t.getMessage().contains("resolve"))
-                        showErrorMessage("No internet connection found!");
-                    else showErrorMessage(t.getMessage());
-
-                    dismissProgressBar();
+                    if (isAdded()) {
+                        if (t.getMessage().contains("resolve"))
+                            showErrorMessage("No internet connection found!");
+                        else showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
+                    }
                 }
             };
 
@@ -172,6 +174,7 @@ public class PostsListFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getParentActivity().updateToolbarTitle(previousTitle);
         if (postListCall != null)
             postListCall.cancel();
         postListAdapter = null;

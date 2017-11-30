@@ -4,6 +4,7 @@
     tools:context="com.cncoding.teazer.home.discover.SubDiscoverFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/material_grey200"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -15,10 +16,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:padding="7dp"
             android:clipToPadding="false"
             app:layoutManager="StaggeredGridLayoutManager" />
 

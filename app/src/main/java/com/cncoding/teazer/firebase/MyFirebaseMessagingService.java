@@ -17,6 +17,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
+
 /**
  *
  * Created by Prem $ on 11/9/2017.
@@ -43,6 +45,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //It is same as we did in earlier posts
     private void sendNotification(String messageBody) {
         Intent intent = new Intent(this, SplashScreen.class);
+        if (messageBody.contains("follow"))
+            intent.putExtra(TAB_INDEX, 3);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

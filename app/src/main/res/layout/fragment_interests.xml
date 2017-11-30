@@ -38,7 +38,7 @@
             android:textSize="@dimen/text_size_content_big"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAccent"
             android:enabled="false"
             android:foreground="@drawable/ripple_light_rounded_2dp"/>
 <!--

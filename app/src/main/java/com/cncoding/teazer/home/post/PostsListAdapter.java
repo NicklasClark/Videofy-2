@@ -77,6 +77,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 .crossFade()
                 .placeholder(R.drawable.bg_placeholder)
                 .skipMemoryCache(false)
+//                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

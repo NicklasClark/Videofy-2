@@ -62,7 +62,7 @@ public class AuthUtils {
 
     public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event, Context context) {
         if (view.getCompoundDrawables()[2] != null) {
-            if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width())) {
+            if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width() * 1.5)) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -289,14 +289,16 @@ public class AuthUtils {
                 } else
                     ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
                 loginBtn.setEnabled(true);
-                stopCircularReveal(revealLayout);
+                if (!isResendAction)
+                    stopCircularReveal(revealLayout);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 ViewUtils.showSnackBar(loginBtn, t.getMessage());
                 loginBtn.setEnabled(true);
-                stopCircularReveal(revealLayout);
+                if (!isResendAction)
+                    stopCircularReveal(revealLayout);
             }
         });
     }

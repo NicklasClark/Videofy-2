@@ -1,17 +1,20 @@
 package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos.Category;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,11 +26,14 @@ import butterknife.ButterKnife;
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.ViewHolder> {
 
+    private int[] colors = new int[]{0xFFF48FB1, 0xFF90CAF9, 0xFF80CBC4, 0xFFFFE082};
+    private SparseIntArray sparseIntArray;
     private ArrayList<Category> trendingCategories;
     private TrendingListInteractionListener mListener;
 
     public TrendingListAdapter(ArrayList<Category> trendingCategories, Context context) {
         this.trendingCategories = trendingCategories;
+        sparseIntArray = new SparseIntArray();
         if (context instanceof TrendingListInteractionListener) {
             mListener = (TrendingListInteractionListener) context;
         }
@@ -42,6 +48,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     @Override
     public void onBindViewHolder(final TrendingListAdapter.ViewHolder holder, int position) {
+        holder.title.setBackground(getBackground(holder.title, position));
         holder.title.setText(trendingCategories.get(position).getCategoryName());
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +58,18 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
                 }
             }
         });
+    }
+
+    private GradientDrawable getBackground(ProximaNovaSemiboldTextView title, int position) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        if (sparseIntArray.get(position) == 0) {
+            sparseIntArray.put(position, colors[new Random().nextInt(colors.length - 1)]);
+        }
+        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke(1, sparseIntArray.get(position));
+        title.setTextColor(sparseIntArray.get(position));
+        return gradientDrawable;
     }
 
     @Override

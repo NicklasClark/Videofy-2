@@ -1,16 +1,15 @@
 package com.cncoding.teazer.home.discover.search;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -30,26 +29,18 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
 
-/**
- * A fragment representing a list of Items.
- */
 public class VideosTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
 
-//    private OnListFragmentInteractionListener mListener;\
     private Call<VideosList> videosListCall;
     private Callback<VideosList> videosListCallback;
     private ArrayList<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public VideosTabFragment() {
     }
 
@@ -57,6 +48,7 @@ public class VideosTabFragment extends BaseFragment {
         VideosTabFragment fragment = new VideosTabFragment();
         Bundle args = new Bundle();
         args.putString(SEARCH_TERM, searchTerm);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -70,7 +62,7 @@ public class VideosTabFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my_interests_tab, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
         videosList = new ArrayList<>();
 
@@ -91,50 +83,63 @@ public class VideosTabFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.resetState();
                 getVideos(1, searchTerm);
             }
         });
 
-        if (videosListCallback == null)
-            videosListCallback = new Callback<VideosList>() {
-                @Override
-                public void onResponse(Call<VideosList> call, Response<VideosList> response) {
-                    if (response.code() == 200) {
-                        is_next_page = response.body().isNextPage();
-                        if (response.body().getVideos().size() > 0) {
-                            swipeRefreshLayout.setVisibility(View.VISIBLE);
-                            noPosts.setVisibility(View.GONE);
-                            videosList.addAll(response.body().getVideos());
-                            recyclerView.getRecycledViewPool().clear();
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            swipeRefreshLayout.setVisibility(View.GONE);
-                            noPosts.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        Toast.makeText(getContext(), response.code() + " : " + response.message(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(Call<VideosList> call, Throwable t) {
-                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            };
-
-        if (videosList != null && videosList.isEmpty())
-            getVideos(1, searchTerm);
-//        else recyclerView.getAdapter().notifyDataSetChanged();
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (searchTerm != null && !searchTerm.equals("")) {
+            if (videosListCallback == null)
+                videosListCallback = new Callback<VideosList>() {
+                    @Override
+                    public void onResponse(Call<VideosList> call, Response<VideosList> response) {
+                        if (response.code() == 200) {
+                            is_next_page = response.body().isNextPage();
+                            if (response.body().getVideos().size() > 0) {
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                noPosts.setVisibility(View.GONE);
+                                recyclerView.getRecycledViewPool().clear();
+                                videosList.addAll(response.body().getVideos());
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                swipeRefreshLayout.setVisibility(View.GONE);
+                                noPosts.setText(R.string.no_videos_match_your_search_criteria);
+                                noPosts.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            Log.e("videosListCallback", response.code() + "_" + response.message());
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailure(Call<VideosList> call, Throwable t) {
+                        if (isAdded()) {
+                            Log.e("videosListCallback", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                };
+
+            if (videosList != null && videosList.isEmpty()) {
+                getVideos(1, searchTerm);
+            }
+        } else {
+            noPosts.setVisibility(View.VISIBLE);
+            noPosts.setText(R.string.search_for_videos);
+        }
+    }
+
     private void getVideos(int page, String searchTerm) {
-        if (page == 1)
+        if (page == 1) {
+            scrollListener.resetState();
             videosList.clear();
+        }
 
         videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
         
@@ -143,21 +148,9 @@ public class VideosTabFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        noPosts.setText(R.string.search_for_videos);
     }
 
     @Override
@@ -167,18 +160,4 @@ public class VideosTabFragment extends BaseFragment {
             videosListCall.cancel();
         adapter = null;
     }
-
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p/>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnListFragmentInteractionListener {
-//        void onListFragmentInteraction(Pojos.User.Notification item);
-//    }
 }

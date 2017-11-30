@@ -92,6 +92,7 @@ public class SubDiscoverFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getParentActivity().setAppBarElevation(1);
         // Inflate the searchContainer for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sub_discover, container, false);
         ButterKnife.bind(this, rootView);
@@ -309,6 +310,7 @@ public class SubDiscoverFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        getParentActivity().setAppBarElevation(0);
         getParentActivity().updateToolbarTitle(previousTitle);
     }
 
