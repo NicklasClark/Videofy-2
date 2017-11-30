@@ -41,10 +41,9 @@
     <declare-styleable name="FontFamily">
         <attr name="font_name">
             <enum value="1" name="bold"/>
-            <enum value="2" name="condensed"/>
-            <enum value="3" name="regular"/>
-            <enum value="4" name="semibold"/>
-            <enum value="5" name="sign_painter"/>
+            <enum value="2" name="regular"/>
+            <enum value="3" name="semibold"/>
+            <enum value="4" name="sign_painter"/>
         </attr>
     </declare-styleable>
 

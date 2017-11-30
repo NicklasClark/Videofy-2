@@ -101,7 +101,11 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private Context context;
     private PostDetails postDetails;
     private boolean isComplete;
+    private int lastPageCalled = 0;
     private byte[] image;
+
+    private Call<PostReactionsList> postReactionsListCall;
+    private Callback<PostReactionsList> postReactionsListCallback;
     private ArrayList<PostReaction> postReactions;
     private ArrayList<TaggedUser> taggedUsersList;
     private MediaControllerView controller;
@@ -141,7 +145,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
         context = getContext();
-        getParentActivity().hidesettingsReport();
+//        getParentActivity().hidesettingsReport();
 
         return rootView;
     }
@@ -194,7 +198,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
-
     }
 
     @Override
@@ -312,58 +315,68 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
-        ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context)
-                .enqueue(new Callback<PostReactionsList>() {
-                    @Override
-                    public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getReactions().size() > 0) {
-                                    postLoadErrorLayout.setVisibility(View.GONE);
-                                    is_next_page = response.body().isNextPage();
-                                    if (pageNumber == 1)
-                                        postReactions.clear();
+        if (pageNumber == 1)
+            postReactions.clear();
 
-                                    postReactions.addAll(response.body().getReactions());
+        if (postReactionsListCallback == null)
+            postReactionsListCallback = new Callback<PostReactionsList>() {
+                @Override
+                public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
+                    switch (response.code()) {
+                        case 200:
+                            if (response.body().getReactions().size() > 0) {
+                                postLoadErrorLayout.setVisibility(View.GONE);
+                                is_next_page = response.body().isNextPage();
+                                if (pageNumber == 1)
+                                    postReactions.clear();
+
+                                postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
-                                    postReactionAdapter.notifyDataSetChanged();
-                                    if (postReactions.size() > 0) {
-                                        if (postReactions.size() >= 1) {
-                                            controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 2) {
-                                            controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 3) {
-                                            controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                        }
+                                postReactionAdapter.notifyDataSetChanged();
+                                if (postReactions.size() > 0) {
+                                    if (postReactions.size() >= 1) {
+                                        controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
                                     }
-                                } else {
-                                    controller.setNoReactions();
-                                    showNoReactionMessage();
+                                    if (postReactions.size() >= 2) {
+                                        controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                    }
+                                    if (postReactions.size() >= 3) {
+                                        controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                    }
                                 }
-                                    break;
-                                default:
-                                    showErrorMessage("Error " + response.code() +": " + response.message());
-                                    break;
+                            } else {
+                                controller.setNoReactions();
+                                showNoReactionMessage();
                             }
+                            break;
+                        default:
+                            showErrorMessage("Error " + response.code() +": " + response.message());
+                            break;
                     }
+                }
 
-                    private void showErrorMessage(String message) {
-                        dismissProgressBar();
+                private void showErrorMessage(String message) {
+                    dismissProgressBar();
 //                        recyclerView.setVisibility(View.INVISIBLE);
-                        postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
-                        postLoadErrorLayout.setVisibility(View.VISIBLE);
-                        message = getString(R.string.could_not_load_posts) + message;
-                        postLoadErrorTextView.setText(message);
-                        postLoadErrorSubtitle.setText(R.string.tap_to_retry);
-                    }
+                    postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
+                    postLoadErrorLayout.setVisibility(View.VISIBLE);
+                    message = getString(R.string.could_not_load_posts) + message;
+                    postLoadErrorTextView.setText(message);
+                    postLoadErrorSubtitle.setText(R.string.tap_to_retry);
+                }
 
-                    @Override
-                    public void onFailure(Call<PostReactionsList> call, Throwable t) {
-                        ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
-                    }
-                });
+                @Override
+                public void onFailure(Call<PostReactionsList> call, Throwable t) {
+                    ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
+                }
+            };
+
+        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
+
+        lastPageCalled = pageNumber;
+
+        if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
+            postReactionsListCall.enqueue(postReactionsListCallback);
     }
 
     private void showNoReactionMessage() {
@@ -572,11 +585,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     return true;
                 case R.id.action_profile_report:
                     if (postDetails.canReact()) {
-                        FragmentManager fm = getFragmentManager();
-                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(postDetails.getPostId(), postDetails.canReact());
+                        FragmentManager fragmentManager = getFragmentManager();
+                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
+                                newInstance(postDetails.getPostId(), postDetails.canReact());
                         // SETS the target fragment for use later when sending results
                         reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
-                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                        if (fragmentManager != null) {
+                            reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+                        }
                     } else {
                         Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
@@ -618,6 +634,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public void onDestroy() {
         super.onDestroy();
         postReactionAdapter = null;
+        if (postReactionsListCall != null)
+            postReactionsListCall.cancel();
         getParentActivity().showAppBar();
     }
 

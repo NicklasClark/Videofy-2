@@ -16,7 +16,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.discover.adapters.SubSearchAdapter;
+import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 
@@ -74,7 +74,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
 
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new SubSearchAdapter(postDetailsArrayList, getContext()));
+        recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {

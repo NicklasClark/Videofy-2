@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos.Category;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_trending) ProximaNovaRegularTextView title;
+        @BindView(R.id.item_trending) ProximaNovaSemiboldTextView title;
 
         public ViewHolder(View itemView) {
             super(itemView);

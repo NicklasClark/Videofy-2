@@ -49,7 +49,7 @@ public class SemiboldButtonWithStartDrawable extends AppCompatButton {
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_semibold.ttf");
+        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_semibold.otf");
         setTypeface(customFont);
     }
 

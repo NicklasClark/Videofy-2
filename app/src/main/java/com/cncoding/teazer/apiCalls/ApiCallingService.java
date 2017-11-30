@@ -8,7 +8,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -26,6 +25,7 @@ import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
@@ -185,6 +185,13 @@ public class ApiCallingService {
         }
 
         /**
+         * Call this service to get the most popular videos. Call this service when user taps "View All".
+         */
+        public static Call<PostList> getAllMostPopularVideos(int page, Context context){
+            return getDiscoverService(context).getAllMostPopularVideos(page);
+        }
+
+        /**
          * Call this service to get the discover page trending category videos of the respected category.
          */
         public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
@@ -210,6 +217,13 @@ public class ApiCallingService {
          */
         public static Call<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
             return getDiscoverService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
+        }
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        public static Call<VideosList> getVideosWithSearchTerm(int page, String searchTerm, Context context){
+            return getDiscoverService(context).getVideosWithSearchTerm(page, searchTerm);
         }
 
         private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {

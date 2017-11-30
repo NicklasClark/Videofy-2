@@ -4,7 +4,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="0.25dp"
+    android:layout_margin="7dp"
     android:background="@android:color/black"
     android:visibility="invisible">
 
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_smaller"
+            app:drawableStartCompat="@drawable/ic_like_outline_small"
             android:gravity="end|center_vertical"
             android:maxLines="1"
             android:singleLine="true"

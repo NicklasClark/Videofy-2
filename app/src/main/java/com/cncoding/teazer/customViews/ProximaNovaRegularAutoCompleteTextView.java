@@ -31,7 +31,7 @@ public class ProximaNovaRegularAutoCompleteTextView extends AppCompatAutoComplet
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_regular.ttf");
+        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_regular.otf");
         setTypeface(customFont);
     }
 }

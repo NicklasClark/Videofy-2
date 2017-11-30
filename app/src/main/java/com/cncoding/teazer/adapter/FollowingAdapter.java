@@ -14,11 +14,17 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -62,20 +68,33 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                 final Following cont = list.get(i);
                 final String followingname = cont.getUserName();
+                final int accounttype = cont.getAccountType();
                 final String userType;
 
                 followerId = cont.getUserId();
                 userType="Following";
                 viewHolder.followingName.setText(followingname);
+
+                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(viewHolder.follow.getText().equals("Follow"))
+                        {
+
+
+                            followUser(followerId, context, viewHolder,accounttype);
+                        }
+                    }
+                });
+
+
+
+
+
                 viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        Intent intent = new Intent(context, othersProfileFragment.class);
-//                        intent.putExtra("Username", followingname);
-//                        intent.putExtra("FollowId", String.valueOf(followerId));
-//                        intent.putExtra("UserType", userType);
-//                        context.startActivity(intent);
-//                       // Toast.makeText(context,"user following 111",Toast.LENGTH_SHORT).show();
 
                         otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId),userType,followingname);
 
@@ -91,6 +110,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final String usertype;
                 final boolean myself = cont.getMySelf();
                 final String followername = cont.getUserName();
+                final int accounttype = cont.getAccountType();
+
                 followerId = cont.getUserId();
                 viewHolder.followingName.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
@@ -117,7 +138,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                         viewHolder.follow.setText("Following");
                         usertype = "Following";
-                      //  Toast.makeText(context,"Following ",Toast.LENGTH_SHORT).show();
+
 
                     } else {
 
@@ -125,7 +146,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         {
                             viewHolder.follow.setText("Requested");
                             usertype = "Requested";
-                        //    Toast.makeText(context,"Requested ",Toast.LENGTH_SHORT).show();
                         }
                         else {
 
@@ -142,6 +162,20 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     }
                 }
 
+                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(viewHolder.follow.getText().equals("Follow"))
+                        {
+
+
+                            followUser(followerId, context, viewHolder,accounttype);
+                        }
+                    }
+                });
+
+
                 viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -153,13 +187,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
-//                                Intent intent = new Intent(context, othersProfileFragment.class);
-//                                intent.putExtra("Username", followername);
-//                                intent.putExtra("FollowId", String.valueOf(followerId));
-//                                intent.putExtra("UserType", usertype);
-//                             //   Toast.makeText(context,"other following",Toast.LENGTH_SHORT).show();
-//
-//                                context.startActivity(intent);
+
                                 otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId),usertype,followername);
                             }
                         }
@@ -173,6 +201,54 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             e.printStackTrace();
         }
     }
+
+    public void followUser(final int userId, final Context context, final FollowingAdapter.ViewHolder viewHolder, final int accounttype) {
+
+        ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b == true) {
+
+
+                            if (accounttype == 1) {
+                                viewHolder.follow.setText("Requested");
+                                Toast.makeText(context, "You have sent following request", Toast.LENGTH_LONG).show();
+
+
+                            } else {
+                                Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
+                                viewHolder.follow.setText("Following");
+                            }
+
+
+                        } else {
+
+                            viewHolder.follow.setText("Following");
+                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         if(counter==100)

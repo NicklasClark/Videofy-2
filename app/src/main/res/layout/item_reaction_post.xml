@@ -6,6 +6,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_card"
     android:visibility="visible"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginBottom="8dp"
     android:animateLayoutChanges="true">
 
     <ImageView
@@ -74,7 +77,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_smaller"
+            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
             android:gravity="end|center_vertical"
             android:layout_below="@+id/reaction_post_name"
             android:layout_alignParentStart="true" />

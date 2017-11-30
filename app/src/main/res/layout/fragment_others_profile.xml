@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.activity.othersProfileFragment">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -44,6 +43,7 @@
                         android:id="@+id/background_profile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@drawable/ic_default_bg"
                         android:scaleType="centerCrop"
                         android:transitionName="profile" />
 
@@ -86,6 +86,7 @@
 
                                         <com.cncoding.teazer.customViews.CircularAppCompatImageView
                                             android:id="@+id/profile_id"
+                                            android:background="@drawable/ic_user_male_dp"
                                             android:layout_width="84dp"
                                             android:layout_height="84dp"
                                             android:layout_gravity="center_vertical"
@@ -93,7 +94,6 @@
                                             android:fitsSystemWindows="true"
 
                                             android:scaleType="centerCrop"
-                                            android:src="@drawable/arif_image"
                                             app:layout_collapseMode="parallax" />
                                     </RelativeLayout>
                                 </LinearLayout>

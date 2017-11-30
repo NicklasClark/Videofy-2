@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
+import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
@@ -60,7 +62,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class othersProfileFragment extends BaseFragment {
+public class OthersProfileFragment extends BaseFragment {
 
     private static final String ARG_ID = "UserID";
     private static final String ARG_IDENTIFIER = "Usertype";
@@ -125,8 +127,8 @@ public class othersProfileFragment extends BaseFragment {
     String userType;
 
 
-    public static othersProfileFragment newInstance(String id, String identifier, String username) {
-        othersProfileFragment othersProfileFragment = new othersProfileFragment();
+    public static OthersProfileFragment newInstance(String id, String identifier, String username) {
+        OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
@@ -137,17 +139,15 @@ public class othersProfileFragment extends BaseFragment {
 
     }
 
-    public static othersProfileFragment newInstance2(String id, String identifier, String username) {
-        othersProfileFragment othersProfileFragment = new othersProfileFragment();
+    public static OthersProfileFragment newInstance2(String id, String identifier, String username) {
+        OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ID, id);
         bundle.putString(ARG_IDENTIFIER, identifier);
         bundle.putString(ARG_USERNAME, username);
         othersProfileFragment.setArguments(bundle);
         return othersProfileFragment;
-
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,18 +157,11 @@ public class othersProfileFragment extends BaseFragment {
             userType = getArguments().getString(ARG_IDENTIFIER);
             username = getArguments().getString(ARG_USERNAME);
             setHasOptionsMenu(true);
-
         }
-
-
-
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
@@ -177,11 +170,8 @@ public class othersProfileFragment extends BaseFragment {
             getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
         }
         getParentActivity().updateToolbarTitle("Profile");
-
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
-        //_btnfollow.setText(userType);
-
 
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +280,7 @@ public class othersProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getParentActivity().hideSettings(true);
+//        getParentActivity().hideSettings(true);
     }
 
     @Override
@@ -361,12 +351,13 @@ public class othersProfileFragment extends BaseFragment {
                                 });
                             }
                             if (userProfileThumbnail == null) {
-                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
-                                Glide.with(context)
-                                        .load(pic)
-                                        .into(profile_id);
-                                profileBlur(pic);
+//                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//
+//                                Glide.with(context)
+//                                        .load(pic)
+//                                        .into(profile_id);
+//                                profileBlur(pic);
                             } else {
 
                                 Picasso.with(context)
@@ -537,13 +528,10 @@ public class othersProfileFragment extends BaseFragment {
 
             case R.id.action_profile_report:
                 openReportUser(followerfollowingid);
-
-
+                break;
             case R.id.action_profile_block:
                 openBlockUser(followerfollowingid);
-
-
-
+                break;
         }
         return true;
 
@@ -709,24 +697,11 @@ public class othersProfileFragment extends BaseFragment {
     }
 
     public void openReportUser(final int blockuserId) {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("Confirm Report...");
-        alertDialog.setMessage("Are you sure you want to report this user");
-        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-
-              //  blockunBlock(blockuserId, BLOCK_STATUS);
-            }
-        });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+        FragmentManager fm = getFragmentManager();
+        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
+        // SETS the target fragment for use later when sending results
+        reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
+        reportUserDialogFragment.show(fm, "fragment_report_post");
     }
 
     public void blockunBlock(int userId, int status) {

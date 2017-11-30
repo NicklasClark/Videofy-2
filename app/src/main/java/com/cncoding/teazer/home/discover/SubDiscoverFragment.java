@@ -25,7 +25,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.discover.adapters.SubSearchAdapter;
+import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -122,14 +122,28 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void prepareMostPopularLayout() {
-        if (!postDetailsArrayList.isEmpty()) {
-            recyclerView.setVisibility(View.VISIBLE);
-            recyclerView.setAdapter(new SubSearchAdapter(postDetailsArrayList, getContext()));
-            StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-            recyclerView.setLayoutManager(manager);
-        } else
-            noPosts.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(manager);
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (is_next_page)
+                    new GetMostPopularVideos(SubDiscoverFragment.this).execute(page);
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                scrollListener.resetState();
+                new GetMostPopularVideos(SubDiscoverFragment.this).execute(1);
+            }
+        });
+        new GetMostPopularVideos(SubDiscoverFragment.this).execute(1);
     }
 
     private void prepareMyInterestsLayout() {
@@ -146,14 +160,14 @@ public class SubDiscoverFragment extends BaseFragment {
 
     private void prepareTrendingLayout() {
         recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(new SubSearchAdapter(postDetailsArrayList, getContext()));
+        recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1 && is_next_page)
+                if (is_next_page)
                     new GetTrendingVideos(SubDiscoverFragment.this).execute(page);
             }
         };
@@ -194,6 +208,54 @@ public class SubDiscoverFragment extends BaseFragment {
 
             ApiCallingService.Discover.getTrendingVideos(integers[0],
                     reference.get().categories.get(0).getCategoryId(), reference.get().getContext())
+                    .enqueue(new Callback<PostList>() {
+                        @Override
+                        public void onResponse(Call<PostList> call, Response<PostList> response) {
+                            if (response.code() == 200) {
+                                reference.get().is_next_page = response.body().isNextPage();
+                                if (!response.body().getPosts().isEmpty()) {
+                                    reference.get().postDetailsArrayList.addAll(response.body().getPosts());
+                                    reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                                } else
+                                    reference.get().noPosts.setVisibility(View.VISIBLE);
+                            } else
+                                Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostList> call, Throwable t) {
+                            Log.e("FAIL! GetTrendingVideos", t.getMessage());
+                        }
+                    });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            reference.get().swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private static class GetMostPopularVideos extends AsyncTask<Integer, Void, Void> {
+
+        private WeakReference<SubDiscoverFragment> reference;
+
+        GetMostPopularVideos(SubDiscoverFragment context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            if (integers[0] == 1)
+                reference.get().postDetailsArrayList.clear();
+
+            ApiCallingService.Discover.getAllMostPopularVideos(integers[0], reference.get().getContext())
                     .enqueue(new Callback<PostList>() {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {

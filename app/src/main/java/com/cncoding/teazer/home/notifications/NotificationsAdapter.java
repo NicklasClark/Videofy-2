@@ -120,14 +120,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder1.content.setText(getString(getHighlights(holder1.notification.getHighlights()), holder1.notification.getMessage()));
 
 
-                holder1.dp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        mListener.onNotificationsInteraction(false, null,
-                                null, holder1.notification.getMetaData().getFromId(),"");
-                    }
-                });
+//                holder1.dp.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                });
 
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
@@ -199,6 +197,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View view) {
 
+
+                        mListener.onNotificationsInteraction(false, null,
+                                null, holder1.notification.getMetaData().getFromId(),"");
                     }
                 };
 
@@ -219,10 +220,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 holder2.content.setText(getString(getHighlights(holder2.notification.getHighlights()), holder2.notification.getMessage()));
 
-                holder2.isActiond=notificationsList.getNotifications().get(position).isActioned();
+                holder2.isActioned =notificationsList.getNotifications().get(position).isActioned();
                 holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
 
-                if(holder2.isActiond==false) {
+                if(!holder2.isActioned) {
                     switch (holder2.notification.getNotificationType()) {
                         case STARTED_FOLLOWING:
                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
@@ -269,16 +270,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                        }
 //
 //                    }
-//                     else
+//                     else {
 //
-//                        {
-//
-//                        }
-//
+//                     }
 //                    }
-
-
-
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
@@ -547,7 +542,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case BUTTON_TYPE_FOLLOWING:
                 button.setText(R.string.following);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);
@@ -556,7 +551,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case BUTTON_TYPE_REQUESTED:
                 button.setText(R.string.requested);
-                button.setTextColor(Color.parseColor("#000000"));
+                button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
                 button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
                         null, null, null);
@@ -603,7 +598,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.notification_action) ProximaNovaSemiboldButton action;
         @BindView(R.id.notification_decline) AppCompatImageView declineRequest;
         Notification notification;
-        boolean isActiond;
+        boolean isActioned;
         int accountType;
 
         RequestsViewHolder(View view) {

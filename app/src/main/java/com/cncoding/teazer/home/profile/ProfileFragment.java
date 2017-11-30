@@ -36,8 +36,6 @@ import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
-import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
@@ -112,7 +110,7 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        //previousTitle=getParentActivity().getToolbarTitle();
+        previousTitle=getParentActivity().getToolbarTitle();
     }
 
 
@@ -214,7 +212,7 @@ public class ProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getProfileDetail();
-        getParentActivity().hidereport();
+//        getParentActivity().hidereport();
         getParentActivity().updateToolbarTitle("Profile");
 
     }
@@ -291,13 +289,15 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.VISIBLE);
 
                     if (userProfileThumbnail == null) {
-                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+//
+//                        Glide.with(context)
+//                                .load(pic)
+//                                .into(profile_id);
+//                        profileBlur(pic);
+                    }
 
-                        Glide.with(context)
-                                .load(pic)
-                                .into(profile_id);
-                        profileBlur(pic);
-                    } else {
+                    else {
 
                         Picasso.with(context)
                                 .load(Uri.parse(userProfileThumbnail))
@@ -320,7 +320,6 @@ public class ProfileFragment extends BaseFragment {
         });
 
     }
-
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
     public void profileBlur(final String pic) {
 
@@ -387,7 +386,7 @@ public class ProfileFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-     //   getParentActivity().updateToolbarTitle(previousTitle);
+       getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     public interface FollowerListListener {

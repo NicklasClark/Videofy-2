@@ -25,7 +25,7 @@
         <item name="android:textColor">@color/colorSecondary_text</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="actionMenuTextColor">@color/colorPrimary_text</item>
-        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@color/colorPrimary_text</item>
         <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge
         </item>
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall
@@ -59,7 +59,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@color/colorPrimary_text</item>
+        <item name="android:textColor">@color/colorPrimary_text</item>
+        <item name="android:textColorPrimary">@color/colorPrimary_text</item>
+        <item name="android:textColorSecondary">@color/colorSecondary_text</item>
+        <item name="android:textColorHint">@color/colorSecondary_text</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -335,7 +339,7 @@
     </style>
 
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
-        <item name="colorAccent">@color/colorReactBtn</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
@@ -364,7 +368,8 @@
     <style name="BottomTabLayout.RecyclerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/padding_half</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">0dp</item>
         <item name="android:clipToPadding">false</item>
         <item name="android:nestedScrollingEnabled">false</item>
     </style>

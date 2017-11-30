@@ -377,6 +377,122 @@ public class Pojos {
         }
     }
 
+    public static class Discover {
+
+        public static class VideosList {
+            private boolean next_page;
+            private ArrayList<Videos> videos;
+
+            public VideosList(boolean next_page, ArrayList<Videos> videos) {
+                this.next_page = next_page;
+                this.videos = videos;
+            }
+
+            public boolean isNextPage() {
+                return next_page;
+            }
+
+            public ArrayList<Videos> getVideos() {
+                return videos;
+            }
+        }
+
+        public static class Videos implements Parcelable {
+            private int post_id;
+            private int posted_by;
+            private int likes;
+            private int views;
+            private int total_reactions;
+            private String title;
+            private String created_at;
+            private Medias post_video_info;
+
+            public Videos(int post_id, int posted_by, int likes, int views, int total_reactions,
+                          String title, String created_at, Medias post_video_info) {
+                this.post_id = post_id;
+                this.posted_by = posted_by;
+                this.likes = likes;
+                this.views = views;
+                this.total_reactions = total_reactions;
+                this.title = title;
+                this.created_at = created_at;
+                this.post_video_info = post_video_info;
+            }
+
+            protected Videos(Parcel in) {
+                post_id = in.readInt();
+                posted_by = in.readInt();
+                likes = in.readInt();
+                views = in.readInt();
+                total_reactions = in.readInt();
+                title = in.readString();
+                created_at = in.readString();
+                post_video_info = in.readParcelable(Medias.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(post_id);
+                dest.writeInt(posted_by);
+                dest.writeInt(likes);
+                dest.writeInt(views);
+                dest.writeInt(total_reactions);
+                dest.writeString(title);
+                dest.writeString(created_at);
+                dest.writeParcelable(post_video_info, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<Videos> CREATOR = new Creator<Videos>() {
+                @Override
+                public Videos createFromParcel(Parcel in) {
+                    return new Videos(in);
+                }
+
+                @Override
+                public Videos[] newArray(int size) {
+                    return new Videos[size];
+                }
+            };
+
+            public int getPostId() {
+                return post_id;
+            }
+
+            public int getPostedBy() {
+                return posted_by;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public int getTotalReactions() {
+                return total_reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getCreatedAt() {
+                return created_at;
+            }
+
+            public Medias getPostVideoInfo() {
+                return post_video_info;
+            }
+        }
+    }
+
     public static class React {
 
         public static class UserReactionsList {

@@ -30,7 +30,7 @@ public class ProximaNovaSemiboldTextView extends android.support.v7.widget.AppCo
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_semibold.ttf");
+        Typeface customFont = Typeface.createFromAsset(context.getAssets(), "fonts/proxima_nova_semibold.otf");
         setTypeface(customFont);
     }
 }
