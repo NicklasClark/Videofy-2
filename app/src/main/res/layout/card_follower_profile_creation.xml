@@ -101,7 +101,6 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
 
-                    android:layout_toStartOf="@+id/reactiontext"
                     android:background="@drawable/bg_circle_white_outline"
                     >
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
@@ -109,7 +108,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_margin="1dp"
-                        app:srcCompat="@drawable/arif_image" />
+                        app:srcCompat="@drawable/ic_user_male_dp_small" />
                 </RelativeLayout>
 
                 <!--<com.cncoding.teazer.customViews.CircularAppCompatImageView-->
