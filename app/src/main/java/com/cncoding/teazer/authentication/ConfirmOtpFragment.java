@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -108,15 +110,26 @@ public class ConfirmOtpFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
-        setTextLimits();
-        otpSentTextView.setText(getString(R.string.otp_sent_1) + " " + userSignUpDetails.getPhoneNumber());
-
-        countDownTimer = ViewUtils.startCountDownTimer(getContext(), otpVerifiedTextView, otpResendBtn);
-
-        if (!arePermissionsAllowed(getActivity().getApplicationContext()))
-            requestPermissions();
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            setTextLimits();
+            otpSentTextView.setText(getString(R.string.otp_sent_1) + " " + userSignUpDetails.getPhoneNumber());
+
+            countDownTimer = ViewUtils.startCountDownTimer(getContext(), otpVerifiedTextView, otpResendBtn);
+
+            if (!arePermissionsAllowed(getActivity().getApplicationContext()))
+                requestPermissions();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.otp_resend_btn) public void resendOtp() {
