@@ -10,9 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:paddingTop="@dimen/padding_half"
-        android:paddingStart="@dimen/padding_half"
-        android:paddingEnd="@dimen/padding_half"
+        android:layout_marginTop="@dimen/padding_thin"
+        android:paddingTop="14dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
         android:textAllCaps="true" />
 
     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
@@ -29,7 +31,8 @@
         android:id="@+id/item_my_interests_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding_half"
+        android:paddingStart="0dp"
+        android:paddingEnd="14dp"
         android:clipToPadding="false"/>
 
 </LinearLayout>

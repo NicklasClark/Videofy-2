@@ -23,6 +23,8 @@ import java.util.Stack;
 
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
+import static com.cncoding.teazer.R.anim.float_up;
+import static com.cncoding.teazer.R.anim.sink_down;
 
 /**
  * The class is used to manage navigation through multiple stacks of fragments, as well as coordinate
@@ -129,6 +131,7 @@ public class NavigationController {
                     ft.commit();
                 } else {
                     fragment = getRootFragment(selectedTabIndex);
+                    ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
                     ft.add(containerId, fragment, generateTag(fragment));
                     ft.commit();
                 }
@@ -164,7 +167,7 @@ public class NavigationController {
             FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
             detachCurrentFragment(ft);
-            ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
+            ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
             ft.add(containerId, fragment, generateTag(fragment));
             ft.commit();
 

@@ -46,7 +46,7 @@ public class NotificationsFragment extends BaseFragment {
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        getParentActivity().hidesettingsReport();
+//        getParentActivity().hidesettingsReport();
 
         return rootView;
     }

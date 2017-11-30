@@ -40,13 +40,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     private OnPostAdapterInteractionListener listener;
     private List<PostDetails> posts;
     private Context context;
-    private PostsListFragment postsListFragment;
 
-    PostsListAdapter(List<PostDetails> posts, Context context, PostsListFragment postsListFragment) {
+    PostsListAdapter(List<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
-        this.postsListFragment = postsListFragment;
         dimensionSparseArray = new SparseIntArray();
+
+        if (context instanceof OnPostAdapterInteractionListener) {
+            listener = (OnPostAdapterInteractionListener) context;
+        }
     }
 
     @Override
@@ -113,6 +115,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
         String title = holder.postDetails.getTitle();
         holder.caption.setText(title);
+        holder.caption.setVisibility(View.VISIBLE);
 
         if (holder.postDetails.getCategories().size() > 0)
             holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
@@ -176,27 +179,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         public String toString() {
             return super.toString() + " '" + name.getText() + "' : \"" + caption.getText() + "\"";
         }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        if (context instanceof OnPostAdapterInteractionListener) {
-            listener = (OnPostAdapterInteractionListener) context;
-        }
-        else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnUserAdapterInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        listener = null;
-//        context = null;
-//        posts = null;
-//        postsListFragment = null;
     }
 
     public interface OnPostAdapterInteractionListener {

@@ -37,8 +37,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     private final Context context;
     private OnSearchInteractionListener mListener;
 
-    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context,
-                                     OnSearchInteractionListener mListener) {
+    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context, OnSearchInteractionListener mListener) {
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
         this.mListener = mListener;

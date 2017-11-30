@@ -50,12 +50,10 @@ public class UniversalTextView extends AppCompatTextView {
             case 1:
                 return mFontFactory.bold;
             case 2:
-                return mFontFactory.condensed;
-            case 3:
                 return mFontFactory.regular;
-            case 4:
+            case 3:
                 return mFontFactory.semiBold;
-            case 5:
+            case 4:
                 return mFontFactory.signPainter;
             default:
                 return mFontFactory.regular;

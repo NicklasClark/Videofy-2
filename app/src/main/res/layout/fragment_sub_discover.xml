@@ -15,6 +15,11 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"
             app:layoutManager="StaggeredGridLayoutManager" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -25,9 +30,9 @@
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
         android:background="@color/colorPrimary"
-        app:tabTextColor="@android:color/white"
-        app:tabSelectedTextColor="@color/material_grey200"
-        app:tabIndicatorColor="#F48FB1"
+        app:tabTextColor="@color/colorSecondary_text"
+        app:tabSelectedTextColor="@color/colorPrimaryOld"
+        app:tabIndicatorColor="@color/colorPrimaryOld"
         app:tabIndicatorHeight="@dimen/padding_thin"
         android:layout_alignParentTop="true"
         android:elevation="6dp"

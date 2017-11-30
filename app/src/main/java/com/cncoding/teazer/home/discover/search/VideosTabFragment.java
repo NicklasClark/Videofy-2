@@ -1,10 +1,11 @@
 package com.cncoding.teazer.home.discover.search;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,12 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
+import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -27,6 +28,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
+
 /**
  * A fragment representing a list of Items.
  */
@@ -34,12 +37,14 @@ public class VideosTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
+    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
 
-//    private OnListFragmentInteractionListener mListener;
-    private boolean isSearchTerm;
-    private ArrayList<Pojos.MiniProfile> usersList;
+//    private OnListFragmentInteractionListener mListener;\
+    private Call<VideosList> videosListCall;
+    private Callback<VideosList> videosListCallback;
+    private ArrayList<Videos> videosList;
     private DiscoverSearchAdapter adapter;
+    private String searchTerm;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,96 +53,93 @@ public class VideosTabFragment extends BaseFragment {
     public VideosTabFragment() {
     }
 
-    public static VideosTabFragment newInstance() {
-        return new VideosTabFragment();
+    public static VideosTabFragment newInstance(String searchTerm) {
+        VideosTabFragment fragment = new VideosTabFragment();
+        Bundle args = new Bundle();
+        args.putString(SEARCH_TERM, searchTerm);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            searchTerm = getArguments().getString(SEARCH_TERM);
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_my_interests_tab, container, false);
         ButterKnife.bind(this, rootView);
-        usersList = new ArrayList<>();
+        videosList = new ArrayList<>();
 
-//        adapter = new DiscoverSearchAdapter(getContext(), true, null);
-//        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-//        recyclerView.setLayoutManager(manager);
-//        recyclerView.setAdapter(adapter);
-//        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-//                if (is_next_page)
-//                    new GetFollowingNotifications(VideosTabFragment.this).execute(page);
-//            }
-//        };
-//        recyclerView.addOnScrollListener(scrollListener);
-//
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                scrollListener.resetState();
-//                new GetFollowingNotifications(VideosTabFragment.this).execute(1);
-//            }
-//        });
+        adapter = new DiscoverSearchAdapter(getContext(), true, null, videosList);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
 
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (is_next_page)
+                    getVideos(page, searchTerm);
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                scrollListener.resetState();
+                getVideos(1, searchTerm);
+            }
+        });
+
+        if (videosListCallback == null)
+            videosListCallback = new Callback<VideosList>() {
+                @Override
+                public void onResponse(Call<VideosList> call, Response<VideosList> response) {
+                    if (response.code() == 200) {
+                        is_next_page = response.body().isNextPage();
+                        if (response.body().getVideos().size() > 0) {
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            noPosts.setVisibility(View.GONE);
+                            videosList.addAll(response.body().getVideos());
+                            recyclerView.getRecycledViewPool().clear();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                            noPosts.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        Toast.makeText(getContext(), response.code() + " : " + response.message(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<VideosList> call, Throwable t) {
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            };
+
+        if (videosList != null && videosList.isEmpty())
+            getVideos(1, searchTerm);
+//        else recyclerView.getAdapter().notifyDataSetChanged();
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        if (usersList != null && usersList.isEmpty())
-//            new GetFollowingNotifications(this).execute(1);
-    }
+    private void getVideos(int page, String searchTerm) {
+        if (page == 1)
+            videosList.clear();
 
-    private static class GetFollowingNotifications extends AsyncTask<Integer, Void, Void> {
-
-        private WeakReference<VideosTabFragment> reference;
-
-        GetFollowingNotifications(VideosTabFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().usersList.clear();
-
-            ApiCallingService.User.getFollowingNotifications(integers[0], reference.get().getContext())
-                    .enqueue(new Callback<NotificationsList>() {
-                        @Override
-                        public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
-                            if (response.code() == 200) {
-//                                reference.get().is_next_page = response.body().isNextPage();
-//                                if (response.body().getNotifications().size() > 0) {
-//                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
-//                                    reference.get().noNotifications.setVisibility(View.GONE);
-//                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
-//                                    reference.get().recyclerView.getRecycledViewPool().clear();
-//                                    reference.get().adapter.notifyDataSetChanged();
-//                                } else {
-//                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
-//                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
-//                                }
-                            } else {
-                                Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
-                        }
-
-                        @Override
-                        public void onFailure(Call<NotificationsList> call, Throwable t) {
-                            Toast.makeText(reference.get().getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
-            return null;
-        }
+        videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
+        
+        if (!videosListCall.isExecuted())
+            videosListCall.enqueue(videosListCallback);
     }
 
     @Override
@@ -161,6 +163,8 @@ public class VideosTabFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (videosListCall != null && videosListCall.isExecuted())
+            videosListCall.cancel();
         adapter = null;
     }
 
