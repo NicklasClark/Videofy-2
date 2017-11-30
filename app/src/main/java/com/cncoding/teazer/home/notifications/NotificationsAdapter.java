@@ -461,7 +461,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 + " : " + response.body().getMessage());
                                                 } else
                                                     Log.d("DeleteJoinRequest", response.code()
-                                                            + " : " + response.body().getMessage());
+                                                            + " : " + response.message());
                                             }
 
                                             @Override
