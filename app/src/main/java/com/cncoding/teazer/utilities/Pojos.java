@@ -1852,25 +1852,9 @@ public class Pojos {
             private ProfileMedia profile_media;
             private ArrayList<String> highlights;
             private MetaData meta_data;
-            private boolean isActioned;
+            private boolean request_sent;
+            private boolean following;
 
-            public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
-                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
-                                ArrayList<String> highlights, MetaData meta_data, boolean isActioned) {
-                this.notification_id = notification_id;
-                this.notification_type = notification_type;
-                this.source_id = source_id;
-                this.account_type = account_type;
-                this.title = title;
-                this.message = message;
-                this.created_at = created_at;
-                this.has_profile_media = has_profile_media;
-                this.is_actioned = is_actioned;
-                this.profile_media = profile_media;
-                this.highlights = highlights;
-                this.meta_data = meta_data;
-                this.isActioned = isActioned;
-            }
 
             protected Notification(Parcel in) {
                 notification_id = in.readInt();
@@ -1885,7 +1869,28 @@ public class Pojos {
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 highlights = in.createStringArrayList();
                 meta_data = in.readParcelable(MetaData.class.getClassLoader());
-                isActioned = in.readByte() != 0;
+                request_sent = in.readByte() != 0;
+                following = in.readByte() != 0;
+            }
+
+            public Notification(int notification_id, int notification_type, int source_id, int account_type,
+                                String title, String message, String created_at, boolean has_profile_media, boolean is_actioned,
+                                ProfileMedia profile_media, ArrayList<String> highlights, MetaData meta_data, boolean isActioned,
+                                boolean request_sent, boolean following) {
+                this.notification_id = notification_id;
+                this.notification_type = notification_type;
+                this.source_id = source_id;
+                this.account_type = account_type;
+                this.title = title;
+                this.message = message;
+                this.created_at = created_at;
+                this.has_profile_media = has_profile_media;
+                this.is_actioned = is_actioned;
+                this.profile_media = profile_media;
+                this.highlights = highlights;
+                this.meta_data = meta_data;
+                this.request_sent = request_sent;
+                this.following = following;
             }
 
             @Override
@@ -1902,7 +1907,8 @@ public class Pojos {
                 dest.writeParcelable(profile_media, flags);
                 dest.writeStringList(highlights);
                 dest.writeParcelable(meta_data, flags);
-                dest.writeByte((byte) (isActioned ? 1 : 0));
+                dest.writeByte((byte) (request_sent ? 1 : 0));
+                dest.writeByte((byte) (following ? 1 : 0));
             }
 
             @Override
@@ -1943,9 +1949,15 @@ public class Pojos {
             }
 
             public boolean isActioned() {
-                return isActioned;
+                return is_actioned;
             }
 
+            public boolean isFollowing() {
+                return following;
+            }
+            public boolean isRequest_sent() {
+                return request_sent;
+            }
             public String getMessage() {
                 return message;
             }

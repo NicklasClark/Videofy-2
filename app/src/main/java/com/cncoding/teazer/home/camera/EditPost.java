@@ -113,7 +113,11 @@ import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
+/**
+ * Created by farazhabib on 29/11/17.
+ */
+
+public class EditPost extends Fragment implements EasyPermissions.PermissionCallbacks{
 
     public static final String VIDEO_PATH = "videoPath";
     private static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -186,19 +190,19 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private Context context;
     private Activity activity;
 
-    private OnUploadFragmentInteractionListener mListener;
+    private EditPost.OnEditPostInteractionListener mListener;
     private boolean isGallery;
 
-    public UploadFragment() {
+    public EditPost() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
-        UploadFragment fragment = new UploadFragment();
+    public static EditPost newInstance(String videoPath) {
+        EditPost fragment = new EditPost();
         Bundle args = new Bundle();
-        args.putString(VIDEO_PATH, videoPath);
-        args.putBoolean(IS_REACTION, isReaction);
-        args.putBoolean(IS_GALLERY, isGallery);
+         args.putString(VIDEO_PATH, videoPath);
+//        args.putBoolean(IS_REACTION, isReaction);
+//        args.putBoolean(IS_GALLERY, isGallery);
         fragment.setArguments(args);
         return fragment;
     }
@@ -209,8 +213,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         Bundle bundle = getArguments();
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
-            isReaction = bundle.getBoolean(IS_REACTION);
-            isGallery = bundle.getBoolean(IS_GALLERY);
+//            isReaction = bundle.getBoolean(IS_REACTION);
+//            isGallery = bundle.getBoolean(IS_GALLERY);
         }
     }
 
@@ -246,9 +250,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         context = getContext();
         activity = getActivity();
 
-        new GetThumbnail(this).execute();
+        new EditPost.GetThumbnail(this).execute();
 
-        new SetVideoDuration(this).execute();
+        new EditPost.SetVideoDuration(this).execute();
 
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
@@ -345,7 +349,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                             if (location != null) {
                                 currentLocation = location;
                                 if (firstTime) {
-                                    new GetNearbyPlacesData(UploadFragment.this).execute(getNearbySearchUrl(currentLocation));
+                                    new EditPost.GetNearbyPlacesData(EditPost.this).execute(getNearbySearchUrl(currentLocation));
                                 }
                             }
                         }
@@ -424,9 +428,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
 
-        WeakReference<UploadFragment> reference;
+        WeakReference<EditPost> reference;
 
-        GetThumbnail(UploadFragment context) {
+        GetThumbnail(EditPost context) {
             reference = new WeakReference<>(context);
         }
 
@@ -495,27 +499,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-//    void launchPlacePicker() {
-//        try {
-//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
-//            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
-//        } catch (GooglePlayServicesRepairableException e) {
-//            GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(), REQUEST_CODE_PLACE_AUTOCOMPLETE);
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
-//        }
-////        try {
-////            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-////            Intent intent = intentBuilder.build(this);
-////            // Start the Intent by requesting a result, identified by a request code.
-////            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-////        } catch (GooglePlayServicesRepairableException e) {
-////            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(), REQUEST_PLACE_PICKER);
-////        } catch (GooglePlayServicesNotAvailableException e) {
-////            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
-////        }
-//    }
-
     private String getNearbySearchUrl(Location location) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location=").append(location.getLatitude()).append(",").append(location.getLongitude());
@@ -550,7 +533,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void addLocation() {
         if (arePermissionsAllowed(context)) {
             if (currentLocation != null)
-                new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+                new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else requestPermissions();
 //        startLocationService();
     }
@@ -564,7 +547,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
-                        mListener.onUploadInteraction(false,
+                        mListener.onsaveEditPost(false,
                                 TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
@@ -572,7 +555,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                                 Snackbar.LENGTH_SHORT).show();
                 } else
                     Snackbar.make(uploadCategoriesBtn, response.code() + " : " + response.message(),
-                                          Snackbar.LENGTH_SHORT).show();
+                            Snackbar.LENGTH_SHORT).show();
                 toggleInteraction(true);
             }
 
@@ -603,7 +586,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
-                            mListener.onUploadInteraction(false,
+                            mListener.onsaveEditPost(false,
                                     TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
                                     TAG_TAGS_FRAGMENT);
                             break;
@@ -658,14 +641,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @OnClick(R.id.video_upload_retake_btn)
     public void retakeVideo() {
-        mListener.onUploadInteraction(true, null, null);
+        mListener.onsaveEditPost(true, null, null);
     }
 
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void startLocationService() {
         String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (EasyPermissions.hasPermissions(context, perms)) {
-            new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+            new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
@@ -757,7 +740,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+        new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
     }
 
     @Override
@@ -840,9 +823,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static class GetNearbyPlacesData extends AsyncTask<String, String, ArrayList<HashMap<String, String>>> {
 
         private String googlePlacesJsonData;
-        private WeakReference<UploadFragment> reference;
+        private WeakReference<EditPost> reference;
 
-        GetNearbyPlacesData(UploadFragment context) {
+        GetNearbyPlacesData(EditPost context) {
             reference = new WeakReference<>(context);
         }
 
@@ -867,16 +850,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
             reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
-            reference.get().mListener.onUploadInteraction(false,
+            reference.get().mListener.onsaveEditPost(false,
                     NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
 
     private static class SetVideoDuration extends AsyncTask<Void, Void, String> {
 
-        private WeakReference<UploadFragment> reference;
+        private WeakReference<EditPost> reference;
 
-        SetVideoDuration(UploadFragment context) {
+        SetVideoDuration(EditPost context) {
             reference = new WeakReference<>(context);
         }
 
@@ -962,7 +945,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
-        mListener.onUploadInteraction(false,
+        mListener.onsaveEditPost(false,
                 NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
     }
 
@@ -979,8 +962,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnUploadFragmentInteractionListener) {
-            mListener = (OnUploadFragmentInteractionListener) context;
+        if (context instanceof EditPost.OnEditPostInteractionListener) {
+            mListener = (EditPost.OnEditPostInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnUploadFragmentInteractionListener");
@@ -999,7 +982,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         mListener = null;
     }
 
-    public interface OnUploadFragmentInteractionListener {
-        void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
+    public interface OnEditPostInteractionListener {
+        void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag);
     }
+
 }
