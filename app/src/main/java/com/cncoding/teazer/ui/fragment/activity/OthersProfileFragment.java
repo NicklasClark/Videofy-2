@@ -642,13 +642,10 @@ public class OthersProfileFragment extends BaseFragment {
                             Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             if (accountType == 1) {
                                 _btnfollow.setText("Requested");
-                                //_btnfollow.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_follow));
 
                             } else {
                                 _btnfollow.setText("Unfollow");
                             }
-
-
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);

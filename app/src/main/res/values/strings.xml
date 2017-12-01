@@ -4,7 +4,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="creation">Creations</string>
-    <string name="following">&#160;&#160;Following</string>
+    <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
