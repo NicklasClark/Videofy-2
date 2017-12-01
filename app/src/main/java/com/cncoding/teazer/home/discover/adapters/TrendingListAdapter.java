@@ -14,7 +14,6 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos.Category;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +25,6 @@ import butterknife.ButterKnife;
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.ViewHolder> {
 
-    private int[] colors = new int[]{0xFFF48FB1, 0xFF90CAF9, 0xFF80CBC4, 0xFFFFE082};
     private SparseIntArray sparseIntArray;
     private ArrayList<Category> trendingCategories;
     private TrendingListInteractionListener mListener;
@@ -63,7 +61,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
     private GradientDrawable getBackground(ProximaNovaSemiboldTextView title, int position) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         if (sparseIntArray.get(position) == 0) {
-            sparseIntArray.put(position, colors[new Random().nextInt(colors.length - 1)]);
+            sparseIntArray.put(position, Color.parseColor(trendingCategories.get(position).getColor()));
         }
         gradientDrawable.setColor(Color.TRANSPARENT);
         gradientDrawable.setCornerRadius(3);

@@ -119,8 +119,6 @@ public class ProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         getParentActivity().updateToolbarTitle("My Profile");
 
-
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
 

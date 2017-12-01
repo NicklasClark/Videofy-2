@@ -8,14 +8,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/BottomTabLayout.NotificationTab"
-        android:background="@drawable/bg_card_no_margin"
-        app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabIndicatorHeight="3dp">
+        style="@style/BottomTabLayout.NotificationTab">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem"

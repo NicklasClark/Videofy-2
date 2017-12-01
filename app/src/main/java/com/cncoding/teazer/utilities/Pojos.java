@@ -8,9 +8,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -2786,45 +2783,32 @@ public class Pojos {
     }
 
     public static class Category implements Parcelable {
-        int category_id;
-        String category_name;
+        private int category_id;
+        private String category_name;
+        private String color;
 
-        public Category(int category_id, String category_name) {
+        public Category(int category_id, String category_name, String color) {
             this.category_id = category_id;
             this.category_name = category_name;
+            this.color = color;
         }
 
-        Category(JSONObject jsonObject) {
-            try {
-                category_id = jsonObject.getInt("category_id");
-                category_name = jsonObject.getString("category_name");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        protected Category(Parcel in) {
+            category_id = in.readInt();
+            category_name = in.readString();
+            color = in.readString();
         }
 
-        public int getCategoryId() {
-            return category_id;
-        }
-
-        public String getCategoryName() {
-            return category_name;
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(category_id);
+            dest.writeString(category_name);
+            dest.writeString(color);
         }
 
         @Override
         public int describeContents() {
             return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(category_id);
-            parcel.writeString(category_name);
-        }
-
-        Category(Parcel in) {
-            category_id = in.readInt();
-            category_name = in.readString();
         }
 
         public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -2838,6 +2822,18 @@ public class Pojos {
                 return new Category[size];
             }
         };
+
+        public int getCategoryId() {
+            return category_id;
+        }
+
+        public String getCategoryName() {
+            return category_name;
+        }
+
+        public String getColor() {
+            return color;
+        }
     }
 
     public static class UploadParams implements Parcelable {

@@ -2,6 +2,8 @@ package com.cncoding.teazer.home.discover.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVideosListAdapter.ViewHolder> {
 
+    private SparseIntArray colorArray;
     private SparseIntArray dimensionSparseArray;
     private final ArrayList<PostDetails> featuredVideosArrayList;
     private final Context context;
@@ -47,6 +50,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         this.context = context;
         this.mListener = mListener;
         dimensionSparseArray = new SparseIntArray();
+        colorArray = new SparseIntArray();
     }
 
     @Override
@@ -69,10 +73,15 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         holder.title.setText(holder.featuredVideo.getTitle());
 
         /*Setting category*/
-        holder.category.setVisibility(holder.featuredVideo.getCategories() != null ? View.VISIBLE : View.GONE);
-        if (holder.category.getVisibility() == View.VISIBLE)
-            holder.category.setText(holder.featuredVideo.getCategories() != null ?
-                    holder.featuredVideo.getCategories().get(0).getCategoryName() : "");
+        if (holder.featuredVideo.getCategories() != null) {
+            holder.category.setVisibility(holder.featuredVideo.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
+            if (holder.category.getVisibility() == View.VISIBLE) {
+                holder.category.setText(holder.featuredVideo.getCategories() != null ?
+                        holder.featuredVideo.getCategories().get(0).getCategoryName() : "");
+                holder.category.setBackground(
+                        getBackground(holder.category, position, Color.parseColor(holder.featuredVideo.getCategories().get(0).getColor())));
+            }
+        } else holder.category.setVisibility(View.GONE);
 
         /*Setting name*/
         String name = holder.featuredVideo.getPostOwner().getFirstName() + BLANK_SPACE + holder.featuredVideo.getPostOwner().getLastName();
@@ -127,6 +136,18 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
                         holder.featuredVideo, null);
             }
         });
+    }
+
+    private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        if (colorArray.get(position) == 0) {
+            colorArray.put(position, color);
+        }
+        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke(1, colorArray.get(position));
+        title.setTextColor(colorArray.get(position));
+        return gradientDrawable;
     }
 
     @Override

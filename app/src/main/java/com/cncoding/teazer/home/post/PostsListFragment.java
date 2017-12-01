@@ -35,13 +35,9 @@ public class PostsListFragment extends BaseFragment {
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
-    public static boolean returningFromUpload = false;
-
     private Call<PostList> postListCall;
-    private Callback<PostList> postListCallback;
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
-    private int lastPageCalled = 0;
 
     public PostsListFragment() {
     }
@@ -92,14 +88,8 @@ public class PostsListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (postListAdapter != null && returningFromUpload) {
-            recyclerView.getRecycledViewPool().clear();
-            postListAdapter.notifyDataSetChanged();
-            returningFromUpload = false;
-        }
-        else if (postList != null && postList.isEmpty())
+        if (postList != null)
             getHomePagePosts(1, false);
-
         getParentActivity().showAppBar();
     }
 
@@ -107,27 +97,29 @@ public class PostsListFragment extends BaseFragment {
         progressBar.setVisibility(View.VISIBLE);
         if (page == 1) postList.clear();
 
-        if (postListCallback == null)
-            postListCallback = new Callback<PostList>() {
+        postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
+
+        if (!postListCall.isExecuted())
+            postListCall.enqueue(new Callback<PostList>() {
                 @Override
                 public void onResponse(Call<PostList> call, Response<PostList> response) {
                     try {
                         switch (response.code()) {
                             case 200:
-                                if (response.body().getPosts() != null && response.body().getPosts().size() > 0) {
-                                    is_next_page = response.body().isNextPage();
-                                    postList.addAll(response.body().getPosts());
-                                    recyclerView.getRecycledViewPool().clear();
-                                    postListAdapter.notifyItemRangeInserted(page * 10, response.body().getPosts().size());
-//                                    postListAdapter.notifyDataSetChanged();
+                                PostList tempPostList = response.body();
+                                if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
+                                    is_next_page = tempPostList.isNextPage();
+                                    postList.addAll(tempPostList.getPosts());
+                                    postListAdapter.notifyDataSetChanged();
                                     recyclerView.setVisibility(View.VISIBLE);
                                     dismissProgressBar();
-                                } else if (page == 1){
-                                    showErrorMessage(getString(R.string.no_posts_available));
+                                } else {
+                                    if (page == 1 && postList.isEmpty())
+                                        showErrorMessage(getString(R.string.no_posts_available));
                                 }
                                 break;
                             default:
-                                showErrorMessage("Error " + response.code() +" : " + response.message());
+                                showErrorMessage("Error " + response.code() + " : " + response.message());
                                 break;
                         }
                     } catch (Exception e) {
@@ -149,17 +141,11 @@ public class PostsListFragment extends BaseFragment {
                     if (isAdded()) {
                         if (t.getMessage().contains("resolve"))
                             showErrorMessage("No internet connection found!");
-                        else showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
+                        else
+                            showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
                     }
                 }
-            };
-
-        postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
-
-        lastPageCalled = page;
-
-        if (!postListCall.isExecuted())
-            postListCall.enqueue(postListCallback);
+            });
 
         if (isRefreshing)
             swipeRefreshLayout.setRefreshing(false);

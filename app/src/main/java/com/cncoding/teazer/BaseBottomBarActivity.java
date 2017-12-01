@@ -610,7 +610,12 @@ public class BaseBottomBarActivity extends BaseActivity
                 toolbarCenterTitle.setVisibility(GONE);
         }
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarPlainTitle.getLayoutParams();
-        params.setMarginStart(navigationController.isRootFragment() ? 0 : -18);
+        params.setMarginStart(navigationController.isRootFragment() ? getPixel(14) : -getPixel(18));
+        toolbarPlainTitle.setLayoutParams(params);
+    }
+
+    private int getPixel(int dp) {
+        return (int)((dp * getResources().getDisplayMetrics().density) + 0.5);
     }
 
     public String getToolbarTitle() {
@@ -653,6 +658,12 @@ public class BaseBottomBarActivity extends BaseActivity
     public void pushFragment(Fragment fragment) {
         if (navigationController != null) {
             navigationController.pushFragment(fragment);
+        }
+    }
+
+    public void pushFragmentOnto(Fragment fragment) {
+        if (navigationController != null) {
+            navigationController.pushFragmentOnto(fragment);
         }
     }
 
@@ -811,8 +822,7 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }, 1000);
         finishVideoUploadSession(this);
-        if(fragment instanceof PostsListFragment)
-        {
+        if(fragment instanceof PostsListFragment) {
             ((PostsListFragment)fragment).getHomePagePosts(1,false);
         }
 

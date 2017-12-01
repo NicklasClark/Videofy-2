@@ -744,4 +744,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public interface OnPostDetailsInteractionListener {
         void onPostDetailsInteraction(int action, PostDetails postDetails);
     }
+
+    interface PostDetailsUpdateListener {
+        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
+    }
 }

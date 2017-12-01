@@ -41,10 +41,6 @@
             android:background="@color/colorAccent"
             android:enabled="false"
             android:foreground="@drawable/ripple_light_rounded_2dp"/>
-<!--
-            app:iconSrc="@drawable/ic_tick_circle_outline"
-            app:iconSize="20dp"
-            app:iconPadding="@dimen/padding_default"-->
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

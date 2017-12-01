@@ -19,10 +19,29 @@ public class SharedPrefs {
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
+    private static final String HOME_PAGE_CACHE = "homePageCache";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
     }
+
+//    public static void cacheHomePagePosts(Context context, PostList postList) {
+//        getSharedPreferences(context)
+//                .edit()
+//                .putString(HOME_PAGE_CACHE, new Gson().toJson(postList))
+//                .apply();
+//    }
+//
+//    public static PostList getHomePagePostsCache(Context context) {
+//        return new Gson().fromJson(getSharedPreferences(context).getString(HOME_PAGE_CACHE, null), PostList.class);
+//    }
+//
+//    public static void clearHomePagePostsCache(Context context) {
+//        getSharedPreferences(context)
+//                .edit()
+//                .putString(HOME_PAGE_CACHE, null)
+//                .apply();
+//    }
 
     public static void saveAuthToken(Context context, String authToken) {
         getSharedPreferences(context)

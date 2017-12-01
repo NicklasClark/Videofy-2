@@ -344,6 +344,8 @@ public class MainActivity extends AppCompatActivity
     private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
                                      final ProximaNovaSemiboldButton button, String username) {
 
+//        String profilePicUrl = facebookData.getString("profile_pic");
+
         username = username == null ? facebookProfile.getName() : username;
 
         ApiCallingService.Auth.socialSignUp(new Authorize(
@@ -412,6 +414,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button, String username) {
+
+//        String profilePicUrl = googleAccount.getPhotoUrl().toString();
 
         username = username == null ? googleAccount.getDisplayName() : username;
 

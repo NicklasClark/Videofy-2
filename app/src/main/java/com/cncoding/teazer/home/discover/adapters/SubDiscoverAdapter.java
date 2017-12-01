@@ -80,34 +80,6 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
             String views = BLANK_SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
             holder.views.setText(views);
 
-            Glide.with(context)
-                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                    .placeholder(R.drawable.bg_placeholder)
-                    .crossFade()
-                    .skipMemoryCache(false)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                            if (height < holder.layout.getWidth())
-                                height = holder.layout.getWidth();
-
-                            holder.layout.getLayoutParams().height = height;
-
-                            dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
-                            holder.layout.setVisibility(View.VISIBLE);
-                            return false;
-                        }
-                    })
-                    .into(holder.postThumbnail);
-
             if (holder.postDetails.getPostOwner().hasProfileMedia() && holder.postDetails.getPostOwner().getProfileMedia() != null) {
                 Glide.with(context)
                         .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
@@ -124,6 +96,33 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
             e.printStackTrace();
         }
 
+        Glide.with(context)
+                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                .placeholder(R.drawable.bg_placeholder)
+                .crossFade()
+                .skipMemoryCache(false)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
+                        if (height < holder.layout.getWidth())
+                            height = holder.layout.getWidth();
+
+                        holder.layout.getLayoutParams().height = height;
+
+                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
+//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+                        holder.layout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+                .into(holder.postThumbnail);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override

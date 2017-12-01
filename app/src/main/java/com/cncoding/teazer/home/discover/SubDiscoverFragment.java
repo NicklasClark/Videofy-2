@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.discover;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -52,6 +55,7 @@ public class SubDiscoverFragment extends BaseFragment {
 
     @BindView(R.id.my_interests_tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
+    @BindView(R.id.list_layout) LinearLayout listLayout;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
@@ -92,7 +96,6 @@ public class SubDiscoverFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getParentActivity().setAppBarElevation(1);
         // Inflate the searchContainer for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sub_discover, container, false);
         ButterKnife.bind(this, rootView);
@@ -123,7 +126,7 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void prepareMostPopularLayout() {
-        recyclerView.setVisibility(View.VISIBLE);
+        listLayout.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -160,7 +163,7 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void prepareTrendingLayout() {
-        recyclerView.setVisibility(View.VISIBLE);
+        listLayout.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -185,8 +188,12 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void populateTabs() {
-        for (int i = 0; i < categories.size(); i++)
-            tabLayout.addTab(tabLayout.newTab().setText(categories.get(i).getCategoryName()));
+        for (int i = 0; i < categories.size(); i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(categories.get(i).getCategoryName()), i);
+//            Set tab text color
+            ((AppCompatTextView) ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i)).getChildAt(1))
+                    .setTextColor(Color.parseColor(categories.get(i).getColor()));
+        }
     }
 
     private static class GetTrendingVideos extends AsyncTask<Integer, Void, Void> {
@@ -296,7 +303,7 @@ public class SubDiscoverFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 //        return super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_edit) {
-            getParentActivity().pushFragment(Interests.newInstance(true, categories));
+            getParentActivity().pushFragmentOnto(Interests.newInstance(true, categories));
             return true;
         }
         return false;
@@ -310,7 +317,6 @@ public class SubDiscoverFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        getParentActivity().setAppBarElevation(0);
         getParentActivity().updateToolbarTitle(previousTitle);
     }
 

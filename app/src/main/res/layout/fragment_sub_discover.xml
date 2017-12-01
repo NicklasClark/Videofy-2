@@ -7,33 +7,42 @@
     android:background="@color/material_grey200"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <LinearLayout
+        android:id="@+id/list_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="7dp"
-            android:clipToPadding="false"
-            app:layoutManager="StaggeredGridLayoutManager" />
+            android:layout_height="0.8dp"
+            android:background="@color/colorShadow"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="7dp"
+                android:clipToPadding="false"
+                app:layoutManager="StaggeredGridLayoutManager" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/my_interests_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:tabMode="scrollable"
-        android:background="@color/colorPrimary"
-        app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorPrimaryOld"
-        app:tabIndicatorColor="@color/colorPrimaryOld"
-        app:tabIndicatorHeight="@dimen/padding_thin"
+        style="@style/BottomTabLayout.NotificationTab"
         android:layout_alignParentTop="true"
-        android:elevation="6dp"
+        app:tabPaddingStart="@dimen/padding_half"
+        app:tabPaddingEnd="@dimen/padding_half"
         android:visibility="gone"/>
 
     <android.support.v4.view.ViewPager
@@ -43,8 +52,7 @@
         android:paddingTop="@dimen/padding_half"
         android:paddingBottom="@dimen/padding_half"
         android:visibility="gone"
-        android:layout_below="@+id/my_interests_tab_layout"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_below="@+id/my_interests_tab_layout" />
 
     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
         android:id="@+id/no_posts"
