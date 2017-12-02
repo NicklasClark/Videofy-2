@@ -17,6 +17,7 @@
             android:animateLayoutChanges="true"
             android:layout_height="wrap_content">
 
+
             <RelativeLayout
                 android:id="@+id/video_preview_thumbnail_container"
                 android:layout_width="match_parent"
@@ -59,7 +60,13 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:theme="@style/ProgressBarTheme"
                 android:visibility="invisible" />
-
+            <Button
+                android:id="@+id/btnTrim"
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal"
+                android:text="Trim video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -202,7 +209,6 @@
                     />
 
             </RelativeLayout>
-
         </LinearLayout>
 
     </ScrollView>

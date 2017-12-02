@@ -868,15 +868,20 @@ public class CameraFragment extends Fragment {
                     mPreviewSession.stopRepeating();
                     mPreviewSession.abortCaptures();
 
-                    //stopping recording timer
-                    timeSwapBuff += timeInMilliseconds;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //stopping recording timer
+                            timeSwapBuff += timeInMilliseconds;
 
-                    startTime = 0L;
-                    timeInMilliseconds = 0L;
-                    timeSwapBuff = 0L;
-                    updatedTime = 0L;
-                    videoDuration.setVisibility(View.INVISIBLE);
-                    customHandler.removeCallbacks(updateTimerThread);
+                            startTime = 0L;
+                            timeInMilliseconds = 0L;
+                            timeSwapBuff = 0L;
+                            updatedTime = 0L;
+                            videoDuration.setVisibility(View.INVISIBLE);
+                            customHandler.removeCallbacks(updateTimerThread);
+                        }
+                    });
 
                     //checking flash status before stopping camera recording
                     if (cameraId.equals(String.valueOf(CAMERA_BACK))) {

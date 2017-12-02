@@ -432,4 +432,9 @@ public class CameraActivity extends AppCompatActivity
         if (getSupportFragmentManager().getBackStackEntryCount() == 1)
             cameraFragment.startPreview();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

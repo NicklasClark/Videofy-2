@@ -28,13 +28,13 @@ import iknow.android.utils.thread.BackgroundExecutor;
 public class TrimVideoUtil {
 
     private static final String TAG = TrimVideoUtil.class.getSimpleName();
-    public static final int VIDEO_MAX_DURATION = 15;// 15秒
-    public static final int MIN_TIME_FRAME = 5;
+    public static final int VIDEO_MAX_DURATION = 15;
+    public static final int MIN_TIME_FRAME = 3;
     private static final int thumb_Width = (DeviceUtil.getDeviceWidth() - UnitConverter.dpToPx(20)) / VIDEO_MAX_DURATION;
     private static final int thumb_Height = UnitConverter.dpToPx(60);
     private static final long one_frame_time = 1000000;
 
-    public static void trimVideo(Context context, String inputFile, String outputFile, long startMs, long endMs, final OnTrimVideoListener callback) {
+    public static void trimVideo(Context context, String inputFile, String outputFile, final long startMs, final long endMs, final OnTrimVideoListener callback) {
         final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         final String outputName = "trimmedVideo_" + timeStamp + ".mp4";
 
@@ -51,7 +51,8 @@ public class TrimVideoUtil {
 
                 @Override
                 public void onSuccess(String s) {
-                    callback.onFinishTrim(null);
+//                    genVideoUsingMp4Parser(src, file, startMs, endMs, callback);
+                    callback.onFinishTrim(outputName);
                 }
 
                 @Override
@@ -81,7 +82,6 @@ public class TrimVideoUtil {
                        long numThumbs = videoLengthInMs < one_frame_time ? 1 : (videoLengthInMs / one_frame_time);
                        final long interval = videoLengthInMs / numThumbs;
 
-                       //每次截取到3帧之后上报
                        for (long i = 0; i < numThumbs; ++i) {
                            Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
                            try {

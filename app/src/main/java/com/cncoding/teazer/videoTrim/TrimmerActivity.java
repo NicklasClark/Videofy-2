@@ -1,5 +1,6 @@
 package com.cncoding.teazer.videoTrim;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -20,7 +21,7 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
 
     private static final String TAG = "jason";
     private static final String STATE_IS_PAUSED = "isPaused";
-    public static final int VIDEO_TRIM_REQUEST_CODE = 0x001;
+    public static final int VIDEO_TRIM_REQUEST_CODE = 101;
     private File tempFile;
     private ActivityTrimmerBinding binding;
 
@@ -73,8 +74,15 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
     }
 
     @Override
-    public void onFinishTrim(Uri uri) {
-        Looper.prepare();
+    public void onFinishTrim(String uri) {
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+        Intent intent = new Intent();
+        intent.putExtra("trimmed_path", uri);
+        setResult(Activity.RESULT_OK, intent);
+
         finish();
     }
 

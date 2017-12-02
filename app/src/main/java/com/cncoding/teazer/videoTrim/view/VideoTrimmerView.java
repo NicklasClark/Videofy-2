@@ -40,12 +40,6 @@ import iknow.android.utils.thread.BackgroundExecutor;
 import iknow.android.utils.thread.UiThreadExecutor;
 
 public class VideoTrimmerView extends FrameLayout {
-
-    /**
-     * 计算公式:
-     * PixRangeMax = (视频总长 * SCREEN_WIDTH) / 视频最长的裁剪时间(15s)
-     * 视频总长/PixRangeMax = 当前视频的时间/游标当前所在位置
-     */
     private static boolean isDebugMode = false;
 
     private static final String TAG = VideoTrimmerView.class.getSimpleName();
@@ -414,7 +408,7 @@ public class VideoTrimmerView extends FrameLayout {
 
     private void onSaveClicked() {
         if (mEndPosition/1000 - mStartPosition/1000 < TrimVideoUtil.MIN_TIME_FRAME) {
-            Toast.makeText(mContext, "视频长不足5秒,无法上传", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
         }else{
             mVideoView.pause();
             TrimVideoUtil.trimVideo(mContext, mSrc.getPath(), getTrimmedVideoPath(), mStartPosition, mEndPosition, mOnTrimVideoListener);
