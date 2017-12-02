@@ -588,12 +588,12 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_hide:
-                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.action_delete:
-                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
-                    return true;
+//                case R.id.action_hide:
+//                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                case R.id.action_delete:
+//                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+//                    return true;
                 case R.id.action_profile_report:
                     if (postDetails.canReact()) {
                         FragmentManager fragmentManager = getFragmentManager();
