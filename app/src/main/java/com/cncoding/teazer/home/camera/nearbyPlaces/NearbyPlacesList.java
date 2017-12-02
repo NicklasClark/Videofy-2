@@ -42,7 +42,7 @@ public class NearbyPlacesList extends Fragment {
     private static final String NEARBY_PLACES = "nearbyPlaces";
     public static final int TURN_ON_LOCATION_ACTION = 454;
     public static final int NEARBY_PLACE_AUTOCOMPLETE_ACTION = 453;
-    private static final String CURRENT_LOCATION = "currentLocation";
+//    private static final String CURRENT_LOCATION = "currentLocation";
     private static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
 
     @BindView(R.id.nearby_places_recycler_view) RecyclerView recyclerView;
@@ -171,7 +171,7 @@ public class NearbyPlacesList extends Fragment {
             } else {
                 handler = new Handler();
             }
-            handler.postDelayed(runnable, 1500);
+            handler.postDelayed(runnable, 1000);
         }
     }
 

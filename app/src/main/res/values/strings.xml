@@ -244,6 +244,7 @@
     <string name="discover">Discover</string>
     <string name="search_videos_or_places">Search Videos or Places</string>
     <string name="phone_number_invalid"><![CDATA[Phone number should not be empty & only contain digits]]></string>
+    <string name="enter_phone_number"><![CDATA[Enter your phone number first]]></string>
     <string name="required">This field is required</string>
     <string name="required_categories">Please select a category to continue</string>
     <string name="play_button">Play button</string>
@@ -256,5 +257,12 @@
     <string name="something_went_wrong">Something went wrong!\nPlease try again later.</string>
     <string name="edit">EDIT</string>
     <string name="people">People</string>
+    <string name="error_fetching_posts">There was an error fetching posts. Please try again later.</string>
+    <string name="error_fetching_data">There was an error fetching the data. Please try again later.</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="no_videos_match_your_search_criteria">No videos match your search criteria</string>
+    <string name="no_one_matches_your_search_criteria">No one matches your search criteria</string>
+    <string name="search_for_videos">Search for videos</string>
+    <string name="search_for_people">Search for people</string>
+    <string name="already_have_otp">Already have OTP?</string>
 </resources>

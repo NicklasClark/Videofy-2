@@ -1,16 +1,15 @@
 package com.cncoding.teazer.home.discover.search;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -20,7 +19,6 @@ import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -29,39 +27,49 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A fragment representing a list of Items.
- */
+import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
+
 public class PeopleTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
+    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
 
-//    private OnListFragmentInteractionListener mListener;
-    private boolean isSearchTerm;
     private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;
+    private Call<UsersList> usersListCall;
+    private Callback<UsersList> usersListCallback;
+    private String searchTerm;
+    private boolean isSearchTerm;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public PeopleTabFragment() {
     }
 
-    public static PeopleTabFragment newInstance() {
-        return new PeopleTabFragment();
+    public static PeopleTabFragment newInstance(String searchTerm) {
+        PeopleTabFragment fragment = new PeopleTabFragment();
+        Bundle args = new Bundle();
+        args.putString(SEARCH_TERM, searchTerm);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            searchTerm = getArguments().getString(SEARCH_TERM);
+            isSearchTerm = searchTerm != null && !searchTerm.equals("");
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
         usersList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(getContext(), false, usersList);
+        adapter = new DiscoverSearchAdapter(getContext(), false, usersList, null);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -69,7 +77,8 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetUsersListToFollow(PeopleTabFragment.this).execute(page);
+                    getUsersList(page, searchTerm, isSearchTerm);
+//                    new GetUsersListToFollow(PeopleTabFragment.this).execute(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -78,7 +87,8 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetUsersListToFollow(PeopleTabFragment.this).execute(1);
+                getUsersList(1, searchTerm, isSearchTerm);
+//                new GetUsersListToFollow(PeopleTabFragment.this).execute(1);
             }
         });
 
@@ -88,92 +98,69 @@ public class PeopleTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (usersListCallback == null) {
+            usersListCallback = new Callback<UsersList>() {
+                @Override
+                public void onResponse(Call<UsersList> call, Response<UsersList> response) {
+                    if (response.code() == 200) {
+                        UsersList users = response.body();
+                        is_next_page = users.isNextPage();
+                        if (users.getUsers().size() > 0) {
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            noPosts.setVisibility(View.GONE);
+                            usersList.addAll(users.getUsers());
+                            recyclerView.getRecycledViewPool().clear();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                            noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+                            noPosts.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        noPosts.setVisibility(View.VISIBLE);
+                        noPosts.setText(R.string.error_fetching_data);
+                        noPosts.setCompoundDrawablesWithIntrinsicBounds(
+                                0, R.drawable.ic_no_data_placeholder, 0, 0);
+                        Log.e("getUsersListToFollow", response.code() + "_" + response.message());
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<UsersList> call, Throwable t) {
+                    if (isAdded()) {
+                        Log.e("getUsersListToFollow", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            };
+        }
         if (usersList != null && usersList.isEmpty())
-            new GetUsersListToFollow(this).execute(1);
+            getUsersList(1, searchTerm, isSearchTerm);
     }
 
-    private static class GetUsersListToFollow extends AsyncTask<Integer, Void, Void> {
+    private void getUsersList(int page, String searchTerm, boolean isSearchTerm) {
+        if (page == 1)
+            usersList.clear();
 
-        private WeakReference<PeopleTabFragment> reference;
+        usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
+                ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
 
-        GetUsersListToFollow(PeopleTabFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().usersList.clear();
-
-            ApiCallingService.Discover.getUsersListToFollow(integers[0], reference.get().getContext())
-                    .enqueue(new Callback<UsersList>() {
-                        @Override
-                        public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                            if (response.code() == 200) {
-                                UsersList usersList = response.body();
-                                reference.get().is_next_page = usersList.isNextPage();
-                                if (usersList.getUsers().size() > 0) {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    reference.get().noNotifications.setVisibility(View.GONE);
-                                    reference.get().usersList.addAll(usersList.getUsers());
-                                    reference.get().recyclerView.getRecycledViewPool().clear();
-                                    reference.get().adapter.notifyDataSetChanged();
-                                } else {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
-                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
-                                }
-                            } else {
-                                Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
-                        }
-
-                        @Override
-                        public void onFailure(Call<UsersList> call, Throwable t) {
-                            Toast.makeText(reference.get().getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
-            return null;
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
+        if (!usersListCall.isExecuted())
+            usersListCall.enqueue(usersListCallback);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        noPosts.setText(R.string.search_for_videos);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (usersListCall != null && usersListCall.isExecuted())
+            usersListCall.cancel();
         adapter = null;
     }
-
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p/>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnListFragmentInteractionListener {
-//        void onListFragmentInteraction(Notification item);
-//    }
 }

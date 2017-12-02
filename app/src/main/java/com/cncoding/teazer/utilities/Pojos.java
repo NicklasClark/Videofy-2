@@ -8,9 +8,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -373,6 +370,122 @@ public class Pojos {
 
             public ArrayList<MiniProfile> getUsers() {
                 return users;
+            }
+        }
+    }
+
+    public static class Discover {
+
+        public static class VideosList {
+            private boolean next_page;
+            private ArrayList<Videos> videos;
+
+            public VideosList(boolean next_page, ArrayList<Videos> videos) {
+                this.next_page = next_page;
+                this.videos = videos;
+            }
+
+            public boolean isNextPage() {
+                return next_page;
+            }
+
+            public ArrayList<Videos> getVideos() {
+                return videos;
+            }
+        }
+
+        public static class Videos implements Parcelable {
+            private int post_id;
+            private int posted_by;
+            private int likes;
+            private int views;
+            private int total_reactions;
+            private String title;
+            private String created_at;
+            private Medias post_video_info;
+
+            public Videos(int post_id, int posted_by, int likes, int views, int total_reactions,
+                          String title, String created_at, Medias post_video_info) {
+                this.post_id = post_id;
+                this.posted_by = posted_by;
+                this.likes = likes;
+                this.views = views;
+                this.total_reactions = total_reactions;
+                this.title = title;
+                this.created_at = created_at;
+                this.post_video_info = post_video_info;
+            }
+
+            protected Videos(Parcel in) {
+                post_id = in.readInt();
+                posted_by = in.readInt();
+                likes = in.readInt();
+                views = in.readInt();
+                total_reactions = in.readInt();
+                title = in.readString();
+                created_at = in.readString();
+                post_video_info = in.readParcelable(Medias.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(post_id);
+                dest.writeInt(posted_by);
+                dest.writeInt(likes);
+                dest.writeInt(views);
+                dest.writeInt(total_reactions);
+                dest.writeString(title);
+                dest.writeString(created_at);
+                dest.writeParcelable(post_video_info, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<Videos> CREATOR = new Creator<Videos>() {
+                @Override
+                public Videos createFromParcel(Parcel in) {
+                    return new Videos(in);
+                }
+
+                @Override
+                public Videos[] newArray(int size) {
+                    return new Videos[size];
+                }
+            };
+
+            public int getPostId() {
+                return post_id;
+            }
+
+            public int getPostedBy() {
+                return posted_by;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public int getViews() {
+                return views;
+            }
+
+            public int getTotalReactions() {
+                return total_reactions;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getCreatedAt() {
+                return created_at;
+            }
+
+            public Medias getPostVideoInfo() {
+                return post_video_info;
             }
         }
     }
@@ -2682,45 +2795,32 @@ public class Pojos {
     }
 
     public static class Category implements Parcelable {
-        int category_id;
-        String category_name;
+        private int category_id;
+        private String category_name;
+        private String color;
 
-        public Category(int category_id, String category_name) {
+        public Category(int category_id, String category_name, String color) {
             this.category_id = category_id;
             this.category_name = category_name;
+            this.color = color;
         }
 
-        Category(JSONObject jsonObject) {
-            try {
-                category_id = jsonObject.getInt("category_id");
-                category_name = jsonObject.getString("category_name");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        protected Category(Parcel in) {
+            category_id = in.readInt();
+            category_name = in.readString();
+            color = in.readString();
         }
 
-        public int getCategoryId() {
-            return category_id;
-        }
-
-        public String getCategoryName() {
-            return category_name;
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(category_id);
+            dest.writeString(category_name);
+            dest.writeString(color);
         }
 
         @Override
         public int describeContents() {
             return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(category_id);
-            parcel.writeString(category_name);
-        }
-
-        Category(Parcel in) {
-            category_id = in.readInt();
-            category_name = in.readString();
         }
 
         public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -2734,6 +2834,18 @@ public class Pojos {
                 return new Category[size];
             }
         };
+
+        public int getCategoryId() {
+            return category_id;
+        }
+
+        public String getCategoryName() {
+            return category_name;
+        }
+
+        public String getColor() {
+            return color;
+        }
     }
 
     public static class UploadParams implements Parcelable {

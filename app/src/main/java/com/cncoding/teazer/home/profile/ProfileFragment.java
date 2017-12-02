@@ -121,8 +121,6 @@ public class ProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         getParentActivity().updateToolbarTitle("My Profile");
 
-
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
 
@@ -214,8 +212,8 @@ public class ProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getProfileDetail();
-        getParentActivity().hidereport();
-      //  getParentActivity().updateToolbarTitle("Profile");
+//        getParentActivity().hidereport();
+        getParentActivity().updateToolbarTitle("Profile");
 
     }
 
@@ -418,8 +416,6 @@ public class ProfileFragment extends BaseFragment {
                 }
             });
         } else {
-
-
         }
     }
 }

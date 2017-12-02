@@ -380,8 +380,6 @@ import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_GOOGLE_ACTION;
 //                                  Profile facebookProfile, Bundle facebookData, @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button);
 //    }
 
-
-
 public class WelcomeFragment extends Fragment implements NetworkStateReceiver.NetworkStateListener {
 
     //    @BindView(R.id.welcome_video) VideoView welcomeVideo;
@@ -569,8 +567,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
             String id = object.getString("id");
 
             try {
-                URL profile_pic = new URL("https://graph.facebook.com/" + id + "/picture?width=200&height=200");
-                Log.i("profile_pic", profile_pic + "");
+                URL profile_pic = new URL("https://graph.facebook.com/" + id + "/picture?width=400&height=400");
+//                Log.i("profile_pic", profile_pic + "");
                 bundle.putString("profile_pic", profile_pic.toString());
 
             } catch (MalformedURLException e) {

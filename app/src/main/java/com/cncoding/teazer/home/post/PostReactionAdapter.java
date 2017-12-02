@@ -33,7 +33,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
 
 /**
@@ -117,9 +116,12 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                     .into(holder.profilePic);
 
         holder.caption.setText(postReaction.getReact_title());
-        holder.name.setText(postOwner.getFirstName() + " " + postOwner.getLastName());
-        holder.likes.setText("  " + postReaction.getLikes());
-        holder.views.setText("  " + postReaction.getViews());
+        String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
+        holder.name.setText(nameText);
+        String likesText = "  " + postReaction.getLikes();
+        holder.likes.setText(likesText);
+        String viewsText = "  " + postReaction.getViews();
+        holder.views.setText(viewsText);
 
         if (listener != null) {
             View.OnClickListener viewReactionDetails = new View.OnClickListener() {
@@ -139,7 +141,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
                                 }
                             });
-                    listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
+//                    listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
                 }
             };
 //            View.OnClickListener viewProfile = new View.OnClickListener() {

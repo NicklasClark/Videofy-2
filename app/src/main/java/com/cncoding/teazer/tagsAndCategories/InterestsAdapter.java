@@ -1,8 +1,10 @@
 package com.cncoding.teazer.tagsAndCategories;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.view.animation.AnimationUtils;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.utilities.Pojos.Category;
 
 import java.util.ArrayList;
@@ -24,40 +27,33 @@ import butterknife.ButterKnife;
 
 public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.ViewHolder> {
 
+    private Typeface REGULAR;
+    private Typeface SEMI_BOLD;
     private ArrayList<Category> interestsList;
     private Interests interests;
-    private boolean isEditing;
+    private SparseIntArray sparseIntArray;
     private SparseBooleanArray selectedInterestsArray;
     private SparseArray<Category> selectedInterests;
 
-    InterestsAdapter(ArrayList<Category> interestsList, Interests interests, boolean isEditing, SparseBooleanArray categories) {
+    InterestsAdapter(ArrayList<Category> interestsList, Interests interests, SparseBooleanArray categories) {
         this.interestsList = interestsList;
         this.interests = interests;
-        this.isEditing = isEditing;
-        if (isEditing) {
-            selectedInterestsArray = categories;
-        } else
-            selectedInterestsArray = new SparseBooleanArray();
+        REGULAR = new TypeFactory(interests.getContext()).regular;
+        SEMI_BOLD = new TypeFactory(interests.getContext()).semiBold;
+        sparseIntArray = new SparseIntArray();
+        selectedInterestsArray = categories != null ? categories : new SparseBooleanArray();
         selectedInterests = new SparseArray<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-        if (!isEditing)
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chip, parent, false);
-        else
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chip, parent, false);
         return new InterestsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String categoryText;
-        if (!isEditing)
-            categoryText = "+ " + interestsList.get(position).getCategoryName();
-        else categoryText = interestsList.get(position).getCategoryName();
+        String categoryText = "+ " + interestsList.get(position).getCategoryName();
         holder.chip.setText(categoryText);
 
         holder.chip.setChecked(selectedInterestsArray.get(position));
@@ -87,19 +83,15 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean animate) {
         if (view.isChecked()) {
             selectedInterests.put(position, interestsList.get(position));
-            if (!isEditing) {
-                view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
-                if (animate)
-                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
-            }
+            view.setTypeface(SEMI_BOLD);
+            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_selected));
         } else {
             selectedInterests.delete(position);
-            if (!isEditing) {
-                view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
-                if (animate)
-                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
-            }
+            view.setTypeface(REGULAR);
+            view.setBackground(interests.getActivity().getResources().getDrawable(R.drawable.chip_default));
         }
+        if (animate)
+            view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
     @Override
