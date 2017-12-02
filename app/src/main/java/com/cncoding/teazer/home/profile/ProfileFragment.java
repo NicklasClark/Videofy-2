@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -119,8 +118,6 @@ public class ProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         getParentActivity().updateToolbarTitle("My Profile");
 
-
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
 
@@ -190,8 +187,8 @@ public class ProfileFragment extends BaseFragment {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBodyText = "Check it out. Your message goes here";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject here");
+                String shareBodyText = "https://play.google.com/store/apps/details?id=com.app_towertwtm.layout";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Teazer App");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
                 startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
 
@@ -367,7 +364,6 @@ public class ProfileFragment extends BaseFragment {
                 }
             }.execute();
 
-
             progressbar.setVisibility(View.GONE);
             coordinatorLayout.setVisibility(View.VISIBLE);
         }
@@ -416,8 +412,6 @@ public class ProfileFragment extends BaseFragment {
                 }
             });
         } else {
-
-
         }
     }
 }

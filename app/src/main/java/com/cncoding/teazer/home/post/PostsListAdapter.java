@@ -1,6 +1,8 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -20,7 +22,7 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,15 +38,17 @@ import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.ViewHolder> {
 
+    private SparseIntArray colorArray;
     private SparseIntArray dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
-    private List<PostDetails> posts;
+    private ArrayList<PostDetails> posts;
     private Context context;
 
-    PostsListAdapter(List<PostDetails> posts, Context context) {
+    PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
         dimensionSparseArray = new SparseIntArray();
+        colorArray = new SparseIntArray();
 
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
@@ -72,34 +76,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
         }
 
-        Glide.with(context)
-                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
-                .placeholder(R.drawable.bg_placeholder)
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                        if (height < holder.layout.getWidth())
-                            height = holder.layout.getWidth();
-
-                        holder.layout.getLayoutParams().height = height;
-
-                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
-                        holder.layout.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
-                .into(holder.postThumbnail);
-
         if (postOwner.hasProfileMedia())
             Glide.with(context)
                     .load(postOwner.getProfileMedia().getThumbUrl())
@@ -117,10 +93,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         holder.caption.setText(title);
         holder.caption.setVisibility(View.VISIBLE);
 
-        if (holder.postDetails.getCategories().size() > 0)
-            holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
-        else
-            holder.category.setVisibility(View.GONE);
+        if (holder.postDetails.getCategories() != null) {
+            holder.category.setVisibility(holder.postDetails.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
+            if (holder.category.getVisibility() == View.VISIBLE) {
+                holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
+                holder.category.setBackground(
+                        getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
+            }
+        } else holder.category.setVisibility(View.GONE);
 
         String name = postOwner.getUserName();
         holder.name.setText(name);
@@ -151,6 +131,47 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.profilePic.setOnClickListener(viewProfile);
             holder.name.setOnClickListener(viewProfile);
         }
+
+        Glide.with(context)
+                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                .crossFade()
+                .placeholder(R.drawable.bg_placeholder)
+                .skipMemoryCache(false)
+//                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
+                        if (height < holder.layout.getWidth())
+                            height = holder.layout.getWidth();
+
+                        holder.layout.getLayoutParams().height = height;
+
+                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
+//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+                        holder.layout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+                .into(holder.postThumbnail);
+    }
+
+    private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        if (colorArray.get(position) == 0) {
+            colorArray.put(position, color);
+        }
+        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke(1, colorArray.get(position));
+        title.setTextColor(colorArray.get(position));
+        return gradientDrawable;
     }
 
     @Override

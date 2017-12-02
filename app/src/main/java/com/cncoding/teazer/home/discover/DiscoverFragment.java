@@ -228,8 +228,10 @@ public class DiscoverFragment extends BaseFragment {
 
                         @Override
                         public void onFailure(Call<LandingPosts> call, Throwable t) {
-                            Log.e("GetDiscoverLandingPosts", t.getMessage());
-                            reference.get().showErrorMessage(t.getMessage(), true);
+                            if (reference.get().isAdded()) {
+                                Log.e("GetDiscoverLandingPosts", t.getMessage());
+                                reference.get().showErrorMessage(t.getMessage(), true);
+                            }
                         }
                     });
             return null;
@@ -273,8 +275,10 @@ public class DiscoverFragment extends BaseFragment {
 
                         @Override
                         public void onFailure(Call<PostList> call, Throwable t) {
-                            Log.e("GetFeaturedPosts", t.getMessage());
-                            reference.get().showErrorMessage(t.getMessage(), false);
+                            if (reference.get().isAdded()) {
+                                Log.e("GetFeaturedPosts", t.getMessage());
+                                reference.get().showErrorMessage(t.getMessage(), false);
+                            }
                         }
                     });
             return null;

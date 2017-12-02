@@ -8,9 +8,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -1968,25 +1965,9 @@ public class Pojos {
             private ProfileMedia profile_media;
             private ArrayList<String> highlights;
             private MetaData meta_data;
-            private boolean isActioned;
+            private boolean request_sent;
+            private boolean following;
 
-            public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
-                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
-                                ArrayList<String> highlights, MetaData meta_data, boolean isActioned) {
-                this.notification_id = notification_id;
-                this.notification_type = notification_type;
-                this.source_id = source_id;
-                this.account_type = account_type;
-                this.title = title;
-                this.message = message;
-                this.created_at = created_at;
-                this.has_profile_media = has_profile_media;
-                this.is_actioned = is_actioned;
-                this.profile_media = profile_media;
-                this.highlights = highlights;
-                this.meta_data = meta_data;
-                this.isActioned = isActioned;
-            }
 
             protected Notification(Parcel in) {
                 notification_id = in.readInt();
@@ -2001,7 +1982,28 @@ public class Pojos {
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 highlights = in.createStringArrayList();
                 meta_data = in.readParcelable(MetaData.class.getClassLoader());
-                isActioned = in.readByte() != 0;
+                request_sent = in.readByte() != 0;
+                following = in.readByte() != 0;
+            }
+
+            public Notification(int notification_id, int notification_type, int source_id, int account_type,
+                                String title, String message, String created_at, boolean has_profile_media, boolean is_actioned,
+                                ProfileMedia profile_media, ArrayList<String> highlights, MetaData meta_data, boolean isActioned,
+                                boolean request_sent, boolean following) {
+                this.notification_id = notification_id;
+                this.notification_type = notification_type;
+                this.source_id = source_id;
+                this.account_type = account_type;
+                this.title = title;
+                this.message = message;
+                this.created_at = created_at;
+                this.has_profile_media = has_profile_media;
+                this.is_actioned = is_actioned;
+                this.profile_media = profile_media;
+                this.highlights = highlights;
+                this.meta_data = meta_data;
+                this.request_sent = request_sent;
+                this.following = following;
             }
 
             @Override
@@ -2018,7 +2020,8 @@ public class Pojos {
                 dest.writeParcelable(profile_media, flags);
                 dest.writeStringList(highlights);
                 dest.writeParcelable(meta_data, flags);
-                dest.writeByte((byte) (isActioned ? 1 : 0));
+                dest.writeByte((byte) (request_sent ? 1 : 0));
+                dest.writeByte((byte) (following ? 1 : 0));
             }
 
             @Override
@@ -2059,9 +2062,15 @@ public class Pojos {
             }
 
             public boolean isActioned() {
-                return isActioned;
+                return is_actioned;
             }
 
+            public boolean isFollowing() {
+                return following;
+            }
+            public boolean isRequest_sent() {
+                return request_sent;
+            }
             public String getMessage() {
                 return message;
             }
@@ -2786,45 +2795,32 @@ public class Pojos {
     }
 
     public static class Category implements Parcelable {
-        int category_id;
-        String category_name;
+        private int category_id;
+        private String category_name;
+        private String color;
 
-        public Category(int category_id, String category_name) {
+        public Category(int category_id, String category_name, String color) {
             this.category_id = category_id;
             this.category_name = category_name;
+            this.color = color;
         }
 
-        Category(JSONObject jsonObject) {
-            try {
-                category_id = jsonObject.getInt("category_id");
-                category_name = jsonObject.getString("category_name");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        protected Category(Parcel in) {
+            category_id = in.readInt();
+            category_name = in.readString();
+            color = in.readString();
         }
 
-        public int getCategoryId() {
-            return category_id;
-        }
-
-        public String getCategoryName() {
-            return category_name;
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(category_id);
+            dest.writeString(category_name);
+            dest.writeString(color);
         }
 
         @Override
         public int describeContents() {
             return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(category_id);
-            parcel.writeString(category_name);
-        }
-
-        Category(Parcel in) {
-            category_id = in.readInt();
-            category_name = in.readString();
         }
 
         public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -2838,6 +2834,18 @@ public class Pojos {
                 return new Category[size];
             }
         };
+
+        public int getCategoryId() {
+            return category_id;
+        }
+
+        public String getCategoryName() {
+            return category_name;
+        }
+
+        public String getColor() {
+            return color;
+        }
     }
 
     public static class UploadParams implements Parcelable {

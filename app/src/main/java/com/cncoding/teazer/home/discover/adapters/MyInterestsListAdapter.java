@@ -52,16 +52,10 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
         if (position < 3) {
             holder.header.setText(myInterestsCategoriesArrayList.get(position).getCategoryName());
 
-            if (!myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()).isEmpty()) {
-                holder.recyclerView.setVisibility(View.VISIBLE);
-                holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
-                        myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
-            } else {
-                holder.recyclerView.setVisibility(View.GONE);
-                holder.noMyInterests.setVisibility(View.VISIBLE);
-                holder.noMyInterests.setText(R.string.sorry_message);
-            }
+            holder.recyclerView.setVisibility(View.VISIBLE);
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
+                    myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
         }
     }
 

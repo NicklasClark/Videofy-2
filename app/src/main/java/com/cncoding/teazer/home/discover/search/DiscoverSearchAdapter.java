@@ -88,7 +88,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case TYPE_VIDEOS:
-                VideosViewHolder holder1 = (VideosViewHolder) viewHolder;
+                final VideosViewHolder holder1 = (VideosViewHolder) viewHolder;
                 holder1.video = videosList.get(position);
                 holder1.content.setText(holder1.video.getTitle());
 
@@ -97,6 +97,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         .placeholder(R.drawable.bg_placeholder)
                         .crossFade()
                         .into(holder1.thumbnail);
+
+                holder1.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mListener != null)
+                            mListener.onDiscoverSearchInteraction(isVideosTab, holder1.video.getPostId());
+                    }
+                });
                 break;
             case TYPE_PEOPLE:
                 final PeopleViewHolder holder2 = (PeopleViewHolder) viewHolder;
@@ -139,7 +147,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         switch (view.getId()) {
                             case R.id.root_layout:
                                 if (mListener != null)
-                                    mListener.onDiscoverSearchInteraction(holder2.user.getUserId());
+                                    mListener.onDiscoverSearchInteraction(isVideosTab, holder2.user.getUserId());
                                 break;
                             case R.id.action:
                                 if (holder2.action.getText().equals(context.getString(R.string.follow))) {
@@ -295,6 +303,6 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public interface OnDiscoverSearchInteractionListener {
-        void onDiscoverSearchInteraction(int userId);
+        void onDiscoverSearchInteraction(boolean isVideosTab, int id);
     }
 }

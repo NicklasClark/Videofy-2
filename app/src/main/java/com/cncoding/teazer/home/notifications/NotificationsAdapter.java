@@ -101,7 +101,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
 
         View.OnClickListener profileListener;
 
@@ -124,6 +124,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                    @Override
 //                    public void onClick(View view) {
 //
+//                        mListener.onNotificationsInteraction(false, null,
+//                                null, holder1.notification.getMetaData().getFromId(),"");
 //                    }
 //                });
 
@@ -142,19 +144,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     holder1.notification.getNotificationType() == TAGGED_YOU_IN_A_VIDEO) {
                                 ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                         .enqueue(new Callback<PostDetails>() {
-
-
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, -1,null);
-                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                            null, -1, null);
+                                                else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                                else{
+                                                else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
-                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                            }
+                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
 
                                             @Override
@@ -173,8 +173,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, -1,null);
-                                                else if(response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                            null, -1, null);
+                                                else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
@@ -199,7 +199,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                         mListener.onNotificationsInteraction(false, null,
-                                null, holder1.notification.getMetaData().getFromId(),"");
+                                null, holder1.notification.getMetaData().getFromId(), "");
                     }
                 };
 
@@ -220,33 +220,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 holder2.content.setText(getString(getHighlights(holder2.notification.getHighlights()), holder2.notification.getMessage()));
 
-                holder2.isActioned =notificationsList.getNotifications().get(position).isActioned();
+                holder2.isActioned=notificationsList.getNotifications().get(position).isActioned();
                 holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
 
-                if(!holder2.isActioned) {
-                    switch (holder2.notification.getNotificationType()) {
-                        case STARTED_FOLLOWING:
-                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                            break;
-                        case ACCEPTED_REQUEST:
-                            setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                            break;
-                        case SENT_YOU_A_FOLLOW_REQUEST:
-                            setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
-                            break;
-                        case ALSO_STARTED_FOLLOWING:
-                            setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+             //   if(!holder2.isActioned) {
+//                    switch (holder2.notification.getNotificationType()) {
 
-
-
-//                else {
-//                    if (holder2.accountType == 1) {
-//                        switch (holder2.notification.getNotificationType()) {
 //
 //
 //                            case STARTED_FOLLOWING:
@@ -270,10 +249,39 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                        }
 //
 //                    }
-//                     else {
-//
-//                     }
-//                    }
+
+
+
+                if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
+                    {
+
+                        if(holder2.notification.isActioned() ==true)
+                        {
+
+                            if(holder2.notification.isFollowing())
+                            {
+                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                            }
+                            else if (holder2.notification.isRequest_sent()==true)
+                            {
+                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                            }
+                            else
+                            {
+                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                            }
+                        }
+                        else
+                            {
+                                if(holder2.notification.getNotificationType()==1)setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                else setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                            }
+                    }
+                    else
+                    {
+                        setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+                    }
+
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
@@ -283,58 +291,56 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 if (mListener != null) {
                                     String userType;
 
-                                    if( holder2.notification.getMetaData().getNotificationType()==1|| holder2.notification.getMetaData().getNotificationType()==2|| holder2.notification.getMetaData().getNotificationType()==10)
-                                    {
-                                        userType="Following";
+                                    if (holder2.notification.getMetaData().getNotificationType() == 1 || holder2.notification.getMetaData().getNotificationType() == 2 || holder2.notification.getMetaData().getNotificationType() == 10) {
+                                        userType = "Following";
                                     }
-                                    if( holder2.notification.getMetaData().getNotificationType()==3)
-                                    {
-                                        userType="Accept";
+                                    if (holder2.notification.getMetaData().getNotificationType() == 3) {
+                                        userType = "Accept";
+                                    } else {
+                                        userType = "Accept";
                                     }
-                                    else
-                                    {
-                                        userType="Accept";
-                                    }
-
-
-
-
 
                                     mListener.onNotificationsInteraction(false, null,
-                                            null, holder2.notification.getMetaData().getFromId(),userType);
+                                            null, holder2.notification.getMetaData().getFromId(), userType);
                                 }
                                 break;
                             case R.id.notification_action:
                                 String text = holder2.action.getText().toString();
                                 if (text.equals(context.getString(R.string.follow))) {
 //                                    USER IS FOLLOWING ANOTHER USER
-                                    ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context)
-                                            .enqueue(new Callback<ResultObject>() {
-                                                @Override
-                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    try {
-                                                        if (response.code() == 200) {
-                                                            if (response.body().getStatus()) {
-                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
-                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                                else
-                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                                holder2.declineRequest.setVisibility(View.GONE);
-                                                            } else {
-                                                                sendJoinRequest(holder2);
-                                                            }
-                                                        } else
-                                                            Log.d("FOLLOW BACK", response.code() + " : " + response.message());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
 
-                                                @Override
-                                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Log.d("FAIL - FOLLOW BACK", t.getMessage());
-                                                }
-                                            });
+                                    followUser( holder2.notification.getMetaData().getFromId(), context,holder2);
+
+                                    ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context).enqueue(new Callback<ResultObject>() {
+                                        @Override
+                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                            try {
+                                                if (response.code() == 200) {
+                                                    if (response.body().getStatus()) {
+                                                        if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                        else
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                        holder2.declineRequest.setVisibility(View.GONE);
+                                                    }
+
+                                                    else {
+                                                        sendJoinRequest(holder2);
+                                                    }
+                                                } else
+                                                    Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                                            Log.d("FAIL - FOLLOW BACK", t.getMessage());
+                                        }
+
+                                    });
+
                                 } else if (text.equals(context.getString(R.string.accept))) {
 //                                    USER IS ACCEPTING A FOLLOW REQUEST
                                     ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context)
@@ -344,21 +350,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus())
                                                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                                                        else
-                                                            Log.d("AcceptJoinRequest", response.code()
-                                                                    + " : " + response.body().getMessage());
-                                                    } else{
+                                                        else {
+//                                                            Log.d("AcceptJoinRequest", response.code()
+//                                                                    + " : " + response.body().getMessage());
+                                                        }
+                                                    } else {
 //                                                        Log.d("AcceptJoinRequest", response.code()
 //                                                                + " : " + response.body().getMessage());
-                                                }}
+                                                    }
+                                                }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Log.d("FAIL- AcceptJoinRequest", t.getMessage());
+//                                                    Log.d("FAIL- AcceptJoinRequest", t.getMessage());
                                                 }
                                             });
-                                }
-                                else if (text.equals(context.getString(R.string.following))) {
+                                } else if (text.equals(context.getString(R.string.following))) {
                                     new AlertDialog.Builder(context)
                                             .setMessage(context.getString(R.string.unfollow_confirmation) +
                                                     holder2.notification.getHighlights().get(0) + "?")
@@ -429,7 +436,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                            })
 //                                            .show();
 //                                }
-                               // break;
+                                 break;
+
                             case R.id.notification_decline:
                                 ApiCallingService.Friends.deleteJoinRequest(holder2.notification.getNotificationId(), context)
                                         .enqueue(new Callback<ResultObject>() {
@@ -456,13 +464,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                     }
                                                                 })
                                                                 .show();
-                                                    }
-                                                    else
+                                                    } else
                                                         Log.d("DeleteJoinRequest", response.code()
                                                                 + " : " + response.body().getMessage());
-                                                } else
-                                                    Log.d("DeleteJoinRequest", response.code()
-                                                            + " : " + response.body().getMessage());
+                                                } else {
+                                                }
+//                                                    Log.d("DeleteJoinRequest", response.code()
+//                                                            + " : " + response.message());
                                             }
 
                                             @Override
@@ -568,6 +576,47 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+
+
+    public void followUser(int userId, final Context context,final RequestsViewHolder holder2) {
+        ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (response.body().getStatus()) {
+
+                            if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                            else
+                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                            holder2.declineRequest.setVisibility(View.GONE);
+                        }
+                        else {
+
+                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     @Override
     public int getItemCount() {
         return notificationsList.getNotifications().size();
@@ -613,6 +662,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId,String userType);
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId, String userType);
     }
 }

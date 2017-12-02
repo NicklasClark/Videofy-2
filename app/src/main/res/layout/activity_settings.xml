@@ -39,8 +39,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,13 +50,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-
+                android:id="@+id/invitefriendslayout"
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/bullets"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/invitefriends"
                     android:textColor="@color/colorPrimary_text"
@@ -189,6 +186,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/text_block_layout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
@@ -237,7 +235,7 @@
                         android:textSize="@dimen/text_size_content" />
                         <TextView
 
-                          
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -419,6 +417,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/logoutlayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">

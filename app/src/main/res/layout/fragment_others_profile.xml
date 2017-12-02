@@ -441,7 +441,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.cncoding.teazer.customViews.ProximaNovaCondensedTextView
+                        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                             android:id="@+id/toolbarusername"
                             android:layout_centerVertical="true"
                             android:layout_width="wrap_content"
@@ -770,7 +770,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="vertical">
-                <com.cncoding.teazer.customViews.ProximaNovaCondensedTextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

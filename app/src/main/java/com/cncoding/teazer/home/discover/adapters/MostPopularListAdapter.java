@@ -44,8 +44,7 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_most_popular_list, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_most_popular_list, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -63,12 +62,13 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
             String viewsText = SPACE + String.valueOf(holder.mostPopular.getMedias().get(0).getViews());
             holder.views.setText(viewsText);
 
-            holder.reactions.setVisibility(holder.mostPopular.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
-            String reactionText;
+            holder.reactions.setVisibility(holder.mostPopular.getTotalReactions() == 0 ? View.INVISIBLE : View.VISIBLE);
+            String reactionText = "";
             if (holder.mostPopular.getTotalReactions() > 2)
                 reactionText = "+" + String.valueOf(holder.mostPopular.getTotalReactions() - 2) + " R";
             else
-                reactionText = String.valueOf(holder.mostPopular.getTotalReactions()) + " R";
+                holder.reactions.getLayoutParams().width = 0;
+//                reactionText = String.valueOf(holder.mostPopular.getTotalReactions()) + " R";
             holder.reactions.setText(reactionText);
 
             Glide.with(context)
@@ -85,31 +85,25 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                     .crossFade()
                     .into(holder.dp);
 
-            if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 2) {
+            if (holder.mostPopular.getReactedUsers() != null && holder.mostPopular.getReactedUsers().size() > 0) {
                 holder.reactionImage1.setVisibility(View.VISIBLE);
-                holder.reactionImage2.setVisibility(View.VISIBLE);
-                holder.reactionImage1.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.with(context)
-                                .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia() != null ?
-                                        holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl() : "")
-                                .placeholder(R.drawable.ic_user_male_dp_small)
-                                .crossFade()
-                                .into(holder.reactionImage1);
-                    }
-                });
-                holder.reactionImage2.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.with(context)
-                                .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia() != null ?
-                                        holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl() : "")
-                                .placeholder(R.drawable.ic_user_male_dp_small)
-                                .crossFade()
-                                .into(holder.reactionImage2);
-                    }
-                });
+                Glide.with(context)
+                        .load(holder.mostPopular.getReactedUsers().get(0).getProfileMedia() == null ?
+                                R.drawable.ic_user_male_dp_small
+                                : holder.mostPopular.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder.reactionImage1);
+                if (holder.mostPopular.getReactedUsers().size() > 1) {
+                    holder.reactionImage2.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .load(holder.mostPopular.getReactedUsers().get(1).getProfileMedia() == null ?
+                                    R.drawable.ic_user_male_dp_small
+                                    : holder.mostPopular.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                            .placeholder(R.drawable.ic_user_male_dp_small)
+                            .crossFade()
+                            .into(holder.reactionImage2);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

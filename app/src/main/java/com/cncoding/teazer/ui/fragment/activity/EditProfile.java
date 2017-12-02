@@ -96,7 +96,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     Button fab;
     ProgressBar simpleProgressBar;
     ScrollView layoutdetail;
-
     private static final int RC_REQUEST_STORAGE = 1001;
     private static final int LIMIT = 1;
     private static final int READ_STORAGE_PERMISSION = 4000;
@@ -151,12 +150,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String mobileno = intent.getStringExtra("MobileNumber");
         userProfileThumbnail = intent.getStringExtra("ProfileThumb");
         userProfileUrl = intent.getStringExtra("ProfileMedia");
-
         if (mobileno == null) {
         } else {
             mobilenumber = Long.parseLong(mobileno);
         }
-
         gender = Integer.parseInt(intent.getStringExtra("Gender"));
         emailId = intent.getStringExtra("EmailId");
         countrycode = Integer.parseInt(intent.getStringExtra("CountryCode"));
@@ -166,7 +163,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         _bio.setText(detail);
         _email.setText(emailId);
         _mobileNumber.setText(String.valueOf(mobilenumber));
-
+        initProfileImage();
 
         if (gender == 1) {
             male.setBackgroundResource(R.drawable.ic_male_sel);
@@ -203,13 +200,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String usernames = _username.getText().toString();
-//                String firstname = _firstname.getText().toString();
-//                String lastnames = "abcdee";
-//                Integer countrycodes = countrycode;
-//                Long mobilenumber = Long.valueOf(_mobileNumber.getText().toString());
-//                String emailid = _email.getText().toString();
-//                  String details = _bio.getText().toString();
                   validate();
             }
         });
@@ -220,9 +210,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 PickImageDialog.build(new PickSetup()).show(EditProfile.this);
             }
         });
-
-        initProfileImage();
-
     }
     @Override
     public void onPickResult(PickResult r) {

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.discover.search;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,26 +29,19 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SEARCH_TERM;
 
-/**
- * A fragment representing a list of Items.
- */
 public class PeopleTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
+    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
 
-//    private OnListFragmentInteractionListener mListener;
     private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;
     private Call<UsersList> usersListCall;
     private Callback<UsersList> usersListCallback;
     private String searchTerm;
+    private boolean isSearchTerm;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public PeopleTabFragment() {
     }
 
@@ -57,6 +49,7 @@ public class PeopleTabFragment extends BaseFragment {
         PeopleTabFragment fragment = new PeopleTabFragment();
         Bundle args = new Bundle();
         args.putString(SEARCH_TERM, searchTerm);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -65,13 +58,14 @@ public class PeopleTabFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
+            isSearchTerm = searchTerm != null && !searchTerm.equals("");
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
         usersList = new ArrayList<>();
 
@@ -83,7 +77,7 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    getUsersListWithSearchTerm(page, searchTerm);
+                    getUsersList(page, searchTerm, isSearchTerm);
 //                    new GetUsersListToFollow(PeopleTabFragment.this).execute(page);
             }
         };
@@ -93,7 +87,7 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                getUsersListWithSearchTerm(1, searchTerm);
+                getUsersList(1, searchTerm, isSearchTerm);
 //                new GetUsersListToFollow(PeopleTabFragment.this).execute(1);
             }
         });
@@ -102,95 +96,64 @@ public class PeopleTabFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        usersListCallback = new Callback<UsersList>() {
-            @Override
-            public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                if (response.code() == 200) {
-                    UsersList users = response.body();
-                    is_next_page = users.isNextPage();
-                    if (users.getUsers().size() > 0) {
-                        swipeRefreshLayout.setVisibility(View.VISIBLE);
-                        noNotifications.setVisibility(View.GONE);
-                        usersList.addAll(users.getUsers());
-                        recyclerView.getRecycledViewPool().clear();
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        swipeRefreshLayout.setVisibility(View.GONE);
-                        noNotifications.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    noNotifications.setVisibility(View.VISIBLE);
-                    noNotifications.setText(R.string.error_fetching_posts);
-                    noNotifications.setCompoundDrawablesWithIntrinsicBounds(
-                            0, R.drawable.ic_no_data_placeholder, 0, 0);
-                    Log.e("getUsersListToFollow", response.code() + "_" + response.message());
-                }
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<UsersList> call, Throwable t) {
-                Log.e("getUsersListToFollow", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        };
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
+        if (usersListCallback == null) {
+            usersListCallback = new Callback<UsersList>() {
+                @Override
+                public void onResponse(Call<UsersList> call, Response<UsersList> response) {
+                    if (response.code() == 200) {
+                        UsersList users = response.body();
+                        is_next_page = users.isNextPage();
+                        if (users.getUsers().size() > 0) {
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            noPosts.setVisibility(View.GONE);
+                            usersList.addAll(users.getUsers());
+                            recyclerView.getRecycledViewPool().clear();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                            noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+                            noPosts.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        noPosts.setVisibility(View.VISIBLE);
+                        noPosts.setText(R.string.error_fetching_data);
+                        noPosts.setCompoundDrawablesWithIntrinsicBounds(
+                                0, R.drawable.ic_no_data_placeholder, 0, 0);
+                        Log.e("getUsersListToFollow", response.code() + "_" + response.message());
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<UsersList> call, Throwable t) {
+                    if (isAdded()) {
+                        Log.e("getUsersListToFollow", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            };
+        }
         if (usersList != null && usersList.isEmpty())
-            getUsersListWithSearchTerm(1, searchTerm);
-//            new GetUsersListToFollow(this).execute(1);
+            getUsersList(1, searchTerm, isSearchTerm);
     }
 
-//    private static class GetUsersListToFollow extends AsyncTask<Integer, Void, Void> {
-//
-//        private WeakReference<PeopleTabFragment> reference;
-//
-//        GetUsersListToFollow(PeopleTabFragment context) {
-//            reference = new WeakReference<>(context);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Integer... integers) {
-//            if (integers[0] == 1)
-//                reference.get().usersList.clear();
-//
-//            ApiCallingService.Discover.getUsersListToFollow(integers[0], reference.get().getContext())
-//                    .enqueue(reference.get().usersListCallback);
-//            return null;
-//        }
-//    }
-
-    private void getUsersListWithSearchTerm(int page, String searchTerm) {
+    private void getUsersList(int page, String searchTerm, boolean isSearchTerm) {
         if (page == 1)
             usersList.clear();
 
-        usersListCall = ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
+        usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
+                ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
 
         if (!usersListCall.isExecuted())
             usersListCall.enqueue(usersListCallback);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        noPosts.setText(R.string.search_for_videos);
     }
 
     @Override
@@ -200,18 +163,4 @@ public class PeopleTabFragment extends BaseFragment {
             usersListCall.cancel();
         adapter = null;
     }
-
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p/>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnListFragmentInteractionListener {
-//        void onListFragmentInteraction(Notification item);
-//    }
 }
