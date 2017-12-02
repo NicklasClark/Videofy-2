@@ -74,8 +74,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
+    private static final String ARG_HAS_REACTED = "has_reacted";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
+    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
 
     @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.video_container) RelativeLayout videoContainer;
@@ -101,6 +103,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private Context context;
     private PostDetails postDetails;
     private boolean isComplete;
+    private boolean enableReactBtn;
     private int lastPageCalled = 0;
     private byte[] image;
 
@@ -117,11 +120,12 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_DETAILS, postDetails);
         args.putByteArray(ARG_THUMBNAIL, image);
+        args.putBoolean(ARG_ENABLE_REACT_BTN, enableReactBtn);
         fragment.setArguments(args);
         return fragment;
     }
@@ -134,6 +138,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         if (getArguments() != null) {
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
             image = getArguments().getByteArray(ARG_THUMBNAIL);
+            enableReactBtn = getArguments().getBoolean(ARG_ENABLE_REACT_BTN);
         }
     }
 
@@ -167,7 +172,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact()) disableView(reactBtn);
+        if (!enableReactBtn) disableView(reactBtn);
+        else
+            if (!postDetails.canReact()) disableView(reactBtn);
 
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
         tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
@@ -253,7 +260,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
                             @Override
                             public void onFailure(Call<ResultObject> call, Throwable t) {
-
                             }
                         });
             }
@@ -367,7 +373,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
                 @Override
                 public void onFailure(Call<PostReactionsList> call, Throwable t) {
-                    ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
+                    if (isAdded()) {
+                        ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
+                    }
                 }
             };
 
@@ -419,7 +427,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         };
         if (!likeBtn.isChecked()) {
@@ -464,7 +474,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
                         @Override
                         public void onFailure(Call<TaggedUsersList> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (isAdded()) {
+                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
         } else {
@@ -577,12 +589,12 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_hide:
-                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.action_delete:
-                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
-                    return true;
+//                case R.id.action_hide:
+//                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                case R.id.action_delete:
+//                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+//                    return true;
                 case R.id.action_profile_report:
                     if (postDetails.canReact()) {
                         FragmentManager fragmentManager = getFragmentManager();
@@ -732,5 +744,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     public interface OnPostDetailsInteractionListener {
         void onPostDetailsInteraction(int action, PostDetails postDetails);
+    }
+
+    interface PostDetailsUpdateListener {
+        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
     }
 }

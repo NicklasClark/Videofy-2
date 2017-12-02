@@ -51,6 +51,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
+import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.ENTERED_TEXT;
@@ -79,6 +80,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_username) ProximaNovaRegularAutoCompleteTextView usernameView;
     @BindView(R.id.login_password) ProximaNovaRegularAutoCompleteTextView passwordView;
     @BindView(R.id.login_through_otp) ProximaNovaSemiboldButton loginThroughOtpBtn;
+    @BindView(R.id.already_have_otp) ProximaNovaSemiboldButton alreadyHaveOtpBtn;
     @BindView(R.id.login_through_password) ProximaNovaSemiboldButton loginThroughPasswordBtn;
     @BindView(R.id.country_code_picker) CountryCodePicker countryCodePicker;
     @BindView(R.id.login_options_layout) RelativeLayout loginOptionsLayout;
@@ -236,7 +238,7 @@ public class LoginFragment extends Fragment {
                             null, null, false);
                 } else {
                     setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
-                    Snackbar.make(usernameView, R.string.phone_number_invalid, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT)
                             .show();
                 }
                 break;
@@ -265,6 +267,7 @@ public class LoginFragment extends Fragment {
         passwordView.setVisibility(View.GONE);
         loginOptionsLayout.setVisibility(View.GONE);
         loginBtn.setText(getString(R.string.request_otp));
+        alreadyHaveOtpBtn.setVisibility(VISIBLE);
         loginThroughPasswordBtn.setVisibility(VISIBLE);
     }
 
@@ -278,8 +281,20 @@ public class LoginFragment extends Fragment {
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
         countryCodePicker.setVisibility(View.GONE);
+        alreadyHaveOtpBtn.setVisibility(View.GONE);
         loginThroughPasswordBtn.setVisibility(View.GONE);
         loginBtn.setText(getString(R.string.login));
+    }
+
+    @OnClick(R.id.already_have_otp) public void alreadyHaveOtp() {
+        ViewUtils.hideKeyboard(getActivity(), loginBtn);
+        if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
+            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, new Pojos.Authorize(Long.parseLong(username), countryCode));
+        } else {
+            setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+            Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     public void loginWithUsernameAndPassword() {

@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -87,16 +86,17 @@ public class Interests extends BaseFragment {
             rootView = inflater.inflate(R.layout.fragment_interests, container, false);
         } else {
             rootView = inflater.inflate(R.layout.fragment_edit_interests, container, false);
+            rootView.findViewById(R.id.root_layout).setBackgroundColor(getResources().getColor(R.color.bgInterests));
         }
         ButterKnife.bind(this, rootView);
 
         interestList = new ArrayList<>();
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
+        flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        recyclerView.setLayoutManager(flexboxLayoutManager);
         if (!isEditing) {
-            FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
-            flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
-            flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
-            recyclerView.setLayoutManager(flexboxLayoutManager);
-            interestsAdapter = new InterestsAdapter(interestList, this, isEditing, null);
+            interestsAdapter = new InterestsAdapter(interestList, this, null);
             recyclerView.setAdapter(interestsAdapter);
         } else {
             enableSaveBtn();
@@ -131,13 +131,11 @@ public class Interests extends BaseFragment {
             for (Category category : categories[0]) {
                 booleanArray.put(category.getCategoryId() - 1, true);
             }
-            return new InterestsAdapter(reference.get().interestList, reference.get(), reference.get().isEditing, booleanArray);
+            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray);
         }
 
         @Override
         protected void onPostExecute(InterestsAdapter interestsAdapter) {
-            reference.get().recyclerView.setLayoutManager(
-                    new LinearLayoutManager(reference.get().getContext(), LinearLayoutManager.VERTICAL, false));
             reference.get().interestsAdapter = interestsAdapter;
             reference.get().recyclerView.setAdapter(interestsAdapter);
             new GetInterests(reference.get()).execute();

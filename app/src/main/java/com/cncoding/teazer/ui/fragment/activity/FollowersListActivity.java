@@ -47,7 +47,7 @@ public class FollowersListActivity extends BaseFragment{
     String followerid;
     Context context;
     List<OtherFollowers> list=new ArrayList<>();
-    List<Follower> userfollowerlist=new ArrayList<>();
+    List<Follower> userfollowerlist;
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -105,17 +105,16 @@ public class FollowersListActivity extends BaseFragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        list=new ArrayList<>();
+        userfollowerlist=new ArrayList<>();
 
         if(identifier.equals("Other"))
         {
-           // layout.setVisibility(View.GONE);
-          //  progressBar.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(Integer.parseInt(followerid));
         }
         else if(identifier.equals("User"))
         {
-           //layout.setVisibility(View.GONE);
-           // progressBar.setVisibility(View.VISIBLE);
+
             getUserfollowerList();
         }
     }
@@ -123,14 +122,6 @@ public class FollowersListActivity extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
-        list.clear();
-        userfollowerlist.clear();
-
-
-//        Intent intent = ;
-//        int followerid=  Integer.parseInt(intent.getStringExtra("FollowerId"));
-//        String identifier=intent.getStringExtra("Identifier");
-
 
 
     }
@@ -195,7 +186,7 @@ public class FollowersListActivity extends BaseFragment{
                     try
                     {
                         boolean next=response.body().getNextPage();
-                        list= response.body().getFollowers();
+                        list.addAll(response.body().getFollowers());
                         if (list == null || list.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);

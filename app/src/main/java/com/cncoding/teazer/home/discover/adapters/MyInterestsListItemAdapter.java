@@ -52,92 +52,112 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
     @Override
     public void onBindViewHolder(final MyInterestsListItemAdapter.ViewHolder holder, int position) {
-        holder.postDetails = postDetailsArrayList.get(position);
+        if (postDetailsArrayList.size() <= position) {
+            holder.thumbnail.setBackgroundColor(context.getResources().getColor(R.color.material_grey200));
+            holder.bottomLayout.setVisibility(View.INVISIBLE);
+            holder.title.setBackgroundColor(context.getResources().getColor(R.color.material_grey200));
+            holder.reactionImage1.setVisibility(View.VISIBLE);
+            holder.reactionImage1.setBackgroundResource(R.drawable.bg_placeholder_light_round);
+            holder.reactionImage2.setVisibility(View.VISIBLE);
+            holder.reactionImage2.setBackgroundResource(R.drawable.bg_placeholder_light_round);
+        } else {
+            holder.postDetails = postDetailsArrayList.get(position);
 
-        try {
+            try {
         /*Setting title*/
-            holder.title.setText(holder.postDetails.getTitle());
+                holder.title.setText(holder.postDetails.getTitle());
 
         /*Setting name*/
-            String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
-            holder.name.setText(name);
+                String name = holder.postDetails.getPostOwner().getFirstName() +
+                        BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+                holder.name.setText(name);
 
         /*Setting likes*/
-            String likes = SPACE + String.valueOf(holder.postDetails.getLikes());
-            holder.likes.setText(likes);
+                String likes = SPACE + String.valueOf(holder.postDetails.getLikes());
+                holder.likes.setText(likes);
 
         /*Setting views*/
-            String views = SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
-            holder.views.setText(views);
+                String views = SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
+                holder.views.setText(views);
 
         /*Setting reactions*/
-            holder.reactions.setVisibility(holder.postDetails.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
-            String reactionText;
-            if (holder.postDetails.getTotalReactions() > 4)
-                reactionText = "+" + String.valueOf(holder.postDetails.getTotalReactions() - 3) + " R";
-            else
-                reactionText = String.valueOf(holder.postDetails.getTotalReactions()) + " R";
-            holder.reactions.setText(reactionText);
+                holder.reactions.setVisibility(holder.postDetails.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
+                String reactionText = "";
+                if (holder.postDetails.getTotalReactions() > 4)
+                    reactionText = "+" + String.valueOf(holder.postDetails.getTotalReactions() - 3) + " R";
+//            else
+//                reactionText = String.valueOf(holder.postDetails.getTotalReactions()) + " R";
+                holder.reactions.setText(reactionText);
 
         /*Setting thumbnail*/
-            Glide.with(context)
-                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                    .placeholder(R.drawable.bg_placeholder)
-                    .crossFade()
-                    .into(holder.thumbnail);
+                Glide.with(context)
+                        .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                        .placeholder(R.drawable.bg_placeholder)
+                        .crossFade()
+                        .into(holder.thumbnail);
 
         /*Setting DP*/
-            Glide.with(context)
-                    .load(holder.postDetails.getPostOwner().hasProfileMedia() &&
-                            holder.postDetails.getPostOwner().getProfileMedia() != null ?
-                            holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.dp);
+                Glide.with(context)
+                        .load(holder.postDetails.getPostOwner().hasProfileMedia() &&
+                                holder.postDetails.getPostOwner().getProfileMedia() != null ?
+                                holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder.dp);
 
         /*Setting reaction thumbnails*/
-            if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getTotalReactions() > 0) {
-                holder.reactionImage1.setVisibility(View.VISIBLE);
-                if (holder.postDetails.getReactedUsers().get(0).hasProfileMedia() &&
-                        holder.postDetails.getReactedUsers().get(0).getProfileMedia() != null)
+                if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getTotalReactions() > 0) {
+                    holder.reactionImage1.setVisibility(View.VISIBLE);
                     Glide.with(context)
-                            .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
+                            .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
+                                    R.drawable.ic_user_male_dp_small :
+                                    holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder.reactionImage1);
 
-                if (holder.postDetails.getTotalReactions() > 1) {
-                    holder.reactionImage2.setVisibility(View.VISIBLE);
-                    if (holder.postDetails.getReactedUsers().get(1).hasProfileMedia() &&
-                            holder.postDetails.getReactedUsers().get(1).getProfileMedia() != null)
+                    if (holder.postDetails.getTotalReactions() > 1) {
+                        holder.reactionImage2.setVisibility(View.VISIBLE);
                         Glide.with(context)
-                                .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
+                                .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia() == null ?
+                                        R.drawable.ic_user_male_dp_small :
+                                        holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
                                 .placeholder(R.drawable.ic_user_male_dp_small)
                                 .crossFade()
                                 .into(holder.reactionImage2);
+                    } else {
+                        holder.reactionImage2.setVisibility(View.VISIBLE);
+                        holder.reactionImage2.setBackgroundResource(R.drawable.bg_placeholder_light_round);
+                    }
+                } else {
+                    holder.reactionImage1.setVisibility(View.VISIBLE);
+                    holder.reactionImage1.setBackgroundResource(R.drawable.bg_placeholder_light_round);
+                    holder.reactionImage2.setVisibility(View.VISIBLE);
+                    holder.reactionImage2.setBackgroundResource(R.drawable.bg_placeholder_light_round);
                 }
-            }
 
-            holder.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
-                            holder.postDetails, null);
-                }
-            });
-        } catch(Resources.NotFoundException e){
-            e.printStackTrace();
+                holder.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
+                                holder.postDetails, null);
+                    }
+                });
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return postDetailsArrayList.size();
+        return postDetailsArrayList.size() < 3 ? 3 : postDetailsArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;

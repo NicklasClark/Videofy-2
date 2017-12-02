@@ -40,6 +40,9 @@
             android:foreground="@drawable/ripple_dark_rounded_2dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+
             android:background="@drawable/bg_outline_rounded_primary"
             android:contentDescription="@string/post_thumbnail" />
 

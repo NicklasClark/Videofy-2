@@ -4,18 +4,20 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="7dp"
     android:background="@android:color/black"
-    android:visibility="invisible">
+    android:visibility="gone"
+    android:layout_margin="7dp"
+    android:animateLayoutChanges="true">
 
     <ImageView
-        android:id="@+id/post_thumb"
+        android:id="@+id/thumbnail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="@drawable/bg_vignette"
         android:contentDescription="@string/post_thumbnail"
+        android:scaleType="fitXY"
         android:layout_centerInParent="true"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true" />
 
     <ImageView
         android:id="@+id/play_btn"
@@ -23,25 +25,28 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_play"
         android:layout_centerInParent="true"
+        android:alpha="0.6"
         android:contentDescription="@string/play_button" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="7dp"
+        android:gravity="center_vertical"
         android:paddingStart="@dimen/padding_half"
         android:paddingEnd="@dimen/padding_half"
         android:layout_alignParentTop="true">
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/title"
-            android:layout_width="0dp"
+            android:layout_width="159dp"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_12sp"
-            android:layout_marginEnd="@dimen/padding_half"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/category"/>
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="13sp"
+            android:layout_toStartOf="@+id/category" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/category"
@@ -61,38 +66,37 @@
             android:gravity="center"
             android:background="@drawable/bg_outline_rounded"
             android:layout_marginStart="@dimen/padding_half"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone"/>
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/name_popularity_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:paddingStart="@dimen/padding_half"
         android:paddingEnd="@dimen/padding_half"
-        android:layout_alignParentBottom="true">
+        android:paddingBottom="@dimen/padding_10dp">
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/dp"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:scaleType="centerCrop"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="6dp"
-            android:layout_alignParentStart="true"/>
+            android:layout_marginEnd="6dp"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_12sp"
             android:maxLines="1"
             android:singleLine="true"
             android:ellipsize="end"
+            android:textSize="@dimen/text_size_12sp"
             android:textColor="@android:color/white"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/dp"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -100,32 +104,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
-            android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_small"
-            android:gravity="end|center_vertical"
             android:maxLines="1"
             android:singleLine="true"
             android:ellipsize="end"
-            android:layout_marginTop="@dimen/padding_x_thin"
-            android:layout_marginEnd="6dp"
-            android:layout_toEndOf="@+id/dp"
-            android:layout_below="@+id/name"/>
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+            android:gravity="end|bottom"
+            android:layout_below="@+id/name"
+            android:layout_toEndOf="@+id/dp" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/views"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline_smaller"
-            android:gravity="center_vertical"
+            android:gravity="start|bottom"
             android:maxLines="1"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:layout_alignTop="@+id/likes"
-            android:layout_alignBottom="@+id/likes"
+            android:layout_marginStart="@dimen/padding_10dp"
             android:layout_below="@+id/name"
-            android:layout_toEndOf="@+id/likes"/>
+            android:layout_toEndOf="@+id/likes"
+            android:layout_alignBottom="@+id/likes"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

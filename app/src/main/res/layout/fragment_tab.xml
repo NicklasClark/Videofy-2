@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/padding_including_action_bar"
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_h5"
         android:text="@string/no_posts_available"

@@ -43,6 +43,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private ArrayList<Pojos.Post.PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
+    EditPostListener editPostListener;
 
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
@@ -52,6 +53,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         this.context = context;
         this.list = list;
         listener = (myCreationListener) context;
+        editPostListener = (EditPostListener) context;
 
     }
 
@@ -142,6 +144,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     deleteVideos(videopostId);
                                     viewHolder.cardView.setVisibility(View.GONE);
                                     list.remove(i);
+                                    break;
+                                case R.id.edit_post:
+
+                                    editPostListener.editPost(thumb_url);
                                     break;
                             }
                             return false;
@@ -331,4 +337,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
         }
 
+
+
+        public interface EditPostListener{
+            public void editPost(String videopath);
+
+        }
     }

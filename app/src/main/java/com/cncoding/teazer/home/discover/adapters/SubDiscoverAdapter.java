@@ -74,39 +74,11 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
             String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
             holder.name.setText(name);
 
-            String likes = String.valueOf(holder.postDetails.getLikes());
+            String likes = BLANK_SPACE + String.valueOf(holder.postDetails.getLikes());
             holder.likes.setText(likes);
 
-            String views = String.valueOf(holder.postDetails.getMedias().get(0).getViews());
+            String views = BLANK_SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
             holder.views.setText(views);
-
-            Glide.with(context)
-                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                    .placeholder(R.drawable.bg_placeholder)
-                    .crossFade()
-                    .skipMemoryCache(false)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                            if (height < holder.layout.getWidth())
-                                height = holder.layout.getWidth();
-
-                            holder.layout.getLayoutParams().height = height;
-
-                            dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
-                            holder.layout.setVisibility(View.VISIBLE);
-                            return false;
-                        }
-                    })
-                    .into(holder.postThumbnail);
 
             if (holder.postDetails.getPostOwner().hasProfileMedia() && holder.postDetails.getPostOwner().getProfileMedia() != null) {
                 Glide.with(context)
@@ -124,6 +96,33 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
             e.printStackTrace();
         }
 
+        Glide.with(context)
+                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                .placeholder(R.drawable.bg_placeholder)
+                .crossFade()
+                .skipMemoryCache(false)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
+                        if (height < holder.layout.getWidth())
+                            height = holder.layout.getWidth();
+
+                        holder.layout.getLayoutParams().height = height;
+
+                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
+//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+                        holder.layout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+                .into(holder.postThumbnail);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,13 +141,13 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
     protected class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
-        @BindView(R.id.post_thumb) ImageView postThumbnail;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
+        @BindView(R.id.thumbnail) ImageView postThumbnail;
+        @BindView(R.id.dp) CircularAppCompatImageView profilePic;
         PostDetails postDetails;
 
         public ViewHolder(View itemView) {

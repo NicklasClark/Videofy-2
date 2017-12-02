@@ -140,10 +140,10 @@ import retrofit2.http.Query;
         Call<ResultObject> loginWithOtp(@Body Authorize phoneNumberDetails);
 
         /**
-         * Perform sign in with OTP.
+         * Verify sign in with OTP.
          * Login step 2.
          */
-        @POST("/api/v1/authentication/signin/with/otp")
+        @POST("/api/v1/authentication/signin/with/otp/verify")
         Call<ResultObject> verifyLoginWithOtp(@Body Authorize verifyLoginWithOtp);
 
         /**

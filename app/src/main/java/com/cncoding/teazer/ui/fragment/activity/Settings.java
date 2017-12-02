@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,19 +30,23 @@ import static com.cncoding.teazer.utilities.AuthUtils.logout;
 
 public class Settings extends AppCompatActivity {
 
-    @BindView(R.id.text_block)
-    TextView text_block;
+    @BindView(R.id.text_block_layout)
+    LinearLayout text_block;
     @BindView(R.id.simpleSwitch)
     Switch simpleSwitch;
 
-    @BindView(R.id.logout)
-    TextView logout;
+    @BindView(R.id.logoutlayout)
+    LinearLayout logout;
     @BindView(R.id.changePassword)
     TextView changePassword;
+
+    @BindView(R.id.invitefriendslayout)
+    LinearLayout invitefriendslayout;
     Context context;
     private static final  int PRIVATE_STATUS=1;
     private static final  int PUBLIC_STATUS=2;
     boolean flag =false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +70,11 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
-                if(flag==false) {
-                    onBackPressed();
-                }
-                else
-                {
 
                     onBackPressed();
-
-                }
             }
         });
+
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
         Intent intent=getIntent();
         int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
@@ -124,6 +123,13 @@ public class Settings extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        invitefriendslayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(Settings.this,InviteFriend.class);
+                startActivity(intent);
+            }
+        });
     }
     public void publicprivateProfile(final int status)
     {
@@ -136,8 +142,6 @@ public class Settings extends AppCompatActivity {
                             boolean b = response.body().getStatus();
                             if (b == true)
                             {
-//                                layout.setVisibility(View.VISIBLE);
-//                                progressBar.setVisibility(View.GONE);
 
                                 if(status==1)
                                  Toast.makeText(getApplicationContext(), "Your account has become private", Toast.LENGTH_LONG).show();
@@ -147,8 +151,7 @@ public class Settings extends AppCompatActivity {
                             }
                             else
                             {
-//                                layout.setVisibility(View.VISIBLE);
-//                                progressBar.setVisibility(View.GONE);
+
                                 Toast.makeText(getApplicationContext(), "Something went wrong please try again", Toast.LENGTH_LONG).show();
                             }
 
@@ -156,8 +159,6 @@ public class Settings extends AppCompatActivity {
                         catch (Exception e) {
 
                             e.printStackTrace();
-//                            layout.setVisibility(View.VISIBLE);
-//                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                         }
 
@@ -167,8 +168,6 @@ public class Settings extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResultObject> call, Throwable t) {
-//                    layout.setVisibility(View.VISIBLE);
-//                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
                 }

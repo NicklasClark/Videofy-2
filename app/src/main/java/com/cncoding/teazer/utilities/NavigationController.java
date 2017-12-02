@@ -184,6 +184,32 @@ public class NavigationController {
     }
 
     /**
+     * Push a fragment onto the current stack without detaching the previous one
+     *
+     * @param fragment The fragment that is to be pushed
+     */
+    public void pushFragmentOnto(@Nullable Fragment fragment) {
+        if (fragment != null && selectedTabIndex != NO_TAB) {
+            FragmentTransaction ft = createTransactionWithOptions(null);
+
+//            detachCurrentFragment(ft);
+            ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
+            ft.add(containerId, fragment, generateTag(fragment));
+            ft.commit();
+
+            executePendingTransactions();
+
+            fragmentStacks.get(selectedTabIndex).push(fragment);
+
+            currentFragment = fragment;
+            if (transactionListener != null) {
+                transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
+            }
+
+        }
+    }
+
+    /**
      * Push a fragment onto the current stack
      *
      * @param fragment The fragment that is to be pushed

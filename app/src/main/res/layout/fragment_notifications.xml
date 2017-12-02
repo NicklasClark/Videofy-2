@@ -8,15 +8,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/BottomTabLayout.NotificationTab"
-        android:background="@color/colorPrimary"
-        app:tabTextColor="@color/colorSecondary_text"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabIndicatorHeight="3dp"
-        android:elevation="1dp">
+        style="@style/BottomTabLayout.NotificationTab">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem"
@@ -36,8 +28,6 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/padding_half"
-        android:paddingBottom="@dimen/padding_half"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>

@@ -104,7 +104,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
+        protected Void doInBackground(final Integer... integers) {
             if (integers[0] == 1)
                 reference.get().notificationsList.getNotifications().clear();
 
@@ -121,8 +121,10 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
                                     reference.get().recyclerView.getRecycledViewPool().clear();
                                     reference.get().adapter.notifyDataSetChanged();
                                 } else {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.GONE);
-                                    reference.get().noNotifications.setVisibility(View.VISIBLE);
+                                    if (integers[0] == 1) {
+                                        reference.get().swipeRefreshLayout.setVisibility(View.GONE);
+                                        reference.get().noNotifications.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             } else {
                                 Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),

@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
@@ -68,6 +69,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
@@ -137,6 +139,17 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.camera_files) AppCompatImageView cameraFilesView;
     @BindView(R.id.camera_flip) AppCompatImageView cameraFlipView;
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
+    @BindView(R.id.video_duration)
+    ProximaNovaRegularTextView videoDuration;
+
+    private long startTime = 0L;
+
+    private Handler customHandler = new Handler();
+
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
+
 
     /** A reference to the opened {@link android.hardware.camera2.CameraDevice} */
     private CameraDevice mCameraDevice;
@@ -779,6 +792,12 @@ public class CameraFragment extends Fragment {
 
                             // Start recording
                             mMediaRecorder.start();
+
+                            //starting video duration counter
+                            videoDuration.setVisibility(View.VISIBLE);
+                            startTime = SystemClock.uptimeMillis();
+                            customHandler.postDelayed(updateTimerThread, 0);
+
                         }
                     });
                 }
@@ -811,6 +830,26 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    //thread to update recording time
+    private Runnable updateTimerThread = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            int secs = (int) (updatedTime / 1000);
+            int mins = secs / 60;
+            secs = secs % 60;
+            int milliseconds = (int) (updatedTime % 1000);
+            videoDuration.setText("" + mins + ":"
+                    + String.format("%02d", secs));
+            customHandler.postDelayed(this, 0);
+        }
+
+    };
+
     public void closePreviewSession() {
         if (mPreviewSession != null) {
             mPreviewSession.close();
@@ -828,6 +867,18 @@ public class CameraFragment extends Fragment {
                 try {
                     mPreviewSession.stopRepeating();
                     mPreviewSession.abortCaptures();
+
+                    //stopping recording timer
+                    timeSwapBuff += timeInMilliseconds;
+
+                    startTime = 0L;
+                    timeInMilliseconds = 0L;
+                    timeSwapBuff = 0L;
+                    updatedTime = 0L;
+                    videoDuration.setVisibility(View.INVISIBLE);
+                    customHandler.removeCallbacks(updateTimerThread);
+
+                    //checking flash status before stopping camera recording
                     if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
                         if (isFlashSupported) {
                             if (isTorchOn) {
