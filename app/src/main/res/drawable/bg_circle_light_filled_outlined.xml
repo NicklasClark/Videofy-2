@@ -35,9 +35,9 @@
         <shape android:shape="oval">
             <padding
                 android:bottom="0dp"
-                android:right="1dp"
+                android:right="0dp"
                 android:top="1dp"
-                android:left="1dp"/>
+                android:left="0dp"/>
             <solid android:color="#15a1887f"/>
         </shape>
     </item>
@@ -45,9 +45,9 @@
         <shape android:shape="oval">
             <padding
                 android:bottom="0dp"
-                android:right="1dp"
+                android:right="0dp"
                 android:top="1dp"
-                android:left="1dp"/>
+                android:left="0dp"/>
             <solid android:color="#20a1887f"/>
         </shape>
     </item>
@@ -55,9 +55,9 @@
         <shape android:shape="oval">
             <padding
                 android:bottom="0dp"
-                android:right="1dp"
+                android:right="0dp"
                 android:top="1dp"
-                android:left="1dp"/>
+                android:left="0dp"/>
             <solid android:color="#25a1887f"/>
         </shape>
     </item>
@@ -65,52 +65,12 @@
         <shape android:shape="oval">
             <padding
                 android:bottom="0dp"
-                android:right="1dp"
-                android:top="1dp"
-                android:left="1dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <!--<item>
-        <shape android:shape="oval">
-            <padding
-                android:bottom="0dp"
                 android:right="0dp"
                 android:top="1dp"
                 android:left="0dp"/>
             <solid android:color="#30a1887f"/>
         </shape>
     </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:bottom="0dp"
-                android:right="0dp"
-                android:top="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:bottom="0dp"
-                android:right="0dp"
-                android:top="1dp"
-                android:left="0dp"/>
-            <solid android:color="#30a1887f"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <padding
-                android:bottom="0dp"
-                android:right="0dp"
-                android:top="1dp"
-                android:left="0dp"/>
-            <solid android:color="#50a1887f"/>
-        </shape>
-    </item>-->
     <!-- Background -->
     <item>
         <shape android:shape="oval">

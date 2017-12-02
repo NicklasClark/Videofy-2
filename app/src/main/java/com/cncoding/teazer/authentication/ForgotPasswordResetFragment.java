@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -83,6 +84,12 @@ public class ForgotPasswordResetFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_forgot_password_reset, container, false);
         ButterKnife.bind(this, rootView);
 
+        try {
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 

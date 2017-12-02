@@ -15,7 +15,8 @@
         android:textAllCaps="true"
         app:drawableTopCompat="@drawable/ic_happy"
         android:textSize="@dimen/text_size_h5"
-        android:text="@string/all_caught_up"/>
+        android:text="@string/all_caught_up"
+        android:visibility="invisible"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

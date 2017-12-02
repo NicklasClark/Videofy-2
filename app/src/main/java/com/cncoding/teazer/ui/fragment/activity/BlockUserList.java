@@ -2,8 +2,8 @@ package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,16 +15,13 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
-import com.cncoding.teazer.adapter.FollowersAdapter;
-import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
 import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
+import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
-import com.cncoding.teazer.model.profile.followers.Follower;
-import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
-import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.utilities.Pojos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,7 +33,7 @@ import retrofit2.Response;
 public class BlockUserList extends AppCompatActivity {
 
     Context context;
-    List<Followers> list;
+    List<BlockedUser> list;
     RecyclerView recyclerView;
     BlockUserListAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -45,6 +42,8 @@ public class BlockUserList extends AppCompatActivity {
     ProgressBar progress_bar;
     @BindView(R.id.layout)
     RelativeLayout layout;
+    @BindView(R.id.blockusertex)
+    TextView blockusertex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,24 +74,38 @@ public class BlockUserList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         layout.setVisibility(View.GONE);
         progress_bar.setVisibility(View.VISIBLE);
+        list=new ArrayList<>();
         getBlockUserList();
     }
     public void getBlockUserList()
     {
         int i=1;
-        ApiCallingService.Friends.getBlockedUsers(i,context).enqueue(new Callback<BlockUsers>() {
+        ApiCallingService.Friends.getBlockedUsers(i,context).enqueue(new Callback<BlockUserResponse>() {
             @Override
-            public void onResponse(Call<BlockUsers> call, Response<BlockUsers> response) {
+            public void onResponse(Call<BlockUserResponse> call, Response<BlockUserResponse> response) {
                 if(response.code()==200)
                 {
                     try
+
                     {
-                        list= response.body().getFollowers();
-                        adapter=new BlockUserListAdapter(context,list);
-                        recyclerView.setAdapter(adapter);
-                        layout.setVisibility(View.VISIBLE);
-                        progress_bar.setVisibility(View.GONE);
+                        list= response.body().getBlockedUsers();
+                        if(list==null||list.size()==0) {
+
+                            //blockusertex.setVisibility(View.VISIBLE);
+
+                            layout.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+
+                            adapter = new BlockUserListAdapter(context, list);
+                            recyclerView.setAdapter(adapter);
+                            layout.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
+                            }
                     }
+
                     catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();
@@ -109,7 +122,7 @@ public class BlockUserList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<BlockUsers> call, Throwable t) {
+            public void onFailure(Call<BlockUserResponse> call, Throwable t) {
 
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);

@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Teazer</string>
+    <string name="app_name" tools:override="true">Teazer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="creation">Creations</string>
-    <string name="following">&#160;&#160;Following</string>
+    <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
@@ -23,7 +23,7 @@
     <string name="flip_camera">Flip camera</string>
     <string name="camera_flash">Camera flash</string>
     <string name="camera_settings">Camera settings</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel" tools:override="true">Cancel</string>
     <string name="check">Check</string>
     <string name="play_pause">Play/pause</string>
     <string name="video_thumbnail">Video thumbnail</string>
@@ -109,7 +109,7 @@
     <string name="title_activity_video_upload">Upload Video</string>
     <string name="action_settings">Settings</string>
     <string name="video_preview_thumbnail">Video preview thumbnail</string>
-    <string name="react_title">Title</string>
+    <string name="title">Title</string>
     <string name="share_with">Share with</string>
     <string name="retake">Retake</string>
     <string name="see_nearby_places">See nearby places</string>
@@ -174,7 +174,7 @@
     <string name="otp">OTP</string>
     <string name="new_password">New Password</string>
     <string name="password_successfully_reset">Password successfully reset!</string>
-    <string name="search">&#160;&#160;&#160;Search</string>
+    <string name="search">Search</string>
     <string name="add">Add</string>
     <string name="added">Added</string>
     <string name="select_up_to_5_categories">Select up to 5 interests</string>
@@ -214,10 +214,12 @@
     <string name="could_not_load_posts">\nCouldn\'t load posts!\n</string>
     <string name="tap_to_retry">Tap to retry</string>
     <string name="could_not_load_reactions">Couldn\'t load reactions!</string>
-    <string name="no_reactions_yet">No reactions yet</string>
+    <string name="no_reactions_yet">\nNo reactions yet</string>
     <string name="be_the_first_one_to_react">Be the first one to react!</string>
     <string name="finished">Finished!</string>
-    <string name="optional_title">Set a title if you wish to (OPTIONAL)</string>
+    <string name="optional_title">
+        Set an optional title if you wish to.
+    </string>
     <string name="uploading_your_reaction">Uploading your reaction…</string>
     <string name="requests">Requests</string>
     <string name="accept">Accept</string>
@@ -236,4 +238,23 @@
     <string name="featured_videos">Featured Videos</string>
     <string name="view_all">View all</string>
     <string name="rationale_storage">App requires external storage permission</string>
+    <string name="no_friends_yet">No friends yet?</string>
+    <string name="like">Like</string>
+    <string name="liked">Liked</string>
+    <string name="discover">Discover</string>
+    <string name="search_videos_or_places">Search Videos or Places</string>
+    <string name="phone_number_invalid"><![CDATA[Phone number should not be empty & only contain digits]]></string>
+    <string name="required">This field is required</string>
+    <string name="required_categories">Please select a category to continue</string>
+    <string name="play_button">Play button</string>
+    <string name="post">Post</string>
+    <string name="tagged">Tagged</string>
+    <string name="more">More</string>
+    <string name="wrong_otp">Otp entered is wrong! please try again.</string>
+    <string name="swipe_down_to_retry">Swipe down to retry</string>
+    <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
+    <string name="something_went_wrong">Something went wrong!\nPlease try again later.</string>
+    <string name="edit">EDIT</string>
+    <string name="people">People</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

@@ -18,7 +18,7 @@
     <dimen name="text_size_h4">22sp</dimen>
     <dimen name="text_size_h5">18sp</dimen>
     <dimen name="text_size_content">16sp</dimen>
-    <dimen name="text_size_content10dp">10dp</dimen>
+    <dimen name="padding_10dp">10dp</dimen>
     <dimen name="text_size_content2">12sp</dimen>
     <dimen name="text_size_content3">14sp</dimen>
     <dimen name="text_size_content_big">18sp</dimen>
@@ -54,6 +54,7 @@
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_8sp">8sp</dimen>
+    <dimen name="text_size_9sp">9sp</dimen>
     <dimen name="margin_reaction_bubbles">12dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="padding_with_small_profile_pic">62dp</dimen>

@@ -10,20 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
+import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
 import com.cncoding.teazer.model.profile.blockuser.Followers;
-import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
 import java.util.List;
@@ -38,12 +32,12 @@ import retrofit2.Response;
 
 public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdapter.ViewHolder> {
 
-    private List<Followers> list;
+    private List<BlockedUser> list;
     private Context context;
     public static final int UNBLOCK_STATUS=2;
 
 
-    public BlockUserListAdapter(Context context, List<Followers> list) {
+    public BlockUserListAdapter(Context context, List<BlockedUser> list) {
         this.context = context;
         this.list = list;
     }
@@ -55,23 +49,27 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
 
     @Override
     public void onBindViewHolder(final BlockUserListAdapter.ViewHolder viewHolder, int i) {
-        Followers cont = list.get(i);
-        final String followername = cont.getUserName();
-        final int blockuserId = cont.getUserId();
-        viewHolder.blockusers.setText(followername);
-        viewHolder.unblock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openAlert(blockuserId,viewHolder);
-            }
-        });
 
+        BlockedUser cont = list.get(i);
+        try {
+            final String followername = cont.getUserName();
+            final int blockuserId = cont.getUserId();
+            viewHolder.blockusers.setText(followername);
+            viewHolder.unblock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openAlert(blockuserId, viewHolder);
+                }
+            });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     @Override
     public int getItemCount() {
         return list.size();
     }
-
 
     public void openAlert(final int blockuserId, final BlockUserListAdapter.ViewHolder viewHolder)
     {
@@ -125,7 +123,6 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
             @Override
             public void onFailure(Call<BlockUnBlockUser> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-                Log.d("ShutDown", t.getMessage());
                 ((BlockUserList)context).InVisibleVisibile();
             }
         });

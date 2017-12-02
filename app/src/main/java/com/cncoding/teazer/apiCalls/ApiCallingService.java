@@ -3,11 +3,11 @@ package com.cncoding.teazer.apiCalls;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
+import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
 import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
@@ -19,10 +19,16 @@ import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
+import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.profile.reportuser.ReportUser;
+import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
+import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
+import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
+import com.cncoding.teazer.utilities.Pojos.Post.LandingPosts;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
@@ -33,6 +39,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -66,11 +73,11 @@ public class ApiCallingService {
 
     public static class Application {
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getPostReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getPostReportTypes() {
             return getApplicationService().getPostReportTypes();
         }
 
-        public static Call<ArrayList<Pojos.Application.ReportType>> getProfileReportTypes() {
+        public static Call<List<ReportPostTitlesResponse>> getProfileReportTypes() {
             return getApplicationService().getProfileReportTypes();
         }
 
@@ -161,6 +168,61 @@ public class ApiCallingService {
         }
     }
 
+    public static class Discover {
+
+        /**
+         * Call this service to get the discover page featured videos lists.
+         */
+        public static Call<PostList> getFeaturedPosts(int page, Context context){
+            return getDiscoverService(context).getFeaturedPosts(page);
+        }
+
+        /**
+         * Call this service to get the discover page interested category videos when user clicks "View all".
+         */
+        public static Call<PostList> getAllInterestedCategoriesVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getAllInterestedCategoriesVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get the discover page trending category videos of the respected category.
+         */
+        public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
+            return getDiscoverService(context).getTrendingVideos(page, categoryId);
+        }
+
+        /**
+         * Call this service to get discover page landing posts.
+         */
+        public static Call<LandingPosts> getDiscoverPagePosts(Context context){
+            return getDiscoverService(context).getDiscoverPagePosts();
+        }
+
+        /**
+         * Call this service to get users list to send follow request.
+         */
+        public static Call<UsersList> getUsersListToFollow(int page, Context context){
+            return getDiscoverService(context).getUsersListToFollow(page);
+        }
+
+        /**
+         * Call this service to get users list to send follow request with search term.
+         */
+        public static Call<UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
+            return getDiscoverService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
+        }
+
+        private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClientWithAuthToken(context))
+                    .build();
+            return retrofit.create(TeazerApiCall.DiscoverCalls.class);
+        }
+    }
+    
     public static class Friends {
         /**
          * Get the "my circle" with search term
@@ -307,24 +369,10 @@ public class ApiCallingService {
         /**
          * Call this service to get blocked users list by you.
          */
-        public static Call<BlockUsers> getBlockedUsers(int page, Context context){
+        public static Call<BlockUserResponse> getBlockedUsers(int page, Context context){
             return getFriendsService(context).getBlockedUsers(page);
         }
 
-        /**
-         * Call this service to get users list to send follow request.
-         */
-        public static Call<Pojos.Friends.UsersList> getUsersListToFollow(int page, Context context){
-            return getFriendsService(context).getUsersListToFollow(page);
-        }
-
-        /**
-         * Call this service to get users list to send follow request with search term.
-         */
-        public static Call<Pojos.Friends.UsersList> getUsersListToFollowWithSearchTerm(int page, String searchTerm, Context context){
-            return getFriendsService(context).getUsersListToFollowWithSearchTerm(page, searchTerm);
-        }
-        
         public static int isResponseOk(Response<CircleList> response) {
             switch (response.code()) {
                 case 200:
@@ -504,7 +552,7 @@ public class ApiCallingService {
             return getPostalService(context).deletePostVideo(postId);
         }
 
-        public static Call<ResultObject> reportPost(Pojos.Post.ReportPost reportPostDetails, Context context) {
+        public static Call<ResultObject> reportPost(ReportPostRequest reportPostDetails, Context context) {
             return getPostalService(context).reportPost(reportPostDetails);
         }
 
@@ -584,8 +632,11 @@ public class ApiCallingService {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }
 
-        public static Call<ResultObject> updatePassword(Pojos.User.UpdatePassword updatePasswordDetails, Context context) {
+        public static Call<ResultObject> updatePassword(UpdatePasswordRequest updatePasswordDetails, Context context) {
             return getUserService(context).updatePassword(updatePasswordDetails);
+        }
+        public static Call<ResultObject> setPassword(SetPasswordRequest setPasswordDetails, Context context) {
+            return getUserService(context).setPassword(setPasswordDetails);
         }
 
         public static Call<Pojos.User.NotificationsList> getFollowingNotifications(int page, Context context){
@@ -608,7 +659,17 @@ public class ApiCallingService {
             return getUserService(context).getUserProfile();
         }
 
+        public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context){
+            return getUserService(context).reportUser(reportuser);
+        }
+
         private static TeazerApiCall.UserCalls getUserService(Context context) {
+
+
+
+
+
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -660,7 +721,7 @@ public class ApiCallingService {
                         .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
                         .method(original.method(), original.body())
                         .build();
-                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
+//                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
         }).addInterceptor(logging).build();

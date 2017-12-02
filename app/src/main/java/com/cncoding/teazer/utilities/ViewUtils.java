@@ -3,27 +3,37 @@ package com.cncoding.teazer.utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
@@ -38,9 +48,23 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
+    public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
+    public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
+
+    public static void enableView(View view) {
+        view.setEnabled(true);
+        view.setAlpha(1);
+        view.setBackgroundTintList(null);
+    }
+
+    public static void disableView(View view) {
+        view.setEnabled(false);
+        view.setAlpha(0.5f);
+        view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+    }
 
     public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -157,6 +181,7 @@ public class ViewUtils {
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
+        ((AppCompatActivity) packageContext).finish();
     }
 
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
@@ -202,11 +227,44 @@ public class ViewUtils {
         }
     }
 
-    public static void updateMediaDatabase(Context context, String videoPath) {
+    public static void showKeyboard(Activity activity, View view) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    public static void updateMediaStoreDatabase(Context context, String videoPath) {
         context.sendBroadcast(
                 new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                         .setData(Uri.fromFile(new File(videoPath)))
         );
+    }
+
+    public static void deleteFileFromMediaStoreDatabase(Context context, String videoPath) {
+        Uri rootUri = MediaStore.Audio.Media.getContentUriForPath(videoPath);  // Change file types here
+        context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{videoPath});
+    }
+
+    public static byte[] getByteArrayFromImage(ImageView imageView) {
+        if (imageView.getDrawable() != null) {
+            try {
+                Bitmap bitmap;
+                if (imageView.getDrawable() instanceof TransitionDrawable)
+                    bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+                else
+                    bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                return outputStream.toByteArray();
+            } catch (ClassCastException e) {
+                if (e.getMessage() != null)
+                    Log.e("Getting thumbnail", e.getMessage());
+                return null;
+            }
+        } else
+            return null;
     }
 
 //    /**

@@ -18,6 +18,7 @@ package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,6 +38,8 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -94,9 +97,10 @@ public class CameraFragment extends Fragment {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
-    public static final int ACTION_UPLOAD_VIDEO_POST = 20;
-//    public static final int ACTION_UPLOAD_REACTION = 21;
+    public static final int ACTION_START_UPLOAD_FRAGMENT = 21;
     public static final int ACTION_SHOW_GALLERY = 22;
+    public static final int ACTION_EXIT = 23;
+
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
 
@@ -212,6 +216,13 @@ public class CameraFragment extends Fragment {
             mCameraDevice = null;
             activity.finish();
         }
+
+        @Override
+        public void onClosed(@NonNull CameraDevice camera) {
+//            closeCamera();
+//            stopBackgroundThread();
+            super.onClosed(camera);
+        }
     };
 
     private FragmentActivity activity;
@@ -224,6 +235,9 @@ public class CameraFragment extends Fragment {
     private String cameraId;
     private boolean isReaction;
     private PostDetails postDetails;
+    private CameraManager cameraManager;
+    private boolean isFlashSupported;
+    private boolean isTorchOn = false;
 
     public static CameraFragment newInstance(boolean isReaction, PostDetails postDetails) {
         CameraFragment fragment = new CameraFragment();
@@ -257,7 +271,7 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
-        createVideoFolder();
+        new CreateVideoFolder(this).execute();
         return rootView;
     }
 
@@ -273,6 +287,10 @@ public class CameraFragment extends Fragment {
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+//        Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+//        isFlashSupported = available == null ? false : available;
+//
+//        setupFlashButton();
     }
 
     @Override
@@ -298,6 +316,43 @@ public class CameraFragment extends Fragment {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_FRONT);
         } else
             openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_BACK);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @OnClick(R.id.camera_flash) public void actionFlash() {
+        try {
+            if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                if (isFlashSupported) {
+                    if (isTorchOn) {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+                        isTorchOn = false;
+                    } else {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+                        isTorchOn = true;
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setupFlashButton() {
+        if (cameraId.equals(String.valueOf(CAMERA_BACK)) && isFlashSupported) {
+            cameraFlashView.setVisibility(View.VISIBLE);
+
+            if (isTorchOn) {
+                cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+            } else {
+                cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+            }
+
+        } else {
+            cameraFlashView.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.camera_files) public void showGallery() {
@@ -327,12 +382,18 @@ public class CameraFragment extends Fragment {
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        mBackgroundThread.quitSafely();
         try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
+            if (mBackgroundThread != null) {
+                mBackgroundThread.quitSafely();
+                try {
+                    mBackgroundThread.join();
+                    mBackgroundThread = null;
+                    mBackgroundHandler = null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -404,13 +465,17 @@ public class CameraFragment extends Fragment {
             return;
         }
 
-        CameraManager cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             if (cameraManager != null) {
-                cameraId = cameraManager.getCameraIdList()[facing];
+                if (cameraManager.getCameraIdList().length > 1) {
+                    cameraId = cameraManager.getCameraIdList()[facing];
+                } else {
+                    cameraId = cameraManager.getCameraIdList()[0];
+                }
                 // Choose the sizes for camera preview and video recording
                 CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
 
@@ -427,6 +492,12 @@ public class CameraFragment extends Fragment {
                 } else {
                     mTextureView.setAspectRatio(mPreviewSize.getHeight(), mPreviewSize.getWidth());
                 }
+
+                Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                isFlashSupported = available == null ? false : available;
+
+                setupFlashButton();
+
                 configureTransform(width, height);
                 mMediaRecorder = new MediaRecorder();
                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -468,7 +539,7 @@ public class CameraFragment extends Fragment {
     /**
      * Start the camera preview.
      */
-    private void startPreview() {
+    public void startPreview() {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;
         }
@@ -607,15 +678,16 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
             mNextVideoAbsolutePath = getVideoFilePath(activity);
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mMediaRecorder.setVideoFrameRate(30);
+//        mMediaRecorder.setPreviewDisplay();
+//        mMediaRecorder.setVideoEncodingBitRate(10000000);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
@@ -629,12 +701,25 @@ public class CameraFragment extends Fragment {
         mMediaRecorder.prepare();
     }
 
-    private void createVideoFolder() {
-        File movieFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-        videoFolder = new File(movieFile, getString(R.string.app_name));
-        if (!videoFolder.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            videoFolder.mkdirs();
+    private static class CreateVideoFolder extends AsyncTask<Void, Void, Boolean> {
+
+        private WeakReference<CameraFragment> reference;
+
+        CreateVideoFolder(CameraFragment context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Boolean isCreated = false;
+            reference.get().videoFolder = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+                    reference.get().getString(R.string.app_name));
+
+            if (!reference.get().videoFolder.exists()) {
+                isCreated = reference.get().videoFolder.mkdirs();
+            }
+            return isCreated;
         }
     }
 
@@ -659,6 +744,7 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
+            checkFlashStatus();
             closePreviewSession();
             setUpMediaRecorder();
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
@@ -707,7 +793,24 @@ public class CameraFragment extends Fragment {
 
     }
 
-    private void closePreviewSession() {
+    private void checkFlashStatus() {
+        try {
+            if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                if (isFlashSupported) {
+                    if (isTorchOn) {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+                        isTorchOn = false;
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closePreviewSession() {
         if (mPreviewSession != null) {
             mPreviewSession.close();
             mPreviewSession = null;
@@ -718,27 +821,40 @@ public class CameraFragment extends Fragment {
         // UI
         mIsRecordingVideo = false;
 
-        try {
-            mPreviewSession.stopRepeating();
-            mPreviewSession.abortCaptures();
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-        // Stop recording
-        try {
-            mMediaRecorder.stop();
-        } catch (RuntimeException e) {
-            Log.e("MediaRecorder stop()", e.getMessage());
-        }
-        mMediaRecorder.reset();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mPreviewSession.stopRepeating();
+                    mPreviewSession.abortCaptures();
+                    if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                        if (isFlashSupported) {
+                            if (isTorchOn) {
+                                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                                isTorchOn = false;
+                            }
+                        }
+                    }
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+                // Stop recording
+                try {
+                    mMediaRecorder.stop();
+                } catch (RuntimeException e) {
+                    Log.e("MediaRecorder stop()", e.getMessage());
+                }
+                mMediaRecorder.reset();
 
-//        Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
-//        mNextVideoAbsolutePath = null;
-//        startPreview();
+            }
+        }).start();
+
+        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
         if (isReaction)
-            new ChooseOptionalTitle(context, new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
+            new ChooseOptionalTitle(new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
         else
-            mListener.onCameraInteraction(ACTION_UPLOAD_VIDEO_POST, new UploadParams(mNextVideoAbsolutePath, null));
+            mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath, null));
     }
 
     /**
@@ -821,9 +937,9 @@ public class CameraFragment extends Fragment {
 
     static class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
 
-        ChooseOptionalTitle(@NonNull final Context context, final UploadParams uploadParams, final Activity activity) {
-            super(context);
-            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        ChooseOptionalTitle(final UploadParams uploadParams, final Activity activity) {
+            super(activity);
+            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(activity);
             LayoutInflater inflater = activity.getLayoutInflater();
             @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
             dialogBuilder.setView(dialogView);
@@ -838,11 +954,20 @@ public class CameraFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     hideKeyboard(activity, editText);
 
-                    performUpload(context,
+                    performUpload(activity,
                             new UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(),
                                     uploadParams.getPostDetails()));
 
                     activity.finish();
+                }
+            });
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+//                    //noinspection ResultOfMethodCallIgnored
+//                    new File(uploadParams.getVideoPath()).delete();
+//                    deleteFileFromMediaStoreDatabase(activity, uploadParams.getVideoPath());
+                    dialogInterface.dismiss();
                 }
             });
             android.support.v7.app.AlertDialog b = dialogBuilder.create();
@@ -862,9 +987,6 @@ public class CameraFragment extends Fragment {
     }
 
     public interface OnCameraFragmentInteractionListener {
-        /**
-         * @param action {@value #ACTION_UPLOAD_VIDEO_POST} or {@value #ACTION_SHOW_GALLERY}
-         */
         void onCameraInteraction(int action, UploadParams uploadParams);
     }
 }

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.utilities;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +15,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,6 +28,7 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -43,6 +41,7 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
+import static com.cncoding.teazer.MainActivity.SIGNUP_FAILED_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
@@ -61,17 +60,20 @@ public class AuthUtils {
         return SharedPrefs.getAuthToken(context) != null;
     }
 
-    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event) {
+    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event, Context context) {
         if (view.getCompoundDrawables()[2] != null) {
             if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width())) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
                         return true;
                     case MotionEvent.ACTION_UP:
                         view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                        view.setTypeface(new TypeFactory(context).regular);
                         view.setSelection(view.getText().length());
+                        view.setTypeface(new TypeFactory(context).regular);
                         return true;
                     default:
                         return false;
@@ -101,20 +103,14 @@ public class AuthUtils {
     @NonNull
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return Settings.Secure.ANDROID_ID;
-
-//        }
-//        TelephonyManager telephonyManager = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-//        if (telephonyManager != null) {
-//            return telephonyManager.getDeviceId();
-//        } else return Settings.Secure.ANDROID_ID;
-        return Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     public static String getFcmToken(Context context) {
+//        Log.d("FCM Token", FirebaseInstanceId.getInstance().getToken());
         return SharedPrefs.getFcmToken(context) == null ? FirebaseInstanceId.getInstance().getToken() : SharedPrefs.getFcmToken(context);
+
+
     }
 
     /**
@@ -203,6 +199,13 @@ public class AuthUtils {
                     } else {
                         ViewUtils.showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mListener != null)
+                                            mListener.onFinalEmailSignupInteraction(SIGNUP_FAILED_ACTION, null);
+                                    }
+                                }, 2000);
                     }
                 } else
                     ViewUtils.showSnackBar(signupBtn, response.code() + " : " + response.message());
@@ -218,7 +221,8 @@ public class AuthUtils {
     }
 
     public static void performFinalSignup(final Context context, final Pojos.Authorize verify, final CountDownTimer countDownTimer,
-                                          final ProximaNovaRegularTextView otpVerifiedTextView, final OnOtpInteractionListener mListener) {
+                                          final ProximaNovaRegularTextView otpVerifiedTextView,
+                                          final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
         ApiCallingService.Auth.verifySignUp(verify)
 
                 .enqueue(new Callback<ResultObject>() {
@@ -236,13 +240,9 @@ public class AuthUtils {
 //                    Username, Email or Phone Number already exists
                             case 200:
                                 countDownTimer.cancel();
-                                otpVerifiedTextView.setText(R.string.already_exists);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mListener.onOtpInteraction(verify, false);
-                                    }
-                                }, 1500);
+                                otpVerifiedTextView.setText(R.string.wrong_otp);
+                                otpResendBtn.setEnabled(true);
+                                otpResendBtn.setAlpha(1);
                                 break;
 //                    Failed, Invalid JSON or validation failed
                             default:
@@ -254,37 +254,13 @@ public class AuthUtils {
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
-                        logout(context, null);
+//                        logout(context, null);
                     }
                 });
     }
 
-    private static void stopCircularReveal(final View revealLayout, View anchorButton) {
-        final Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-                (int) anchorButton.getX() + (anchorButton.getWidth() / 2),
-                (int) anchorButton.getY() + (anchorButton.getHeight() / 2),
-                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-        animator.setDuration(500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                revealLayout.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        animator.start();
+    private static void stopCircularReveal(View revealLayout) {
+        revealLayout.animate().alpha(0).setDuration(280).start();
     }
 
     /**
@@ -313,24 +289,14 @@ public class AuthUtils {
                 } else
                     ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
                 loginBtn.setEnabled(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
-                    }
-                }, 1000);
+                stopCircularReveal(revealLayout);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 ViewUtils.showSnackBar(loginBtn, t.getMessage());
                 loginBtn.setEnabled(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopCircularReveal(revealLayout, loginBtn);
-                    }
-                }, 1000);
+                stopCircularReveal(revealLayout);
             }
         });
     }
@@ -362,8 +328,8 @@ public class AuthUtils {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mListener.onOtpInteraction(
-                                                null, false);
+                                        if (mListener != null)
+                                            mListener.onOtpInteraction(null, true);
                                     }
                                 }, 1000);
                             } else {
@@ -372,18 +338,22 @@ public class AuthUtils {
                             }
                         } else
                             ViewUtils.showSnackBar(otpResendBtn, response.code() + " : " + response.message());
+
                         otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         ViewUtils.showSnackBar(otpResendBtn, t.getMessage());
                         otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
                     }
                 });
     }
 
     public static void logout(final Context context, @Nullable final Activity activity) {
+        SharedPrefs.finishVideoUploadSession(context);
         ApiCallingService.User.logout("Bearer " + SharedPrefs.getAuthToken(context), context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override

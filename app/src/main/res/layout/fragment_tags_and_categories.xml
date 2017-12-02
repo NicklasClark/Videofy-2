@@ -4,7 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey100"
+    android:animateLayoutChanges="true"
     tools:context=".tagsAndCategories.TagsAndCategoryFragment">
+
+    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+        android:id="@+id/no_friends_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/padding_half"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_h4"
+        android:text="@string/no_friends_yet"
+        android:visibility="gone"/>
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/headerTextView"

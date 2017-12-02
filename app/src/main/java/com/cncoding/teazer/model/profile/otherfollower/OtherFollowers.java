@@ -28,9 +28,21 @@ public class OtherFollowers {
     @SerializedName("my_self")
     @Expose
     private Boolean mySelf;
+    @SerializedName("account_type")
+    @Expose
+    private Integer accountType;
     @SerializedName("has_profile_media")
     @Expose
     private Boolean hasProfileMedia;
+    @SerializedName("following")
+    @Expose
+    private Boolean following;
+    @SerializedName("follower")
+    @Expose
+    private Boolean follower;
+    @SerializedName("request_sent")
+    @Expose
+    private Boolean requestSent;
     @SerializedName("profile_media")
     @Expose
     private ProfileMedia profileMedia;
@@ -83,12 +95,44 @@ public class OtherFollowers {
         this.mySelf = mySelf;
     }
 
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
+
     public Boolean getHasProfileMedia() {
         return hasProfileMedia;
     }
 
     public void setHasProfileMedia(Boolean hasProfileMedia) {
         this.hasProfileMedia = hasProfileMedia;
+    }
+
+    public Boolean getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Boolean following) {
+        this.following = following;
+    }
+
+    public Boolean getFollower() {
+        return follower;
+    }
+
+    public void setFollower(Boolean follower) {
+        this.follower = follower;
+    }
+
+    public Boolean getRequestSent() {
+        return requestSent;
+    }
+
+    public void setRequestSent(Boolean requestSent) {
+        this.requestSent = requestSent;
     }
 
     public ProfileMedia getProfileMedia() {
@@ -100,3 +144,4 @@ public class OtherFollowers {
     }
 
 }
+

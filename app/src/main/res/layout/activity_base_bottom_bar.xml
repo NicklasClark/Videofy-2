@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     tools:context="com.cncoding.teazer.BaseBottomBarActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -19,30 +20,56 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:contentInsetStart="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@color/colorSecondary_text">
+            app:titleTextColor="@android:color/white">
 
-            <com.cncoding.teazer.customViews.SignPainterTextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/app_name"
-                android:textColor="@color/colorPrimary"
-                android:layout_gravity="center"
-                android:textSize="@dimen/text_size_h3"
-                android:gravity="center"/>
+            <RelativeLayout
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                android:id="@+id/logout_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/text_size_content"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:foreground="@drawable/ripple_dark"
-                android:paddingStart="@dimen/padding_default"
-                android:paddingEnd="@dimen/padding_default"
-                android:text="@string/logout"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+                <com.cncoding.teazer.customViews.SignPainterTextView
+                    android:id="@+id/toolbar_center_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_h3"
+                    tools:ignore="PrivateResource,RelativeOverlap" />
+
+
+                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    android:id="@+id/toolbar_plain_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/padding_half"
+                    android:layout_marginBottom="@dimen/padding_half"
+                    android:padding="@dimen/padding_thin"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_content_big"
+                    android:visibility="gone" />
+
+                <!--<com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    android:id="@+id/up_btn_with_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="?android:attr/actionBarSize"
+                    app:drawableStartCompat="@drawable/ic_previous"
+                    android:scaleType="center"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_content_big"
+                    android:foreground="@drawable/ripple_dark_circle"
+                    android:contentDescription="@string/up"
+                    android:visibility="gone"
+                    tools:ignore="RelativeOverlap" />-->
+
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -62,6 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:visibility="gone">
 
             <LinearLayout
@@ -111,6 +139,12 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <android.support.design.widget.TabLayout
@@ -119,61 +153,55 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@drawable/bg_bottom_drawer" />
+        android:foreground="@drawable/ripple_dark_no_rounded_with_top_margin"
+        android:background="@drawable/bg_bottom_drawer"
+        app:tabBackground="?attr/selectableItemBackground">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@null"
+            android:tag="@string/title_home"
+            android:icon="@drawable/ic_home_default" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@null"
+            android:tag="@string/discover"
+            android:icon="@drawable/ic_binoculars_default" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@null"
+            android:visibility="invisible"/>
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@null"
+            android:tag="@string/title_notifications"
+            android:icon="@drawable/ic_notifications_default" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@null"
+            android:tag="@string/title_dashboard"
+            android:icon="@drawable/ic_person" />
+
+    </android.support.design.widget.TabLayout>
 
     <ImageButton
         android:id="@+id/camera_btn"
-        android:layout_width="85dp"
-        android:layout_height="80dp"
+        android:layout_width="62dp"
+        android:layout_height="64dp"
         android:foreground="@drawable/ripple_camera_button"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/padding_half"
+        android:src="@drawable/ic_add_video"
+        android:layout_marginBottom="@dimen/padding_10dp"
         android:background="@drawable/bg_circle_light_filled_outlined"
         android:contentDescription="@string/record_video" />
 
-    <!--REACTION CAMERA FRAGMENT CONTAINER-->
-<!--    <FrameLayout
-        android:id="@+id/camera_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
-
 </com.cncoding.teazer.customViews.NestedCoordinatorLayout>
-<!--
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/material_grey100"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:contentInsetStart="0dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="@color/colorSecondary_text">
-
-        <com.cncoding.teazer.customViews.SignPainterTextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/app_name"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"
-            android:textSize="@dimen/text_size_h3"
-            android:gravity="center"/>
-
-    </android.support.v7.widget.Toolbar>
-
-    <FrameLayout
-        android:id="@+id/main_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:orientation="vertical">
-    </FrameLayout>
-
-</LinearLayout>-->

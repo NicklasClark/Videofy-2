@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by amit on 18/11/17.
+ * Created by amit on 26/11/17.
  */
 
 public class ProfileReaction {

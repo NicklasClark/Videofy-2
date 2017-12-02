@@ -6,22 +6,27 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,24 +35,25 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.MediaControllerView;
+import com.cncoding.teazer.customViews.MediaControllerView.MediaPlayerControlListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
+import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.io.IOException;
@@ -61,15 +67,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 
-public class PostDetailsFragment extends BaseFragment implements MediaControllerView.MediaPlayerControlListener,
-        TextureView.SurfaceTextureListener, MediaPlayer.OnVideoSizeChangedListener {
+public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
+        SurfaceTextureListener, OnVideoSizeChangedListener {
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
 
+    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.video_surface) TextureView textureView;
@@ -77,15 +85,16 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     @BindView(R.id.video_surface_container) FrameLayout surfaceContainer;
     @BindView(R.id.loading) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
-    @BindView(R.id.like) CheckedTextView likeBtn;
+    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
     @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
     @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
     @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
     @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
-    @BindView(R.id.menu) CircularAppCompatImageView menu;
+    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list) RecyclerView recyclerView;
 //    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
     @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
@@ -94,6 +103,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     private boolean isComplete;
     private byte[] image;
     private ArrayList<PostReaction> postReactions;
+    private ArrayList<TaggedUser> taggedUsersList;
     private MediaControllerView controller;
     private MediaPlayer mediaPlayer;
     private OnPostDetailsInteractionListener mListener;
@@ -116,6 +126,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         postReactions = new ArrayList<>();
+        taggedUsersList = new ArrayList<>();
         if (getArguments() != null) {
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
             image = getArguments().getByteArray(ARG_THUMBNAIL);
@@ -123,14 +134,21 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).hideAppBar();
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getParentActivity().hideAppBar();
+        getParentActivity().updateToolbarTitle(getString(R.string.post));
+
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
         ButterKnife.bind(this, rootView);
         context = getContext();
+        getParentActivity().hidesettingsReport();
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
@@ -145,10 +163,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact())
-            reactBtn.setEnabled(false);
+        if (!postDetails.canReact()) disableView(reactBtn);
 
-//        tagsCountBadge.setText(postDetails.);
+        tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
 
         prepareController();
 
@@ -160,7 +178,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (is_next_page)
                     getPostReactions(postDetails.getPostId(), page);
             }
         };
@@ -174,7 +192,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //            }
 //        });
 
-        return rootView;
+        taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
+
     }
 
     @Override
@@ -198,7 +218,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
             mediaPlayer.setDataSource(postDetails.getMedias().get(0).getMediaUrl());
             mediaPlayer.setSurface(surface);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+//            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
             e.printStackTrace();
@@ -216,6 +236,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         placeholder.setVisibility(View.INVISIBLE);
                     }
                 }, 400);
+                controller.show(false, true, false);
 //                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
 //                Increment the video view count
@@ -246,7 +267,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     private void prepareController() {
         String profilePicUrl = "";
-        if (postDetails.getPostOwner().hasProfileMedia())
+        if (postDetails.getPostOwner().hasProfileMedia() && postDetails.getPostOwner().getProfileMedia() != null)
             profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
         String location = "";
         if (postDetails.hasCheckin())
@@ -266,16 +287,28 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                     .withReactionCount(postDetails.getTotalReactions())
                     .build(surfaceContainer);
         }
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY != 0) {
+                    if (!controller.isShowing())
+                        controller.show(true, false, true);
+                }
+            }
+        });
     }
 
     private String getUserCategories() {
-        StringBuilder categories = new StringBuilder();
-        for (int i = 0; i < postDetails.getCategories().size(); i++) {
-            categories.append(postDetails.getCategories().get(i).getCategoryName());
-            if (i < postDetails.getCategories().size() - 1)
-                categories.append(", ");
-        }
-        return categories.toString();
+        if (postDetails.getCategories() != null) {
+            StringBuilder categories = new StringBuilder();
+            for (int i = 0; i < postDetails.getCategories().size(); i++) {
+                categories.append(postDetails.getCategories().get(i).getCategoryName());
+                if (i < postDetails.getCategories().size() - 1)
+                    categories.append(", ");
+            }
+            return categories.toString();
+        } else return null;
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
@@ -286,35 +319,34 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                         switch (response.code()) {
                             case 200:
                                 if (response.body().getReactions().size() > 0) {
+                                    postLoadErrorLayout.setVisibility(View.GONE);
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1)
+                                        postReactions.clear();
+
                                     postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
                                     postReactionAdapter.notifyDataSetChanged();
                                     if (postReactions.size() > 0) {
                                         if (postReactions.size() >= 1) {
                                             controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(0);
+                                        }
                                         if (postReactions.size() >= 2) {
                                             controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(1);
+                                        }
                                         if (postReactions.size() >= 3) {
                                             controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                        } else
-                                            controller.disappearReactionPic(2);
+                                        }
                                     }
                                 } else {
-                                    controller.disappearReactionPic(0);
-                                    controller.disappearReactionPic(1);
-                                    controller.disappearReactionPic(2);
                                     controller.setNoReactions();
                                     showNoReactionMessage();
                                 }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() +": " + response.message());
-                                break;
-                        }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() +": " + response.message());
+                                    break;
+                            }
                     }
 
                     private void showErrorMessage(String message) {
@@ -336,6 +368,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     private void showNoReactionMessage() {
         dismissProgressBar();
+        reactionsHeader.setVisibility(View.GONE);
 //        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(View.VISIBLE);
@@ -363,11 +396,11 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() == 200) {
-                    likeAction(likeBtn.isChecked(), true);
-//                    ViewUtils.makeSnackbarWithBottomMargin(getActivity(), likeBtn, response.body().getMessage());
-                } else {
-                    Toast.makeText(context, response.code() + " : " + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                if (response.code() != 200) {
+                    if (response.body() != null)
+                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
+                    else
+                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
                 }
             }
 
@@ -383,6 +416,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 //            Unlike the post
             ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, context).enqueue(callback);
         }
+        likeAction(likeBtn.isChecked(), true);
     }
 
     @OnClick(R.id.tags) public void getTaggedList() {
@@ -395,21 +429,20 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                             if (response.code() == 200) {
                                 horizontalListViewParent.setVisibility(View.VISIBLE);
                                 if (response.body().getTaggedUsers().size() > 0) {
-                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
-                                            LinearLayoutManager.HORIZONTAL, false));
-                                    taggedUserListView.setAdapter(new TagListAdapter(context, response.body().getTaggedUsers()));
+                                    taggedUsersList.addAll(response.body().getTaggedUsers());
+                                    taggedUserListView.getAdapter().notifyDataSetChanged();
                                 } else {
-                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
-                                            LinearLayoutManager.HORIZONTAL, false));
-                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
-//                                    noTaggedUsers.setVisibility(View.VISIBLE);
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            horizontalListViewParent.setVisibility(View.GONE);
-//                                            noTaggedUsers.setVisibility(View.GONE);
-//                                        }
-//                                    }, 2000);
+                                     noTaggedUsers.setVisibility(View.VISIBLE);
+//                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
+//                                            LinearLayoutManager.HORIZONTAL, false));
+//                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            horizontalListViewParent.setVisibility(View.GONE);
+                                            noTaggedUsers.setVisibility(View.GONE);
+                                        }
+                                    }, 2000);
                                 }
                             } else {
                                 Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
@@ -426,65 +459,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
         }
     }
 
-    private ArrayList<Pojos.TaggedUser> getDummyTaggedUsersList() {
-        ArrayList<Pojos.TaggedUser> taggedUsers = new ArrayList<>();
-
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Prem Suman", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://media.licdn.com/mpr/mpr/shrink_100_100/p/2/005/0b8/3ed/1116b9c.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Madhav R", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://img.huffingtonpost.com/asset/58189045170000c5045baf66.jpg?ops=100_100",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Ankita", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://media.npr.org/assets/img/2017/04/13/ailsa-chang_npr_1_sq-72b113f65ab52a533c9f7bd99931a54c8262f993-s100-c85.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Ailsa Chang", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://www.incimages.com/uploaded_files/image/100x100/Carolyn-Cutrone-800x800_31057.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Carolyn Cutrone", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://news.usc.edu/files/2015/04/emily-gersema160x160-100x100.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Emily gersema", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://media.licdn.com/mpr/mpr/shrink_100_100/p/2/005/0b8/3ed/1116b9c.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Chaitanya", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://img.huffingtonpost.com/asset/58189045170000c5045baf66.jpg?ops=100_100",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Arif K", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://media.npr.org/assets/img/2017/04/13/ailsa-chang_npr_1_sq-72b113f65ab52a533c9f7bd99931a54c8262f993-s100-c85.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Ailsa Chang", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://www.incimages.com/uploaded_files/image/100x100/Carolyn-Cutrone-800x800_31057.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        taggedUsers.add(new Pojos.TaggedUser(0, 0, "Carolyn Cutrone", "",
-                "", false, false, true,
-                new Pojos.ProfileMedia(0, "",
-                        "https://news.usc.edu/files/2015/04/emily-gersema160x160-100x100.jpg",
-                        "", new Pojos.Dimension(100, 100), true)));
-        return taggedUsers;
-    }
-
     private void likeAction(boolean isChecked, boolean animate) {
         if (!isChecked) {
             likeBtn.setChecked(true);
+            likeBtn.setText(R.string.liked);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
@@ -493,9 +471,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
         } else {
             likeBtn.setChecked(false);
+            likeBtn.setText(R.string.like);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline, 0, 0);
             if (animate) {
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.deselected));
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.decrementLikes();
             }
         }
@@ -503,14 +482,16 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     @OnClick(R.id.menu) public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
-//        popupMenu.setOnDismissListener(new OnDismissListener());
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         popupMenu.inflate(R.menu.menu_post);
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.pause();
+        else mediaPlayer.start();
+
         if (controller != null)
             controller.toggleControllerView();
     }
@@ -589,8 +570,16 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
                 case R.id.action_delete:
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.action_report:
-                    Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
+                case R.id.action_profile_report:
+                    if (postDetails.canReact()) {
+                        FragmentManager fm = getFragmentManager();
+                        ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.newInstance(postDetails.getPostId(), postDetails.canReact());
+                        // SETS the target fragment for use later when sending results
+                        reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
+                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                    } else {
+                        Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
             }
             return false;
@@ -629,6 +618,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
     public void onDestroy() {
         super.onDestroy();
         postReactionAdapter = null;
+        getParentActivity().showAppBar();
     }
 
     private void resetMediaPlayer() {
@@ -713,7 +703,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaController
 
     @Override
     public int getBufferPercentage() {
-        return 0;
+        return 10;
     }
 
     @Override

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:layout_margin="@dimen/padding_half"
-    android:background="@drawable/bg_card">
+    android:id="@+id/root_layout"
+    android:layout_width="328dp"
+    android:layout_height="220dp"
+    android:layout_margin="@dimen/padding_half">
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:contentDescription="@string/video_thumbnail" />
 
@@ -85,7 +85,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_content"
+            android:textSize="@dimen/text_size_14sp"
             android:maxLines="1"
             android:singleLine="true"
             android:ellipsize="end"
@@ -98,10 +98,13 @@
             android:id="@+id/likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_12sp"
+            android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_like_outline_small"
             android:gravity="end|center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:paddingStart="@dimen/padding_thin"
             android:paddingEnd="0dp"
             android:layout_marginTop="@dimen/padding_thin"
@@ -112,10 +115,13 @@
             android:id="@+id/views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_12sp"
+            android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:paddingStart="@dimen/padding_half"
             android:paddingEnd="0dp"
             android:layout_marginTop="@dimen/padding_thin"
@@ -134,6 +140,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_14sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
             android:paddingTop="@dimen/padding_half"
             android:paddingBottom="@dimen/padding_half"
@@ -149,7 +158,8 @@
             android:scaleType="centerCrop"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/reaction_count"/>
+            android:layout_toStartOf="@+id/reaction_count"
+            android:visibility="gone"/>
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/reaction_2"
@@ -158,8 +168,9 @@
             android:scaleType="centerCrop"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_reaction_bubbles"
-            android:layout_toStartOf="@+id/reaction_1"/>
+            android:layout_marginEnd="@dimen/padding_thin"
+            android:layout_toStartOf="@+id/reaction_1"
+            android:visibility="gone"/>
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/reaction_3"
@@ -168,8 +179,9 @@
             android:scaleType="centerCrop"
             android:foreground="@drawable/bg_circle_white_outline"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_reaction_bubbles"
-            android:layout_toStartOf="@+id/reaction_2"/>
+            android:layout_marginEnd="@dimen/padding_thin"
+            android:layout_toStartOf="@+id/reaction_2"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

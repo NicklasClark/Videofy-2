@@ -4,15 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cncoding.teazer.home.search.SearchFragment">
+    tools:context="com.cncoding.teazer.home.discover.DiscoverFragment">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/user_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
         android:hint="@string/search"
-        app:drawableStartCompat="@drawable/ic_search"/>
+        app:drawableStartCompat="@drawable/ic_search_padded"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"

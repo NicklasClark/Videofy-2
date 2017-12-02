@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -67,6 +68,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 //    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int DEVICE_TYPE_ANDROID = 2;
-    public static final int OPEN_CAMERA_ACTION = 98;
+//    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
     private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
     private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
-    private static final String TAG_SELECT_INTERESTS = "selectInterests";
+    public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     private static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
+    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
@@ -210,7 +213,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
-                transaction.replace(R.id.main_fragment_container, Interests.newInstance(), TAG_SELECT_INTERESTS);
+                transaction.replace(R.id.main_fragment_container, Interests.newInstance(false, null),
+                        TAG_SELECT_INTERESTS);
                 break;
             default:
                 break;
@@ -315,28 +319,22 @@ public class MainActivity extends AppCompatActivity
                 mediaPlayer.pause();
                 loggingIn = true;
                 if (facebookProfile != null && facebookData != null) {
-                    handleFacebookLogin(facebookProfile, facebookData, button);
+                    handleFacebookLogin(facebookProfile, facebookData, button, null);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
                 mediaPlayer.pause();
                 loggingIn = true;
                 if (googleAccount != null)
-                    handleGoogleSignIn(googleAccount, button);
+                    handleGoogleSignIn(googleAccount, button, null);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
-                break;
-            case BACK_PRESSED_ACTION:
-                onBackPressed();
                 break;
             case RESUME_WELCOME_VIDEO_ACTION:
                 if (mediaPlayer != null && loggingIn)
                     if (!mediaPlayer.isPlaying())
                         mediaPlayer.start();
-                break;
-            case OPEN_CAMERA_ACTION:
-                startFragmentTransition(false, TAG_SELECT_INTERESTS, true);
                 break;
             default:
                 break;
@@ -344,7 +342,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
-                                     final ProximaNovaSemiboldButton button) {
+                                     final ProximaNovaSemiboldButton button, String username) {
+
+        username = username == null ? facebookProfile.getName() : username;
+
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
                 getDeviceId(this),
@@ -352,7 +353,7 @@ public class MainActivity extends AppCompatActivity
                 facebookProfile.getId(),                                            //social ID
                 SOCIAL_LOGIN_TYPE_FACEBOOK,
                 facebookData.getString("email"),                               //email
-                facebookProfile.getName(),                                          //Username
+                username,                                                           //Username
                 facebookProfile.getFirstName(),
                 facebookProfile.getLastName()))
 
@@ -360,74 +361,117 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//1
-                        switch (response.code()) {
-                            case 201:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, false);
-                                }
-                                break;
-                            case 200:
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(true, null,
-                                            facebookData, facebookProfile, button, true);
-                                } else {
-                                    new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
-                                            facebookProfile, button);
-                                }
-                                break;
-                            default:
-                                break;
+//                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                        try {
+                            switch (response.code()) {
+                                case 201:
+                                    if (response.body().getStatus()) {
+                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, false);
+                                    }
+                                    break;
+                                case 200:
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                    if (response.body().getStatus()) {
+                                        verificationSuccessful(true, null,
+                                                facebookData, facebookProfile, button, true);
+                                    } else {
+                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
+                                                facebookProfile, facebookData, button);
+                                    }
+                                    break;
+                                default:
+                                    Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
+                                    button.revertAnimation(new OnAnimationEndListener() {
+                                        @Override
+                                        public void onAnimationEnd() {
+                                            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                                    0, 0, 0);
+                                        }
+                                    });
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         loggingIn = false;
+                        Log.d("handleFacebookLogin()", t.getMessage());
+                        button.revertAnimation(new OnAnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0, 0, 0);
+                            }
+                        });
                     }
                 });
     }
 
-    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount,
-                                    final ProximaNovaSemiboldButton button) {
-        ApiCallingService.Auth.socialSignUp(new Authorize(
+    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button, String username) {
+
+        username = username == null ? googleAccount.getDisplayName() : username;
+
+        Authorize authorize = new Authorize(
                 getFcmToken(this),
                 getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 googleAccount.getId(),              //Social ID
                 SOCIAL_LOGIN_TYPE_GOOGLE,
                 googleAccount.getEmail(),
-                googleAccount.getDisplayName(),     //Username
+                username,                           //Username
                 googleAccount.getGivenName(),       //First name
-                googleAccount.getFamilyName()))     //Last name
+                googleAccount.getFamilyName())   ;   //Last name
+
+        ApiCallingService.Auth.socialSignUp(authorize)
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         loggingIn = false;
-                        SharedPrefs.saveAuthToken(MainActivity.this, response.body().getAuthToken());//2
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                     verificationSuccessful(false, googleAccount,
                                             null, null, button, false);
                                 }
                                 break;
                             case 200:
+                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false, googleAccount,
                                             null, null, button, true);
                                 } else {
                                     new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
-                                            null, button);
+                                            null, null, button);
                                 }
+                                break;
+                            default:
+                                Log.d("handleGoogleSignIn()", response.code() + "_" +response.message());
+                                button.revertAnimation(new OnAnimationEndListener() {
+                                    @Override
+                                    public void onAnimationEnd() {
+                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
+                                                0, 0, 0);
+                                    }
+                                });
+                                break;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         loggingIn = false;
+                        Log.d("handleGoogleSignIn()", t.getMessage());button.revertAnimation(new OnAnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0, 0, 0);
+                            }
+                        });
                     }
                 });
     }
@@ -497,11 +541,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
-        if (isVerified)
-            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-        else {
-            setFragment(TAG_LOGIN_FRAGMENT, true,
-                    new Object[] {verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+        if (verificationDetails != null) {
+            if (isVerified)
+                startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+            else {
+                setFragment(TAG_LOGIN_FRAGMENT, true,
+                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+            }
+        } else {
+            if (isVerified)
+                successfullyLoggedIn();
         }
     }
 
@@ -573,10 +622,10 @@ public class MainActivity extends AppCompatActivity
 
     private class UserNameAlreadyAvailableDialog extends AlertDialog.Builder {
 
-        UserNameAlreadyAvailableDialog(boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
-                                       Profile facebookProfile, final ProximaNovaSemiboldButton button) {
+        UserNameAlreadyAvailableDialog(final boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
+                                       final Profile facebookProfile, final Bundle facebookData, final ProximaNovaSemiboldButton button) {
             super(context);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogTheme);
             LayoutInflater inflater = MainActivity.this.getLayoutInflater();
             @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
             dialogBuilder.setView(dialogView);
@@ -596,7 +645,10 @@ public class MainActivity extends AppCompatActivity
             dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     if (!editText.getText().toString().equals("")) {
-                        handleGoogleSignIn(googleAccount, button);
+                        if (isFacebook)
+                            handleFacebookLogin(facebookProfile, facebookData, button, editText.getText().toString());
+                        else
+                            handleGoogleSignIn(googleAccount, button, editText.getText().toString());
                     }
                 }
             });
@@ -605,8 +657,12 @@ public class MainActivity extends AppCompatActivity
                     fragmentManager.popBackStackImmediate();
                 }
             });
-            AlertDialog b = dialogBuilder.create();
-            b.show();
+            AlertDialog dialog = dialogBuilder.create();
+//            button.setTextColor(Color.parseColor("#757575"));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#5a000000"));
+//            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#5a000000"));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+            dialog.show();
         }
 
         private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {

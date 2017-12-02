@@ -54,8 +54,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
         notificationsList = new NotificationsList(new ArrayList<Pojos.User.Notification>(), 0, false);
@@ -67,12 +66,11 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1)
+                if (is_next_page)
                     new GetFollowingNotifications(FollowingNotificationsTabFragment.this).execute(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        new GetFollowingNotifications(this).execute(1);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -83,6 +81,13 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
+            new GetFollowingNotifications(this).execute(1);
     }
 
     private static class GetFollowingNotifications extends AsyncTask<Integer, Void, Void> {
@@ -96,20 +101,24 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            reference.get().notificationsList.getNotifications().clear();
         }
 
         @Override
         protected Void doInBackground(Integer... integers) {
+            if (integers[0] == 1)
+                reference.get().notificationsList.getNotifications().clear();
+
             ApiCallingService.User.getFollowingNotifications(integers[0], reference.get().getContext())
                     .enqueue(new Callback<NotificationsList>() {
                         @Override
                         public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
                             if (response.code() == 200) {
+                                reference.get().is_next_page = response.body().isNextPage();
                                 if (response.body().getNotifications().size() > 0) {
                                     reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     reference.get().noNotifications.setVisibility(View.GONE);
                                     reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
+                                    reference.get().recyclerView.getRecycledViewPool().clear();
                                     reference.get().adapter.notifyDataSetChanged();
                                 } else {
                                     reference.get().swipeRefreshLayout.setVisibility(View.GONE);

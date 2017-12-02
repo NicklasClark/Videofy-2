@@ -64,7 +64,7 @@ public class ProfileFragmentNew extends BaseFragment {
     TextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    ProfileFragment.RemoveAppBar removeAppBar;
+
     Button btnedit;
     int totalfollowers;
     int totalfollowing;
@@ -82,7 +82,7 @@ public class ProfileFragmentNew extends BaseFragment {
     String detail;
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
-    private ProfileFragment.OnFragmentInteractionListener mListener;
+
 
     public ProfileFragmentNew() {
     }
@@ -104,7 +104,7 @@ public class ProfileFragmentNew extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
-        removeAppBar = (ProfileFragment.RemoveAppBar) context;
+
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);

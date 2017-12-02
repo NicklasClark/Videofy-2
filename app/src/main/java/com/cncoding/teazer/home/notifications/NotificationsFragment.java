@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.BaseFragment;
 
@@ -36,8 +35,9 @@ public class NotificationsFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        previousTitle = getParentActivity().getToolbarTitle();
+        getParentActivity().updateToolbarTitle(getString(R.string.title_notifications));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, rootView);
@@ -46,6 +46,7 @@ public class NotificationsFragment extends BaseFragment {
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        getParentActivity().hidesettingsReport();
 
         return rootView;
     }
@@ -53,9 +54,8 @@ public class NotificationsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() != null) {
-            ((BaseBottomBarActivity) getActivity()).showAppBar();
-        }
+        getParentActivity().showAppBar();
+      //  getParentActivity().hideSettings(false);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class NotificationsFragment extends BaseFragment {
         }
 //        else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnUploadFragmentInteractionListener");
 //        }
     }
 
@@ -74,6 +74,7 @@ public class NotificationsFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     /**

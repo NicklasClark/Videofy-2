@@ -52,7 +52,6 @@ import butterknife.OnClick;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
-import static com.cncoding.teazer.MainActivity.OPEN_CAMERA_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_FACEBOOK_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_GOOGLE_ACTION;
@@ -462,10 +461,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         snackbar.show();
     }
 
-    @OnClick(R.id.teazer_header) public void testBtnPressed() {
-        mListener.onWelcomeInteraction(OPEN_CAMERA_ACTION, null, null, null, null);
-    }
-
     @OnClick(R.id.login_page_btn) public void onLoginBtnClick() {
         if (isConnected)
             mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null, null, null, null);
@@ -551,7 +546,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                     }
                 });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location");
+                parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
                 request.setParameters(parameters);
                 request.executeAsync();
             }

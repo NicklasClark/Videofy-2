@@ -5,11 +5,15 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 //import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
@@ -721,6 +725,7 @@ public class Pojos {
             private int posted_by;
             private int likes;
             private int total_reactions;
+            private int total_tags;
             private boolean has_checkin;
             private String title;
             private boolean can_react;
@@ -730,15 +735,18 @@ public class Pojos {
             private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
             private CheckIn check_in;
             private ArrayList<Medias> medias;
+            private ArrayList<ReactedUser> reacted_users;
             private ArrayList<Category> categories;
 
-            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, boolean has_checkin,
-                               String title, boolean can_react, boolean can_like, boolean can_delete, MiniProfile post_owner,
-                               String created_at, CheckIn check_in, ArrayList<Medias> medias, ArrayList<Category> categories) {
+            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags,
+                               boolean has_checkin, String title, boolean can_react, boolean can_like, boolean can_delete,
+                               MiniProfile post_owner, String created_at, CheckIn check_in, ArrayList<Medias> medias,
+                               ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories) {
                 this.post_id = post_id;
                 this.posted_by = posted_by;
                 this.likes = likes;
                 this.total_reactions = total_reactions;
+                this.total_tags = total_tags;
                 this.has_checkin = has_checkin;
                 this.title = title;
                 this.can_react = can_react;
@@ -748,8 +756,65 @@ public class Pojos {
                 this.created_at = created_at;
                 this.check_in = check_in;
                 this.medias = medias;
+                this.reacted_users = reacted_users;
                 this.categories = categories;
             }
+
+            protected PostDetails(Parcel in) {
+                post_id = in.readInt();
+                posted_by = in.readInt();
+                likes = in.readInt();
+                total_reactions = in.readInt();
+                total_tags = in.readInt();
+                has_checkin = in.readByte() != 0;
+                title = in.readString();
+                can_react = in.readByte() != 0;
+                can_like = in.readByte() != 0;
+                can_delete = in.readByte() != 0;
+                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
+                created_at = in.readString();
+                check_in = in.readParcelable(CheckIn.class.getClassLoader());
+                medias = in.createTypedArrayList(Medias.CREATOR);
+                reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
+                categories = in.createTypedArrayList(Category.CREATOR);
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(post_id);
+                dest.writeInt(posted_by);
+                dest.writeInt(likes);
+                dest.writeInt(total_reactions);
+                dest.writeInt(total_tags);
+                dest.writeByte((byte) (has_checkin ? 1 : 0));
+                dest.writeString(title);
+                dest.writeByte((byte) (can_react ? 1 : 0));
+                dest.writeByte((byte) (can_like ? 1 : 0));
+                dest.writeByte((byte) (can_delete ? 1 : 0));
+                dest.writeParcelable(post_owner, flags);
+                dest.writeString(created_at);
+                dest.writeParcelable(check_in, flags);
+                dest.writeTypedList(medias);
+                dest.writeTypedList(reacted_users);
+                dest.writeTypedList(categories);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
+                @Override
+                public PostDetails createFromParcel(Parcel in) {
+                    return new PostDetails(in);
+                }
+
+                @Override
+                public PostDetails[] newArray(int size) {
+                    return new PostDetails[size];
+                }
+            };
 
             public int getPostId() {
                 return post_id;
@@ -765,6 +830,10 @@ public class Pojos {
 
             public int getTotalReactions() {
                 return total_reactions;
+            }
+
+            public int getTotalTags() {
+                return total_tags;
             }
 
             public boolean hasCheckin() {
@@ -803,61 +872,13 @@ public class Pojos {
                 return medias;
             }
 
+            public ArrayList<ReactedUser> getReactedUsers() {
+                return reacted_users;
+            }
+
             public ArrayList<Category> getCategories() {
                 return categories;
             }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(post_id);
-                parcel.writeInt(posted_by);
-                parcel.writeInt(likes);
-                parcel.writeInt(total_reactions);
-                parcel.writeByte((byte) (has_checkin ? 1 : 0));
-                parcel.writeString(title);
-                parcel.writeByte((byte) (can_react ? 1 : 0));
-                parcel.writeByte((byte) (can_like ? 1 : 0));
-                parcel.writeByte((byte) (can_delete ? 1 : 0));
-                parcel.writeParcelable(post_owner, i);
-                parcel.writeString(created_at);
-                parcel.writeParcelable(check_in, i);
-                parcel.writeTypedList(medias);
-                parcel.writeTypedList(categories);
-            }
-
-            protected PostDetails(Parcel in) {
-                post_id = in.readInt();
-                posted_by = in.readInt();
-                likes = in.readInt();
-                total_reactions = in.readInt();
-                has_checkin = in.readByte() != 0;
-                title = in.readString();
-                can_react = in.readByte() != 0;
-                can_like = in.readByte() != 0;
-                can_delete = in.readByte() != 0;
-                post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-                created_at = in.readString();
-                check_in = in.readParcelable(CheckIn.class.getClassLoader());
-                medias = in.createTypedArrayList(Medias.CREATOR);
-                categories = in.createTypedArrayList(Category.CREATOR);
-            }
-
-            public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
-                @Override
-                public PostDetails createFromParcel(Parcel in) {
-                    return new PostDetails(in);
-                }
-
-                @Override
-                public PostDetails[] newArray(int size) {
-                    return new PostDetails[size];
-                }
-            };
         }
 
         public static class PostReaction implements Parcelable {
@@ -986,6 +1007,162 @@ public class Pojos {
                 this.report_type_id = report_type_id;
             }
         }
+
+        public static class ReactedUser implements Parcelable {
+
+            private Integer user_id;
+            private String user_name;
+            private String first_name;
+            private String last_name;
+            private boolean is_blocked_you;
+            private boolean my_self;
+            private boolean has_profile_media;
+            private ProfileMedia profile_media;
+
+            public ReactedUser(Integer user_id, String user_name, String first_name, String last_name,
+                               boolean is_blocked_you, boolean my_self, boolean has_profile_media, ProfileMedia profile_media) {
+                this.user_id = user_id;
+                this.user_name = user_name;
+                this.first_name = first_name;
+                this.last_name = last_name;
+                this.is_blocked_you = is_blocked_you;
+                this.my_self = my_self;
+                this.has_profile_media = has_profile_media;
+                this.profile_media = profile_media;
+            }
+
+            protected ReactedUser(Parcel in) {
+                if (in.readByte() == 0) {
+                    user_id = null;
+                } else {
+                    user_id = in.readInt();
+                }
+                user_name = in.readString();
+                first_name = in.readString();
+                last_name = in.readString();
+                is_blocked_you = in.readByte() != 0;
+                my_self = in.readByte() != 0;
+                has_profile_media = in.readByte() != 0;
+                profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                if (user_id == null) {
+                    dest.writeByte((byte) 0);
+                } else {
+                    dest.writeByte((byte) 1);
+                    dest.writeInt(user_id);
+                }
+                dest.writeString(user_name);
+                dest.writeString(first_name);
+                dest.writeString(last_name);
+                dest.writeByte((byte) (is_blocked_you ? 1 : 0));
+                dest.writeByte((byte) (my_self ? 1 : 0));
+                dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeParcelable(profile_media, flags);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<ReactedUser> CREATOR = new Creator<ReactedUser>() {
+                @Override
+                public ReactedUser createFromParcel(Parcel in) {
+                    return new ReactedUser(in);
+                }
+
+                @Override
+                public ReactedUser[] newArray(int size) {
+                    return new ReactedUser[size];
+                }
+            };
+
+            public Integer getUserId() {
+                return user_id;
+            }
+
+            public String getUserName() {
+                return user_name;
+            }
+
+            public String getFirstName() {
+                return first_name;
+            }
+
+            public String getLastName() {
+                return last_name;
+            }
+
+            public Boolean hasBlockedYou() {
+                return is_blocked_you;
+            }
+
+            public Boolean getMySelf() {
+                return my_self;
+            }
+
+            public Boolean hasProfileMedia() {
+                return has_profile_media;
+            }
+
+            public ProfileMedia getProfileMedia() {
+                return profile_media;
+            }
+        }
+
+        public static class LandingPosts {
+            private ArrayList<PostDetails> most_popular;
+            private ArrayList<Category> user_interests;
+            private ArrayList<Category> trending_categories;
+            @SerializedName("my_interests")
+            @Expose
+            private Map<String, ArrayList<PostDetails>> my_interests;
+
+            public LandingPosts(ArrayList<PostDetails> most_popular, ArrayList<Category> user_interests,
+                                ArrayList<Category> trending_categories, Map<String, ArrayList<PostDetails>> my_interests) {
+                this.most_popular = most_popular;
+                this.user_interests = user_interests;
+                this.trending_categories = trending_categories;
+                this.my_interests = my_interests;
+            }
+
+            public void clearData() {
+                if (most_popular != null)
+                    most_popular.clear();
+                if (user_interests != null)
+                    user_interests.clear();
+                if (trending_categories != null)
+                    trending_categories.clear();
+                if (my_interests != null) {
+                    my_interests.clear();
+                }
+            }
+
+            public ArrayList<PostDetails> getMostPopular() {
+                return most_popular;
+            }
+
+            public ArrayList<Category> getUserInterests() {
+                return user_interests;
+            }
+
+            public ArrayList<Category> getTrendingCategories() {
+                return trending_categories;
+            }
+
+            public Map<String, ArrayList<PostDetails>> getMyInterests() {
+                return my_interests;
+            }
+
+            public boolean isEmpty() {
+                return getMostPopular().isEmpty() &&
+                        (getMyInterests().isEmpty() ||
+                                Collections.frequency(getMyInterests().values(), Collections.EMPTY_LIST) == getMyInterests().size());
+            }
+        }
     }
 
     public static class User {
@@ -995,12 +1172,14 @@ public class Pojos {
             private int followers;
             private int followings;
             private int total_videos;
+            private boolean can_change_password;
 
-            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos) {
+            public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
                 this.user_profile = user_profile;
                 this.followers = followers;
                 this.followings = followings;
                 this.total_videos = total_videos;
+                this.can_change_password = can_change_password;
             }
 
 
@@ -1048,6 +1227,14 @@ public class Pojos {
 
             public int getTotalVideos() {
                 return total_videos;
+            }
+
+            public boolean isCan_change_password() {
+                return can_change_password;
+            }
+
+            public void setCan_change_password(boolean can_change_password) {
+                this.can_change_password = can_change_password;
             }
         }
 
@@ -1140,8 +1327,6 @@ public class Pojos {
                 return followings;
             }
         }
-
-
 
 //        public static class UserProfile implements Parcelable {
 //            private String user_id;
@@ -1260,7 +1445,7 @@ public class Pojos {
 //                return updated_at;
 //            }
 //
-//            public boolean hasProfileMedia() {
+//            public boolean has_profile_media() {
 //                return has_profile_media;
 //            }
 //
@@ -1400,11 +1585,6 @@ public class Pojos {
 //            }
 //        }
 //
-
-
-
-
-
 
         public static class PrivateProfile implements Parcelable {
             private String user_id;
@@ -1668,25 +1848,13 @@ public class Pojos {
             private String message;
             private String created_at;
             private boolean has_profile_media;
+            private boolean is_actioned;
             private ProfileMedia profile_media;
             private ArrayList<String> highlights;
             private MetaData meta_data;
+            private boolean request_sent;
+            private boolean following;
 
-            public Notification(int notification_id, int notification_type, int source_id, int account_type, String title,
-                                String message, String created_at, boolean has_profile_media, ProfileMedia profile_media,
-                                ArrayList<String> highlights, MetaData meta_data) {
-                this.notification_id = notification_id;
-                this.notification_type = notification_type;
-                this.source_id = source_id;
-                this.account_type = account_type;
-                this.title = title;
-                this.message = message;
-                this.created_at = created_at;
-                this.has_profile_media = has_profile_media;
-                this.profile_media = profile_media;
-                this.highlights = highlights;
-                this.meta_data = meta_data;
-            }
 
             protected Notification(Parcel in) {
                 notification_id = in.readInt();
@@ -1697,9 +1865,32 @@ public class Pojos {
                 message = in.readString();
                 created_at = in.readString();
                 has_profile_media = in.readByte() != 0;
+                is_actioned = in.readByte() != 0;
                 profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
                 highlights = in.createStringArrayList();
                 meta_data = in.readParcelable(MetaData.class.getClassLoader());
+                request_sent = in.readByte() != 0;
+                following = in.readByte() != 0;
+            }
+
+            public Notification(int notification_id, int notification_type, int source_id, int account_type,
+                                String title, String message, String created_at, boolean has_profile_media, boolean is_actioned,
+                                ProfileMedia profile_media, ArrayList<String> highlights, MetaData meta_data, boolean isActioned,
+                                boolean request_sent, boolean following) {
+                this.notification_id = notification_id;
+                this.notification_type = notification_type;
+                this.source_id = source_id;
+                this.account_type = account_type;
+                this.title = title;
+                this.message = message;
+                this.created_at = created_at;
+                this.has_profile_media = has_profile_media;
+                this.is_actioned = is_actioned;
+                this.profile_media = profile_media;
+                this.highlights = highlights;
+                this.meta_data = meta_data;
+                this.request_sent = request_sent;
+                this.following = following;
             }
 
             @Override
@@ -1712,9 +1903,17 @@ public class Pojos {
                 dest.writeString(message);
                 dest.writeString(created_at);
                 dest.writeByte((byte) (has_profile_media ? 1 : 0));
+                dest.writeByte((byte) (is_actioned ? 1 : 0));
                 dest.writeParcelable(profile_media, flags);
                 dest.writeStringList(highlights);
                 dest.writeParcelable(meta_data, flags);
+                dest.writeByte((byte) (request_sent ? 1 : 0));
+                dest.writeByte((byte) (following ? 1 : 0));
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
             }
 
             public static final Creator<Notification> CREATOR = new Creator<Notification>() {
@@ -1749,6 +1948,16 @@ public class Pojos {
                 return title;
             }
 
+            public boolean isActioned() {
+                return is_actioned;
+            }
+
+            public boolean isFollowing() {
+                return following;
+            }
+            public boolean isRequest_sent() {
+                return request_sent;
+            }
             public String getMessage() {
                 return message;
             }
@@ -1773,10 +1982,6 @@ public class Pojos {
                 return meta_data;
             }
 
-            @Override
-            public int describeContents() {
-                return 0;
-            }
         }
 
         public static class MetaData implements Parcelable {
@@ -1785,13 +1990,15 @@ public class Pojos {
             private int from_id;
             private int to_id;
             private int source_id;
+            private int post_id;
 
-            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id) {
+            public MetaData(int notification_type, String thumb_url, int from_id, int to_id, int source_id, int post_id) {
                 this.notification_type = notification_type;
                 this.thumb_url = thumb_url;
                 this.from_id = from_id;
                 this.to_id = to_id;
                 this.source_id = source_id;
+                this.post_id = post_id;
             }
 
             protected MetaData(Parcel in) {
@@ -1800,6 +2007,22 @@ public class Pojos {
                 from_id = in.readInt();
                 to_id = in.readInt();
                 source_id = in.readInt();
+                post_id = in.readInt();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(notification_type);
+                dest.writeString(thumb_url);
+                dest.writeInt(from_id);
+                dest.writeInt(to_id);
+                dest.writeInt(source_id);
+                dest.writeInt(post_id);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
             }
 
             public static final Creator<MetaData> CREATOR = new Creator<MetaData>() {
@@ -1814,18 +2037,8 @@ public class Pojos {
                 }
             };
 
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(notification_type);
-                parcel.writeString(thumb_url);
-                parcel.writeInt(from_id);
-                parcel.writeInt(to_id);
-                parcel.writeInt(source_id);
+            public int getPostId() {
+                return post_id;
             }
 
             public int getNotificationType() {
@@ -1901,22 +2114,70 @@ public class Pojos {
         String user_name;
         String first_name;
         String last_name;
+        int account_type;
         boolean following;
         boolean follower;
+        boolean request_sent;
         boolean has_profile_media;
         ProfileMedia profile_media;
 
-        public MiniProfile(int user_id, String user_name, String first_name, String last_name,
-                           boolean following, boolean follower, boolean has_profile_media, ProfileMedia profile_media) {
+        public MiniProfile(int user_id, String user_name, String first_name, String last_name, int account_type, boolean following,
+                           boolean follower, boolean request_sent, boolean has_profile_media, ProfileMedia profile_media) {
             this.user_id = user_id;
             this.user_name = user_name;
             this.first_name = first_name;
             this.last_name = last_name;
+            this.account_type = account_type;
             this.following = following;
             this.follower = follower;
+            this.request_sent = request_sent;
             this.has_profile_media = has_profile_media;
             this.profile_media = profile_media;
         }
+
+        protected MiniProfile(Parcel in) {
+            user_id = in.readInt();
+            user_name = in.readString();
+            first_name = in.readString();
+            last_name = in.readString();
+            account_type = in.readInt();
+            following = in.readByte() != 0;
+            follower = in.readByte() != 0;
+            request_sent = in.readByte() != 0;
+            has_profile_media = in.readByte() != 0;
+            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(user_id);
+            dest.writeString(user_name);
+            dest.writeString(first_name);
+            dest.writeString(last_name);
+            dest.writeInt(account_type);
+            dest.writeByte((byte) (following ? 1 : 0));
+            dest.writeByte((byte) (follower ? 1 : 0));
+            dest.writeByte((byte) (request_sent ? 1 : 0));
+            dest.writeByte((byte) (has_profile_media ? 1 : 0));
+            dest.writeParcelable(profile_media, flags);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<MiniProfile> CREATOR = new Creator<MiniProfile>() {
+            @Override
+            public MiniProfile createFromParcel(Parcel in) {
+                return new MiniProfile(in);
+            }
+
+            @Override
+            public MiniProfile[] newArray(int size) {
+                return new MiniProfile[size];
+            }
+        };
 
         public int getUserId() {
             return user_id;
@@ -1934,12 +2195,20 @@ public class Pojos {
             return last_name;
         }
 
+        public int getAccountType() {
+            return account_type;
+        }
+
         public boolean isFollowing() {
             return following;
         }
 
         public boolean isFollower() {
             return follower;
+        }
+
+        public boolean isRequestSent() {
+            return request_sent;
         }
 
         public boolean hasProfileMedia() {
@@ -1949,46 +2218,6 @@ public class Pojos {
         public ProfileMedia getProfileMedia() {
             return profile_media;
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(user_id);
-            parcel.writeString(user_name);
-            parcel.writeString(first_name);
-            parcel.writeString(last_name);
-            parcel.writeByte((byte) (following ? 1 : 0));
-            parcel.writeByte((byte) (follower ? 1 : 0));
-            parcel.writeByte((byte) (has_profile_media ? 1 : 0));
-            parcel.writeParcelable(profile_media, i);
-        }
-
-        protected MiniProfile(Parcel in) {
-            user_id = in.readInt();
-            user_name = in.readString();
-            first_name = in.readString();
-            last_name = in.readString();
-            following = in.readByte() != 0;
-            follower = in.readByte() != 0;
-            has_profile_media = in.readByte() != 0;
-            profile_media = in.readParcelable(ProfileMedia.class.getClassLoader());
-        }
-
-        public static final Creator<MiniProfile> CREATOR = new Creator<MiniProfile>() {
-            @Override
-            public MiniProfile createFromParcel(Parcel in) {
-                return new MiniProfile(in);
-            }
-
-            @Override
-            public MiniProfile[] newArray(int size) {
-                return new MiniProfile[size];
-            }
-        };
     }
 
     public static class TaggedUser implements Parcelable {
@@ -2517,9 +2746,11 @@ public class Pojos {
         private String tags;
         private String categories;
         private PostDetails postDetails;
+        private boolean isGallery;
 
-        public UploadParams(String videoPath, boolean isReaction, String title, String location,
+        public UploadParams(boolean isGallery, String videoPath, boolean isReaction, String title, String location,
                             double latitude, double longitude, String tags, String categories) {
+            this.isGallery = isGallery;
             this.videoPath = videoPath;
             this.isReaction = isReaction;
             this.title = title;
@@ -2542,6 +2773,7 @@ public class Pojos {
             this.postDetails = postDetails;
         }
 
+
         protected UploadParams(Parcel in) {
             videoPath = in.readString();
             isReaction = in.readByte() != 0;
@@ -2552,6 +2784,7 @@ public class Pojos {
             tags = in.readString();
             categories = in.readString();
             postDetails = in.readParcelable(PostDetails.class.getClassLoader());
+            isGallery = in.readByte() != 0;
         }
 
         @Override
@@ -2565,6 +2798,7 @@ public class Pojos {
             dest.writeString(tags);
             dest.writeString(categories);
             dest.writeParcelable(postDetails, flags);
+            dest.writeByte((byte) (isGallery ? 1 : 0));
         }
 
         @Override
@@ -2619,11 +2853,19 @@ public class Pojos {
         public PostDetails getPostDetails() {
             return postDetails;
         }
+
+        public boolean isGallery() {
+            return isGallery;
+        }
+
+        public void setGallery(boolean gallery) {
+            isGallery = gallery;
+        }
     }
 
-    public static class Discover {
+    public static class DummyDiscover {
 
-        public static class MostPopular {
+        public static class DummyMostPopular {
             private String title;
             private int duration;
             private String thumbUrl;
@@ -2636,8 +2878,8 @@ public class Pojos {
             private String reaction3Url;
             private int reactions;
 
-            public MostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
-                               int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+            public DummyMostPopular(String title, int duration, String thumbUrl, String profileThumbUrl, String name,
+                                    int likes, int views, String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
                 this.title = title;
                 this.duration = duration;
                 this.thumbUrl = thumbUrl;
@@ -2696,7 +2938,7 @@ public class Pojos {
             }
         }
 
-        public static class MyInterests {
+        public static class MyDummyInterests {
             private String title;
             private String thumbUrl;
             private String profileThumbUrl;
@@ -2708,8 +2950,8 @@ public class Pojos {
             private String reaction3Url;
             private int reactions;
 
-            public MyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
-                               String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
+            public MyDummyInterests(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views,
+                                    String reaction1Url, String reaction2Url, String reaction3Url, int reactions) {
                 this.title = title;
                 this.thumbUrl = thumbUrl;
                 this.profileThumbUrl = profileThumbUrl;
@@ -2763,7 +3005,7 @@ public class Pojos {
             }
         }
 
-        public static class FeaturedVideos {
+        public static class DummyFeaturedVideos {
             private String title;
             private String thumbUrl;
             private String profileThumbUrl;
@@ -2771,7 +3013,7 @@ public class Pojos {
             private int likes;
             private int views;
 
-            public FeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
+            public DummyFeaturedVideos(String title, String thumbUrl, String profileThumbUrl, String name, int likes, int views) {
                 this.title = title;
                 this.thumbUrl = thumbUrl;
                 this.profileThumbUrl = profileThumbUrl;
