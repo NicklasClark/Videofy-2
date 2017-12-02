@@ -185,7 +185,7 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     public void changeVisibility(int visibility) {
-        if (doneBtn.getVisibility() != visibility) {
+                if (doneBtn.getVisibility() != visibility) {
             switch (visibility) {
                 case VISIBLE:
                     doneBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.float_up));

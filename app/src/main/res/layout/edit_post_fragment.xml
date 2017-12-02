@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/material_grey100"
-    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+    android:layout_height="match_parent">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,7 +43,6 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:indeterminate="true"
-                    android:visibility="gone"
                     style="?android:attr/progressBarStyleLarge"
                     android:theme="@style/ProgressBarTheme"
                     android:layout_centerInParent="true" />
@@ -157,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|end"
                 android:padding="@dimen/padding_default"
-                android:layout_marginBottom="100dp">
+                android:layout_marginBottom="@dimen/app_bar_height">
 
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:layout_width="wrap_content"
@@ -204,89 +201,70 @@
 
             </RelativeLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginBottom="100dp">
-
-                <RelativeLayout
-                    android:id="@+id/video_actions"
-                    android:layout_width="match_parent"
-                    android:background="@android:color/black"
-                    android:layout_height="?android:attr/actionBarSize"
-                    android:layout_gravity="bottom|center_horizontal">
-
-                    <Space
-                        android:id="@+id/spacer1"
-                        android:layout_width="80dp"
-                        android:layout_height="0dp"
-                        android:layout_centerInParent="true"/>
-
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
-                        android:id="@+id/video_upload_retake_btn"
-                        style="@style/AppTheme.CancelUploadButtonsTheme"
-                        app:drawableStartCompat="@drawable/ic_previous_white"
-                        android:text="@string/retake"
-                        android:layout_alignParentStart="true"
-                        android:contentDescription="@string/cancel"
-                        android:layout_toStartOf="@+id/spacer1"/>
-
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
-                        android:id="@+id/video_upload_check_btn"
-                        style="@style/AppTheme.CancelUploadButtonsTheme"
-                        app:drawableEndCompat="@drawable/ic_upload"
-                        android:text="@string/upload"
-                        android:layout_alignParentEnd="true"
-                        android:contentDescription="@string/check"
-                        android:layout_toEndOf="@+id/spacer1" />
-
-                </RelativeLayout>
-
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                    android:id="@+id/video_duration"
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_content"
-                    android:background="@drawable/bg_circle_dark_outlined"
-                    android:foreground="@drawable/ripple_dark"
-                    android:layout_gravity="bottom|center_horizontal" />
-
-                <FrameLayout
-                    android:id="@+id/fragment_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/up_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_previous"
-                    android:foreground="@drawable/ripple_dark"
-                    android:padding="@dimen/padding_default"
-                    android:contentDescription="@string/up"
-                    android:visibility="invisible"/>
-
-            </FrameLayout>
         </LinearLayout>
 
     </ScrollView>
-    <Button
-        android:id="@+id/save"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/colorAccent"
-        android:layout_alignParentBottom="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="3dp"
-        android:paddingLeft="6dp"
-        android:text="Save Changes"
-        android:textStyle="normal"
-        android:textAllCaps="false"
-        android:textColor="@color/colorIcons"
-        android:textSize="14sp" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/video_actions"
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="bottom|center_horizontal">
+
+        <Space
+            android:id="@+id/spacer1"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            android:id="@+id/video_upload_retake_btn"
+            style="@style/AppTheme.CancelUploadButtonsTheme"
+            app:drawableStartCompat="@drawable/ic_previous_white"
+            android:text="@string/retake"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/cancel"
+            android:layout_toStartOf="@+id/spacer1"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            android:id="@+id/video_upload_check_btn"
+            style="@style/AppTheme.CancelUploadButtonsTheme"
+            app:drawableEndCompat="@drawable/ic_upload"
+            android:text="@string/upload"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/check"
+            android:layout_toEndOf="@+id/spacer1" />
+
+    </RelativeLayout>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/video_duration"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_content"
+        android:background="@drawable/bg_circle_dark_outlined"
+        android:foreground="@drawable/ripple_dark"
+        android:layout_gravity="bottom|center_horizontal" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/up_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_previous"
+        android:foreground="@drawable/ripple_dark"
+        android:padding="@dimen/padding_default"
+        android:contentDescription="@string/up"
+        android:visibility="invisible"/>
+
+
+
+
+</FrameLayout>
