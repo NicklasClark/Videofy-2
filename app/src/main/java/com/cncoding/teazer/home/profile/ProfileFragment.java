@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -36,8 +35,6 @@ import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
-import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
-import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
@@ -366,7 +363,6 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 }
             }.execute();
-
 
             progressbar.setVisibility(View.GONE);
             coordinatorLayout.setVisibility(View.VISIBLE);
