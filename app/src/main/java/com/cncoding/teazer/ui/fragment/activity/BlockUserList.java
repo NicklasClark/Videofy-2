@@ -44,6 +44,7 @@ public class BlockUserList extends AppCompatActivity {
     RelativeLayout layout;
     @BindView(R.id.blockusertex)
     TextView blockusertex;
+    int pageId=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +80,8 @@ public class BlockUserList extends AppCompatActivity {
     }
     public void getBlockUserList()
     {
-        int i=1;
-        ApiCallingService.Friends.getBlockedUsers(i,context).enqueue(new Callback<BlockUserResponse>() {
+
+        ApiCallingService.Friends.getBlockedUsers(pageId,context).enqueue(new Callback<BlockUserResponse>() {
             @Override
             public void onResponse(Call<BlockUserResponse> call, Response<BlockUserResponse> response) {
                 if(response.code()==200)
@@ -89,9 +90,9 @@ public class BlockUserList extends AppCompatActivity {
 
                     {
                         list= response.body().getBlockedUsers();
-                        if(list==null||list.size()==0) {
+                        boolean nextPage=response.body().getNextPage();
 
-                            //blockusertex.setVisibility(View.VISIBLE);
+                        if(list==null||list.size()==0) {
 
                             layout.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
@@ -103,9 +104,14 @@ public class BlockUserList extends AppCompatActivity {
                             recyclerView.setAdapter(adapter);
                             layout.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
-                            }
-                    }
+                            if(nextPage)
+                            {
+                                pageId++;
+                                getBlockUserList();
 
+                            }
+                        }
+                    }
                     catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();

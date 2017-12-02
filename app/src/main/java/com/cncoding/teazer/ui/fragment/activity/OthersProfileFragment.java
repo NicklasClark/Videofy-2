@@ -325,7 +325,6 @@ public class OthersProfileFragment extends BaseFragment {
                             accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
-                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) _usernameTitle.getLayoutParams();
                             if (details == null || details.equals("")) {
                                 hobby.setText("");
 
@@ -393,7 +392,6 @@ public class OthersProfileFragment extends BaseFragment {
 
 
                         } else if (response.body().getPublicProfile() == null) {
-
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
                             Toast.makeText(context,"PrivateProfile",Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
@@ -423,10 +421,8 @@ public class OthersProfileFragment extends BaseFragment {
                             }
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
-                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) _usernameTitle.getLayoutParams();
-
                             hobby.setText("");
-                            lp.setMargins(0, 0, 0, 20);
+
                             if (isfollowing) {
 
                                 _btnfollow.setText("Following");
@@ -454,7 +450,8 @@ public class OthersProfileFragment extends BaseFragment {
                         }
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
@@ -511,14 +508,11 @@ public class OthersProfileFragment extends BaseFragment {
         }.execute();
 
 
-//            progressbar.setVisibility(View.GONE);
-//            coordinatorLayout.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-      //  super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_other_profile,menu);
 
 
@@ -745,6 +739,6 @@ public class OthersProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //  list.clear();
+
     }
 }

@@ -257,43 +257,49 @@ public class BaseBottomBarActivity extends BaseActivity
 //                        shareDialog.show(content);
 
 
-                        final String s = "https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-                        new AsyncTask<Void, Void, Bitmap>() {
-                            @Override
-                            protected Bitmap doInBackground(final Void... params) {
-                                Bitmap bitmap = null;
-                                try {
-                                    final URL url = new URL(s);
+                        if(UploadFragment.checkefacebookeButtonPressed) {
+
+
+                            final String s = "https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
+                            new AsyncTask<Void, Void, Bitmap>() {
+                                @Override
+                                protected Bitmap doInBackground(final Void... params) {
+                                    Bitmap bitmap = null;
                                     try {
-                                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                    } catch (IOException e) {
+                                        final URL url = new URL(s);
+                                        try {
+                                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                    return bitmap;
                                 }
 
-                                return bitmap;
-                            }
+                                @Override
+                                protected void onPostExecute(final Bitmap result) {
 
-                            @Override
-                            protected void onPostExecute(final Bitmap result) {
+                                    SharePhoto photo = new SharePhoto.Builder()
+                                            .setBitmap(result)
+                                            .build();
+                                    SharePhotoContent content = new SharePhotoContent.Builder()
+                                            .addPhoto(photo)
+                                            .build();
 
-                                SharePhoto photo = new SharePhoto.Builder()
-                                        .setBitmap(result)
-                                        .build();
-                                SharePhotoContent content = new SharePhotoContent.Builder()
-                                        .addPhoto(photo)
-                                        .build();
+                                    ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
+                                    shareDialog.show(content);
+                                    ShareApi.share(content, null);
+                                    UploadFragment.checkefacebookeButtonPressed=false;
 
-                                ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
-                                shareDialog.show(content);
-                                ShareApi.share(content, null);
+                                }
+                            }.execute();
 
-                            }
-                        }.execute();
 
+                        }
 
                         // Bitmap image = ...
 

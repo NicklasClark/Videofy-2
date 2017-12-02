@@ -136,7 +136,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     Space spacer1;
     @BindView(R.id.video_actions)
     RelativeLayout videoActions;
-    private boolean checkefacebookeButtonPressed;
+    public static boolean checkefacebookeButtonPressed=false;
 
     @BindView(R.id.video_preview_thumbnail_container)
     RelativeLayout thumbnailViewContainer;
@@ -263,8 +263,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 if (checkefacebookeButtonPressed == false) {
                     checkefacebookeButtonPressed = true;
                     facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_enabled);
-                    Toast.makeText(getContext(), "You have selected facbook to share your data", Toast.LENGTH_SHORT).show();
-                    // setupFacebookShareIntent();
 
 
                 } else {

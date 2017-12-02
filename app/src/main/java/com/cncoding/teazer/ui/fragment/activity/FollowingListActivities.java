@@ -29,6 +29,7 @@ import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
 import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
 import com.cncoding.teazer.utilities.Pojos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -95,6 +96,8 @@ public class FollowingListActivities extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        list=new ArrayList<>();
+        otherlist=new ArrayList<>();
         if (identifier.equals("User")) {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
@@ -117,7 +120,7 @@ public class FollowingListActivities extends BaseFragment {
 
                     try {
                         boolean next=response.body().getNextPage();
-                        list = response.body().getFollowings();
+                        list.addAll(response.body().getFollowings());
                         if (list == null || list.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
@@ -162,7 +165,7 @@ public class FollowingListActivities extends BaseFragment {
                 if (response.code() == 200) {
                     try {
                         boolean next=response.body().getNextPage();
-                        otherlist = response.body().getFollowings();
+                        otherlist.addAll(response.body().getFollowings());
                         if (otherlist == null || otherlist.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
@@ -198,9 +201,8 @@ public class FollowingListActivities extends BaseFragment {
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
-
-
             }
+
         });
 
 
