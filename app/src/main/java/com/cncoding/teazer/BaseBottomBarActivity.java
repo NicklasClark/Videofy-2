@@ -438,7 +438,7 @@ public class BaseBottomBarActivity extends BaseActivity
             reference.get().uploadCall.enqueue(resultObjectCallback);
 
             if (uploadParams.isReaction() && isResuming) {
-                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null));
+                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null, true));
             }
         }
     }
@@ -681,7 +681,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(postDetails, image));
+                pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
@@ -721,12 +721,12 @@ public class BaseBottomBarActivity extends BaseActivity
         else if (action == ACTION_VIEW_MOST_POPULAR)
             pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
         else if (action == ACTION_VIEW_POST)
-            pushFragment(PostDetailsFragment.newInstance(postDetails, image));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
     }
 
     @Override
     public void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage));
+        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage, false));
     }
 
     @Override
@@ -744,7 +744,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false));
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
@@ -795,7 +795,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null));
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null, false));
     }
 
 //    public void hideSettings(boolean flag) {

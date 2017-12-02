@@ -74,6 +74,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
+    private static final String ARG_HAS_REACTED = "has_reacted";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
 
@@ -112,16 +113,18 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private MediaPlayer mediaPlayer;
     private OnPostDetailsInteractionListener mListener;
     private PostReactionAdapter postReactionAdapter;
+    private boolean hasReacted;
 
     public PostDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean hasReacted) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_DETAILS, postDetails);
         args.putByteArray(ARG_THUMBNAIL, image);
+        args.putBoolean(ARG_HAS_REACTED, hasReacted);
         fragment.setArguments(args);
         return fragment;
     }
@@ -134,6 +137,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         if (getArguments() != null) {
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
             image = getArguments().getByteArray(ARG_THUMBNAIL);
+            hasReacted = getArguments().getBoolean(ARG_HAS_REACTED);
         }
     }
 
@@ -147,6 +151,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         context = getContext();
 //        getParentActivity().hidesettingsReport();
 
+        if (hasReacted)
+            disableView(reactBtn);
         return rootView;
     }
 
