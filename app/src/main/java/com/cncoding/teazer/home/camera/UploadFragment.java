@@ -123,59 +123,35 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final String TAG_TAGS_FRAGMENT = "tagsFragment";
     //    private static final int REQUEST_PLACE_PICKER = 212;
     private static final int REQUEST_LOCATION_PERMISSIONS = 211;
-    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 210;
+//    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 210;
     private static final int REQUEST_CODE_CHECK_SETTINGS = 312;
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
-    @BindView(R.id.spacer)
-    Space spacer;
-    @BindView(R.id.google_share_btn)
-    AppCompatImageView googleShareBtn;
-    @BindView(R.id.instagram_share_btn)
-    AppCompatImageView instagramShareBtn;
-    @BindView(R.id.spacer1)
-    Space spacer1;
-    @BindView(R.id.video_actions)
-    RelativeLayout videoActions;
-    public static boolean checkefacebookeButtonPressed=false;
+    @BindView(R.id.spacer) Space spacer;
+    @BindView(R.id.google_share_btn) AppCompatImageView googleShareBtn;
+    @BindView(R.id.instagram_share_btn) AppCompatImageView instagramShareBtn;
+    @BindView(R.id.spacer1) Space spacer1;
+    @BindView(R.id.video_actions) RelativeLayout videoActions;
+    @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
+    @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
+    @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
+    @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
+    @BindView(R.id.thumbnail_progress_bar) ProgressBar thumbnailProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar topProgressBar;
+    @BindView(R.id.video_upload_retake_btn) Button cancelBtn;
+    @BindView(R.id.video_upload_check_btn) Button uploadBtn;
+    @BindView(R.id.video_upload_title) ProximaNovaRegularAutoCompleteTextView videoTitle;
+    @BindView(R.id.video_upload_location) ProximaNovaBoldButton addLocationBtn;
+    @BindView(R.id.video_upload_location_text) ProximaNovaRegularTextView addLocationText;
+    @BindView(R.id.video_upload_tag_friends) ProximaNovaBoldButton tagFriendsBtn;
+    @BindView(R.id.video_upload_tag_friends_text) ProximaNovaRegularTextView tagFriendsText;
+    @BindView(R.id.video_upload_categories) ProximaNovaBoldButton uploadCategoriesBtn;
+    @BindView(R.id.video_upload_categories_text) ProximaNovaRegularTextView uploadCategoriesText;
+    @BindView(R.id.up_btn) AppCompatImageView upBtn;
+    @BindView(R.id.facebook_share_btn) AppCompatImageView facebook_share_btn;
 
-    @BindView(R.id.video_preview_thumbnail_container)
-    RelativeLayout thumbnailViewContainer;
-    @BindView(R.id.video_preview_thumbnail)
-    ImageView thumbnailView;
-    @BindView(R.id.fragment_container)
-    FrameLayout fragmentContainer;
-    @BindView(R.id.video_duration)
-    ProximaNovaRegularTextView videoDurationTextView;
-    @BindView(R.id.progress_bar)
-    ProgressBar thumbnailProgressBar;
-    @BindView(R.id.top_progress_bar)
-    ProgressBar topProgressBar;
-    @BindView(R.id.video_upload_retake_btn)
-    Button cancelBtn;
-    @BindView(R.id.video_upload_check_btn)
-    Button uploadBtn;
-    @BindView(R.id.video_upload_title)
-    ProximaNovaRegularAutoCompleteTextView videoTitle;
-    @BindView(R.id.video_upload_location)
-    ProximaNovaBoldButton addLocationBtn;
-    @BindView(R.id.video_upload_location_text)
-    ProximaNovaRegularTextView addLocationText;
-    @BindView(R.id.video_upload_tag_friends)
-    ProximaNovaBoldButton tagFriendsBtn;
-    @BindView(R.id.video_upload_tag_friends_text)
-    ProximaNovaRegularTextView tagFriendsText;
-    @BindView(R.id.video_upload_categories)
-    ProximaNovaBoldButton uploadCategoriesBtn;
-    @BindView(R.id.video_upload_categories_text)
-    ProximaNovaRegularTextView uploadCategoriesText;
-    @BindView(R.id.up_btn)
-    AppCompatImageView upBtn;
-    @BindView(R.id.facebook_share_btn)
-    AppCompatImageView facebook_share_btn;
-
-
+    public static boolean checkFacebookButtonPressed = false;
     public String videoPath;
     public boolean isReaction;
     String selectedCategoriesToSend = null;
@@ -236,8 +212,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -263,16 +238,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         facebook_share_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkefacebookeButtonPressed == false) {
-                    checkefacebookeButtonPressed = true;
+                if (!checkFacebookButtonPressed) {
+                    checkFacebookButtonPressed = true;
                     facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_enabled);
-
-
                 } else {
-                    checkefacebookeButtonPressed = false;
+                    checkFacebookButtonPressed = false;
                     facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_disabled);
                 }
-
             }
         });
 
@@ -433,11 +405,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
 
         WeakReference<UploadFragment> reference;
@@ -463,29 +430,27 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             try {
                 if (bitmap != null) {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    if (stream != null) {
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        Glide.with(reference.get())
-                                .load(stream.toByteArray())
-                                .asBitmap()
-                                //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                                .animate(R.anim.fast_fade_in)
-                                .listener(new RequestListener<byte[], Bitmap>() {
-                                    @Override
-                                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                        return false;
-                                    }
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    Glide.with(reference.get())
+                            .load(stream.toByteArray())
+                            .asBitmap()
+                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+                            .animate(R.anim.fast_fade_in)
+                            .listener(new RequestListener<byte[], Bitmap>() {
+                                @Override
+                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
 
-                                    @Override
-                                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                        return false;
-                                    }
-                                })
-                                .into(reference.get().thumbnailView);
-                    }
+                                @Override
+                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+                                                               boolean isFromMemoryCache, boolean isFirstResource) {
+                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
+                            .into(reference.get().thumbnailView);
                 } else {
                     Glide.with(reference.get())
                             .load(R.drawable.material_flat)

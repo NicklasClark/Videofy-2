@@ -81,7 +81,7 @@
                     android:id="@+id/like"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    app:drawableTopCompat="@drawable/ic_like_outline"
+                    app:drawableTopCompat="@drawable/ic_like_outline_dark"
                     android:paddingTop="@dimen/padding_thin"
                     android:paddingBottom="@dimen/padding_thin"
                     android:paddingStart="@dimen/padding_half"

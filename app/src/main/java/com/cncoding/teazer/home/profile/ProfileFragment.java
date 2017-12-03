@@ -1,13 +1,15 @@
 package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -26,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -37,9 +40,12 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
-import com.squareup.picasso.Picasso;
+import com.cncoding.teazer.utilities.SharedPrefs;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 
 import jp.wasabeef.blurry.Blurry;
@@ -48,6 +54,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.cncoding.teazer.utilities.SharedPrefs.getBlurredProfilePic;
+import static com.cncoding.teazer.utilities.SharedPrefs.isBlurredProfilePicSaved;
 
 public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -68,7 +79,7 @@ public class ProfileFragment extends BaseFragment {
     TextView _followers;
     TextView _following;
     ProximaNovaRegularCheckedTextView _detail;
-    ImageView backgroundprofile;
+    ImageView backgroundProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.UserProfile userprofile;
     Button btnedit;
@@ -109,17 +120,15 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        previousTitle=getParentActivity().getToolbarTitle();
+        previousTitle = getParentActivity().getToolbarTitle();
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-        getParentActivity().updateToolbarTitle("My Profile");
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        context = container.getContext();
+        context = getContext();
 
         //     Toolbar toolbar = view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -135,7 +144,7 @@ public class ProfileFragment extends BaseFragment {
         _followers = view.findViewById(R.id.followers);
         _following = view.findViewById(R.id.following);
         _detail = view.findViewById(R.id.hobby);
-        backgroundprofile = view.findViewById(R.id.background_profile);
+        backgroundProfile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         btnedit = view.findViewById(R.id.btnedit);
         btnshare = view.findViewById(R.id.btnshare);
@@ -205,22 +214,17 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onResume() {
+        super.onResume();
         getProfileDetail();
-//        getParentActivity().hidereport();
-        getParentActivity().updateToolbarTitle("Profile");
-
+        getParentActivity().updateToolbarTitle("My Profile");
+        getParentActivity().showAppBar();
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //  super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_user_profile,menu);
-
-
     }
 
     @Override
@@ -231,22 +235,16 @@ public class ProfileFragment extends BaseFragment {
               Intent intent=new Intent(context, Settings.class);
                         intent.putExtra("AccountType",String.valueOf(accountType));
               startActivity(intent);
-
-
             case R.id.action_profile_block:
                // openBlockUser(followerfollowingid);
-
-
-
         }
         return true;
-
     }
+
     public void getProfileDetail() {
 
         progressbar.setVisibility(View.VISIBLE);
         coordinatorLayout.setVisibility(View.GONE);
-
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
@@ -285,18 +283,8 @@ public class ProfileFragment extends BaseFragment {
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                     coordinatorLayout.setVisibility(View.VISIBLE);
 
-                    if (userProfileThumbnail == null) {
-//                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-//
-//                        Glide.with(context)
-//                                .load(pic)
-//                                .into(profile_id);
-//                        profileBlur(pic);
-                    }
-
-                    else {
-
-                        Picasso.with(context)
+                    if (userProfileThumbnail != null) {
+                        Glide.with(context)
                                 .load(Uri.parse(userProfileThumbnail))
                                 .into(profile_id);
                         profileBlur(userProfileUrl);
@@ -305,8 +293,8 @@ public class ProfileFragment extends BaseFragment {
                     progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -317,57 +305,101 @@ public class ProfileFragment extends BaseFragment {
         });
 
     }
-    @AfterPermissionGranted(RC_REQUEST_STORAGE)
-    public void profileBlur(final String pic) {
 
-        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (!EasyPermissions.hasPermissions(getContext(), perm)) {
+    @AfterPermissionGranted(RC_REQUEST_STORAGE) public void profileBlur(final String pic) {
+        String[] perm = new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
+        if (!EasyPermissions.hasPermissions(context, perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
         } else {
             progressbar.setVisibility(View.VISIBLE);
             coordinatorLayout.setVisibility(View.GONE);
-            new AsyncTask<Void, Void, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(final Void... params) {
-                    Bitmap bitmap = null;
-                    try {
-                        final URL url = new URL(pic);
-                        try {
-                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    return bitmap;
-                }
-
-                @Override
-                protected void onPostExecute(final Bitmap result) {
-                    progressbar.setVisibility(View.VISIBLE);
-                    coordinatorLayout.setVisibility(View.GONE);
-
-                    try {
-                        Bitmap photobitmap = Bitmap.createScaledBitmap(result,
-                                260, 260, false);
-                        Blurry.with(getContext()).from(photobitmap).into(backgroundprofile);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    progressbar.setVisibility(View.GONE);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
-                }
-            }.execute();
+            new SetBackgroundBlurPic(this).execute(pic);
 
             progressbar.setVisibility(View.GONE);
             coordinatorLayout.setVisibility(View.VISIBLE);
         }
+    }
 
+    private static class SetBackgroundBlurPic extends AsyncTask<String, Void, Bitmap> {
+
+        private WeakReference<ProfileFragment> reference;
+        private boolean isSavedLocally;
+
+        SetBackgroundBlurPic(ProfileFragment context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            if (isBlurredProfilePicSaved(reference.get().getParentActivity().getApplicationContext())) {
+                File file = new File(getBlurredProfilePic(reference.get().getParentActivity().getApplicationContext()));
+                isSavedLocally = true;
+                return BitmapFactory.decodeFile(file.getAbsolutePath());
+            } else {
+                try {
+                    final URL url = new URL(strings[0]);
+                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    isSavedLocally = false;
+                    return bitmap;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+
+        private String saveBlurredPic(Bitmap bitmapImage) {
+            ContextWrapper cw = new ContextWrapper(reference.get().getParentActivity().getApplicationContext());
+            File directory = cw.getDir("dp", Context.MODE_PRIVATE);
+            File imagePath = new File(directory,"profile.png");
+
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(imagePath);
+
+                // Use the compress method on the BitMap object to write image to the OutputStream
+                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                fileOutputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return imagePath.getAbsolutePath();
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            reference.get().progressbar.setVisibility(View.VISIBLE);
+            reference.get().coordinatorLayout.setVisibility(View.GONE);
+
+            try {
+                if (isSavedLocally) {
+                    reference.get().backgroundProfile.setImageBitmap(bitmap);
+                } else {
+                    int width = bitmap.getWidth();
+                    int height = bitmap.getHeight();
+                    while (width > 500 && height > 500) {
+                        width = width / 2;
+                        height = height / 2;
+                    }
+                    Blurry.with(reference.get().context)
+                            .async(new Blurry.ImageComposer.ImageComposerListener() {
+                                @Override
+                                public void onImageReady(BitmapDrawable drawable) {
+                                    SharedPrefs.saveBlurredProfilePic(reference.get().context, saveBlurredPic(drawable.getBitmap()));
+                                    reference.get().backgroundProfile.setImageDrawable(drawable);
+                                }
+                            })
+                            .from(Bitmap.createScaledBitmap(bitmap, width, height, false))
+                            .into(reference.get().backgroundProfile);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            reference.get().progressbar.setVisibility(View.GONE);
+            reference.get().coordinatorLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -388,14 +420,6 @@ public class ProfileFragment extends BaseFragment {
     public interface FollowerListListener {
         void onFollowerListListener(String id,String identifier);
         void onFollowingListListener(String id,String identifier);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getProfileDetail();
-
-        getParentActivity().showAppBar();
     }
 
     private void dynamicToolbarColor() {

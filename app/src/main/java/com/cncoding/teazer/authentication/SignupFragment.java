@@ -2,6 +2,7 @@ package com.cncoding.teazer.authentication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -10,25 +11,28 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.utilities.AuthUtils;
+import com.cncoding.teazer.utilities.FilterFactory;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
 import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class SignupFragment extends Fragment {
@@ -49,24 +53,18 @@ public class SignupFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_signup, container, false);
         ButterKnife.bind(this, rootView);
-        setTextLimits();
+        nameView.setFilters(new InputFilter[] {FilterFactory.nameFilter});
+        emailView.setFilters(new InputFilter[] {FilterFactory.nameFilter});
         setOnCountryChangeListener();
-        try {
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getCountryCode(countryCodeView, getActivity());
     }
@@ -75,6 +73,7 @@ public class SignupFragment extends Fragment {
         countryCodeView.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
             public void onCountrySelected() {
+                //noinspection ConstantConditions
                 getActivity().getApplicationContext()
                         .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
                         .edit()
@@ -84,15 +83,35 @@ public class SignupFragment extends Fragment {
         });
     }
 
+    @OnEditorAction(R.id.signup_email) public boolean goToPhoneNumberField(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            phoneNumberView.requestFocus();
+            return true;
+        }
+        return false;
+    }
+
+    @OnEditorAction(R.id.signup_phone_number) public boolean signupProceedByKeyboard(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_GO) {
+            hideKeyboard(getActivity(), phoneNumberView);
+            signupProceed();
+            return true;
+        }
+        return false;
+    }
+
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (areAllViewsFilled()) {
             if (getFirstAndLastNames(nameView.getText().toString()).length >= 2) {
-                String[] names = getFirstAndLastNames(nameView.getText().toString());
-                mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
-                        new Authorize(names[0], names[1],
-                                emailView.getText().toString(),
-                                countryCodeView.getSelectedCountryCodeAsInt(),
-                                Long.parseLong(phoneNumberView.getText().toString())));
+                if (isValidEmailAddress(emailView.getText().toString())) {
+                    hideKeyboard(getActivity(), signupProceedBtn);
+                    String[] names = getFirstAndLastNames(nameView.getText().toString());
+                    mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
+                            new Authorize(names[0], names[1],
+                                    emailView.getText().toString(),
+                                    countryCodeView.getSelectedCountryCodeAsInt(),
+                                    Long.parseLong(phoneNumberView.getText().toString())));
+                } else Snackbar.make(signupProceedBtn, "Please provide a valid email address.", Snackbar.LENGTH_SHORT).show();
             } else Snackbar.make(signupProceedBtn, "Please provide both first and last names", Snackbar.LENGTH_SHORT).show();
         } else Snackbar.make(signupProceedBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
     }
@@ -100,7 +119,7 @@ public class SignupFragment extends Fragment {
     @OnFocusChange(R.id.signup_email) public void onEmailFocusChanged(boolean isFocused) {
         if (!isFocused) {
             String email = emailView.getText().toString();
-            if (!email.isEmpty() && AuthUtils.isValidEmailAddress(emailView.getText().toString())) {
+            if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
                 ApiCallingService.Auth.checkEmail(emailView, true);
             } else {
                 setEditTextDrawableEnd(emailView, R.drawable.ic_error);
@@ -119,11 +138,10 @@ public class SignupFragment extends Fragment {
 
     public static String[] getFirstAndLastNames(String name) {
         String[] names = name.split(" ");
-        return new String[] {names[0], names[names.length - 1]};
-    }
-
-    private void setTextLimits() {
-        phoneNumberView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
+        if (names.length > 1)
+            return new String[] {names[0], names[names.length - 1]};
+        else
+            return names;
     }
 
     private boolean areAllViewsFilled() {

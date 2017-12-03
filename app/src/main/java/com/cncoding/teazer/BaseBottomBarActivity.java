@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -252,38 +253,9 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     if (response.code() == 201) {
-
-
-                        //      ShareDialog shareDialog;
-                        //       FacebookSdk.sdkInitialize(getApplicationContext());
-                        //   shareDialog = new ShareDialog(BaseBottomBarActivity.this);
-
-//                        Uri videoFileUri = Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE");
-//                        ShareVideo shareVideo = new ShareVideo.Builder()
-//                                .setLocalUrl(videoFileUri)
-//                                .build();
-//                        ShareVideoContent content = new ShareVideoContent.Builder()
-//                                .setVideo(shareVideo)
-//                                .build();
-//
-//                        shareDialog.show(content);
-
                         final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
                         new ShowShareDialog(BaseBottomBarActivity.this).execute(s);
-
-                       // Bitmap image = ...
-
-//                        Uri videoFileUri = Uri.parse("https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939.mp4");
-//                        ShareVideo video = new ShareVideo.Builder()
-//                                .setLocalUrl(videoFileUri)
-//                                .build();
-//                        ShareVideoContent content = new ShareVideoContent.Builder()
-//                                .setVideo(video)
-//                                .build();
-//                        ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
-//                        shareDialog.show(content);
                     onUploadFinish();
-
                         deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
                     } else {
                         if (response.code() == 200) {
@@ -509,7 +481,7 @@ public class BaseBottomBarActivity extends BaseActivity
             reference.get().uploadCall.enqueue(resultObjectCallback);
 
             if (uploadParams.isReaction() && isResuming) {
-                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null, true));
+                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null, false, false));
             }
         }
     }
@@ -562,7 +534,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private void switchTab(final int position) {
         navigationController.switchTab(position);
-        updateTabFocus(position);
+        updateBottomTabIconFocus(position);
         updateToolbar(position == 1 || position == 3);
         if (position == 1 || position == 3)
             setAppBarElevation(0);
@@ -571,7 +543,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void updateTabFocus(int position) {
+    private void updateBottomTabIconFocus(int position) {
         for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
             if (i != 2) {
                 if (i == position)
@@ -583,7 +555,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void updateToolbar(boolean isDiscoverPage) {
-        if (isDiscoverPage && navigationController.isRootFragment()) {
+        if (isDiscoverPage) {
             if (toolbarPlainTitle.getVisibility() != VISIBLE)
                 toolbarPlainTitle.setVisibility(VISIBLE);
             if (toolbarCenterTitle.getVisibility() != GONE)
@@ -668,7 +640,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 toolbarCenterTitle.setVisibility(GONE);
         }
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarPlainTitle.getLayoutParams();
-        params.setMarginStart(navigationController.isRootFragment() ? getPixel(14) : -getPixel(18));
+        params.setMarginStart(navigationController.isRootFragment() ? getPixel(14) : 0);
         toolbarPlainTitle.setLayoutParams(params);
     }
 
@@ -765,7 +737,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
+                pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, true));
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(new ProfileFragment());
@@ -805,12 +777,12 @@ public class BaseBottomBarActivity extends BaseActivity
         else if (action == ACTION_VIEW_MOST_POPULAR)
             pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
         else if (action == ACTION_VIEW_POST)
-            pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, false));
     }
 
     @Override
     public void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage, false));
+        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage, true, false));
     }
 
     @Override
@@ -821,7 +793,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
-                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, false));
+                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }
@@ -846,7 +818,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(postDetails, null, false));
+            pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
@@ -885,17 +857,27 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void hideAppBar() {
-        appBar.setExpanded(false, true);
-    }
+//    public void hideAppBar() {
+//        appBar.setExpanded(false, true);
+//    }
 
     public void showAppBar() {
         appBar.setExpanded(true, true);
     }
 
+    public void hideBottomBar() {
+        bottomTabLayout.animate().translationY(100).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(100).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+    }
+
+    public void showBottomBar() {
+        bottomTabLayout.animate().translationY(0).alpha(1).setDuration(600).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(0).alpha(1).setDuration(600).setInterpolator(new DecelerateInterpolator()).start();
+    }
+
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null, false));
+        pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
     }
 
 //    public void hideSettings(boolean flag) {

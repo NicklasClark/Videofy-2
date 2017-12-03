@@ -2,6 +2,7 @@ package com.cncoding.teazer.authentication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -10,15 +11,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.utilities.FilterFactory;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 
@@ -70,27 +70,22 @@ public class SignupFragment2 extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_signup_2, container, false);
         ButterKnife.bind(this, rootView);
-        setTextLimits();
-        try {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setTextFilters();
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        headerTextView.setText("Hey " + signUpDetails.getFirstName() + ", " + getString(R.string.you_are_almost_there));
+        String headerText = "Hey " + signUpDetails.getFirstName() + ", " + getString(R.string.you_are_almost_there);
+        headerTextView.setText(headerText);
     }
 
-    @OnEditorAction(R.id.signup_confirm_password) public boolean onLoginByKeyboard(TextView v, int actionId) {
+    @OnEditorAction(R.id.signup_confirm_password) public boolean onLoginByKeyboard(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
             performSignup();
             return true;
@@ -171,8 +166,8 @@ public class SignupFragment2 extends Fragment {
             Snackbar.make(signupBtn, R.string.not_connected_message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void setTextLimits() {
-        InputFilter[] inputFilters = new InputFilter[] {new InputFilter.LengthFilter(32)};
+    private void setTextFilters() {
+        InputFilter[] inputFilters = new InputFilter[] {FilterFactory.passwordFilter};
         passwordView.setFilters(inputFilters);
         confirmPasswordView.setFilters(inputFilters);
     }

@@ -35,9 +35,13 @@ public class PostsListFragment extends BaseFragment {
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
+    public static boolean isRefreshing;
+    public static PostDetails postDetails;
+    public static int positionToUpdate = -1;
     private Call<PostList> postListCall;
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
+    private int[] savedPosition;
 
     public PostsListFragment() {
     }
@@ -48,6 +52,8 @@ public class PostsListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedPosition == null)
+            savedPosition = new int[2];
         previousTitle = getParentActivity().getToolbarTitle();
         getParentActivity().updateToolbarTitle(null);
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
@@ -86,11 +92,28 @@ public class PostsListFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(savedPosition);
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        if (postList != null)
-            getHomePagePosts(1, false);
-        getParentActivity().showAppBar();
+        if (postList != null && !isRefreshing) {
+            if (postList.isEmpty())
+                getHomePagePosts(1, false);
+            else {
+                recyclerView.getAdapter().notifyDataSetChanged();
+                dismissProgressBar();
+            }
+        }
+        else {
+            isRefreshing = false;
+            recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
+            postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+        }
+//        getParentActivity().showAppBar();
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
@@ -110,7 +133,10 @@ public class PostsListFragment extends BaseFragment {
                                 if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
                                     is_next_page = tempPostList.isNextPage();
                                     postList.addAll(tempPostList.getPosts());
-                                    postListAdapter.notifyDataSetChanged();
+                                    if (page == 1)
+                                        postListAdapter.notifyDataSetChanged();
+                                    else
+                                        postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
                                     recyclerView.setVisibility(View.VISIBLE);
                                     dismissProgressBar();
                                 } else {
@@ -164,5 +190,7 @@ public class PostsListFragment extends BaseFragment {
         if (postListCall != null)
             postListCall.cancel();
         postListAdapter = null;
+        positionToUpdate = -1;
+        postDetails = null;
     }
 }

@@ -68,6 +68,7 @@ import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
         SurfaceTextureListener, OnVideoSizeChangedListener {
@@ -78,6 +79,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
     private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
+    private static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
 
     @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.video_container) RelativeLayout videoContainer;
@@ -104,7 +106,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private PostDetails postDetails;
     private boolean isComplete;
     private boolean enableReactBtn;
-    private int lastPageCalled = 0;
+    private boolean isComingFromHomePage;
     private byte[] image;
 
     private Call<PostReactionsList> postReactionsListCall;
@@ -120,12 +122,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn,
+                                                  boolean isComingFromHomePage) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_DETAILS, postDetails);
         args.putByteArray(ARG_THUMBNAIL, image);
         args.putBoolean(ARG_ENABLE_REACT_BTN, enableReactBtn);
+        args.putBoolean(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -139,12 +143,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
             image = getArguments().getByteArray(ARG_THUMBNAIL);
             enableReactBtn = getArguments().getBoolean(ARG_ENABLE_REACT_BTN);
+            isComingFromHomePage = getArguments().getBoolean(ARG_IS_COMING_FROM_HOME_PAGE);
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getParentActivity().hideAppBar();
+        getParentActivity().hideBottomBar();
         getParentActivity().updateToolbarTitle(getString(R.string.post));
 
         View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
@@ -172,9 +177,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         likeAction(postDetails.canLike(), false);
 
+        if (!postDetails.canReact()) disableView(reactBtn);
+
         if (!enableReactBtn) disableView(reactBtn);
-        else
-            if (!postDetails.canReact()) disableView(reactBtn);
+        else enableView(reactBtn);
 
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
         tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
@@ -250,6 +256,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
 //                Increment the video view count
+                PostsListFragment.postDetails.getMedias().get(0).views++;
                 ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
                         .enqueue(new Callback<ResultObject>() {
                             @Override
@@ -381,8 +388,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
 
-        lastPageCalled = pageNumber;
-
         if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
             postReactionsListCall.enqueue(postReactionsListCallback);
     }
@@ -490,6 +495,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             likeBtn.setText(R.string.liked);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
+                PostsListFragment.postDetails.likes++;
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.incrementLikes();
             }
@@ -497,8 +503,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         } else {
             likeBtn.setChecked(false);
             likeBtn.setText(R.string.like);
-            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline, 0, 0);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
             if (animate) {
+                PostsListFragment.postDetails.likes--;
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.decrementLikes();
             }
@@ -636,6 +643,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     @Override
     public void onDetach() {
         super.onDetach();
+        if (isComingFromHomePage)
+            PostsListFragment.isRefreshing = true;
         mListener = null;
         exit();
         resetMediaPlayer();
@@ -648,7 +657,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         postReactionAdapter = null;
         if (postReactionsListCall != null)
             postReactionsListCall.cancel();
-        getParentActivity().showAppBar();
+        getParentActivity().showBottomBar();
     }
 
     private void resetMediaPlayer() {

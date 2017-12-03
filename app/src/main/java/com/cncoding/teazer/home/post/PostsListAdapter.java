@@ -115,6 +115,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             View.OnClickListener viewPostDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    PostsListFragment.positionToUpdate = holder.getAdapterPosition();
+                    PostsListFragment.postDetails = holder.postDetails;
                     listener.onPostInteraction(ACTION_VIEW_POST, holder.postDetails, holder.postThumbnail,
                             holder.layout, getByteArrayFromImage(holder.postThumbnail));
                 }
@@ -154,7 +156,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                         holder.layout.getLayoutParams().height = height;
 
                         dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+
                         holder.layout.setVisibility(View.VISIBLE);
                         return false;
                     }

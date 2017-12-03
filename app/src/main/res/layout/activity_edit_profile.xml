@@ -72,9 +72,7 @@
                     android:id="@+id/profile_id2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/ic_default_bg"
-                    android:transitionName="profile" />
+                    android:scaleType="centerCrop" />
                 <RelativeLayout
 
                     android:layout_width="match_parent"

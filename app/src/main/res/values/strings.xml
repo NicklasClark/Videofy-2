@@ -265,4 +265,11 @@
     <string name="search_for_videos">Search for videos</string>
     <string name="search_for_people">Search for people</string>
     <string name="already_have_otp">Already have OTP?</string>
+    <string name="validEmailLetters">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz0123456789@._</string>
+    <string name="validName">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz</string>
+    <string name="validUsername">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._</string>
+    <string name="validPassword">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~`!@#$%^*()_-+={}|[]:";'/?&amp;\</string>
+    <string name="validNumber">1234567890</string>
+    <string name="enter_email_or_mobile_number_first">Enter email or mobile number first</string>
+    <string name="enter_location">Enter location</string>
 </resources>

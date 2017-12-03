@@ -17,9 +17,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
-import com.cncoding.teazer.model.profile.blockuser.BlockUsers;
 import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
-import com.cncoding.teazer.model.profile.blockuser.Followers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class BlockUserList extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+//        toolbar.setNavigationIcon(R.drawable.ic_previous);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
