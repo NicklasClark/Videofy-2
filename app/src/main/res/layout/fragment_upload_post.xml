@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+
+    <RelativeLayout
+        android:id="@+id/video_preview_thumbnail_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_vignette"
+        android:animateLayoutChanges="true"
+        android:elevation="5dp">
+
+        <ImageView
+            android:id="@+id/video_preview_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:minHeight="160dp"
+            android:maxHeight="200dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/video_preview_thumbnail" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_play_big"
+            android:clickable="false"/>
+
+        <ProgressBar
+            android:id="@+id/thumbnail_progress_bar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleLarge"
+            android:theme="@style/ProgressBarTheme"
+            android:layout_centerInParent="true" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="18dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            tools:ignore="RelativeOverlap" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/video_preview_thumbnail_container">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:animateLayoutChanges="true"
+            android:paddingBottom="55dp"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/progress_bar_horizontal"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="180"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp">
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
+                    style="@style/AppTheme.FullScreen.EditText"
+                    android:padding="@dimen/padding_default"
+                    android:id="@+id/video_upload_title"
+                    android:hint="@string/title"
+                    android:maxLength="180"
+                    android:inputType="textCapSentences"
+                    android:imeOptions="actionDone"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp">
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
+                    android:id="@+id/video_upload_location"
+                    style="@style/AppTheme.FullScreen.EditText"
+                    android:hint="@string/enter_location"
+                    app:drawableStartCompat="@drawable/ic_add_location"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                android:id="@+id/tag_friends_badge"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/text_size_8sp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="22dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_circle_primary"
+                android:layout_marginBottom="-24dp"
+                android:visibility="invisible"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp">
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
+                    android:id="@+id/video_upload_tag_friends"
+                    style="@style/AppTheme.FullScreen.EditText"
+                    android:hint="@string/tag_friends"
+                    app:drawableStartCompat="@drawable/ic_person_left"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                android:id="@+id/categories_badge"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/text_size_8sp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="22dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_circle_primary"
+                android:layout_marginBottom="-24dp"
+                android:visibility="invisible"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="36dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:paddingTop="14dp">
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
+                    android:id="@+id/video_upload_categories"
+                    style="@style/AppTheme.FullScreen.EditText"
+                    android:hint="@string/choose_category"
+                    app:drawableStartCompat="@drawable/ic_grid"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share"
+                android:textSize="@dimen/text_size_14sp"
+                android:textColor="@android:color/black"
+                android:textAllCaps="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="14dp" />
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                android:id="@+id/share_on_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="@string/share_on_facebook"
+                android:layout_marginEnd="14dp"
+                app:drawableStartCompat="@drawable/ic_facebook"
+                android:paddingTop="18dp"
+                android:paddingBottom="18dp"
+                android:textColor="@color/colorSecondary_text"
+                android:textSize="@dimen/text_size_content"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                android:id="@+id/share_on_twitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="@string/share_on_twitter"
+                android:layout_marginEnd="14dp"
+                app:drawableStartCompat="@drawable/ic_twitter"
+                android:paddingTop="18dp"
+                android:paddingBottom="18dp"
+                android:textColor="@color/colorSecondary_text"
+                android:textSize="@dimen/text_size_content"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/video_upload_check_btn"
+        style="@style/AppTheme.CancelUploadButtonsTheme"
+        android:text="@string/upload"
+        android:contentDescription="@string/check"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

@@ -60,9 +60,10 @@ public class ViewUtils {
         view.setBackgroundTintList(null);
     }
 
-    public static void disableView(View view) {
+    public static void disableView(View view, boolean setAlpha) {
         view.setEnabled(false);
-        view.setAlpha(0.5f);
+        if (setAlpha)
+            view.setAlpha(0.5f);
         view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
     }
 

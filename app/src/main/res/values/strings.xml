@@ -29,9 +29,9 @@
     <string name="video_thumbnail">Video thumbnail</string>
     <string name="flip_video">flip_video</string>
     <string name="caption">Caption…</string>
-    <string name="tag_friends">Tag Friends</string>
+    <string name="tag_friends">&#160;&#160;Tag Friends</string>
     <string name="add_location">Add Location</string>
-    <string name="choose_category">Add categories to your video</string>
+    <string name="choose_category">&#160;&#160;Categories</string>
     <string name="facebook">\tFacebook</string>
     <string name="instagram">\tInstagram</string>
     <string name="title_home">Home</string>
@@ -110,7 +110,7 @@
     <string name="action_settings">Settings</string>
     <string name="video_preview_thumbnail">Video preview thumbnail</string>
     <string name="title">Title</string>
-    <string name="share_with">Share with</string>
+    <string name="share_to">Share to</string>
     <string name="retake">Retake</string>
     <string name="see_nearby_places">See nearby places</string>
     <string name="in_order_to_see_nearby_places">In order to see nearby places you need to turn on your location first.</string>
@@ -238,7 +238,7 @@
     <string name="featured_videos">Featured Videos</string>
     <string name="view_all">View all</string>
     <string name="rationale_storage">App requires external storage permission</string>
-    <string name="no_friends_yet">No friends yet?</string>
+    <string name="no_friends_yet">No friends yet</string>
     <string name="like">Like</string>
     <string name="liked">Liked</string>
     <string name="discover">Discover</string>
@@ -271,5 +271,8 @@
     <string name="validPassword">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~`!@#$%^*()_-+={}|[]:";'/?&amp;\</string>
     <string name="validNumber">1234567890</string>
     <string name="enter_email_or_mobile_number_first">Enter email or mobile number first</string>
-    <string name="enter_location">Enter location</string>
+    <string name="enter_location">&#160;&#160;Enter location</string>
+    <string name="share_on_facebook">&#160;&#160;Share on facebook</string>
+    <string name="share_on_twitter">&#160;&#160;Share on twitter</string>
+    <string name="error_fetchng_categories">Error fetching categories, please try again</string>
 </resources>

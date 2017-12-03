@@ -105,8 +105,6 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEAR
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
-import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
@@ -245,7 +243,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         StrictMode.setVmPolicy(builder.build());
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_upload, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_upload_post, container, false);
         ButterKnife.bind(this, rootView);
 
         context = getContext();
@@ -548,8 +546,8 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
-                        mListener.onsaveEditPost(false,
-                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
+                        mListener.onSaveEditPost(false,
+                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
                         Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
@@ -587,8 +585,8 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
-                            mListener.onsaveEditPost(false,
-                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
+                            mListener.onSaveEditPost(false,
+                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT),
                                     TAG_TAGS_FRAGMENT);
                             break;
                         default:
@@ -607,7 +605,6 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         });
     }
 
-
     @OnClick(R.id.video_upload_check_btn)
     public void onUploadBtnClick() {
         if (validateFields()) {
@@ -624,7 +621,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
             String tags = tagFriendsText.getText().toString().equals("") ? null : tagFriendsText.getText().toString();
             DecimalFormat df = new DecimalFormat("#.#######");
             performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
-                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend));
+                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend, null));
         }
     }
 
@@ -642,7 +639,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     @OnClick(R.id.video_upload_retake_btn)
     public void retakeVideo() {
-        mListener.onsaveEditPost(true, null, null);
+        mListener.onSaveEditPost(true, null, null);
     }
 
     @AfterPermissionGranted(RC_LOCATION_PERM)
@@ -851,7 +848,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
             reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
-            reference.get().mListener.onsaveEditPost(false,
+            reference.get().mListener.onSaveEditPost(false,
                     NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
@@ -946,7 +943,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
-        mListener.onsaveEditPost(false,
+        mListener.onSaveEditPost(false,
                 NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
     }
 
@@ -984,7 +981,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     }
 
     public interface OnEditPostInteractionListener {
-        void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag);
+        void onSaveEditPost(boolean isBackToCamera, Fragment fragment, String tag);
     }
 
 }

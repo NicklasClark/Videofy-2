@@ -13,11 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
 import java.util.ArrayList;
@@ -25,9 +30,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
+import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 
 public class TagsAndCategoryFragment extends Fragment {
 
@@ -36,6 +46,7 @@ public class TagsAndCategoryFragment extends Fragment {
     public static final String ACTION_TAGS_FRAGMENT = "tagsFragment";
 //    private static final int CATEGORIES_LIMIT = 5;
 
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.headerTextView) ProximaNovaRegularTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_done) FloatingActionButton doneBtn;
@@ -48,16 +59,16 @@ public class TagsAndCategoryFragment extends Fragment {
     private ArrayList<MiniProfile> circles;
     private TagsAdapter tagsAdapter;
     private TagsAndCategoriesInteractionListener listener;
+    private boolean nextPage;
 
     public TagsAndCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static TagsAndCategoryFragment newInstance(String action, ArrayList<? extends Parcelable> args) {
+    public static TagsAndCategoryFragment newInstance(String action) {
         TagsAndCategoryFragment fragment = new TagsAndCategoryFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, action);
-        bundle.putParcelableArrayList(action, args);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -67,19 +78,9 @@ public class TagsAndCategoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             action = getArguments().getString(ACTION);
-            if (action != null) {
-                switch (action) {
-                    case ACTION_TAGS_FRAGMENT:
-                        circles = getArguments().getParcelableArrayList(ACTION_TAGS_FRAGMENT);
-                        break;
-                    case ACTION_CATEGORIES_FRAGMENT:
-                        categories = getArguments().getParcelableArrayList(ACTION_CATEGORIES_FRAGMENT);
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
+        categories = new ArrayList<>();
+        circles = new ArrayList<>();
     }
 
     @Override
@@ -89,6 +90,24 @@ public class TagsAndCategoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tags_and_categories, container, false);
         ButterKnife.bind(this, rootView);
         prepareRecyclerView();
+        switch (action) {
+            case ACTION_CATEGORIES_FRAGMENT:
+                recyclerView.setHasFixedSize(true);
+                getCategories();
+                break;
+            case ACTION_TAGS_FRAGMENT:
+                EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(
+                        (LinearLayoutManager) recyclerView.getLayoutManager()) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                        if (nextPage)
+                            getMyCircle(page);
+                    }
+                };
+                recyclerView.addOnScrollListener(scrollListener);
+                getMyCircle(1);
+                break;
+        }
         return rootView;
     }
 
@@ -97,14 +116,8 @@ public class TagsAndCategoryFragment extends Fragment {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 headerTextView.setText(R.string.tag_your_friends);
-                if (circles.size() > 0) {
-                    tagsAdapter = new TagsAdapter(circles, this);
-                    recyclerView.setAdapter(tagsAdapter);
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                    doneBtn.setVisibility(View.GONE);
-                    noFriendsTextView.setVisibility(VISIBLE);
-                }
+                tagsAdapter = new TagsAdapter(circles, this);
+                recyclerView.setAdapter(tagsAdapter);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
@@ -127,20 +140,85 @@ public class TagsAndCategoryFragment extends Fragment {
         });
     }
 
+    private void getCategories() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+                if (response.code() == 200) {
+                    ArrayList<Category> tempList = response.body();
+                    if (!tempList.isEmpty()) {
+                        categories.addAll(tempList);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        doneBtn.setVisibility(VISIBLE);
+                    } else {
+                        doneBtn.setVisibility(View.GONE);
+                        noFriendsTextView.setText(R.string.error_fetchng_categories);
+                        noFriendsTextView.setVisibility(VISIBLE);
+                    }
+                } else {
+                    doneBtn.setVisibility(View.GONE);
+                    noFriendsTextView.setText(R.string.error_fetchng_categories);
+                    noFriendsTextView.setVisibility(VISIBLE);
+//                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+                logTheError("getCategories", t.getMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void getMyCircle(final int page) {
+        ApiCallingService.Friends.getMyCircle(page, getContext()).enqueue(new Callback<CircleList>() {
+            @Override
+            public void onResponse(Call<CircleList> call, Response<CircleList> response) {
+                if (response.code() == 200) {
+                    CircleList circleList = response.body();
+                    if (!circleList.getCircles().isEmpty()) {
+                        nextPage = circleList.isNextPage();
+                        circles.addAll(circleList.getCircles());
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        doneBtn.setVisibility(VISIBLE);
+                    } else {
+                        doneBtn.setVisibility(View.GONE);
+                        noFriendsTextView.setVisibility(VISIBLE);
+                    }
+                } else {
+                    doneBtn.setVisibility(View.GONE);
+                    noFriendsTextView.setText(getErrorMessage(response.errorBody()));
+                    noFriendsTextView.setVisibility(VISIBLE);
+//                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<CircleList> call, Throwable t) {
+                logTheError("getMyCircle", t.getMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
     @OnClick(R.id.tags_categories_done) public void getResult() {
         try {
             switch (action) {
                 case ACTION_TAGS_FRAGMENT:
                     if (circles != null && circles.size() > 0 && tagsAdapter != null) {
                         listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                                getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                                getSelectedTags(tagsAdapter.getSelectedTags()), null, getCount(tagsAdapter.getSelectedTags()));
                     }
                     break;
                 case ACTION_CATEGORIES_FRAGMENT:
                     if (categories != null && categories.size() > 0) {
                         listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
                                 getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                                getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                                getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()),
+                                getCount(categoriesAdapter.getSelectedCategories()));
                     }
                     break;
                 default:
@@ -160,6 +238,10 @@ public class TagsAndCategoryFragment extends Fragment {
             }
         }
         return stringBuilder.toString();
+    }
+
+    private int getCount(SparseArray<? extends Parcelable> sparseArray) {
+        return sparseArray.size();
     }
 
     private String getSelectedCategoriesToSend(SparseArray<Category> sparseArray) {
@@ -218,6 +300,6 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     public interface TagsAndCategoriesInteractionListener {
-        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend);
+        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count);
     }
 }

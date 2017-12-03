@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.CircularImageView;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
@@ -51,18 +51,16 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final TagsAdapter.ViewHolder holder, int position) {
         final MiniProfile circle = circles.get(position);
-        holder.nameView.setText(circle.getFirstName() + " " + circle.getLastName());
-        if (circle.hasProfileMedia()) {
+        String name = circle.getFirstName() + " " + circle.getLastName();
 
+        holder.nameView.setText(name);
+        if (circle.hasProfileMedia()) {
             Glide.with(fragment)
                     .load(circle.getProfileMedia().getThumbUrl())
                     .placeholder(R.drawable.ic_user_male_dp_small)
                     .crossFade(400)
                     .into(holder.image);
-        } else
-            Glide.with(fragment).load("")
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .into(holder.image);
+        }
 
         holder.nameView.setChecked(selectedTagsArray.get(holder.getAdapterPosition()));
 
@@ -89,7 +87,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tags_item_layout) RelativeLayout rootLayout;
-        @BindView(R.id.list_item_checked_thumbnail_image) CircularImageView image;
+        @BindView(R.id.list_item_checked_thumbnail_image) CircularAppCompatImageView image;
         @BindView(R.id.chip) ProximaNovaRegularCheckedTextView nameView;
 
         ViewHolder(View view) {

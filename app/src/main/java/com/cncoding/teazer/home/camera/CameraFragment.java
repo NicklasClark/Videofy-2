@@ -17,9 +17,7 @@
 package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -54,7 +52,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -62,12 +59,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
@@ -90,8 +85,6 @@ import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
-import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
 public class CameraFragment extends Fragment {
 
@@ -360,11 +353,17 @@ public class CameraFragment extends Fragment {
     }
 
     private void animateRecordButton(Context context) {
+        cameraFilesView.setVisibility(View.GONE);
+        cameraFlashView.setVisibility(View.GONE);
+        cameraFlipView.setVisibility(View.GONE);
         recordBtnInner.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_inner_pulse));
         recordBtnOuter.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_outer_pulse));
     }
 
     private void stopRecordButtonAnimations() {
+        cameraFilesView.setVisibility(View.VISIBLE);
+        cameraFlashView.setVisibility(View.VISIBLE);
+        cameraFlipView.setVisibility(View.VISIBLE);
         recordBtnInner.clearAnimation();
         recordBtnOuter.clearAnimation();
     }
@@ -852,10 +851,7 @@ public class CameraFragment extends Fragment {
         }).start();
 
         cameraFlashView.setImageResource(R.drawable.ic_flash_off);
-        if (isReaction)
-            new ChooseOptionalTitle(new UploadParams(mNextVideoAbsolutePath, postDetails), activity);
-        else
-            mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath, null));
+        mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath, postDetails));
     }
 
     /**
@@ -936,56 +932,56 @@ public class CameraFragment extends Fragment {
 
     }
 
-    static class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
-
-        ChooseOptionalTitle(final UploadParams uploadParams, final Activity activity) {
-            super(activity);
-            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(activity);
-            LayoutInflater inflater = activity.getLayoutInflater();
-            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
-            dialogBuilder.setView(dialogView);
-
-            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
-
-            setupEditText(editText, activity);
-
-            dialogBuilder.setCancelable(false);
-            dialogBuilder.setMessage(R.string.optional_title);
-            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    hideKeyboard(activity, editText);
-
-                    performUpload(activity,
-                            new UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(),
-                                    uploadParams.getPostDetails()));
-
-                    activity.finish();
-                }
-            });
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-//                    //noinspection ResultOfMethodCallIgnored
-//                    new File(uploadParams.getVideoPath()).delete();
-//                    deleteFileFromMediaStoreDatabase(activity, uploadParams.getVideoPath());
-                    dialogInterface.dismiss();
-                }
-            });
-            android.support.v7.app.AlertDialog b = dialogBuilder.create();
-            b.show();
-        }
-
-        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText, final Activity activity) {
-            editText.requestFocus();
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    hideKeyboard(activity, textView);
-                    return true;
-                }
-            });
-        }
-    }
+//    static class ChooseOptionalTitle extends android.support.v7.app.AlertDialog.Builder {
+//
+//        ChooseOptionalTitle(final UploadParams uploadParams, final Activity activity) {
+//            super(activity);
+//            android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(activity);
+//            LayoutInflater inflater = activity.getLayoutInflater();
+//            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
+//            dialogBuilder.setView(dialogView);
+//
+//            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
+//
+//            setupEditText(editText, activity);
+//
+//            dialogBuilder.setCancelable(false);
+//            dialogBuilder.setMessage(R.string.optional_title);
+//            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int whichButton) {
+//                    hideKeyboard(activity, editText);
+//
+//                    performUpload(activity,
+//                            new UploadParams(uploadParams.getVideoPath(), true, editText.getText().toString(),
+//                                    uploadParams.getPostDetails()));
+//
+//                    activity.finish();
+//                }
+//            });
+//            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+////                    //noinspection ResultOfMethodCallIgnored
+////                    new File(uploadParams.getVideoPath()).delete();
+////                    deleteFileFromMediaStoreDatabase(activity, uploadParams.getVideoPath());
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            android.support.v7.app.AlertDialog b = dialogBuilder.create();
+//            b.show();
+//        }
+//
+//        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText, final Activity activity) {
+//            editText.requestFocus();
+//            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//                @Override
+//                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                    hideKeyboard(activity, textView);
+//                    return true;
+//                }
+//            });
+//        }
+//    }
 
     public interface OnCameraFragmentInteractionListener {
         void onCameraInteraction(int action, UploadParams uploadParams);

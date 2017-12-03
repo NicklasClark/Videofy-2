@@ -7,13 +7,24 @@
     android:animateLayoutChanges="true"
     tools:context=".tagsAndCategories.TagsAndCategoryFragment">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:indeterminate="true"
+        style="?android:attr/progressBarStyleLarge"
+        android:theme="@style/ProgressBarTheme"
+        android:layout_centerInParent="true" />
+
     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
         android:id="@+id/no_friends_text_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:padding="@dimen/padding_half"
         android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
         android:textSize="@dimen/text_size_h4"
         android:text="@string/no_friends_yet"
         android:visibility="gone"/>
@@ -23,9 +34,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorSecondary_text"
+        android:background="@drawable/bg_card_no_margin"
         android:textSize="@dimen/text_size_h4"
         android:padding="@dimen/padding_default"
-        android:gravity="center"/>
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:elevation="2dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tags_categories_recycler_view"
@@ -42,6 +57,7 @@
         app:srcCompat="@drawable/ic_check_white"
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

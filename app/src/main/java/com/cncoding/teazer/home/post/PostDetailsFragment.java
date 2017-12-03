@@ -176,9 +176,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact()) disableView(reactBtn);
+        if (!postDetails.canReact()) disableView(reactBtn, true);
 
-        if (!enableReactBtn) disableView(reactBtn);
+        if (!enableReactBtn) disableView(reactBtn, true);
         else enableView(reactBtn);
 
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
@@ -255,7 +255,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
 //                Increment the video view count
-                PostsListFragment.postDetails.getMedias().get(0).views++;
+                if (PostsListFragment.postDetails != null)
+                    PostsListFragment.postDetails.getMedias().get(0).views++;
                 ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
                         .enqueue(new Callback<ResultObject>() {
                             @Override
@@ -494,17 +495,22 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             likeBtn.setText(R.string.liked);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
-                PostsListFragment.postDetails.likes++;
+                if (PostsListFragment.postDetails != null) {
+                    PostsListFragment.postDetails.likes++;
+                    PostsListFragment.postDetails.can_like = false;
+                }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.incrementLikes();
             }
-
         } else {
             likeBtn.setChecked(false);
             likeBtn.setText(R.string.like);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
             if (animate) {
-                PostsListFragment.postDetails.likes--;
+                if (PostsListFragment.postDetails != null) {
+                    PostsListFragment.postDetails.likes--;
+                    PostsListFragment.postDetails.can_like = true;
+                }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.decrementLikes();
             }

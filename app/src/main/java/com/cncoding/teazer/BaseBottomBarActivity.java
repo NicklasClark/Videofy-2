@@ -94,6 +94,7 @@ import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRE
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
 import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
 import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
 import static com.cncoding.teazer.utilities.NavigationController.TAB4;
@@ -270,7 +271,9 @@ public class BaseBottomBarActivity extends BaseActivity
                                 }
                             }, 1000);
                         }
-                    }
+                    } else {
+                            onUploadError(new Throwable(getErrorMessage(response.errorBody())));
+                        }
                 }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -361,14 +364,14 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag) {
+    public void onSaveEditPost(boolean isBackToCamera, Fragment fragment, String tag) {
 
         if (!isBackToCamera) {
             if (fragment != null && tag != null) {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
-                        .replace(R.id.helper_uploading_container, fragment, tag)
+                        .replace(R.id.uploading_container, fragment, tag)
                         .addToBackStack(tag)
                         .commit();
             } else {
@@ -390,8 +393,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
-        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count) {
+        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
         getSupportFragmentManager().popBackStack();
     }
 
@@ -452,20 +455,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
         @Override
         protected void onPostExecute(Callback<ResultObject> resultObjectCallback) {
-            super.onPostExecute(resultObjectCallback);
-            String title = uploadParams.getTitle();
-            if (!uploadParams.isReaction()) {
-//                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-                reference.get().uploadCall = ApiCallingService.Posts.uploadVideo(
-                        videoPartFile, title, uploadParams.getLocation(), uploadParams.getLatitude(),
-                        uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), reference.get());
-            } else {
-//                UPLOADING REACTION VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-                reference.get().uploadCall = ApiCallingService.React.uploadReaction(videoPartFile,
-                        uploadParams.getPostDetails().getPostId(), reference.get(), title);
-            }
             reference.get().uploadCall.enqueue(resultObjectCallback);
 
             if (uploadParams.isReaction() && isResuming) {
@@ -568,7 +557,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //        if (settings.getVisibility() != GONE)
 //            settings.setVisibility(GONE);
 //    }
-//
+
 //    public void reappearSearchBar() {
 //        toolbarPlainTitle.setVisibility(VISIBLE);
 //    }

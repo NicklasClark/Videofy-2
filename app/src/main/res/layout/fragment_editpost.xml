@@ -114,7 +114,7 @@
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/tag_friends"
                     android:textSize="@dimen/text_size_content"
-                    app:drawableStartCompat="@drawable/ic_person_white"
+                    app:drawableStartCompat="@drawable/ic_person_left"
                     android:layout_toEndOf="@+id/spacer"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -161,7 +161,7 @@
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/share_with"
+                    android:text="@string/share_to"
                     android:textSize="@dimen/text_size_content_big"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
@@ -177,8 +177,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="@dimen/padding_thin"
                     android:background="@drawable/ic_facebook_disabled"
-                    android:layout_toStartOf="@+id/google_share_btn"
-                    />
+                    android:layout_toStartOf="@+id/google_share_btn" />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/google_share_btn"
