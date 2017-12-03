@@ -18,6 +18,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -44,7 +45,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -53,6 +56,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
@@ -135,10 +139,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private static final int RC_LOCATION_PERM = 123;
     @BindView(R.id.spacer)
     Space spacer;
-    @BindView(R.id.google_share_btn)
-    AppCompatImageView googleShareBtn;
-    @BindView(R.id.instagram_share_btn)
-    AppCompatImageView instagramShareBtn;
+
     @BindView(R.id.spacer1)
     Space spacer1;
     @BindView(R.id.video_actions)
@@ -177,8 +178,10 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     ProximaNovaRegularTextView uploadCategoriesText;
     @BindView(R.id.up_btn)
     AppCompatImageView upBtn;
-    @BindView(R.id.facebook_share_btn)
-    AppCompatImageView facebook_share_btn;
+
+
+    @BindView(R.id.save)
+    FloatingActionButton save;
 
     public String videoPath;
     public boolean isReaction;
@@ -192,22 +195,21 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private SelectedPlace selectedPlace;
     private Context context;
     private Activity activity;
-
+    String categories;
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
     Pojos.Post.PostDetails postDetails;
+    StringBuilder categoryId;
+    StringBuilder categoryName;
+    String location;
 
 
     public EditPostFragment() {
-        // Required empty public constructor
     }
 
     public static EditPostFragment newInstance(Pojos.Post.PostDetails postDetails) {
         EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();
-//        args.putString(VIDEO_PATH, videoPath);
-//        args.putBoolean(IS_REACTION, isReaction);
-//        args.putBoolean(IS_GALLERY, isGallery);
         args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
@@ -218,9 +220,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-//            videoPath = bundle.getString(VIDEO_PATH);
-//            isReaction = bundle.getBoolean(IS_REACTION);
-//            isGallery = bundle.getBoolean(IS_GALLERY);
             postDetails = bundle.getParcelable(POST_DETAILS);
         }
     }
@@ -256,75 +255,102 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
         context = getContext();
         activity = getActivity();
-
-        new GetThumbnail(this).execute();
-
+      //  new GetThumbnail(this).execute();
         new SetVideoDuration(this).execute();
-
         isRequestingLocationUpdates = false;
+
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
         getLastLocation(false);
+
         createLocationCallback();
         createLocationRequest();
 
-        facebook_share_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkefacebookeButtonPressed == false) {
-                    checkefacebookeButtonPressed = true;
-                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_enabled);
-
-
-                } else {
-                    checkefacebookeButtonPressed = false;
-                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_disabled);
-                }
-
-            }
-        });
-
         videoTitle.setText(postDetails.getTitle());
-        if (postDetails.getMedias().get(0).getThumbUrl()!=null){
-        Glide.with(context)
-                        .load(postDetails.getMedias().get(0).getThumbUrl())
-                        .into(thumbnailView);}
-                        else
-        {
+        if (postDetails.getMedias().get(0).getThumbUrl() != null) {
+            Glide.with(context)
+                    .load(postDetails.getMedias().get(0).getThumbUrl())
+                    .into(thumbnailView);
+        } else {
             Glide.with(context)
                     .load(R.drawable.material_flat)
                     .into(thumbnailView);
         }
-        if(postDetails.getCheckIn()!=null)
-        {
+        if (postDetails.getCheckIn() != null) {
             addLocationText.setText(postDetails.getCheckIn().getLocation());
         }
 
-        List<Pojos.Category> list=postDetails.getCategories();
-        StringBuilder stringBuilder=new StringBuilder();
-        for(int i=0;i<list.size();i++)
-        {
-           stringBuilder.append(list.get(i).getCategoryName());
-           if(i==list.size()-1) {
-               stringBuilder.append("");
-           }
-           else
-           {
-               stringBuilder.append(", ");
-           }
+        List<Pojos.Category> list = postDetails.getCategories();
+        categoryName = new StringBuilder();
+        categoryId = new StringBuilder();
+
+        for (int i = 0; i < list.size(); i++) {
+            categoryName.append(list.get(i).getCategoryName());
+            categoryId.append(list.get(i).getCategoryId());
+
+            if (i == list.size() - 1) {
+            } else {
+                categoryName.append(",");
+                categoryId.append(",");
+            }
         }
-        uploadCategoriesText.setText(stringBuilder.toString());
 
 
+        uploadCategoriesText.setText(categoryName.toString());
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double latitude = 0;
+                double longitude = 0;
+
+                if (selectedPlace != null) {
+                    location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                    latitude = selectedPlace.getLatitude();
+                    longitude = selectedPlace.getLongitude();
+                }
+
+                if (selectedCategoriesToSend != null) {
+                    categories = selectedCategoriesToSend;
+                } else {
+                    categories = categoryId.toString();
+                }
+                String title = videoTitle.getText().toString();
+                int postId = postDetails.getPostId();
+//                String location = addLocationText.getText().toString();
+                UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, "", categories);
+                updatePost(updatePostRequest);
+            }
+        });
         return rootView;
     }
+    private void updatePost(UpdatePostRequest updatePostRequest) {
+        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
 
+                if (response.code() == 200) {
+
+                    if (response.body().getStatus()) {
+                        Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
+                    } else {
+                        Toast.makeText(context, "Your post has not been updated", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
     }
-
 
     @Override
     public void onResume() {
@@ -449,7 +475,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         protected void onPostExecute(Bitmap bitmap) {
             try {
 //                if (postDetails.getMedias().get(0).getThumbUrl()!=null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                    if (stream != null) {
 //                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                        Glide.with(reference.get())
@@ -491,7 +517,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 //                                }
 //                            })
 //                            .into(reference.get().thumbnailView);
-          //      }
+                //      }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -546,7 +572,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     @OnClick(R.id.video_preview_thumbnail)
     public void playVideoPreview() {
-      //  playVideo(context, videoPath, false);
+        //  playVideo(context, videoPath, false);
 
     }
 
@@ -716,9 +742,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
-
         addLocationText.setText(selectedPlace.getPlaceName());
-
 
 
     }
@@ -731,6 +755,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             case ACTION_CATEGORIES_FRAGMENT:
                 selectedCategoriesToSend = resultToSend;
                 uploadCategoriesText.setText(resultToShow);
+                // Log.d(" selected categories",resultToSend);
                 break;
         }
     }
@@ -910,7 +935,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 //                        return "";
 //                    }
 //                } else
-                   return "";
+                return "";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "";
@@ -1010,7 +1035,10 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         mListener = null;
     }
 
+
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
     }
+
+
 }

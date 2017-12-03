@@ -743,8 +743,17 @@ public class BaseBottomBarActivity extends BaseActivity
             case ACTION_VIEW_POST:
                 pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
                 break;
+
             case ACTION_VIEW_PROFILE:
-                pushFragment(new ProfileFragment());
+                int postOwnerId=postDetails.getPostOwner().getUserId();
+                String username=postDetails.getPostOwner().getUserName();
+                String userType="";
+                boolean candelete=postDetails.canDelete();
+                if(candelete)
+                    pushFragment(ProfileFragment.newInstance());
+
+                else
+                    pushFragment(OthersProfileFragment.newInstance(String.valueOf(postOwnerId),userType,username));
         }
     }
 
@@ -752,13 +761,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onPostDetailsInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_DISMISS_PLACEHOLDER:
-//                expandedImage.animate().alpha(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        expandedImage.setImageDrawable(null);
-//                    }
-//                }, 250);
                 break;
             case ACTION_OPEN_REACTION_CAMERA:
                 launchReactionCamera(this, postDetails);
