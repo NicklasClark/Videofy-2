@@ -134,7 +134,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
+//                .crossFade()
                 .placeholder(R.drawable.bg_placeholder)
                 .skipMemoryCache(false)
 //                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)

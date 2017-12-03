@@ -30,6 +30,7 @@ import com.cncoding.teazer.videoTrim.widget.Thumb;
 import com.cncoding.teazer.videoTrim.widget.VideoThumbHorizontalListView;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -411,7 +412,11 @@ public class VideoTrimmerView extends FrameLayout {
             Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
         }else{
             mVideoView.pause();
-            TrimVideoUtil.trimVideo(mContext, mSrc.getPath(), getTrimmedVideoPath(), mStartPosition, mEndPosition, mOnTrimVideoListener);
+            try {
+                TrimVideoUtil.trimVideo(mContext, mSrc.getPath(), getTrimmedVideoPath(), mStartPosition, mEndPosition, mOnTrimVideoListener);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
