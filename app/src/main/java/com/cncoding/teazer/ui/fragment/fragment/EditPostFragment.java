@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.camera;
+package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,6 +18,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -44,15 +45,20 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
+import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
@@ -114,12 +120,13 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
- * Created by farazhabib on 29/11/17.
+ * Created by farazhabib on 02/12/17.
  */
 
-public class EditPost extends Fragment implements EasyPermissions.PermissionCallbacks{
+public class EditPostFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     public static final String VIDEO_PATH = "videoPath";
+    public static final String POST_DETAILS = "postdetails";
     private static final String TAG_NEARBY_PLACES = "nearbyPlaces";
     private static final String TAG_INTERESTS_FRAGMENT = "interestsFragment";
     private static final String TAG_TAGS_FRAGMENT = "tagsFragment";
@@ -132,15 +139,12 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     private static final int RC_LOCATION_PERM = 123;
     @BindView(R.id.spacer)
     Space spacer;
-    @BindView(R.id.google_share_btn)
-    AppCompatImageView googleShareBtn;
-    @BindView(R.id.instagram_share_btn)
-    AppCompatImageView instagramShareBtn;
+
     @BindView(R.id.spacer1)
     Space spacer1;
     @BindView(R.id.video_actions)
     RelativeLayout videoActions;
-    private boolean checkefacebookeButtonPressed;
+    public static boolean checkefacebookeButtonPressed = false;
 
     @BindView(R.id.video_preview_thumbnail_container)
     RelativeLayout thumbnailViewContainer;
@@ -174,8 +178,10 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     ProximaNovaRegularTextView uploadCategoriesText;
     @BindView(R.id.up_btn)
     AppCompatImageView upBtn;
-    @BindView(R.id.facebook_share_btn)
-    AppCompatImageView facebook_share_btn;
+
+
+    @BindView(R.id.save)
+    FloatingActionButton save;
 
     public String videoPath;
     public boolean isReaction;
@@ -189,20 +195,22 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     private SelectedPlace selectedPlace;
     private Context context;
     private Activity activity;
-
-    private EditPost.OnEditPostInteractionListener mListener;
+    String categories;
+    private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
+    Pojos.Post.PostDetails postDetails;
+    StringBuilder categoryId;
+    StringBuilder categoryName;
+    String location;
 
-    public EditPost() {
-        // Required empty public constructor
+
+    public EditPostFragment() {
     }
 
-    public static EditPost newInstance(String videoPath) {
-        EditPost fragment = new EditPost();
+    public static EditPostFragment newInstance(Pojos.Post.PostDetails postDetails) {
+        EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();
-         args.putString(VIDEO_PATH, videoPath);
-//        args.putBoolean(IS_REACTION, isReaction);
-//        args.putBoolean(IS_GALLERY, isGallery);
+        args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
     }
@@ -212,9 +220,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            videoPath = bundle.getString(VIDEO_PATH);
-//            isReaction = bundle.getBoolean(IS_REACTION);
-//            isGallery = bundle.getBoolean(IS_GALLERY);
+            postDetails = bundle.getParcelable(POST_DETAILS);
         }
     }
 
@@ -244,87 +250,106 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         StrictMode.setVmPolicy(builder.build());
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_upload, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_editpost, container, false);
         ButterKnife.bind(this, rootView);
 
         context = getContext();
         activity = getActivity();
-
-        new EditPost.GetThumbnail(this).execute();
-
-        new EditPost.SetVideoDuration(this).execute();
-
+      //  new GetThumbnail(this).execute();
+        new SetVideoDuration(this).execute();
         isRequestingLocationUpdates = false;
+
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
         getLastLocation(false);
+
         createLocationCallback();
         createLocationRequest();
 
-        facebook_share_btn.setOnClickListener(new View.OnClickListener() {
+        videoTitle.setText(postDetails.getTitle());
+        if (postDetails.getMedias().get(0).getThumbUrl() != null) {
+            Glide.with(context)
+                    .load(postDetails.getMedias().get(0).getThumbUrl())
+                    .into(thumbnailView);
+        } else {
+            Glide.with(context)
+                    .load(R.drawable.material_flat)
+                    .into(thumbnailView);
+        }
+        if (postDetails.getCheckIn() != null) {
+            addLocationText.setText(postDetails.getCheckIn().getLocation());
+        }
+
+        List<Pojos.Category> list = postDetails.getCategories();
+        categoryName = new StringBuilder();
+        categoryId = new StringBuilder();
+
+        for (int i = 0; i < list.size(); i++) {
+            categoryName.append(list.get(i).getCategoryName());
+            categoryId.append(list.get(i).getCategoryId());
+
+            if (i == list.size() - 1) {
+            } else {
+                categoryName.append(",");
+                categoryId.append(",");
+            }
+        }
+
+
+        uploadCategoriesText.setText(categoryName.toString());
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkefacebookeButtonPressed == false) {
-                    checkefacebookeButtonPressed = true;
-                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_enabled);
-                    Toast.makeText(getContext(), "You have selected facbook to share your data", Toast.LENGTH_SHORT).show();
-                    // setupFacebookShareIntent();
+                double latitude = 0;
+                double longitude = 0;
 
-
-                } else {
-                    checkefacebookeButtonPressed = false;
-                    facebook_share_btn.setBackgroundResource(R.drawable.ic_facebook_disabled);
+                if (selectedPlace != null) {
+                    location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                    latitude = selectedPlace.getLatitude();
+                    longitude = selectedPlace.getLongitude();
                 }
 
+                if (selectedCategoriesToSend != null) {
+                    categories = selectedCategoriesToSend;
+                } else {
+                    categories = categoryId.toString();
+                }
+                String title = videoTitle.getText().toString();
+                int postId = postDetails.getPostId();
+//                String location = addLocationText.getText().toString();
+                UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, "", categories);
+                updatePost(updatePostRequest);
+            }
+        });
+        return rootView;
+    }
+    private void updatePost(UpdatePostRequest updatePostRequest) {
+        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+
+                if (response.code() == 200) {
+
+                    if (response.body().getStatus()) {
+                        Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
+                    } else {
+                        Toast.makeText(context, "Your post has not been updated", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                t.printStackTrace();
             }
         });
 
-        return rootView;
-    }
 
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-    }
-
-
-    public void setupFacebookShareIntent() {
-
-//        if(checkefacebookeButtonPressed==true) {
-//            String s="https://www.youtube.com/";
-//            Uri videoFileUri = Uri.parse(s);
-//            ShareVideo shareVideo = new ShareVideo.Builder()
-//                    .setLocalUrl(videoFileUri)
-//                    .build();
-//            ShareVideoContent content = new ShareVideoContent.Builder()
-//                    .setVideo(shareVideo)
-//                    .build();
-//        }
-//        else
-//        {
-//            Toast.makeText(getContext(),"check not upload",Toast.LENGTH_SHORT).show();
-//
-//        }
-
-        try {
-            ShareDialog shareDialog;
-            FacebookSdk.sdkInitialize(getContext());
-            shareDialog = new ShareDialog(getActivity());
-            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
-
-
-            ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle(videoTitle.getText().toString())
-                    .setContentDescription(
-                            "Hello")
-                    .setContentUrl(Uri.parse(videoPath))
-                    .build();
-
-            shareDialog.show(linkContent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -349,7 +374,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                             if (location != null) {
                                 currentLocation = location;
                                 if (firstTime) {
-                                    new EditPost.GetNearbyPlacesData(EditPost.this).execute(getNearbySearchUrl(currentLocation));
+                                    new GetNearbyPlacesData(EditPostFragment.this).execute(getNearbySearchUrl(currentLocation));
                                 }
                             }
                         }
@@ -428,9 +453,9 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
 
-        WeakReference<EditPost> reference;
+        WeakReference<EditPostFragment> reference;
 
-        GetThumbnail(EditPost context) {
+        GetThumbnail(EditPostFragment context) {
             reference = new WeakReference<>(context);
         }
 
@@ -449,55 +474,76 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             try {
-                if (bitmap != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    if (stream != null) {
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        Glide.with(reference.get())
-                                .load(stream.toByteArray())
-                                .asBitmap()
-                                //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                                .animate(R.anim.fast_fade_in)
-                                .listener(new RequestListener<byte[], Bitmap>() {
-                                    @Override
-                                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                        return false;
-                                    }
-                                })
-                                .into(reference.get().thumbnailView);
-                    }
-                } else {
-                    Glide.with(reference.get())
-                            .load(R.drawable.material_flat)
-                            .crossFade()
-                            .listener(new RequestListener<Integer, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(reference.get().thumbnailView);
-                }
+//                if (postDetails.getMedias().get(0).getThumbUrl()!=null) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    if (stream != null) {
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        Glide.with(reference.get())
+//                                .load(stream.toByteArray())
+//                                .asBitmap()
+//                                //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+//                                .animate(R.anim.fast_fade_in)
+//                                .listener(new RequestListener<byte[], Bitmap>() {
+//                                    @Override
+//                                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+//                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                        return false;
+//                                    }
+//
+//                                    @Override
+//                                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+//                                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+//                                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                        return false;
+//                                    }
+//                                })
+//                                .into(reference.get().thumbnailView);
+//                    }
+//                } else {
+//                    Glide.with(reference.get())
+//                            .load(R.drawable.material_flat)
+//                            .crossFade()
+//                            .listener(new RequestListener<Integer, GlideDrawable>() {
+//                                @Override
+//                                public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//                            })
+//                            .into(reference.get().thumbnailView);
+                //      }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+//    void launchPlacePicker() {
+//        try {
+//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
+//            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+//        } catch (GooglePlayServicesRepairableException e) {
+//            GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(), REQUEST_CODE_PLACE_AUTOCOMPLETE);
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
+//        }
+////        try {
+////            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+////            Intent intent = intentBuilder.build(this);
+////            // Start the Intent by requesting a result, identified by a request code.
+////            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+////        } catch (GooglePlayServicesRepairableException e) {
+////            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(), REQUEST_PLACE_PICKER);
+////        } catch (GooglePlayServicesNotAvailableException e) {
+////            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
+////        }
+//    }
 
     private String getNearbySearchUrl(Location location) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
@@ -526,14 +572,15 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     @OnClick(R.id.video_preview_thumbnail)
     public void playVideoPreview() {
-        playVideo(context, videoPath, false);
+        //  playVideo(context, videoPath, false);
+
     }
 
     @OnClick(R.id.video_upload_location)
     public void addLocation() {
         if (arePermissionsAllowed(context)) {
             if (currentLocation != null)
-                new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+                new EditPostFragment.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else requestPermissions();
 //        startLocationService();
     }
@@ -547,7 +594,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
-                        mListener.onsaveEditPost(false,
+                        mListener.onUploadInteraction(false,
                                 TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, response.body()),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
@@ -586,7 +633,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                         case SUCCESS_OK_FALSE:
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
-                            mListener.onsaveEditPost(false,
+                            mListener.onUploadInteraction(false,
                                     TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, myFollowingsList),
                                     TAG_TAGS_FRAGMENT);
                             break;
@@ -641,14 +688,14 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     @OnClick(R.id.video_upload_retake_btn)
     public void retakeVideo() {
-        mListener.onsaveEditPost(true, null, null);
+        mListener.onUploadInteraction(true, null, null);
     }
 
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void startLocationService() {
         String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (EasyPermissions.hasPermissions(context, perms)) {
-            new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+            new EditPostFragment.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
@@ -696,6 +743,8 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
         addLocationText.setText(selectedPlace.getPlaceName());
+
+
     }
 
     public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
@@ -706,6 +755,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
             case ACTION_CATEGORIES_FRAGMENT:
                 selectedCategoriesToSend = resultToSend;
                 uploadCategoriesText.setText(resultToShow);
+                // Log.d(" selected categories",resultToSend);
                 break;
         }
     }
@@ -740,7 +790,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        new EditPost.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
+        new EditPostFragment.GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
     }
 
     @Override
@@ -823,9 +873,9 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     private static class GetNearbyPlacesData extends AsyncTask<String, String, ArrayList<HashMap<String, String>>> {
 
         private String googlePlacesJsonData;
-        private WeakReference<EditPost> reference;
+        private WeakReference<EditPostFragment> reference;
 
-        GetNearbyPlacesData(EditPost context) {
+        GetNearbyPlacesData(EditPostFragment context) {
             reference = new WeakReference<>(context);
         }
 
@@ -850,40 +900,46 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
             reference.get().toggleInteraction(true);
             reference.get().toggleUpBtnVisibility(VISIBLE);
-            reference.get().mListener.onsaveEditPost(false,
+            reference.get().mListener.onUploadInteraction(false,
                     NearbyPlacesList.newInstance(googlePlaces), TAG_NEARBY_PLACES);
         }
     }
 
     private static class SetVideoDuration extends AsyncTask<Void, Void, String> {
 
-        private WeakReference<EditPost> reference;
+        private WeakReference<EditPostFragment> reference;
 
-        SetVideoDuration(EditPost context) {
+        SetVideoDuration(EditPostFragment context) {
             reference = new WeakReference<>(context);
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            File file = new File(reference.get().videoPath);
-            if (file.exists()) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(reference.get().videoPath);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration;
-                try {
-                    duration = Long.parseLong(time);
-                    retriever.release();
-                    return String.format(Locale.UK, "%02d:%02d",
-                            MILLISECONDS.toMinutes(duration),
-                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-                } catch (NumberFormatException e) {
-                    if (e.getMessage() != null)
-                        Log.e("ErrorParsingDuration", e.getMessage());
-                    return "";
-                }
-            } else
+            try {
+//                File file = new File(reference.get().videoPath);
+//
+//                if (file.exists()) {
+//                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//                    retriever.setDataSource(reference.get().videoPath);
+//                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//                    long duration;
+//                    try {
+//                        duration = Long.parseLong(time);
+//                        retriever.release();
+//                        return String.format(Locale.UK, "%02d:%02d",
+//                                MILLISECONDS.toMinutes(duration),
+//                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+//                    } catch (NumberFormatException e) {
+//                        if (e.getMessage() != null)
+//                            Log.e("ErrorParsingDuration", e.getMessage());
+//                        return "";
+//                    }
+//                } else
                 return "";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
         }
 
         @Override
@@ -893,9 +949,6 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         }
     }
 
-    /**
-     * PERMISSIONS AND SHIT
-     */
     private boolean arePermissionsAllowed(Context applicationContext) {
         int fineLocationResult = ContextCompat.checkSelfPermission(applicationContext, ACCESS_FINE_LOCATION);
         int coarseLocationResult = ContextCompat.checkSelfPermission(applicationContext, ACCESS_COARSE_LOCATION);
@@ -945,7 +998,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     private void showEmptyList() {
         toggleUpBtnVisibility(VISIBLE);
-        mListener.onsaveEditPost(false,
+        mListener.onUploadInteraction(false,
                 NearbyPlacesList.newInstance(null), TAG_NEARBY_PLACES);
     }
 
@@ -962,8 +1015,8 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof EditPost.OnEditPostInteractionListener) {
-            mListener = (EditPost.OnEditPostInteractionListener) context;
+        if (context instanceof EditPostFragment.OnUploadFragmentInteractionListener) {
+            mListener = (EditPostFragment.OnUploadFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnUploadFragmentInteractionListener");
@@ -982,8 +1035,10 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
         mListener = null;
     }
 
-    public interface OnEditPostInteractionListener {
-        void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag);
+
+    public interface OnUploadFragmentInteractionListener {
+        void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
     }
+
 
 }

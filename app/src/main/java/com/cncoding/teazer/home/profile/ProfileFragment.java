@@ -67,6 +67,8 @@ public class ProfileFragment extends BaseFragment {
     TextView _creations;
     TextView _followers;
     TextView _following;
+    ViewPager viewPager;
+    TabLayout tabLayout;
     ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundprofile;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
@@ -83,7 +85,6 @@ public class ProfileFragment extends BaseFragment {
     String email;
     int accountType;
     boolean hasProfleMedia;
-    //    Pojos.User.UserProfile userprofile;
     Long mobilenumber;
     int gender;
     int countrycode;
@@ -96,6 +97,7 @@ public class ProfileFragment extends BaseFragment {
     private static final int RC_REQUEST_STORAGE = 1001;
     private String userProfileThumbnail;
     private String userProfileUrl;
+
 
     public ProfileFragment() {
     }
@@ -121,14 +123,7 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = container.getContext();
 
-        //     Toolbar toolbar = view.findViewById(R.id.toolbar);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        // backbutton = view.findViewById(R.id.backbutton);
-        // settings = view.findViewById(R.id.settings);
-        // _toolbarusername = view.findViewById(R.id.toolbarusername);
+
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -195,11 +190,9 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
+        tabLayout = view.findViewById(R.id.sliding_tabs);
+        viewPager = view.findViewById(R.id.viewpager);
 
-        ViewPager viewPager = view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
-        TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
@@ -208,8 +201,7 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getProfileDetail();
-//        getParentActivity().hidereport();
+
         getParentActivity().updateToolbarTitle("Profile");
 
     }
@@ -393,8 +385,9 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), context));
+        tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
-
         getParentActivity().showAppBar();
     }
 

@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -182,11 +182,14 @@
         <activity android:name=".ui.fragment.activity.OthersPostDetails" />
         <activity
             android:name=".ui.fragment.activity.Main2Activity"
-            android:label="@string/title_activity_main2"/>
-
-        <activity android:name=".ui.fragment.activity.InviteFriend"
+            android:label="@string/title_activity_main2" />
+        <activity
+            android:name=".ui.fragment.activity.InviteFriend"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.fragment.activity.EditPost"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

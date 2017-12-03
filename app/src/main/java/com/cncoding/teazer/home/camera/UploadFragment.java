@@ -1000,4 +1000,5 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
     }
+
 }

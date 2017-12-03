@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -35,6 +36,8 @@ import retrofit2.Response;
 public class RequestNotificationsTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_notifications) ProximaNovaBoldTextView noNotifications;
 
@@ -87,6 +90,8 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
         if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
             new GetRequestNotifications(this).execute(1);
     }
