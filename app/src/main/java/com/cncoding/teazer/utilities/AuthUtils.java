@@ -13,14 +13,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ErrorBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.LoginFragment.LoginInteractionListener;
@@ -30,11 +32,13 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import java.io.IOException;
+import java.util.Locale;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +52,7 @@ import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
 import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 /**
  *
@@ -94,8 +99,14 @@ public class AuthUtils {
         int countryCode = fragmentActivity.getApplicationContext()
                 .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
                 .getInt(COUNTRY_CODE, -1);
-        if (countryCodePicker != null && countryCode != -1) {
-            countryCodePicker.setCountryForPhoneCode(countryCode);
+        if (countryCodePicker != null) {
+            if (countryCode != -1)
+                countryCodePicker.setCountryForPhoneCode(countryCode);
+            else {
+                countryCodePicker.setCountryForNameCode(Locale.getDefault().getCountry());
+                countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
+                setCountryCode(fragmentActivity.getApplicationContext(), countryCode);
+            }
         }
         return countryCode;
     }
@@ -139,14 +150,14 @@ public class AuthUtils {
     }
 
     public static boolean isValidEmailAddress(String email) {
-        boolean result = true;
-        try {
-            InternetAddress emailAddress = new InternetAddress(email);
-            emailAddress.validate();
-        } catch (AddressException ex) {
-            result = false;
-        }
-        return result;
+//        boolean result = true;
+//        try {
+//            InternetAddress emailAddress = new InternetAddress(email);
+//            emailAddress.validate();
+//        } catch (AddressException ex) {
+//            result = false;
+//        }
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
@@ -197,7 +208,7 @@ public class AuthUtils {
                     if (response.body().getStatus()) {
                         mListener.onFinalEmailSignupInteraction(SIGNUP_WITH_EMAIL_ACTION, authorize);
                     } else {
-                        ViewUtils.showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
+                        showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -208,13 +219,13 @@ public class AuthUtils {
                                 }, 2000);
                     }
                 } else
-                    ViewUtils.showSnackBar(signupBtn, response.code() + " : " + response.message());
+                    showSnackBar(signupBtn, getErrorMessage(response.errorBody()));
                 signupBtn.setEnabled(true);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                ViewUtils.showSnackBar(signupBtn, t.getMessage());
+                logTheError("performInitialSignup", t.getMessage());
                 signupBtn.setEnabled(true);
             }
         });
@@ -235,32 +246,38 @@ public class AuthUtils {
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
                                 SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
                                 ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_tick_circle);
-                                mListener.onOtpInteraction(verify, true);
+                                mListener.onOtpInteraction(verify);
                                 break;
 //                    Username, Email or Phone Number already exists
                             case 200:
                                 countDownTimer.cancel();
-                                otpVerifiedTextView.setText(R.string.wrong_otp);
+                                otpVerifiedTextView.setText(R.string.already_exists);
                                 otpResendBtn.setEnabled(true);
                                 otpResendBtn.setAlpha(1);
                                 break;
 //                    Failed, Invalid JSON or validation failed
                             default:
-                                ViewUtils.showSnackBar(otpVerifiedTextView, response.code() + " : " + response.message());
+                                showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
                                 break;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Snackbar.make(otpVerifiedTextView, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                        logTheError("performFinalSignup", t.getMessage());
 //                        logout(context, null);
                     }
                 });
     }
 
-    private static void stopCircularReveal(View revealLayout) {
-        revealLayout.animate().alpha(0).setDuration(280).start();
+    public static void stopCircularReveal(final View view) {
+        view.animate().scaleY(0).scaleX(0).setDuration(280).start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.setVisibility(View.INVISIBLE);
+            }
+        }, 280);
     }
 
     /**
@@ -268,7 +285,7 @@ public class AuthUtils {
      * */
     public static void loginWithOtp(final Context context, final String username, final int countryCode,
                                     final LoginInteractionListener mListener, final ProximaNovaSemiboldButton loginBtn,
-                                    final LinearLayout revealLayout, final ProximaNovaRegularTextView otpVerifiedTextView,
+                                    final ProgressBar progressBar, final ProximaNovaRegularTextView otpVerifiedTextView,
                                     final CountDownTimer[] countDownTimer, final boolean isResendAction) {
         final Pojos.Authorize authorize = new Pojos.Authorize(Long.parseLong(username), countryCode);
         ApiCallingService.Auth.loginWithOtp(authorize).enqueue(new Callback<ResultObject>() {
@@ -287,18 +304,18 @@ public class AuthUtils {
                     }
                     else Snackbar.make(loginBtn, R.string.login_through_otp_error, Snackbar.LENGTH_LONG).show();
                 } else
-                    ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
+                    showSnackBar(loginBtn, getErrorMessage(response.errorBody()));
                 loginBtn.setEnabled(true);
                 if (!isResendAction)
-                    stopCircularReveal(revealLayout);
+                    stopCircularReveal(progressBar);
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                ViewUtils.showSnackBar(loginBtn, t.getMessage());
+                logTheError("loginWithOtp", t.getMessage());
                 loginBtn.setEnabled(true);
                 if (!isResendAction)
-                    stopCircularReveal(revealLayout);
+                    stopCircularReveal(progressBar);
             }
         });
     }
@@ -331,7 +348,7 @@ public class AuthUtils {
                                     @Override
                                     public void run() {
                                         if (mListener != null)
-                                            mListener.onOtpInteraction(null, true);
+                                            mListener.onOtpInteraction(null);
                                     }
                                 }, 1000);
                             } else {
@@ -339,7 +356,7 @@ public class AuthUtils {
                                         Snackbar.LENGTH_SHORT).show();
                             }
                         } else
-                            ViewUtils.showSnackBar(otpResendBtn, response.code() + " : " + response.message());
+                            showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
 
                         otpResendBtn.setEnabled(true);
                         otpResendBtn.setAlpha(1);
@@ -347,7 +364,7 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        ViewUtils.showSnackBar(otpResendBtn, t.getMessage());
+                        logTheError("verifyOtpLogin", t.getMessage());
                         otpResendBtn.setEnabled(true);
                         otpResendBtn.setAlpha(1);
                     }
@@ -367,8 +384,15 @@ public class AuthUtils {
 //                        }
 //                        else
 //                            Toast.makeText(context, "Logout failed, logging out manually...", Toast.LENGTH_SHORT).show();
+                        LTFO();
+                    }
+
+                    private void LTFO() {
                         SharedPrefs.resetAuthToken(context);
                         if (activity != null) {
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             activity.startActivity(new Intent(activity, MainActivity.class));
                             activity.finish();
                         }
@@ -376,9 +400,27 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                        logTheError("Logging out", t.getMessage());
+                        LTFO();
                     }
                 });
+    }
+
+    public static void logTheError(String tag, String message) {
+        Log.e(tag, message != null ? message : "FAILED!!!");
+    }
+
+    @NonNull public static String getErrorMessage(ResponseBody responseBody) {
+        if (responseBody != null) {
+            try {
+                ErrorBody errorBody = new Gson().fromJson(responseBody.string(), ErrorBody.class);
+                return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again later" : errorBody.getReason().get(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Something went wrong, Please try again later";
+            }
+        } else
+            return "Something went wrong, Please try again later";
     }
 
 //    public static void onLoginSuccessful(FragmentActivity activity) {

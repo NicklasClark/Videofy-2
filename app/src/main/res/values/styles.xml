@@ -188,6 +188,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_otp</item>
         <item name="android:gravity">center</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:digits">@string/validNumber</item>
         <item name="android:inputType">number</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_marginStart">@dimen/otp_edit_text_horizontal_margin</item>
@@ -347,6 +349,10 @@
 
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="WhiteProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">

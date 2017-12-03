@@ -78,6 +78,7 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity
         implements SurfaceTextureListener,
@@ -113,8 +114,8 @@ public class MainActivity extends AppCompatActivity
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
-    public static final int BACK_PRESSED_ACTION = 6;
-    public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
+//    public static final int BACK_PRESSED_ACTION = 6;
+//    public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
     public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
     private String VIDEO_PATH;
 
@@ -126,7 +127,6 @@ public class MainActivity extends AppCompatActivity
     private ProfileTracker facebookProfileTracker;
     private FragmentManager fragmentManager;
     private TransitionDrawable transitionDrawable;
-    private boolean loggingIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity
         VIDEO_PATH = "android.resource://" + getPackageName() + "/" + R.raw.welcome_video;
 
         welcomeVideo.setSurfaceTextureListener(MainActivity.this);
-        loggingIn = false;
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
@@ -226,6 +225,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressLint("StaticFieldLeak")
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
+        hideKeyboard(this, upBtn);
         if (!reverse) {
             setFragment(tag, addToBackStack, null);
             new Blur(this).execute();
@@ -317,25 +317,23 @@ public class MainActivity extends AppCompatActivity
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
                 mediaPlayer.pause();
-                loggingIn = true;
                 if (facebookProfile != null && facebookData != null) {
                     handleFacebookLogin(facebookProfile, facebookData, button, null);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
                 mediaPlayer.pause();
-                loggingIn = true;
                 if (googleAccount != null)
                     handleGoogleSignIn(googleAccount, button, null);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
                 break;
-            case RESUME_WELCOME_VIDEO_ACTION:
-                if (mediaPlayer != null && loggingIn)
-                    if (!mediaPlayer.isPlaying())
-                        mediaPlayer.start();
-                break;
+//            case RESUME_WELCOME_VIDEO_ACTION:
+//                if (mediaPlayer != null && loggingIn)
+//                    if (!mediaPlayer.isPlaying())
+//                        mediaPlayer.start();
+//                break;
             default:
                 break;
         }
@@ -344,9 +342,7 @@ public class MainActivity extends AppCompatActivity
     private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
                                      final ProximaNovaSemiboldButton button, String username) {
 
-//        String profilePicUrl = facebookData.getString("profile_pic");
-
-        username = username == null ? facebookProfile.getName() : username;
+        username = username == null ? facebookProfile.getName() : username.replace(" ", "");
 
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
@@ -357,12 +353,12 @@ public class MainActivity extends AppCompatActivity
                 facebookData.getString("email"),                               //email
                 username,                                                           //Username
                 facebookProfile.getFirstName(),
-                facebookProfile.getLastName()))
+                facebookProfile.getLastName(),
+                facebookData.getString("profile_pic")))
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        loggingIn = false;
 //                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                         try {
                             switch (response.code()) {
@@ -401,7 +397,6 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        loggingIn = false;
                         Log.d("handleFacebookLogin()", t.getMessage());
                         button.revertAnimation(new OnAnimationEndListener() {
                             @Override
@@ -428,14 +423,14 @@ public class MainActivity extends AppCompatActivity
                 googleAccount.getEmail(),
                 username,                           //Username
                 googleAccount.getGivenName(),       //First name
-                googleAccount.getFamilyName())   ;   //Last name
+                googleAccount.getFamilyName(),      //Last name
+                googleAccount.getPhotoUrl() != null ? googleAccount.getPhotoUrl().toString() : null);
 
         ApiCallingService.Auth.socialSignUp(authorize)
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        loggingIn = false;
                         switch (response.code()) {
                             case 201:
                                 if (response.body().getStatus()) {
@@ -469,7 +464,6 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        loggingIn = false;
                         Log.d("handleGoogleSignIn()", t.getMessage());button.revertAnimation(new OnAnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
@@ -544,16 +538,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOtpInteraction(Authorize verificationDetails, boolean isVerified) {
+    public void onOtpInteraction(Authorize verificationDetails) {
         if (verificationDetails != null) {
-            if (isVerified)
+//            if (isVerified)
                 startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-            else {
-                setFragment(TAG_LOGIN_FRAGMENT, true,
-                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
-            }
+//            else {
+//                setFragment(TAG_LOGIN_FRAGMENT, true,
+//                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
+//            }
         } else {
-            if (isVerified)
+//            if (isVerified)
                 successfullyLoggedIn();
         }
     }
@@ -757,6 +751,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.up_btn) public void backPressed() {
+        hideKeyboard(this, upBtn);
         onBackPressed();
     }
 

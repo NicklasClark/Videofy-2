@@ -84,7 +84,7 @@ public class ViewUtils {
      * */
     public static void makeSnackbarWithBottomMargin(Activity activity, View view, CharSequence text) {
         Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
-        Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/proxima_nova_regular.ttf");
+        Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/proxima_nova_regular.otf");
         TextView tv = (snackbar.getView()).findViewById(android.support.design.R.id.snackbar_text);
         tv.setTypeface(font);
         Button button = (snackbar.getView()).findViewById(android.support.design.R.id.snackbar_action);

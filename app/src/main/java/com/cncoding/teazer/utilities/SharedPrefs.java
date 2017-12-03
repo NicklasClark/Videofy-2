@@ -19,7 +19,7 @@ public class SharedPrefs {
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
-    private static final String HOME_PAGE_CACHE = "homePageCache";
+    private static final String BLURRED_PROFILE_PIC = "homePageCache";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -28,26 +28,39 @@ public class SharedPrefs {
 //    public static void cacheHomePagePosts(Context context, PostList postList) {
 //        getSharedPreferences(context)
 //                .edit()
-//                .putString(HOME_PAGE_CACHE, new Gson().toJson(postList))
+//                .putString(BLURRED_PROFILE_PIC, new Gson().toJson(postList))
 //                .apply();
 //    }
 //
 //    public static PostList getHomePagePostsCache(Context context) {
-//        return new Gson().fromJson(getSharedPreferences(context).getString(HOME_PAGE_CACHE, null), PostList.class);
+//        return new Gson().fromJson(getSharedPreferences(context).getString(BLURRED_PROFILE_PIC, null), PostList.class);
 //    }
 //
 //    public static void clearHomePagePostsCache(Context context) {
 //        getSharedPreferences(context)
 //                .edit()
-//                .putString(HOME_PAGE_CACHE, null)
+//                .putString(BLURRED_PROFILE_PIC, null)
 //                .apply();
 //    }
 
+    public static void saveBlurredProfilePic(Context context, String path) {
+        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, path).apply();
+    }
+
+    public static String getBlurredProfilePic(Context context) {
+        return getSharedPreferences(context).getString(BLURRED_PROFILE_PIC, null);
+    }
+
+    public static boolean isBlurredProfilePicSaved(Context context) {
+        return getBlurredProfilePic(context) != null;
+    }
+
+    public static void deleteSavedBlurredProfilePic(Context context) {
+        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, null).apply();
+    }
+
     public static void saveAuthToken(Context context, String authToken) {
-        getSharedPreferences(context)
-                .edit()
-                .putString(AUTH_TOKEN, authToken)
-                .apply();
+        getSharedPreferences(context).edit().putString(AUTH_TOKEN, authToken).apply();
     }
 
     public static String getAuthToken(Context context) {
@@ -60,18 +73,12 @@ public class SharedPrefs {
     }
 
     public static void saveFcmToken(Context context, String fcmToken) {
-        getSharedPreferences(context)
-                .edit()
-                .putString(FCM_TOKEN, fcmToken)
-                .apply();
+        getSharedPreferences(context).edit().putString(FCM_TOKEN, fcmToken).apply();
     }
 
     static String getFcmToken(Context context) {
-        return getSharedPreferences(context)
-                .getString(FCM_TOKEN, null);
+        return getSharedPreferences(context).getString(FCM_TOKEN, null);
     }
-
-
 
     public static void saveVideoUploadSession(Context context, UploadParams uploadParams) {
         getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();

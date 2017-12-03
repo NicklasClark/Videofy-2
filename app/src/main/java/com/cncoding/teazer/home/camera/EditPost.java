@@ -114,6 +114,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
+ *
  * Created by farazhabib on 29/11/17.
  */
 
@@ -291,7 +292,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
 
     public void setupFacebookShareIntent() {
 
-//        if(checkefacebookeButtonPressed==true) {
+//        if(checkFacebookButtonPressed==true) {
 //            String s="https://www.youtube.com/";
 //            Uri videoFileUri = Uri.parse(s);
 //            ShareVideo shareVideo = new ShareVideo.Builder()

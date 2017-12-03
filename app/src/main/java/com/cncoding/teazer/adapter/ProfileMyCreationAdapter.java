@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -22,10 +20,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
-import com.cncoding.teazer.model.profile.reaction.reactionpost.ReactionPost;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.Pojos;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -146,8 +141,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     list.remove(i);
                                     break;
                                 case R.id.edit_post:
-
-                                    editPostListener.editPost(thumb_url);
+//                                    editPostListener.editPost(thumb_url);
                                     break;
                             }
                             return false;

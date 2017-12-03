@@ -158,10 +158,11 @@ public class OthersProfileFragment extends BaseFragment {
             username = getArguments().getString(ARG_USERNAME);
             setHasOptionsMenu(true);
         }
+        previousTitle = getParentActivity().getToolbarTitle();
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
@@ -281,6 +282,12 @@ public class OthersProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        getParentActivity().hideSettings(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentActivity().updateToolbarTitle("Profile");
     }
 
     @Override
@@ -737,8 +744,8 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
+    public void onDetach() {
+        super.onDetach();
+        getParentActivity().updateToolbarTitle(previousTitle);
     }
 }

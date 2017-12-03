@@ -1,5 +1,6 @@
 package com.cncoding.teazer.authentication;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,13 +13,11 @@ import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +47,13 @@ import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.performFinalSignup;
 import static com.cncoding.teazer.utilities.AuthUtils.verifyOtpLogin;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 public class ConfirmOtpFragment extends Fragment {
 
@@ -69,6 +71,8 @@ public class ConfirmOtpFragment extends Fragment {
 
     private Authorize userSignUpDetails;
     int launchAction;
+    private Activity activity;
+    private Context context;
 
     private OnOtpInteractionListener mListener;
     private CountDownTimer countDownTimer;
@@ -103,6 +107,8 @@ public class ConfirmOtpFragment extends Fragment {
             userSignUpDetails = getArguments().getParcelable(USER_DETAILS);
             launchAction = getArguments().getInt(LAUNCH_ACTION);
         }
+        context = getContext();
+        activity = getActivity();
     }
 
     @Override
@@ -110,7 +116,6 @@ public class ConfirmOtpFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
-
         return rootView;
     }
 
@@ -118,16 +123,17 @@ public class ConfirmOtpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            setTextLimits();
-            otpSentTextView.setText(getString(R.string.otp_sent_1) + " " + userSignUpDetails.getPhoneNumber());
+            String sent = getString(R.string.otp_sent_1) + " " + userSignUpDetails.getPhoneNumber();
+            otpSentTextView.setText(sent);
 
-            countDownTimer = ViewUtils.startCountDownTimer(getContext(), otpVerifiedTextView, otpResendBtn);
+            countDownTimer = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, otpResendBtn);
 
-            if (!arePermissionsAllowed(getActivity().getApplicationContext()))
+            //noinspection ConstantConditions
+            if (!arePermissionsAllowed(activity.getApplicationContext()))
                 requestPermissions();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -140,26 +146,26 @@ public class ConfirmOtpFragment extends Fragment {
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
-                                Snackbar.make(otpResendBtn,
-                                        "New otp sent to " + userSignUpDetails.getPhoneNumber(),
-                                        Snackbar.LENGTH_LONG).show();
+                                showSnackBar(otpResendBtn, "New otp sent to " + userSignUpDetails.getPhoneNumber());
                                 otpResendBtn.setEnabled(false);
                                 otpResendBtn.setAlpha(0.5f);
-                                countDownTimer = ViewUtils.startCountDownTimer(getContext(), otpVerifiedTextView, otpResendBtn).start();
+                                countDownTimer = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, otpResendBtn).start();
                             }
+                        } else {
+                            showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Snackbar.make(otpResendBtn, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                        logTheError("PerformSignup", t.getMessage());
                         otpResendBtn.setEnabled(true);
                         otpResendBtn.setAlpha(1);
                     }
                 });
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                loginWithOtp(getContext(), String.valueOf(userSignUpDetails.getPhoneNumber()), userSignUpDetails.getCountryCode(),
+                loginWithOtp(context, String.valueOf(userSignUpDetails.getPhoneNumber()), userSignUpDetails.getCountryCode(),
                         null, otpResendBtn, null, otpVerifiedTextView, new CountDownTimer[]{countDownTimer},
                         true);
                 break;
@@ -201,7 +207,7 @@ public class ConfirmOtpFragment extends Fragment {
     @SuppressWarnings("ConstantConditions")
     private void verifyOtp() {
         otpVerifiedTextView.setText("");
-        ViewUtils.hideKeyboard(getActivity(), otp4EditText);
+        ViewUtils.hideKeyboard(activity, otp4EditText);
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 final Authorize verify = new Authorize(
@@ -213,14 +219,14 @@ public class ConfirmOtpFragment extends Fragment {
                         userSignUpDetails.getPhoneNumber(),
                         userSignUpDetails.getCountryCode(),
                         getOtp(),
-                        getFcmToken(getContext()),
-                        getDeviceId(getContext()),
+                        getFcmToken(context),
+                        getDeviceId(context),
                         DEVICE_TYPE_ANDROID);
-                performFinalSignup(getActivity().getApplicationContext(), verify, countDownTimer,
+                performFinalSignup(activity.getApplicationContext(), verify, countDownTimer,
                         otpVerifiedTextView, mListener, otpResendBtn);
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                verifyOtpLogin(getActivity().getApplicationContext(), userSignUpDetails, getOtp(),
+                verifyOtpLogin(activity.getApplicationContext(), userSignUpDetails, getOtp(),
                         countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
                 break;
             default:
@@ -236,17 +242,9 @@ public class ConfirmOtpFragment extends Fragment {
                 otp4EditText.getText().toString());
     }
 
-    private void setTextLimits() {
-        InputFilter[] inputFilters = new InputFilter[] {new InputFilter.LengthFilter(1)};
-        otp1EditText.setFilters(inputFilters);
-        otp2EditText.setFilters(inputFilters);
-        otp3EditText.setFilters(inputFilters);
-        otp4EditText.setFilters(inputFilters);
-    }
-
     @Override
     public void onResume() {
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, new IntentFilter("otp"));
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter("otp"));
         super.onResume();
         if (countDownTimer!= null)
             countDownTimer.start();
@@ -256,7 +254,7 @@ public class ConfirmOtpFragment extends Fragment {
     public void onPause() {
         super.onPause();
         countDownTimer.cancel();
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
     @Override
@@ -290,7 +288,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     private void requestPermissions() {
-        ActivityCompat.requestPermissions(getActivity(),
+        ActivityCompat.requestPermissions(activity,
                 new String[]{RECEIVE_SMS, READ_SMS, SEND_SMS},
                 REQUEST_PERMISSIONS);
     }
@@ -305,13 +303,13 @@ public class ConfirmOtpFragment extends Fragment {
                     boolean readSmsAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     boolean sendSmsAccepted = grantResults[2] == PackageManager.PERMISSION_GRANTED;
 
-                    if (receiveSmsAccepted && readSmsAccepted && sendSmsAccepted) {
-//                        permissions are granted
-                    }
-                    else {
+                    if (!receiveSmsAccepted || !readSmsAccepted || !sendSmsAccepted) {
 //                        permissions are denied
                         showExplanationDialog();
                     }
+//                    else {
+////                        permissions are granted
+//                    }
                 } else showExplanationDialog();
                 break;
             default:
@@ -320,7 +318,7 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     private void showExplanationDialog() {
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(context)
                 .setTitle(R.string.whoa)
                 .setMessage(R.string.please_allow_all_permissions_message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -342,6 +340,6 @@ public class ConfirmOtpFragment extends Fragment {
     }
 
     public interface OnOtpInteractionListener {
-        void onOtpInteraction(Authorize verificationDetails, boolean isVerified);
+        void onOtpInteraction(Authorize verificationDetails);
     }
 }

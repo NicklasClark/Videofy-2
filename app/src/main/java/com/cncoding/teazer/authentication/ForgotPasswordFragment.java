@@ -2,8 +2,8 @@ package com.cncoding.teazer.authentication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.AuthUtils;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -25,7 +26,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
+import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 public class ForgotPasswordFragment extends Fragment {
 
@@ -60,8 +64,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_forgot_password, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -73,6 +76,7 @@ public class ForgotPasswordFragment extends Fragment {
             @Override
             public void onCountrySelected() {
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
+                //noinspection ConstantConditions
                 setCountryCode(getActivity().getApplicationContext(), countryCode);
             }
         });
@@ -81,7 +85,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         forgotPasswordEditText.setText(username);
     }
@@ -120,38 +124,43 @@ public class ForgotPasswordFragment extends Fragment {
                                     if (response.body().getStatus()) {
                                         mListener.onForgotPasswordInteraction(enteredText, countryCode, false);
                                     } else {
-                                        Snackbar.make(forgotPasswordEditText, "An error occurred! Please try again later.",
-                                                Snackbar.LENGTH_SHORT).show();
+                                        showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
                                     }
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<ResultObject> call, Throwable t) {
-                                Snackbar.make(forgotPasswordEditText, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                logTheError("resetPasswordByPhone", t.getMessage());
                             }
                         });
             } else {
 //                Email is entered
-                ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                if (response.code() == 200) {
-                                    if (response.body().getStatus()) {
-                                        mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
-                                    } else {
-                                        Snackbar.make(forgotPasswordEditText, "An error occurred! Please try again later.",
-                                                Snackbar.LENGTH_SHORT).show();
+                if (AuthUtils.isValidEmailAddress(enteredText)) {
+                    ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
+                            .enqueue(new Callback<ResultObject>() {
+                                @Override
+                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                    if (response.code() == 200) {
+                                        if (response.body().getStatus()) {
+                                            mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
+                                        } else {
+                                            showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                    logTheError("resetPasswordByEmail", t.getMessage());
+                                }
+                            });
+                } else {
+                    showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
+                }
             }
+        } else {
+            showSnackBar(forgotPasswordEditText, getString(R.string.enter_email_or_mobile_number_first));
         }
     }
 

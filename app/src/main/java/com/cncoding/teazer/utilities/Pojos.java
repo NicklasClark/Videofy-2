@@ -93,6 +93,7 @@ public class Pojos {
         private int device_type;
         private String social_id;
         private int social_login_type;
+        private String image_url;
 
         /**Proceed to second signup page after entering Name, Email and Phone number in the first page**/
         public Authorize(String first_name, String last_name, String email, int country_code, long phone_number) {
@@ -184,7 +185,7 @@ public class Pojos {
 
         /**Social SignUp**/
         public Authorize(String fcm_token, String device_id, int device_type, String social_id,
-                         int social_login_type, String email, String user_name, String first_name, String last_name) {
+                         int social_login_type, String email, String user_name, String first_name, String last_name, String imageUrl) {
             this.fcm_token = fcm_token;
             this.device_id = device_id;
             this.device_type = device_type;
@@ -194,7 +195,62 @@ public class Pojos {
             this.user_name = user_name;
             this.first_name = first_name;
             this.last_name = last_name;
+            this.image_url = imageUrl;
         }
+
+        protected Authorize(Parcel in) {
+            user_name = in.readString();
+            first_name = in.readString();
+            last_name = in.readString();
+            email = in.readString();
+            password = in.readString();
+            new_password = in.readString();
+            phone_number = in.readLong();
+            country_code = in.readInt();
+            otp = in.readInt();
+            fcm_token = in.readString();
+            device_id = in.readString();
+            device_type = in.readInt();
+            social_id = in.readString();
+            social_login_type = in.readInt();
+            image_url = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(user_name);
+            dest.writeString(first_name);
+            dest.writeString(last_name);
+            dest.writeString(email);
+            dest.writeString(password);
+            dest.writeString(new_password);
+            dest.writeLong(phone_number);
+            dest.writeInt(country_code);
+            dest.writeInt(otp);
+            dest.writeString(fcm_token);
+            dest.writeString(device_id);
+            dest.writeInt(device_type);
+            dest.writeString(social_id);
+            dest.writeInt(social_login_type);
+            dest.writeString(image_url);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Authorize> CREATOR = new Creator<Authorize>() {
+            @Override
+            public Authorize createFromParcel(Parcel in) {
+                return new Authorize(in);
+            }
+
+            @Override
+            public Authorize[] newArray(int size) {
+                return new Authorize[size];
+            }
+        };
 
         public String getFirstName() {
             return first_name;
@@ -252,51 +308,10 @@ public class Pojos {
             return new_password;
         }
 
-        Authorize(Parcel in) {
-            user_name = in.readString();
-            first_name = in.readString();
-            last_name = in.readString();
-            email = in.readString();
-            password = in.readString();
-            phone_number = in.readLong();
-            country_code = in.readInt();
-            otp = in.readInt();
-            fcm_token = in.readString();
-            device_id = in.readString();
-            device_type = in.readInt();
+        public String getImageUrl() {
+            return image_url;
         }
 
-        public static final Creator<Authorize> CREATOR = new Creator<Authorize>() {
-            @Override
-            public Authorize createFromParcel(Parcel in) {
-                return new Authorize(in);
-            }
-
-            @Override
-            public Authorize[] newArray(int size) {
-                return new Authorize[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(user_name);
-            parcel.writeString(first_name);
-            parcel.writeString(last_name);
-            parcel.writeString(email);
-            parcel.writeString(password);
-            parcel.writeLong(phone_number);
-            parcel.writeInt(country_code);
-            parcel.writeInt(otp);
-            parcel.writeString(fcm_token);
-            parcel.writeString(device_id);
-            parcel.writeInt(device_type);
-        }
     }
 
     public static class Friends {
@@ -402,10 +417,10 @@ public class Pojos {
             private int total_reactions;
             private String title;
             private String created_at;
-            private Medias post_video_info;
+            private ArrayList<Medias> post_video_info;
 
             public Videos(int post_id, int posted_by, int likes, int views, int total_reactions,
-                          String title, String created_at, Medias post_video_info) {
+                          String title, String created_at, ArrayList<Medias> post_video_info) {
                 this.post_id = post_id;
                 this.posted_by = posted_by;
                 this.likes = likes;
@@ -424,7 +439,7 @@ public class Pojos {
                 total_reactions = in.readInt();
                 title = in.readString();
                 created_at = in.readString();
-                post_video_info = in.readParcelable(Medias.class.getClassLoader());
+                post_video_info = in.createTypedArrayList(Medias.CREATOR);
             }
 
             @Override
@@ -436,7 +451,7 @@ public class Pojos {
                 dest.writeInt(total_reactions);
                 dest.writeString(title);
                 dest.writeString(created_at);
-                dest.writeParcelable(post_video_info, flags);
+                dest.writeTypedList(post_video_info);
             }
 
             @Override
@@ -484,7 +499,7 @@ public class Pojos {
                 return created_at;
             }
 
-            public Medias getPostVideoInfo() {
+            public ArrayList<Medias> getPostVideoInfo() {
                 return post_video_info;
             }
         }
@@ -836,8 +851,8 @@ public class Pojos {
         public static class PostDetails implements Parcelable{
             private int post_id;
             private int posted_by;
-            private int likes;
-            private int total_reactions;
+            public int likes;
+            public int total_reactions;
             private int total_tags;
             private boolean has_checkin;
             private String title;
@@ -847,7 +862,7 @@ public class Pojos {
             private MiniProfile post_owner;
             private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
             private CheckIn check_in;
-            private ArrayList<Medias> medias;
+            public ArrayList<Medias> medias;
             private ArrayList<ReactedUser> reacted_users;
             private ArrayList<Category> categories;
 
@@ -2599,7 +2614,7 @@ public class Pojos {
         private String duration;
         private Dimension media_dimension;
         private boolean is_image;
-        private int views;
+        public int views;
         private String created_at;
         public Medias(int media_id, String media_url, String thumb_url, String duration,
                       Dimension dimension, boolean is_image, int views, String created_at) {

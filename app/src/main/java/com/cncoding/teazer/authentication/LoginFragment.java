@@ -1,25 +1,19 @@
 package com.cncoding.teazer.authentication;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -27,7 +21,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.Pojos;
@@ -47,7 +40,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.FORGOT_PASSWORD_ACTION;
@@ -58,14 +50,18 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.ENT
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.IS_EMAIL;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
+import static com.cncoding.teazer.utilities.AuthUtils.stopCircularReveal;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
 import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 public class LoginFragment extends Fragment {
 
@@ -84,9 +80,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_through_password) ProximaNovaSemiboldButton loginThroughPasswordBtn;
     @BindView(R.id.country_code_picker) CountryCodePicker countryCodePicker;
     @BindView(R.id.login_options_layout) RelativeLayout loginOptionsLayout;
-    @BindView(R.id.reveal_layout) LinearLayout revealLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.uploading_notification) ProximaNovaRegularTextView uploadingNotification;
 
     private String username;
     private int countryCode = -1;
@@ -128,13 +122,6 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, rootView);
         setOnCountryChangeListener();
-        passwordView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(32)});
-        try {
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return rootView;
     }
 
@@ -192,18 +179,18 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    @OnFocusChange(R.id.login_username) public void onUsernameFocusChanged(boolean isFocused) {
+        if (!isFocused) {
+            validateUsername(usernameView, getActivity());
+        }
+    }
+
     @OnTextChanged(R.id.login_password) public void passwordTextChanged(CharSequence charSequence) {
         if (!charSequence.toString().equals("")) {
             if (passwordView.getCompoundDrawables()[2] == null)
                 passwordView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
         } else {
             clearDrawables(passwordView);
-        }
-    }
-
-    @OnFocusChange(R.id.login_username) public void onUsernameFocusChanged(boolean isFocused) {
-        if (!isFocused) {
-            validateUsername(usernameView, getActivity());
         }
     }
 
@@ -234,7 +221,7 @@ public class LoginFragment extends Fragment {
                 if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
                     loginBtn.setEnabled(false);
                     startCircularReveal();
-                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, revealLayout,
+                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, progressBar,
                             null, null, false);
                 } else {
                     setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
@@ -326,34 +313,20 @@ public class LoginFragment extends Fragment {
                                         ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
                                     }
                                 } else
-                                    ViewUtils.showSnackBar(loginBtn, response.code() + " : " + response.message());
+                                    showSnackBar(loginBtn, getErrorMessage(response.errorBody()));
 
-                                stopCircularReveal();
+                                stopCircularReveal(progressBar);
                                 loginBtn.setEnabled(true);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
 
-                        void stopCircularReveal() {
-                            loginBtn.setEnabled(true);
-                            revealLayout.animate().alpha(0).setDuration(250).start();
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    revealLayout.setVisibility(INVISIBLE);
-                                    progressBar.animate().scaleX(1).scaleY(1).setDuration(250)
-                                            .setInterpolator(new DecelerateInterpolator()).start();
-                                    progressBar.setVisibility(VISIBLE);
-                                }
-                            }, 250);
-                        }
-
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
-                            stopCircularReveal();
+                            stopCircularReveal(progressBar);
                             loginBtn.setEnabled(true);
-                            ViewUtils.showSnackBar(loginBtn, t.getMessage());
+                            logTheError("loginWithPassword", t.getMessage());
                         }
                     });
         } else {
@@ -372,74 +345,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void startCircularReveal() {
-        revealLayout.setVisibility(VISIBLE);
-        revealLayout.setBackground(getResources().getDrawable(R.drawable.drawable_primary));
-        uploadingNotification.setText(R.string.logging_you_in);
-        Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-                (int) loginBtn.getX() + (loginBtn.getWidth() / 2), (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
-                0, (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()));
-        animator.setDuration(500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        animator.start();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-                progressBar.setVisibility(VISIBLE);
-            }
-        }, 680);
+        progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
+        progressBar.setVisibility(VISIBLE);
     }
-
-//    public void stopCircularReveal() {
-//        Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-//                (int) loginBtn.getX() + (loginBtn.getWidth() / 2), (int) loginBtn.getY() + (loginBtn.getHeight() / 2),
-//                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-//        animator.setDuration(500);
-//        animator.setInterpolator(new DecelerateInterpolator());
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                revealLayout.setVisibility(View.INVISIBLE);
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//            }
-//        });
-//        animator.start();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-//                progressBar.setVisibility(View.VISIBLE);
-//            }
-//        }, 680);
-//    }
 
     @Override
     public void onAttach(Context context) {

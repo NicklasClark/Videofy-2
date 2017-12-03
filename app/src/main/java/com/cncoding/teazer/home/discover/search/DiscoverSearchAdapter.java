@@ -93,7 +93,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder1.content.setText(holder1.video.getTitle());
 
                 Glide.with(context)
-                        .load(holder1.video.getPostVideoInfo().getThumbUrl())
+                        .load(holder1.video.getPostVideoInfo().get(0).getThumbUrl())
                         .placeholder(R.drawable.bg_placeholder)
                         .crossFade()
                         .into(holder1.thumbnail);
