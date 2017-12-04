@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -151,26 +152,26 @@ public class ForgotPasswordResetFragment extends Fragment {
                                 resetPasswordStatusView.setText(R.string.password_successfully_reset);
                                 resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                         0, 0, R.drawable.ic_tick_circle, 0);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (isAdded()) {
+                                            mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
+                                            Toast.makeText(getContext(), "Please login with the new password", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }, 1000);
                             } else {
-                                String resetPasswordStatus = "Resetting password failed!\n" + response.body().getMessage();
+                                String resetPasswordStatus = getString(R.string.resetting_password_failed);
                                 resetPasswordStatusView.setText(resetPasswordStatus);
                                 resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                         0, R.drawable.ic_error, 0, 0);
                             }
                         } else {
-                            String resetPasswordStatus = "Resetting password failed!\n" + getErrorMessage(response.errorBody());
-                                    resetPasswordStatusView.setText(resetPasswordStatus);
+                                    resetPasswordStatusView.setText(getString(R.string.resetting_password_failed));
                             resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                     0, R.drawable.ic_error, 0, 0);
                         }
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAdded()) {
-                                    mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
-                                }
-                            }
-                        }, 1000);
         //                dismissMessage();
                     }
 

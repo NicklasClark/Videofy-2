@@ -18,7 +18,7 @@
             android:id="@+id/discover_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search_videos_or_places"
+            android:hint="@string/search_for_videos_or_people"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="12dp"

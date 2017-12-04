@@ -1,11 +1,11 @@
 package com.cncoding.teazer.home.discover.search;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.User.Notification;
@@ -46,22 +47,24 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int TYPE_VIDEOS = 0;
     private static final int TYPE_PEOPLE = 1;
 
-    private Context context;
+    private BaseFragment baseFragment;
     private boolean isVideosTab;
     private ArrayList<Videos> videosList;
     private ArrayList<MiniProfile> usersList;
+    private SparseIntArray actionArray;
     private OnDiscoverSearchInteractionListener mListener;
 
-    DiscoverSearchAdapter(Context context, boolean isVideosTab, ArrayList<MiniProfile> usersList, ArrayList<Videos> videosList) {
-        this.context = context;
+    DiscoverSearchAdapter(BaseFragment baseFragment, boolean isVideosTab, ArrayList<MiniProfile> usersList, ArrayList<Videos> videosList) {
+        this.baseFragment = baseFragment;
         this.isVideosTab = isVideosTab;
+        actionArray = new SparseIntArray();
         if (isVideosTab)
             this.videosList = videosList;
         else
             this.usersList = usersList;
 
-        if (context instanceof OnDiscoverSearchInteractionListener)
-            mListener = (OnDiscoverSearchInteractionListener) context;
+        if (baseFragment instanceof OnDiscoverSearchInteractionListener)
+            mListener = (OnDiscoverSearchInteractionListener) baseFragment;
     }
 
     @Override
@@ -92,8 +95,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder1.video = videosList.get(position);
                 holder1.content.setText(holder1.video.getTitle());
 
-                Glide.with(context)
-                        .load(holder1.video.getPostVideoInfo().get(0).getThumbUrl())
+                Glide.with(baseFragment.getContext())
+                        .load(holder1.video.getPostVideoInfo() != null ? holder1.video.getPostVideoInfo().get(0).getThumbUrl() :
+                                R.drawable.bg_placeholder)
                         .placeholder(R.drawable.bg_placeholder)
                         .crossFade()
                         .into(holder1.thumbnail);
@@ -114,32 +118,33 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 String name = holder2.user.getFirstName() + BLANK_SPACE + holder2.user.getLastName();
                 holder2.name.setText(name);
 
-                if (holder2.user.hasProfileMedia() && holder2.user.getProfileMedia() != null) {
-                    Glide.with(context)
-                            .load(holder2.user.getProfileMedia().getThumbUrl())
-                            .placeholder(R.drawable.ic_user_male_dp_small)
-                            .crossFade()
-                            .into(holder2.dp);
-                }
+                Glide.with(baseFragment.getContext())
+                        .load(holder2.user.getProfileMedia() != null ? holder2.user.getProfileMedia().getThumbUrl() :
+                                R.drawable.ic_user_male_dp_small)
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .crossFade()
+                        .into(holder2.dp);
 
-                switch (holder2.user.getAccountType()) {
-                    case ACCOUNT_TYPE_PRIVATE:
-                        if (holder2.user.isFollowing())
-                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
-                        else if (holder2.user.isRequestSent())
-                            setActionButton(holder2.action, BUTTON_TYPE_REQUESTED);
-                        else
-                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
-                        break;
-                    case ACCOUNT_TYPE_PUBLIC:
-                        if (holder2.user.isFollowing())
-                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
-                        else
-                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
-                        break;
-                    default:
-                        break;
-                }
+                if (actionArray.get(position) == 0) {
+                    switch (holder2.user.getAccountType()) {
+                        case ACCOUNT_TYPE_PRIVATE:
+                            if (holder2.user.isFollowing())
+                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
+                            else if (holder2.user.isRequestSent())
+                                setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, position, true);
+                            else
+                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                            break;
+                        case ACCOUNT_TYPE_PUBLIC:
+                            if (holder2.user.isFollowing())
+                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
+                            else
+                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                            break;
+                        default:
+                            break;
+                    }
+                } else setActionButton(holder2.action, actionArray.get(position), position, false);
 
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
@@ -150,56 +155,67 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                     mListener.onDiscoverSearchInteraction(isVideosTab, holder2.user.getUserId());
                                 break;
                             case R.id.action:
-                                if (holder2.action.getText().equals(context.getString(R.string.follow))) {
-                                    ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), context)
+                                if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.follow))) {
+                                    ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), baseFragment.getContext())
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200) {
-                                                        switch (holder2.user.getAccountType()) {
-                                                            case ACCOUNT_TYPE_PRIVATE:
-                                                                setActionButton(holder2.action, BUTTON_TYPE_REQUESTED);
-                                                                break;
-                                                            case ACCOUNT_TYPE_PUBLIC:
-                                                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING);
-                                                                break;
-                                                            default:
-                                                                break;
-                                                        }
-                                                    } else
-                                                        Log.e("sendJoinRequest", response.code() + "_" + response.message());
+                                                    if (baseFragment.isAdded()) {
+                                                        if (response.code() == 200) {
+                                                            switch (holder2.user.getAccountType()) {
+                                                                case ACCOUNT_TYPE_PRIVATE:
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_REQUESTED,
+                                                                            holder2.getAdapterPosition(), true);
+                                                                    break;
+                                                                case ACCOUNT_TYPE_PUBLIC:
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
+                                                                            holder2.getAdapterPosition(), true);
+                                                                    break;
+                                                                default:
+                                                                    break;
+                                                            }
+                                                        } else
+                                                            Log.e("sendJoinRequest", response.code() + "_" + response.message());
+                                                    }
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    if (t.getMessage() != null)
-                                                        Log.e("sendJoinRequest", t.getMessage());
+                                                    if (baseFragment.isAdded()) {
+                                                        if (t.getMessage() != null)
+                                                            Log.e("sendJoinRequest", t.getMessage());
+                                                    }
                                                 }
                                             });
                                 }
-                                else if (holder2.action.getText().equals(context.getString(R.string.following))) {
-                                    new AlertDialog.Builder(context)
-                                            .setMessage(context.getString(R.string.unfollow_confirmation) +
+                                else if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.following))) {
+                                    new AlertDialog.Builder(baseFragment.getParentActivity())
+                                            .setMessage(baseFragment.getParentActivity().getString(R.string.unfollow_confirmation) +
                                                     holder2.user.getUserName() + "?")
                                             .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    ApiCallingService.Friends.unfollowUser(holder2.user.getUserId(), context)
+                                                    ApiCallingService.Friends.unfollowUser(holder2.user.getUserId(), baseFragment.getContext())
                                                             .enqueue(new Callback<ResultObject>() {
                                                                 @Override
                                                                 public void onResponse(Call<ResultObject> call,
                                                                                        Response<ResultObject> response) {
-                                                                    if (response.code() == 200) {
-                                                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOW);
-                                                                    } else
-                                                                        Log.e("unfollowUser",
-                                                                                response.code() + "_" + response.message());
+                                                                    if (baseFragment.isAdded()) {
+                                                                        if (response.code() == 200) {
+                                                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                                    holder2.getAdapterPosition(), true);
+                                                                        } else
+                                                                            Log.e("unfollowUser",
+                                                                                    response.code() + "_" + response.message());
+                                                                    }
                                                                 }
 
                                                                 @Override
                                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                                    if (t.getMessage() != null)
-                                                                        Log.e("sendJoinRequest", t.getMessage());
+                                                                    if (baseFragment.isAdded()) {
+                                                                        if (t.getMessage() != null)
+                                                                            Log.e("sendJoinRequest", t.getMessage());
+                                                                    }
                                                                 }
                                                             });
                                                 }
@@ -224,7 +240,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private void setActionButton(ProximaNovaSemiboldTextView button, int type) {
+    private void setActionButton(ProximaNovaSemiboldTextView button, int type, int position, boolean savePosition) {
+        if (savePosition)
+            actionArray.put(position, type);
         switch (type) {
 //            case BUTTON_TYPE_ACCEPT:
 //                button.setText(R.string.accept);
@@ -242,14 +260,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 button.setText(R.string.following);
                 button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
+                button.setCompoundDrawablesWithIntrinsicBounds(baseFragment.getParentActivity().getDrawable(R.drawable.ic_check_small),
                         null, null, null);
                 break;
             case BUTTON_TYPE_REQUESTED:
                 button.setText(R.string.requested);
-                button.setTextColor(Color.parseColor("#333333"));
+                button.setTextColor(Color.parseColor("#666666"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
+                button.setCompoundDrawablesWithIntrinsicBounds(baseFragment.getParentActivity().getDrawable(R.drawable.ic_check_small),
                         null, null, null);
                 break;
 //            case BUTTON_TYPE_NONE:

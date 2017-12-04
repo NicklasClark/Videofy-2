@@ -137,7 +137,7 @@ public class Interests extends BaseFragment {
         @Override
         protected void onPostExecute(InterestsAdapter interestsAdapter) {
             reference.get().interestsAdapter = interestsAdapter;
-            reference.get().recyclerView.setAdapter(interestsAdapter);
+            reference.get().recyclerView.setAdapter(reference.get().interestsAdapter);
             new GetInterests(reference.get()).execute();
             super.onPostExecute(interestsAdapter);
         }
@@ -224,7 +224,7 @@ public class Interests extends BaseFragment {
                 saveBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         } else {
             saveBtn.setEnabled(false);
-            saveBtn.setAlpha(0.5f);
+            saveBtn.setAlpha(0.4f);
         }
     }
 

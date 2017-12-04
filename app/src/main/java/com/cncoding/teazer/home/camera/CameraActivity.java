@@ -27,13 +27,15 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
@@ -42,8 +44,10 @@ import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractio
 import com.cncoding.teazer.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPlacesInteractionListener;
+import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
@@ -60,17 +64,28 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.R.anim.fade_in;
-import static android.R.anim.fade_out;
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.R.anim.float_up;
+import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD_FRAGMENT;
+import static com.cncoding.teazer.home.camera.UploadFragment.TAG_CATEGORIES_FRAGMENT;
+import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
+import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLACES;
+import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
+import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
+import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
@@ -90,7 +105,9 @@ public class CameraActivity extends AppCompatActivity
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
     @BindView(R.id.sliding_panel_arrow) AppCompatImageView slidingPanelArrow;
+    @BindView(R.id.up_btn) AppCompatImageView upBtn;
 
+    private FragmentManager fragmentManager;
     private GoogleApiClient googleApiClient;
     private SlidingUpPanelLayout.PanelSlideListener panelSlideListener;
     private ArrayList<Videos> videosList;
@@ -114,6 +131,7 @@ public class CameraActivity extends AppCompatActivity
 //                .build());
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
+        fragmentManager = getSupportFragmentManager();
         videosList = new ArrayList<>();
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -130,7 +148,7 @@ public class CameraActivity extends AppCompatActivity
 
         cameraFragment = CameraFragment.newInstance(isReaction, postDetails);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(R.id.container, cameraFragment)
                     .commit();
         }
@@ -191,9 +209,11 @@ public class CameraActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getSupportFragmentManager()
+                toggleUpBtnVisibility(VISIBLE);
+                upBtn.setImageResource(R.drawable.ic_previous);
+                fragmentManager
                         .beginTransaction()
-                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
+                        .setCustomAnimations(float_up, sink_down, fade_in, sink_down)
                         .replace(R.id.uploading_container, uploadFragment, TAG_UPLOAD_FRAGMENT)
                         .addToBackStack(TAG_UPLOAD_FRAGMENT)
                         .commitAllowingStateLoss();
@@ -208,7 +228,7 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, postDetails, false);
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -254,11 +274,14 @@ public class CameraActivity extends AppCompatActivity
 
 
     @Override
-    public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
-        uploadFragment.onNearbyPlacesAdapterInteraction(selectedPlace);
-        getSupportFragmentManager().popBackStack();
-//        String name = getSupportFragmentManager().getBackStackEntryAt(0).getName();
-//        getSupportFragmentManager().popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    public void onNearbyPlacesAdapterInteraction(final SelectedPlace selectedPlace) {
+        fragmentManager.popBackStack();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadFragment.onNearbyPlacesAdapterInteraction(selectedPlace);
+            }
+        }, 500);
     }
 
     @Override
@@ -287,7 +310,7 @@ public class CameraActivity extends AppCompatActivity
                                     places.get(0).getLatLng().latitude,
                                     places.get(0).getLatLng().longitude
                             ));
-                            getSupportFragmentManager().popBackStack();
+                            fragmentManager.popBackStack();
                         }
                         else {
                             Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_SHORT).show();
@@ -303,35 +326,46 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
-        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
-        getSupportFragmentManager().popBackStack();
+    public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend, final int count) {
+        fragmentManager.popBackStack();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
+            }
+        }, 500);
     }
 
     @Override
-    public void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag) {
-        if (!isBackToCamera) {
-            if (fragment != null && tag != null) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
-                        .replace(R.id.helper_uploading_container, fragment, tag)
-                        .addToBackStack(tag)
-                        .commit();
-            } else {
-                getSupportFragmentManager().popBackStack();
+    public void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData) {
+        toggleUpBtnVisibility(VISIBLE);
+        upBtn.setImageResource(R.drawable.ic_previous_dark);
+        if (tag != null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            switch (tag) {
+                case TAG_CATEGORIES_FRAGMENT:
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedData), tag);
+                    break;
+                case TAG_TAGS_FRAGMENT:
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData), tag);
+                    break;
+                case TAG_NEARBY_PLACES:
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            NearbyPlacesList.newInstance(googlePlaces), tag);
+                    break;
+                case TAG_NULL_NEARBY_PLACES:
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            NearbyPlacesList.newInstance(null), tag);
+                    break;
+                default:
+                    break;
             }
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commit();
         } else {
-//            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
-//                uploadFragment = null;
-//                getSupportFragmentManager().popBackStack();
-//            }
-            onBackPressed();
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
-//                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
-//                    .commit();
+            fragmentManager.popBackStack();
         }
     }
 
@@ -413,6 +447,25 @@ public class CameraActivity extends AppCompatActivity
         return googleApiClient;
     }
 
+    public void toggleUpBtnVisibility(int visibility) {
+        switch (visibility) {
+            case VISIBLE:
+                if (upBtn.getVisibility() == INVISIBLE || upBtn.getVisibility() == GONE) {
+                    upBtn.animate().scaleX(1).scaleY(1).alpha(1).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+                    upBtn.setVisibility(VISIBLE);
+                }
+                break;
+            case INVISIBLE:
+                if (upBtn.getVisibility() == VISIBLE) {
+                    upBtn.animate().scaleX(0).scaleY(0).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+                    upBtn.setVisibility(INVISIBLE);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -439,15 +492,23 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
+    @OnClick(R.id.up_btn) public void retakeVideo() {
+        onBackPressed();
+    }
+
     @Override
     public void onBackPressed() {
         if (slidingUpPanelLayout.getPanelState() == ANCHORED ||
                 slidingUpPanelLayout.getPanelState() == EXPANDED) {
             slidingUpPanelLayout.setPanelState(COLLAPSED);
         }
-        else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-            uploadFragment.toggleUpBtnVisibility(INVISIBLE);
+        else if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+
+            if (fragmentManager.getBackStackEntryCount() == 1)
+                upBtn.setImageResource(R.drawable.ic_previous);
+            else if (fragmentManager.getBackStackEntryCount() == 0)
+                toggleUpBtnVisibility(INVISIBLE);
         }
         else {
             if (!isReaction) {
@@ -455,7 +516,7 @@ public class CameraActivity extends AppCompatActivity
                 finish();
             } else super.onBackPressed();
         }
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
+        if (fragmentManager.getBackStackEntryCount() == 1)
             cameraFragment.startPreview();
     }
 

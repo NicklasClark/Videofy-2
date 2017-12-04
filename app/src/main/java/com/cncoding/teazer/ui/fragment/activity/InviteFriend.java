@@ -36,9 +36,6 @@ public class InviteFriend extends AppCompatActivity {
     @BindView(R.id.smsLayout)
     LinearLayout smsLayout;
 
-//    @BindView(R.id.)
-//    ProximaNovaRegularCheckedTextView teazersite;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

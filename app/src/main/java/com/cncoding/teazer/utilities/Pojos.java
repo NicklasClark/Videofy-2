@@ -856,8 +856,8 @@ public class Pojos {
             private int total_tags;
             private boolean has_checkin;
             private String title;
-            private boolean can_react;
-            private boolean can_like;
+            public boolean can_react;
+            public boolean can_like;
             private boolean can_delete;
             private MiniProfile post_owner;
             private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
@@ -2866,7 +2866,7 @@ public class Pojos {
         private boolean isGallery;
 
         public UploadParams(boolean isGallery, String videoPath, boolean isReaction, String title, String location,
-                            double latitude, double longitude, String tags, String categories) {
+                            double latitude, double longitude, String tags, String categories, PostDetails postDetails) {
             this.isGallery = isGallery;
             this.videoPath = videoPath;
             this.isReaction = isReaction;
@@ -2876,6 +2876,7 @@ public class Pojos {
             this.longitude = longitude;
             this.tags = tags;
             this.categories = categories;
+            this.postDetails = postDetails;
         }
 
         public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {

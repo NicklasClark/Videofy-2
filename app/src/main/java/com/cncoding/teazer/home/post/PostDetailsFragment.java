@@ -177,9 +177,9 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
         likeAction(postDetails.canLike(), false);
 
-        if (!postDetails.canReact()) disableView(reactBtn);
+        if (!postDetails.canReact()) disableView(reactBtn, true);
 
-        if (!enableReactBtn) disableView(reactBtn);
+        if (!enableReactBtn) disableView(reactBtn, true);
         else enableView(reactBtn);
 
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
@@ -255,20 +255,23 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                 controller.show(false, true, false);
 //                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
 
-//                Increment the video view count
-                PostsListFragment.postDetails.getMedias().get(0).views++;
-                ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                if (response.code() == 200 && response.body().getStatus())
-                                    controller.incrementViews();
-                            }
+//                Increment the video view count (only if this post belongs to someone else)
+                if (PostsListFragment.postDetails != null)
+                    PostsListFragment.postDetails.getMedias().get(0).views++;
+                if (postDetails.canDelete()) {
+                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
+                            .enqueue(new Callback<ResultObject>() {
+                                @Override
+                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                    if (response.code() == 200 && response.body().getStatus())
+                                        controller.incrementViews();
+                                }
 
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                }
+                            });
+                }
             }
         });
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -283,7 +286,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private void prepareController() {
         String profilePicUrl = "";
-        if (postDetails.getPostOwner().hasProfileMedia() && postDetails.getPostOwner().getProfileMedia() != null)
+        if (postDetails.getPostOwner().getProfileMedia() != null)
             profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
         String location = "";
         if (postDetails.hasCheckin())
@@ -473,7 +476,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                     }, 2000);
                                 }
                             } else {
-                                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.error_getting_tagged_users, Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -495,17 +498,22 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             likeBtn.setText(R.string.liked);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
-                PostsListFragment.postDetails.likes++;
+                if (PostsListFragment.postDetails != null) {
+                    PostsListFragment.postDetails.likes++;
+                    PostsListFragment.postDetails.can_like = false;
+                }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.incrementLikes();
             }
-
         } else {
             likeBtn.setChecked(false);
             likeBtn.setText(R.string.like);
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
             if (animate) {
-                PostsListFragment.postDetails.likes--;
+                if (PostsListFragment.postDetails != null) {
+                    PostsListFragment.postDetails.likes--;
+                    PostsListFragment.postDetails.can_like = true;
+                }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 controller.decrementLikes();
             }

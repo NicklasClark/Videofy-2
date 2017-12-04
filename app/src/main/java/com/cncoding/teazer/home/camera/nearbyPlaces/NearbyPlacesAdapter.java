@@ -69,6 +69,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     private void initializeListener(Context context) {
         if (mListener == null) {
+
             if (context instanceof NearbyPlacesInteractionListener) {
                 mListener = (NearbyPlacesInteractionListener) context;
             } else {

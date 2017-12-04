@@ -1,6 +1,7 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -20,6 +21,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 09/11/17.
  */
 
@@ -38,7 +41,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private ArrayList<Pojos.Post.PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
-    EditPostListener editPostListener;
+
 
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
@@ -48,10 +51,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         this.context = context;
         this.list = list;
         listener = (myCreationListener) context;
-        editPostListener = (EditPostListener) context;
-
     }
-
     @Override
     public ProfileMyCreationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_mycreations, viewGroup, false);
@@ -141,7 +141,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     list.remove(i);
                                     break;
                                 case R.id.edit_post:
-//                                    editPostListener.editPost(thumb_url);
+                                    Intent intent=new Intent(context, EditPost.class);
+                                    intent.putExtra("PostDetail",cont);
+                                    context.startActivity(intent);
                                     break;
                             }
                             return false;
@@ -329,12 +331,5 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         public interface myCreationListener {
 
             public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
-        }
-
-
-
-        public interface EditPostListener{
-            public void editPost(String videopath);
-
         }
     }

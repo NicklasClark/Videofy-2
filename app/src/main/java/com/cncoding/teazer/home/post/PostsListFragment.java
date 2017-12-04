@@ -110,7 +110,8 @@ public class PostsListFragment extends BaseFragment {
         }
         else {
             isRefreshing = false;
-            recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
+            if (savedPosition[1] > 4)
+                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
             postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
         }
 //        getParentActivity().showAppBar();

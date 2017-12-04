@@ -352,7 +352,7 @@ public class AuthUtils {
                                     }
                                 }, 1000);
                             } else {
-                                Snackbar.make(otpVerifiedTextView, R.string.login_through_otp_error,
+                                Snackbar.make(otpVerifiedTextView, R.string.wrong_otp,
                                         Snackbar.LENGTH_SHORT).show();
                             }
                         } else
@@ -411,16 +411,16 @@ public class AuthUtils {
     }
 
     @NonNull public static String getErrorMessage(ResponseBody responseBody) {
-        if (responseBody != null) {
+        if (responseBody != null && responseBody.contentLength() != -1) {
             try {
                 ErrorBody errorBody = new Gson().fromJson(responseBody.string(), ErrorBody.class);
-                return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again later" : errorBody.getReason().get(0);
+                return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again" : errorBody.getReason().get(0);
             } catch (IOException e) {
                 e.printStackTrace();
-                return "Something went wrong, Please try again later";
+                return "Something went wrong, Please try again";
             }
         } else
-            return "Something went wrong, Please try again later";
+            return "Something went wrong, Please try again";
     }
 
 //    public static void onLoginSuccessful(FragmentActivity activity) {

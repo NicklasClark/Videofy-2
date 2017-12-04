@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context="com.cncoding.teazer.home.camera.CameraActivity">
+    android:layout_height="match_parent">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,22 +27,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:minHeight="160dp"
-                    android:maxHeight="200dp"
+                    android:minHeight="250dp"
+                    android:maxHeight="400dp"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/video_preview_thumbnail" />
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     app:srcCompat="@drawable/ic_play_big"
                     android:clickable="false"/>
 
                 <ProgressBar
-                    android:id="@+id/thumbnail_progress_bar"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:id="@+id/progress_bar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:indeterminate="true"
                     style="?android:attr/progressBarStyleLarge"
                     android:theme="@style/ProgressBarTheme"
@@ -52,34 +50,8 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/progress_bar_horizontal"
-                android:visibility="visible"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="180"
-                android:layout_marginTop="36dp"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp">
-
-                <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_default"
-                    android:id="@+id/video_upload_title"
-                    android:hint="@string/title"
-                    android:maxLength="180"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:singleLine="true"
-                    android:inputType="textCapSentences"
-                    android:imeOptions="actionDone"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <ProgressBar
+                android:id="@+id/top_progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:indeterminate="true"
@@ -89,25 +61,33 @@
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_location"
-                app:drawableStartCompat="@drawable/ic_add_location2"
-                app:drawableEndCompat="@drawable/ic_arrow_right"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp" />
+                android:padding="@dimen/padding_default"
+                android:id="@+id/video_upload_title"
+                android:hint="@string/title"
+                android:background="@drawable/bg_search"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:lines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:inputType="textCapSentences"
+                android:imeOptions="actionDone"
+                android:layout_marginTop="@dimen/padding_thin"
+                android:layout_marginStart="@dimen/padding_default"
+                android:layout_marginEnd="@dimen/padding_default"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp">
+                android:layout_marginStart="@dimen/padding_default"
+                android:layout_marginEnd="@dimen/padding_default">
 
                 <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/add_location"
                     android:textSize="@dimen/text_size_content"
+                    app:drawableStartCompat="@drawable/ic_add_location"
                     android:layout_toStartOf="@+id/spacer"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -132,7 +112,7 @@
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/tag_friends"
                     android:textSize="@dimen/text_size_content"
-                    app:drawableStartCompat="@drawable/ic_person_white"
+                    app:drawableStartCompat="@drawable/ic_person_left"
                     android:layout_toEndOf="@+id/spacer"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -179,7 +159,7 @@
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/share_with"
+                    android:text="@string/share_to"
                     android:textSize="@dimen/text_size_content_big"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
@@ -282,5 +262,8 @@
         android:padding="@dimen/padding_default"
         android:contentDescription="@string/up"
         android:visibility="invisible"/>
+
+
+
 
 </FrameLayout>

@@ -45,13 +45,13 @@ import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
  */
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE_FOLLOWING = 0;
-    private static final int TYPE_REQUESTS = 1;
-    public static final int BUTTON_TYPE_ACCEPT = 10;
+    private static final int TYPE_FOLLOWING = 50;
+    private static final int TYPE_REQUESTS = 51;
+    private static final int BUTTON_TYPE_ACCEPT = 10;
     public static final int BUTTON_TYPE_FOLLOW = 11;
     public static final int BUTTON_TYPE_FOLLOWING = 12;
     public static final int BUTTON_TYPE_REQUESTED = 13;
-    public static final int BUTTON_TYPE_NONE = 14;
+    private static final int BUTTON_TYPE_NONE = 14;
 
     private static final int STARTED_FOLLOWING = 1;
     private static final int ACCEPTED_REQUEST = 2;
@@ -260,19 +260,27 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                             if(holder2.notification.isFollowing())
                             {
+                                holder2.action.setVisibility(View.VISIBLE);
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             }
                             else if (holder2.notification.isRequest_sent()==true)
+
                             {
+                                holder2.action.setVisibility(View.VISIBLE);
+
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                             }
                             else
                             {
+                                holder2.action.setVisibility(View.VISIBLE);
+
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                         }
                         else
                             {
+                                holder2.action.setVisibility(View.VISIBLE);
+
                                 if(holder2.notification.getNotificationType()==1)setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                                 else setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
