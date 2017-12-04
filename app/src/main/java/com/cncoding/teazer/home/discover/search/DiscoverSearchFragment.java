@@ -59,7 +59,13 @@ public class DiscoverSearchFragment extends BaseFragment {
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), searchTerm);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                hideKeyboard(getParentActivity(), searchBtn);
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         return rootView;
