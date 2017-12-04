@@ -21,6 +21,7 @@ import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.profile.reportuser.ReportUser;
+import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
@@ -548,6 +549,10 @@ public class ApiCallingService {
                                                      double latitude, double longitude,
                                                      String tags, String categories, Context context) {
             return getPostalService(context).uploadVideoToServer(videoPartFile, title, location, latitude, longitude, tags, categories);
+        }
+
+        public static Call<ResultObject> updatePost(UpdatePostRequest updatePostRequest, Context context) {
+            return getPostalService(context).updatePost(updatePostRequest);
         }
 
         public static Call<ResultObject> likeDislikePost(int postId, int status, Context context) {

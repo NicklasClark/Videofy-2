@@ -21,6 +21,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
@@ -80,7 +81,11 @@ public class NearbyPlacesList extends Fragment {
 //            location = getArguments().getParcelable(CURRENT_LOCATION);
         }
         if (getActivity() != null) {
-            googleApiClient = ((CameraActivity) getActivity()).getGoogleApiClient();
+            if(getActivity() instanceof CameraActivity)
+               googleApiClient = ((CameraActivity) getActivity()).getGoogleApiClient();
+            else
+                googleApiClient = ((EditPost) getActivity()).getGoogleApiClient();
+
         }
         if (googleApiClient != null && !googleApiClient.isConnected())
             googleApiClient.connect();

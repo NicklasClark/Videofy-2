@@ -74,6 +74,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
+    private static final String ARG_HAS_REACTED = "has_reacted";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
     private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";

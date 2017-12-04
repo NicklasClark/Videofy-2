@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -37,7 +38,7 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.camera.EditPost;
+import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
@@ -67,6 +68,9 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,13 +118,13 @@ public class BaseBottomBarActivity extends BaseActivity
         OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
         NotificationsAdapter.OnNotificationsInteractionListener, ProgressRequestBody.UploadCallbacks,FollowersAdapter.OtherProfileListener,
         ProfileFragment.FollowerListListener,
-        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener,ProfileMyCreationAdapter.EditPostListener, EditPost.OnEditPostInteractionListener,TagsAndCategoryFragment.TagsAndCategoriesInteractionListener {
+        ProfileMyCreationAdapter.myCreationListener,FollowingAdapter.OtherProfileListenerFollowing,FollowersCreationAdapter.FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 2;
     public static final String TAB_INDEX = "tabIndex";
 //    public static final int ACTION_VIEW_REACTION = 1;
-    private UploadFragment uploadFragment;
+
 
 //    private int[] mTabIconsDefault = {
 //            R.drawable.ic_home_default,
@@ -157,6 +161,8 @@ public class BaseBottomBarActivity extends BaseActivity
     private Call<ResultObject> uploadCall;
     private Callback<ResultObject> callback;
     private Fragment fragment;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,6 +217,21 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
             }
         });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     @Override
@@ -320,6 +341,9 @@ public class BaseBottomBarActivity extends BaseActivity
         };
     }
 
+
+
+
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
 
         private WeakReference<BaseBottomBarActivity> reference;
@@ -382,46 +406,10 @@ public class BaseBottomBarActivity extends BaseActivity
         pushFragment(OthersProfileFragment.newInstance2(id, type,username));
     }
 
-    @Override
-    public void editPost(String videoPath) {
-        pushFragment(EditPost.newInstance(videoPath));
 
-    }
 
-    @Override
-    public void onsaveEditPost(boolean isBackToCamera, Fragment fragment, String tag) {
 
-        if (!isBackToCamera) {
-            if (fragment != null && tag != null) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
-                        .replace(R.id.helper_uploading_container, fragment, tag)
-                        .addToBackStack(tag)
-                        .commit();
-            } else {
-                getSupportFragmentManager().popBackStack();
-            }
-        } else {
-//            if (getSupportFragmentManager().findFragmentByTag(TAG_UPLOAD_FRAGMENT) != null) {
-//                uploadFragment = null;
-//                getSupportFragmentManager().popBackStack();
-//            }
-            onBackPressed();
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .setCustomAnimations(fade_in, fade_out, fade_in, fade_out)
-//                    .replace(R.id.container, CameraFragment.newInstance(isReaction, postDetails))
-//                    .commit();
-        }
 
-    }
-
-    @Override
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
-        uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
-        getSupportFragmentManager().popBackStack();
-    }
 
 
     private static class ResumeUpload extends AsyncTask<Void, Void, Callback<ResultObject>> {
@@ -755,8 +743,17 @@ public class BaseBottomBarActivity extends BaseActivity
             case ACTION_VIEW_POST:
                 pushFragment(PostDetailsFragment.newInstance(postDetails, image, false));
                 break;
+
             case ACTION_VIEW_PROFILE:
-                pushFragment(new ProfileFragment());
+                int postOwnerId=postDetails.getPostOwner().getUserId();
+                String username=postDetails.getPostOwner().getUserName();
+                String userType="";
+                boolean candelete=postDetails.canDelete();
+                if(candelete)
+                    pushFragment(ProfileFragment.newInstance());
+
+                else
+                    pushFragment(OthersProfileFragment.newInstance(String.valueOf(postOwnerId),userType,username));
         }
     }
 
@@ -764,13 +761,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onPostDetailsInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_DISMISS_PLACEHOLDER:
-//                expandedImage.animate().alpha(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        expandedImage.setImageDrawable(null);
-//                    }
-//                }, 250);
                 break;
             case ACTION_OPEN_REACTION_CAMERA:
                 launchReactionCamera(this, postDetails);
