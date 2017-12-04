@@ -217,6 +217,7 @@ public class TagsAndCategoryFragment extends Fragment {
         listener = null;
     }
 
+
     public interface TagsAndCategoriesInteractionListener {
         void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend);
     }

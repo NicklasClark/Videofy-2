@@ -1287,6 +1287,15 @@ public class Pojos {
             private int total_videos;
             private boolean can_change_password;
 
+
+            protected UserProfile(Parcel in) {
+                user_profile = in.readParcelable(PublicProfile.class.getClassLoader());
+                followers = in.readInt();
+                followings = in.readInt();
+                total_videos = in.readInt();
+                can_change_password = in.readByte() != 0;
+            }
+
             public UserProfile(PublicProfile user_profile, int followers, int followings, int total_videos, boolean can_change_password) {
                 this.user_profile = user_profile;
                 this.followers = followers;
@@ -1295,18 +1304,13 @@ public class Pojos {
                 this.can_change_password = can_change_password;
             }
 
-
-            protected UserProfile(Parcel in) {
-                followers = in.readInt();
-                followings = in.readInt();
-                total_videos = in.readInt();
-            }
-
             @Override
             public void writeToParcel(Parcel dest, int flags) {
+                dest.writeParcelable(user_profile, flags);
                 dest.writeInt(followers);
                 dest.writeInt(followings);
                 dest.writeInt(total_videos);
+                dest.writeByte((byte) (can_change_password ? 1 : 0));
             }
 
             @Override
