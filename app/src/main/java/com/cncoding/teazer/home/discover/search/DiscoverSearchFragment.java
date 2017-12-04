@@ -20,7 +20,6 @@ import android.view.inputmethod.EditorInfo;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,7 +140,7 @@ public class DiscoverSearchFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        ViewUtils.hideKeyboard(getActivity(), searchBtn);
+        hideKeyboard(getActivity(), searchBtn);
         mListener = null;
         super.onDetach();
     }

@@ -105,6 +105,7 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
 import static com.cncoding.teazer.utilities.ViewUtils.deleteFileFromMediaStoreDatabase;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
@@ -704,6 +705,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                hideKeyboard(this, bottomTabLayout);
                 onBackPressed();
                 return true;
         }
