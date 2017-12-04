@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.databinding.ActivityTrimmerBinding;
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
-import com.cncoding.teazer.videoTrim.utils.TrimVideoUtil;
 
 import java.io.File;
 
@@ -24,6 +23,7 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
     public static final int VIDEO_TRIM_REQUEST_CODE = 101;
     private File tempFile;
     private ActivityTrimmerBinding binding;
+    private int maxDuration;
 
     public static void go(FragmentActivity from, String videoPath){
         if(!TextUtils.isEmpty(videoPath)) {
@@ -41,11 +41,13 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
         binding = DataBindingUtil.setContentView(this, R.layout.activity_trimmer);
         Bundle bd = getIntent().getExtras();
         String path = "";
-        if(bd != null)
+        if(bd != null) {
             path = bd.getString("path");
+            maxDuration = bd.getInt("MAX_DURATION");
+        }
 
         if (binding.trimmerView != null) {
-            binding.trimmerView.setMaxDuration(TrimVideoUtil.VIDEO_MAX_DURATION);
+            binding.trimmerView.setMaxDuration(maxDuration);
             binding.trimmerView.setOnTrimVideoListener(this);
             binding.trimmerView.setVideoURI(Uri.parse(path));
         }

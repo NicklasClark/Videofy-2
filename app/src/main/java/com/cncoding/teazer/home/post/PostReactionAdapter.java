@@ -132,6 +132,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 //                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
                     Intent intent = new Intent(context, ExoPlayerActivity.class);
                     intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
+                    intent.putExtra("POST_INFO", postReaction);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 

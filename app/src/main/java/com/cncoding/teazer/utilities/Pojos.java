@@ -1022,20 +1022,47 @@ public class Pojos {
             private MiniProfile react_owner;
             private String reacted_at;
 
-            public PostReaction(int react_id, int post_id, String react_title, int post_owner_id, int likes, int views, boolean can_like,
-                                boolean can_delete, ReactionMediaDetail media_detail, MiniProfile react_owner, String reacted_at) {
-                this.react_id = react_id;
-                this.post_id = post_id;
-                this.react_title = react_title;
-                this.post_owner_id = post_owner_id;
-                this.likes = likes;
-                this.views = views;
-                this.can_like = can_like;
-                this.can_delete = can_delete;
-                this.media_detail = media_detail;
-                this.react_owner = react_owner;
-                this.reacted_at = reacted_at;
+
+            protected PostReaction(Parcel in) {
+                react_id = in.readInt();
+                post_id = in.readInt();
+                react_title = in.readString();
+                post_owner_id = in.readInt();
+                likes = in.readInt();
+                views = in.readInt();
+                can_like = in.readByte() != 0;
+                can_delete = in.readByte() != 0;
+                media_detail = in.readParcelable(ReactionMediaDetail.class.getClassLoader());
+                react_owner = in.readParcelable(MiniProfile.class.getClassLoader());
+                reacted_at = in.readString();
             }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(react_id);
+                dest.writeInt(post_id);
+                dest.writeString(react_title);
+                dest.writeInt(post_owner_id);
+                dest.writeInt(likes);
+                dest.writeInt(views);
+                dest.writeByte((byte) (can_like ? 1 : 0));
+                dest.writeByte((byte) (can_delete ? 1 : 0));
+                dest.writeParcelable(media_detail, flags);
+                dest.writeParcelable(react_owner, flags);
+                dest.writeString(reacted_at);
+            }
+
+            public static final Creator<PostReaction> CREATOR = new Creator<PostReaction>() {
+                @Override
+                public PostReaction createFromParcel(Parcel in) {
+                    return new PostReaction(in);
+                }
+
+                @Override
+                public PostReaction[] newArray(int size) {
+                    return new PostReaction[size];
+                }
+            };
 
             public int getReactId() {
                 return react_id;
@@ -1086,44 +1113,7 @@ public class Pojos {
                 return 0;
             }
 
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeInt(react_id);
-                parcel.writeInt(post_id);
-                parcel.writeInt(post_owner_id);
-                parcel.writeInt(likes);
-                parcel.writeInt(views);
-                parcel.writeByte((byte) (can_like ? 1 : 0));
-                parcel.writeByte((byte) (can_delete ? 1 : 0));
-                parcel.writeParcelable(media_detail, i);
-                parcel.writeParcelable(react_owner, i);
-                parcel.writeString(reacted_at);
-            }
 
-            protected PostReaction(Parcel in) {
-                react_id = in.readInt();
-                post_id = in.readInt();
-                post_owner_id = in.readInt();
-                likes = in.readInt();
-                views = in.readInt();
-                can_like = in.readByte() != 0;
-                can_delete = in.readByte() != 0;
-                media_detail = in.readParcelable(ReactionMediaDetail.class.getClassLoader());
-                react_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-                reacted_at = in.readString();
-            }
-
-            public static final Creator<PostReaction> CREATOR = new Creator<PostReaction>() {
-                @Override
-                public PostReaction createFromParcel(Parcel in) {
-                    return new PostReaction(in);
-                }
-
-                @Override
-                public PostReaction[] newArray(int size) {
-                    return new PostReaction[size];
-                }
-            };
         }
 
         public static class ReportPost {

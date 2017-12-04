@@ -148,15 +148,13 @@ public class VideoTrimmerView extends FrameLayout {
 
     private void initSeekBarPosition() {
         seekTo(mStartPosition);
-        //时间与屏幕的刻度永远保持一致
         pixelRangeMax = (mDuration * SCREEN_WIDTH) / mMaxDuration;
         mRangeSeekBarView.initThumbForRangeSeekBar(mDuration, pixelRangeMax);
 
-        //大于15秒的时候,游标处于0-15秒
         if (mDuration >= mMaxDuration) {
             mEndPosition = mMaxDuration;
             mTimeVideo = mMaxDuration;
-        } else {//小于15秒,游标处于0-mDuration
+        } else {
             mEndPosition = mDuration;
             mTimeVideo = mDuration;
         }
@@ -410,7 +408,12 @@ public class VideoTrimmerView extends FrameLayout {
     private void onSaveClicked() {
         if (mEndPosition/1000 - mStartPosition/1000 < TrimVideoUtil.MIN_TIME_FRAME) {
             Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
-        }else{
+        }
+        else if(mEndPosition/1000 - mStartPosition/1000 > TrimVideoUtil.VIDEO_MAX_ALLOWED_DURATION)
+        {
+            Toast.makeText(mContext, "Video length can not be more than 60 seconds", Toast.LENGTH_SHORT).show();
+        }
+        else{
             mVideoView.pause();
             try {
                 TrimVideoUtil.trimVideo(mContext, mSrc.getPath(), getTrimmedVideoPath(), mStartPosition, mEndPosition, mOnTrimVideoListener);

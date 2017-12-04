@@ -190,7 +190,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".videoTrim.TrimmerActivity" />
-        <activity android:name=".ui.fragment.activity.ExoPlayerActivity"></activity>
+        <activity android:name=".ui.fragment.activity.ExoPlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DetailAppTheme"/>
     </application>
 
 </manifest>

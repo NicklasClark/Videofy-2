@@ -85,15 +85,14 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
-    compile 'com.iceteck.silicompressorr:silicompressor:2.1'
     compile 'com.github.iknow4:android-utils-sdk:1.1.1'
     compile 'com.googlecode.mp4parser:isoparser:1.1.20'
     compile 'org.aspectj:aspectjrt:1.8.9'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.writingminds:FFmpegAndroid:0.3.2'
     compile 'com.android.support:multidex:1.0.2'
-    compile project(':k4l-video-trimmer')
     compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
+    compile 'com.github.yangjie10930:EpMedia:v0.9.1'
 }
 
 configurations.all {

@@ -54,7 +54,6 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.videoTrim.TrimmerActivity;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -111,7 +110,6 @@ import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
-import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -254,17 +252,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @OnClick(R.id.btnTrim)
-    public void trimVideo()
-    {
-//
-        Bundle bundle = new Bundle();
-        bundle.putString("path", videoPath);
-        Intent intent = new Intent(getActivity(),TrimmerActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
     }
 
     @Override
@@ -813,11 +800,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //                    Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
 //                }
 //                break;
-            case VIDEO_TRIM_REQUEST_CODE:
-                if (data != null) {
-                    videoPath = data.getStringExtra("trimmed_path");
-                }
-                break;
             default:
                 break;
         }

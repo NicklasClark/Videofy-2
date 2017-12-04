@@ -62,4 +62,9 @@
     <color name="line_button">#565758</color>
     <color name="black_translucent">#50000000</color>
     <color name="top_bottom">#42BAF8</color>
+    <color name="gray_mid_dark">#757575</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#cccccc</color>
+    <color name="grey_700">#646464</color>
 </resources>

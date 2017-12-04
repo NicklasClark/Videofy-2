@@ -81,30 +81,11 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:layout_width="match_parent"
-<<<<<<< HEAD
                 android:layout_height="20dp"
                 android:indeterminate="true"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:theme="@style/ProgressBarTheme"
                 android:visibility="invisible" />
-            <Button
-                android:id="@+id/btnTrim"
-                android:visibility="visible"
-                android:layout_gravity="center_horizontal"
-                android:text="Trim video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-=======
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_location"
-                app:drawableStartCompat="@drawable/ic_add_location"
-                app:drawableEndCompat="@drawable/ic_arrow_right"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp" />
-
->>>>>>> prem_dev
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

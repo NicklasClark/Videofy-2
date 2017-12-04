@@ -19,6 +19,7 @@ package com.cncoding.teazer.home.camera;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.videoTrim.TrimmerActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -72,6 +74,7 @@ import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
+import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED;
@@ -221,11 +224,34 @@ public class CameraActivity extends AppCompatActivity
             if (isReaction) {
                 new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
             } else {
-                uploadFragment = UploadFragment.newInstance(videoPath, false, true);
-                startVideoUploadFragment();
+                if (getVideoDuration(videoPath) < 60) {
+                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    startVideoUploadFragment();
+                }
+                else
+                {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("path", videoPath);
+                    bundle.putInt("MAX_DURATION", (int)getVideoDuration(videoPath));
+                    Intent intent = new Intent(this,TrimmerActivity.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
+                }
             }
         } else Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
+
+    private long getVideoDuration(String videoFile)
+    {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(videoFile);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInSec = Long.parseLong(time)/1000;
+
+        retriever.release();
+        return timeInSec;
+    }
+
 
     @Override
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
@@ -433,8 +459,20 @@ public class CameraActivity extends AppCompatActivity
             cameraFragment.startPreview();
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case VIDEO_TRIM_REQUEST_CODE:
+                if (data != null) {
+                    String videoPath = data.getStringExtra("trimmed_path");
+                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    startVideoUploadFragment();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
