@@ -191,9 +191,16 @@ public class SubDiscoverFragment extends BaseFragment {
         for (int i = 0; i < categories.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(categories.get(i).getCategoryName()), i);
 //            Set tab text color
-            ((AppCompatTextView) ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i)).getChildAt(1))
-                    .setTextColor(Color.parseColor(categories.get(i).getColor()));
+            LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
+            linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
+            AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
+            view.setTextColor(Color.parseColor(categories.get(i).getColor()));
+            
         }
+    }
+
+    private int getPixel() {
+        return (int)((8 * getResources().getDisplayMetrics().density) + 0.5);
     }
 
     private static class GetTrendingVideos extends AsyncTask<Integer, Void, Void> {

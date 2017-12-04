@@ -207,7 +207,7 @@ public class ProfileFragment extends BaseFragment {
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
-        getParentActivity().updateToolbarTitle("Profile");
+        getParentActivity().updateToolbarTitle("My Profile");
         getParentActivity().showAppBar();
     }
 

@@ -56,6 +56,7 @@ public class DiscoverSearchFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discover_search, container, false);
         ButterKnife.bind(this, rootView);
+        previousTitle = getParentActivity().getToolbarTitle();
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), searchTerm);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -74,6 +75,7 @@ public class DiscoverSearchFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getParentActivity().updateToolbarTitle(getString(R.string.discover));
         searchBtn.requestFocus();
         showKeyboard(getParentActivity());
     }
@@ -146,6 +148,7 @@ public class DiscoverSearchFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
+        getParentActivity().updateToolbarTitle(previousTitle);
         hideKeyboard(getActivity(), searchBtn);
         mListener = null;
         super.onDetach();

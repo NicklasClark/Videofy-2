@@ -19,7 +19,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/action_bar_height"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:contentInsetStart="0dp"
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
@@ -30,8 +29,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true">
+                android:layout_height="wrap_content">
 
                 <com.cncoding.teazer.customViews.SignPainterTextView
                     android:id="@+id/toolbar_center_title"
@@ -67,9 +65,10 @@
                     android:text="@string/discover"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/colorPrimary_text"
+                    android:layout_marginStart="14dp"
                     android:layout_marginBottom="@dimen/padding_half"
                     android:layout_centerVertical="true"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
 
                 <!--<com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:id="@+id/up_btn_with_title"

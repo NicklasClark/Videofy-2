@@ -1,6 +1,7 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -217,13 +218,26 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            int index = intent.getExtras().getBundle("bundle").getInt(TAB_INDEX);
+            if (index != -1)
+                switchTab(index);
+        }
+    }
+
+    @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        initTab();
-        int index = getIntent().getIntExtra(TAB_INDEX, -1);
-        if (index != -1)
-            switchTab(index);
-        else {
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras().getBundle("bundle");
+            if (bundle != null) {
+                int index = bundle.getInt(TAB_INDEX);
+                switchTab(index);
+            }
+        } else {
             if (navigationController.getCurrentFragment() instanceof PostsListFragment)
                 switchTab(0);
             else if (navigationController.getCurrentFragment() instanceof DiscoverFragment)
@@ -471,7 +485,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private void switchTab(final int position) {
         navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
-        updateToolbar(position == 1 || position == 3);
+//        updateToolbar(position == 1 || position == 3);
         if (position == 1 || position == 3)
             setAppBarElevation(0);
         else
@@ -490,20 +504,20 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    public void updateToolbar(boolean isDiscoverPage) {
-        if (isDiscoverPage) {
-            if (toolbarPlainTitle.getVisibility() != VISIBLE)
-                toolbarPlainTitle.setVisibility(VISIBLE);
-            if (toolbarCenterTitle.getVisibility() != GONE)
-                toolbarCenterTitle.setVisibility(GONE);
-        }
-        else {
-            if (toolbarCenterTitle.getVisibility() != VISIBLE)
-                toolbarCenterTitle.setVisibility(VISIBLE);
-            if (toolbarPlainTitle.getVisibility() != GONE)
-                toolbarPlainTitle.setVisibility(GONE);
-        }
-    }
+//    public void updateToolbar(boolean isDiscoverPage) {
+//        if (isDiscoverPage) {
+//            if (toolbarPlainTitle.getVisibility() != VISIBLE)
+//                toolbarPlainTitle.setVisibility(VISIBLE);
+//            if (toolbarCenterTitle.getVisibility() != GONE)
+//                toolbarCenterTitle.setVisibility(GONE);
+//        }
+//        else {
+//            if (toolbarCenterTitle.getVisibility() != VISIBLE)
+//                toolbarCenterTitle.setVisibility(VISIBLE);
+//            if (toolbarPlainTitle.getVisibility() != GONE)
+//                toolbarPlainTitle.setVisibility(GONE);
+//        }
+//    }
 
     public void setAppBarElevation(float elevation) {
         if (appBar.getElevation() != elevation)
@@ -575,13 +589,17 @@ public class BaseBottomBarActivity extends BaseActivity
             if (toolbarCenterTitle.getVisibility() != GONE)
                 toolbarCenterTitle.setVisibility(GONE);
         }
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarPlainTitle.getLayoutParams();
-        params.setMarginStart(navigationController.isRootFragment() ? getPixel(14) : 0);
-        toolbarPlainTitle.setLayoutParams(params);
-    }
-
-    private int getPixel(@SuppressWarnings("SameParameterValue") int dp) {
-        return (int)((dp * getResources().getDisplayMetrics().density) + 0.5);
+//        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarPlainTitle.getLayoutParams();
+//        if (navigationController.isRootFragment())
+//            params.setMarginStart(getPixel(14));
+//        else
+//            params.leftMargin = getPixel(20) - getPixel(38);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                toolbarPlainTitle.setLayoutParams(params);
+//            }
+//        }, 200);
     }
 
     public String getToolbarTitle() {
@@ -806,15 +824,15 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void hideBottomBar() {
-        bottomTabLayout.animate().translationY(100).alpha(0).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(100).alpha(0).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.animate().translationY(100).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(100).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
         bottomTabLayout.setVisibility(GONE);
         cameraButton.setVisibility(GONE);
     }
 
     public void showBottomBar() {
-        bottomTabLayout.animate().translationY(0).alpha(1).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(0).alpha(1).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.animate().translationY(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
         bottomTabLayout.setVisibility(VISIBLE);
         cameraButton.setVisibility(VISIBLE);
     }

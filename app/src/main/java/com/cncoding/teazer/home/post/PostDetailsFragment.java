@@ -630,8 +630,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                                 }
                                             });
                                 }
-                            });
-                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .show();
                     return true;
                 case R.id.action_delete:
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();

@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.SplashScreen;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
+
+import java.util.Map;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
 
@@ -25,6 +28,19 @@ import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+    private static final int STARTED_FOLLOWING = 1;
+    private static final int ACCEPTED_REQUEST = 2;
+    private static final int SENT_YOU_A_FOLLOW_REQUEST = 3;
+    private static final int ALSO_STARTED_FOLLOWING = 10;
+
+    private static final int LIKED_YOUR_VIDEO = 5;
+    private static final int POSTED_A_VIDEO = 7;
+    private static final int TAGGED_YOU_IN_A_VIDEO = 9;
+
+    private static final int REACTED_TO_YOUR_VIDEO = 4;
+    private static final int LIKED_YOUR_REACTION = 6;
+    private static final int REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN = 8;
 
     private static final String TAG = "FirebaseMessagingSvc";
     private NotificationManager notificationManager;
@@ -37,17 +53,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "From: " + remoteMessage.getFrom());
             Log.d(TAG, "Notification Message Body: " + notification.getBody());
 //            sendNotification(notification.getBody(), getBitmapFromUrl(imageUrl));
-            sendNotification(notification.getBody());
+            for (Map.Entry<String,String> entry : remoteMessage.getData().entrySet()) {
+                Log.d(TAG, "Notification Data: " + entry.getValue() + " at " + entry.getKey());
+            }
+            Log.d(TAG, "data: " + remoteMessage.getData());
+            Log.d(TAG, "Notification: " + notification.getClickAction());
+
+            sendNotification(notification.getBody(), remoteMessage.getData().get("notification_type"));
         }
     }
 
     //This method is only generating push notification
     //It is same as we did in earlier posts
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, SplashScreen.class);
-        if (messageBody.contains("follow"))
-            intent.putExtra(TAB_INDEX, 3);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    private void sendNotification(String messageBody, String notificationType) {
+        Intent intent = new Intent();
+        intent.setClass(this, BaseBottomBarActivity.class);
+//        if (messageBody.contains("follow"))
+        Bundle bundle = new Bundle();
+        bundle.putInt(TAB_INDEX, getAction(notificationType));
+        intent.putExtra("bundle", bundle);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -67,6 +93,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (notificationManager != null) {
             notificationManager.notify(0, notificationBuilder.build());
+        }
+    }
+
+    private int getAction(String type) {
+        try {
+            int notificationType = Integer.parseInt(type);
+            if (notificationType == 1 || notificationType == 2 || notificationType == 3 || notificationType == 10) {
+                return 4;
+            } else return 3;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 3;
         }
     }
 

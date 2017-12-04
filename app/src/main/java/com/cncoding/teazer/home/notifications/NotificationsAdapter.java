@@ -18,11 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
@@ -115,6 +118,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             .load(holder1.notification.getProfileMedia().getThumbUrl())
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                               boolean isFromMemoryCache, boolean isFirstResource) {
+
+                                    holder1.dp.setImageDrawable(resource);
+                                    return true;
+                                }
+                            })
                             .into(holder1.dp);
 
                 holder1.content.setText(getString(getHighlights(holder1.notification.getHighlights()), holder1.notification.getMessage()));
@@ -250,8 +267,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //
 //                    }
 
-
-
                 if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
                     {
 
@@ -281,7 +296,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             {
                                 holder2.action.setVisibility(View.VISIBLE);
 
-                                if(holder2.notification.getNotificationType()==1)setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                if(holder2.notification.getNotificationType()==1)setActionButton(holder2.action,
+                                        null, BUTTON_TYPE_FOLLOW);
                                 else setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                     }
@@ -299,7 +315,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 if (mListener != null) {
                                     String userType;
 
-                                    if (holder2.notification.getMetaData().getNotificationType() == 1 || holder2.notification.getMetaData().getNotificationType() == 2 || holder2.notification.getMetaData().getNotificationType() == 10) {
+                                    if (holder2.notification.getMetaData().getNotificationType() == 1 ||
+                                            holder2.notification.getMetaData().getNotificationType() == 2 ||
+                                            holder2.notification.getMetaData().getNotificationType() == 10) {
                                         userType = "Following";
                                     }
                                     if (holder2.notification.getMetaData().getNotificationType() == 3) {
@@ -319,7 +337,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                     followUser( holder2.notification.getMetaData().getFromId(), context,holder2);
 
-                                    ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context).enqueue(new Callback<ResultObject>() {
+                                    ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context)
+                                            .enqueue(new Callback<ResultObject>() {
                                         @Override
                                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                             try {
@@ -538,11 +557,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return TextUtils.join(", ", highlights);
     }
 
-    private void setActionButton(ProximaNovaSemiboldButton button, AppCompatImageView declineRequest, int type) {
+    private void setActionButton(ProximaNovaSemiboldTextView button, AppCompatImageView declineRequest, int type) {
         switch (type) {
             case BUTTON_TYPE_ACCEPT:
                 button.setText(R.string.accept);
-                button.setTextColor(Color.parseColor("#546E7A"));
+                button.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
                 button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 if (declineRequest != null)
@@ -550,7 +569,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case BUTTON_TYPE_FOLLOW:
                 button.setText(R.string.follow);
-                button.setTextColor(Color.parseColor("#546E7A"));
+                button.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
                 button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 if (declineRequest != null)
@@ -560,7 +579,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 button.setText(R.string.following);
                 button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
+                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_dark),
                         null, null, null);
                 if (declineRequest != null)
                     declineRequest.setVisibility(View.GONE);
@@ -569,8 +588,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 button.setText(R.string.requested);
                 button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_small),
-                        null, null, null);
+//                button.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_check_dark),
+//                        null, null, null);
                 if (declineRequest != null)
                     declineRequest.setVisibility(View.GONE);
                 break;
@@ -584,9 +603,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-
-
-    public void followUser(int userId, final Context context,final RequestsViewHolder holder2) {
+    private void followUser(int userId, final Context context, final RequestsViewHolder holder2) {
         ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -652,7 +669,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.notification_dp) CircularAppCompatImageView dp;
         @BindView(R.id.notification_content) UniversalTextView content;
-        @BindView(R.id.notification_action) ProximaNovaSemiboldButton action;
+        @BindView(R.id.notification_action) ProximaNovaSemiboldTextView action;
         @BindView(R.id.notification_decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;
@@ -670,6 +687,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId, String userType);
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
+                                        int profileId, String userType);
     }
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -32,19 +33,20 @@
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/notification_action"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_margin="14dp"
+            android:minWidth="90dp"
             android:foreground="@drawable/ripple_dark_rounded_2dp"
+            android:gravity="center"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            android:visibility="gone"
-
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-
+            android:text="@string/accept"
+            android:visibility="visible"
+            android:paddingStart="8dp"
+            android:paddingEnd="10dp"
             android:background="@drawable/bg_outline_rounded_primary"
             android:contentDescription="@string/post_thumbnail" />
 
