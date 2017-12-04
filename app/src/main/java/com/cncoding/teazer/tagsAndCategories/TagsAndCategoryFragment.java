@@ -298,7 +298,7 @@ public class TagsAndCategoryFragment extends Fragment {
         for (int i = 0; i < sparseArray.size(); i++) {
             stringBuilder.append(sparseArray.valueAt(i).getUserId());
             if (i < sparseArray.size() - 1) {
-                stringBuilder.append(", ");
+                stringBuilder.append(",");
             }
         }
         return stringBuilder.toString();

@@ -1,34 +1,17 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.home.camera.CameraFragment;
-import com.cncoding.teazer.home.camera.UploadFragment;
-import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
-import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
@@ -36,44 +19,18 @@ import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.fragment.fragment.EditPostFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.INTERNET;
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
         TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
@@ -162,10 +119,9 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
     }
 
     @Override
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count) {
         editPostFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
         getSupportFragmentManager().popBackStack();
-
     }
 
     @Override

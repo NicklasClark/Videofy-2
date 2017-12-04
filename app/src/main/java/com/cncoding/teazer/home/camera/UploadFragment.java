@@ -87,6 +87,7 @@ import static android.Manifest.permission.INTERNET;
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
@@ -518,11 +519,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }
-            String tags = tagFriendsBtn.getText().toString().equals("") ? null : tagFriendsBtn.getText().toString();
             DecimalFormat df = new DecimalFormat("#.#######");
+
             performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, isReaction, title, location,
                     Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                    tags, selectedCategoriesToSend, postDetails));
+                    selectedTagsToSend, selectedCategoriesToSend, postDetails));
         }
     }
 
@@ -578,15 +579,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
-        addLocationBtn.setText(selectedPlace.getPlaceName());
+        String placeName = SPACE + selectedPlace.getPlaceName();
+        addLocationBtn.setText(placeName);
     }
 
     public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count) {
+        resultToShow = SPACE + resultToShow;
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagCount = count;
                 selectedTagsToShow = resultToShow;
                 selectedTagsToSend = resultToSend;
+                resultToShow = SPACE + resultToShow;
                 tagFriendsBtn.setText(resultToShow);
                 setBadge(tagFriendsBadge, count);
                 break;
