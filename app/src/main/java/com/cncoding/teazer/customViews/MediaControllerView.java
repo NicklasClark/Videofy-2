@@ -20,6 +20,9 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.utilities.ViewUtils;
 
@@ -300,7 +303,20 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         Glide.with(getContext())
                 .load(profilePicUrl)
                 .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade(400)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        profilePic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
                 .into(profilePic);
     }
 
@@ -324,7 +340,20 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         Glide.with(getContext())
                 .load(reaction1PicUrl)
                 .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade(400)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction1Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
                 .into(reaction1Pic);
     }
 
@@ -333,7 +362,20 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         Glide.with(getContext())
                 .load(reaction2PicUrl)
                 .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade(400)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction2Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
                 .into(reaction2Pic);
     }
 
@@ -342,7 +384,20 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         Glide.with(getContext())
                 .load(reaction3PicUrl)
                 .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade(400)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction3Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
                 .into(reaction3Pic);
     }
 

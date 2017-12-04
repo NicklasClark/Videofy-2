@@ -20,7 +20,6 @@ import android.view.inputmethod.EditorInfo;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +59,13 @@ public class DiscoverSearchFragment extends BaseFragment {
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), searchTerm);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                hideKeyboard(getParentActivity(), searchBtn);
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         return rootView;
@@ -141,7 +146,7 @@ public class DiscoverSearchFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        ViewUtils.hideKeyboard(getActivity(), searchBtn);
+        hideKeyboard(getActivity(), searchBtn);
         mListener = null;
         super.onDetach();
     }

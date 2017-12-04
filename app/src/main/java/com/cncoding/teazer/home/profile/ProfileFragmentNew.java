@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.profile.userProfile.UserProfileResponse;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by farazhabib on 18/11/17.
@@ -109,7 +101,7 @@ public class ProfileFragmentNew extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+//        toolbar.setNavigationIcon(R.drawable.ic_previous);
         backbutton = view.findViewById(R.id.backbutton);
         settings = view.findViewById(R.id.settings);
         _toolbarusername = view.findViewById(R.id.toolbarusername);

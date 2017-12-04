@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private Typeface SEMI_BOLD;
     private ArrayList<Category> interestsList;
     private Interests interests;
-    private SparseIntArray sparseIntArray;
+//    private SparseIntArray sparseIntArray;
     private SparseBooleanArray selectedInterestsArray;
     private SparseArray<Category> selectedInterests;
 
@@ -40,9 +39,17 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         this.interests = interests;
         REGULAR = new TypeFactory(interests.getContext()).regular;
         SEMI_BOLD = new TypeFactory(interests.getContext()).semiBold;
-        sparseIntArray = new SparseIntArray();
+//        sparseIntArray = new SparseIntArray();
         selectedInterestsArray = categories != null ? categories : new SparseBooleanArray();
         selectedInterests = new SparseArray<>();
+
+        if (selectedInterestsArray.size() >= 5) {
+            if (!interests.isSaveBtnEnabled())
+                interests.enableSaveBtn();
+        } else {
+            if (interests.isSaveBtnEnabled())
+                interests.disableSaveBtn();
+        }
     }
 
     @Override
@@ -67,16 +74,19 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
                 holder.chip.setChecked(!holder.chip.isChecked());
 
                 checkAction(holder.chip, holder.getAdapterPosition(), true);
-
-                if (selectedInterests.size() >= 5) {
-                    if (!interests.isSaveBtnEnabled())
-                        interests.enableSaveBtn();
-                } else {
-                    if (interests.isSaveBtnEnabled())
-                        interests.disableSaveBtn();
-                }
+                checkButtonAccess();
             }
         });
+    }
+
+    private void checkButtonAccess() {
+        if (selectedInterests.size() >= 5) {
+            if (!interests.isSaveBtnEnabled())
+                interests.enableSaveBtn();
+        } else {
+            if (interests.isSaveBtnEnabled())
+                interests.disableSaveBtn();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

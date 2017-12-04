@@ -3,8 +3,8 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +60,7 @@ public class Settings extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+//        toolbar.setNavigationIcon(R.drawable.ic_previous);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

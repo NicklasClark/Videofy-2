@@ -20,7 +20,7 @@
             android:id="@+id/discover_search"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:hint="@string/search_videos_or_places"
+            android:hint="@string/search_for_videos_or_people"
             android:textSize="@dimen/text_size_14sp"
             android:layout_marginTop="@dimen/padding_thin"
             android:layout_marginBottom="@dimen/padding_thin"

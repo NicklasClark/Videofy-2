@@ -60,9 +60,10 @@ public class ViewUtils {
         view.setBackgroundTintList(null);
     }
 
-    public static void disableView(View view) {
+    public static void disableView(View view, boolean setAlpha) {
         view.setEnabled(false);
-        view.setAlpha(0.5f);
+        if (setAlpha)
+            view.setAlpha(0.5f);
         view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
     }
 
@@ -84,7 +85,7 @@ public class ViewUtils {
      * */
     public static void makeSnackbarWithBottomMargin(Activity activity, View view, CharSequence text) {
         Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
-        Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/proxima_nova_regular.ttf");
+        Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/proxima_nova_regular.otf");
         TextView tv = (snackbar.getView()).findViewById(android.support.design.R.id.snackbar_text);
         tv.setTypeface(font);
         Button button = (snackbar.getView()).findViewById(android.support.design.R.id.snackbar_action);

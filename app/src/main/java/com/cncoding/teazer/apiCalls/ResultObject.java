@@ -14,12 +14,14 @@ public class ResultObject {
     @SerializedName("message") @Expose private String message;
     @SerializedName("auth_token") @Expose private String auth_token;
     @SerializedName("status") @Expose private boolean status;
+    @SerializedName("errorBody") @Expose private ErrorBody errorBody;
 
-    public ResultObject(int code, String message, String auth_token, boolean status) {
+    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody) {
         this.code = code;
         this.message = message;
         this.auth_token = auth_token;
         this.status = status;
+        this.errorBody = errorBody;
     }
 
     public int getCode() {
@@ -35,6 +37,10 @@ public class ResultObject {
     }
 
     public String getAuthToken() {
+
         return auth_token;
+    }
+    public ErrorBody getErrorBody() {
+        return errorBody;
     }
 }

@@ -115,7 +115,7 @@
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/tag_friends"
                     android:textSize="@dimen/text_size_content"
-                    app:drawableStartCompat="@drawable/ic_person_white"
+                    app:drawableStartCompat="@drawable/ic_person_left"
                     android:layout_toEndOf="@+id/spacer"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -176,7 +176,7 @@
                     <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                         android:id="@+id/video_upload_retake_btn"
                         style="@style/AppTheme.CancelUploadButtonsTheme"
-                        app:drawableStartCompat="@drawable/ic_previous_white"
+                        app:drawableStartCompat="@drawable/ic_previous"
                         android:text="@string/retake"
                         android:layout_alignParentStart="true"
                         android:contentDescription="@string/cancel"
@@ -232,7 +232,6 @@
                 android:layout_centerHorizontal="true"/>
         </LinearLayout>
 
-
     </ScrollView>
     <!--<Button-->
         <!--android:id="@+id/save"-->
@@ -249,7 +248,5 @@
         <!--android:textAllCaps="false"-->
         <!--android:textColor="@color/colorIcons"-->
         <!--android:textSize="14sp" />-->
-
-
 
 </RelativeLayout>

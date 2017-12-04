@@ -213,16 +213,18 @@ public class DiscoverFragment extends BaseFragment {
                     .enqueue(new Callback<LandingPosts>() {
                         @Override
                         public void onResponse(Call<LandingPosts> call, Response<LandingPosts> response) {
-                            if (response.code() == 200) {
-                                reference.get().landingPosts.getMostPopular().addAll(response.body().getMostPopular());
-                                reference.get().landingPosts.getUserInterests().addAll(response.body().getUserInterests());
-                                reference.get().landingPosts.getTrendingCategories().addAll(response.body().getTrendingCategories());
-                                reference.get().landingPosts.getMyInterests().putAll(response.body().getMyInterests());
-                                reference.get().notifyLandingPostsDataSetChanged();
-                            } else {
-                                Log.e("GetDiscoverLandingPosts", response.code() + "_" + response.message());
-                                reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
-                                        true);
+                            if (reference.get().isAdded()) {
+                                if (response.code() == 200) {
+                                    reference.get().landingPosts.getMostPopular().addAll(response.body().getMostPopular());
+                                    reference.get().landingPosts.getUserInterests().addAll(response.body().getUserInterests());
+                                    reference.get().landingPosts.getTrendingCategories().addAll(response.body().getTrendingCategories());
+                                    reference.get().landingPosts.getMyInterests().putAll(response.body().getMyInterests());
+                                    reference.get().notifyLandingPostsDataSetChanged();
+                                } else {
+                                    Log.e("GetDiscoverLandingPosts", response.code() + "_" + response.message());
+                                    reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
+                                            true);
+                                }
                             }
                         }
 
@@ -230,7 +232,8 @@ public class DiscoverFragment extends BaseFragment {
                         public void onFailure(Call<LandingPosts> call, Throwable t) {
                             if (reference.get().isAdded()) {
                                 Log.e("GetDiscoverLandingPosts", t.getMessage());
-                                reference.get().showErrorMessage(t.getMessage(), true);
+                                reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
+                                        true);
                             }
                         }
                     });
@@ -254,22 +257,24 @@ public class DiscoverFragment extends BaseFragment {
                     .enqueue(new Callback<PostList>() {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (response.code() == 200) {
-                                if (response.body().getPosts().isEmpty()) {
-                                    reference.get().featuredPostsContainer.setVisibility(GONE);
-                                    reference.get().featuredVideosList.setVisibility(GONE);
-                                    reference.get().noFeaturedVideos.setVisibility(VISIBLE);
+                            if (reference.get().isAdded()) {
+                                if (response.code() == 200) {
+                                    if (response.body().getPosts().isEmpty()) {
+                                        reference.get().featuredPostsContainer.setVisibility(GONE);
+                                        reference.get().featuredVideosList.setVisibility(GONE);
+                                        reference.get().noFeaturedVideos.setVisibility(VISIBLE);
+                                    } else {
+                                        reference.get().featuredPostsContainer.setVisibility(VISIBLE);
+                                        reference.get().featuredVideosList.setVisibility(VISIBLE);
+                                        reference.get().noFeaturedVideos.setVisibility(GONE);
+                                        reference.get().featuredPostsList.addAll(response.body().getPosts());
+                                        reference.get().featuredVideosList.getAdapter().notifyDataSetChanged();
+                                    }
                                 } else {
-                                    reference.get().featuredPostsContainer.setVisibility(VISIBLE);
-                                    reference.get().featuredVideosList.setVisibility(VISIBLE);
-                                    reference.get().noFeaturedVideos.setVisibility(GONE);
-                                    reference.get().featuredPostsList.addAll(response.body().getPosts());
-                                    reference.get().featuredVideosList.getAdapter().notifyDataSetChanged();
+                                    Log.e("GetFeaturedPosts", response.code() + "_" + response.message());
+                                    reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
+                                            false);
                                 }
-                            } else {
-                                Log.e("GetFeaturedPosts", response.code() + "_" + response.message());
-                                reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
-                                        false);
                             }
                         }
 
@@ -277,7 +282,8 @@ public class DiscoverFragment extends BaseFragment {
                         public void onFailure(Call<PostList> call, Throwable t) {
                             if (reference.get().isAdded()) {
                                 Log.e("GetFeaturedPosts", t.getMessage());
-                                reference.get().showErrorMessage(t.getMessage(), false);
+                                reference.get().showErrorMessage(reference.get().getString(R.string.something_went_wrong),
+                                        false);
                             }
                         }
                     });

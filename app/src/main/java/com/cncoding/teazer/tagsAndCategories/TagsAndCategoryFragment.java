@@ -1,6 +1,7 @@
 package com.cncoding.teazer.tagsAndCategories;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -8,34 +9,48 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
+import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 
 public class TagsAndCategoryFragment extends Fragment {
 
     private static final String ACTION = "action";
     public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
     public static final String ACTION_TAGS_FRAGMENT = "tagsFragment";
+    private static final String SELECTED_DATA = "selectedData";
 //    private static final int CATEGORIES_LIMIT = 5;
 
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.headerTextView) ProximaNovaRegularTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_done) FloatingActionButton doneBtn;
@@ -48,16 +63,18 @@ public class TagsAndCategoryFragment extends Fragment {
     private ArrayList<MiniProfile> circles;
     private TagsAdapter tagsAdapter;
     private TagsAndCategoriesInteractionListener listener;
+    private boolean nextPage;
+    private String selectedData;
 
     public TagsAndCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static TagsAndCategoryFragment newInstance(String action, ArrayList<? extends Parcelable> args) {
+    public static TagsAndCategoryFragment newInstance(String action, String selectedData) {
         TagsAndCategoryFragment fragment = new TagsAndCategoryFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, action);
-        bundle.putParcelableArrayList(action, args);
+        bundle.putString(SELECTED_DATA, selectedData);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -67,19 +84,10 @@ public class TagsAndCategoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             action = getArguments().getString(ACTION);
-            if (action != null) {
-                switch (action) {
-                    case ACTION_TAGS_FRAGMENT:
-                        circles = getArguments().getParcelableArrayList(ACTION_TAGS_FRAGMENT);
-                        break;
-                    case ACTION_CATEGORIES_FRAGMENT:
-                        categories = getArguments().getParcelableArrayList(ACTION_CATEGORIES_FRAGMENT);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            selectedData = getArguments().getString(SELECTED_DATA);
         }
+        categories = new ArrayList<>();
+        circles = new ArrayList<>();
     }
 
     @Override
@@ -89,6 +97,24 @@ public class TagsAndCategoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tags_and_categories, container, false);
         ButterKnife.bind(this, rootView);
         prepareRecyclerView();
+        switch (action) {
+            case ACTION_CATEGORIES_FRAGMENT:
+                recyclerView.setHasFixedSize(true);
+                getCategories();
+                break;
+            case ACTION_TAGS_FRAGMENT:
+                EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(
+                        (LinearLayoutManager) recyclerView.getLayoutManager()) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                        if (nextPage)
+                            getMyCircle(page);
+                    }
+                };
+                recyclerView.addOnScrollListener(scrollListener);
+                getMyCircle(1);
+                break;
+        }
         return rootView;
     }
 
@@ -97,18 +123,12 @@ public class TagsAndCategoryFragment extends Fragment {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 headerTextView.setText(R.string.tag_your_friends);
-                if (circles.size() > 0) {
-                    tagsAdapter = new TagsAdapter(circles, this);
-                    recyclerView.setAdapter(tagsAdapter);
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                    doneBtn.setVisibility(View.GONE);
-                    noFriendsTextView.setVisibility(VISIBLE);
-                }
+                tagsAdapter = new TagsAdapter(circles, this, selectedData);
+                recyclerView.setAdapter(tagsAdapter);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
-                categoriesAdapter = new CategoriesAdapter(categories, this, getContext());
+                categoriesAdapter = new CategoriesAdapter(categories, this, selectedData);
                 recyclerView.setAdapter(categoriesAdapter);
                 break;
             default:
@@ -127,20 +147,82 @@ public class TagsAndCategoryFragment extends Fragment {
         });
     }
 
+    private void getCategories() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+                if (response.code() == 200) {
+                    ArrayList<Category> tempList = response.body();
+                    if (!tempList.isEmpty()) {
+                        categories.addAll(tempList);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        doneBtn.setVisibility(VISIBLE);
+                    } else {
+                        doneBtn.setVisibility(View.GONE);
+                        noFriendsTextView.setText(R.string.error_fetchng_categories);
+                        noFriendsTextView.setVisibility(VISIBLE);
+                    }
+                } else {
+                    doneBtn.setVisibility(View.GONE);
+                    noFriendsTextView.setText(R.string.error_fetchng_categories);
+                    noFriendsTextView.setVisibility(VISIBLE);
+//                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+                logTheError("getCategories", t.getMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void getMyCircle(final int page) {
+        ApiCallingService.Friends.getMyCircle(page, getContext()).enqueue(new Callback<CircleList>() {
+            @Override
+            public void onResponse(Call<CircleList> call, Response<CircleList> response) {
+                if (response.code() == 200) {
+                    CircleList circleList = response.body();
+                    if (!circleList.getCircles().isEmpty()) {
+                        nextPage = circleList.isNextPage();
+                        circles.addAll(circleList.getCircles());
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        doneBtn.setVisibility(VISIBLE);
+                    } else {
+                        doneBtn.setVisibility(View.GONE);
+                        noFriendsTextView.setVisibility(VISIBLE);
+                    }
+                } else {
+                    doneBtn.setVisibility(View.GONE);
+                    noFriendsTextView.setText(getErrorMessage(response.errorBody()));
+                    noFriendsTextView.setVisibility(VISIBLE);
+//                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<CircleList> call, Throwable t) {
+                logTheError("getMyCircle", t.getMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
     @OnClick(R.id.tags_categories_done) public void getResult() {
         try {
             switch (action) {
                 case ACTION_TAGS_FRAGMENT:
                     if (circles != null && circles.size() > 0 && tagsAdapter != null) {
-                        listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                                getSelectedTags(tagsAdapter.getSelectedTags()), null);
+                        new ParseResult(this, ACTION_TAGS_FRAGMENT).execute(tagsAdapter.getSelectedTags());
                     }
                     break;
                 case ACTION_CATEGORIES_FRAGMENT:
                     if (categories != null && categories.size() > 0) {
-                        listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                                getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                                getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()));
+                        new ParseResult(this, ACTION_CATEGORIES_FRAGMENT).execute(categoriesAdapter.getSelectedCategories());
                     }
                     break;
                 default:
@@ -151,10 +233,81 @@ public class TagsAndCategoryFragment extends Fragment {
         }
     }
 
-    private String getSelectedTags(SparseArray<MiniProfile> sparseArray) {
+    private static class ParseResult extends AsyncTask<SparseArray<? extends Parcelable>, Void, String[]> {
+
+        private WeakReference<TagsAndCategoryFragment> reference;
+        private final String action;
+
+        ParseResult(TagsAndCategoryFragment context, String action) {
+            reference = new WeakReference<>(context);
+            this.action = action;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected String[] doInBackground(SparseArray<? extends Parcelable>[] sparseArrays) {
+            switch (action) {
+                case ACTION_TAGS_FRAGMENT:
+                    SparseArray<MiniProfile> tagsSparseArray = (SparseArray<MiniProfile>) sparseArrays[0];
+                    return new String[] {
+                            reference.get().getSelectedTagsToShow(tagsSparseArray),
+                            reference.get().getSelectedTagsToSend(tagsSparseArray),
+                            String.valueOf(reference.get().getCount(tagsSparseArray))
+                    };
+                case ACTION_CATEGORIES_FRAGMENT:
+                    SparseArray<Category> categorySparseArray = (SparseArray<Category>) sparseArrays[0];
+                    return new String[] {
+                            reference.get().getSelectedCategoriesToShow(categorySparseArray),
+                            reference.get().getSelectedCategoriesToSend(categorySparseArray),
+                            String.valueOf(reference.get().getCount(categorySparseArray))
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            try {
+                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], Integer.parseInt(strings[2]));
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                if (e instanceof NumberFormatException)
+                    Log.e("NumberFormatException", "Trying to parse" + strings[2]);
+            }
+        }
+    }
+
+    private int getCount(SparseArray<? extends Parcelable> sparseArray) {
+        return sparseArray.size();
+    }
+
+    private String getSelectedTagsToShow(SparseArray<MiniProfile> sparseArray) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < sparseArray.size(); i++) {
             stringBuilder.append(sparseArray.valueAt(i).getFirstName());
+            if (i < sparseArray.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private String getSelectedTagsToSend(SparseArray<MiniProfile> sparseArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            stringBuilder.append(sparseArray.valueAt(i).getUserId());
+            if (i < sparseArray.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private String getSelectedCategoriesToShow(SparseArray<Category> sparseArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            stringBuilder.append(sparseArray.valueAt(i).getCategoryName());
             if (i < sparseArray.size() - 1) {
                 stringBuilder.append(", ");
             }
@@ -171,17 +324,6 @@ public class TagsAndCategoryFragment extends Fragment {
             }
         }
         return string.toString();
-    }
-
-    private String getSelectedCategoriesToShow(SparseArray<Category> sparseArray) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < sparseArray.size(); i++) {
-            stringBuilder.append(sparseArray.valueAt(i).getCategoryName());
-            if (i < sparseArray.size() - 1) {
-                stringBuilder.append(", ");
-            }
-        }
-        return stringBuilder.toString();
     }
 
     public void changeVisibility(int visibility) {
@@ -218,6 +360,6 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     public interface TagsAndCategoriesInteractionListener {
-        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend);
+        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count);
     }
 }

@@ -11,9 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -27,7 +25,6 @@ import com.cncoding.teazer.model.profile.reaction.reactionpost.ReactionPost;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.Pojos;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,6 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 09/11/17.
  */
 
@@ -145,7 +143,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     list.remove(i);
                                     break;
                                 case R.id.edit_post:
-
                                     Intent intent=new Intent(context, EditPost.class);
                                     intent.putExtra("PostDetail",cont);
                                     context.startActivity(intent);
@@ -337,8 +334,4 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
             public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
         }
-
-
-
-
     }

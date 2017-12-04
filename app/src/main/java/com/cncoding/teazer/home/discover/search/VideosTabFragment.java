@@ -36,7 +36,6 @@ public class VideosTabFragment extends BaseFragment {
     @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
 
     private Call<VideosList> videosListCall;
-    private Callback<VideosList> videosListCallback;
     private ArrayList<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
@@ -66,7 +65,7 @@ public class VideosTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         videosList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(getContext(), true, null, videosList);
+        adapter = new DiscoverSearchAdapter(this, true, null, videosList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -75,7 +74,7 @@ public class VideosTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    getVideos(page, searchTerm);
+                    getVideos(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -83,7 +82,8 @@ public class VideosTabFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getVideos(1, searchTerm);
+                getVideos(1);
+                scrollListener.resetState();
             }
         });
 
@@ -93,11 +93,27 @@ public class VideosTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (searchTerm != null && !searchTerm.equals("")) {
-            if (videosListCallback == null)
-                videosListCallback = new Callback<VideosList>() {
-                    @Override
-                    public void onResponse(Call<VideosList> call, Response<VideosList> response) {
+        if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
+            getVideos(1);
+        } else {
+            noPosts.setVisibility(View.VISIBLE);
+            noPosts.setText(R.string.search_for_videos);
+        }
+    }
+
+    private void getVideos(final int page) {
+        if (page == 1) {
+            scrollListener.resetState();
+            videosList.clear();
+        }
+
+        videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
+        
+        if (!videosListCall.isExecuted())
+            videosListCall.enqueue(new Callback<VideosList>() {
+                @Override
+                public void onResponse(Call<VideosList> call, Response<VideosList> response) {
+                    if (isAdded()) {
                         if (response.code() == 200) {
                             is_next_page = response.body().isNextPage();
                             if (response.body().getVideos().size() > 0) {
@@ -107,44 +123,27 @@ public class VideosTabFragment extends BaseFragment {
                                 videosList.addAll(response.body().getVideos());
                                 adapter.notifyDataSetChanged();
                             } else {
-                                swipeRefreshLayout.setVisibility(View.GONE);
-                                noPosts.setText(R.string.no_videos_match_your_search_criteria);
-                                noPosts.setVisibility(View.VISIBLE);
+                                if (page == 1 && videosList.isEmpty()) {
+                                    swipeRefreshLayout.setVisibility(View.GONE);
+                                    noPosts.setText(R.string.no_videos_match_your_search_criteria);
+                                    noPosts.setVisibility(View.VISIBLE);
+                                }
                             }
                         } else {
                             Log.e("videosListCallback", response.code() + "_" + response.message());
                         }
                         swipeRefreshLayout.setRefreshing(false);
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<VideosList> call, Throwable t) {
-                        if (isAdded()) {
-                            Log.e("videosListCallback", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                @Override
+                public void onFailure(Call<VideosList> call, Throwable t) {
+                    if (isAdded()) {
+                        Log.e("videosListCallback", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
+                        swipeRefreshLayout.setRefreshing(false);
                     }
-                };
-
-            if (videosList != null && videosList.isEmpty()) {
-                getVideos(1, searchTerm);
-            }
-        } else {
-            noPosts.setVisibility(View.VISIBLE);
-            noPosts.setText(R.string.search_for_videos);
-        }
-    }
-
-    private void getVideos(int page, String searchTerm) {
-        if (page == 1) {
-            scrollListener.resetState();
-            videosList.clear();
-        }
-
-        videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
-        
-        if (!videosListCall.isExecuted())
-            videosListCall.enqueue(videosListCallback);
+                }
+            });
     }
 
     @Override
