@@ -276,4 +276,5 @@
     <string name="share_on_twitter">&#160;&#160;Share on twitter</string>
     <string name="error_fetchng_categories">Error fetching categories, please try again</string>
     <string name="error_getting_tagged_users">Error fetching tagged users, please try again</string>
+    <string name="resetting_password_failed">Resetting password failed or wrong OTP entered</string>
 </resources>

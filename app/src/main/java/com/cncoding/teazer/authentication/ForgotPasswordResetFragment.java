@@ -162,14 +162,13 @@ public class ForgotPasswordResetFragment extends Fragment {
                                     }
                                 }, 1000);
                             } else {
-                                String resetPasswordStatus = "Resetting password failed or wrong OTP entered";
+                                String resetPasswordStatus = getString(R.string.resetting_password_failed);
                                 resetPasswordStatusView.setText(resetPasswordStatus);
                                 resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                         0, R.drawable.ic_error, 0, 0);
                             }
                         } else {
-                            String resetPasswordStatus = "Resetting password failed!\n" + getErrorMessage(response.errorBody());
-                                    resetPasswordStatusView.setText(resetPasswordStatus);
+                                    resetPasswordStatusView.setText(getString(R.string.resetting_password_failed));
                             resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                     0, R.drawable.ic_error, 0, 0);
                         }
