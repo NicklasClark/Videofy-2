@@ -108,6 +108,7 @@ public class ProfileFragment extends BaseFragment {
     private static final int RC_REQUEST_STORAGE = 1001;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    PublicProfile userProfile;
 
     public ProfileFragment() {
     }
@@ -126,6 +127,7 @@ public class ProfileFragment extends BaseFragment {
 
 
     @Override
+
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -133,6 +135,7 @@ public class ProfileFragment extends BaseFragment {
 
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
+
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -146,7 +149,6 @@ public class ProfileFragment extends BaseFragment {
         coordinatorLayout = view.findViewById(R.id.layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
-
 
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,15 +174,12 @@ public class ProfileFragment extends BaseFragment {
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mListener.onFollowerListListener(String.valueOf(0),"User");
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 mListener.onFollowingListListener(String.valueOf(0),"User");
             }
         });
@@ -225,6 +224,8 @@ public class ProfileFragment extends BaseFragment {
             case R.id.action_settings:
               Intent intent=new Intent(context, Settings.class);
                         intent.putExtra("AccountType",String.valueOf(accountType));
+                        intent.putExtra("UserProfile",userProfile);
+
               startActivity(intent);
             case R.id.action_profile_block:
                // openBlockUser(followerfollowingid);
@@ -242,7 +243,7 @@ public class ProfileFragment extends BaseFragment {
             public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
 
                 try {
-                    PublicProfile userProfile = response.body().getUserProfile();
+                    userProfile = response.body().getUserProfile();
                     firstname = userProfile.getFirstName();
                     lastname = userProfile.getLastName();
                     username = userProfile.getUserName();

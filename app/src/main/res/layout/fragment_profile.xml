@@ -163,7 +163,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/bulletslayout"
-                                            android:layout_marginBottom="5dp"
+                                            android:layout_marginBottom="8dp"
                                             android:lineSpacingExtra="2dp"
                                             android:layout_marginTop="5dp"
                                             android:layout_marginRight="20dp"
@@ -176,7 +176,6 @@
 
                                         <Button
                                             android:id="@+id/btnshare"
-
                                             android:layout_width="72dp"
                                             android:layout_height="26dp"
                                             android:layout_below="@+id/hobby"

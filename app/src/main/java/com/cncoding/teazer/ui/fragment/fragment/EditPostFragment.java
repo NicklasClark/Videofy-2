@@ -274,8 +274,14 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             }
         }
 
+
         selectedCategories = categoryName.toString();
         uploadCategoriesText.setText(selectedCategories);
+
+
+       // uploadCategoriesText.setText(categoryName.toString());
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
