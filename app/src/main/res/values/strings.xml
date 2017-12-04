@@ -277,4 +277,8 @@
     <string name="error_fetchng_categories">Error fetching categories, please try again</string>
     <string name="error_getting_tagged_users">Error fetching tagged users, please try again</string>
     <string name="resetting_password_failed">Resetting password failed or wrong OTP entered</string>
+    <string name="hiding_post">Hiding post</string>
+    <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, only you will be able to see this post.</string>
+    <string name="yes_hide">Yes, hide</string>
+    <string name="video_hide_successful">The video was hidden successfully\nOnly you are able to view it now</string>
 </resources>

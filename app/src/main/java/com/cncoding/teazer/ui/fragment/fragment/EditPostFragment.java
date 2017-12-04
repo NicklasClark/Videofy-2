@@ -181,6 +181,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     StringBuilder categoryId;
     StringBuilder categoryName;
     String location;
+    private String selectedCategories;
 
 
     public EditPostFragment() {
@@ -267,15 +268,14 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             categoryName.append(list.get(i).getCategoryName());
             categoryId.append(list.get(i).getCategoryId());
 
-            if (i == list.size() - 1) {
-            } else {
+            if (i != list.size() - 1) {
                 categoryName.append(",");
                 categoryId.append(",");
             }
         }
 
-
-        uploadCategoriesText.setText(categoryName.toString());
+        selectedCategories = categoryName.toString();
+        uploadCategoriesText.setText(selectedCategories);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -553,7 +553,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
                         mListener.onUploadInteraction(false,
-                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, getSelectedCategoriesToShow(response.body())),
+                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedCategories),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
                         Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
@@ -730,6 +730,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 selectedCategoriesToSend = resultToSend;
+                selectedCategories = resultToShow;
                 uploadCategoriesText.setText(resultToShow);
                 break;
         }

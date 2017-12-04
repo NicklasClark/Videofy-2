@@ -131,7 +131,8 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
 
-
+        tabLayout = view.findViewById(R.id.sliding_tabs);
+        viewPager = view.findViewById(R.id.viewpager);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
         _creations = view.findViewById(R.id.creations);
@@ -198,16 +199,14 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
-        tabLayout = view.findViewById(R.id.sliding_tabs);
-        viewPager = view.findViewById(R.id.viewpager);
-
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+        tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
         getParentActivity().updateToolbarTitle("Profile");
         getParentActivity().showAppBar();
