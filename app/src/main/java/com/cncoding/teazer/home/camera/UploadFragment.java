@@ -88,7 +88,6 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
-import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEARBY_PLACE_AUTOCOMPLETE_ACTION;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
@@ -569,9 +568,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             case TURN_ON_LOCATION_ACTION:
                 createLocationRequest();
                 break;
-            case NEARBY_PLACE_AUTOCOMPLETE_ACTION:
-//                launchPlacePicker();
-                break;
+//            case NEARBY_PLACE_AUTOCOMPLETE_ACTION:
+////                launchPlacePicker();
+//                break;
             default:
                 break;
         }
