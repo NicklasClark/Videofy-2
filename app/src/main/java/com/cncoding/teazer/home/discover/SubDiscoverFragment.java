@@ -219,20 +219,24 @@ public class SubDiscoverFragment extends BaseFragment {
                     .enqueue(new Callback<PostList>() {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (response.code() == 200) {
-                                reference.get().is_next_page = response.body().isNextPage();
-                                if (!response.body().getPosts().isEmpty()) {
-                                    reference.get().postDetailsArrayList.addAll(response.body().getPosts());
-                                    reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                            if (reference.get().isAdded()) {
+                                if (response.code() == 200) {
+                                    reference.get().is_next_page = response.body().isNextPage();
+                                    if (!response.body().getPosts().isEmpty()) {
+                                        reference.get().postDetailsArrayList.addAll(response.body().getPosts());
+                                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                                    } else
+                                        reference.get().noPosts.setVisibility(View.VISIBLE);
                                 } else
-                                    reference.get().noPosts.setVisibility(View.VISIBLE);
-                            } else
-                                Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+                                    Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<PostList> call, Throwable t) {
-                            Log.e("FAIL! GetTrendingVideos", t.getMessage());
+                            if (reference.get().isAdded()) {
+                                Log.e("FAIL! GetTrendingVideos", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                            }
                         }
                     });
             return null;
@@ -267,20 +271,27 @@ public class SubDiscoverFragment extends BaseFragment {
                     .enqueue(new Callback<PostList>() {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (response.code() == 200) {
-                                reference.get().is_next_page = response.body().isNextPage();
-                                if (!response.body().getPosts().isEmpty()) {
-                                    reference.get().postDetailsArrayList.addAll(response.body().getPosts());
-                                    reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                            if (reference.get().isAdded()) {
+                                if (response.code() == 200) {
+                                    PostList postList = response.body();
+                                    if (postList != null) {
+                                        reference.get().is_next_page = postList.isNextPage();
+                                        if (!postList.getPosts().isEmpty()) {
+                                            reference.get().postDetailsArrayList.addAll(postList.getPosts());
+                                            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                                        } else
+                                            reference.get().noPosts.setVisibility(View.VISIBLE);
+                                    }
                                 } else
-                                    reference.get().noPosts.setVisibility(View.VISIBLE);
-                            } else
-                                Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+                                    Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<PostList> call, Throwable t) {
-                            Log.e("FAIL! GetTrendingVideos", t.getMessage());
+                            if (reference.get().isAdded()) {
+                                Log.e("FAIL! GetTrendingVideos", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                            }
                         }
                     });
             return null;

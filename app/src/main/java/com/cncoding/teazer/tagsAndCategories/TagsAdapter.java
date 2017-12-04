@@ -1,6 +1,5 @@
 package com.cncoding.teazer.tagsAndCategories;
 
-import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -30,15 +29,16 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     private ArrayList<MiniProfile> circles;
     private Fragment fragment;
+    private String selectedTagsString;
     private SparseBooleanArray selectedTagsArray;
-    private SparseArray<MiniProfile> selectedTags;
+    private SparseArray<MiniProfile> tagsSparseArray;
 
-    @SuppressLint("UseSparseArrays")
-    TagsAdapter(ArrayList<MiniProfile> circles, Fragment fragment) {
+    TagsAdapter(ArrayList<MiniProfile> circles, Fragment fragment, String selectedTagsString) {
         this.circles = circles;
         this.fragment = fragment;
+        this.selectedTagsString = selectedTagsString;
         selectedTagsArray = new SparseBooleanArray();
-        selectedTags = new SparseArray<>();
+        this.tagsSparseArray = new SparseArray<>();
     }
 
     @Override
@@ -54,27 +54,33 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         String name = circle.getFirstName() + " " + circle.getLastName();
 
         holder.nameView.setText(name);
-        if (circle.hasProfileMedia()) {
-            Glide.with(fragment)
-                    .load(circle.getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade(400)
-                    .into(holder.image);
-        }
 
-        holder.nameView.setChecked(selectedTagsArray.get(holder.getAdapterPosition()));
+        Glide.with(fragment)
+                .load(circle.hasProfileMedia() ? circle.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .into(holder.image);
+
+        holder.nameView.setChecked(selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
+        if (selectedTagsString == null || selectedTagsString.isEmpty())
+            holder.nameView.setChecked(selectedTagsArray.get(position));
+
+        if (holder.nameView.isChecked()) {
+            tagsSparseArray.put(holder.getAdapterPosition(), circle);
+        }
+        else tagsSparseArray.delete(holder.getAdapterPosition());
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean isChecked = !holder.nameView.isChecked();
-                selectedTagsArray.put(holder.getAdapterPosition(), isChecked);
+//                selectedTagsArray.put(holder.getAdapterPosition(), isChecked);
                 holder.nameView.setChecked(isChecked);
                 ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
                 if (isChecked) {
-                    selectedTags.put(holder.getAdapterPosition(), circle);
+                    tagsSparseArray.put(holder.getAdapterPosition(), circle);
                 }
-                else selectedTags.delete(holder.getAdapterPosition());
+                else tagsSparseArray.delete(holder.getAdapterPosition());
             }
         });
     }
@@ -97,6 +103,6 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
     SparseArray<MiniProfile> getSelectedTags() {
-        return selectedTags;
+        return tagsSparseArray;
     }
 }

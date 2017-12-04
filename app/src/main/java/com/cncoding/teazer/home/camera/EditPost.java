@@ -547,7 +547,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                     if (response.body() != null) {
                         toggleUpBtnVisibility(VISIBLE);
                         mListener.onSaveEditPost(false,
-                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT),
+                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, null),
                                 TAG_INTERESTS_FRAGMENT);
                     } else
                         Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
@@ -586,7 +586,7 @@ public class EditPost extends Fragment implements EasyPermissions.PermissionCall
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
                             mListener.onSaveEditPost(false,
-                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT),
+                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, null),
                                     TAG_TAGS_FRAGMENT);
                             break;
                         default:

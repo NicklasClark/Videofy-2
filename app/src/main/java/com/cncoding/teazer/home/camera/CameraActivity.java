@@ -307,23 +307,27 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces) {
+    public void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData) {
         toggleUpBtnVisibility(VISIBLE);
         upBtn.setImageResource(R.drawable.ic_previous_dark);
         if (tag != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (tag) {
                 case TAG_CATEGORIES_FRAGMENT:
-                    fragmentTransaction.replace(R.id.uploading_container, TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT), tag);
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedData), tag);
                     break;
                 case TAG_TAGS_FRAGMENT:
-                    fragmentTransaction.replace(R.id.uploading_container, TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT), tag);
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData), tag);
                     break;
                 case TAG_NEARBY_PLACES:
-                    fragmentTransaction.replace(R.id.uploading_container, NearbyPlacesList.newInstance(googlePlaces), tag);
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            NearbyPlacesList.newInstance(googlePlaces), tag);
                     break;
                 case TAG_NULL_NEARBY_PLACES:
-                    fragmentTransaction.replace(R.id.uploading_container, NearbyPlacesList.newInstance(null), tag);
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            NearbyPlacesList.newInstance(null), tag);
                     break;
                 default:
                     break;

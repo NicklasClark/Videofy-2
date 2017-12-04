@@ -138,6 +138,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private int tagCount;
     private int categoryCount;
     String selectedCategoriesToSend = null;
+    String selectedTagsToSend = null;
+    String selectedCategoriesToShow = null;
+    String selectedTagsToShow = null;
     private boolean isRequestingLocationUpdates;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
@@ -463,7 +466,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnClick(R.id.share_on_twitter) public void shareOnTwitterAction() {
-        checkAction("twitter", facebookShareBtn);
+        checkAction("twitter", twitterShareBtn);
     }
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
@@ -486,7 +489,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @OnTouch(R.id.video_upload_tag_friends) public boolean getMyFollowings(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             hideKeyboard(activity, view);
-            mListener.onUploadInteraction(TAG_TAGS_FRAGMENT, null);
+            mListener.onUploadInteraction(TAG_TAGS_FRAGMENT, null, selectedTagsToShow);
             tagFriendsBtn.clearFocus();
             return true;
         }
@@ -496,7 +499,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @OnTouch(R.id.video_upload_categories) public boolean getCategories(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             hideKeyboard(activity, view);
-            mListener.onUploadInteraction(TAG_CATEGORIES_FRAGMENT, null);
+            mListener.onUploadInteraction(TAG_CATEGORIES_FRAGMENT, null, selectedCategoriesToShow);
             uploadCategoriesBtn.clearFocus();
             return true;
         }
@@ -582,11 +585,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagCount = count;
+                selectedTagsToShow = resultToShow;
+                selectedTagsToSend = resultToSend;
                 tagFriendsBtn.setText(resultToShow);
                 setBadge(tagFriendsBadge, count);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
+                selectedCategoriesToShow = resultToShow;
                 selectedCategoriesToSend = resultToSend;
                 uploadCategoriesBtn.setText(resultToShow);
                 setBadge(uploadCategoriesBadge, count);
@@ -693,7 +699,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
             reference.get().toggleInteraction(true);
-            reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces);
+            reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
         }
     }
 
@@ -785,7 +791,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     private void showEmptyList() {
-        mListener.onUploadInteraction(TAG_NULL_NEARBY_PLACES, null);
+        mListener.onUploadInteraction(TAG_NULL_NEARBY_PLACES, null, null);
     }
 
     private void stopLocationUpdates() {
@@ -822,6 +828,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     public interface OnUploadFragmentInteractionListener {
-        void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces);
+        void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
     }
 }

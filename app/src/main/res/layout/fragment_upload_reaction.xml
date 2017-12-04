@@ -80,7 +80,6 @@
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
-                    android:padding="@dimen/padding_default"
                     android:id="@+id/video_upload_title"
                     android:hint="@string/title"
                     android:maxLength="180"
@@ -93,8 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp"
-                android:paddingTop="14dp">
+                android:layout_marginEnd="14dp">
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                     android:id="@+id/video_upload_location"
@@ -127,8 +125,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
                 android:visibility="gone">
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
@@ -163,8 +159,6 @@
                 android:layout_marginBottom="36dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
                 android:visibility="gone">
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
@@ -194,8 +188,11 @@
                 android:text="@string/share_on_facebook"
                 android:layout_marginEnd="14dp"
                 app:drawableStartCompat="@drawable/ic_facebook"
+                app:drawableEndCompat="@drawable/ic_unchecked"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/padding_thin"
                 android:textColor="@color/colorSecondary_text"
                 android:textSize="@dimen/text_size_content"
                 android:gravity="center_vertical"/>
@@ -215,8 +212,11 @@
                 android:text="@string/share_on_twitter"
                 android:layout_marginEnd="14dp"
                 app:drawableStartCompat="@drawable/ic_twitter"
+                app:drawableEndCompat="@drawable/ic_unchecked"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/padding_thin"
                 android:textColor="@color/colorSecondary_text"
                 android:textSize="@dimen/text_size_content"
                 android:gravity="center_vertical"/>

@@ -352,7 +352,7 @@ public class AuthUtils {
                                     }
                                 }, 1000);
                             } else {
-                                Snackbar.make(otpVerifiedTextView, R.string.login_through_otp_error,
+                                Snackbar.make(otpVerifiedTextView, R.string.wrong_otp,
                                         Snackbar.LENGTH_SHORT).show();
                             }
                         } else

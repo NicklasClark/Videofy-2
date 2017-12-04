@@ -1,6 +1,7 @@
 package com.cncoding.teazer.tagsAndCategories;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -44,6 +47,7 @@ public class TagsAndCategoryFragment extends Fragment {
     private static final String ACTION = "action";
     public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
     public static final String ACTION_TAGS_FRAGMENT = "tagsFragment";
+    private static final String SELECTED_DATA = "selectedData";
 //    private static final int CATEGORIES_LIMIT = 5;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -60,15 +64,17 @@ public class TagsAndCategoryFragment extends Fragment {
     private TagsAdapter tagsAdapter;
     private TagsAndCategoriesInteractionListener listener;
     private boolean nextPage;
+    private String selectedData;
 
     public TagsAndCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static TagsAndCategoryFragment newInstance(String action) {
+    public static TagsAndCategoryFragment newInstance(String action, String selectedData) {
         TagsAndCategoryFragment fragment = new TagsAndCategoryFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, action);
+        bundle.putString(SELECTED_DATA, selectedData);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -78,6 +84,7 @@ public class TagsAndCategoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             action = getArguments().getString(ACTION);
+            selectedData = getArguments().getString(SELECTED_DATA);
         }
         categories = new ArrayList<>();
         circles = new ArrayList<>();
@@ -116,12 +123,12 @@ public class TagsAndCategoryFragment extends Fragment {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 headerTextView.setText(R.string.tag_your_friends);
-                tagsAdapter = new TagsAdapter(circles, this);
+                tagsAdapter = new TagsAdapter(circles, this, selectedData);
                 recyclerView.setAdapter(tagsAdapter);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setText(R.string.select_up_to_5_categories);
-                categoriesAdapter = new CategoriesAdapter(categories, this, getContext());
+                categoriesAdapter = new CategoriesAdapter(categories, this, selectedData);
                 recyclerView.setAdapter(categoriesAdapter);
                 break;
             default:
@@ -204,21 +211,18 @@ public class TagsAndCategoryFragment extends Fragment {
         });
     }
 
+    @SuppressWarnings("unchecked")
     @OnClick(R.id.tags_categories_done) public void getResult() {
         try {
             switch (action) {
                 case ACTION_TAGS_FRAGMENT:
                     if (circles != null && circles.size() > 0 && tagsAdapter != null) {
-                        listener.onTagsAndCategoriesInteraction(ACTION_TAGS_FRAGMENT,
-                                getSelectedTags(tagsAdapter.getSelectedTags()), null, getCount(tagsAdapter.getSelectedTags()));
+                        new ParseResult(this, ACTION_TAGS_FRAGMENT).execute(tagsAdapter.getSelectedTags());
                     }
                     break;
                 case ACTION_CATEGORIES_FRAGMENT:
                     if (categories != null && categories.size() > 0) {
-                        listener.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                                getSelectedCategoriesToShow(categoriesAdapter.getSelectedCategories()),
-                                getSelectedCategoriesToSend(categoriesAdapter.getSelectedCategories()),
-                                getCount(categoriesAdapter.getSelectedCategories()));
+                        new ParseResult(this, ACTION_CATEGORIES_FRAGMENT).execute(categoriesAdapter.getSelectedCategories());
                     }
                     break;
                 default:
@@ -229,7 +233,56 @@ public class TagsAndCategoryFragment extends Fragment {
         }
     }
 
-    private String getSelectedTags(SparseArray<MiniProfile> sparseArray) {
+    private static class ParseResult extends AsyncTask<SparseArray<? extends Parcelable>, Void, String[]> {
+
+        private WeakReference<TagsAndCategoryFragment> reference;
+        private final String action;
+
+        ParseResult(TagsAndCategoryFragment context, String action) {
+            reference = new WeakReference<>(context);
+            this.action = action;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected String[] doInBackground(SparseArray<? extends Parcelable>[] sparseArrays) {
+            switch (action) {
+                case ACTION_TAGS_FRAGMENT:
+                    SparseArray<MiniProfile> tagsSparseArray = (SparseArray<MiniProfile>) sparseArrays[0];
+                    return new String[] {
+                            reference.get().getSelectedTagsToShow(tagsSparseArray),
+                            reference.get().getSelectedTagsToSend(tagsSparseArray),
+                            String.valueOf(reference.get().getCount(tagsSparseArray))
+                    };
+                case ACTION_CATEGORIES_FRAGMENT:
+                    SparseArray<Category> categorySparseArray = (SparseArray<Category>) sparseArrays[0];
+                    return new String[] {
+                            reference.get().getSelectedCategoriesToShow(categorySparseArray),
+                            reference.get().getSelectedCategoriesToSend(categorySparseArray),
+                            String.valueOf(reference.get().getCount(categorySparseArray))
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            try {
+                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], Integer.parseInt(strings[2]));
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                if (e instanceof NumberFormatException)
+                    Log.e("NumberFormatException", "Trying to parse" + strings[2]);
+            }
+        }
+    }
+
+    private int getCount(SparseArray<? extends Parcelable> sparseArray) {
+        return sparseArray.size();
+    }
+
+    private String getSelectedTagsToShow(SparseArray<MiniProfile> sparseArray) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < sparseArray.size(); i++) {
             stringBuilder.append(sparseArray.valueAt(i).getFirstName());
@@ -240,19 +293,15 @@ public class TagsAndCategoryFragment extends Fragment {
         return stringBuilder.toString();
     }
 
-    private int getCount(SparseArray<? extends Parcelable> sparseArray) {
-        return sparseArray.size();
-    }
-
-    private String getSelectedCategoriesToSend(SparseArray<Category> sparseArray) {
-        StringBuilder string = new StringBuilder();
+    private String getSelectedTagsToSend(SparseArray<MiniProfile> sparseArray) {
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < sparseArray.size(); i++) {
-            string.append(sparseArray.valueAt(i).getCategoryId());
+            stringBuilder.append(sparseArray.valueAt(i).getUserId());
             if (i < sparseArray.size() - 1) {
-                string.append(",");
+                stringBuilder.append(", ");
             }
         }
-        return string.toString();
+        return stringBuilder.toString();
     }
 
     private String getSelectedCategoriesToShow(SparseArray<Category> sparseArray) {
@@ -264,6 +313,17 @@ public class TagsAndCategoryFragment extends Fragment {
             }
         }
         return stringBuilder.toString();
+    }
+
+    private String getSelectedCategoriesToSend(SparseArray<Category> sparseArray) {
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            string.append(sparseArray.valueAt(i).getCategoryId());
+            if (i < sparseArray.size() - 1) {
+                string.append(",");
+            }
+        }
+        return string.toString();
     }
 
     public void changeVisibility(int visibility) {

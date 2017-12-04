@@ -38,7 +38,6 @@ public class PeopleTabFragment extends BaseFragment {
     private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;
     private Call<UsersList> usersListCall;
-    private Callback<UsersList> usersListCallback;
     private String searchTerm;
     private boolean isSearchTerm;
 
@@ -69,7 +68,7 @@ public class PeopleTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         usersList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(getContext(), false, usersList, null);
+        adapter = new DiscoverSearchAdapter(this, false, usersList, null);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -77,8 +76,7 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    getUsersList(page, searchTerm, isSearchTerm);
-//                    new GetUsersListToFollow(PeopleTabFragment.this).execute(page);
+                    getUsersList(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -87,8 +85,7 @@ public class PeopleTabFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                getUsersList(1, searchTerm, isSearchTerm);
-//                new GetUsersListToFollow(PeopleTabFragment.this).execute(1);
+                getUsersList(1);
             }
         });
 
@@ -98,32 +95,47 @@ public class PeopleTabFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (usersListCallback == null) {
-            usersListCallback = new Callback<UsersList>() {
+        if (usersList != null && usersList.isEmpty())
+            getUsersList(1);
+    }
+
+    private void getUsersList(final int page) {
+        if (page == 1)
+            usersList.clear();
+
+        usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
+                ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
+
+        if (!usersListCall.isExecuted())
+            usersListCall.enqueue(new Callback<UsersList>() {
                 @Override
                 public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                    if (response.code() == 200) {
-                        UsersList users = response.body();
-                        is_next_page = users.isNextPage();
-                        if (users.getUsers().size() > 0) {
-                            swipeRefreshLayout.setVisibility(View.VISIBLE);
-                            noPosts.setVisibility(View.GONE);
-                            usersList.addAll(users.getUsers());
-                            recyclerView.getRecycledViewPool().clear();
-                            adapter.notifyDataSetChanged();
+                    if (isAdded()) {
+                        if (response.code() == 200) {
+                            UsersList users = response.body();
+                            is_next_page = users.isNextPage();
+                            if (users.getUsers().size() > 0) {
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                noPosts.setVisibility(View.GONE);
+                                usersList.addAll(users.getUsers());
+                                recyclerView.getRecycledViewPool().clear();
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                if (page == 1 && usersList.isEmpty()) {
+                                    swipeRefreshLayout.setVisibility(View.GONE);
+                                    noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+                                    noPosts.setVisibility(View.VISIBLE);
+                                }
+                            }
                         } else {
-                            swipeRefreshLayout.setVisibility(View.GONE);
-                            noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
                             noPosts.setVisibility(View.VISIBLE);
+                            noPosts.setText(R.string.error_fetching_data);
+                            noPosts.setCompoundDrawablesWithIntrinsicBounds(
+                                    0, R.drawable.ic_no_data_placeholder, 0, 0);
+                            Log.e("getUsersListToFollow", response.code() + "_" + response.message());
                         }
-                    } else {
-                        noPosts.setVisibility(View.VISIBLE);
-                        noPosts.setText(R.string.error_fetching_data);
-                        noPosts.setCompoundDrawablesWithIntrinsicBounds(
-                                0, R.drawable.ic_no_data_placeholder, 0, 0);
-                        Log.e("getUsersListToFollow", response.code() + "_" + response.message());
+                        swipeRefreshLayout.setRefreshing(false);
                     }
-                    swipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -133,21 +145,7 @@ public class PeopleTabFragment extends BaseFragment {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
-            };
-        }
-        if (usersList != null && usersList.isEmpty())
-            getUsersList(1, searchTerm, isSearchTerm);
-    }
-
-    private void getUsersList(int page, String searchTerm, boolean isSearchTerm) {
-        if (page == 1)
-            usersList.clear();
-
-        usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
-                ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
-
-        if (!usersListCall.isExecuted())
-            usersListCall.enqueue(usersListCallback);
+            });
     }
 
     @Override

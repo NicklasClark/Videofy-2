@@ -65,6 +65,7 @@ import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.SharedPrefs;
+import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -764,6 +765,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onDiscoverSearchInteraction(boolean isVideosTab, int id) {
+        ViewUtils.hideKeyboard(this, bottomTabLayout);
         if (isVideosTab) {
             ApiCallingService.Posts.getPostDetails(id, this)
                     .enqueue(new Callback<PostDetails>() {
@@ -843,13 +845,17 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public void hideBottomBar() {
-        bottomTabLayout.animate().translationY(100).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(100).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.animate().translationY(100).alpha(0).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(100).alpha(0).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.setVisibility(GONE);
+        cameraButton.setVisibility(GONE);
     }
 
     public void showBottomBar() {
-        bottomTabLayout.animate().translationY(0).alpha(1).setDuration(600).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(0).alpha(1).setDuration(600).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.animate().translationY(0).alpha(1).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        cameraButton.animate().translationY(0).alpha(1).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        bottomTabLayout.setVisibility(VISIBLE);
+        cameraButton.setVisibility(VISIBLE);
     }
 
     @Override
