@@ -234,7 +234,7 @@ public class ProfileFragment extends BaseFragment {
 
               startActivity(intent);
             case R.id.action_profile_block:
-               // openBlockUser(followerfollowingid);
+
         }
         return true;
     }

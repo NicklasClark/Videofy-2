@@ -155,7 +155,7 @@
     <string name="hobby">Photographer,Traveller,Dreamer.</string>
     <string name="user_detail">Follow me to see my creative Videos.</string>
     <string name="invitefriends">Invite Friends</string>
-    <string name="personasettings">PERSONAL SETTINGS</string>
+    <string name="personasettings">Personal Settings</string>
     <string name="changecategories">Change Categories</string>
     <string name="react">&#160;&#160;&#160;React</string>
     <string name="already_exists">Username, Email or Phone Number already exists!\nPlease login instead.</string>
@@ -188,7 +188,7 @@
     <string name="your_details">Your Details</string>
     <string name="edit_profile">Edit profile</string>
     <string name="change_categories">Change Categories</string>
-    <string name="account_settings">ACCOUNT SETTINGS</string>
+    <string name="account_settings">Account settings</string>
     <string name="my_account_info">My Account Info</string>
     <string name="link_accounts">Link Accounts</string>
     <string name="change_password">Change Password</string>
@@ -196,7 +196,7 @@
     <string name="deactivate_account">Deactivate Account</string>
     <string name="account_logout">Logout</string>
 
-    <string name="community">COMMUNITY</string>
+    <string name="community">Community</string>
     <string name="leagal">Leagal</string>
     <string name="my_block_list">My Block List</string>
     <string name="followus_on_instagram">Follow us on Instagram</string>

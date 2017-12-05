@@ -15,6 +15,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
 
@@ -39,6 +40,7 @@ public class FragmentProfileMyReactions extends Fragment {
     Context context;
     List<Reaction>list;
     int page=1;
+    ProximaNovaRegularTextView alert1;
     public static FragmentProfileMyReactions newInstance(int page) {
         return new FragmentProfileMyReactions();
     }
@@ -51,6 +53,8 @@ public class FragmentProfileMyReactions extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_myreactions, container, false);
         context=container.getContext();
         recyclerView=view.findViewById(R.id.recycler_view);
+        alert1=view.findViewById(R.id.alert1);
+
         return view;
     }
     @Override
@@ -67,7 +71,11 @@ public class FragmentProfileMyReactions extends Fragment {
                 if (response.code() == 200) {
                     try {
                         response.body().getReactions();
-                        if (response.body().getReactions() == null) {
+                        if (response.body().getReactions() == null||response.body().getReactions().size()==0) {
+
+                            alert1.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+
 
                         }
                         else {
@@ -105,7 +113,6 @@ public class FragmentProfileMyReactions extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //getReactions();
-        //list.clear();
+
     }
 }
