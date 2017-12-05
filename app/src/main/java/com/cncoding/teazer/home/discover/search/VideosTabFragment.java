@@ -65,7 +65,7 @@ public class VideosTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         videosList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(this, true, null, videosList);
+        adapter = new DiscoverSearchAdapter(getParentActivity(), this, true, null, videosList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

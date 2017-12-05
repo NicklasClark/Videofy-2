@@ -236,7 +236,7 @@ public class BaseBottomBarActivity extends BaseActivity
             if (bundle != null) {
                 int index = bundle.getInt(TAB_INDEX);
                 switchTab(index);
-            }
+            } else switchTab(0);
         } else {
             if (navigationController.getCurrentFragment() instanceof PostsListFragment)
                 switchTab(0);

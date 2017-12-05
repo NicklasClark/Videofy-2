@@ -25,6 +25,7 @@ import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -76,7 +77,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                     public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
                         if (!isFromMemoryCache) {
-                            Animation animation = AnimationUtils.loadAnimation(context, R.anim.float_up);
+                            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
                             animation.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
                                 public void onAnimationStart(Animation animation) {
@@ -108,12 +109,24 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 //                .animate(R.anim.float_up)
                 .into(holder.postThumbnail);
 
-        if (postOwner.hasProfileMedia())
-            Glide.with(context)
-                    .load(postOwner.getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.profilePic);
+        Glide.with(context)
+                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .listener(new RequestListener<Serializable, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        holder.profilePic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
+                .into(holder.profilePic);
 
         holder.caption.setText(postReaction.getReact_title());
         String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
