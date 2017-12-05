@@ -161,7 +161,7 @@ public class ForgotPasswordResetFragment extends AuthFragment {
                                                         Toast.LENGTH_LONG).show();
                                             }
                                         }
-                                    }, 1000);
+                                    }, 2000);
                                 } else {
                                     String resetPasswordStatus = getString(R.string.resetting_password_failed);
                                     resetPasswordStatusView.setText(resetPasswordStatus);
