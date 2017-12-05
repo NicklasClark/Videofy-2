@@ -48,6 +48,9 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @SuppressWarnings("WeakerAccess")
 public class ViewUtils {
 
+    //    private String email;
+    public static final int GALLERY_ACTIVITY_CODE=200;
+    public static final int RESULT_CROP = 400;
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";

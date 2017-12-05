@@ -200,13 +200,14 @@ public class AuthUtils {
     }
 
     public static void performInitialSignup(final SignupFragment2.OnFinalSignupInteractionListener mListener,
-                                            final Pojos.Authorize authorize, final ProximaNovaSemiboldButton signupBtn) {
+                                            final Pojos.Authorize authorize, final ProximaNovaSemiboldButton signupBtn,
+                                            final String picturePath) {
         ApiCallingService.Auth.performSignUp(authorize).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus()) {
-                        mListener.onFinalEmailSignupInteraction(SIGNUP_WITH_EMAIL_ACTION, authorize);
+                        mListener.onFinalEmailSignupInteraction(SIGNUP_WITH_EMAIL_ACTION, authorize, picturePath);
                     } else {
                         showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
@@ -214,7 +215,7 @@ public class AuthUtils {
                                     @Override
                                     public void run() {
                                         if (mListener != null)
-                                            mListener.onFinalEmailSignupInteraction(SIGNUP_FAILED_ACTION, null);
+                                            mListener.onFinalEmailSignupInteraction(SIGNUP_FAILED_ACTION, null, picturePath);
                                     }
                                 }, 2000);
                     }
@@ -233,7 +234,8 @@ public class AuthUtils {
 
     public static void performFinalSignup(final Context context, final Pojos.Authorize verify, final CountDownTimer countDownTimer,
                                           final ProximaNovaRegularTextView otpVerifiedTextView,
-                                          final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
+                                          final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn,
+                                          final String picturePath) {
         ApiCallingService.Auth.verifySignUp(verify)
 
                 .enqueue(new Callback<ResultObject>() {
@@ -246,7 +248,7 @@ public class AuthUtils {
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
                                 SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
                                 ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_tick_circle);
-                                mListener.onOtpInteraction(verify);
+                                mListener.onOtpInteraction(verify, picturePath);
                                 break;
 //                    Username, Email or Phone Number already exists
                             case 200:
@@ -348,7 +350,7 @@ public class AuthUtils {
                                     @Override
                                     public void run() {
                                         if (mListener != null)
-                                            mListener.onOtpInteraction(null);
+                                            mListener.onOtpInteraction(null, null);
                                     }
                                 }, 1000);
                             } else {

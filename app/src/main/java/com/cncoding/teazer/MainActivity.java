@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
@@ -56,13 +55,13 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.utilities.BlurBuilder;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -70,6 +69,9 @@ import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -189,7 +191,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SECOND_SIGNUP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container,
-                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1])), TAG_SECOND_SIGNUP_FRAGMENT);
+                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1]), ((String) args[2])), TAG_SECOND_SIGNUP_FRAGMENT);
                 break;
             case TAG_OTP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
@@ -212,7 +214,13 @@ public class MainActivity extends AppCompatActivity
         hideKeyboard(this, upBtn);
         if (!reverse) {
             setFragment(tag, addToBackStack, null);
-            new Blur(this).execute();
+            Drawable[] backgrounds = {getResources().getDrawable(R.drawable.bg_transparent),
+                    getResources().getDrawable(R.color.colorTranslucentBgMainActivity)};
+            transitionDrawable = new TransitionDrawable(backgrounds);
+            transitionDrawable.setCrossFadeEnabled(true);
+            mainFragmentContainer.setBackground(transitionDrawable);
+            transitionDrawable.startTransition(400);
+//            new Blur(this).execute();
         }
         else {
             mainFragmentContainer.setBackgroundColor(Color.TRANSPARENT);
@@ -223,38 +231,43 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
+//    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
+//
+//        private WeakReference<MainActivity> reference;
+//
+//        Blur(MainActivity context) {
+//            reference = new WeakReference<>(context);
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            if (reference.get().mediaPlayer.isPlaying())
+//                reference.get().mediaPlayer.pause();
+//        }
+//
+//        @Override
+//        protected Bitmap doInBackground(Void... voids) {
+//            Bitmap bitmap = reference.get().welcomeVideo.getBitmap();
+//            return BlurBuilder.blur(reference.get(),
+//                    Bitmap.createBitmap(bitmap,
+//                            bitmap.getWidth() / 5, bitmap.getHeight() / 5,
+//                            bitmap.getWidth() / 3, bitmap.getHeight() / 3));
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Bitmap bitmap) {
+//            Drawable[] backgrounds = {reference.get().getResources().getDrawable(R.drawable.bg_transparent),
+//                    new BitmapDrawable(reference.get().getResources(), bitmap)};
+//            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
+//            reference.get().transitionDrawable.setCrossFadeEnabled(true);
+//            reference.get().mainFragmentContainer.setBackground(reference.get().transitionDrawable);
+//            reference.get().transitionDrawable.startTransition(400);
+//        }
+//    }
 
-        private WeakReference<MainActivity> reference;
-
-        Blur(MainActivity context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if (reference.get().mediaPlayer.isPlaying())
-                reference.get().mediaPlayer.pause();
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... voids) {
-            Bitmap bitmap = reference.get().welcomeVideo.getBitmap();
-            return BlurBuilder.blur(reference.get(),
-                    Bitmap.createBitmap(bitmap,
-                            bitmap.getWidth() / 5, bitmap.getHeight() / 5,
-                            bitmap.getWidth() / 3, bitmap.getHeight() / 3));
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            Drawable[] backgrounds = {reference.get().getResources().getDrawable(R.drawable.bg_transparent),
-                    new BitmapDrawable(reference.get().getResources(), bitmap)};
-            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
-            reference.get().transitionDrawable.setCrossFadeEnabled(true);
-            reference.get().mainFragmentContainer.setBackground(reference.get().transitionDrawable);
-            reference.get().transitionDrawable.startTransition(400);
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -300,13 +313,13 @@ public class MainActivity extends AppCompatActivity
                 startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
-                mediaPlayer.pause();
+//                mediaPlayer.pause();
                 if (facebookProfile != null && facebookData != null) {
                     handleFacebookLogin(facebookProfile, facebookData, button, null);
                 }
                 break;
             case SIGNUP_WITH_GOOGLE_ACTION:
-                mediaPlayer.pause();
+//                mediaPlayer.pause();
                 if (googleAccount != null)
                     handleGoogleSignIn(googleAccount, button, null);
                 break;
@@ -496,14 +509,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOtpInteraction(Authorize verificationDetails) {
+    public void onOtpInteraction(Authorize verificationDetails, String picturePath) {
         if (verificationDetails != null) {
-//            if (isVerified)
                 startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-//            else {
-//                setFragment(TAG_LOGIN_FRAGMENT, true,
-//                        new Object[]{verificationDetails.getEmail(), verificationDetails.getCountryCode(), true});
-//            }
+                new UpdateProfilePic(this).execute(picturePath);
         } else {
 //            if (isVerified)
                 successfullyLoggedIn();
@@ -521,18 +530,45 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInitialEmailSignupInteraction(int action, final Authorize signUpDetails) {
-        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails.getUsername(), signUpDetails.getPassword()});
+    public void onInitialEmailSignupInteraction(int action, final Authorize signUpDetails, String picturePath) {
+        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true,
+                new Object[]{signUpDetails.getUsername(), signUpDetails.getPassword(), picturePath});
     }
 
     @Override
-    public void onFinalEmailSignupInteraction(int action, final Authorize signUpDetails) {
-        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION});
+    public void onFinalEmailSignupInteraction(int action, final Authorize signUpDetails, String picturePath) {
+        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
     }
 
     @Override
     public void onInterestsInteraction() {
         successfullyLoggedIn();
+    }
+
+    private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {
+
+        WeakReference<MainActivity> reference;
+
+        public UpdateProfilePic(MainActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected MultipartBody.Part doInBackground(String... strings) {
+            File profileImage = new File(strings[0]);
+            if (profileImage.exists()) {
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(MultipartBody.Part part) {
+            if (part != null) {
+                ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(null);
+            }
+        }
     }
 
     public void toggleUpBtnVisibility(int visibility) {

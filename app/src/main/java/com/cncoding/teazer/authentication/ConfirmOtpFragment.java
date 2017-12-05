@@ -44,6 +44,7 @@ import static android.Manifest.permission.SEND_SMS;
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
+import static com.cncoding.teazer.authentication.SignupFragment2.ARG_PICTURE_PATH;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
@@ -69,6 +70,7 @@ public class ConfirmOtpFragment extends AuthFragment {
 
     private Authorize userSignUpDetails;
     int launchAction;
+    private String picturePath;
 
     private OnOtpInteractionListener mListener;
     private CountDownTimer countDownTimer;
@@ -92,6 +94,7 @@ public class ConfirmOtpFragment extends AuthFragment {
         Bundle args = new Bundle();
         args.putParcelable(USER_DETAILS, (Parcelable) signUpDetails[0]);
         args.putInt(LAUNCH_ACTION, (Integer) signUpDetails[1]);
+        args.putString(ARG_PICTURE_PATH, (String) signUpDetails[2]);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,9 +102,11 @@ public class ConfirmOtpFragment extends AuthFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userSignUpDetails = getArguments().getParcelable(USER_DETAILS);
-            launchAction = getArguments().getInt(LAUNCH_ACTION);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            userSignUpDetails = bundle.getParcelable(USER_DETAILS);
+            launchAction = bundle.getInt(LAUNCH_ACTION);
+            picturePath = bundle.getString(ARG_PICTURE_PATH);
         }
     }
 
@@ -226,7 +231,7 @@ public class ConfirmOtpFragment extends AuthFragment {
                         DEVICE_TYPE_ANDROID);
                 if (isConnected) {
                     performFinalSignup(context.getApplicationContext(), verify, countDownTimer,
-                            otpVerifiedTextView, mListener, otpResendBtn);
+                            otpVerifiedTextView, mListener, otpResendBtn, picturePath);
                 } else {
                     Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
@@ -348,6 +353,6 @@ public class ConfirmOtpFragment extends AuthFragment {
     }
 
     public interface OnOtpInteractionListener {
-        void onOtpInteraction(Authorize verificationDetails);
+        void onOtpInteraction(Authorize verificationDetails, String picturePath);
     }
 }

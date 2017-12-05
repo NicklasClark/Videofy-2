@@ -18,6 +18,7 @@
     <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
     <color name="colorTranslucentBg">#91212121</color>
+    <color name="colorTranslucentBgMainActivity">#c8000000</color>
     <color name="bgInterests">#c8000000</color>
     <color name="colorTranslucentButton">#5a000000</color>
     <color name="colorPrimary_text">#333333</color>

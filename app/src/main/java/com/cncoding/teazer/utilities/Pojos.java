@@ -79,7 +79,6 @@ public class Pojos {
     }
 
     public static class Authorize implements Parcelable {
-        private String username;
         private String user_name;
         private String first_name;
         private String last_name;
@@ -218,7 +217,7 @@ public class Pojos {
         }
 
         public Authorize(String username, String pass) {
-            this.username = username;
+            this.user_name = username;
             this.password = pass;
         }
 

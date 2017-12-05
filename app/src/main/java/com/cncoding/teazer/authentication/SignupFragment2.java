@@ -35,6 +35,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 public class SignupFragment2 extends AuthFragment {
     private static final String ARG_USERNAME = "username";
     private static final String ARG_PASS = "pass";
+    public static final String ARG_PICTURE_PATH = "picturePath";
 
     @BindView(R.id.signup_name) ProximaNovaRegularAutoCompleteTextView nameView;
     @BindView(R.id.signup_email) ProximaNovaRegularAutoCompleteTextView emailView;
@@ -44,6 +45,7 @@ public class SignupFragment2 extends AuthFragment {
 
     private String username;
     private String pass;
+    private String picturePath;
 
     private OnFinalSignupInteractionListener mListener;
 
@@ -51,11 +53,12 @@ public class SignupFragment2 extends AuthFragment {
         // Required empty public constructor
     }
 
-    public static SignupFragment2 newInstance(String username, String pass) {
+    public static SignupFragment2 newInstance(String username, String pass, String picturePath) {
         SignupFragment2 fragment = new SignupFragment2();
         Bundle args = new Bundle();
         args.putString(ARG_USERNAME, username);
         args.putString(ARG_PASS, pass);
+        args.putString(ARG_PICTURE_PATH, picturePath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,6 +70,7 @@ public class SignupFragment2 extends AuthFragment {
         if (bundle != null) {
             username = bundle.getString(ARG_USERNAME);
             pass = bundle.getString(ARG_PASS);
+            picturePath = bundle.getString(ARG_PICTURE_PATH);
         }
     }
 
@@ -154,7 +158,7 @@ public class SignupFragment2 extends AuthFragment {
                                 countryCodeView.getSelectedCountryCodeAsInt()
                         );
                         signupBtn.setEnabled(false);
-                        performInitialSignup(mListener, authorize, signupBtn);
+                        performInitialSignup(mListener, authorize, signupBtn, picturePath);
                     } else Snackbar.make(signupBtn, "Please provide a valid email address.", Snackbar.LENGTH_SHORT).show();
                 } else Snackbar.make(signupBtn, "Please provide both first and last names, separated by blank space", Snackbar.LENGTH_SHORT).show();
             } else
@@ -202,6 +206,6 @@ public class SignupFragment2 extends AuthFragment {
     }
 
     public interface OnFinalSignupInteractionListener {
-        void onFinalEmailSignupInteraction(int action, Authorize signUpDetails);
+        void onFinalEmailSignupInteraction(int action, Authorize signUpDetails, String picturePath);
     }
 }

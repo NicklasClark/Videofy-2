@@ -1,5 +1,5 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cncoding.teazer.authentication.LoginFragment"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,9 +23,34 @@
                 android:padding="@dimen/padding_default"
                 android:textSize="@dimen/text_size_h2"
                 android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="30dp"
                 tools:ignore="PrivateResource" />
 
+            <RelativeLayout
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:layout_marginBottom="40dp"
+                android:orientation="vertical">
+
+                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    android:id="@+id/dp"
+                    android:layout_width="84dp"
+                    android:layout_height="84dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/ic_user_male_dp"
+                    android:transitionName="profile" />
+
+                <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                    android:id="@+id/dp_edit_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:padding="5sp"
+                    android:textColor="#efefef"
+                    android:background="@drawable/bg_image_whiter_outline_solid"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    app:srcCompat="@drawable/ic_add" />
+            </RelativeLayout>
 <!--            <ImageView
                 android:id="@+id/signup_profile_pic"
                 android:layout_width="100dp"

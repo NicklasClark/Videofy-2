@@ -191,7 +191,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.fragment.activity.EditPost"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".utilities.GalleryUtil" />
     </application>
 
 </manifest>

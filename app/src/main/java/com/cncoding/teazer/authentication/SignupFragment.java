@@ -1,8 +1,16 @@
 package com.cncoding.teazer.authentication;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -10,11 +18,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.utilities.GalleryUtil;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,23 +39,34 @@ import butterknife.OnTouch;
 
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
+import static com.cncoding.teazer.utilities.ViewUtils.GALLERY_ACTIVITY_CODE;
+import static com.cncoding.teazer.utilities.ViewUtils.RESULT_CROP;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SignupFragment extends AuthFragment {
 
-//    private String email;
-
+    @BindView(R.id.dp) CircularAppCompatImageView dp;
+    @BindView(R.id.dp_edit_btn) CircularAppCompatImageView dpEditBtn;
     @BindView(R.id.signup_username) ProximaNovaRegularAutoCompleteTextView usernameView;
     @BindView(R.id.signup_password) ProximaNovaRegularAutoCompleteTextView passwordView;
     @BindView(R.id.signup__proceed_btn) AppCompatButton signupProceedBtn;
 
     private OnInitialSignupInteractionListener mListener;
+    private String picturePath;
     //    private Context context;
 
     public SignupFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     @Override
@@ -87,11 +111,16 @@ public class SignupFragment extends AuthFragment {
         }
     }
 
+    @OnClick(R.id.dp) public void launchImageSelector() {
+        Intent gallery_Intent = new Intent(getApplicationContext(), GalleryUtil.class);
+        startActivityForResult(gallery_Intent, GALLERY_ACTIVITY_CODE);
+    }
+
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (areAllViewsFilled()) {
             if (isPasswordValid(passwordView.getText().toString())) {
                 mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
-                                new Authorize(usernameView.getText().toString(), passwordView.getText().toString()));
+                                new Authorize(usernameView.getText().toString(), passwordView.getText().toString()), picturePath);
             } else
                 Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
         } else
@@ -105,6 +134,66 @@ public class SignupFragment extends AuthFragment {
     private boolean areAllViewsFilled() {
         return !usernameView.getText().toString().isEmpty() &&
                 !passwordView.getText().toString().isEmpty();
+    }
+
+    private void performCrop(String picUri) {
+        try {
+            //Start Crop Activity
+
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            File f = new File(picUri);
+            Uri contentUri = Uri.fromFile(f);
+
+            cropIntent.setDataAndType(contentUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 280);
+            cropIntent.putExtra("outputY", 280);
+
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, RESULT_CROP);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException e) {
+            // display an error message
+            Toast.makeText(context, R.string.no_crop_action_support_message, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case GALLERY_ACTIVITY_CODE:
+                if(resultCode == Activity.RESULT_OK){
+                    picturePath = data.getStringExtra("picturePath");
+                    //perform Crop on the Image Selected from Gallery
+                    performCrop(picturePath);
+                }
+                break;
+            case RESULT_CROP:
+                Bundle extras = data.getExtras();
+                Bitmap selectedBitmap = null;
+                if (extras != null) {
+                    selectedBitmap = extras.getParcelable("data");
+                }
+                if (selectedBitmap == null && data.getData() != null)
+                    selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
+                // Set The Bitmap Data To ImageView
+                dp.setImageBitmap(selectedBitmap);
+                dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -125,6 +214,6 @@ public class SignupFragment extends AuthFragment {
     }
 
     public interface OnInitialSignupInteractionListener {
-        void onInitialEmailSignupInteraction(int action, Authorize signUpDetails);
+        void onInitialEmailSignupInteraction(int action, Authorize signUpDetails, String picturePath);
     }
 }
