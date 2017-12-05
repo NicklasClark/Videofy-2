@@ -132,7 +132,7 @@
             android:background="@android:color/transparent"
             android:foreground="@drawable/ripple_dark_no_rounded"
             android:textColor="@color/colorIcons"
-            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginBottom="24dp"
             android:text="@string/continue_with_email_phone"
             android:textAllCaps="false"
             android:layout_above="@+id/signup_with_facebook"/>

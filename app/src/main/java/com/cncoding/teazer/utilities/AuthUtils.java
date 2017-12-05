@@ -51,7 +51,7 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COU
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
-import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
+import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 /**

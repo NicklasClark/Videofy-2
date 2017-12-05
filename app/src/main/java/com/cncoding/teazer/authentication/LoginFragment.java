@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -63,7 +63,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends AuthFragment {
 
     private static final int LOGIN_STATE_PASSWORD = 1;
     private static final int LOGIN_STATE_OTP = 2;
@@ -195,7 +195,7 @@ public class LoginFragment extends Fragment {
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event, getContext());
+        return togglePasswordVisibility(passwordView, event, context);
     }
 
     @OnEditorAction(R.id.login_password) public boolean onLoginByKeyboard(int actionId) {
@@ -220,9 +220,13 @@ public class LoginFragment extends Fragment {
             case LOGIN_STATE_OTP:
                 if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
                     loginBtn.setEnabled(false);
-                    startCircularReveal();
-                    loginWithOtp(getContext(), username, countryCode, mListener, loginBtn, progressBar,
-                            null, null, false);
+                    startProgressBar();
+                    if (isConnected) {
+                        loginWithOtp(context, username, countryCode, mListener, loginBtn, progressBar,
+                                null, null, false);
+                    } else {
+                        Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                     Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT)
@@ -234,8 +238,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.forgot_password_btn)
-    public void onForgotPasswordClick() {
+    @OnClick(R.id.forgot_password_btn) public void onForgotPasswordClick() {
         mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new Authorize(username));
     }
 
@@ -244,7 +247,7 @@ public class LoginFragment extends Fragment {
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
-        usernameView.setTextAppearance(getContext(), R.style.AppTheme_PhoneNumberEditText);
+        usernameView.setTextAppearance(context, R.style.AppTheme_PhoneNumberEditText);
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(VISIBLE);
@@ -291,44 +294,49 @@ public class LoginFragment extends Fragment {
         }
         if (AuthUtils.isPasswordValid(passwordView)) {
             loginBtn.setEnabled(false);
-            startCircularReveal();
+            startProgressBar();
             final Pojos.Authorize authorize = new Pojos.Authorize(
-                    getFcmToken(getContext()),
-                    getDeviceId(getContext()),
+                    getFcmToken(context),
+                    getDeviceId(context),
                     DEVICE_TYPE_ANDROID,
                     username,
                     passwordView.getText().toString());
-            ApiCallingService.Auth.loginWithPassword(authorize)
-                    .enqueue(new Callback<ResultObject>() {
-                        @SuppressWarnings("ConstantConditions")
-                        @Override
-                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            try {
-                                if (response.code() == 200) {
-                                    if (response.body().getStatus()) {
-                                        SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
-                                        setCurrentPassword(getContext() ,passwordView.getText().toString());
-                                        mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
-                                    } else {
-                                        ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
-                                    }
-                                } else
-                                    showSnackBar(loginBtn, getErrorMessage(response.errorBody()));
+            if (isConnected) {
+                ApiCallingService.Auth.loginWithPassword(authorize)
+                        .enqueue(new Callback<ResultObject>() {
+                            @SuppressWarnings("ConstantConditions")
+                            @Override
+                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                try {
+                                    if (response.code() == 200) {
+                                        if (response.body().getStatus()) {
+                                            SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
+                                            setCurrentPassword(context ,passwordView.getText().toString());
+                                            mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
+                                        } else {
+                                            ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
+                                        }
+                                    } else
+                                        showSnackBar(loginBtn, getErrorMessage(response.errorBody()));
 
+                                    stopCircularReveal(progressBar);
+                                    loginBtn.setEnabled(true);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResultObject> call, Throwable t) {
                                 stopCircularReveal(progressBar);
                                 loginBtn.setEnabled(true);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                logTheError("loginWithPassword", t.getMessage());
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                            stopCircularReveal(progressBar);
-                            loginBtn.setEnabled(true);
-                            logTheError("loginWithPassword", t.getMessage());
-                        }
-                    });
+                        });
+            } else {
+                Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                stopCircularReveal(progressBar);
+            }
         } else {
             loginBtn.setEnabled(true);
             Snackbar.make(loginBtn, "Password must be 5 to 32 characters", Snackbar.LENGTH_SHORT).show();
@@ -344,7 +352,7 @@ public class LoginFragment extends Fragment {
         else return -1;
     }
 
-    private void startCircularReveal() {
+    private void startProgressBar() {
         progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
         progressBar.setVisibility(VISIBLE);
     }

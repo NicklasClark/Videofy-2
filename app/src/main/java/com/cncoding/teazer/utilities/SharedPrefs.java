@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.google.gson.Gson;
 
-import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
-
 /**
  *
  * Created by Prem $ on 10/24/2017.
@@ -15,6 +13,7 @@ import static com.cncoding.teazer.utilities.OfflineUserProfile.TEAZER;
 
 public class SharedPrefs {
 
+    public static final String TEAZER = "teazer_preferences";
     private static final String AUTH_TOKEN = "authToken";
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";

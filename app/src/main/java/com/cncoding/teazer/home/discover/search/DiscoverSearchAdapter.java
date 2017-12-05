@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.discover.search;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
@@ -54,7 +55,8 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private SparseIntArray actionArray;
     private OnDiscoverSearchInteractionListener mListener;
 
-    DiscoverSearchAdapter(BaseFragment baseFragment, boolean isVideosTab, ArrayList<MiniProfile> usersList, ArrayList<Videos> videosList) {
+    DiscoverSearchAdapter(Context context, BaseFragment baseFragment, boolean isVideosTab, ArrayList<MiniProfile> usersList,
+                          ArrayList<Videos> videosList) {
         this.baseFragment = baseFragment;
         this.isVideosTab = isVideosTab;
         actionArray = new SparseIntArray();
@@ -63,8 +65,8 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         else
             this.usersList = usersList;
 
-        if (baseFragment instanceof OnDiscoverSearchInteractionListener)
-            mListener = (OnDiscoverSearchInteractionListener) baseFragment;
+        if (context instanceof OnDiscoverSearchInteractionListener)
+            mListener = (OnDiscoverSearchInteractionListener) context;
     }
 
     @Override

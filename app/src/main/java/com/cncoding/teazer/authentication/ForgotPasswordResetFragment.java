@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +37,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class ForgotPasswordResetFragment extends Fragment {
+public class ForgotPasswordResetFragment extends AuthFragment {
     public static final String ENTERED_TEXT = "enteredText";
     public static final String COUNTRY_CODE = "countryCode";
     public static final String IS_EMAIL = "isEmail";
@@ -96,7 +95,7 @@ public class ForgotPasswordResetFragment extends Fragment {
     }
 
     @OnTouch(R.id.forgot_pwd_reset_new_password) public boolean onNewPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(resetNewPasswordView, event, getContext());
+        return togglePasswordVisibility(resetNewPasswordView, event, context);
     }
 
     @OnTextChanged(R.id.forgot_pwd_reset_confirm_password) public void confirmPasswordTextChanged(CharSequence charSequence) {
@@ -109,7 +108,7 @@ public class ForgotPasswordResetFragment extends Fragment {
     }
 
     @OnTouch(R.id.forgot_pwd_reset_confirm_password) public boolean onConfirmPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(resetConfirmPasswordView, event, getContext());
+        return togglePasswordVisibility(resetConfirmPasswordView, event, context);
     }
 
     @OnEditorAction(R.id.forgot_pwd_reset_confirm_password) public boolean resetByKeyboard(TextView v, int actionId) {
@@ -125,7 +124,7 @@ public class ForgotPasswordResetFragment extends Fragment {
     }
 
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
-        hideKeyboard(getActivity(), resetPasswordStatusView);
+        hideKeyboard(getParentActivity(), resetPasswordStatusView);
         if (!resetOtpView.getText().toString().isEmpty()) {
             if (resetNewPasswordView.getText().toString().equals(resetConfirmPasswordView.getText().toString())) {
                 Pojos.Authorize authorize;
@@ -144,45 +143,50 @@ public class ForgotPasswordResetFragment extends Fragment {
                             countryCode,
                             Integer.parseInt(resetOtpView.getText().toString()));
                 }
-                ApiCallingService.Auth.changePassword(authorize).enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            if (response.body().getStatus()) {
-                                resetPasswordStatusView.setText(R.string.password_successfully_reset);
-                                resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                                        0, 0, R.drawable.ic_tick_circle, 0);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAdded()) {
-                                            mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
-                                            Toast.makeText(getContext(), "Please login with the new password", Toast.LENGTH_LONG).show();
+                if (isConnected) {
+                    ApiCallingService.Auth.changePassword(authorize).enqueue(new Callback<ResultObject>() {
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            if (response.code() == 200) {
+                                if (response.body().getStatus()) {
+                                    resetPasswordStatusView.setText(R.string.password_successfully_reset);
+                                    resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                            0, 0, R.drawable.ic_tick_circle, 0);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isAdded()) {
+                                                mListener.onResetForgotPasswordInteraction(enteredText, countryCode, isEmail);
+                                                Toast.makeText(context, "Please login with the new password",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                }, 1000);
+                                    }, 1000);
+                                } else {
+                                    String resetPasswordStatus = getString(R.string.resetting_password_failed);
+                                    resetPasswordStatusView.setText(resetPasswordStatus);
+                                    resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                            0, R.drawable.ic_error, 0, 0);
+                                }
                             } else {
-                                String resetPasswordStatus = getString(R.string.resetting_password_failed);
-                                resetPasswordStatusView.setText(resetPasswordStatus);
+                                        resetPasswordStatusView.setText(getString(R.string.resetting_password_failed));
                                 resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
                                         0, R.drawable.ic_error, 0, 0);
                             }
-                        } else {
-                                    resetPasswordStatusView.setText(getString(R.string.resetting_password_failed));
-                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                                    0, R.drawable.ic_error, 0, 0);
+            //                dismissMessage();
                         }
-        //                dismissMessage();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        logTheError("Resetting password failed!", t.getMessage());
-                        resetPasswordStatusView.setText(getErrorMessage(null));
-                        resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_error, 0, 0);
-                        dismissMessage();
-                    }
-                });
+    
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            logTheError("Resetting password failed!", t.getMessage());
+                            resetPasswordStatusView.setText(getErrorMessage(null));
+                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_error, 0, 0);
+                            dismissMessage();
+                        }
+                    });
+                } else {
+                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 showSnackBar(resetOtpView, "Passwords don't match");
             }

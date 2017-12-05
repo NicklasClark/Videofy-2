@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.text.InputFilter;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -16,36 +13,37 @@ import android.view.inputmethod.EditorInfo;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.utilities.FilterFactory;
-import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
-import butterknife.OnTextChanged;
-import butterknife.OnTouch;
 
+import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
+import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
+import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
 import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignup;
-import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
-import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
+import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
-public class SignupFragment2 extends Fragment {
-    private static final String SIGNUP_DETAILS = "signupDetails";
+public class SignupFragment2 extends AuthFragment {
+    private static final String ARG_USERNAME = "username";
+    private static final String ARG_PASS = "pass";
 
-    private Authorize signUpDetails;
-
-    @BindView(R.id.signup_page_header) ProximaNovaRegularTextView headerTextView;
-    @BindView(R.id.signup_username) ProximaNovaRegularAutoCompleteTextView usernameView;
-    @BindView(R.id.signup_password) ProximaNovaRegularAutoCompleteTextView passwordView;
-    @BindView(R.id.signup_confirm_password) ProximaNovaRegularAutoCompleteTextView confirmPasswordView;
+    @BindView(R.id.signup_name) ProximaNovaRegularAutoCompleteTextView nameView;
+    @BindView(R.id.signup_email) ProximaNovaRegularAutoCompleteTextView emailView;
+    @BindView(R.id.signup_country_code) CountryCodePicker countryCodeView;
+    @BindView(R.id.signup_phone_number) ProximaNovaRegularAutoCompleteTextView phoneNumberView;
     @BindView(R.id.signup_btn) ProximaNovaSemiboldButton signupBtn;
+
+    private String username;
+    private String pass;
 
     private OnFinalSignupInteractionListener mListener;
 
@@ -53,10 +51,11 @@ public class SignupFragment2 extends Fragment {
         // Required empty public constructor
     }
 
-    public static SignupFragment2 newInstance(Authorize signUpDetails) {
+    public static SignupFragment2 newInstance(String username, String pass) {
         SignupFragment2 fragment = new SignupFragment2();
         Bundle args = new Bundle();
-        args.putParcelable(SIGNUP_DETAILS, signUpDetails);
+        args.putString(ARG_USERNAME, username);
+        args.putString(ARG_PASS, pass);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +63,10 @@ public class SignupFragment2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            signUpDetails = getArguments().getParcelable(SIGNUP_DETAILS);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            username = bundle.getString(ARG_USERNAME);
+            pass = bundle.getString(ARG_PASS);
         }
     }
 
@@ -74,103 +75,114 @@ public class SignupFragment2 extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_signup_2, container, false);
         ButterKnife.bind(this, rootView);
-        setTextFilters();
+//        setTextFilters();
+        setOnCountryChangeListener();
         return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String headerText = "Hey " + signUpDetails.getFirstName() + ", " + getString(R.string.you_are_almost_there);
-        headerTextView.setText(headerText);
+        getCountryCode(countryCodeView, getParentActivity());
     }
 
-    @OnEditorAction(R.id.signup_confirm_password) public boolean onLoginByKeyboard(int actionId) {
+    private void setOnCountryChangeListener() {
+        countryCodeView.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+                //noinspection ConstantConditions
+                getParentActivity().getApplicationContext()
+                        .getSharedPreferences(TEAZER, Context.MODE_PRIVATE)
+                        .edit()
+                        .putInt(COUNTRY_CODE, countryCodeView.getSelectedCountryCodeAsInt())
+                        .apply();
+            }
+        });
+    }
+
+    @OnEditorAction(R.id.signup_email) public boolean goToPhoneNumberField(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            phoneNumberView.requestFocus();
+            return true;
+        }
+        return false;
+    }
+
+    @OnEditorAction(R.id.signup_phone_number) public boolean signupProceedByKeyboard(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
+            hideKeyboard(getParentActivity(), phoneNumberView);
             performSignup();
             return true;
         }
         return false;
     }
 
-    @OnTextChanged(R.id.signup_password) public void signupPasswordTextChanged(CharSequence charSequence) {
-        if (charSequence.toString().equals(""))
-            clearDrawables(passwordView);
-        else
-        if (passwordView.getCompoundDrawables()[2] == null)
-            setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
-    }
-
-    @OnTextChanged(R.id.signup_confirm_password) public void confirmPasswordTextChanged(CharSequence charSequence) {
-        if (charSequence.toString().equals(""))
-            clearDrawables(confirmPasswordView);
-        else
-        if (confirmPasswordView.getCompoundDrawables()[2] == null)
-            setEditTextDrawableEnd(confirmPasswordView, R.drawable.ic_view_filled);
-    }
-
-    @OnTouch(R.id.signup_password) public boolean onSignupPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event, getContext());
-    }
-
-    @OnTouch(R.id.signup_confirm_password) public boolean onConfirmPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(confirmPasswordView, event, getContext());
-    }
-
-    @OnFocusChange(R.id.signup_username) public void onUsernameFocusChanged(boolean isFocused) {
+    @OnFocusChange(R.id.signup_email) public void onEmailFocusChanged(boolean isFocused) {
         if (!isFocused) {
-            String username = usernameView.getText().toString();
-            if (!username.isEmpty()) {
-                ApiCallingService.Auth.checkUsername(usernameView, true);
+            String email = emailView.getText().toString();
+            if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
+                ApiCallingService.Auth.checkEmail(emailView, true);
             } else {
-                setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
+                setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
         }
     }
 
-    private boolean isPasswordValid(String password) {
-        return password.length() >= 8 && password.length() <= 32;
-    }
-
-    private boolean areAllViewsFilled() {
-        return !usernameView.getText().toString().isEmpty() &&
-                !passwordView.getText().toString().isEmpty() &&
-                !confirmPasswordView.getText().toString().isEmpty();
+    @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
+        if (!isFocused) {
+            if (isValidPhoneNumber(phoneNumberView.getText().toString()))
+                ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+            else
+                setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
+        }
     }
 
     @OnClick(R.id.signup_btn) public void performSignup() {
-        hideKeyboard(getActivity(), signupBtn);
-        String password = passwordView.getText().toString();
-        if (NetworkStateReceiver.isConnected(getActivity())) {
+        hideKeyboard(getParentActivity(), signupBtn);
+        if (isConnected) {
             if (areAllViewsFilled()) {
-                if (isPasswordValid(password)) {
-                    if (password.equals(confirmPasswordView.getText().toString())) {
+                if (getFirstAndLastNames(nameView.getText().toString()).length >= 2) {
+                    if (isValidEmailAddress(emailView.getText().toString())) {
+                        String[] names = getFirstAndLastNames(nameView.getText().toString());
                         final Authorize authorize = new Authorize(
-                                usernameView.getText().toString(),
-                                signUpDetails.getFirstName(),
-                                signUpDetails.getLastName(),
-                                signUpDetails.getEmail(),
-                                passwordView.getText().toString(),
-                                signUpDetails.getPhoneNumber(),
-                                signUpDetails.getCountryCode()
+                                username,
+                                names[0],
+                                names[1],
+                                emailView.getText().toString(),
+                                pass,
+                                Long.parseLong(phoneNumberView.getText().toString()),
+                                countryCodeView.getSelectedCountryCodeAsInt()
                         );
                         signupBtn.setEnabled(false);
                         performInitialSignup(mListener, authorize, signupBtn);
-                    } else
-                        Snackbar.make(signupBtn, "Passwords don't match!", Snackbar.LENGTH_SHORT).show();
-                } else
-                    Snackbar.make(signupBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
+                    } else Snackbar.make(signupBtn, "Please provide a valid email address.", Snackbar.LENGTH_SHORT).show();
+                } else Snackbar.make(signupBtn, "Please provide both first and last names, separated by blank space", Snackbar.LENGTH_SHORT).show();
             } else
                 Snackbar.make(signupBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
         } else
             Snackbar.make(signupBtn, R.string.not_connected_message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void setTextFilters() {
-        InputFilter[] inputFilters = new InputFilter[] {FilterFactory.passwordFilter};
-        passwordView.setFilters(inputFilters);
-        confirmPasswordView.setFilters(inputFilters);
+    public static String[] getFirstAndLastNames(String name) {
+        String[] names = name.split(" ");
+        if (names.length > 1)
+            return new String[] {names[0], names[names.length - 1]};
+        else
+            return names;
     }
+
+    private boolean areAllViewsFilled() {
+        return !nameView.getText().toString().isEmpty() &&
+                !emailView.getText().toString().isEmpty() &&
+                !countryCodeView.getSelectedCountryCode().isEmpty() &&
+                !phoneNumberView.getText().toString().isEmpty();
+    }
+
+//    private void setTextFilters() {
+////        InputFilter[] inputFilters = new InputFilter[] {FilterFactory.passwordFilter};
+////        passwordView.setFilters(inputFilters);
+////        confirmPasswordView.setFilters(inputFilters);
+//    }
 
     @Override
     public void onAttach(Context context) {
