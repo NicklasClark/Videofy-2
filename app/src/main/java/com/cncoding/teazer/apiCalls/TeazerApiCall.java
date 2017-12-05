@@ -18,6 +18,7 @@ import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.profile.reportuser.ReportUser;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
 import com.cncoding.teazer.utilities.Pojos;
@@ -538,7 +539,7 @@ import retrofit2.http.Query;
          *      or 412 : Validation Failed
          */
         @PUT("/api/v1/post/update")
-        Call<ResultObject> updatePost(@Body UpdatePostRequest updatePostRequest);
+        Call<UpdatePostResultObject> updatePost(@Body UpdatePostRequest updatePostRequest);
 
         @POST("/api/v1/post/like/{post_id}/{status}")
         Call<ResultObject> likeDislikePost(@Path("post_id") int postId, @Path("status") int status);
