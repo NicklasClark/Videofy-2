@@ -1,12 +1,14 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -55,6 +57,8 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.ViewUtils;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,26 +85,47 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
     private static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
 
-    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
-    @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.video_surface) TextureView textureView;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.video_surface_container) FrameLayout surfaceContainer;
-    @BindView(R.id.loading) ProgressBar progressBar;
-    @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
-    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
-    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
-    @BindView(R.id.list) RecyclerView recyclerView;
-//    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+    @BindView(R.id.root_layout)
+    NestedScrollView nestedScrollView;
+    @BindView(R.id.video_container)
+    RelativeLayout videoContainer;
+    @BindView(R.id.relative_layout)
+    RelativeLayout relativeLayout;
+    @BindView(R.id.video_surface)
+    TextureView textureView;
+    @BindView(R.id.placeholder)
+    ImageView placeholder;
+    @BindView(R.id.video_surface_container)
+    FrameLayout surfaceContainer;
+    @BindView(R.id.loading)
+    ProgressBar progressBar;
+    @BindView(R.id.react_btn)
+    ProximaNovaSemiboldButton reactBtn;
+    @BindView(R.id.like)
+    ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users)
+    ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list)
+    RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent)
+    RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge)
+    ProximaNovaSemiboldTextView tagsCountBadge;
+    @BindView(R.id.menu)
+    ProximaNovaRegularTextView menu;
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    //    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.post_load_error)
+    ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header)
+    ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle)
+    ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout)
+    LinearLayout postLoadErrorLayout;
+    @BindView(R.id.share)
+    ProximaNovaRegularTextView share;
 
     private Context context;
     private PostDetails postDetails;
@@ -366,7 +391,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                             }
                             break;
                         default:
-                            showErrorMessage("Error " + response.code() +": " + response.message());
+                            showErrorMessage("Error " + response.code() + ": " + response.message());
                             break;
                     }
                 }
@@ -415,13 +440,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }, 280);
     }
 
-    @OnClick(R.id.react_btn) public void react() {
+    @OnClick(R.id.react_btn)
+    public void react() {
         if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
         mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails);
     }
 
-    @OnClick(R.id.like) public void likePost() {
+    @OnClick(R.id.like)
+    public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -450,7 +477,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags) public void getTaggedList() {
+    @OnClick(R.id.tags)
+    public void getTaggedList() {
         if (horizontalListViewParent.getVisibility() == View.GONE) {
             ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, context)
                     .enqueue(new Callback<TaggedUsersList>() {
@@ -463,7 +491,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                     taggedUsersList.addAll(response.body().getTaggedUsers());
                                     taggedUserListView.getAdapter().notifyDataSetChanged();
                                 } else {
-                                     noTaggedUsers.setVisibility(View.VISIBLE);
+                                    noTaggedUsers.setVisibility(View.VISIBLE);
 //                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
 //                                            LinearLayoutManager.HORIZONTAL, false));
 //                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
@@ -520,14 +548,16 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor) {
+    @OnClick(R.id.menu)
+    public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         popupMenu.inflate(R.menu.menu_post);
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.video_surface_container)
+    public void toggleMediaControllerVisibility() {
         if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
         else mediaPlayer.start();
@@ -598,6 +628,32 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         textureView.setLayoutParams(params);
         textureView.animate().alpha(1).setDuration(280).start();
         textureView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @OnClick(R.id.share)
+    public void onViewClicked() {
+        DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("https://v6f43.app.goo.gl/?link="+ postDetails.getPostId()))
+                .setDynamicLinkDomain("v6f43.app.goo.gl")
+                // Open links with this app on Android
+                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
+                // Open links with com.example.ios on iOS
+                .setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
+                .buildDynamicLink();
+
+        Uri dynamicLinkUri = dynamicLink.getUri();
+
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, dynamicLinkUri.toString());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -715,7 +771,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //        if (mediaPlayer != null)
 //            return convert(mediaPlayer.getDuration());
 //        else
-            return postDetails.getMedias().get(0).getDuration();
+        return postDetails.getMedias().get(0).getDuration();
     }
 
 //    private String convert(final int duration) {

@@ -6,9 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.databinding.ActivityTrimmerBinding;
@@ -25,20 +23,15 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
     private ActivityTrimmerBinding binding;
     private int maxDuration;
 
-    public static void go(FragmentActivity from, String videoPath){
-        if(!TextUtils.isEmpty(videoPath)) {
-            Bundle bundle = new Bundle();
-            bundle.putString("path", videoPath);
-            Intent intent = new Intent(from,TrimmerActivity.class);
-            intent.putExtras(bundle);
-            from.startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_trimmer);
+        if (getActionBar() != null) {
+            getActionBar().setDisplayShowTitleEnabled(true);
+            getActionBar().setTitle("Trim Video");
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         Bundle bd = getIntent().getExtras();
         String path = "";
         if(bd != null) {

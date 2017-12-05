@@ -102,7 +102,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
+import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -120,11 +120,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
-    @BindView(R.id.spacer) Space spacer;
-    @BindView(R.id.google_share_btn) AppCompatImageView googleShareBtn;
-    @BindView(R.id.instagram_share_btn) AppCompatImageView instagramShareBtn;
-    @BindView(R.id.spacer1) Space spacer1;
-    @BindView(R.id.video_actions) RelativeLayout videoActions;
+
+    @BindView(R.id.share_on_facebook) ProximaNovaRegularCheckedTextView facebookShareBtn;
+    @BindView(R.id.share_on_twitter) ProximaNovaRegularCheckedTextView twitterShareBtn;
     @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
     @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
@@ -520,7 +518,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
         hideKeyboard(activity, videoTitle);
-        playVideo(context, videoPath, false);
+//        playVideo(context, videoPath, false);
+        playVideoInExoPlayer(context, videoPath);
     }
 
     @OnTouch(R.id.video_upload_location) public boolean addLocation(View view, MotionEvent motionEvent) {

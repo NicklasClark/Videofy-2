@@ -97,7 +97,7 @@ public class TrimVideoUtil {
 
             @Override
             public void onProgress(float v) {
-                Toast.makeText(context, "Processing", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Processing", Toast.LENGTH_SHORT).show();
             }
         });
     }

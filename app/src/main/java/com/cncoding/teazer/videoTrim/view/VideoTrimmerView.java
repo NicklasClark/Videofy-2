@@ -70,7 +70,7 @@ public class VideoTrimmerView extends FrameLayout {
 
     private VideoThumbAdapter videoThumbAdapter;
     private long pixelRangeMax;
-    private int currentPixMax;  //用于处理红色进度条
+    private int currentPixMax;
     private int mScrolledOffset;
     private float leftThumbValue,rightThumbValue;
     private boolean isFromRestore = false;

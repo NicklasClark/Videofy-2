@@ -22,7 +22,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
+import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
@@ -130,7 +130,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 @Override
                 public void onClick(View view) {
 //                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
-                    Intent intent = new Intent(context, ExoPlayerActivity.class);
+                    Intent intent = new Intent(context, ReactionPlayerActivity.class);
                     intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
                     intent.putExtra("POST_INFO", postReaction);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);

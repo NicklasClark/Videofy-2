@@ -241,11 +241,8 @@ public class CameraActivity extends AppCompatActivity
 
     public void onVideoGalleryAdapterInteraction(String videoPath) {
         if (new File(videoPath).exists()) {
-            if (isReaction) {
-                new CameraFragment.ChooseOptionalTitle(new UploadParams(videoPath, postDetails), this);
-            } else {
                 if (getVideoDuration(videoPath) < 60) {
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, postDetails, true);
                     startVideoUploadFragment();
                 }
                 else
@@ -257,8 +254,8 @@ public class CameraActivity extends AppCompatActivity
                     intent.putExtras(bundle);
                     startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
                 }
-            }
-        } else Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
 
     private long getVideoDuration(String videoFile)
@@ -528,7 +525,7 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     String videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, false, postDetails, true);
                     startVideoUploadFragment();
                 }
                 break;

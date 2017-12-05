@@ -32,11 +32,13 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -77,6 +79,14 @@ public class ViewUtils {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         context.startActivity(intent);
+    }
+
+    public static void playVideoInExoPlayer(Context context, String videoPath) {
+        Intent intent = new Intent(context, ExoPlayerActivity.class);
+        intent.putExtra("VIDEO_URL", videoPath);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+
     }
 
     /**
