@@ -294,14 +294,18 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     private String getSelectedTagsToSend(SparseArray<MiniProfile> sparseArray) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < sparseArray.size(); i++) {
-            stringBuilder.append(sparseArray.valueAt(i).getUserId());
-            if (i < sparseArray.size() - 1) {
-                stringBuilder.append(",");
+        if (sparseArray.size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < sparseArray.size(); i++) {
+                stringBuilder.append(sparseArray.valueAt(i).getUserId());
+                if (i < sparseArray.size() - 1) {
+                    stringBuilder.append(",");
+                }
             }
+            return stringBuilder.toString();
+        } else {
+            return null;
         }
-        return stringBuilder.toString();
     }
 
     private String getSelectedCategoriesToShow(SparseArray<Category> sparseArray) {

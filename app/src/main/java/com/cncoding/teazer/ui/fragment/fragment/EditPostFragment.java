@@ -47,6 +47,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
@@ -165,6 +166,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     public String videoPath;
     public boolean isReaction;
     String selectedCategoriesToSend = null;
+    String selectedTagsToSend=null;
     private boolean isRequestingLocationUpdates;
     private ArrayList<MiniProfile> myFollowingsList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -301,8 +303,10 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 }
                 String title = videoTitle.getText().toString();
                 int postId = postDetails.getPostId();
-//                String location = addLocationText.getText().toString();
-                UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, "", categories);
+            //    Log.d("Selected Friend",selectedTagsToSend);
+                Toast.makeText(context,selectedTagsToSend,Toast.LENGTH_SHORT).show();
+//              String location = addLocationText.getText().toString();
+                UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, selectedTagsToSend, categories);
                 updatePost(updatePostRequest);
             }
         });
@@ -310,23 +314,29 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     private void updatePost(UpdatePostRequest updatePostRequest) {
-        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<UpdatePostResultObject>() {
             @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+            public void onResponse(Call<UpdatePostResultObject> call, Response<UpdatePostResultObject> response) {
 
                 if (response.code() == 200) {
+                    try {
 
-                    if (response.body().getStatus()) {
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
-                    } else {
-                        Toast.makeText(context, "Your post has not been updated", Toast.LENGTH_SHORT).show();
                     }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        Log.d("Exception",e.getMessage());
+                    }
+                }
+                else{
+
                 }
             }
 
             @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
+            public void onFailure(Call<UpdatePostResultObject> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -733,6 +743,8 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagFriendsText.setText(resultToShow);
+                selectedTagsToSend=resultToSend;
+
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 selectedCategoriesToSend = resultToSend;
