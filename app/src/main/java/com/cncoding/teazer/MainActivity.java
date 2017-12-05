@@ -57,12 +57,10 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.utilities.BlurBuilder;
-import com.cncoding.teazer.utilities.OfflineUserProfile;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.IOException;
@@ -124,7 +122,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.up_btn) ImageView upBtn;
 
     private MediaPlayer mediaPlayer;
-    private ProfileTracker facebookProfileTracker;
     private FragmentManager fragmentManager;
     private TransitionDrawable transitionDrawable;
 
@@ -149,19 +146,6 @@ public class MainActivity extends AppCompatActivity
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
-
-        facebookProfileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                saveUserProfile(MainActivity.this,
-                        currentProfile.getId(),
-                        currentProfile.getFirstName(),
-                        currentProfile.getLastName(),
-                        currentProfile.getName(),
-                        "", currentProfile.getProfilePictureUri(100, 100)
-                );
-            }
-        };
     }
 
     private void successfullyLoggedIn() {
@@ -205,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SECOND_SIGNUP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container,
-                        SignupFragment2.newInstance((Authorize) args[0]), TAG_SECOND_SIGNUP_FRAGMENT);
+                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1])), TAG_SECOND_SIGNUP_FRAGMENT);
                 break;
             case TAG_OTP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
@@ -365,15 +349,15 @@ public class MainActivity extends AppCompatActivity
                                 case 201:
                                     if (response.body().getStatus()) {
                                         SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                        verificationSuccessful(true, null,
-                                                facebookData, facebookProfile, button, false);
+                                        verificationSuccessful(true,
+                                                button, false);
                                     }
                                     break;
                                 case 200:
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
                                     if (response.body().getStatus()) {
-                                        verificationSuccessful(true, null,
-                                                facebookData, facebookProfile, button, true);
+                                        verificationSuccessful(true,
+                                                button, true);
                                     } else {
                                         new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
                                                 facebookProfile, facebookData, button);
@@ -435,15 +419,15 @@ public class MainActivity extends AppCompatActivity
                             case 201:
                                 if (response.body().getStatus()) {
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
-                                    verificationSuccessful(false, googleAccount,
-                                            null, null, button, false);
+                                    verificationSuccessful(false,
+                                            button, false);
                                 }
                                 break;
                             case 200:
                                 SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
                                 if (response.body().getStatus()) {
-                                    verificationSuccessful(false, googleAccount,
-                                            null, null, button, true);
+                                    verificationSuccessful(false,
+                                            button, true);
                                 } else {
                                     new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
                                             null, null, button);
@@ -474,26 +458,11 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-    private void verificationSuccessful(boolean isFacebookAccount, GoogleSignInAccount googleAccount, Bundle facebookData,
-                                        Profile facebookProfile, ProximaNovaSemiboldButton button, final boolean accountAlreadyExists) {
+    private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button, final boolean accountAlreadyExists) {
         if (isFacebookAccount) {
-            saveUserProfile(MainActivity.this,
-                    facebookProfile.getId(),
-                    facebookProfile.getFirstName(),
-                    facebookProfile.getLastName(),
-                    facebookProfile.getName(),
-                    facebookData.getString("email"),
-                    facebookProfile.getProfilePictureUri(500, 500));
             button.doneLoadingAnimation(Color.parseColor("#4469AF"),
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         } else {
-            saveUserProfile(MainActivity.this,
-                    googleAccount.getId(),
-                    googleAccount.getGivenName(),
-                    googleAccount.getFamilyName(),
-                    googleAccount.getDisplayName(),
-                    googleAccount.getEmail(),
-                    googleAccount.getPhotoUrl());
             button.doneLoadingAnimation(Color.parseColor("#DC4E41"),
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         }
@@ -507,17 +476,6 @@ public class MainActivity extends AppCompatActivity
                     successfullyLoggedIn();
             }
         }, 500);
-    }
-
-    private void saveUserProfile(Context context, String id, String firstName,
-                                 String lastName, String name, String email, Uri profilePicUri) {
-        new OfflineUserProfile(context)
-                .setUserId(id)
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setUsername(name)
-                .setEmail(email)
-                .setProfilePicUri(profilePicUri);
     }
 
     @Override
@@ -564,7 +522,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onInitialEmailSignupInteraction(int action, final Authorize signUpDetails) {
-        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails});
+        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{signUpDetails.getUsername(), signUpDetails.getPassword()});
     }
 
     @Override
@@ -736,7 +694,6 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         if (mediaPlayer != null)
             mediaPlayer.pause();
-        facebookProfileTracker.stopTracking();
     }
 
     @Override

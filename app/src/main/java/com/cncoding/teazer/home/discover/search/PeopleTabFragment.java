@@ -68,7 +68,7 @@ public class PeopleTabFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         usersList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(this, false, usersList, null);
+        adapter = new DiscoverSearchAdapter(getParentActivity(), this, false, usersList, null);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

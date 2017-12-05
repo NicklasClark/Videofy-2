@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -31,7 +31,7 @@ import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class ForgotPasswordFragment extends Fragment {
+public class ForgotPasswordFragment extends AuthFragment {
 
     private static final String USERNAME = "username";
 
@@ -77,7 +77,7 @@ public class ForgotPasswordFragment extends Fragment {
             public void onCountrySelected() {
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
                 //noinspection ConstantConditions
-                setCountryCode(getActivity().getApplicationContext(), countryCode);
+                setCountryCode(context, countryCode);
             }
         });
 
@@ -116,34 +116,14 @@ public class ForgotPasswordFragment extends Fragment {
         if (!enteredText.isEmpty()) {
             if (TextUtils.isDigitsOnly(enteredText)) {
 //                Phone number is entered
-                ApiCallingService.Auth.requestResetPasswordByPhone(Long.parseLong(enteredText), countryCode)
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                if (response.code() == 200) {
-                                    if (response.body().getStatus()) {
-                                        mListener.onForgotPasswordInteraction(enteredText, countryCode, false);
-                                    } else {
-                                        showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-                                logTheError("resetPasswordByPhone", t.getMessage());
-                            }
-                        });
-            } else {
-//                Email is entered
-                if (AuthUtils.isValidEmailAddress(enteredText)) {
-                    ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
+                if (isConnected) {
+                    ApiCallingService.Auth.requestResetPasswordByPhone(Long.parseLong(enteredText), countryCode)
                             .enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                     if (response.code() == 200) {
                                         if (response.body().getStatus()) {
-                                            mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
+                                            mListener.onForgotPasswordInteraction(enteredText, countryCode, false);
                                         } else {
                                             showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
                                         }
@@ -152,9 +132,37 @@ public class ForgotPasswordFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                    logTheError("resetPasswordByEmail", t.getMessage());
+                                    logTheError("resetPasswordByPhone", t.getMessage());
                                 }
                             });
+                } else {
+                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+//                Email is entered
+                if (AuthUtils.isValidEmailAddress(enteredText)) {
+                    if (isConnected) {
+                        ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
+                                .enqueue(new Callback<ResultObject>() {
+                                    @Override
+                                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                        if (response.code() == 200) {
+                                            if (response.body().getStatus()) {
+                                                mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
+                                            } else {
+                                                showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                                        logTheError("resetPasswordByEmail", t.getMessage());
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
                 }

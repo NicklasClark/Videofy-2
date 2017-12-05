@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.activity.EditProfile">
 
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"

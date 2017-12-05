@@ -31,9 +31,9 @@
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/login_page_btn"
-            android:layout_width="90dp"
-            android:layout_height="?android:attr/actionBarSize"
-            android:padding="@dimen/padding_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="19dp"
             android:background="@android:color/transparent"
             android:foreground="@drawable/ripple_dark"
             android:text="@string/login"
@@ -65,7 +65,7 @@
                 android:id="@+id/marquee_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_content_big"
+                android:textSize="17sp"
                 android:gravity="center"
                 android:text="@string/video_fun_friends" />
 
@@ -132,7 +132,7 @@
             android:background="@android:color/transparent"
             android:foreground="@drawable/ripple_dark_no_rounded"
             android:textColor="@color/colorIcons"
-            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginBottom="24dp"
             android:text="@string/continue_with_email_phone"
             android:textAllCaps="false"
             android:layout_above="@+id/signup_with_facebook"/>

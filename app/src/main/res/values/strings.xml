@@ -104,7 +104,7 @@
     <string name="video_image_thumbnail">Video imageView thumbnail</string>
     <string name="proceed">Proceed</string>
     <string name="first_and_last_name">First and last name</string>
-    <string name="you_are_almost_there">You\'re almost there,\njust a couple things more</string>
+    <string name="you_are_almost_there">You\'re almost there,\njust a few things more</string>
     <string name="add_user">Add user</string>
     <string name="title_activity_video_upload">Upload Video</string>
     <string name="action_settings">Settings</string>
@@ -281,4 +281,5 @@
     <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, only you will be able to see this post.</string>
     <string name="yes_hide">Yes, hide</string>
     <string name="video_hide_successful">The video was hidden successfully\nOnly you are able to view it now</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>
