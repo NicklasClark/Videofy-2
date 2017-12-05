@@ -64,7 +64,6 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
@@ -241,7 +240,6 @@ public class CameraFragment extends Fragment {
     private String cameraId;
     private boolean isReaction;
     private PostDetails postDetails;
-    private CameraManager cameraManager;
     private boolean isFlashSupported;
     private boolean isTorchOn = false;
 
@@ -477,7 +475,7 @@ public class CameraFragment extends Fragment {
             return;
         }
 
-        cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        CameraManager cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -839,11 +837,11 @@ public class CameraFragment extends Fragment {
             updatedTime = timeSwapBuff + timeInMilliseconds;
 
             int secs = (int) (updatedTime / 1000);
-            int mins = secs / 60;
+            int minutes = secs / 60;
             secs = secs % 60;
-            int milliseconds = (int) (updatedTime % 1000);
-            videoDuration.setText("" + mins + ":"
-                    + String.format("%02d", secs));
+//            int milliseconds = (int) (updatedTime % 1000);
+            String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+            videoDuration.setText(duration);
             customHandler.postDelayed(this, 0);
         }
 
@@ -867,20 +865,22 @@ public class CameraFragment extends Fragment {
                     mPreviewSession.stopRepeating();
                     mPreviewSession.abortCaptures();
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //stopping recording timer
-                            timeSwapBuff += timeInMilliseconds;
+                    if (isAdded()) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //stopping recording timer
+                                timeSwapBuff += timeInMilliseconds;
 
-                            startTime = 0L;
-                            timeInMilliseconds = 0L;
-                            timeSwapBuff = 0L;
-                            updatedTime = 0L;
-                            videoDuration.setVisibility(View.INVISIBLE);
-                            customHandler.removeCallbacks(updateTimerThread);
-                        }
-                    });
+                                startTime = 0L;
+                                timeInMilliseconds = 0L;
+                                timeSwapBuff = 0L;
+                                updatedTime = 0L;
+                                videoDuration.setVisibility(View.INVISIBLE);
+                                customHandler.removeCallbacks(updateTimerThread);
+                            }
+                        });
+                    }
 
                     //checking flash status before stopping camera recording
                     if (cameraId.equals(String.valueOf(CAMERA_BACK))) {

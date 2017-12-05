@@ -78,7 +78,7 @@ public class UserVideosFragment extends BaseFragment implements AppBarLayout.OnO
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 //        mAppBarLayout.addOnOffsetChangedListener(this);
 
-//        mToolbar.inflateMenu(R.menu.menu_post);
+//        mToolbar.inflateMenu(R.menu.menu_post_others);
 //        startAlphaAnimation(mTitle, 0, INVISIBLE);
 //        startAlphaAnimation(upBtn, 0, INVISIBLE);
 //        startAlphaAnimation(tabLayout, 0, INVISIBLE);
@@ -98,8 +98,8 @@ public class UserVideosFragment extends BaseFragment implements AppBarLayout.OnO
 
 //    @Override
 //    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_post, menu);
-////        getActivity().getMenuInflater().inflate(R.menu.menu_post, menu);
+//        inflater.inflate(R.menu.menu_post_others, menu);
+////        getActivity().getMenuInflater().inflate(R.menu.menu_post_others, menu);
 //    }
 
     @Override

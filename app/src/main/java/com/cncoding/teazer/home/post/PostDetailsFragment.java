@@ -2,6 +2,7 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -552,7 +554,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
-        popupMenu.inflate(R.menu.menu_post);
+        if (postDetails.canDelete())
+            popupMenu.inflate(R.menu.menu_post_self);
+        else
+            popupMenu.inflate(R.menu.menu_post_others);
         popupMenu.show();
     }
 
@@ -660,14 +665,35 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-//                case R.id.action_hide:
-//                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
-//                    return true;
-//                case R.id.action_delete:
-//                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
-//                    return true;
+                case R.id.action_hide:
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.hiding_post)
+                            .setMessage(R.string.hide_post_confirm)
+                            .setPositiveButton(getString(R.string.yes_hide), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, getContext())
+                                            .enqueue(new Callback<ResultObject>() {
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                    Log.e("hidePost", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                                                }
+                                            });
+                                }
+                            });
+                    Toast.makeText(context, "Hide", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.action_delete:
+                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                    return true;
                 case R.id.action_profile_report:
-                    if (postDetails.canReact()) {
+                    if (!postDetails.canDelete()) {
                         FragmentManager fragmentManager = getFragmentManager();
                         ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
                                 newInstance(postDetails.getPostId(), postDetails.canReact());

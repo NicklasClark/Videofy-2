@@ -22,6 +22,7 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -76,19 +77,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
         }
 
-        if (postOwner.hasProfileMedia())
-            Glide.with(context)
-                    .load(postOwner.getProfileMedia().getThumbUrl())
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .into(holder.profilePic);
-        else
-            Glide.with(context)
-                    .load(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .skipMemoryCache(true)
-                    .into(holder.profilePic);
-
         String title = holder.postDetails.getTitle();
         holder.caption.setText(title);
         holder.caption.setVisibility(View.VISIBLE);
@@ -133,6 +121,25 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             holder.profilePic.setOnClickListener(viewProfile);
             holder.name.setOnClickListener(viewProfile);
         }
+
+        Glide.with(context)
+                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .listener(new RequestListener<Serializable, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        holder.profilePic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
+                .into(holder.profilePic);
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
