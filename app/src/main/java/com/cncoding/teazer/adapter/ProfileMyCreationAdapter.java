@@ -1,6 +1,8 @@
 package com.cncoding.teazer.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -21,6 +23,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -136,9 +139,30 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
-                                    deleteVideos(videopostId);
-                                    viewHolder.cardView.setVisibility(View.GONE);
-                                    list.remove(i);
+
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                                    alertDialog.setTitle("Confirm Deletion...");
+                                    alertDialog.setMessage("Are you sure you want to delete this video.");
+                                    alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+                                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface dialog,int which) {
+                                            deleteVideos(videopostId);
+                                            viewHolder.cardView.setVisibility(View.GONE);
+                                            list.remove(i);
+                                        }
+                                    });
+                                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    alertDialog.show();
+
+
+
+
                                     break;
                                 case R.id.edit_post:
                                     Intent intent=new Intent(context, EditPost.class);

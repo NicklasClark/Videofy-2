@@ -37,52 +37,204 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
-                <ImageView
 
-                    android:id="@+id/profile_id"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/defaultqrcode"
 
-                    android:layout_margin="2dp"
-                  />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:foregroundGravity="center_horizontal"
-                 android:layout_marginBottom="10dp"
-                android:gravity="center_horizontal">
-                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                    android:layout_width="wrap_content"
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp">
 
-                    android:text="Invite your friends using QR Code."
+                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Invite your Frinds on"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp" />
 
-                    android:textColor="#FF000000"
-                    android:textSize="14sp" />
-                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                    android:layout_width="wrap_content"
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="35dp"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:id="@+id/facebookShareLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/ic_fbshare"
+                                android:layout_margin="2dp"
+                                android:layout_marginBottom="10dp"
+                               />
+
+                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Facebook"
+                            android:textColor="#FF333333"
+                            android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                      >
+                        <LinearLayout
+                            android:id="@+id/watsppLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/ic_whatsapp"
+                                android:layout_margin="2dp"
+                                android:layout_marginBottom="10dp" />
+
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Whatsapp"
+                                android:textColor="#FF333333"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="35dp"
+                        >
+                        <LinearLayout
+                            android:id="@+id/smsLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+
+                            android:orientation="vertical">
+                            <ImageView
+
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/ic_sms_invite"
+                                android:layout_margin="2dp"
+                                android:layout_marginBottom="10dp" />
+
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SMS"
+                                android:textColor="#FF333333"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+
+                            android:id="@+id/gmailShare"
+                            android:orientation="vertical">
+                            <ImageView
+
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/ic_email_invite"
+                                android:layout_margin="2dp"
+                                android:layout_marginBottom="10dp" />
+
+                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Email"
+                                android:textColor="#FF333333"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <View
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:background="#FFDDDDDD"
+                    android:layout_marginEnd="15dp"
                     android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:textColor="#FF26C6DA"
-                    android:text="Share"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="15dp"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -120,161 +272,7 @@
                         android:textColor="#FF26C6DA"
                         android:textSize="14sp" />
                 </LinearLayout>
-                <View
-                    android:layout_height="1dp"
-                    android:layout_width="match_parent"
-                    android:background="#FFDDDDDD"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginStart="15dp"/>
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="From our official site"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:id="@+id/facebookShareLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical">
-                            <ImageView
-
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/ic_fbshare"
-                                android:layout_margin="2dp"
-                                android:layout_marginBottom="10dp"
-                               />
-
-                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Facebook"
-                            android:textColor="#FF333333"
-                            android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <LinearLayout
-                            android:id="@+id/watsppLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical">
-                            <ImageView
-
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/ic_whatsapp"
-                                android:layout_margin="2dp"
-                                android:layout_marginBottom="10dp" />
-
-                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Whatsapp"
-                                android:textColor="#FF333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <LinearLayout
-                            android:id="@+id/smsLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-
-                            android:orientation="vertical">
-                            <ImageView
-
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/ic_sms_invite"
-                                android:layout_margin="2dp"
-                                android:layout_marginBottom="10dp" />
-
-                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SMS"
-                                android:textColor="#FF333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:id="@+id/gmailShare"
-                            android:orientation="vertical">
-                            <ImageView
-
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/ic_email_invite"
-                                android:layout_margin="2dp"
-                                android:layout_marginBottom="10dp" />
-
-                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Email"
-                                android:textColor="#FF333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
 
             </LinearLayout>
         </RelativeLayout>

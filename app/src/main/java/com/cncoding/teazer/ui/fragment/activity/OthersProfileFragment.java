@@ -181,7 +181,7 @@ public class OthersProfileFragment extends BaseFragment {
 
                     followUser(followerfollowingid, context);
 
-                } else if (_btnfollow.getText().equals("Unfollow") || _btnfollow.getText().equals("Following")) {
+                } else if (_btnfollow.getText().equals("Following")) {
 
                     unFollowUser(followerfollowingid, context);
 
@@ -645,12 +645,12 @@ public class OthersProfileFragment extends BaseFragment {
                                 _btnfollow.setText("Requested");
 
                             } else {
-                                _btnfollow.setText("Unfollow");
+                                _btnfollow.setText("Following");
                             }
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            _btnfollow.setText("Unfollow");
+                            _btnfollow.setText("Following");
                             Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
                         }
 

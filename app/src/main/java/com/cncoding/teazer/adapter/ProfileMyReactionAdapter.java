@@ -1,6 +1,8 @@
 package com.cncoding.teazer.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -50,7 +52,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         return new ProfileMyReactionAdapter.ViewHolder(view);
     }
     @Override
-    public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
 
         final Reaction cont = list.get(i);
         final int reactId = cont.getReactId();
@@ -60,7 +62,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         final String reactduration = cont.getMediaDetail().getReactDuration();
 
         final String videourl = cont.getMediaDetail().getReactMediaUrl();
-        final String thumb_url = cont.getMediaDetail().getReactMediaUrl();
+        final String thumb_url = cont.getMediaDetail().getReactThumbUrl();
         final String postowner = cont.getPostOwner().getUserName();
         final int reaction = cont.getReactedBy();
 
@@ -98,15 +100,33 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 PopupMenu popup = new PopupMenu(context, viewHolder.menu);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.menu_profile);
-                //adding click listener
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_delete:
-                                deleteVideos(reactId);
-                                // notifyItemRemoved(i);
-                                viewHolder.cardView.setVisibility(View.GONE);
+
+
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                                alertDialog.setTitle("Confirm Deletion...");
+                                alertDialog.setMessage("Are you sure you want to delete this video.");
+                                alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+                                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog,int which) {
+                                        deleteVideos(reactId);
+                                        viewHolder.cardView.setVisibility(View.GONE);
+                                    }
+                                });
+                                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        dialog.cancel();
+                                    }
+                                });
+                                alertDialog.show();
+
                                 break;
 
                         }
