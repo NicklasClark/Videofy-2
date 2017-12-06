@@ -32,7 +32,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.model.profile.reaction.Reaction;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
+import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,6 +57,8 @@ public class ViewUtils {
     public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
+    public static final int POST_REACTION = 0;
+    public static final int SELF_REACTION = 1;
 
     public static void enableView(View view) {
         view.setEnabled(true);
@@ -86,7 +90,30 @@ public class ViewUtils {
         intent.putExtra("VIDEO_URL", videoPath);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
 
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction)
+    {
+        switch (source) {
+            case POST_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("POST_INFO", postReaction);
+                intent.putExtra("SOURCE", POST_REACTION);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+            case SELF_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
+                intent.putExtra("POST_INFO", reaction);
+                intent.putExtra("SOURCE", SELF_REACTION);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+        }
     }
 
     /**

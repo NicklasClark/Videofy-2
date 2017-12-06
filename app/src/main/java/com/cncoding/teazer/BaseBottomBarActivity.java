@@ -2,6 +2,7 @@ package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
@@ -78,6 +80,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -88,6 +93,8 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import okhttp3.MultipartBody.Part;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -224,7 +231,50 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         });
 
-        getDynamicLinks();
+//        getDynamicLinks();
+        getBranchDynamicLinks();
+    }
+
+    private void getBranchDynamicLinks() {
+        // listener (within Main Activity's onStart)
+        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    try {
+                        Log.d("BRANCH", referringParams.getString("post_id"));
+                        String postId = referringParams.getString("post_id");
+                        if (postId != null) {
+                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                    .enqueue(new Callback<PostDetails>() {
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200) {
+                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                            } else
+                                                Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 
     private void getDynamicLinks() {
@@ -241,6 +291,22 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Log.d("Firebase", deepLink.toString());
                             }
                             String postId = deepLink.getQueryParameter("link");
+                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                    .enqueue(new Callback<PostDetails>() {
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200) {
+                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                            } else
+                                                Log.e("Fetching post details", response.code() + "_" + response.message());
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
+                                        }
+                                    });
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

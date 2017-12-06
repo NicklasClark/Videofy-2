@@ -94,6 +94,7 @@ dependencies {
     compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
     compile 'com.github.yangjie10930:EpMedia:v0.9.1'
     compile 'com.google.firebase:firebase-invites:11.6.2'
+    compile 'io.branch.sdk.android:library:2.+'
 }
 
 configurations.all {

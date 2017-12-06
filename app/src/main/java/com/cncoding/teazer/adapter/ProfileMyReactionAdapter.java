@@ -20,7 +20,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
 import com.cncoding.teazer.ui.fragment.activity.ProfileCreationVideos;
 
@@ -29,6 +28,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -89,6 +91,8 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 intent.putExtra("Views",String.valueOf( views));
                 intent.putExtra("Title", videotitle);
                 context.startActivity(intent);
+
+                playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {

@@ -54,7 +54,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="220dp"
-                        android:background="@color/blur"
+                        android:background="@color/white"
                         android:orientation="vertical" />
 
                     <LinearLayout
@@ -124,7 +124,7 @@
                                             android:gravity="center_vertical"
                                             android:maxLines="1"
                                             android:text="usernamezp"
-                                            android:textColor="@color/colorIcons"
+                                            android:textColor="@color/colorPrimary_text"
                                             android:textSize="32sp" />
                                         <LinearLayout
                                             android:id="@+id/bulletslayout"
@@ -153,7 +153,7 @@
                                                 android:maxLines="1"
 
                                                 android:text="@string/name"
-                                                android:textColor="@color/colorIcons"
+                                                android:textColor="@color/colorPrimary_text"
                                                 android:textSize="12sp" />
                                         </LinearLayout>
 
@@ -170,7 +170,7 @@
                                             android:maxLines="3"
                                             android:ellipsize="end"
                                             android:text="@string/hobby"
-                                            android:textColor="@color/colorIcons"
+                                            android:textColor="@color/colorPrimary_text"
                                             android:textSize="12sp" />
 
 
@@ -181,7 +181,7 @@
                                             android:layout_below="@+id/hobby"
                                             android:layout_marginEnd="10dp"
                                             android:background="@drawable/border_layout"
-                                            android:drawableStart="@drawable/ic_share_white"
+                                            android:drawableStart="@drawable/ic_share"
                                             android:paddingTop="5dp"
                                             android:paddingBottom="5dp"
                                             android:paddingRight="3dp"
@@ -190,7 +190,7 @@
                                             android:text="Share"
                                             android:textStyle="normal"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorIcons"
+                                            android:textColor="@color/colorPrimary_text"
                                             android:textSize="12sp" />
 
                                         <Button
@@ -200,7 +200,7 @@
                                             android:layout_below="@+id/hobby"
                                             android:layout_toEndOf="@+id/btnshare"
                                             android:background="@drawable/border_layout"
-                                            android:drawableStart="@drawable/ic_edit"
+                                            android:drawableStart="@drawable/ic_edit_black_24dp"
                                             android:paddingTop="5dp"
                                             android:paddingBottom="5dp"
                                             android:paddingRight="3dp"
@@ -208,7 +208,7 @@
                                             android:drawablePadding="-8dp"
                                             android:text="Edit"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorIcons"
+                                            android:textColor="@color/colorPrimary_text"
                                             android:textSize="12sp" />
 
 
@@ -246,7 +246,7 @@
                                     android:drawablePadding="5dp"
                                     android:drawableStart="@drawable/ic_creations"
                                     android:text="@string/creation"
-                                    android:textColor="@color/colorIcons"
+                                    android:textColor="@color/colorPrimary_text"
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -263,8 +263,8 @@
                                     android:layout_height="26dp"
                                     android:layout_below="@+id/username_title"
                                     android:layout_marginStart="2dp"
-                                    android:background="#64ffffff"
-                                    android:textColor="@color/colorIcons" />
+                                    android:background="@color/colorPrimary_text"
+                                    android:textColor="@color/colorPrimary_text" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -283,7 +283,7 @@
                                     android:drawablePadding="5dp"
                                     android:drawableStart="@drawable/ic_following"
                                     android:text="@string/following"
-                                    android:textColor="@color/colorIcons"
+                                    android:textColor="@color/colorPrimary_text"
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -297,7 +297,9 @@
                                 <View
                                     android:layout_width="1dp"
                                     android:layout_height="26dp"
-                                    android:background="#64ffffff"/>
+                                    android:background="@color/colorPrimary_text"
+                                    android:textColor="@color/colorPrimary_text" />
+
 
                             </LinearLayout>
 
@@ -318,7 +320,7 @@
 
                                     android:drawableStart="@drawable/ic_followers"
                                     android:text="@string/followers"
-                                    android:textColor="@color/colorIcons"
+                                    android:textColor="@color/colorPrimary_text"
                                     android:textSize="13sp" />
                             </LinearLayout>
                         </LinearLayout>
@@ -326,6 +328,7 @@
 
 
                 </RelativeLayout>
+
 
                 <!--<android.support.v7.widget.Toolbar-->
 
@@ -373,7 +376,7 @@
                             <!--android:layout_marginStart="5dp"-->
                             <!--android:layout_toEndOf="@+id/backbutton"-->
                             <!--android:text="@string/username"-->
-                            <!--android:textColor="@color/colorIcons"-->
+                            <!--android:textColor="@color/colorPrimary_text"-->
                             <!--android:textSize="@dimen/text_size_h5"-->
                             <!--android:visibility="invisible" />-->
 
@@ -445,7 +448,7 @@
         <!--android:text="@string/name"-->
         <!--android:layout_marginTop="5dp"-->
         <!--android:layout_marginBottom="5dp"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:layout_gravity="center"-->
         <!--android:textSize="@dimen/text_size_h3"-->
 
@@ -456,7 +459,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_below="@+id/username_title"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_content"-->
         <!--android:text="\u25CF"/>-->
 
@@ -467,7 +470,7 @@
         <!--android:layout_toEndOf="@+id/bullets"-->
         <!--android:layout_marginStart="5dp"-->
         <!--android:layout_below="@+id/username_title"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_content"-->
         <!--android:text="@string/username" />-->
 
@@ -480,7 +483,7 @@
         <!--android:layout_below="@+id/bullets"-->
         <!--android:textSize="@dimen/text_size_content"-->
         <!--android:layout_marginTop="5dp"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:text="@string/hobby" />-->
 
         <!--<TextView-->
@@ -490,7 +493,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_below="@+id/hobby"-->
         <!--android:textSize="@dimen/text_size_content"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:layout_marginTop="5dp"-->
         <!--android:layout_marginBottom="5dp"-->
         <!--android:text="@string/user_detail" />-->
@@ -504,7 +507,7 @@
         <!--android:textSize="14dp"-->
         <!--android:textStyle="normal"-->
         <!--android:layout_marginTop="5dp"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:background="@drawable/border_layout"-->
         <!--android:drawableStart="@drawable/ic_share"-->
         <!--android:layout_marginEnd="10dp"-->
@@ -522,7 +525,7 @@
         <!--android:textSize="14dp"-->
         <!--android:background="@drawable/border_layout"-->
         <!--android:layout_marginTop="5dp"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:drawableStart="@drawable/ic_edit" />-->
 
 
@@ -544,7 +547,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_marginStart="5dp"-->
         <!--android:layout_below="@+id/username_title"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_content2"-->
         <!--android:drawableStart="@drawable/ic_creations"-->
         <!--android:drawablePadding="5dp"-->
@@ -559,7 +562,7 @@
         <!--<View-->
         <!--android:layout_height="30dp"-->
         <!--android:layout_width="1dp"-->
-        <!--android:background="@color/colorIcons"-->
+        <!--android:background="@color/colorPrimary_text"-->
         <!--android:layout_below="@+id/username_title"-->
         <!--android:layout_marginStart="10dp"-->
         <!--android:textColor="@color/colorlines"-->
@@ -577,7 +580,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_marginStart="5dp"-->
         <!--android:layout_below="@+id/username_title"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_content2"-->
         <!--android:drawableStart="@drawable/ic_following"-->
         <!--android:drawablePadding="5dp"-->
@@ -606,7 +609,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_marginStart="5dp"-->
         <!--android:layout_below="@+id/username_title"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_content2"-->
         <!--android:drawableStart="@drawable/ic_followers"-->
         <!--android:drawablePadding="5dp"-->
@@ -638,7 +641,7 @@
         <!--android:layout_toEndOf="@+id/backbutton"-->
         <!--android:layout_marginStart="5dp"-->
         <!--android:visibility="invisible"-->
-        <!--android:textColor="@color/colorIcons"-->
+        <!--android:textColor="@color/colorPrimary_text"-->
         <!--android:textSize="@dimen/text_size_h5"-->
         <!--android:text="@string/username" />-->
 
@@ -666,6 +669,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_mid_dark"
+                    android:textColor="@color/colorPrimary_text" />
                 <android.support.design.widget.TabLayout
                     android:id="@+id/sliding_tabs"
                     style="@style/MyCustomTabLayout"
@@ -717,31 +725,31 @@
 
     <!--<RelativeLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content">-->
 
-    <!--<com.cncoding.teazer.customViews.SignPainterTextView--><!--android:id="@+id/username_title"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="@string/name"--><!--android:layout_marginTop="5dp"--><!--android:layout_marginBottom="5dp"--><!--android:textColor="@color/colorIcons"--><!--android:layout_gravity="center"--><!--android:textSize="@dimen/text_size_h3"-->
+    <!--<com.cncoding.teazer.customViews.SignPainterTextView--><!--android:id="@+id/username_title"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="@string/name"--><!--android:layout_marginTop="5dp"--><!--android:layout_marginBottom="5dp"--><!--android:textColor="@color/colorPrimary_text"--><!--android:layout_gravity="center"--><!--android:textSize="@dimen/text_size_h3"-->
 
-    <!--android:gravity="center"/>--><!--<TextView--><!--android:id="@+id/bullets"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_content"--><!--android:text="\u25CF"/>-->
+    <!--android:gravity="center"/>--><!--<TextView--><!--android:id="@+id/bullets"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_content"--><!--android:text="\u25CF"/>-->
 
-    <!--<TextView--><!--android:id="@+id/username"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_content"--><!--android:text="@string/username" />-->
+    <!--<TextView--><!--android:id="@+id/username"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_content"--><!--android:text="@string/username" />-->
 
 
-    <!--<TextView--><!--android:id="@+id/hobby"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/bullets"--><!--android:textSize="@dimen/text_size_content"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorIcons"--><!--android:text="hsaghsaghcnasjnc/.a" />-->
+    <!--<TextView--><!--android:id="@+id/hobby"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/bullets"--><!--android:textSize="@dimen/text_size_content"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorPrimary_text"--><!--android:text="hsaghsaghcnasjnc/.a" />-->
 
     <!--<TextView-->
 
-    <!--android:id="@+id/detail"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/hobby"--><!--android:textSize="@dimen/text_size_content"--><!--android:textColor="@color/colorIcons"--><!--android:layout_marginTop="5dp"--><!--android:layout_marginBottom="5dp"--><!--android:text="@string/user_detail" />--><!--<Button--><!--android:layout_width="70dp"--><!--android:layout_height="30dp"--><!--android:id="@+id/btnshare"--><!--android:layout_below="@+id/detail"--><!--android:text="Share"--><!--android:textAllCaps="false"--><!--android:textSize="14dp"--><!--android:textStyle="normal"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorIcons"--><!--android:background="@drawable/border_layout"--><!--android:drawableStart="@drawable/ic_share"--><!--android:layout_marginEnd="10dp"--><!--android:padding="5dp" />--><!--<Button--><!--android:layout_width="65dp"--><!--android:layout_height="30dp"--><!--android:id="@+id/btnedit"--><!--android:layout_below="@+id/detail"--><!--android:layout_toEndOf="@+id/btnshare"--><!--android:text="Edit"--><!--android:textStyle="normal"--><!--android:padding="5dp"--><!--android:textAllCaps="false"--><!--android:textSize="14dp"--><!--android:background="@drawable/border_layout"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorIcons"--><!--android:drawableStart="@drawable/ic_edit" />-->
+    <!--android:id="@+id/detail"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_below="@+id/hobby"--><!--android:textSize="@dimen/text_size_content"--><!--android:textColor="@color/colorPrimary_text"--><!--android:layout_marginTop="5dp"--><!--android:layout_marginBottom="5dp"--><!--android:text="@string/user_detail" />--><!--<Button--><!--android:layout_width="70dp"--><!--android:layout_height="30dp"--><!--android:id="@+id/btnshare"--><!--android:layout_below="@+id/detail"--><!--android:text="Share"--><!--android:textAllCaps="false"--><!--android:textSize="14dp"--><!--android:textStyle="normal"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorPrimary_text"--><!--android:background="@drawable/border_layout"--><!--android:drawableStart="@drawable/ic_share"--><!--android:layout_marginEnd="10dp"--><!--android:padding="5dp" />--><!--<Button--><!--android:layout_width="65dp"--><!--android:layout_height="30dp"--><!--android:id="@+id/btnedit"--><!--android:layout_below="@+id/detail"--><!--android:layout_toEndOf="@+id/btnshare"--><!--android:text="Edit"--><!--android:textStyle="normal"--><!--android:padding="5dp"--><!--android:textAllCaps="false"--><!--android:textSize="14dp"--><!--android:background="@drawable/border_layout"--><!--android:layout_marginTop="5dp"--><!--android:textColor="@color/colorPrimary_text"--><!--android:drawableStart="@drawable/ic_edit" />-->
 
 
-    <!--</RelativeLayout>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="match_parent"--><!--android:layout_margin="10dp"--><!--android:orientation="horizontal">--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">--><!--<TextView--><!--android:id="@+id/creations"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_creations"--><!--android:drawablePadding="5dp"--><!--android:text="@string/creation" />--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight=".3"-->
+    <!--</RelativeLayout>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="match_parent"--><!--android:layout_margin="10dp"--><!--android:orientation="horizontal">--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">--><!--<TextView--><!--android:id="@+id/creations"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_creations"--><!--android:drawablePadding="5dp"--><!--android:text="@string/creation" />--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight=".3"-->
 
-    <!--android:orientation="horizontal">--><!--<View--><!--android:layout_height="30dp"--><!--android:layout_width="1dp"--><!--android:background="@color/colorIcons"--><!--android:layout_below="@+id/username_title"--><!--android:layout_marginStart="10dp"--><!--android:textColor="@color/colorlines"--><!--/>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">-->
+    <!--android:orientation="horizontal">--><!--<View--><!--android:layout_height="30dp"--><!--android:layout_width="1dp"--><!--android:background="@color/colorPrimary_text"--><!--android:layout_below="@+id/username_title"--><!--android:layout_marginStart="10dp"--><!--android:textColor="@color/colorlines"--><!--/>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">-->
 
-    <!--<TextView--><!--android:id="@+id/following"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_following"--><!--android:drawablePadding="5dp"--><!--android:text="@string/following" />--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight=".3"--><!--android:orientation="horizontal">--><!--<View--><!--android:layout_height="30dp"--><!--android:layout_width="1dp"--><!--android:layout_marginStart="10dp"--><!--android:background="@color/colorlines"--><!--/>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">--><!--<TextView--><!--android:id="@+id/followers"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_followers"--><!--android:drawablePadding="5dp"--><!--android:text="@string/followers" />--><!--</LinearLayout>--><!--</LinearLayout>--><!--</LinearLayout>-->
+    <!--<TextView--><!--android:id="@+id/following"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_following"--><!--android:drawablePadding="5dp"--><!--android:text="@string/following" />--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight=".3"--><!--android:orientation="horizontal">--><!--<View--><!--android:layout_height="30dp"--><!--android:layout_width="1dp"--><!--android:layout_marginStart="10dp"--><!--android:background="@color/colorlines"--><!--/>--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="0dp"--><!--android:layout_weight="1"--><!--android:orientation="horizontal">--><!--<TextView--><!--android:id="@+id/followers"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/bullets"--><!--android:layout_marginStart="5dp"--><!--android:layout_below="@+id/username_title"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_content2"--><!--android:drawableStart="@drawable/ic_followers"--><!--android:drawablePadding="5dp"--><!--android:text="@string/followers" />--><!--</LinearLayout>--><!--</LinearLayout>--><!--</LinearLayout>-->
 
     <!--</RelativeLayout>--><!--<android.support.v7.widget.Toolbar--><!--android:id="@+id/toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="?attr/actionBarSize"--><!--app:layout_collapseMode="pin">-->
 
     <!--<RelativeLayout--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content">--><!--<ImageView--><!--android:id="@+id/backbutton"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:src="@drawable/ic_arrow_back_black_24dp" />-->
 
-    <!--<TextView--><!--android:id="@+id/toolbarusername"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/backbutton"--><!--android:layout_marginStart="5dp"--><!--android:visibility="invisible"--><!--android:textColor="@color/colorIcons"--><!--android:textSize="@dimen/text_size_h5"--><!--android:text="@string/username" />-->
+    <!--<TextView--><!--android:id="@+id/toolbarusername"--><!--android:layout_height="wrap_content"--><!--android:layout_width="wrap_content"--><!--android:layout_toEndOf="@+id/backbutton"--><!--android:layout_marginStart="5dp"--><!--android:visibility="invisible"--><!--android:textColor="@color/colorPrimary_text"--><!--android:textSize="@dimen/text_size_h5"--><!--android:text="@string/username" />-->
 
     <!--<ImageView--><!--android:id="@+id/settings"--><!--android:layout_width="24dp"--><!--android:layout_height="24dp"--><!--android:src="@drawable/settings"--><!--android:layout_alignParentEnd="true"--><!--android:layout_marginEnd="10dp" />-->
 

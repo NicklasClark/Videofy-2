@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
@@ -35,7 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -129,12 +128,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             View.OnClickListener viewReactionDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
-                    Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                    intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
-                    intent.putExtra("POST_INFO", postReaction);
-                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+                    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
 
                     ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
                             .enqueue(new Callback<ResultObject>() {

@@ -391,9 +391,8 @@ public class AuthUtils {
                         SharedPrefs.resetAuthToken(context);
                         if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            activity.startActivity(new Intent(activity, MainActivity.class));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            activity.startActivity(intent);
                             activity.finish();
                         }
                     }
