@@ -34,7 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -140,7 +141,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             View.OnClickListener viewReactionDetails = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
+                    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+
                     ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
                             .enqueue(new Callback<ResultObject>() {
                                 @Override

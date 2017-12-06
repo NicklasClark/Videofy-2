@@ -32,11 +32,15 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
+import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -56,6 +60,8 @@ public class ViewUtils {
     public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
+    public static final int POST_REACTION = 0;
+    public static final int SELF_REACTION = 1;
 
     public static void enableView(View view) {
         view.setEnabled(true);
@@ -80,6 +86,37 @@ public class ViewUtils {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         context.startActivity(intent);
+    }
+
+    public static void playVideoInExoPlayer(Context context, String videoPath) {
+        Intent intent = new Intent(context, ExoPlayerActivity.class);
+        intent.putExtra("VIDEO_URL", videoPath);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction)
+    {
+        switch (source) {
+            case POST_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("POST_INFO", postReaction);
+                intent.putExtra("SOURCE", POST_REACTION);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+            case SELF_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
+                intent.putExtra("POST_INFO", reaction);
+                intent.putExtra("SOURCE", SELF_REACTION);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+        }
     }
 
     /**

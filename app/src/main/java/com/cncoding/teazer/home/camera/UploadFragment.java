@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -48,6 +49,9 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.utilities.Pojos;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -98,7 +102,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
+import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -238,7 +242,50 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    public void setupFacebookShareIntent() {
+
+//        if(checkefacebookeButtonPressed==true) {
+//            String s="https://www.youtube.com/";
+//            Uri videoFileUri = Uri.parse(s);
+//            ShareVideo shareVideo = new ShareVideo.Builder()
+//                    .setLocalUrl(videoFileUri)
+//                    .build();
+//            ShareVideoContent content = new ShareVideoContent.Builder()
+//                    .setVideo(shareVideo)
+//                    .build();
+//        }
+//        else
+//        {
+//            Toast.makeText(getContext(),"check not upload",Toast.LENGTH_SHORT).show();
+//
+//        }
+
+        try {
+            ShareDialog shareDialog;
+            FacebookSdk.sdkInitialize(getContext());
+            shareDialog = new ShareDialog(getActivity());
+            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
+
+
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(videoTitle.getText().toString())
+                    .setContentDescription(
+                            "Hello")
+                    .setContentUrl(Uri.parse(videoPath))
+                    .build();
+
+            shareDialog.show(linkContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -471,7 +518,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
         hideKeyboard(activity, videoTitle);
-        playVideo(context, videoPath, false);
+//        playVideo(context, videoPath, false);
+        playVideoInExoPlayer(context, videoPath);
     }
 
     @OnTouch(R.id.video_upload_location) public boolean addLocation(View view, MotionEvent motionEvent) {

@@ -1,5 +1,8 @@
 package com.cncoding.teazer.model.profile.reaction;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.cncoding.teazer.model.profile.followerprofile.ProfileMedia_;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by farazhabib on 10/11/17.
  */
 
-public class PostOwner {
+public class PostOwner implements Parcelable {
 
 
     @SerializedName("user_id")
@@ -78,4 +81,43 @@ public class PostOwner {
     public void setProfileMedia(ProfileMedia_ profileMedia) {
         this.profileMedia = profileMedia;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.userId);
+        dest.writeString(this.userName);
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
+        dest.writeValue(this.hasProfileMedia);
+        dest.writeParcelable(this.profileMedia, flags);
+    }
+
+    public PostOwner() {
+    }
+
+    protected PostOwner(Parcel in) {
+        this.userId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.userName = in.readString();
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+        this.hasProfileMedia = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.profileMedia = in.readParcelable(ProfileMedia_.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<PostOwner> CREATOR = new Parcelable.Creator<PostOwner>() {
+        @Override
+        public PostOwner createFromParcel(Parcel source) {
+            return new PostOwner(source);
+        }
+
+        @Override
+        public PostOwner[] newArray(int size) {
+            return new PostOwner[size];
+        }
+    };
 }
