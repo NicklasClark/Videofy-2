@@ -60,6 +60,7 @@
                     app:ccpDialog_fastScroller_handleColor="@color/colorAccent"
                     app:ccpDialog_backgroundColor="@color/material_grey100"
                     app:ccpDialog_textColor="@color/colorSecondary_text"
+                    app:ccp_contentColor="@color/colorCcp"
                     app:ccp_showNameCode="false"
                     app:ccp_showPhoneCode="true"
                     android:layout_alignTop="@+id/login_username"

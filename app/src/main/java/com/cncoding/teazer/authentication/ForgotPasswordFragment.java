@@ -27,7 +27,6 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
-import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
@@ -132,7 +131,7 @@ public class ForgotPasswordFragment extends AuthFragment {
 
                                 @Override
                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                    logTheError("resetPasswordByPhone", t.getMessage());
+                                    t.printStackTrace();
                                 }
                             });
                 } else {
@@ -157,7 +156,7 @@ public class ForgotPasswordFragment extends AuthFragment {
 
                                     @Override
                                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                                        logTheError("resetPasswordByEmail", t.getMessage());
+                                        t.printStackTrace();
                                     }
                                 });
                     } else {

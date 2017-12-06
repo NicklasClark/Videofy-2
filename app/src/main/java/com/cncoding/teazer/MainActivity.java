@@ -223,9 +223,8 @@ public class MainActivity extends AppCompatActivity
 //            new Blur(this).execute();
         }
         else {
-            mainFragmentContainer.setBackgroundColor(Color.TRANSPARENT);
-//            if (transitionDrawable != null)
-//                transitionDrawable.reverseTransition(600);
+            if (transitionDrawable != null)
+                transitionDrawable.reverseTransition(400);
             if (mediaPlayer != null && !mediaPlayer.isPlaying())
                 mediaPlayer.start();
         }

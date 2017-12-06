@@ -40,7 +40,6 @@ import retrofit2.Response;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
-import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 
 public class TagsAndCategoryFragment extends Fragment {
 
@@ -173,7 +172,7 @@ public class TagsAndCategoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
-                logTheError("getCategories", t.getMessage());
+                t.printStackTrace();
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -205,7 +204,7 @@ public class TagsAndCategoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CircleList> call, Throwable t) {
-                logTheError("getMyCircle", t.getMessage());
+                t.printStackTrace();
                 progressBar.setVisibility(View.GONE);
             }
         });

@@ -543,13 +543,13 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             return;
         }
         isShowing = false;
-        putOn(topLayout)
+        putOn(playPauseButton)
                 .animate()
-                .translationY(-topLayout.getHeight())
-                .duration(ANIMATE_TIME)
-                .andAnimate(bottomLayout)
-                .translationY(bottomLayout.getHeight())
-                .duration(ANIMATE_TIME)
+//                .translationY(-topLayout.getHeight())
+//                .duration(ANIMATE_TIME)
+//                .andAnimate(bottomLayout)
+//                .translationY(bottomLayout.getHeight())
+//                .duration(ANIMATE_TIME)
                 .andAnimate(playPauseButton)
                 .scale(1, 0)
                 .alpha(1, 0)

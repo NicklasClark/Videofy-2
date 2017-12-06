@@ -77,7 +77,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private static final String ARG_POST_DETAILS = "postDetails";
     private static final String ARG_THUMBNAIL = "thumbnail";
-    private static final String ARG_HAS_REACTED = "has_reacted";
+//    private static final String ARG_HAS_REACTED = "has_reacted";
     public static final int ACTION_DISMISS_PLACEHOLDER = 10;
     public static final int ACTION_OPEN_REACTION_CAMERA = 11;
     private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
@@ -112,7 +112,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     private byte[] image;
 
     private Call<PostReactionsList> postReactionsListCall;
-    private Callback<PostReactionsList> postReactionsListCallback;
     private ArrayList<PostReaction> postReactions;
     private ArrayList<TaggedUser> taggedUsersList;
     private MediaControllerView controller;
@@ -333,11 +332,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
-        if (pageNumber == 1)
-            postReactions.clear();
+        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
 
-        if (postReactionsListCallback == null)
-            postReactionsListCallback = new Callback<PostReactionsList>() {
+        if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
+            postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
                 @Override
                 public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
                     switch (response.code()) {
@@ -345,8 +343,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                             if (response.body().getReactions().size() > 0) {
                                 postLoadErrorLayout.setVisibility(View.GONE);
                                 is_next_page = response.body().isNextPage();
-                                if (pageNumber == 1)
-                                    postReactions.clear();
+                                if (pageNumber == 1) postReactions.clear();
 
                                 postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
@@ -389,12 +386,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                         ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
                     }
                 }
-            };
-
-        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
-
-        if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
-            postReactionsListCall.enqueue(postReactionsListCallback);
+            });
     }
 
     private void showNoReactionMessage() {
@@ -795,7 +787,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         void onPostDetailsInteraction(int action, PostDetails postDetails);
     }
 
-    interface PostDetailsUpdateListener {
-        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
-    }
+//    interface PostDetailsUpdateListener {
+//        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
+//    }
 }

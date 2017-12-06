@@ -372,8 +372,8 @@ import retrofit2.http.Query;
         Call<FollowersProfile> getOthersProfileInfo(@Path("user_id") int userId);
 
 
-        @GET("/api/v1/friend/profile/{user_id}")
-        Call<Profile> getOthersProfileInfoNoti(@Path("user_id") int userId);
+//        @GET("/api/v1/friend/profile/{user_id}")
+//        Call<Profile> getOthersProfileInfoNoti(@Path("user_id") int userId);
 
         /**
          * Call this service to Block/Unblock a user

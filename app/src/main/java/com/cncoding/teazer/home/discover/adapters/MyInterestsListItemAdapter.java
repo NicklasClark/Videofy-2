@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -136,13 +137,31 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                     holder.reactionImage2.setBackgroundResource(R.drawable.bg_placeholder_light_round);
                 }
 
-                holder.layout.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
-                                holder.postDetails, null);
+                        switch (view.getId()) {
+                            case R.id.root_layout:
+                                mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
+                                        holder.postDetails, null);
+                                break;
+                            case R.id.dp:
+                                mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
+                                        holder.postDetails, null);
+                                break;
+                            case R.id.name:
+                                mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
+                                        holder.postDetails, null);
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                });
+                };
+
+                holder.layout.setOnClickListener(listener);
+                holder.name.setOnClickListener(listener);
+                holder.dp.setOnClickListener(listener);
             } catch (Resources.NotFoundException e) {
                 e.printStackTrace();
             }

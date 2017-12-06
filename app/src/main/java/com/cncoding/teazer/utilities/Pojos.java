@@ -868,12 +868,13 @@ public class Pojos {
             private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
             private CheckIn check_in;
             public ArrayList<Medias> medias;
+            private ArrayList<TaggedUser> tagged_users;
             private ArrayList<ReactedUser> reacted_users;
             private ArrayList<Category> categories;
 
-            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags,
-                               boolean has_checkin, String title, boolean can_react, boolean can_like, boolean can_delete,
-                               MiniProfile post_owner, String created_at, CheckIn check_in, ArrayList<Medias> medias,
+            public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags, boolean has_checkin,
+                               String title, boolean can_react, boolean can_like, boolean can_delete, MiniProfile post_owner,
+                               String created_at, CheckIn check_in, ArrayList<Medias> medias, ArrayList<TaggedUser> tagged_users,
                                ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories) {
                 this.post_id = post_id;
                 this.posted_by = posted_by;
@@ -889,6 +890,7 @@ public class Pojos {
                 this.created_at = created_at;
                 this.check_in = check_in;
                 this.medias = medias;
+                this.tagged_users = tagged_users;
                 this.reacted_users = reacted_users;
                 this.categories = categories;
             }
@@ -908,6 +910,7 @@ public class Pojos {
                 created_at = in.readString();
                 check_in = in.readParcelable(CheckIn.class.getClassLoader());
                 medias = in.createTypedArrayList(Medias.CREATOR);
+                tagged_users = in.createTypedArrayList(TaggedUser.CREATOR);
                 reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
                 categories = in.createTypedArrayList(Category.CREATOR);
             }
@@ -928,6 +931,7 @@ public class Pojos {
                 dest.writeString(created_at);
                 dest.writeParcelable(check_in, flags);
                 dest.writeTypedList(medias);
+                dest.writeTypedList(tagged_users);
                 dest.writeTypedList(reacted_users);
                 dest.writeTypedList(categories);
             }
@@ -1003,6 +1007,10 @@ public class Pojos {
 
             public ArrayList<Medias> getMedias() {
                 return medias;
+            }
+
+            public ArrayList<TaggedUser> getTaggedUsers() {
+                return tagged_users;
             }
 
             public ArrayList<ReactedUser> getReactedUsers() {

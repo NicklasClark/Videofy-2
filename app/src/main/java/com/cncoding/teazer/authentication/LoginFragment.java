@@ -52,7 +52,6 @@ import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
-import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.stopCircularReveal;
@@ -330,7 +329,7 @@ public class LoginFragment extends AuthFragment {
                             public void onFailure(Call<ResultObject> call, Throwable t) {
                                 stopCircularReveal(progressBar);
                                 loginBtn.setEnabled(true);
-                                logTheError("loginWithPassword", t.getMessage());
+                                t.printStackTrace();
                             }
                         });
             } else {

@@ -41,7 +41,7 @@ public class PostsListFragment extends BaseFragment {
     private Call<PostList> postListCall;
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
-    private int[] savedPosition;
+//    private int[] savedPosition;
 
     public PostsListFragment() {
     }
@@ -52,8 +52,8 @@ public class PostsListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedPosition == null)
-            savedPosition = new int[2];
+//        if (savedPosition == null)
+//            savedPosition = new int[2];
         previousTitle = getParentActivity().getToolbarTitle();
         getParentActivity().updateToolbarTitle(null);
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
@@ -91,11 +91,11 @@ public class PostsListFragment extends BaseFragment {
         return rootView;
     }
 
-    @Override
-    public void onPause() {
-        ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(savedPosition);
-        super.onPause();
-    }
+//    @Override
+//    public void onPause() {
+//        ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(savedPosition);
+//        super.onPause();
+//    }
 
     @Override
     public void onResume() {
@@ -110,8 +110,8 @@ public class PostsListFragment extends BaseFragment {
         }
         else {
             isRefreshing = false;
-            if (savedPosition[1] > 4)
-                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
+//            if (savedPosition[1] > 4)
+//                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
             postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
         }
 //        getParentActivity().showAppBar();
@@ -119,7 +119,6 @@ public class PostsListFragment extends BaseFragment {
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
         progressBar.setVisibility(View.VISIBLE);
-        if (page == 1) postList.clear();
 
         postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
 
@@ -133,6 +132,7 @@ public class PostsListFragment extends BaseFragment {
                                 PostList tempPostList = response.body();
                                 if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
                                     is_next_page = tempPostList.isNextPage();
+                                    if (page == 1) postList.clear();
                                     postList.addAll(tempPostList.getPosts());
                                     if (page == 1)
                                         postListAdapter.notifyDataSetChanged();

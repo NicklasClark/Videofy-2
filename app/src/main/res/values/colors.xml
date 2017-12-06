@@ -31,6 +31,7 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e0e0e0</color>
     <color name="colorRippleLight">#bbffffff</color>
+    <color name="colorCcp">#0076FF</color>
     <!--69f0ae-->
     <color name="colorRippleDark">#bb616161</color>
     <color name="colorFacebook">#4469AF</color>

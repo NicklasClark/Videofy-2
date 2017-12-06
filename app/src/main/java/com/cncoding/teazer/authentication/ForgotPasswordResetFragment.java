@@ -31,7 +31,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
-import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
@@ -178,9 +177,10 @@ public class ForgotPasswordResetFragment extends AuthFragment {
     
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
-                            logTheError("Resetting password failed!", t.getMessage());
+                            t.printStackTrace();
                             resetPasswordStatusView.setText(getErrorMessage(null));
-                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_error, 0, 0);
+                            resetPasswordStatusView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                    0, R.drawable.ic_error, 0, 0);
                             dismissMessage();
                         }
                     });

@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -63,40 +64,40 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final FeaturedVideosListAdapter.ViewHolder holder, int position) {
-        holder.featuredVideo = featuredVideosArrayList.get(position);
+        holder.postDetails = featuredVideosArrayList.get(position);
 
         if (dimensionSparseArray.get(position) != 0) {
             holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
         }
 
         /*Setting title*/
-        holder.title.setText(holder.featuredVideo.getTitle());
+        holder.title.setText(holder.postDetails.getTitle());
 
         /*Setting category*/
-        if (holder.featuredVideo.getCategories() != null) {
-            holder.category.setVisibility(holder.featuredVideo.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
+        if (holder.postDetails.getCategories() != null) {
+            holder.category.setVisibility(holder.postDetails.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
             if (holder.category.getVisibility() == View.VISIBLE) {
-                holder.category.setText(holder.featuredVideo.getCategories() != null ?
-                        holder.featuredVideo.getCategories().get(0).getCategoryName() : "");
+                holder.category.setText(holder.postDetails.getCategories() != null ?
+                        holder.postDetails.getCategories().get(0).getCategoryName() : "");
                 holder.category.setBackground(
-                        getBackground(holder.category, position, Color.parseColor(holder.featuredVideo.getCategories().get(0).getColor())));
+                        getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
             }
         } else holder.category.setVisibility(View.GONE);
 
         /*Setting name*/
-        String name = holder.featuredVideo.getPostOwner().getFirstName() + BLANK_SPACE + holder.featuredVideo.getPostOwner().getLastName();
+        String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
         holder.name.setText(name);
 
         /*Setting likes*/
-        String likes = SPACE + String.valueOf(holder.featuredVideo.getLikes());
+        String likes = SPACE + String.valueOf(holder.postDetails.getLikes());
         holder.likes.setText(likes);
 
         /*Setting views*/
-        String views = SPACE + String.valueOf(holder.featuredVideo.getMedias().get(0).getViews());
+        String views = SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
         holder.views.setText(views);
 
         Glide.with(context)
-                .load(holder.featuredVideo.getMedias().get(0).getThumbUrl())
+                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
                 .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
                 .listener(new RequestListener<String, GlideDrawable>() {
@@ -123,19 +124,37 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
                 .into(holder.thumbnail);
 
         Glide.with(context)
-                .load(holder.featuredVideo.getPostOwner().hasProfileMedia() ?
-                        holder.featuredVideo.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
+                        holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
                 .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade()
                 .into(holder.dp);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
-                        holder.featuredVideo, null);
+                switch (view.getId()) {
+                    case R.id.root_layout:
+                        mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
+                                holder.postDetails, null);
+                        break;
+                    case R.id.dp:
+                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails, null);
+                        break;
+                    case R.id.name:
+                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails, null);
+                        break;
+                    default:
+                        break;
+                }
             }
-        });
+        };
+
+        holder.layout.setOnClickListener(listener);
+        holder.name.setOnClickListener(listener);
+        holder.dp.setOnClickListener(listener);
     }
 
     private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
@@ -165,7 +184,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView thumbnail;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
-        PostDetails featuredVideo;
+        PostDetails postDetails;
         
         public ViewHolder(View itemView) {
             super(itemView);

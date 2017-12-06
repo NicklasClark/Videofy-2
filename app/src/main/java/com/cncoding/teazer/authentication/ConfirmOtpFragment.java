@@ -48,7 +48,6 @@ import static com.cncoding.teazer.authentication.SignupFragment2.ARG_PICTURE_PAT
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
-import static com.cncoding.teazer.utilities.AuthUtils.logTheError;
 import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.performFinalSignup;
 import static com.cncoding.teazer.utilities.AuthUtils.verifyOtpLogin;
@@ -158,7 +157,7 @@ public class ConfirmOtpFragment extends AuthFragment {
 
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
-                            logTheError("PerformSignup", t.getMessage());
+                            t.printStackTrace();
                             otpResendBtn.setEnabled(true);
                             otpResendBtn.setAlpha(1);
                         }

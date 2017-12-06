@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.notifications;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,7 +20,6 @@ import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -44,6 +42,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
 //    private OnListFragmentInteractionListener mListener;
     private NotificationsList notificationsList;
     private NotificationsAdapter adapter;
+    private Call<NotificationsList> notificationsListCall;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -71,7 +70,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(page);
+                    getRequestNotifications(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -80,7 +79,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetRequestNotifications(RequestNotificationsTabFragment.this).execute(1);
+                getRequestNotifications(1);
             }
         });
 
@@ -93,60 +92,51 @@ public class RequestNotificationsTabFragment extends BaseFragment {
 
 
         if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
-            new GetRequestNotifications(this).execute(1);
+            getRequestNotifications(1);
     }
 
-    private static class GetRequestNotifications extends AsyncTask<Integer, Void, Void> {
+    private void getRequestNotifications(final int page) {
 
-        private WeakReference<RequestNotificationsTabFragment> reference;
+        notificationsListCall = ApiCallingService.User.getRequestNotifications(page, getContext());
 
-        GetRequestNotifications(RequestNotificationsTabFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(final Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().notificationsList.getNotifications().clear();
-
-            ApiCallingService.User.getRequestNotifications(integers[0], reference.get().getContext())
-                    .enqueue(new Callback<NotificationsList>() {
-                        @Override
-                        public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
+        if (!notificationsListCall.isExecuted())
+            notificationsListCall.enqueue(new Callback<NotificationsList>() {
+                @Override
+                public void onResponse(Call<NotificationsList> call, Response<NotificationsList> response) {
+                    try {
+                        if (isAdded()) {
                             if (response.code() == 200) {
-                                reference.get().is_next_page = response.body().isNextPage();
+                                is_next_page = response.body().isNextPage();
                                 if (response.body().getNotifications().size() > 0) {
-                                    reference.get().swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    reference.get().noNotifications.setVisibility(View.GONE);
-                                    reference.get().notificationsList.getNotifications().addAll(response.body().getNotifications());
-                                    reference.get().recyclerView.getRecycledViewPool().clear();
-                                    reference.get().adapter.notifyDataSetChanged();
+                                    if (page == 1) notificationsList.getNotifications().clear();
+                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    noNotifications.setVisibility(View.GONE);
+                                    notificationsList.getNotifications().addAll(response.body().getNotifications());
+                                    recyclerView.getRecycledViewPool().clear();
+                                    adapter.notifyDataSetChanged();
                                 } else {
-                                    if (integers[0] == 1) {
-                                        reference.get().swipeRefreshLayout.setVisibility(View.GONE);
-                                        reference.get().noNotifications.setVisibility(View.VISIBLE);
+                                    if (page == 1) {
+                                        swipeRefreshLayout.setVisibility(View.GONE);
+                                        noNotifications.setVisibility(View.VISIBLE);
                                     }
                                 }
                             } else {
-                                Toast.makeText(reference.get().getContext(), response.code() + " : " + response.message(),
+                                Toast.makeText(getContext(), response.code() + " : " + response.message(),
                                         Toast.LENGTH_SHORT).show();
                             }
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
+                            swipeRefreshLayout.setRefreshing(false);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                        @Override
-                        public void onFailure(Call<NotificationsList> call, Throwable t) {
-                            Toast.makeText(reference.get().getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                            reference.get().swipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
-            return null;
-        }
+                @Override
+                public void onFailure(Call<NotificationsList> call, Throwable t) {
+                    t.printStackTrace();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
     }
 
     @Override
@@ -170,6 +160,8 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (notificationsListCall != null)
+            notificationsListCall.cancel();
         adapter = null;
     }
 

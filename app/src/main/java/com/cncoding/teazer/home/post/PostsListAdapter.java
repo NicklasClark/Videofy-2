@@ -70,33 +70,33 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.postDetails = posts.get(position);
-        Pojos.MiniProfile postOwner = holder.postDetails.getPostOwner();
+        final PostDetails postDetails = posts.get(position);
+        Pojos.MiniProfile postOwner = postDetails.getPostOwner();
 
         if (dimensionSparseArray.get(position) != 0) {
             holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
         }
 
-        String title = holder.postDetails.getTitle();
+        String title = postDetails.getTitle();
         holder.caption.setText(title);
         holder.caption.setVisibility(View.VISIBLE);
 
-        if (holder.postDetails.getCategories() != null) {
-            holder.category.setVisibility(holder.postDetails.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
+        if (postDetails.getCategories() != null) {
+            holder.category.setVisibility(postDetails.getCategories().isEmpty() ? View.GONE : View.VISIBLE);
             if (holder.category.getVisibility() == View.VISIBLE) {
-                holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
+                holder.category.setText(postDetails.getCategories().get(0).getCategoryName());
                 holder.category.setBackground(
-                        getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
+                        getBackground(holder.category, position, Color.parseColor(postDetails.getCategories().get(0).getColor())));
             }
         } else holder.category.setVisibility(View.GONE);
 
         String name = postOwner.getUserName();
         holder.name.setText(name);
 
-        String likes = BLANK_SPACE + String.valueOf(holder.postDetails.getLikes());
+        String likes = BLANK_SPACE + String.valueOf(postDetails.getLikes());
         holder.likes.setText(likes);
 
-        String views = BLANK_SPACE + String.valueOf(holder.postDetails.getMedias().get(0).getViews());
+        String views = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
         holder.views.setText(views);
 
         if (listener != null) {
@@ -104,15 +104,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 @Override
                 public void onClick(View view) {
                     PostsListFragment.positionToUpdate = holder.getAdapterPosition();
-                    PostsListFragment.postDetails = holder.postDetails;
-                    listener.onPostInteraction(ACTION_VIEW_POST, holder.postDetails, holder.postThumbnail,
+                    PostsListFragment.postDetails = postDetails;
+                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
                             holder.layout, getByteArrayFromImage(holder.postThumbnail));
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_PROFILE, holder.postDetails, holder.postThumbnail,
+                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
                             holder.layout, getByteArrayFromImage(holder.postThumbnail));
                 }
             };
@@ -142,7 +142,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 .into(holder.profilePic);
 
         Glide.with(context)
-                .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                .load(postDetails.getMedias().get(0).getThumbUrl())
 //                .crossFade()
                 .placeholder(R.drawable.bg_placeholder)
                 .skipMemoryCache(false)
@@ -198,7 +198,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
-        PostDetails postDetails;
 
         ViewHolder(View view) {
             super(view);

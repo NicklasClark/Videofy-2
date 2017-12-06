@@ -36,7 +36,6 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.React.UserReactionsList;
-import com.cncoding.teazer.utilities.Pojos.User.Profile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -370,9 +369,9 @@ public class ApiCallingService {
         public static Call<FollowersProfile> getOthersProfileInfo(int userId, Context context) {
             return getFriendsService(context).getOthersProfileInfo(userId);
         }
-            public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
-            return getFriendsService(context).getOthersProfileInfoNoti(userId);
-        }
+//            public static Call<Profile> getOthersProfileInfoNoti(int userId, Context context) {
+//            return getFriendsService(context).getOthersProfileInfoNoti(userId);
+//        }
 
         /**
          * Call this service to Block/Unblock a user

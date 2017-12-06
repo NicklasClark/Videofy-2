@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
@@ -226,7 +225,7 @@ public class AuthUtils {
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                logTheError("performInitialSignup", t.getMessage());
+                t.printStackTrace();
                 signupBtn.setEnabled(true);
             }
         });
@@ -266,14 +265,13 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        logTheError("performFinalSignup", t.getMessage());
-//                        logout(context, null);
+                        t.printStackTrace();
                     }
                 });
     }
 
     public static void stopCircularReveal(final View view) {
-        view.animate().scaleY(0).scaleX(0).setDuration(280).start();
+        view.animate().alpha(0).setDuration(280).start();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -314,7 +312,7 @@ public class AuthUtils {
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                logTheError("loginWithOtp", t.getMessage());
+                t.printStackTrace();
                 loginBtn.setEnabled(true);
                 if (!isResendAction)
                     stopCircularReveal(progressBar);
@@ -366,7 +364,7 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        logTheError("verifyOtpLogin", t.getMessage());
+                        t.printStackTrace();
                         otpResendBtn.setEnabled(true);
                         otpResendBtn.setAlpha(1);
                     }
@@ -402,14 +400,10 @@ public class AuthUtils {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        logTheError("Logging out", t.getMessage());
+                        t.printStackTrace();
                         LTFO();
                     }
                 });
-    }
-
-    public static void logTheError(String tag, String message) {
-        Log.e(tag, message != null ? message : "FAILED!!!");
     }
 
     @NonNull public static String getErrorMessage(ResponseBody responseBody) {

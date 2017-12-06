@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
+import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
-import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
 
 /**
  *
@@ -85,12 +86,12 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
                         .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
                         .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
-                        .into(holder.profilePic);
+                        .into(holder.dp);
             } else {
                 Glide.with(context)
                         .load(R.drawable.ic_user_male_dp_small)
                         .crossFade()
-                        .into(holder.profilePic);
+                        .into(holder.dp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,13 +125,28 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
                 })
                 .into(holder.postThumbnail);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onSubSearchInteraction(holder.postDetails, getByteArrayFromImage(holder.postThumbnail));
+                switch (view.getId()) {
+                    case R.id.root_layout:
+                        mListener.onSubSearchInteraction(ACTION_VIEW_POST, holder.postDetails);
+                        break;
+                    case R.id.dp:
+                        mListener.onSubSearchInteraction(ACTION_VIEW_PROFILE, holder.postDetails);
+                        break;
+                    case R.id.name:
+                        mListener.onSubSearchInteraction(ACTION_VIEW_PROFILE, holder.postDetails);
+                        break;
+                    default:
+                        break;
+                }
             }
-        });
+        };
+
+        holder.layout.setOnClickListener(listener);
+        holder.name.setOnClickListener(listener);
+        holder.dp.setOnClickListener(listener);
     }
 
     @Override
@@ -147,7 +163,7 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView postThumbnail;
-        @BindView(R.id.dp) CircularAppCompatImageView profilePic;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
         PostDetails postDetails;
 
         public ViewHolder(View itemView) {
@@ -157,6 +173,6 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
     }
 
     public interface OnSubSearchInteractionListener {
-        void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage);
+        void onSubSearchInteraction(int action, PostDetails postDetails);
     }
 }

@@ -121,7 +121,7 @@ public class BaseBottomBarActivity extends BaseActivity
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
-    public static final int ACTION_VIEW_PROFILE = 2;
+    public static final int ACTION_VIEW_PROFILE = 123;
     public static final String TAB_INDEX = "tabIndex";
 //    public static final int ACTION_VIEW_REACTION = 1;
 
@@ -425,7 +425,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 reference.get().uploadCall.enqueue(callback);
 
             if (uploadParams.isReaction() && isResuming) {
-                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null, false, false));
+                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null,
+                        false, false));
             }
         }
     }
@@ -731,17 +732,36 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
                                     PostDetails postDetails, byte[] image) {
-        if (action == ACTION_VIEW_MY_INTERESTS)
-            pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
-        else if (action == ACTION_VIEW_MOST_POPULAR)
-            pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
-        else if (action == ACTION_VIEW_POST)
-            pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, false));
+        switch (action) {
+            case ACTION_VIEW_MY_INTERESTS:
+                pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
+                break;
+            case ACTION_VIEW_MOST_POPULAR:
+                pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
+                break;
+            case ACTION_VIEW_POST:
+                pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, false));
+                break;
+            case ACTION_VIEW_PROFILE:
+                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
+                        OthersProfileFragment.newInstance(
+                                String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+                break;
+        }
     }
 
     @Override
-    public void onSubSearchInteraction(PostDetails postDetails, byte[] byteArrayFromImage) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, byteArrayFromImage, true, false));
+    public void onSubSearchInteraction(int action, PostDetails postDetails) {
+        switch (action) {
+            case ACTION_VIEW_POST:
+                pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
+                break;
+            case ACTION_VIEW_PROFILE:
+                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
+                        OthersProfileFragment.newInstance(
+                                String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+                break;
+        }
     }
 
     @Override
@@ -753,7 +773,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
-                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true,
+                                        false));
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }
@@ -776,7 +797,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage, int profileId, String userType) {
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
+                                           int profileId, String userType) {
         if (isFollowingTab) {
             pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
         } else {
