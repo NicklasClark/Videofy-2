@@ -16,9 +16,13 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -60,7 +64,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         return new FollowingAdapter.ViewHolder(view);
     }
     @Override
-    public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder,final  int i) {
         try {
 
             final int followerId;
@@ -70,9 +74,18 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final String followingname = cont.getUserName();
                 final int accounttype = cont.getAccountType();
                 final String userType;
-
                 followerId = cont.getUserId();
                 userType="Following";
+                final boolean isfollowersDp=cont.getHasProfileMedia();
+                if(isfollowersDp) {
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    Picasso.with(context)
+                            .load(followrsDp)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.userDp);
+                }
                 viewHolder.followingName.setText(followingname);
 
                 viewHolder.follow.setOnClickListener(new View.OnClickListener() {
@@ -81,16 +94,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                         if(viewHolder.follow.getText().equals("Follow"))
                         {
-
-
                             followUser(followerId, context, viewHolder,accounttype);
                         }
                     }
                 });
-
-
-
-
 
                 viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -103,7 +110,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             }
 
             else
-
             {
 
                 final OtherUserFollowings cont = otherlist.get(i);
@@ -111,7 +117,16 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final boolean myself = cont.getMySelf();
                 final String followername = cont.getUserName();
                 final int accounttype = cont.getAccountType();
-
+                final boolean isfollowersDp=cont.getHasProfileMedia();
+                if(isfollowersDp) {
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    Picasso.with(context)
+                            .load(followrsDp)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.userDp);
+                }
                 followerId = cont.getUserId();
                 viewHolder.followingName.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
@@ -264,11 +279,13 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         private TextView followingName, address;
         Button follow;
         CardView cardview;
+        CircularAppCompatImageView userDp;
         public ViewHolder(View view) {
             super(view);
             followingName = view.findViewById(R.id.following_name);
             follow = view.findViewById(R.id.follow_button);
             cardview = view.findViewById(R.id.cardview);
+            userDp = view.findViewById(R.id.userDp);
 
         }
     }

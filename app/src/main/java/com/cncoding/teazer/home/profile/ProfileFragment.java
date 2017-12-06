@@ -15,6 +15,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -114,6 +115,7 @@ public class ProfileFragment extends BaseFragment {
     private String userProfileThumbnail;
     private String userProfileUrl;
     PublicProfile userProfile;
+    NestedScrollView nestedscrollview;
 
     public ProfileFragment() {
     }
@@ -145,6 +147,7 @@ public class ProfileFragment extends BaseFragment {
         _followers = view.findViewById(R.id.followers);
         _following = view.findViewById(R.id.following);
         _detail = view.findViewById(R.id.hobby);
+
 
         backgroundProfile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
@@ -234,7 +237,7 @@ public class ProfileFragment extends BaseFragment {
 
               startActivity(intent);
             case R.id.action_profile_block:
-               // openBlockUser(followerfollowingid);
+
         }
         return true;
     }
