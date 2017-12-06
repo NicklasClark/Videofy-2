@@ -17,10 +17,14 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -74,7 +78,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(final FollowersAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final FollowersAdapter.ViewHolder viewHolder, final int i) {
         try {
 
             final int followerId;
@@ -83,6 +87,17 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final String usertype;
                 final Follower cont = userlist.get(i);
                 final String followername = cont.getUserName();
+                final boolean isfollowersDp=cont.getHasProfileMedia();
+                if(isfollowersDp) {
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    Picasso.with(context)
+                            .load(followrsDp)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.userDp);
+
+                }
                 final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
@@ -174,6 +189,18 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 followerId = cont.getUserId();
                 viewHolder.followersname.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
+
+                final boolean isfollowersDp=cont.getHasProfileMedia();
+                if(isfollowersDp) {
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    Picasso.with(context)
+                            .load(followrsDp)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.userDp);
+
+                }
 
                 if (myself) {
                     viewHolder.followersname.setTextColor(Color.BLUE);
@@ -353,6 +380,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         Button follow;
         CardView cardview;
         ProgressBar progress_bar;
+        CircularAppCompatImageView userDp;
 
 
         public ViewHolder(View view) {
@@ -361,6 +389,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             follow = view.findViewById(R.id.follow_button);
             cardview = view.findViewById(R.id.cardview);
             progress_bar = view.findViewById(R.id.progress_bar);
+            userDp = view.findViewById(R.id.userDp);
 
         }
     }

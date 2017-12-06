@@ -15,6 +15,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
@@ -40,12 +41,7 @@ public class FragmentProfileMyCreations extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progress_bar;
     int page=1;
-
-
-
-
-
-
+    ProximaNovaRegularTextView alert1;
 
     public static FragmentProfileMyCreations newInstance(int page) {
         return new FragmentProfileMyCreations();
@@ -73,6 +69,7 @@ public class FragmentProfileMyCreations extends Fragment {
 
         recyclerView=view.findViewById(R.id.recycler_view);
         progress_bar=view.findViewById(R.id.progress_bar);
+        alert1=view.findViewById(R.id.alert1);
         return view;
 
     }
@@ -86,29 +83,32 @@ public class FragmentProfileMyCreations extends Fragment {
 
     }
 
-
     public void getProfileVideos() {
-
         progress_bar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
-
         ApiCallingService.Posts.getPostedVideos(context,page).enqueue(new Callback<Pojos.Post.PostList>() {
             @Override
             public void onResponse(Call<Pojos.Post.PostList> call, Response<Pojos.Post.PostList> response) {
 
                 if (response.code() == 200) {
-                    boolean next=response.body().isNextPage();
-                    list.addAll(response.body().getPosts());
-                    profileMyCreationAdapter=new ProfileMyCreationAdapter(context,list);
-                    recyclerView.setAdapter(profileMyCreationAdapter);
-
-                    if(next)
-                    {
-                         page++;
-                         getProfileVideos();
+                    if (response.body().getPosts().size()==0||response.body().getPosts()==null){
+                        alert1.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        progress_bar.setVisibility(View.GONE);
                     }
-                    progress_bar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                        else{
+                        boolean next = response.body().isNextPage();
+                        list.addAll(response.body().getPosts());
+                        profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list);
+                        recyclerView.setAdapter(profileMyCreationAdapter);
+
+                        if (next) {
+                            page++;
+                            getProfileVideos();
+                        }
+                        progress_bar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
             @Override

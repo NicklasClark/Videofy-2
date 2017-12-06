@@ -148,8 +148,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                         public void onClick(DialogInterface dialog,int which) {
                                             deleteVideos(videopostId);
-                                            viewHolder.cardView.setVisibility(View.GONE);
                                             list.remove(i);
+                                            notifyItemRemoved(i);
+                                            notifyItemRangeChanged(i,list.size());
                                         }
                                     });
                                     alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
