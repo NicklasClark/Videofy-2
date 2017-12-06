@@ -98,7 +98,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             public void onClick(View view) {
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-                //inflating menu from xml resource
+
                 popup.inflate(R.menu.menu_profile);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -116,7 +116,9 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
                                     public void onClick(DialogInterface dialog,int which) {
                                         deleteVideos(reactId);
-                                        viewHolder.cardView.setVisibility(View.GONE);
+                                        list.remove(i);
+                                        notifyItemRemoved(i);
+                                        notifyItemRangeChanged(i,list.size());
                                     }
                                 });
                                 alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
