@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,8 +61,8 @@ public class FragmentDeactivateAccount extends Fragment {
     @BindView(R.id.commentLayout)
     LinearLayout commentLayout;
 
-    @BindView(R.id.deactivationreason)
-    EditText layout;
+    @BindView(R.id.layout)
+    RelativeLayout layout;
 
     @BindView(R.id.deactivationreason)
     EditText deactivation_reason;
@@ -73,7 +74,6 @@ public class FragmentDeactivateAccount extends Fragment {
     RecyclerView recyclerView;
     DeactivateAccountUserAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
-
 
     public static FragmentDeactivateAccount newInstance() {
         FragmentDeactivateAccount fragment = new FragmentDeactivateAccount();
@@ -98,7 +98,6 @@ public class FragmentDeactivateAccount extends Fragment {
         View view = inflater.inflate(R.layout.fragment_deactivate_account, container, false);
         context = container.getContext();
         ButterKnife.bind(this, view);
-        progress_bar.setVisibility(View.GONE);
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

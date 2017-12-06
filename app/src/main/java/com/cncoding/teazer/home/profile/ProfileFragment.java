@@ -157,7 +157,6 @@ public class ProfileFragment extends BaseFragment {
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
         bgImage = view.findViewById(R.id.background_profile);
-
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -279,11 +278,12 @@ public class ProfileFragment extends BaseFragment {
                     _detail.setText(detail);
                     _name.setText(firstname);
                     _username.setText(username);
-                    _followers.setText(String.valueOf(totalfollowers) + " Follower");
+                    _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                     coordinatorLayout.setVisibility(View.VISIBLE);
                     if (userProfileThumbnail == null) {
+
 //                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 //
 //                        Glide.with(context)
@@ -298,9 +298,8 @@ public class ProfileFragment extends BaseFragment {
 
                         Picasso.with(context)
                                 .load(userProfileThumbnail)
-                                .fit().centerInside()
-
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                                 .fit().centerInside()
+                                .networkPolicy(NetworkPolicy.NO_CACHE)
                                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                                 .into(profile_id);
 
