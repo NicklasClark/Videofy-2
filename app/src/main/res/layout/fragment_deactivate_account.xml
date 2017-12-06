@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.activity.BlockUserList">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_below="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycler_view"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/commentLayout"
+
+        android:layout_below="@+id/layout"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_circle_white_outline">
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/deactivateReason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="Remark"
+                android:textColor="@color/colorPrimary_text"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <!--<View-->
+
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:background="@color/colorSecondary_text_light" />-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/deactivationreason"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:maxLines="2"
+                android:maxLength="100"
+                android:layout_height="45dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:textColor="#797979" android:background="@drawable/border_layout"
+                android:textSize="@dimen/text_size_16sp" />
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/deactivateAccount"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colorAccent"
+            android:layout_alignParentBottom="true"
+
+            android:text="Done"
+            android:textStyle="normal"
+            android:textAllCaps="false"
+            android:textColor="@color/colorIcons"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

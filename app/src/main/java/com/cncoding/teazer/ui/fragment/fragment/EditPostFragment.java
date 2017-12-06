@@ -152,6 +152,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     ProximaNovaRegularTextView addLocationText;
     @BindView(R.id.video_upload_tag_friends)
     ProximaNovaBoldButton tagFriendsBtn;
+
     @BindView(R.id.video_upload_tag_friends_text)
     ProximaNovaRegularTextView tagFriendsText;
     @BindView(R.id.video_upload_categories)
@@ -162,6 +163,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     AppCompatImageView upBtn;
     @BindView(R.id.save)
     FloatingActionButton save;
+
 
     public String videoPath;
     public boolean isReaction;
@@ -184,6 +186,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     StringBuilder categoryName;
     String location;
     private String selectedCategories;
+    List<Pojos.TaggedUser> taggedUsers;
+    StringBuilder stringBuilder;
+    private String selectedTags;
 
 
     public EditPostFragment() {
@@ -279,6 +284,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
         selectedCategories = categoryName.toString();
         uploadCategoriesText.setText(selectedCategories);
+
+
+        getTagFriends(postDetails.getPostId());
 
 
        // uploadCategoriesText.setText(categoryName.toString());
@@ -589,10 +597,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     @OnClick(R.id.video_upload_tag_friends) public void getMyFollowings() {
-
-
-
-
         toggleInteraction(false);
         getMyCircle(1);
     }
@@ -614,7 +618,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                             myFollowingsList.addAll(response.body().getCircles());
                             toggleUpBtnVisibility(VISIBLE);
                             mListener.onUploadInteraction(false,
-                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, getSelectedTagsToShow(myFollowingsList)),
+                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedTags),
                                     TAG_TAGS_FRAGMENT);
                             break;
                         default:
@@ -639,6 +643,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             stringBuilder.append(sparseArray.get(i).getFirstName());
             if (i < sparseArray.size() - 1) {
                 stringBuilder.append(", ");
+
             }
         }
         return stringBuilder.toString();
@@ -655,36 +660,63 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         return stringBuilder.toString();
     }
 
-    public void getTagFriends(final int page)
+    public void getTagFriends(final int postId)
     {
 
-        ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<Pojos.Friends.CircleList>() {
+        ApiCallingService.Posts.getPostDetails(postId, context).enqueue(new Callback<Pojos.Post.PostDetails>() {
             @Override
-            public void onResponse(Call<Pojos.Friends.CircleList> call, Response<Pojos.Friends.CircleList> response) {
-                if (response.body().getCircles() != null) {
-                    switch (isResponseOk(response)) {
-                        case SUCCESS_OK_TRUE:
-                            myFollowingsList.addAll(response.body().getCircles());
-                            getMyCircle(page + 1);
-                            break;
-                        case SUCCESS_OK_FALSE:
-                            myFollowingsList.addAll(response.body().getCircles());
-                            toggleUpBtnVisibility(VISIBLE);
-                            mListener.onUploadInteraction(false,
-                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, getSelectedTagsToShow(myFollowingsList)),
-                                    TAG_TAGS_FRAGMENT);
-                            break;
-                        default:
-                            Log.e("getMyCircle", response.message());
-                            break;
+            public void onResponse(Call<Pojos.Post.PostDetails> call, Response<Pojos.Post.PostDetails> response) {
+                if(response.code()==200) {
+                    try{
+                       taggedUsers=response.body().getTaggedUsers();
+                        stringBuilder=new StringBuilder();
+                       for (int i=0;i<taggedUsers.size();i++)
+
+                       {
+                          stringBuilder.append(taggedUsers.get(i).getFirstName());
+                           if (i != taggedUsers.size() - 1) {
+                               stringBuilder.append(",");}
+
+                       }
+                       selectedTags = stringBuilder.toString();
+                        tagFriendsText.setText(selectedTags);
+
                     }
-                } else Toast.makeText(context, "No friends yet!", Toast.LENGTH_SHORT).show();
-                toggleInteraction(true);
+                    catch(Exception e)
+                    {
+                        e.printStackTrace();
+
+                    }
+
+
+//                if (response.body().getCircles() != null) {
+//                    switch (isResponseOk(response)) {
+//                        case SUCCESS_OK_TRUE:
+//                            myFollowingsList.addAll(response.body().getCircles());
+//                            getMyCircle(page + 1);
+//                            break;
+//                        case SUCCESS_OK_FALSE:
+//                            myFollowingsList.addAll(response.body().getCircles());
+//                            toggleUpBtnVisibility(VISIBLE);
+//                            mListener.onUploadInteraction(false,
+//                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, getSelectedTagsToShow(myFollowingsList)),
+//                                    TAG_TAGS_FRAGMENT);
+//                            break;
+//                        default:
+//                            Log.e("getMyCircle", response.message());
+//                            break;
+//                    }
+//                } else Toast.makeText(context, "No friends yet!", Toast.LENGTH_SHORT).show();
+//                toggleInteraction(true);
+
+                }
+
             }
 
+
+
             @Override
-            public void onFailure(Call<Pojos.Friends.CircleList> call, Throwable t) {
-                Log.e("getMyCircle", t.getMessage());
+            public void onFailure(Call<Pojos.Post.PostDetails> call, Throwable t) {
                 toggleInteraction(true);
             }
         });
@@ -789,6 +821,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagFriendsText.setText(resultToShow);
+                selectedTags = resultToShow;
                 selectedTagsToSend=resultToSend;
 
                 break;
