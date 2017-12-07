@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.profile;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,6 +19,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+
 
 import jp.wasabeef.blurry.Blurry;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -116,6 +120,7 @@ public class ProfileFragment extends BaseFragment {
     private String userProfileUrl;
     PublicProfile userProfile;
     NestedScrollView nestedscrollview;
+    public static boolean checkprofileupdated=false;
 
     public ProfileFragment() {
     }
@@ -170,6 +175,7 @@ public class ProfileFragment extends BaseFragment {
                 intent.putExtra("CountryCode", String.valueOf(countrycode));
                 intent.putExtra("ProfileThumb", userProfileThumbnail);
                 intent.putExtra("ProfileMedia", userProfileUrl);
+
                 if (detail == null)
                     intent.putExtra("Detail", "");
                 else {
@@ -210,12 +216,11 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        getProfileDetail();
-        getParentActivity().updateToolbarTitle("My Profile");
-        getParentActivity().showAppBar();
         super.onResume();
-        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
-        tabLayout.setupWithViewPager(viewPager);
+        if( ProfileFragment.checkprofileupdated) {
+            getProfileDetail();
+            checkprofileupdated=false;
+        }
 
     }
 
@@ -223,6 +228,16 @@ public class ProfileFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //  super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_user_profile,menu);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getParentActivity().updateToolbarTitle("My Profile");
+        getParentActivity().showAppBar();
+        viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+        tabLayout.setupWithViewPager(viewPager);
+        getProfileDetail();
     }
 
     @Override
@@ -284,34 +299,23 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.VISIBLE);
                     if (userProfileThumbnail == null) {
 
-//                        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-//
-//                        Glide.with(context)
-//                                .load(pic)
-//                                .into(profile_id);
-//
-                    }
 
+                    }
                     else {
 
-
-
-                        Picasso.with(context)
-                                .load(userProfileThumbnail)
-                                 .fit().centerInside()
-                                .networkPolicy(NetworkPolicy.NO_CACHE)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        Glide.with(context)
+                                .load(userProfileUrl)
                                 .into(profile_id);
-
-                        profileBlur(userProfileThumbnail);
+                        progressbar.setVisibility(View.GONE);
+                        profileBlur(userProfileUrl);
                     }
 
-                    progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
 
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
@@ -323,7 +327,21 @@ public class ProfileFragment extends BaseFragment {
     }
 
 
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
 
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+
+
+
+        return newBitmap;
+    }
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
     public void profileBlur(final String pic) {
@@ -360,8 +378,14 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.GONE);
 
                     try {
+                        Bitmap userImage=scaleDown(result,  200,true);
+                     //   protectedfile_id.setRotation(0);
+//                       profile_id.setImageBitmap(userImage);
+
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
+
+
                         Blurry.with(getContext()).from(photobitmap).into(bgImage);
                     } catch (Exception e) {
                         e.printStackTrace();

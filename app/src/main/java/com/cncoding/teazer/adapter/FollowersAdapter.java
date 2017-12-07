@@ -13,11 +13,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.following.Following;
@@ -41,27 +44,20 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     private List<OtherFollowers> list;
     private List<Follower> userlist;
     private Context context;
-    //public static final String UserType = "Follower";
     List<Following> list2;
     int counter;
     final static int PrivateAccount = 1;
     final static int PublicAccount = 2;
     OtherProfileListener otherProfileListener;
 
-
     public FollowersAdapter(Context context, List<Follower> userlist, int counter) {
         this.context = context;
         this.userlist = userlist;
         this.counter = counter;
-
-
-
-            if (context instanceof ProfileFragment.FollowerListListener) {
-                otherProfileListener = (OtherProfileListener) context;
-            }
-
+        if (context instanceof ProfileFragment.FollowerListListener) {
+            otherProfileListener = (OtherProfileListener) context;
+        }
     }
-
     public FollowersAdapter(Context context, List<OtherFollowers> list) {
         this.context = context;
         this.list = list;
@@ -86,10 +82,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                 final String usertype;
                 final Follower cont = userlist.get(i);
-                final String followername = cont.getUserName();
+                final String followername = cont.getFirstName();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Picasso.with(context)
                             .load(followrsDp)
                             .fit().centerInside()
@@ -167,7 +163,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         if(viewHolder.follow.getText().equals("Follow"))
-
                         {
 
                             followUser(followerId, context, viewHolder,accounttype);
@@ -185,19 +180,17 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
-                final String followername = cont.getUserName();
+                final String followername = cont.getFirstName();
                 followerId = cont.getUserId();
                 viewHolder.followersname.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
 
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
-                    Picasso.with(context)
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
+
+                    Glide.with(context)
                             .load(followrsDp)
-                            .fit().centerInside()
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.userDp);
 
                 }
@@ -376,8 +369,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView followersname, address;
-        Button follow;
+        private TextView  address;
+        ProximaNovaSemiboldTextView followersname;
+        ProximaNovaSemiboldTextView follow;
         CardView cardview;
         ProgressBar progress_bar;
         CircularAppCompatImageView userDp;

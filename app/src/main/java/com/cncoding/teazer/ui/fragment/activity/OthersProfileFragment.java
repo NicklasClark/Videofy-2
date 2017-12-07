@@ -70,7 +70,7 @@ public class OthersProfileFragment extends BaseFragment {
     @BindView(R.id.username_title)
     SignPainterTextView _usernameTitle;
     @BindView(R.id.creations)
-    ProximaNovaRegularCheckedTextView _creations;
+    TextView _creations;
 
     @BindView(R.id.layoutDetail)
     RelativeLayout layoutDetail;
@@ -79,9 +79,9 @@ public class OthersProfileFragment extends BaseFragment {
     @BindView(R.id.username)
     ProximaNovaRegularCheckedTextView _name;
     @BindView(R.id.following)
-    ProximaNovaRegularCheckedTextView _following;
+    TextView _following;
     @BindView(R.id.followers)
-    ProximaNovaRegularCheckedTextView _followers;
+    TextView _followers;
     @BindView(R.id.recycler_view)
     RecyclerView _recycler_view;
     @BindView(R.id.btnfollow)
@@ -177,6 +177,7 @@ public class OthersProfileFragment extends BaseFragment {
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (_btnfollow.getText().equals("Follow")) {
 
                     followUser(followerfollowingid, context);
@@ -199,7 +200,6 @@ public class OthersProfileFragment extends BaseFragment {
                 if (accountType == 1) {
 
                     if (hassentrequest == true) {
-
 
                         if (requestRecieved == true) {
 
@@ -244,7 +244,7 @@ public class OthersProfileFragment extends BaseFragment {
         });
 
 
-        getProfileInformation(followerfollowingid);
+
 
         return view;
 
@@ -255,6 +255,8 @@ public class OthersProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        getParentActivity().hideSettings(true);
+
+        getProfileInformation(followerfollowingid);
     }
 
     @Override
@@ -329,13 +331,14 @@ public class OthersProfileFragment extends BaseFragment {
                                     }
                                 });
                             }
-                            if (userProfileThumbnail == null) {
+                            if (userProfileUrl == null) {
 
                             } else {
 
-                                Picasso.with(context)
-                                        .load(Uri.parse(userProfileThumbnail))
+                                Glide.with(context)
+                                        .load(Uri.parse(userProfileUrl))
                                         .into(profile_id);
+
                                 profileBlur(userProfileUrl);
                             }
 
@@ -392,24 +395,21 @@ public class OthersProfileFragment extends BaseFragment {
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
                             if (hasProfileMedia) {
-                                userProfileThumbnail = privateProfile.getProfileMedia().getMediaUrl();
-                                userProfileUrl = privateProfile.getProfileMedia().getThumbUrl();
+                                userProfileThumbnail = privateProfile.getProfileMedia().getThumbUrl();
+                                userProfileUrl = privateProfile.getProfileMedia().getMediaUrl();
+
                             }
 
-                            if (userProfileThumbnail == null) {
-                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
+                            if (userProfileUrl == null) {
 
-                                Glide.with(context)
-                                        .load(pic)
-                                        .into(profile_id);
-                                profileBlur(pic);
                             } else {
 
-                                Picasso.with(context)
-                                        .load(Uri.parse(userProfileThumbnail))
+                                Glide.with(context)
+                                        .load(Uri.parse(userProfileUrl))
                                         .into(profile_id);
                                 profileBlur(userProfileUrl);
                             }
+
                             _usernameTitle.setText(username);
                             _name.setText(firstName);
                             hobby.setText("");
@@ -641,12 +641,14 @@ public class OthersProfileFragment extends BaseFragment {
                         if (b == true) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
+
                             if (accountType == 1) {
                                 _btnfollow.setText("Requested");
+                                Toast.makeText(context, "Your request has been sent", Toast.LENGTH_LONG).show();
 
                             } else {
                                 _btnfollow.setText("Following");
+                                Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             layout.setVisibility(View.VISIBLE);
