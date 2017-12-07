@@ -87,37 +87,41 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exo_player);
         ButterKnife.bind(this);
 
-        videoURL = getIntent().getStringExtra("VIDEO_URL");
-        postDetails = getIntent().getParcelableExtra("POST_INFO");
-        if(postDetails != null)
-            reactId = postDetails.getReactId();
+        try {
+            videoURL = getIntent().getStringExtra("VIDEO_URL");
+            postDetails = getIntent().getParcelableExtra("POST_INFO");
+            if(postDetails != null)
+                reactId = postDetails.getReactId();
 
-        if (null != toolbar) {
-            this.setSupportActionBar(toolbar);
-            //noinspection ConstantConditions
-            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-//            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+            if (null != toolbar) {
+                this.setSupportActionBar(toolbar);
+                //noinspection ConstantConditions
+                this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+    //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+            }
+
+            isLiked = !postDetails.canLike();
+            likesCount = postDetails.getLikes();
+            viewsCount = postDetails.getViews();
+            reactionTitle = postDetails.getReact_title();
+
+            Glide.with(this)
+                    .load(postDetails.getReactOwner().getProfileMedia().getMediaUrl())
+                    .asBitmap()
+                    .into(reactionPostDp);
+            if (reactionTitle != null) {
+                reactionPostCaption.setText(reactionTitle);
+            }
+            postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
+            reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+
+            initView();
+            incrementView();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        isLiked = !postDetails.canLike();
-        likesCount = postDetails.getLikes();
-        viewsCount = postDetails.getViews();
-        reactionTitle = postDetails.getReact_title();
-
-        Glide.with(this)
-                .load(postDetails.getReactOwner().getProfileMedia().getMediaUrl())
-                .asBitmap()
-                .into(reactionPostDp);
-        if (reactionTitle != null) {
-            reactionPostCaption.setText(reactionTitle);
-        }
-        postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
-        reactionPostName.setText(postDetails.getReactOwner().getFirstName());
-
-        initView();
-        incrementView();
     }
 
     private void incrementView() {

@@ -41,6 +41,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -106,7 +107,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -157,6 +158,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
+    private static boolean isCompressing = true;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -184,6 +186,22 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 postDetails = getArguments().getParcelable(POST_DETAILS);
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
+
+        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+        compressVideoAsyncTask.delegate = this;
+        compressVideoAsyncTask.execute(videoPath);
+    }
+
+    @Override
+    public void processFinish(String output) {
+        videoPath = output;
+        try {
+            uploadBtn.setEnabled(true);
+            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isCompressing = false;
     }
 
     @Override
@@ -242,6 +260,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (isCompressing) {
+            uploadBtn.setEnabled(false);
+            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey));
+        }
     }
 
     @Override

@@ -8,8 +8,6 @@
     android:background="@drawable/bg_card_no_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"

@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.home.camera.CameraFragment.OnCameraFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.UploadFragment.OnUploadFragmentInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
@@ -97,7 +98,7 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDE
 public class CameraActivity extends AppCompatActivity
         implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
         TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener,
-        NearbyPlacesInteractionListener, OnConnectionFailedListener {
+        NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
     private static final String TAG_UPLOAD_FRAGMENT = "uploadFragment";
@@ -229,6 +230,9 @@ public class CameraActivity extends AppCompatActivity
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
                 uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, postDetails, false);
+//                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
+//                compressVideoAsyncTask.delegate = this;
+//                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -243,6 +247,10 @@ public class CameraActivity extends AppCompatActivity
         if (new File(videoPath).exists()) {
                 if (getVideoDuration(videoPath) < 60) {
                     uploadFragment = UploadFragment.newInstance(videoPath, isReaction, postDetails, true);
+//                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
+//                    compressVideoAsyncTask.delegate = this;
+//                    compressVideoAsyncTask.execute(videoPath);
+                    Log.d("OriginalLength", String.valueOf(new File(videoPath).length()));
                     startVideoUploadFragment();
                 }
                 else
@@ -256,6 +264,13 @@ public class CameraActivity extends AppCompatActivity
                 }
         } else
             Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void processFinish(String output) {
+        File trimmedFile = new File(output);
+        Log.d("CompressedLength", String.valueOf(new File(output).length()));
+        startVideoUploadFragment();
     }
 
     private long getVideoDuration(String videoFile)
@@ -526,6 +541,11 @@ public class CameraActivity extends AppCompatActivity
                 if (data != null) {
                     String videoPath = data.getStringExtra("trimmed_path");
                     uploadFragment = UploadFragment.newInstance(videoPath, false, postDetails, true);
+
+//                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
+//                    compressVideoAsyncTask.delegate = this;
+//                    compressVideoAsyncTask.execute(videoPath);
+
                     startVideoUploadFragment();
                 }
                 break;
