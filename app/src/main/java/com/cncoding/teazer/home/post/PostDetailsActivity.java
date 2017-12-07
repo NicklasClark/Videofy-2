@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.post;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
@@ -8,6 +9,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -57,6 +59,21 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.ViewUtils;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +81,12 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,19 +121,25 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
     @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list) RecyclerView recyclerView;
-//    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    //    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
     @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+    @BindView(R.id.share) ProximaNovaRegularTextView share;
+    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
 
-    private Context context;
-    private PostDetails postDetails;
+    private long playbackPosition;
+    private int currentWindow;
+    private boolean playWhenReady = true;
     private boolean isComplete;
     private boolean enableReactBtn;
     private boolean isComingFromHomePage;
     private byte[] image;
 
+    private SimpleExoPlayer player;
+    private Context context;
+    private PostDetails postDetails;
     private Call<PostReactionsList> postReactionsListCall;
     private ArrayList<PostReaction> postReactions;
     private ArrayList<TaggedUser> taggedUsersList;
@@ -123,8 +152,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn,
-                                                  boolean isComingFromHomePage) {
+    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn, boolean isComingFromHomePage) {
         PostDetailsFragment fragment = new PostDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_DETAILS, postDetails);
@@ -226,6 +254,10 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         if (postDetails != null) {
             postReactions.clear();
             getPostReactions(postDetails.getPostId(), 1);
+        }
+
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initializePlayer();
         }
     }
 
@@ -365,7 +397,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                             }
                             break;
                         default:
-                            showErrorMessage("Error " + response.code() +": " + response.message());
+                            showErrorMessage("Error " + response.code() + ": " + response.message());
                             break;
                     }
                 }
@@ -409,13 +441,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }, 280);
     }
 
-    @OnClick(R.id.react_btn) public void react() {
+    @OnClick(R.id.react_btn)
+    public void react() {
         if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
         mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails);
     }
 
-    @OnClick(R.id.like) public void likePost() {
+    @OnClick(R.id.like)
+    public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -444,7 +478,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags) public void getTaggedList() {
+    @OnClick(R.id.tags)
+    public void getTaggedList() {
         if (horizontalListViewParent.getVisibility() == View.GONE) {
             ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, context)
                     .enqueue(new Callback<TaggedUsersList>() {
@@ -457,7 +492,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                     taggedUsersList.addAll(response.body().getTaggedUsers());
                                     taggedUserListView.getAdapter().notifyDataSetChanged();
                                 } else {
-                                     noTaggedUsers.setVisibility(View.VISIBLE);
+                                    noTaggedUsers.setVisibility(View.VISIBLE);
 //                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
 //                                            LinearLayoutManager.HORIZONTAL, false));
 //                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
@@ -514,7 +549,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor) {
+    @OnClick(R.id.menu)
+    public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
@@ -524,20 +560,26 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container) public void toggleMediaControllerVisibility() {
-        if (mediaPlayer.isPlaying())
-            mediaPlayer.pause();
-        else mediaPlayer.start();
+    @OnClick(R.id.video_surface_container)
+    public void toggleMediaControllerVisibility() {
+        try {
+//            if (mediaPlayer.isPlaying())
+//                mediaPlayer.pause();
+//            else mediaPlayer.start();
 
-        if (controller != null)
-            controller.toggleControllerView();
+            if (controller != null)
+                controller.toggleControllerView();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
         Surface surface = new Surface(surfaceTexture);
 //        mediaPlayer.setDisplay(surfaceHolder);
-        prepareMediaPlayer(surface);
+//        prepareMediaPlayer(surface);
+        initializePlayer();
     }
 
     @Override
@@ -594,7 +636,83 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         textureView.setLayoutParams(params);
         textureView.animate().alpha(1).setDuration(280).start();
-        textureView.setVisibility(View.VISIBLE);
+        textureView.setVisibility(View.GONE);
+        playerView.setLayoutParams(params);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @OnClick(R.id.share)
+    public void onViewClicked() {
+//        DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+//                .setLink(Uri.parse("https://v6f43.app.goo.gl/?link="+ postDetails.getPostId()))
+//                .setDynamicLinkDomain("v6f43.app.goo.gl")
+//                // Open links with this app on Android
+//                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
+//                // Open links with com.example.ios on iOS
+//                .setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
+//                .buildDynamicLink();
+//
+//        Uri dynamicLinkUri = dynamicLink.getUri();
+//
+//
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, dynamicLinkUri.toString());
+//        sendIntent.setType("text/plain");
+//        startActivity(sendIntent);
+        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                .setCanonicalIdentifier(postDetails.getPostOwner().getFirstName())
+                .setTitle(postDetails.getTitle())
+                .setContentDescription("View this awesome video on Teazer app")
+                .setContentImageUrl(postDetails.getMedias().get(0).getThumbUrl());
+
+        LinkProperties linkProperties = new LinkProperties()
+                .setChannel("facebook")
+                .setFeature("sharing")
+                .addControlParameter("post_id", String.valueOf(postDetails.getPostId()))
+                .addControlParameter("$desktop_url", "https://teazer.in/")
+                .addControlParameter("$ios_url", "https://teazer.in/");
+
+//        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+//            @Override
+//            public void onLinkCreate(String url, BranchError error) {
+//                if (error == null) {
+//                    Log.i("MyApp", "got my Branch link to share: " + url);
+//                }
+//            }
+//        });
+        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getParentActivity(),
+                "Check this out!", "This video is awesome: ")
+                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
+                        "Copy", "Added to clipboard")
+                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
+                .setAsFullWidthStyle(true)
+                .setSharingTitle("Share With");
+
+        branchUniversalObject.showShareSheet(getParentActivity(),
+                linkProperties,
+                shareSheetStyle,
+                new Branch.BranchLinkShareListener() {
+                    @Override
+                    public void onShareLinkDialogLaunched() {
+                    }
+                    @Override
+                    public void onShareLinkDialogDismissed() {
+                    }
+                    @Override
+                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                    }
+                    @Override
+                    public void onChannelSelected(String channelName) {
+                    }
+                });
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -668,8 +786,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     @Override
     public void onPause() {
         super.onPause();
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
+//        if (mediaPlayer != null)
+//            mediaPlayer.pause();
+
+        player.setPlayWhenReady(!player.getPlayWhenReady());
+
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
     }
 
     @Override
@@ -679,7 +803,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             PostsListFragment.isRefreshing = true;
         mListener = null;
         exit();
-        resetMediaPlayer();
+//        resetMediaPlayer();
         controller.exit();
     }
 
@@ -722,16 +846,17 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     @Override
     public void start() {
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            isComplete = false;
-            mediaPlayer.start();
-        }
+//        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+//            isComplete = false;
+//            mediaPlayer.start();
+//        }
+        player.setPlayWhenReady(!player.getPlayWhenReady());
     }
 
     @Override
     public void pause() {
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
+//        if (mediaPlayer != null)
+//            mediaPlayer.pause();
     }
 
     @Override
@@ -739,7 +864,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //        if (mediaPlayer != null)
 //            return convert(mediaPlayer.getDuration());
 //        else
-            return postDetails.getMedias().get(0).getDuration();
+        return postDetails.getMedias().get(0).getDuration();
     }
 
 //    private String convert(final int duration) {
@@ -779,7 +904,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     @Override
     public void exit() {
-        resetMediaPlayer();
+//        resetMediaPlayer();
         controller.exit();
     }
 
@@ -787,7 +912,85 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         void onPostDetailsInteraction(int action, PostDetails postDetails);
     }
 
-//    interface PostDetailsUpdateListener {
-//        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
+    interface PostDetailsUpdateListener {
+        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        hideSystemUi();
+//        if ((Util.SDK_INT <= 23 || player == null)) {
+//            initializePlayer();
+//        }
 //    }
+    @SuppressLint("InlinedApi")
+    private void hideSystemUi() {
+        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (Util.SDK_INT <= 23) {
+//            releasePlayer();
+//        }
+//    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            playbackPosition = player.getCurrentPosition();
+            currentWindow = player.getCurrentWindowIndex();
+            playWhenReady = player.getPlayWhenReady();
+            player.release();
+            player = null;
+        }
+    }
+
+    private void initializePlayer() {
+        try {
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+            player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+
+            Uri videoURI = Uri.parse(postDetails.getMedias().get(0).getMediaUrl());
+
+            DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            MediaSource mediaSource =
+                    new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
+
+            LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSource);
+            playerView.setPlayer(player);
+            player.prepare(loopingMediaSource);
+//            player.setVideoSurface(surface);
+            player.setPlayWhenReady(playWhenReady);
+            player.getPlaybackState();
+            dismissProgressBar();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
-import com.cncoding.teazer.ui.fragment.activity.Settings;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,8 +34,6 @@ import static com.cncoding.teazer.utilities.AuthUtils.logout;
  */
 
 public class FragmentSettings extends Fragment{
-
-
 
     @BindView(R.id.text_block_layout)
     LinearLayout text_block;

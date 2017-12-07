@@ -1,13 +1,17 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -26,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
@@ -70,6 +75,13 @@ import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +93,8 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import okhttp3.MultipartBody.Part;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -159,6 +173,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private Call<ResultObject> uploadCall;
     private Fragment fragment;
+    private static Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +181,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
+        mContext = getApplicationContext();
         checkIfAnyVideoIsUploading();
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
@@ -213,6 +229,94 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
             }
         });
+
+//        getDynamicLinks();
+        getBranchDynamicLinks();
+    }
+
+    private void getBranchDynamicLinks() {
+        // listener (within Main Activity's onStart)
+        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    try {
+                        Log.d("BRANCH", referringParams.getString("post_id"));
+                        String postId = referringParams.getString("post_id");
+                        if (postId != null) {
+                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                    .enqueue(new Callback<PostDetails>() {
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200) {
+                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                            } else
+                                                Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
+
+    private void getDynamicLinks() {
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        try {
+                            Uri deepLink = null;
+                            if (pendingDynamicLinkData != null) {
+                                deepLink = pendingDynamicLinkData.getLink();
+                                Log.d("Firebase", deepLink.toString());
+                            }
+                            String postId = deepLink.getQueryParameter("link");
+                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                    .enqueue(new Callback<PostDetails>() {
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200) {
+                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                            } else
+                                                Log.e("Fetching post details", response.code() + "_" + response.message());
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
+                                        }
+                                    });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "getDynamicLink:onFailure", e);
+                    }
+                });
     }
 
 //    @Override
@@ -401,6 +505,15 @@ public class BaseBottomBarActivity extends BaseActivity
             SharedPrefs.saveVideoUploadSession(reference.get(), uploadParams);
 
             File videoFile = new File(uploadParams.getVideoPath());
+            File compressedVideoFile = new File(uploadParams.getVideoPath());
+
+//            try {
+//                String filePath = SiliCompressor.with(mContext).compressVideo(uploadParams.getVideoPath(), videoFile.getParent());
+//                compressedVideoFile = new File(filePath);
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+
             ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, reference.get());
             return Part.createFormData("video", videoFile.getName(), videoBody);
         }

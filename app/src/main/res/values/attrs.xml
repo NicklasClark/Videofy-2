@@ -61,4 +61,11 @@
         <attr name="bnv_active_centre_button_background_color" format="color"/>
         <attr name="bnv_centre_part_linear" format="boolean" />
     </declare-styleable>-->
+
+    <declare-styleable name="HorizontalListView">
+        <attr name="hori_listview_dividerWidth" format="dimension" />
+        <attr name="android:divider" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
 </resources>
