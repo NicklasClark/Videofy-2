@@ -108,7 +108,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
 
     @Override
     public void onProgressUpdate(int percentage) {
-        bundle.clear();
+//        bundle.clear();
         bundle.putInt(UPLOAD_PROGRESS, percentage);
         receiver.send(UPLOAD_IN_PROGRESS_CODE, bundle);
     }

@@ -49,6 +49,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPla
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.videoTrim.TrimmerActivity;
@@ -79,14 +80,18 @@ import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD_FRAGMENT;
+import static com.cncoding.teazer.home.camera.UploadFragment.REACTION_UPLOAD;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
+import static com.cncoding.teazer.home.camera.UploadFragment.VIDEO_UPLOAD;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
+import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
+import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
 import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
@@ -145,7 +150,7 @@ public class CameraActivity extends AppCompatActivity
         slidingUpPanelLayout.setOverlayed(true);
         slidingUpPanelLayout.setScrollableView(recyclerView);
 
-        cameraFragment = CameraFragment.newInstance(isReaction, postDetails);
+        cameraFragment = CameraFragment.newInstance(isReaction);
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, cameraFragment)
@@ -224,7 +229,7 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, postDetails, false);
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -238,7 +243,7 @@ public class CameraActivity extends AppCompatActivity
     public void onVideoGalleryAdapterInteraction(String videoPath) {
         if (new File(videoPath).exists()) {
                 if (getVideoDuration(videoPath) < 60) {
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, postDetails, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
                     startVideoUploadFragment();
                 }
                 else
@@ -360,6 +365,39 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
+    public void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
+                              double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend) {
+        switch (whichUpload) {
+            case VIDEO_UPLOAD:
+                performVideoUpload(this,
+                        new Pojos.UploadParams(
+                                isGallery,
+                                videoPath,
+                                title,
+                                location,
+                                latitude,
+                                longitude,
+                                selectedTagsToSend,
+                                selectedCategoriesToSend,
+                                postDetails));
+                break;
+            case REACTION_UPLOAD:
+                performReactionUpload(this,
+                        new Pojos.UploadParams(
+                                isGallery,
+                                videoPath,
+                                title,
+                                location,
+                                latitude,
+                                longitude,
+                                postDetails));
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
@@ -471,7 +509,7 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     String videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, postDetails, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
                     startVideoUploadFragment();
                 }
                 break;

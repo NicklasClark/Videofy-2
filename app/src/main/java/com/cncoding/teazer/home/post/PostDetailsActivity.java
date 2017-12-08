@@ -1,24 +1,29 @@
 package com.cncoding.teazer.home.post;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +47,6 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
@@ -108,6 +112,7 @@ import retrofit2.Response;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
@@ -117,7 +122,6 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
-import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
@@ -126,7 +130,7 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 
-public class PostDetailsActivity extends AppCompatActivity implements TaggedListInteractionListener, UploadCallbacks {
+public class PostDetailsActivity extends AppCompatActivity implements TaggedListInteractionListener {
 
     //<editor-fold desc="Constants">
     public static final String SPACE = "  ";
@@ -157,10 +161,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 //    @BindView(R.id.share) ProximaNovaRegularTextView share;
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
-    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
-//    @BindView(R.id.reaction_upload_progress_bar) ProgressBar uploadingProgressBar;
-    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
-    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
     //</editor-fold>
 
     //<editor-fold desc="Controller views">
@@ -207,7 +207,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private ArrayList<TaggedUser> taggedUsersList;
     private PostReactionAdapter postReactionAdapter;
     private AudioManager audioManager;
-    private Call<ResultObject> uploadCall;
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder builder;
     private ReactionUploadReceiver reactionUploadReceiver;
     //</editor-fold>
 
@@ -238,8 +239,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         setContentView(R.layout.activity_post_details);
         ButterKnife.bind(this);
 
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
         setupServiceReceiver();
-        checkIfAnyVideoIsUploading();
 
         categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
@@ -303,6 +305,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @Override
     public void onResume() {
         super.onResume();
+        checkIfAnyVideoIsUploading();
         if (postDetails != null) {
             postReactions.clear();
             getPostReactions(postDetails.getPostId(), 1);
@@ -735,14 +738,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    @OnClick(R.id.uploading_notification) public void retryUpload() {
-        if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
-            uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            launchReactionUploadService(getApplicationContext(),
-                    getReactionUploadSession(getApplicationContext()), reactionUploadReceiver);
-        }
-    }
-
     private void updateTextureViewSize(int viewWidth, int viewHeight) {
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
@@ -1137,46 +1132,79 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
+        builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+                .setContentTitle("Teazer reaction upload")
+                .setContentText("Uploading")
+//                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
+//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSmallIcon(R.drawable.ic_file_upload)
+                .setAutoCancel(false)
+                .setSound(null)
+                .setDefaults(0)
+                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                        PendingIntent.getActivity(PostDetailsActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
+                .setProgress(0, 0, true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
+                    "Upload notification", NotificationManager.IMPORTANCE_NONE);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("reactionUploadChanel");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.CYAN);
+//            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+//            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
         reactionUploadReceiver = new ReactionUploadReceiver(new Handler())
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
                     @Override
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch(resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                if (uploadingStatusLayout.getVisibility() != VISIBLE) {
-                                    progressBar.setIndeterminate(false);
-                                    uploadingStatusLayout.setVisibility(VISIBLE);
-                                    uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-                                }
-                                progressBar.setProgress(resultData.getInt(UPLOAD_PROGRESS));
-                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
+                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false);
+                                notifyProgressInNotification();
+//                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
-//                                String completeMessage = String.valueOf(resultData.getString(UPLOAD_COMPLETE));
-                                uploadingStatusLayout.setVisibility(VISIBLE);
-                                uploadingNotificationTextView.setText(R.string.finished);
-                                uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(
-                                        0, 0, R.drawable.ic_tick_circle, 0);
+                                builder.setContentText("Finished!")
+                                        .setProgress(0, 0, false);
+                                notifyProgressInNotification();
+
+                                finishReactionUploadSession(getApplicationContext());
+
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        uploadingStatusLayout.setVisibility(GONE);
+                                        notificationManager.cancel(0);
                                     }
-                                }, 1000);
-                                finishReactionUploadSession(getApplicationContext());
+                                }, 4000);
 
+                                getPostReactions(postDetails.getPostId(), 1);
 //                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
 //                                new ShowShareDialog().execute(s);
 
-                                uploadCall = null;
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-                                uploadingStatusLayout.setVisibility(VISIBLE);
-                                uploadingNotificationTextView.setText(failedMessage);
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-                                uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(
-                                        0, 0, R.drawable.ic_retry, 0);
+
+                                builder.setContentText("Upload failed!")
+                                        .setProgress(0, 0, false);
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        notificationManager.cancel(0);
+                                    }
+                                }, 4000);
+
+                                notifyProgressInNotification();
+                                break;
+                            case REQUEST_CANCEL_UPLOAD:
+                                Toast.makeText(PostDetailsActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
                                 break;
@@ -1186,12 +1214,15 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     private void checkIfAnyVideoIsUploading() {
-        if (getReactionUploadSession(this) != null) {
-            launchReactionUploadService(getApplicationContext(), getReactionUploadSession(getApplicationContext()), reactionUploadReceiver);
+        UploadParams uploadParams = getReactionUploadSession(getApplicationContext());
+        if (uploadParams != null) {
+            launchReactionUploadService(getApplicationContext(), uploadParams, reactionUploadReceiver);
         }
-        else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
-            launchReactionUploadService(getApplicationContext(),
-                    (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), reactionUploadReceiver);
+    }
+
+    private void notifyProgressInNotification() {
+        if (notificationManager != null) {
+            notificationManager.notify(0, builder.build());
         }
     }
 
@@ -1249,32 +1280,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             // ShareApi.share(content, null);
             super.onPostExecute(bitmap);
         }
-    }
-
-    @Override
-    public void onProgressUpdate(int percentage) {
-        progressBar.setProgress(percentage);
-    }
-
-    @Override
-    public void onUploadError(Throwable throwable) {
-        uploadingNotificationTextView.setText(R.string.something_went_wrong);
-        Log.e("onUploadError", throwable.getMessage() != null ? throwable.getMessage() : "FAILED!");
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
-    }
-
-    @Override
-    public void onUploadFinish() {
-        uploadingNotificationTextView.setText(R.string.finished);
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 1000);
-        finishReactionUploadSession(this);
-        uploadCall = null;
     }
     //</editor-fold>
 

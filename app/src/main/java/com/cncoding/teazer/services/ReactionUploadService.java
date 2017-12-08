@@ -40,7 +40,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
     private static final String REACTION_UPLOAD_RECEIVER = "reactionUploadReceiver";
     private ResultReceiver receiver;
     private Bundle bundle;
-    private int resultCode;
+//    private int resultCode;
 
     public static void launchReactionUploadService(Context context, UploadParams uploadParams, ReactionUploadReceiver reactionUploadReceiver) {
         Intent intent = new Intent(context, ReactionUploadService.class);
@@ -61,6 +61,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
+            finishReactionUploadSession(getApplicationContext());
             receiver = intent.getParcelableExtra(REACTION_UPLOAD_RECEIVER);
             UploadParams uploadParams = intent.getParcelableExtra(UPLOAD_PARAMS);
             bundle = new Bundle();
@@ -76,7 +77,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                         .enqueue(new Callback<ResultObject>() {
                             @Override
                             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                resultCode = response.code();
+//                                resultCode = response.code();
                                 try {
                                     if (response.code() == 201) {
                                         onUploadFinish();
@@ -102,7 +103,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
 
     @Override
     public void onProgressUpdate(int percentage) {
-        bundle.clear();
+//        bundle.clear();
         bundle.putInt(UPLOAD_PROGRESS, percentage);
         receiver.send(UPLOAD_IN_PROGRESS_CODE, bundle);
     }

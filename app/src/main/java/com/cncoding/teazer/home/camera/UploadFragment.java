@@ -50,7 +50,6 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.utilities.Pojos;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -98,12 +97,9 @@ import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTI
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -122,6 +118,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
+    public static final int VIDEO_UPLOAD = 25;
+    public static final int REACTION_UPLOAD = 26;
 
     @BindView(R.id.share_on_facebook) ProximaNovaRegularCheckedTextView facebookShareBtn;
     @BindView(R.id.share_on_twitter) ProximaNovaRegularCheckedTextView twitterShareBtn;
@@ -150,7 +148,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean isRequestingLocationUpdates;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
-    private Pojos.Post.PostDetails postDetails;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private SelectedPlace selectedPlace;
@@ -164,13 +161,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, Pojos.Post.PostDetails postDetails, boolean isGallery) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
-        args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
     }
@@ -182,8 +178,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
-            if (isReaction)
-                postDetails = getArguments().getParcelable(POST_DETAILS);
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
     }
@@ -559,15 +553,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }
-            DecimalFormat df = new DecimalFormat("#.#######");
+            DecimalFormat df = new DecimalFormat("#.######");
 
             if (!isReaction)
-                performVideoUpload(activity, new Pojos.UploadParams(isGallery, videoPath, title, location,
+                mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,
                         Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                        selectedTagsToSend, selectedCategoriesToSend, postDetails));
+                        selectedTagsToSend, selectedCategoriesToSend);
             else
-                performReactionUpload(activity, new Pojos.UploadParams(isGallery, videoPath, title, location,
-                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude))));
+                mListener.performUpload(REACTION_UPLOAD, isGallery, videoPath, title, location,
+                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
+                        null, null);
         }
     }
 
@@ -902,6 +897,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
+        void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
+                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend);
     }
 
 }
