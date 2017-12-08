@@ -409,7 +409,7 @@ public class VideoTrimmerView extends FrameLayout {
         if (mEndPosition/1000 - mStartPosition/1000 < TrimVideoUtil.MIN_TIME_FRAME) {
             Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
         }
-        else if(mEndPosition/1000 - mStartPosition/1000 > TrimVideoUtil.VIDEO_MAX_ALLOWED_DURATION)
+        else if(mEndPosition/1000 - mStartPosition/1000 > TrimVideoUtil.VIDEO_MAX_DURATION)
         {
             Toast.makeText(mContext, "Video length can not be more than 60 seconds", Toast.LENGTH_SHORT).show();
         }
@@ -445,18 +445,12 @@ public class VideoTrimmerView extends FrameLayout {
         setPlayPauseViewIcon(mVideoView.isPlaying());
     }
 
-    /**
-     * 屏幕长度转化成视频的长度
-     */
     private long PixToTime(float value) {
         if(pixelRangeMax == 0)
             return 0;
         return (long)((mDuration * value) / pixelRangeMax);
     }
 
-    /**
-     * 视频长度转化成屏幕的长度
-     */
     private long TimeToPix(long value) {
         return (pixelRangeMax * value) / mDuration;
     }

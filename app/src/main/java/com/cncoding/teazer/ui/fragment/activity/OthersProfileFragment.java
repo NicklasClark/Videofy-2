@@ -272,10 +272,7 @@ public class OthersProfileFragment extends BaseFragment {
 //        });
 
         getProfileInformation(followerfollowingid);
-
         return view;
-
-
     }
 
     @Override

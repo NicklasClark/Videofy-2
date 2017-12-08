@@ -786,24 +786,29 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected String doInBackground(Void... voids) {
-            File file = new File(reference.get().videoPath);
-            if (file.exists()) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(reference.get().videoPath);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration;
-                try {
-                    duration = Long.parseLong(time);
-                    retriever.release();
-                    return "Duration " + String.format(Locale.UK, "%02d:%02d",
-                            MILLISECONDS.toMinutes(duration),
-                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-                } catch (NumberFormatException e) {
-                    Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+            try {
+                File file = new File(reference.get().videoPath);
+                if (file.exists()) {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(reference.get().videoPath);
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long duration;
+                    try {
+                        duration = Long.parseLong(time);
+                        retriever.release();
+                        return "Duration " + String.format(Locale.UK, "%02d:%02d",
+                                MILLISECONDS.toMinutes(duration),
+                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                    } catch (NumberFormatException e) {
+                        Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+                        return "";
+                    }
+                } else
                     return "";
-                }
-            } else
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
                 return "";
+            }
         }
 
         @Override

@@ -23,11 +23,13 @@ import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.branch.referral.Branch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by farazhabib on 03/12/17.
@@ -120,6 +122,7 @@ public class FragmentSettings extends Fragment{
             @Override
             public void onClick(View view) {
                 logout(context, getActivity());
+                Branch.getInstance(getApplicationContext()).logout();
             }
         });
 

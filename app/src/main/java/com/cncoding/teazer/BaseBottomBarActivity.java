@@ -7,11 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -75,10 +73,6 @@ import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -230,7 +224,6 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         });
 
-//        getDynamicLinks();
         getBranchDynamicLinks();
     }
 
@@ -241,26 +234,35 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
                     try {
-                        Log.d("BRANCH", referringParams.getString("post_id"));
-                        String postId = referringParams.getString("post_id");
-                        if (postId != null) {
-                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
-                                    .enqueue(new Callback<PostDetails>() {
-                                        @Override
-                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                            if (response.code() == 200) {
-                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
-                                            } else
-                                                Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                        }
+                        if (referringParams.getBoolean("+clicked_branch_link")) {
+                                if (referringParams.has("post_id")) {
+                                    String postId = referringParams.getString("post_id");
+                                    ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                            .enqueue(new Callback<PostDetails>() {
+                                                @Override
+                                                public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                    if (response.code() == 200) {
+                                                        if (response.body() != null) {
+                                                            pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
+                                                        } else {
+                                                            Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else
+                                                        Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
 
-                                        @Override
-                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                                @Override
+                                                public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                    Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                                else if(referringParams.has("user_id"))
+                                {
+                                    String userId = referringParams.getString("user_id");
+                                    pushFragment(OthersProfileFragment.newInstance(userId, "",""));
+                                }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -275,59 +277,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
     }
-
-    private void getDynamicLinks() {
-        FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(getIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                    @Override
-                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                        // Get deep link from result (may be null if no link is found)
-                        try {
-                            Uri deepLink = null;
-                            if (pendingDynamicLinkData != null) {
-                                deepLink = pendingDynamicLinkData.getLink();
-                                Log.d("Firebase", deepLink.toString());
-                            }
-                            String postId = deepLink.getQueryParameter("link");
-                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
-                                    .enqueue(new Callback<PostDetails>() {
-                                        @Override
-                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                            if (response.code() == 200) {
-                                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true, false));
-                                            } else
-                                                Log.e("Fetching post details", response.code() + "_" + response.message());
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
-                                        }
-                                    });
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "getDynamicLink:onFailure", e);
-                    }
-                });
-    }
-
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        if (intent.getExtras() != null) {
-//            int index = intent.getExtras().getBundle("bundle").getInt(TAB_INDEX);
-//            if (index != -1)
-//                switchTab(index);
-//        }
-//    }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {

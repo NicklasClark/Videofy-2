@@ -689,7 +689,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //        sendIntent.setType("text/plain");
 //        startActivity(sendIntent);
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
-                .setCanonicalIdentifier(postDetails.getPostOwner().getFirstName())
+                .setCanonicalIdentifier(String.valueOf(postDetails.getPostId()))
                 .setTitle(postDetails.getTitle())
                 .setContentDescription("View this awesome video on Teazer app")
                 .setContentImageUrl(postDetails.getMedias().get(0).getThumbUrl());
@@ -701,7 +701,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                 .addControlParameter("$desktop_url", "https://teazer.in/")
                 .addControlParameter("$ios_url", "https://teazer.in/");
 
-//        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+//        branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
 //            @Override
 //            public void onLinkCreate(String url, BranchError error) {
 //                if (error == null) {
@@ -709,7 +709,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //                }
 //            }
 //        });
-        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getActivity(), "Check this out!", "This video is awesome: ")
+        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getActivity(), "Check this out!", "This video on Teazer is awesome: ")
                 .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
                 .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
                 .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)

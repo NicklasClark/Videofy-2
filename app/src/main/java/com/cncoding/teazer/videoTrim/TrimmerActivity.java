@@ -14,6 +14,8 @@ import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
 
 import java.io.File;
 
+import static com.cncoding.teazer.videoTrim.utils.TrimVideoUtil.VIDEO_MAX_DURATION;
+
 public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoListener {
 
     private static final String TAG = "jason";
@@ -36,11 +38,10 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
         String path = "";
         if(bd != null) {
             path = bd.getString("path");
-            maxDuration = bd.getInt("MAX_DURATION");
         }
 
         if (binding.trimmerView != null) {
-            binding.trimmerView.setMaxDuration(maxDuration);
+            binding.trimmerView.setMaxDuration(VIDEO_MAX_DURATION);
             binding.trimmerView.setOnTrimVideoListener(this);
             binding.trimmerView.setVideoURI(Uri.parse(path));
         }

@@ -89,7 +89,7 @@
             </intent-filter>
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="teazer" android:host="open" />
+                <data android:scheme="teazerapp" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -130,7 +130,7 @@
             android:windowSoftInputMode="adjustPan">
 
             <intent-filter>
-                <data android:scheme="teazer" />
+                <data android:scheme="teazerapp" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
