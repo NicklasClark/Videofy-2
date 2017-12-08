@@ -43,7 +43,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
 
     private ResultReceiver receiver;
     private Bundle bundle;
-    private int resultCode;
+//    private int resultCode;
     private Call<ResultObject> videoUploadCall;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
