@@ -103,7 +103,8 @@
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
         <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
         <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -134,15 +135,20 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="teazer.test-app.link" android:scheme="http"/>
+                <data android:host="teazer.test-app.link" android:scheme="https"/>
             </intent-filter>
-
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="true"
+                tools:targetApi="m">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="teazer.test-app.link" />
             </intent-filter>
         </activity>
+        <activity android:name=".home.post.PostDetailsActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
@@ -181,6 +187,11 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <service android:name=".services.VideoUploadService"
+            android:exported="false" />
+        <service android:name=".services.ReactionUploadService"
+            android:exported="false" />
 
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.

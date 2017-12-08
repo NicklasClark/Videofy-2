@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -35,7 +36,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
@@ -75,7 +75,6 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.R.anim.fade_in;
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
@@ -206,12 +205,9 @@ public class CameraActivity extends AppCompatActivity
 
     private void startVideoUploadFragment() {
         slidingUpPanelLayout.setPanelState(COLLAPSED);
-//        uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), uploadParams.isReaction());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                toggleUpBtnVisibility(VISIBLE);
-                upBtn.setImageResource(R.drawable.ic_previous);
                 fragmentManager
                         .beginTransaction()
                         .setCustomAnimations(float_up, sink_down, fade_in, sink_down)
@@ -266,6 +262,7 @@ public class CameraActivity extends AppCompatActivity
             Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
 
+<<<<<<< HEAD
     @Override
     public void processFinish(String output) {
         File trimmedFile = new File(output);
@@ -275,6 +272,9 @@ public class CameraActivity extends AppCompatActivity
 
     private long getVideoDuration(String videoFile)
     {
+=======
+    private long getVideoDuration(String videoFile) {
+>>>>>>> prem_dev
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(videoFile);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -293,7 +293,7 @@ public class CameraActivity extends AppCompatActivity
             public void run() {
                 uploadFragment.onNearbyPlacesAdapterInteraction(selectedPlace);
             }
-        }, 500);
+        }, 100);
     }
 
     @Override
@@ -345,13 +345,11 @@ public class CameraActivity extends AppCompatActivity
             public void run() {
                 uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
             }
-        }, 500);
+        }, 100);
     }
 
     @Override
     public void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData) {
-        toggleUpBtnVisibility(VISIBLE);
-        upBtn.setImageResource(R.drawable.ic_previous_dark);
         if (tag != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (tag) {
@@ -459,25 +457,6 @@ public class CameraActivity extends AppCompatActivity
         return googleApiClient;
     }
 
-    public void toggleUpBtnVisibility(int visibility) {
-        switch (visibility) {
-            case VISIBLE:
-                if (upBtn.getVisibility() == INVISIBLE || upBtn.getVisibility() == GONE) {
-                    upBtn.animate().scaleX(1).scaleY(1).alpha(1).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
-                    upBtn.setVisibility(VISIBLE);
-                }
-                break;
-            case INVISIBLE:
-                if (upBtn.getVisibility() == VISIBLE) {
-                    upBtn.animate().scaleX(0).scaleY(0).alpha(0).setDuration(400).setInterpolator(new DecelerateInterpolator()).start();
-                    upBtn.setVisibility(INVISIBLE);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -504,6 +483,13 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
+    public void updateBackButton(@DrawableRes int resId) {
+        if (resId != -1) {
+            upBtn.setVisibility(VISIBLE);
+            upBtn.setImageResource(resId);
+        } else upBtn.setVisibility(GONE);
+    }
+
     @OnClick(R.id.up_btn) public void retakeVideo() {
         onBackPressed();
     }
@@ -516,11 +502,6 @@ public class CameraActivity extends AppCompatActivity
         }
         else if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
-
-            if (fragmentManager.getBackStackEntryCount() == 1)
-                upBtn.setImageResource(R.drawable.ic_previous);
-            else if (fragmentManager.getBackStackEntryCount() == 0)
-                toggleUpBtnVisibility(INVISIBLE);
         }
         else {
             if (!isReaction) {
@@ -531,7 +512,6 @@ public class CameraActivity extends AppCompatActivity
         if (fragmentManager.getBackStackEntryCount() == 1)
             cameraFragment.startPreview();
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

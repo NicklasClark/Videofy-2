@@ -110,9 +110,13 @@ public class PostsListFragment extends BaseFragment {
         }
         else {
             isRefreshing = false;
+            if (postList != null && postDetails == null) {
+                postList.remove(positionToUpdate);
+                postListAdapter.notifyItemRemoved(positionToUpdate);
+            } else
+                postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
-            postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
         }
 //        getParentActivity().showAppBar();
     }

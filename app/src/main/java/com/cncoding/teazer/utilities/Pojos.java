@@ -2872,7 +2872,7 @@ public class Pojos {
 
     public static class UploadParams implements Parcelable {
         private String videoPath;
-        private boolean isReaction;
+        public boolean isReaction;
         private String title;
         private String location;
         private double latitude;
@@ -2882,11 +2882,10 @@ public class Pojos {
         private PostDetails postDetails;
         private boolean isGallery;
 
-        public UploadParams(boolean isGallery, String videoPath, boolean isReaction, String title, String location,
+        public UploadParams(boolean isGallery, String videoPath, String title, String location,
                             double latitude, double longitude, String tags, String categories, PostDetails postDetails) {
             this.isGallery = isGallery;
             this.videoPath = videoPath;
-            this.isReaction = isReaction;
             this.title = title;
             this.location = location;
             this.latitude = latitude;
@@ -2894,6 +2893,15 @@ public class Pojos {
             this.tags = tags;
             this.categories = categories;
             this.postDetails = postDetails;
+        }
+
+        public UploadParams(boolean isGallery, String videoPath, String title, String location, double latitude, double longitude) {
+            this.isGallery = isGallery;
+            this.videoPath = videoPath;
+            this.title = title;
+            this.location = location;
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
 
         public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {

@@ -758,7 +758,33 @@
             android:visibility="gone"
             android:layout_centerInParent="true"
             android:textSize="20dp"/>
+        <RelativeLayout
+            android:id="@+id/layoutDetail2"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
 
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/alert1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Oops this is private Account "
+                android:layout_margin="5dp"
+                android:textColor="#505050"
+                android:textSize="14sp"
+                />
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/alert1"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/backbutton"
+                android:text="To view the details, Please follow the user "
+                android:textColor="#505050"
+                android:textSize="14sp"
+                />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/layoutDetail"
             android:layout_width="match_parent"

@@ -74,6 +74,8 @@ public class OthersProfileFragment extends BaseFragment {
 
     @BindView(R.id.layoutDetail)
     RelativeLayout layoutDetail;
+    @BindView(R.id.layoutDetail2)
+    RelativeLayout layoutDetail2;
     @BindView(R.id.username)
     ProximaNovaRegularCheckedTextView _name;
     @BindView(R.id.following)
@@ -167,9 +169,7 @@ public class OthersProfileFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         context = container.getContext();
         context = container.getContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
-        }
+
         getParentActivity().updateToolbarTitle("Profile");
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
@@ -242,34 +242,7 @@ public class OthersProfileFragment extends BaseFragment {
 
             }
         });
-//        menu.setOnClickListener(new View.OnClickListener()
-//
-//        {
-//            @Override
-//            public void onClick(View view) {
-//                PopupMenu popup = new PopupMenu(context, menu);
-//                popup.inflate(R.menu.menu_other_profile);
-//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.action_profile_block:
-//                                openBlockUser(followerfollowingid);
-//                                break;
-//                            case R.id.action_profile_report: {
-//                                FragmentManager fm = getChildFragmentManager();
-//                                ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(followerfollowingid);
-//                                reportUserDialogFragment.show(fm, "fragment_report_user");
-//                            }
-//
-//                        }
-//                        return false;
-//                    }
-//                });
-//                popup.show();
-//            }
-//
-//        });
+
 
         getProfileInformation(followerfollowingid);
         return view;
@@ -355,12 +328,6 @@ public class OthersProfileFragment extends BaseFragment {
                             }
                             if (userProfileThumbnail == null) {
 
-//                                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-//
-//                                Glide.with(context)
-//                                        .load(pic)
-//                                        .into(profile_id);
-//                                profileBlur(pic);
                             } else {
 
                                 Picasso.with(context)
@@ -392,7 +359,24 @@ public class OthersProfileFragment extends BaseFragment {
                                 progressBar.setVisibility(View.GONE);
                             }
 
-                            getProfileVideos(followersid);
+                            if(accountType==2)
+                            {
+                                getProfileVideos(followersid);
+                            }
+                            else
+                            {
+                                if (isfollowing)
+                                {
+                                    getProfileVideos(followersid);
+
+                                }
+                                else {
+                                    layoutDetail2.setVisibility(View.VISIBLE);
+                                    layoutDetail.setVisibility(View.GONE);
+                                }
+
+                            }
+
 
 
                         } else if (response.body().getPublicProfile() == null) {
@@ -451,6 +435,23 @@ public class OthersProfileFragment extends BaseFragment {
                                 layout.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
                             }
+                            if(accountType==2)
+                            {
+                                getProfileVideos(followersid);
+                            }
+                            else
+                            {
+                                if (isfollowing)
+                                {
+                                    getProfileVideos(followersid);
+
+                                }
+                                else {
+                                    layoutDetail2.setVisibility(View.VISIBLE);
+                                    layoutDetail.setVisibility(View.GONE);
+                                }
+                            }
+
                         }
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);

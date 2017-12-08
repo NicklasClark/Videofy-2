@@ -107,15 +107,16 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             viewsCount = postDetails.getViews();
             reactionTitle = postDetails.getReact_title();
 
-            Glide.with(this)
-                    .load(postDetails.getReactOwner().getProfileMedia().getMediaUrl())
-                    .asBitmap()
-                    .into(reactionPostDp);
-            if (reactionTitle != null) {
-                reactionPostCaption.setText(reactionTitle);
-            }
-            postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
-            reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+        Glide.with(this)
+                .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
+                        : R.drawable.ic_user_male_dp_small)
+                .asBitmap()
+                .into(reactionPostDp);
+        if (reactionTitle != null) {
+            reactionPostCaption.setText(reactionTitle);
+        }
+        postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
+        reactionPostName.setText(postDetails.getReactOwner().getFirstName());
 
             initView();
             incrementView();

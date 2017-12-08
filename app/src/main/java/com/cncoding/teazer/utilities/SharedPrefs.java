@@ -19,6 +19,7 @@ public class SharedPrefs {
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
     private static final String BLURRED_PROFILE_PIC = "homePageCache";
+    private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -89,6 +90,18 @@ public class SharedPrefs {
 
     public static UploadParams getVideoUploadSession(Context context) {
         return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
+    }
+
+    public static void saveReactionUploadSession(Context context, UploadParams uploadParams) {
+        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+    }
+
+    public static void finishReactionUploadSession(Context context) {
+        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, null).apply();
+    }
+
+    public static UploadParams getReactionUploadSession(Context context) {
+        return new Gson().fromJson(getSharedPreferences(context).getString(REACTION_UPLOAD_SESSION, null), UploadParams.class);
     }
 
     public static void setCurrentPassword(Context context, String password) {

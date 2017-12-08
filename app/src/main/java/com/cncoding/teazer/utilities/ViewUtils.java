@@ -32,6 +32,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
@@ -40,7 +41,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -76,34 +76,33 @@ public class ViewUtils {
         view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
     }
 
-    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (isOnlineVideo) {
-            intent.setDataAndType(Uri.parse(videoPath), "video/*");
-        } else {
-            File file = new File(videoPath);
-            intent.setDataAndType(Uri.fromFile(file), "video/*");
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-        context.startActivity(intent);
-    }
+//    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        if (isOnlineVideo) {
+//            intent.setDataAndType(Uri.parse(videoPath), "video/*");
+//        } else {
+//            File file = new File(videoPath);
+//            intent.setDataAndType(Uri.fromFile(file), "video/*");
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        }
+//        context.startActivity(intent);
+//    }
 
     public static void playVideoInExoPlayer(Context context, String videoPath) {
         Intent intent = new Intent(context, ExoPlayerActivity.class);
         intent.putExtra("VIDEO_URL", videoPath);
-        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction)
-    {
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction) {
         switch (source) {
             case POST_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
                 intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
                 intent.putExtra("POST_INFO", postReaction);
                 intent.putExtra("SOURCE", POST_REACTION);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 break;
             }
@@ -112,7 +111,7 @@ public class ViewUtils {
                 intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
                 intent.putExtra("POST_INFO", reaction);
                 intent.putExtra("SOURCE", SELF_REACTION);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 break;
             }
@@ -217,8 +216,16 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void performUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+    public static void performVideoUpload(Context packageContext, Pojos.UploadParams uploadParams) {
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
+        intent.putExtra(UPLOAD_PARAMS, uploadParams);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        packageContext.startActivity(intent);
+        ((AppCompatActivity) packageContext).finish();
+    }
+
+    public static void performReactionUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+        Intent intent = new Intent(packageContext, PostDetailsActivity.class);
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);

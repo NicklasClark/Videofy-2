@@ -38,7 +38,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -69,7 +68,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +96,6 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
 /**
  *
@@ -589,9 +586,16 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     @OnClick(R.id.video_upload_tag_friends) public void getMyFollowings() {
+
+
+
+
         toggleInteraction(false);
         getMyCircle(1);
     }
+
+
+
 
     private void getMyCircle(final int page) {
         ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<Pojos.Friends.CircleList>() {
@@ -648,25 +652,64 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         return stringBuilder.toString();
     }
 
-    @OnClick(R.id.video_upload_check_btn)
-    public void onUploadBtnClick() {
-        if (validateFields()) {
-            toggleInteraction(false);
-            String title = videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString();
-            String location = null;
-            double latitude = 0;
-            double longitude = 0;
-            if (selectedPlace != null) {
-                location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
-                latitude = selectedPlace.getLatitude();
-                longitude = selectedPlace.getLongitude();
+    public void getTagFriends(final int page)
+    {
+
+        ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<Pojos.Friends.CircleList>() {
+            @Override
+            public void onResponse(Call<Pojos.Friends.CircleList> call, Response<Pojos.Friends.CircleList> response) {
+                if (response.body().getCircles() != null) {
+                    switch (isResponseOk(response)) {
+                        case SUCCESS_OK_TRUE:
+                            myFollowingsList.addAll(response.body().getCircles());
+                            getMyCircle(page + 1);
+                            break;
+                        case SUCCESS_OK_FALSE:
+                            myFollowingsList.addAll(response.body().getCircles());
+                            toggleUpBtnVisibility(VISIBLE);
+                            mListener.onUploadInteraction(false,
+                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, getSelectedTagsToShow(myFollowingsList)),
+                                    TAG_TAGS_FRAGMENT);
+                            break;
+                        default:
+                            Log.e("getMyCircle", response.message());
+                            break;
+                    }
+                } else Toast.makeText(context, "No friends yet!", Toast.LENGTH_SHORT).show();
+                toggleInteraction(true);
             }
-            String tags = tagFriendsText.getText().toString().equals("") ? null : tagFriendsText.getText().toString();
-            DecimalFormat df = new DecimalFormat("#.#######");
-            performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
-                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend, null));
-        }
+
+            @Override
+            public void onFailure(Call<Pojos.Friends.CircleList> call, Throwable t) {
+                Log.e("getMyCircle", t.getMessage());
+                toggleInteraction(true);
+            }
+        });
     }
+
+
+
+
+
+//    @OnClick(R.id.video_upload_check_btn)
+//    public void onUploadBtnClick() {
+//        if (validateFields()) {
+//            toggleInteraction(false);
+//            String title = videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString();
+//            String location = null;
+//            double latitude = 0;
+//            double longitude = 0;
+//            if (selectedPlace != null) {
+//                location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+//                latitude = selectedPlace.getLatitude();
+//                longitude = selectedPlace.getLongitude();
+//            }
+//            String tags = tagFriendsText.getText().toString().equals("") ? null : tagFriendsText.getText().toString();
+//            DecimalFormat df = new DecimalFormat("#.#######");
+//            performVideoUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
+//                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend, null));
+//        }
+//    }
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(videoTitle.getText())) {

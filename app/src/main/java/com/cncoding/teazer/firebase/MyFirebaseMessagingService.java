@@ -69,7 +69,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     //This method is only generating push notification
-    //It is same as we did in earlier posts
     private void sendNotification(String messageBody, Bitmap bitmap, String title) {
         Intent intent = new Intent();
         intent.setClass(this, BaseBottomBarActivity.class);
@@ -85,7 +84,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         initChannels();
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default")
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")
                 .setSmallIcon(R.drawable.ic_stat_notification_icon)
                 .setContentTitle(title != null ? title : "Teazer")
                 .setContentText(messageBody)

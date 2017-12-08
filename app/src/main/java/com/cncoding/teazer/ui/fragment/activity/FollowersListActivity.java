@@ -91,9 +91,9 @@ public class FollowersListActivity extends BaseFragment{
         View view = inflater.inflate(R.layout.activity_followers, container, false);
         ButterKnife.bind(this,view);
         context=container.getContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+//        }
         recyclerView=view.findViewById(R.id.recycler_view);
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

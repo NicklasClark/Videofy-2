@@ -524,6 +524,8 @@ public class CameraFragment extends Fragment {
             ErrorDialog.newInstance(getString(R.string.camera_error), this).show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Toast.makeText(context, getString(R.string.cannot_start_camera), Toast.LENGTH_SHORT).show();
         }
     }
 

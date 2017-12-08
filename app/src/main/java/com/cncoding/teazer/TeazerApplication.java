@@ -22,10 +22,12 @@ import iknow.android.utils.BaseUtils;
 import io.branch.referral.Branch;
 
 /**
+ *
  * Created by amit on 30/11/17.
  */
 
 public class TeazerApplication extends MultiDexApplication {
+
     private static final String TAG = "Application";
 
     @Override
@@ -59,7 +61,6 @@ public class TeazerApplication extends MultiDexApplication {
                     }
                 });
         EmojiCompat.init(config);
-
     }
 
     public static void initImageLoader(Context context) {
