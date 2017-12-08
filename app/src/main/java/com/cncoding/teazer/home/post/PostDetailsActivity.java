@@ -209,6 +209,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private AudioManager audioManager;
     private Call<ResultObject> uploadCall;
     private ReactionUploadReceiver reactionUploadReceiver;
+    private static boolean isDeepLink = false;
+    private String thumbUrl;
     //</editor-fold>
 
     public PostDetailsActivity() {
@@ -216,10 +218,15 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     public static void newInstance(Context packageContext, @NonNull PostDetails postDetails, byte[] image,
-                                   boolean isComingFromHomePage) {
+                                   boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl) {
         Intent intent = new Intent(packageContext, PostDetailsActivity.class);
         intent.putExtra(ARG_POST_DETAILS, postDetails);
-        intent.putExtra(ARG_THUMBNAIL, image);
+        if (!isDeepLink) {
+            intent.putExtra(ARG_THUMBNAIL, image);
+        } else {
+            PostDetailsActivity.isDeepLink = true;
+            intent.putExtra(ARG_THUMBNAIL, thumbUrl);
+        }
 //        intent.putExtra(ARG_ENABLE_REACT_BTN, enableReactBtn);
         intent.putExtra(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
         packageContext.startActivity(intent);
@@ -246,7 +253,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         taggedUsersList = new ArrayList<>();
         if (getIntent() != null) {
             postDetails = getIntent().getParcelableExtra(ARG_POST_DETAILS);
-            image = getIntent().getByteArrayExtra(ARG_THUMBNAIL);
+            if (!isDeepLink) {
+                image = getIntent().getByteArrayExtra(ARG_THUMBNAIL);
+            }
+            else
+            {
+                thumbUrl = getIntent().getStringExtra(ARG_THUMBNAIL);
+            }
 //            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
             isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
@@ -260,11 +273,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
 
-        if (image != null)
+        if (image != null && !isDeepLink)
             Glide.with(this)
                     .load(image)
                     .asBitmap()
                     .into(placeholder);
+        else
+            Glide.with(this)
+                    .load(thumbUrl)
+                    .into(placeholder);
+
 
         loadingProgressBar.setVisibility(VISIBLE);
 

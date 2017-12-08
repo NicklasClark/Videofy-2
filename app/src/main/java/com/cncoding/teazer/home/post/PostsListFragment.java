@@ -108,16 +108,16 @@ public class PostsListFragment extends BaseFragment {
                 dismissProgressBar();
             }
         }
-        else {
-            isRefreshing = false;
-            if (postList != null && postDetails == null) {
-                postList.remove(positionToUpdate);
-                postListAdapter.notifyItemRemoved(positionToUpdate);
-            } else
-                postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
-//            if (savedPosition[1] > 4)
-//                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
-        }
+//        else {
+//            isRefreshing = false;
+//            if (postList != null && postDetails == null) {
+//                postList.remove(positionToUpdate);
+//                postListAdapter.notifyItemRemoved(positionToUpdate);
+//            } else
+//                postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+////            if (savedPosition[1] > 4)
+////                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
+//        }
 //        getParentActivity().showAppBar();
     }
 

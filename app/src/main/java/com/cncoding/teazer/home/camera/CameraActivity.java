@@ -262,7 +262,6 @@ public class CameraActivity extends AppCompatActivity
             Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
     }
 
-<<<<<<< HEAD
     @Override
     public void processFinish(String output) {
         File trimmedFile = new File(output);
@@ -272,9 +271,6 @@ public class CameraActivity extends AppCompatActivity
 
     private long getVideoDuration(String videoFile)
     {
-=======
-    private long getVideoDuration(String videoFile) {
->>>>>>> prem_dev
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(videoFile);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
