@@ -8,6 +8,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
+import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateAccountRequest;
+import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateReasonList;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -84,6 +86,10 @@ public class ApiCallingService {
 
         public static Call<ArrayList<Pojos.Category>> getCategories() {
             return getApplicationService().getCategories();
+
+        }
+        public static Call<List<DeactivateReasonList>> getDeactivationTypesList() {
+            return getApplicationService().getDeactivationTypesList();
         }
 
         private static TeazerApiCall.ApplicationCalls getApplicationService() {
@@ -680,6 +686,10 @@ public class ApiCallingService {
 
         public static Call<ResultObject> reportUsers(ReportUser reportuser, Context context){
             return getUserService(context).reportUser(reportuser);
+        }
+
+        public static Call<ResultObject> deactivateAccount(Context context, DeactivateAccountRequest deactivateAccountRequest) {
+            return getUserService(context).deactivateAccount(deactivateAccountRequest);
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {

@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
 import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
+import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateAccountRequest;
+import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateReasonList;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
@@ -89,11 +91,17 @@ import retrofit2.http.Query;
         @GET("/api/v1/application/profile/report/types")
         Call<List<ReportPostTitlesResponse>> getProfileReportTypes();
 
+       @GET("/api/v1/application/deactivate/types")
+        Call<List<DeactivateReasonList>> getDeactivationTypesList();
+
         /**
          * To get the categories list
          * */
         @GET("/api/v1/application/categories")
         Call<ArrayList<Pojos.Category>> getCategories();
+
+
+
     }
 
     interface AuthenticationCalls {
@@ -750,5 +758,8 @@ import retrofit2.http.Query;
 
         @POST("/api/v1/user/report")
         Call<ResultObject> reportUser(@Body ReportUser reportuser);
+
+        @POST("/api/v1/user/deactivate")
+        Call<ResultObject> deactivateAccount(@Body DeactivateAccountRequest deactivateAccountRequest);
     }
 }

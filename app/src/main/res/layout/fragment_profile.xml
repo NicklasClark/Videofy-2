@@ -56,6 +56,7 @@
                         android:orientation="vertical" />
 
                     <LinearLayout
+                        android:id="@+id/layout1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -217,111 +218,121 @@
                         </LinearLayout>
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
-                            android:layout_marginRight="10dp"
-                            android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
 
-                                android:orientation="horizontal">
 
-                                <TextView
-                                    android:id="@+id/creations"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/username_title"
-                                    android:layout_marginStart="5dp"
-                                    android:layout_toEndOf="@+id/bullets"
-                                    android:drawablePadding="5dp"
-                                    android:drawableStart="@drawable/ic_creations"
-                                    android:text="@string/creation"
-                                    android:textColor="@color/colorIcons"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight=".1"
-                                android:layout_marginStart="2dp"
-
-                                android:orientation="horizontal">
-
-                                <View
-                                    android:layout_width="1dp"
-                                    android:layout_height="26dp"
-                                    android:layout_below="@+id/username_title"
-                                    android:layout_marginStart="2dp"
-                                    android:background="#64ffffff"
-                                    android:textColor="@color/colorIcons" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/following"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/username_title"
-                                    android:layout_marginStart="5dp"
-                                    android:layout_toEndOf="@+id/bullets"
-                                    android:drawablePadding="5dp"
-                                    android:drawableStart="@drawable/ic_following"
-                                    android:text="@string/following"
-                                    android:textColor="@color/colorIcons"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight=".1"
-                                android:layout_marginStart="2dp"
-                                android:orientation="horizontal">
-
-                                <View
-                                    android:layout_width="1dp"
-                                    android:layout_height="26dp"
-                                    android:background="#64ffffff"/>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/followers"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/username_title"
-                                    android:layout_marginStart="5dp"
-                                    android:layout_toEndOf="@+id/bullets"
-                                    android:drawablePadding="5dp"
-
-                                    android:drawableStart="@drawable/ic_followers"
-                                    android:text="@string/followers"
-                                    android:textColor="@color/colorIcons"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_below="@+id/layout1"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:gravity="center_vertical"
+
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/creations"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/username_title"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:layout_marginStart="5dp"
+                                android:layout_toEndOf="@+id/bullets"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@drawable/ic_creations"
+                                android:text="@string/creation"
+                                android:textColor="@color/colorIcons"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".1"
+                            android:layout_marginStart="2dp"
+
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="26dp"
+                                android:layout_below="@+id/username_title"
+                                android:layout_marginStart="2dp"
+                                android:background="#64ffffff"
+                                android:textColor="@color/colorIcons" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/following"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/username_title"
+                                android:layout_marginStart="5dp"
+                                android:layout_toEndOf="@+id/bullets"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@drawable/ic_following"
+                                android:text="@string/following"
+                                android:textColor="@color/colorIcons"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".1"
+                            android:layout_marginStart="2dp"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="26dp"
+                                android:background="#64ffffff"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/followers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/username_title"
+                                android:layout_marginStart="5dp"
+                                android:layout_toEndOf="@+id/bullets"
+                                android:drawablePadding="5dp"
+
+                                android:drawableStart="@drawable/ic_followers"
+                                android:text="@string/followers"
+                                android:textColor="@color/colorIcons"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </RelativeLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>

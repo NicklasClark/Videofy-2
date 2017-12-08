@@ -31,30 +31,55 @@
                         android:id="@+id/userDp"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/ic_user_male_dp"
                         android:scaleType="centerCrop"
                         />
-                    <TextView
+                    <com.cncoding.teazer.customViews.UniversalTextView
                         android:id="@+id/following_name"
-                        android:layout_toRightOf="@+id/userDp"
+                        android:layout_toRightOf="@id/userDp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="5dp"
-                        android:text="@string/invitefriends"
+                        android:text="UserName"
                         android:textColor="@color/colorPrimary_text"
-                        android:textSize="@dimen/text_size_content" />
+                        android:textAppearance="?attr/textAppearanceListItem"
+                        android:textSize="14sp" />
 
-                    <Button
+
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                         android:id="@+id/follow_button"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:text="@string/unfollow"
+
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/border_layout"
-                        app:srcCompat="@drawable/arif_image" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_margin="14dp"
+                        android:minWidth="90dp"
+                        android:foreground="@drawable/ripple_dark_rounded_2dp"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="centerCrop"
+                        android:text="@string/accept"
+                        android:visibility="visible"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="10dp"
+                        android:background="@drawable/bg_outline_rounded_primary"
+                        android:contentDescription="@string/post_thumbnail"/>
+
+                    <!--<Button-->
+                        <!--android:id="@+id/follow_button"-->
+                        <!--android:layout_width="100dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:text="@string/unfollow"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:layout_marginEnd="10dp"-->
+                        <!--android:background="@drawable/border_layout"-->
+                        <!--app:srcCompat="@drawable/arif_image" />-->
+
+
                 </RelativeLayout>
                 <View
 

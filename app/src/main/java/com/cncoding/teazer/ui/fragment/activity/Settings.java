@@ -13,14 +13,14 @@ import android.view.View;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
 
 import butterknife.ButterKnife;
 
 
 
-public class Settings extends AppCompatActivity implements FragmentSettings.ChangeCategoriesListener {
-
+public class Settings extends AppCompatActivity implements FragmentSettings.ChangeCategoriesListener{
 
     Context context;
     private PublicProfile userProfile;
@@ -77,6 +77,15 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         ft.replace(R.id.container, fragment);
         ft.commit();
 
+
+    }
+
+    @Override
+    public void deactivateAccountListener() {
+        FragmentDeactivateAccount fragment= FragmentDeactivateAccount.newInstance();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, fragment);
+        ft.commit();
 
     }
 }

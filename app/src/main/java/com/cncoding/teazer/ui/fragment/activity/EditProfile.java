@@ -11,26 +11,32 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
 import com.squareup.picasso.MemoryPolicy;
@@ -41,8 +47,11 @@ import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -92,7 +101,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
     Button fab;
     ProgressBar simpleProgressBar;
-    ScrollView layoutdetail;
+    RelativeLayout layoutdetail;
 
     private static final int RC_REQUEST_STORAGE = 1001;
     private static final int LIMIT = 1;
@@ -103,32 +112,37 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     private String userProfileUrl;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
-                onBackPressed();
 
+                onBackPressed();
             }
         });
+
+
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Edit Profile</font>"));
         context = EditProfile.this;
         bgImage = findViewById(R.id.profile_id2);
         simpleProgressBar = findViewById(R.id.simpleProgressBar);
@@ -173,7 +187,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             female.setBackgroundResource(R.drawable.ic_female_sel);
             male.setBackgroundResource(R.drawable.ic_male_white);
-            femaletxt.setTextColor(Color.parseColor("#2196F3"));
+            femaletxt.setTextColor(Color.parseColor("#F48fb1"));
             maletext.setTextColor(Color.parseColor("#333333"));
         }
 
@@ -192,7 +206,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onClick(View view) {
                 female.setBackgroundResource(R.drawable.ic_female_sel);
                 male.setBackgroundResource(R.drawable.ic_male_white);
-                femaletxt.setTextColor(Color.parseColor("#2196F3"));
+                femaletxt.setTextColor(Color.parseColor("#F48fb1"));
                 maletext.setTextColor(Color.parseColor("#333333"));
                 gender = 2;
             }
@@ -206,41 +220,64 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProfileFragment.checkprofileupdated=true;
 
                 PickImageDialog.build(new PickSetup()).show(EditProfile.this);
+
             }
         });
 
         initProfileImage();
 
     }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
+
     @Override
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
 
-            SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("MYIMAGES", r.getUri().toString());
-            editor.apply();
-            try {
-                File profileImage = new File(r.getPath());
-                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
-//                String fileExt = profileImage.getAbsolutePath().substring(profileImage.getAbsolutePath().lastIndexOf("."));
-                MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
-                saveDataToDatabase(body);
 
-                SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-                final String imageUri = prfs.getString("MYIMAGES", "");
+            try {
+
+                ProfileFragment.checkprofileupdated=true;
+
+//                SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+//                final String imageUri = prfs.getString("MYIMAGES", "");
+
                 Picasso.with(EditProfile.this)
-                        .load(imageUri)
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .load(r.getUri())
                         .into(profile_image);
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), Uri.parse(imageUri));
+
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), r.getUri());
                 Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap,
                         300, 300, false);
 
                 Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
+
+             //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
+
+                SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("MYIMAGES", r.getUri().toString());
+                editor.apply();
+
+                File profileImage = new File(r.getPath());
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
+                saveDataToDatabase(body);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -264,18 +301,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     RC_REQUEST_STORAGE, perm);
         } else {
 
-            if (userProfileThumbnail == null) {
-                final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-
+            if (userProfileUrl == null) {
 
             } else {
 
-                Picasso.with(context)
-                        .load(Uri.parse(userProfileThumbnail)) .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-                        .fit().centerInside()
+                Glide.with(context)
+                        .load(Uri.parse(userProfileUrl))
                         .into(profile_image);
-
                 profileBlur(userProfileUrl);
             }
 
@@ -292,7 +324,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
     }
-
 
 
     @Override
@@ -352,15 +383,18 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
     public void saveDataToDatabase(MultipartBody.Part body) {
+        simpleProgressBar.setVisibility(View.VISIBLE);
+        // layoutdetail.setVisibility(View.GONE);
+        profile_image.setClickable(false);
+
         ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
 
-
                     simpleProgressBar.setVisibility(View.GONE);
-                    layoutdetail.setVisibility(View.VISIBLE);
-
+                    //layoutdetail.setVisibility(View.VISIBLE);
+                    profile_image.setClickable(true);
                     if (response.code() == 400) {
                     }
 
@@ -407,8 +441,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             simpleProgressBar.setVisibility(View.VISIBLE);
             layoutdetail.setVisibility(View.GONE);
-
-
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(final Void... params) {
@@ -432,6 +464,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 protected void onPostExecute(final Bitmap result) {
 
                     try {
+
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
                         Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
@@ -460,7 +493,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String firstname = _firstname.getText().toString();
         String lastnames = lastname;
         Integer countrycodes = countrycode;
-        String  mobilenumber = _mobileNumber.getText().toString();
+        String mobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
         String details = _bio.getText().toString();
 
@@ -469,8 +502,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             _username.requestFocus();
             valid = false;
 
-        }
-        else {
+        } else {
             _username.setError(null);
         }
         if (firstname.isEmpty()) {
@@ -491,16 +523,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         }
 
 
-        if (mobilenumber.isEmpty()|| mobilenumber.length() < 10 || mobilenumber.length() > 10) {
+        if (mobilenumber.isEmpty() || mobilenumber.length() < 10 || mobilenumber.length() > 10) {
             _mobileNumber.setError("enter valid 10 digit mobile number");
             _mobileNumber.requestFocus();
             valid = false;
 
-        }
-
-
-        else
-        {
+        } else {
             _mobileNumber.setError(null);
 
         }
@@ -515,14 +543,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         }
 
 
-
-
-        if(valid) {
+        if (valid) {
             ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
             ProfileUpdate(profileUpdateRequest);
-        }
-        else
-        {
+        } else {
 
         }
 

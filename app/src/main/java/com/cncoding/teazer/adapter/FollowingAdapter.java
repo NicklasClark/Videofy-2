@@ -17,6 +17,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
@@ -58,6 +60,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
+
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_following, viewGroup, false);
@@ -78,7 +81,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 userType="Following";
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Picasso.with(context)
                             .load(followrsDp)
                             .fit().centerInside()
@@ -86,6 +89,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.userDp);
                 }
+                viewHolder.follow.setText("Following");
                 viewHolder.followingName.setText(followingname);
 
                 viewHolder.follow.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +123,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final int accounttype = cont.getAccountType();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Picasso.with(context)
                             .load(followrsDp)
                             .fit().centerInside()
@@ -242,7 +246,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         } else {
 
                             viewHolder.follow.setText("Following");
-                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "You are already following", Toast.LENGTH_LONG).show();
                         }
 
                     } catch (Exception e) {
@@ -276,8 +280,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView followingName, address;
-        Button follow;
+        private TextView address;
+        private UniversalTextView followingName;
+        ProximaNovaSemiboldTextView follow;
         CardView cardview;
         CircularAppCompatImageView userDp;
         public ViewHolder(View view) {

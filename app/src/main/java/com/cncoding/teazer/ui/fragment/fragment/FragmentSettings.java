@@ -52,6 +52,9 @@ public class FragmentSettings extends Fragment{
 
     @BindView(R.id.invitefriendslayout)
     LinearLayout invitefriendslayout;
+
+    @BindView(R.id.dectivateAccountLayout)
+    LinearLayout dectivateAccountLayout;
     Context context;
     private static final  int PRIVATE_STATUS=1;
     private static final  int PUBLIC_STATUS=2;
@@ -117,6 +120,13 @@ public class FragmentSettings extends Fragment{
             }
         });
 
+        dectivateAccountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mlistener.deactivateAccountListener();
+
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,9 +195,7 @@ public class FragmentSettings extends Fragment{
                         if(status==1)
                             Toast.makeText(context, "Your account has become private", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(context, "Your account has become public", Toast.LENGTH_LONG).show();
-
-                    }
+                            Toast.makeText(context, "Your account has become public", Toast.LENGTH_LONG).show();}
                     else
                     {
 
@@ -202,21 +210,19 @@ public class FragmentSettings extends Fragment{
                 }
 
             }
-
-
-
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }
         });
-
-
     }
+
     public interface ChangeCategoriesListener
     {
         public void changeCategoriesListener();
+        public void deactivateAccountListener();
     }
+
 
 }
