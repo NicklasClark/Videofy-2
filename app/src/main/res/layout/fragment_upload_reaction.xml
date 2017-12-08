@@ -11,7 +11,6 @@
         android:id="@+id/video_preview_thumbnail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_vignette"
         android:animateLayoutChanges="true"
         android:elevation="5dp">
 
@@ -20,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
+            android:background="@drawable/bg_vignette"
             android:minHeight="160dp"
             android:maxHeight="200dp"
             android:layout_centerInParent="true"
@@ -97,6 +97,7 @@
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.FullScreen.EditText"
+                    android:cursorVisible="false"
                     android:hint="@string/enter_location"
                     app:drawableStartCompat="@drawable/ic_add_location"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />

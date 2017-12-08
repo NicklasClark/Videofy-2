@@ -17,10 +17,12 @@ import iknow.android.utils.BaseUtils;
 import io.branch.referral.Branch;
 
 /**
+ *
  * Created by amit on 30/11/17.
  */
 
 public class TeazerApplication extends MultiDexApplication {
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -30,6 +32,10 @@ public class TeazerApplication extends MultiDexApplication {
 
         // Initialize the Branch object
         Branch.getAutoInstance(this);
+
+        //<editor-fold desc="Uploading notification initializer">
+//        VideoUploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
+        //</editor-fold>
     }
 
     public static void initImageLoader(Context context) {

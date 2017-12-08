@@ -107,7 +107,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         reactionTitle = postDetails.getReact_title();
 
         Glide.with(this)
-                .load(postDetails.getReactOwner().getProfileMedia().getMediaUrl())
+                .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
+                        : R.drawable.ic_user_male_dp_small)
                 .asBitmap()
                 .into(reactionPostDp);
         if (reactionTitle != null) {

@@ -237,7 +237,7 @@
     <string name="trending">Trending</string>
     <string name="featured_videos">Featured Videos</string>
     <string name="view_all">View all</string>
-    <string name="rationale_storage">App requires external storage permission</string>
+    <string name="rationale_storage">Teazer requires external storage permission</string>
     <string name="no_friends_yet">No friends yet</string>
     <string name="like">Like</string>
     <string name="liked">Liked</string>
@@ -284,4 +284,9 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
+    <string name="upload_profile_pic">Upload profile pic</string>
+    <string name="crop_selected_image">Crop selected image</string>
+    <string name="cannot_start_camera">Cannot start camera, please restart your device</string>
+    <string name="upload_success">Upload successful!</string>
+    <string name="upload_cancelled">Upload cancelled</string>
 </resources>

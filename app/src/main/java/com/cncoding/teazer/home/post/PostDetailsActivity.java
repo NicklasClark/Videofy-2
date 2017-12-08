@@ -1,34 +1,31 @@
 package com.cncoding.teazer.home.post;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
-import android.graphics.Matrix;
-import android.graphics.SurfaceTexture;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.media.MediaCodec;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.Surface;
-import android.view.TextureView;
-import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
@@ -39,35 +36,50 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.MediaControllerView;
-import com.cncoding.teazer.customViews.MediaControllerView.MediaPlayerControlListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.post.TagListAdapter.TaggedListInteractionListener;
+import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
-import com.cncoding.teazer.utilities.ViewUtils;
+import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -76,6 +88,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -92,107 +106,157 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
+import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
+import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
-import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
+import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
+import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
+import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
+import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
+import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 
-public class PostDetailsFragment extends BaseFragment implements MediaPlayerControlListener,
-        SurfaceTextureListener, OnVideoSizeChangedListener {
+public class PostDetailsActivity extends AppCompatActivity implements TaggedListInteractionListener, UploadCallbacks {
 
-    private static final String ARG_POST_DETAILS = "postDetails";
-    private static final String ARG_THUMBNAIL = "thumbnail";
-//    private static final String ARG_HAS_REACTED = "has_reacted";
-    public static final int ACTION_DISMISS_PLACEHOLDER = 10;
-    public static final int ACTION_OPEN_REACTION_CAMERA = 11;
-    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
-    private static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
+    //<editor-fold desc="Constants">
+    public static final String SPACE = "  ";
+    public static final String ARG_POST_DETAILS = "postDetails";
+    public static final String ARG_THUMBNAIL = "thumbnail";
+//    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
+    public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
+    //</editor-fold>
 
-    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
-    @BindView(R.id.video_container) RelativeLayout videoContainer;
+    //<editor-fold desc="Main layout views">
+    //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
+//    @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.video_surface) TextureView textureView;
     @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.video_surface_container) FrameLayout surfaceContainer;
-    @BindView(R.id.loading) ProgressBar progressBar;
+    @BindView(R.id.loading) ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
     @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
     @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
     @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
     @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
     @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
-    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
+//    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list) RecyclerView recyclerView;
-    //    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
     @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-    @BindView(R.id.share) ProximaNovaRegularTextView share;
+//    @BindView(R.id.share) ProximaNovaRegularTextView share;
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
+//    @BindView(R.id.reaction_upload_progress_bar) ProgressBar uploadingProgressBar;
+    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
+    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
+    //</editor-fold>
 
-    private long playbackPosition;
-    private int currentWindow;
+    //<editor-fold desc="Controller views">
+    @BindView(R.id.controls) FrameLayout controlsContainer;
+    //top layout
+    @BindView(R.id.media_controller_caption) ProximaNovaSemiboldTextView caption;
+    @BindView(R.id.media_controller_location) ProximaNovaRegularTextView locationView;
+    @BindView(R.id.media_controller_eta) ProximaNovaRegularTextView remainingTime;
+    //center layout
+    @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
+
+    //bottom layout
+    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name) ProximaNovaSemiboldTextView profileNameView;
+    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiboldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
+    //</editor-fold>
+
+    //<editor-fold desc="primitive members">
+//    private long playbackPosition;
+//    private int currentWindow;
+//    private boolean enableReactBtn;
     private boolean playWhenReady = true;
-    private boolean isComplete;
-    private boolean enableReactBtn;
     private boolean isComingFromHomePage;
     private byte[] image;
+    private boolean is_next_page;
+    private int currentVolume;
+    private boolean isAudioEnabled;
+    private int likes;
+    private int views;
+    private boolean oneShotFlag;
+    //</editor-fold>
 
+    //<editor-fold desc="Objects">
     private SimpleExoPlayer player;
-    private Context context;
     private PostDetails postDetails;
     private Call<PostReactionsList> postReactionsListCall;
     private ArrayList<PostReaction> postReactions;
     private ArrayList<TaggedUser> taggedUsersList;
-    private MediaControllerView controller;
-    private MediaPlayer mediaPlayer;
-    private OnPostDetailsInteractionListener mListener;
     private PostReactionAdapter postReactionAdapter;
+    private AudioManager audioManager;
+    private Call<ResultObject> uploadCall;
+    private ReactionUploadReceiver reactionUploadReceiver;
+    //</editor-fold>
 
-    public PostDetailsFragment() {
+    public PostDetailsActivity() {
         // Required empty public constructor
     }
 
-    public static PostDetailsFragment newInstance(PostDetails postDetails, byte[] image, boolean enableReactBtn, boolean isComingFromHomePage) {
-        PostDetailsFragment fragment = new PostDetailsFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_POST_DETAILS, postDetails);
-        args.putByteArray(ARG_THUMBNAIL, image);
-        args.putBoolean(ARG_ENABLE_REACT_BTN, enableReactBtn);
-        args.putBoolean(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
-        fragment.setArguments(args);
-        return fragment;
+    public static void newInstance(Context packageContext, @NonNull PostDetails postDetails, byte[] image,
+                                   boolean isComingFromHomePage) {
+        Intent intent = new Intent(packageContext, PostDetailsActivity.class);
+        intent.putExtra(ARG_POST_DETAILS, postDetails);
+        intent.putExtra(ARG_THUMBNAIL, image);
+//        intent.putExtra(ARG_ENABLE_REACT_BTN, enableReactBtn);
+        intent.putExtra(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
+        packageContext.startActivity(intent);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |                                            // hide status bar
+                        View.SYSTEM_UI_FLAG_IMMERSIVE);
+        setContentView(R.layout.activity_post_details);
+        ButterKnife.bind(this);
+
+        setupServiceReceiver();
+        checkIfAnyVideoIsUploading();
+
+        categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
         taggedUsersList = new ArrayList<>();
-        if (getArguments() != null) {
-            postDetails = getArguments().getParcelable(ARG_POST_DETAILS);
-            image = getArguments().getByteArray(ARG_THUMBNAIL);
-            enableReactBtn = getArguments().getBoolean(ARG_ENABLE_REACT_BTN);
-            isComingFromHomePage = getArguments().getBoolean(ARG_IS_COMING_FROM_HOME_PAGE);
+        if (getIntent() != null) {
+            postDetails = getIntent().getParcelableExtra(ARG_POST_DETAILS);
+            image = getIntent().getByteArrayExtra(ARG_THUMBNAIL);
+//            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
+            isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getParentActivity().hideBottomBar();
-        getParentActivity().updateToolbarTitle(getString(R.string.post));
-
-        View rootView = inflater.inflate(R.layout.fragment_post_details, container, false);
-        ButterKnife.bind(this, rootView);
-        context = getContext();
-//        getParentActivity().hidesettingsReport();
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        oneShotFlag = true;
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
 
@@ -202,26 +266,26 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     .asBitmap()
                     .into(placeholder);
 
-        progressBar.setVisibility(View.VISIBLE);
+        loadingProgressBar.setVisibility(VISIBLE);
 
         likeAction(postDetails.canLike(), false);
 
         if (!postDetails.canReact()) disableView(reactBtn, true);
 
-        if (!enableReactBtn) disableView(reactBtn, true);
-        else enableView(reactBtn);
+//        if (!enableReactBtn) disableView(reactBtn, true);
+//        else enableView(reactBtn);
 
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
-        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? View.GONE : View.VISIBLE);
+        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
 
         prepareController();
 
-        postReactionAdapter = new PostReactionAdapter(postReactions, context);
+        postReactionAdapter = new PostReactionAdapter(postReactions, this);
         CustomStaggeredGridLayoutManager manager = new CustomStaggeredGridLayoutManager(2, VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(postReactionAdapter);
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
@@ -230,27 +294,15 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         };
         recyclerView.addOnScrollListener(scrollListener);
 
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                scrollListener.resetState();
-//                getPostReactions(postDetails.getPostId(), 1);
-//            }
-//        });
+        taggedUserListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        taggedUserListView.setAdapter(new TagListAdapter(this, taggedUsersList));
 
-        taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList));
+        getTaggedUsers(1);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        textureView.setSurfaceTextureListener(this);
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            isComplete = false;
-            mediaPlayer.start();
-        }
-
         if (postDetails != null) {
             postReactions.clear();
             getPostReactions(postDetails.getPostId(), 1);
@@ -259,96 +311,77 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
-    }
 
-    private void prepareMediaPlayer(Surface surface) {
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(postDetails.getMedias().get(0).getMediaUrl());
-            mediaPlayer.setSurface(surface);
-            mediaPlayer.setOnVideoSizeChangedListener(this);
-//            mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-            e.printStackTrace();
+        if (currentVolume <= 0 && audioManager != null) {
+            currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         }
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                dismissProgressBar();
-                isComplete = false;
-                mediaPlayer.start();
-                placeholder.animate().alpha(0).setDuration(400).start();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        placeholder.setVisibility(View.INVISIBLE);
-                    }
-                }, 400);
-                controller.show(false, true, false);
-//                mListener.onPostDetailsInteraction(ACTION_DISMISS_PLACEHOLDER);
-
-//                Increment the video view count (only if this post belongs to someone else)
-                if (PostsListFragment.postDetails != null)
-                    PostsListFragment.postDetails.getMedias().get(0).views++;
-                if (postDetails.canDelete()) {
-                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
-                            .enqueue(new Callback<ResultObject>() {
-                                @Override
-                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                    if (response.code() == 200 && response.body().getStatus())
-                                        controller.incrementViews();
-                                }
-
-                                @Override
-                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                }
-                            });
-                }
-            }
-        });
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                isComplete = true;
-            }
-        });
-        mediaPlayer.setLooping(true);
-        mediaPlayer.prepareAsync();
+        isAudioEnabled = currentVolume > 0;
     }
 
     private void prepareController() {
-        String profilePicUrl = "";
-        if (postDetails.getPostOwner().getProfileMedia() != null)
-            profilePicUrl = postDetails.getPostOwner().getProfileMedia().getThumbUrl();
-        String location = "";
-        if (postDetails.hasCheckin())
-            location = postDetails.getCheckIn().getLocation();
-
         if (postDetails != null) {
-            controller = new MediaControllerView.Builder(getActivity(), PostDetailsFragment.this)
-                    .withVideoTitle(postDetails.getTitle())
-                    .withVideoSurfaceView(textureView)
-                    .withLocation(location)
-                    .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
-                    .withProfilePicUrl(profilePicUrl)
-                    .withLikes(postDetails.getLikes())
-                    .withViews(postDetails.getMedias().get(0).getViews())
-                    .withCategories(getUserCategories())
-                    .withDuration(postDetails.getMedias().get(0).getDuration())
-                    .withReactionCount(postDetails.getTotalReactions())
-                    .build(surfaceContainer);
-        }
+            caption.setText(postDetails.getTitle());
+            locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
+            locationView.setText(locationView.getVisibility() == VISIBLE ?
+                    (postDetails.hasCheckin() ? SPACE + postDetails.getCheckIn().getLocation() : "") : "");
+            profileNameView.setText(postDetails.getPostOwner().getUserName());
 
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY != 0) {
-                    if (!controller.isShowing())
-                        controller.show(true, false, true);
-                }
-            }
-        });
+            this.likes = postDetails.getLikes();
+            String likes = SPACE + this.likes;
+            likesView.setText(likes);
+
+            this.views = postDetails.getMedias().get(0).getViews();
+            String views = SPACE + this.views;
+            viewsView.setText(views);
+
+            String categories = getUserCategories();
+            if (categories != null && categories.length() > 1) {
+                categories = "Categories:    " + categories;
+                categoriesView.setText(categories);
+            } else categoriesView.setVisibility(GONE);
+
+            String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration() + " secs";
+            remainingTime.setText(duration);
+
+            reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()));
+            tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+
+            Glide.with(this)
+                    .load(postDetails.getPostOwner().getProfileMedia() != null ?
+                            postDetails.getPostOwner().getProfileMedia().getThumbUrl() : "")
+                    .placeholder(R.drawable.ic_user_male_dp_small)
+                    .crossFade()
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            profilePic.setImageDrawable(resource);
+                            return true;
+                        }
+                    })
+                    .into(profilePic);
+            controlsContainer.setVisibility(VISIBLE);
+//            reaction1Url = builder.reaction1Url;
+//            reaction2Url = builder.reaction2Url;
+//            reaction3Url = builder.reaction3Url;
+//            controller = new MediaControllerView.Builder(this, PostDetailsActivity.this)
+//                    .withVideoTitle(postDetails.getTitle())
+////                    .withVideoSurfaceView(textureView)
+//                    .withLocation(location)
+//                    .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
+//                    .withProfilePicUrl(profilePicUrl)
+//                    .withLikes(postDetails.getLikes())
+//                    .withViews(postDetails.getMedias().get(0).getViews())
+//                    .withCategories(getUserCategories())
+//                    .withDuration(postDetails.getMedias().get(0).getDuration())
+//                    .withReactionCount(postDetails.getTotalReactions())
+//                    .build(controlsContainer);
+        }
     }
 
     private String getUserCategories() {
@@ -357,14 +390,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
             for (int i = 0; i < postDetails.getCategories().size(); i++) {
                 categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
-                    categories.append(", ");
+                    categories.append("    ");
             }
             return categories.toString();
         } else return null;
     }
 
     private void getPostReactions(final int postId, final int pageNumber) {
-        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, context);
+        postReactionsListCall = ApiCallingService.Posts.getReactionsOfPost(postId, pageNumber, this);
 
         if (postReactionsListCall != null && !postReactionsListCall.isExecuted())
             postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
@@ -373,7 +406,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     switch (response.code()) {
                         case 200:
                             if (response.body().getReactions().size() > 0) {
-                                postLoadErrorLayout.setVisibility(View.GONE);
+                                postLoadErrorLayout.setVisibility(GONE);
                                 is_next_page = response.body().isNextPage();
                                 if (pageNumber == 1) postReactions.clear();
 
@@ -382,17 +415,17 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                                 postReactionAdapter.notifyDataSetChanged();
                                 if (postReactions.size() > 0) {
                                     if (postReactions.size() >= 1) {
-                                        controller.setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                        setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
                                     }
                                     if (postReactions.size() >= 2) {
-                                        controller.setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                        setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
                                     }
                                     if (postReactions.size() >= 3) {
-                                        controller.setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                        setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
                                     }
                                 }
                             } else {
-                                controller.setNoReactions();
+                                setNoReactions();
                                 showNoReactionMessage();
                             }
                             break;
@@ -406,7 +439,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     dismissProgressBar();
 //                        recyclerView.setVisibility(View.INVISIBLE);
                     postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
-                    postLoadErrorLayout.setVisibility(View.VISIBLE);
+                    postLoadErrorLayout.setVisibility(VISIBLE);
                     message = getString(R.string.could_not_load_posts) + message;
                     postLoadErrorTextView.setText(message);
                     postLoadErrorSubtitle.setText(R.string.tap_to_retry);
@@ -414,42 +447,155 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
                 @Override
                 public void onFailure(Call<PostReactionsList> call, Throwable t) {
-                    if (isAdded()) {
-                        ViewUtils.makeSnackbarWithBottomMargin(getActivity(), recyclerView, t.getMessage());
-                    }
+                    t.printStackTrace();
                 }
             });
     }
 
     private void showNoReactionMessage() {
         dismissProgressBar();
-        reactionsHeader.setVisibility(View.GONE);
+        reactionsHeader.setVisibility(GONE);
 //        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
-        postLoadErrorLayout.setVisibility(View.VISIBLE);
+        postLoadErrorLayout.setVisibility(VISIBLE);
         postLoadErrorTextView.setText(R.string.no_reactions_yet);
         postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
     }
 
     private void dismissProgressBar() {
-        progressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
+        loadingProgressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressBar.setVisibility(View.INVISIBLE);
+                loadingProgressBar.setVisibility(View.INVISIBLE);
             }
         }, 280);
     }
 
-    @OnClick(R.id.react_btn)
-    public void react() {
-        if (mediaPlayer.isPlaying())
-            mediaPlayer.pause();
-        mListener.onPostDetailsInteraction(ACTION_OPEN_REACTION_CAMERA, postDetails);
+    public void incrementLikes() {
+        String likesText = PostDetailsActivity.SPACE + ++likes;
+        likesView.setText(likesText);
     }
 
-    @OnClick(R.id.like)
-    public void likePost() {
+    public void decrementLikes() {
+        String likesText = PostDetailsActivity.SPACE + --likes;
+        likesView.setText(likesText);
+    }
+
+    public void incrementViews() {
+        String viewsText = PostDetailsActivity.SPACE + ++views;
+        viewsView.setText(viewsText);
+    }
+
+    public void setReaction1Pic(String reaction1PicUrl) {
+        reaction1Pic.setVisibility(VISIBLE);
+        Glide.with(this)
+                .load(reaction1PicUrl)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction1Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
+                .into(reaction1Pic);
+    }
+
+    public void setReaction2Pic(String reaction2PicUrl) {
+        reaction2Pic.setVisibility(VISIBLE);
+        Glide.with(this)
+                .load(reaction2PicUrl)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction2Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
+                .into(reaction2Pic);
+    }
+
+    public void setReaction3Pic(String reaction3PicUrl) {
+        reaction3Pic.setVisibility(VISIBLE);
+        Glide.with(this)
+                .load(reaction3PicUrl)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        reaction3Pic.setImageDrawable(resource);
+                        return true;
+                    }
+                })
+                .into(reaction3Pic);
+    }
+
+    public void setNoReactions() {
+        reactionCountView.setText("");
+    }
+
+    @OnClick(R.id.btnClose) public void goBack() {
+        finish();
+    }
+
+    @OnClick(R.id.media_controller_eta) public void toggleSound() {
+        if (audioManager != null) {
+            int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+            int volume;
+
+            if (isAudioEnabled) {
+                volume = 0;
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_mute);
+                isAudioEnabled = false;
+            } else {
+                if (currentVolume > 0)
+                    volume = currentVolume;
+                else volume = maxVolume;
+//                volume = 100 * maxVolume + currentVolume;
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume);
+                isAudioEnabled = true;
+            }
+
+            if (volume > maxVolume) {
+                volume = maxVolume;
+            }
+
+            if (volume < 0) {
+                volume = 0;
+            }
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+        }
+    }
+
+    @OnClick(R.id.react_btn) public void react() {
+        launchReactionCamera(this, postDetails);
+    }
+
+    @OnClick(R.id.like) public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -463,62 +609,81 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                t.printStackTrace();
             }
         };
         if (!likeBtn.isChecked()) {
 //            Like the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, context).enqueue(callback);
+            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, this).enqueue(callback);
         } else {
 //            Unlike the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, context).enqueue(callback);
+            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, this).enqueue(callback);
         }
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags)
-    public void getTaggedList() {
-        if (horizontalListViewParent.getVisibility() == View.GONE) {
-            ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, context)
-                    .enqueue(new Callback<TaggedUsersList>() {
+    @OnClick(R.id.tags) public void getTaggedList() {
+        if (horizontalListViewParent.getVisibility() == GONE) {
+            horizontalListViewParent.setVisibility(VISIBLE);
+        } else {
+            horizontalListViewParent.setVisibility(GONE);
+        }
+    }
 
-                        @Override
-                        public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
-                            if (response.code() == 200) {
-                                horizontalListViewParent.setVisibility(View.VISIBLE);
-                                if (response.body().getTaggedUsers().size() > 0) {
-                                    taggedUsersList.addAll(response.body().getTaggedUsers());
-                                    taggedUserListView.getAdapter().notifyDataSetChanged();
-                                } else {
-                                    noTaggedUsers.setVisibility(View.VISIBLE);
-//                                    taggedUserListView.setLayoutManager(new LinearLayoutManager(context,
-//                                            LinearLayoutManager.HORIZONTAL, false));
-//                                    taggedUserListView.setAdapter(new TagListAdapter(context, getDummyTaggedUsersList()));
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            horizontalListViewParent.setVisibility(View.GONE);
-                                            noTaggedUsers.setVisibility(View.GONE);
-                                        }
-                                    }, 2000);
+    private void getTaggedUsers(final int page) {
+        ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, this)
+                .enqueue(new Callback<TaggedUsersList>() {
+
+                    @Override
+                    public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
+                        if (response.code() == 200) {
+                            TaggedUsersList taggedList = response.body();
+                            if (taggedList.isNextPage()) {
+                                if (!taggedList.getTaggedUsers().isEmpty()) {
+                                    if (page == 1)
+                                        taggedUsersList.clear();
+
+                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                    getTaggedUsers(page + 1);
+                                    noTaggedUsers.setVisibility(GONE);
+                                }
+                                else if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                    taggedUsersList.clear();
+                                    noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
                                 }
                             } else {
-                                Toast.makeText(context, R.string.error_getting_tagged_users, Toast.LENGTH_SHORT).show();
+                                if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                    taggedUsersList.clear();
+                                    noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
+                                } else {
+                                    noTaggedUsers.setVisibility(GONE);
+                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                    taggedUserListView.getAdapter().notifyDataSetChanged();
+                                }
                             }
+                        } else {
+                            Toast.makeText(PostDetailsActivity.this, R.string.error_getting_tagged_users,
+                                    Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<TaggedUsersList> call, Throwable t) {
-                            if (isAdded()) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        } else {
-            horizontalListViewParent.setVisibility(View.GONE);
-        }
+                    @Override
+                    public void onFailure(Call<TaggedUsersList> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
     }
 
     private void likeAction(boolean isChecked, boolean animate) {
@@ -531,8 +696,8 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     PostsListFragment.postDetails.likes++;
                     PostsListFragment.postDetails.can_like = false;
                 }
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
-                controller.incrementLikes();
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
+                incrementLikes();
             }
         } else {
             likeBtn.setChecked(false);
@@ -543,15 +708,14 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                     PostsListFragment.postDetails.likes--;
                     PostsListFragment.postDetails.can_like = true;
                 }
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
-                controller.decrementLikes();
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
+                decrementLikes();
             }
         }
     }
 
-    @OnClick(R.id.menu)
-    public void showMenu(View anchor) {
-        PopupMenu popupMenu = new PopupMenu(context, anchor);
+    @OnClick(R.id.menu) public void showMenu(View anchor) {
+        PopupMenu popupMenu = new PopupMenu(this, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
             popupMenu.inflate(R.menu.menu_post_self);
@@ -560,55 +724,36 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         popupMenu.show();
     }
 
-    @OnClick(R.id.video_surface_container)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
         try {
-//            if (mediaPlayer.isPlaying())
-//                mediaPlayer.pause();
-//            else mediaPlayer.start();
-
-            if (controller != null)
-                controller.toggleControllerView();
-        } catch (IllegalStateException e) {
+            player.setPlayWhenReady(!player.getPlayWhenReady());
+            playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
+                    : R.drawable.ic_pause_big);
+            togglePlayPauseBtnVisibility(!player.getPlayWhenReady());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-        Surface surface = new Surface(surfaceTexture);
-//        mediaPlayer.setDisplay(surfaceHolder);
-//        prepareMediaPlayer(surface);
-        initializePlayer();
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
-//        textureView.setAspectRatio(width, height);
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        surfaceTexture.release();
-        resetMediaPlayer();
-        return true;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+    @OnClick(R.id.uploading_notification) public void retryUpload() {
+        if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
+            uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            launchReactionUploadService(getApplicationContext(),
+                    getReactionUploadSession(getApplicationContext()), reactionUploadReceiver);
+        }
     }
 
     private void updateTextureViewSize(int viewWidth, int viewHeight) {
-        if (getActivity() != null) {
-            int systemWidth = getActivity().getWindow().getDecorView().getWidth();
-            viewHeight = systemWidth * viewHeight / viewWidth;
-            viewWidth = systemWidth;
-            if (viewHeight < viewWidth) {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-                //noinspection SuspiciousNameCombination
-                params.height = viewWidth;
-                relativeLayout.setLayoutParams(params);
-            }
+        Point point = new Point();
+        getWindowManager().getDefaultDisplay().getSize(point);
+        int systemWidth = point.x;
+        viewHeight = systemWidth * viewHeight / viewWidth;
+        viewWidth = systemWidth;
+        if (viewHeight < viewWidth) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+            //noinspection SuspiciousNameCombination
+            params.height = viewWidth;
+            relativeLayout.setLayoutParams(params);
         }
 //        float scaleX = 1.0f;
 //        float scaleY = 1.0f;
@@ -624,29 +769,22 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //        } else if (viewHeight > videoHeight) {
 //            scaleX = (viewHeight / videoHeight) / (viewWidth / videoWidth);
 //        }
-        /* Calculate pivot points, in our case crop from center*/
-        int pivotPointX = viewWidth / 2;
-        int pivotPointY = viewHeight / 2;
-
-        Matrix matrix = new Matrix();
-        matrix.setScale(1, 1, pivotPointX, pivotPointY);
-
-        textureView.setTransform(matrix);
+//        /* Calculate pivot points, in our case crop from center*/
+//        int pivotPointX = viewWidth / 2;
+//        int pivotPointY = viewHeight / 2;
+//        Matrix matrix = new Matrix();
+//        matrix.setScale(1, 1, pivotPointX, pivotPointY);
+//        textureView.setTransform(matrix);
+//        textureView.setLayoutParams(params);
+//        textureView.animate().alpha(1).setDuration(280).start();
+//        textureView.setVisibility(GONE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        textureView.setLayoutParams(params);
-        textureView.animate().alpha(1).setDuration(280).start();
-        textureView.setVisibility(View.GONE);
         playerView.setLayoutParams(params);
+        playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @OnClick(R.id.share)
-    public void onViewClicked() {
+    @OnClick(R.id.share) public void onViewClicked() {
 //        DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
 //                .setLink(Uri.parse("https://v6f43.app.goo.gl/?link="+ postDetails.getPostId()))
 //                .setDynamicLinkDomain("v6f43.app.goo.gl")
@@ -685,7 +823,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //                }
 //            }
 //        });
-        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getParentActivity(),
+        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
                 "Check this out!", "This video is awesome: ")
                 .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
                         "Copy", "Added to clipboard")
@@ -696,7 +834,7 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                 .setAsFullWidthStyle(true)
                 .setSharingTitle("Share With");
 
-        branchUniversalObject.showShareSheet(getParentActivity(),
+        branchUniversalObject.showShareSheet(this,
                 linkProperties,
                 shareSheetStyle,
                 new Branch.BranchLinkShareListener() {
@@ -715,28 +853,43 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                 });
     }
 
+    @Override
+    public void onTaggedUserInteraction(int userId, boolean isSelf) {
+        isComingFromHomePage = false;
+        Intent intent = new Intent(this, BaseBottomBarActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("userId", userId);
+        bundle.putBoolean("isSelf", isSelf);
+        intent.putExtra("profileBundle", bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_hide:
-                    new AlertDialog.Builder(context)
+                    new AlertDialog.Builder(PostDetailsActivity.this)
                             .setTitle(R.string.hiding_post)
                             .setMessage(R.string.hide_post_confirm)
                             .setPositiveButton(getString(R.string.yes_hide), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, getContext())
+                                    ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, PostDetailsActivity.this)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    Toast.makeText(context, R.string.video_hide_successful, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(PostDetailsActivity.this, R.string.video_hide_successful,
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                                                    Log.e("hidePost", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                                                    t.printStackTrace();
+                                                    Toast.makeText(PostDetailsActivity.this, R.string.something_went_wrong,
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
@@ -750,20 +903,35 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
                             .show();
                     return true;
                 case R.id.action_delete:
-                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(PostDetailsActivity.this)
+                            .setTitle(R.string.confirm)
+                            .setMessage("Are you sure you want to delete this video?")
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog,int which) {
+                                    deleteVideo(postDetails.getPostId());
+                                    PostsListFragment.postDetails = null;
+                                    finish();
+                                }})
+                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
                     return true;
                 case R.id.action_profile_report:
                     if (!postDetails.canDelete()) {
-                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
                         ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
                                 newInstance(postDetails.getPostId(), postDetails.canReact());
                         // SETS the target fragment for use later when sending results
-                        reportPostDialogFragment.setTargetFragment(PostDetailsFragment.this, 301);
+//                        reportPostDialogFragment.setTargetFragment(PostDetailsActivity.this, 301);
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
                     } else {
-                        Toast.makeText(context, "You can not report your own video", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;
             }
@@ -771,24 +939,32 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnPostDetailsInteractionListener) {
-            mListener = (OnPostDetailsInteractionListener) context;
-        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnPostDetailsInteractionListener");
-//        }
+    private void deleteVideo(int postId) {
+        ApiCallingService.Posts.deletePosts(postId, getApplicationContext()).enqueue(new Callback<DeleteMyVideos>() {
+            @Override
+            public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
+                try {
+                    if (response.code() == 200) {
+                        Toast.makeText(PostDetailsActivity.this, "Video has been deleted", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(PostDetailsActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        if (mediaPlayer != null)
-//            mediaPlayer.pause();
-
         player.setPlayWhenReady(!player.getPlayWhenReady());
 
         if (Util.SDK_INT <= 23) {
@@ -797,123 +973,13 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        if (isComingFromHomePage)
-            PostsListFragment.isRefreshing = true;
-        mListener = null;
-        exit();
-//        resetMediaPlayer();
-        controller.exit();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
+        if (isComingFromHomePage)
+            PostsListFragment.isRefreshing = true;
         postReactionAdapter = null;
         if (postReactionsListCall != null)
             postReactionsListCall.cancel();
-        getParentActivity().showBottomBar();
-    }
-
-    private void resetMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
-    @Override
-    public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-//        videoHeight = mediaPlayer.getVideoHeight();
-//        videoWidth = mediaPlayer.getVideoWidth();
-//        if (videoHeight > 0 && videoWidth > 0)
-//            textureView.setAspectRatio(this.mediaPlayer.getVideoWidth(), this.mediaPlayer.getVideoHeight());
-//            textureView.adjustSize(videoContainer.getWidth(), videoContainer.getHeight(),
-//                    this.mediaPlayer.getVideoWidth(), this.mediaPlayer.getVideoHeight());
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-//        if (videoWidth > 0 && videoHeight > 0)
-//            textureView.setAspectRatio(textureView.getWidth(), textureView.getHeight());
-//            textureView.adjustSize(ViewUtils.getDeviceWidth(context), ViewUtils.getDeviceHeight(context),
-//                    textureView.getWidth(), textureView.getHeight());
-    }
-
-    @Override
-    public void start() {
-//        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-//            isComplete = false;
-//            mediaPlayer.start();
-//        }
-        player.setPlayWhenReady(!player.getPlayWhenReady());
-    }
-
-    @Override
-    public void pause() {
-//        if (mediaPlayer != null)
-//            mediaPlayer.pause();
-    }
-
-    @Override
-    public String getDuration() {
-//        if (mediaPlayer != null)
-//            return convert(mediaPlayer.getDuration());
-//        else
-        return postDetails.getMedias().get(0).getDuration();
-    }
-
-//    private String convert(final int duration) {
-//        int dur, min, sec, mil;
-//
-//        dur = duration;
-//        min = dur / 60000;
-//        dur -= min * 60000;
-//        sec = dur / 1000;
-//        dur -= sec * 1000;
-//        mil = dur;
-//
-//        return min + ":" + sec + "." + mil;
-//    }
-
-    @Override
-    public int getCurrentPosition() {
-        if (mediaPlayer != null)
-            return mediaPlayer.getCurrentPosition();
-        return 0;
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return mediaPlayer != null && mediaPlayer.isPlaying();
-    }
-
-    @Override
-    public boolean isComplete() {
-        return isComplete;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 10;
-    }
-
-    @Override
-    public void exit() {
-//        resetMediaPlayer();
-        controller.exit();
-    }
-
-    public interface OnPostDetailsInteractionListener {
-        void onPostDetailsInteraction(int action, PostDetails postDetails);
-    }
-
-    interface PostDetailsUpdateListener {
-        void onItemUpdated(int position, boolean isLiked, boolean isViewed, boolean isReacted);
     }
 
     @Override
@@ -932,23 +998,6 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 //            initializePlayer();
 //        }
 //    }
-    @SuppressLint("InlinedApi")
-    private void hideSystemUi() {
-        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        if (Util.SDK_INT <= 23) {
-//            releasePlayer();
-//        }
-//    }
 
     @Override
     public void onStop() {
@@ -960,11 +1009,37 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
 
     private void releasePlayer() {
         if (player != null) {
-            playbackPosition = player.getCurrentPosition();
-            currentWindow = player.getCurrentWindowIndex();
+//            playbackPosition = player.getCurrentPosition();
+//            currentWindow = player.getCurrentWindowIndex();
             playWhenReady = player.getPlayWhenReady();
             player.release();
             player = null;
+        }
+    }
+
+    private void togglePlayPauseBtnVisibility(boolean visible) {
+        if (visible) {
+            playPauseButton.animate()
+                    .scaleY(1)
+                    .scaleX(1)
+                    .setDuration(200)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            playPauseButton.setVisibility(VISIBLE);
+        }
+        else {
+            playPauseButton.animate()
+                    .scaleY(0)
+                    .scaleX(0)
+                    .setDuration(200)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    playPauseButton.setVisibility(GONE);
+                }
+            }, 500);
         }
     }
 
@@ -972,7 +1047,74 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-            player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+            player.addListener(new ExoPlayer.EventListener() {
+
+                @Override
+                public void onPlayerStateChanged(boolean b, int i) {
+                    switch (i) {
+                        case STATE_IDLE:
+                            playPauseButton.setImageResource(R.drawable.ic_play_big);
+                            togglePlayPauseBtnVisibility(true);
+                            break;
+                        case STATE_BUFFERING:
+                            progressBar.setVisibility(VISIBLE);
+                            break;
+                        case STATE_READY:
+                            playPauseButton.setImageResource(R.drawable.ic_pause_big);
+                            if (playPauseButton.getVisibility() == VISIBLE)
+                                togglePlayPauseBtnVisibility(false);
+                            progressBar.setVisibility(GONE);
+                            placeholder.setImageBitmap(null);
+                            image = null;
+                            if (oneShotFlag) {
+                                oneShotFlag = false;
+                                if (!postDetails.canDelete()) {
+                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(),
+                                            PostDetailsActivity.this)
+                                            .enqueue(new Callback<ResultObject>() {
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    if (response.code() == 200 && response.body().getStatus()) {
+                                                        incrementViews();
+                                                        if (PostsListFragment.postDetails != null)
+                                                            PostsListFragment.postDetails.getMedias().get(0).views++;
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                }
+                                            });
+                                }
+                            }
+                            break;
+                        case STATE_ENDED:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                @Override
+                public void onTimelineChanged(Timeline timeline, Object o) {
+                }
+                @Override
+                public void onTracksChanged(TrackGroupArray trackGroupArray, TrackSelectionArray trackSelectionArray) {
+                }
+                @Override
+                public void onLoadingChanged(boolean b) {
+                }
+                @Override
+                public void onPlayerError(ExoPlaybackException e) {
+                }
+                @Override
+                public void onPositionDiscontinuity() {
+                }
+                @Override
+                public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                }
+            });
 
             Uri videoURI = Uri.parse(postDetails.getMedias().get(0).getMediaUrl());
 
@@ -993,4 +1135,151 @@ public class PostDetailsFragment extends BaseFragment implements MediaPlayerCont
         }
     }
 
+    //<editor-fold desc="Video upload handler">
+    private void setupServiceReceiver() {
+        reactionUploadReceiver = new ReactionUploadReceiver(new Handler())
+                .setReceiver(new ReactionUploadReceiver.Receiver() {
+                    @Override
+                    public void onReceiverResult(int resultCode, Bundle resultData) {
+                        switch(resultCode) {
+                            case UPLOAD_IN_PROGRESS_CODE:
+                                if (uploadingStatusLayout.getVisibility() != VISIBLE) {
+                                    progressBar.setIndeterminate(false);
+                                    uploadingStatusLayout.setVisibility(VISIBLE);
+                                    uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
+                                }
+                                progressBar.setProgress(resultData.getInt(UPLOAD_PROGRESS));
+                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
+                                break;
+                            case UPLOAD_COMPLETE_CODE:
+//                                String completeMessage = String.valueOf(resultData.getString(UPLOAD_COMPLETE));
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadingNotificationTextView.setText(R.string.finished);
+                                uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(
+                                        0, 0, R.drawable.ic_tick_circle, 0);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 1000);
+                                finishReactionUploadSession(getApplicationContext());
+
+//                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
+//                                new ShowShareDialog().execute(s);
+
+                                uploadCall = null;
+                                break;
+                            case UPLOAD_ERROR_CODE:
+                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadingNotificationTextView.setText(failedMessage);
+                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+                                uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(
+                                        0, 0, R.drawable.ic_retry, 0);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+    }
+
+    private void checkIfAnyVideoIsUploading() {
+        if (getReactionUploadSession(this) != null) {
+            launchReactionUploadService(getApplicationContext(), getReactionUploadSession(getApplicationContext()), reactionUploadReceiver);
+        }
+        else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
+            launchReactionUploadService(getApplicationContext(),
+                    (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), reactionUploadReceiver);
+        }
+    }
+
+//    private void deleteFile(String path, boolean isGallery) {
+//        if (!isGallery) {
+//            deleteFileFromMediaStoreDatabase(getApplicationContext(), path);
+//            //noinspection ResultOfMethodCallIgnored
+//            new File(path).delete();
+//        }
+//    }
+
+//    if (uploadParams.isReaction() && isResuming) {
+//        uploadParams.getPostDetails().can_react = false;
+//        PostDetailsActivity.newInstance(reference.get(), uploadParams.getPostDetails(), null, false);
+//    }
+
+    @SuppressWarnings("unused")
+    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
+
+        private WeakReference<PostDetailsActivity> reference;
+
+        ShowShareDialog(PostDetailsActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Bitmap bitmap = null;
+            try {
+                final URL url = new URL(strings[0]);
+                try {
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+
+            ShareDialog shareDialog = new ShareDialog(reference.get());
+            shareDialog.show(content);
+            // ShareApi.share(content, null);
+            super.onPostExecute(bitmap);
+        }
+    }
+
+    @Override
+    public void onProgressUpdate(int percentage) {
+        progressBar.setProgress(percentage);
+    }
+
+    @Override
+    public void onUploadError(Throwable throwable) {
+        uploadingNotificationTextView.setText(R.string.something_went_wrong);
+        Log.e("onUploadError", throwable.getMessage() != null ? throwable.getMessage() : "FAILED!");
+        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
+    }
+
+    @Override
+    public void onUploadFinish() {
+        uploadingNotificationTextView.setText(R.string.finished);
+        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadingStatusLayout.setVisibility(GONE);
+            }
+        }, 1000);
+        finishReactionUploadSession(this);
+        uploadCall = null;
+    }
+    //</editor-fold>
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

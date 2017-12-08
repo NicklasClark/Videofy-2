@@ -38,7 +38,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -69,7 +68,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +96,6 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
 
 /**
  *
@@ -709,7 +706,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 //            }
 //            String tags = tagFriendsText.getText().toString().equals("") ? null : tagFriendsText.getText().toString();
 //            DecimalFormat df = new DecimalFormat("#.#######");
-//            performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
+//            performVideoUpload(activity, new Pojos.UploadParams(isGallery, videoPath, false, title, location,
 //                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)), tags, selectedCategoriesToSend, null));
 //        }
 //    }
