@@ -158,7 +158,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
-    private static boolean isCompressing = true;
+    private static boolean isCompressing = false;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -187,9 +187,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
 
-        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
-        compressVideoAsyncTask.delegate = this;
-        compressVideoAsyncTask.execute(videoPath);
+//        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+//        compressVideoAsyncTask.delegate = this;
+//        compressVideoAsyncTask.execute(videoPath);
     }
 
     @Override
