@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
@@ -49,7 +48,6 @@ public class NearbyPlacesList extends Fragment {
     @BindView(R.id.nearby_places_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.location_not_available_layout) LinearLayout locationNotAvailableLayout;
     @BindView(R.id.turn_on_location_btn) ProximaNovaSemiboldButton turnOnLocationBtn;
-    @BindView(R.id.nearby_places_app_bar_layout) FrameLayout appBarLayout;
     @BindView(R.id.nearby_places_search) ProximaNovaRegularAutoCompleteTextView searchBar;
     @BindView(R.id.clear) AppCompatImageView clearBtn;
 
@@ -108,6 +106,14 @@ public class NearbyPlacesList extends Fragment {
             locationNotAvailableLayout.setVisibility(View.VISIBLE);
         }
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous_dark);
+        }
     }
 
     @OnClick(R.id.clear) public void clearSearch() {
@@ -238,6 +244,14 @@ public class NearbyPlacesList extends Fragment {
                     + " must implement OnNearbyPlacesListInteractionListener");
         }
     }
+
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+//            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
+//        }
+//    }
 
     @Override
     public void onDetach() {

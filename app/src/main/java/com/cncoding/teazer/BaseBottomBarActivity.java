@@ -1,41 +1,41 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
@@ -47,12 +47,12 @@ import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingLi
 import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscoverSearchInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
-import com.cncoding.teazer.home.post.PostDetailsFragment;
-import com.cncoding.teazer.home.post.PostDetailsFragment.OnPostDetailsInteractionListener;
+import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
+import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
@@ -61,17 +61,17 @@ import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
-import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
-import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 
-import java.io.File;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -81,7 +81,8 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MultipartBody.Part;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,10 +92,12 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
-import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_DISMISS_PLACEHOLDER;
-import static com.cncoding.teazer.home.post.PostDetailsFragment.ACTION_OPEN_REACTION_CAMERA;
-import static com.cncoding.teazer.home.post.PostReactionAdapter.PostReactionAdapterListener;
-import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
+import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
 import static com.cncoding.teazer.utilities.NavigationController.TAB4;
@@ -103,16 +106,14 @@ import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
-import static com.cncoding.teazer.utilities.ViewUtils.deleteFileFromMediaStoreDatabase;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
 public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
-        implements FragmentNavigation, TransactionListener, RootFragmentListener, UploadCallbacks,
+        implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnPostAdapterInteractionListener, OnPostDetailsInteractionListener, PostReactionAdapterListener, OnInterestsInteractionListener,
+        OnPostAdapterInteractionListener, OnInterestsInteractionListener,
 //    Discover page listeners
         OnDiscoverSearchInteractionListener, OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
@@ -123,23 +124,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String TAB_INDEX = "tabIndex";
-//    public static final int ACTION_VIEW_REACTION = 1;
-
-//    private int[] mTabIconsDefault = {
-//            R.drawable.ic_home_default,
-//            R.drawable.ic_binoculars_default,
-////            R.drawable.ic_add_video,
-//            R.drawable.ic_notifications_default,
-//            R.drawable.ic_person_default
-//    };
-//
-//    private int[] mTabIconsSelected = {
-//            R.drawable.ic_home_selected,
-//            R.drawable.ic_binoculars_selected,
-//            R.drawable.ic_add_video,
-//            R.drawable.ic_notifications_selected,
-//            R.drawable.ic_person_selected
-//    };
+    public static final int REQUEST_CANCEL_UPLOAD = 45;
 
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
@@ -149,16 +134,21 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
-    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
 
-    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
-
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder builder;
+    private VideoUploadReceiver videoUploadReceiver;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private Call<ResultObject> uploadCall;
     private Fragment fragment;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (navigationController != null) {
+            navigationController.onSaveInstanceState(outState);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +156,9 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        setupServiceReceiver();
         checkIfAnyVideoIsUploading();
 
         Log.d("AUTH_TOKEN", getAuthToken(getApplicationContext()) == null ? "N/A" : getAuthToken(getApplicationContext()));
@@ -174,9 +167,9 @@ public class BaseBottomBarActivity extends BaseActivity
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
+//        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
         fragmentHistory = new FragmentHistory();
         navigationController = NavigationController
@@ -213,17 +206,113 @@ public class BaseBottomBarActivity extends BaseActivity
                 return true;
             }
         });
+
+        getBranchDynamicLinks();
+    }
+    private void getBranchDynamicLinks() {
+        // listener (within Main Activity's onStart)
+        //noinspection ConstantConditions
+        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    try {
+                        Log.d("BranchLog", referringParams.toString());
+                        if (referringParams != null) {
+                                if (referringParams.has("post_id")) {
+                                    String postId = referringParams.getString("post_id");
+                                    ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                            .enqueue(new Callback<PostDetails>() {
+                                                @Override
+                                                public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                    if (response.code() == 200) {
+                                                        if (response.body() != null) {
+                                                            PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                                        } else {
+                                                            Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else
+                                                        Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                    Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                                else if(referringParams.has("user_id"))
+                                {
+                                    String userId = referringParams.getString("user_id");
+                                    pushFragment(OthersProfileFragment.newInstance(userId, "",""));
+                                }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        if (intent.getExtras() != null) {
-//            int index = intent.getExtras().getBundle("bundle").getInt(TAB_INDEX);
-//            if (index != -1)
-//                switchTab(index);
-//        }
+//    private void getDynamicLinks() {
+//        FirebaseDynamicLinks.getInstance()
+//                .getDynamicLink(getIntent())
+//                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+//                    @Override
+//                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+//                        // Get deep link from result (may be null if no link is found)
+//                        try {
+//                            Uri deepLink = null;
+//                            if (pendingDynamicLinkData != null) {
+//                                deepLink = pendingDynamicLinkData.getLink();
+//                                Log.d("Firebase", deepLink.toString());
+//                            }
+//                            String postId = deepLink.getQueryParameter("link");
+//                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+//                                    .enqueue(new Callback<PostDetails>() {
+//                                        @Override
+//                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+//                                            if (response.code() == 200) {
+//                                                PostDetailsActivity.newInstance(BaseBottomBarActivity.this,
+//                                                        response.body(), null, false);
+//                                            } else
+//                                                Log.e("Fetching post details", response.code() + "_" + response.message());
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+//                                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
+//                                        }
+//                                    });
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(this, new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w("Firebase", "getDynamicLink:onFailure", e);
+//                    }
+//                });
 //    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            Bundle bundle = intent.getExtras().getBundle("bundle");
+            if (bundle != null) {
+                int index = bundle.getInt(TAB_INDEX);
+                if (index != -1)
+                    switchTab(index);
+            }
+        }
+    }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -234,262 +323,65 @@ public class BaseBottomBarActivity extends BaseActivity
             if (bundle != null) {
                 int index = bundle.getInt(TAB_INDEX);
                 switchTab(index);
-            } else switchTab(0);
-        } else {
-            if (navigationController.getCurrentFragment() instanceof PostsListFragment)
-                switchTab(0);
-            else if (navigationController.getCurrentFragment() instanceof DiscoverFragment)
-                switchTab(1);
-            else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
-                switchTab(3);
-            else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
-                switchTab(4);
-        }
-    }
-
-    private void checkIfAnyVideoIsUploading() {
-        if (getVideoUploadSession(this) != null) {
-            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
-//            resumeUpload(getVideoUploadSession(this), false);
-        }
-        else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
-            new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
-//            resumeUpload((UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true);
-        }
-    }
-
-    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
-
-        private WeakReference<BaseBottomBarActivity> reference;
-
-        ShowShareDialog(BaseBottomBarActivity context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap bitmap = null;
-            try {
-                final URL url = new URL(strings[0]);
-                try {
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(reference.get());
-            shareDialog.show(content);
-            // ShareApi.share(content, null);
-            super.onPostExecute(bitmap);
-        }
-    }
-
-    @Override
-    public void onFollowerListListener(String id,String identifier) {
-        pushFragment(FollowersListActivity.newInstance(id, identifier));
-    }
-
-    @Override
-    public void onFollowingListListener(String id, String identifier) {
-        pushFragment(FollowingListActivities.newInstance(id, identifier));
-    }
-
-    @Override
-    public void viewOthersProfile(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance(id, type,username));
-    }
-
-    @Override
-    public void viewOthersProfileFollowing(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance2(id, type,username));
-    }
-
-    @Override
-    public void viewUserProfile() {
-        pushFragment(ProfileFragment.newInstance());
-    }
-
-    private static class ResumeUpload extends AsyncTask<Void, Void, Part> {
-
-        private final Callback<ResultObject> callback;
-        private WeakReference<BaseBottomBarActivity> reference;
-        private boolean isResuming;
-        private UploadParams uploadParams;
-
-        ResumeUpload(BaseBottomBarActivity context, final UploadParams uploadParams, boolean isResuming) {
-            reference = new WeakReference<>(context);
-            this.uploadParams = uploadParams;
-            this.isResuming = isResuming;
-            callback = new Callback<ResultObject>() {
-                @Override
-                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                    try {
-                        if (response.code() == 201) {
-                            final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-                            new ShowShareDialog(reference.get()).execute(s);
-                            reference.get().onUploadFinish();
-                            deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                        } else {
-                            if (response.code() == 200) {
-                                if (response.body().getMessage().contains("own video")) {
-//                        USER IS REACTING ON HIS OWN VIDEO.
-
-                                    reference.get().uploadingNotificationTextView.setText(response.body().getMessage());
-                                    deleteFile(uploadParams.getVideoPath(), uploadParams.isGallery());
-                                    finishVideoUploadSession(reference.get().getApplicationContext());
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            reference.get().uploadingStatusLayout.setVisibility(GONE);
-                                        }
-                                    }, 1000);
-                                }
-                            } else {
-                                reference.get().onUploadError(new Throwable(getErrorMessage(response.errorBody())));
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                private void deleteFile(String path, boolean isGallery) {
-                    if (!isGallery) {
-                        deleteFileFromMediaStoreDatabase(reference.get(), path);
-                        //noinspection ResultOfMethodCallIgnored
-                        new File(path).delete();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResultObject> call, Throwable t) {
-                    reference.get().onUploadError(t);
-                }
-            };
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            reference.get().uploadingStatusLayout.setVisibility(VISIBLE);
-            reference.get().progressBar.setIndeterminate(false);
-            try {
-                if (!uploadParams.isReaction())
-                    //                UPLOADING POST VIDEO
-                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-                else
-                    //                UPLOADING REACTION VIDEO
-                    reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected Part doInBackground(Void... voids) {
-            SharedPrefs.saveVideoUploadSession(reference.get(), uploadParams);
-
-            File videoFile = new File(uploadParams.getVideoPath());
-            ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, reference.get());
-            return Part.createFormData("video", videoFile.getName(), videoBody);
-        }
-
-        @Override
-        protected void onPostExecute(Part part) {
-            String title = uploadParams.getTitle();
-            if (!uploadParams.isReaction()) {
-//                UPLOADING POST VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_video);
-                reference.get().uploadCall = ApiCallingService.Posts.uploadVideo(
-                        part, title, uploadParams.getLocation(), uploadParams.getLatitude(),
-                        uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), reference.get());
             } else {
-//                UPLOADING REACTION VIDEO
-                reference.get().uploadingNotificationTextView.setText(R.string.uploading_your_reaction);
-                reference.get().uploadCall = ApiCallingService.React.uploadReaction(part,
-                        uploadParams.getPostDetails().getPostId(), reference.get(), title);
+                bundle = getIntent().getExtras().getBundle("profileBundle");
+                if (bundle != null) {
+                    int userId = bundle.getInt("userId");
+                    boolean isSelf = bundle.getBoolean("isSelf");
+                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+                } else switchTabDynamically();
             }
-
-            if (!reference.get().uploadCall.isExecuted())
-                reference.get().uploadCall.enqueue(callback);
-
-            if (uploadParams.isReaction() && isResuming) {
-                reference.get().pushFragment(PostDetailsFragment.newInstance(uploadParams.getPostDetails(), null,
-                        false, false));
-            }
+        } else {
+            switchTabDynamically();
         }
     }
 
-    @OnClick(R.id.uploading_notification) public void retryUpload() {
-        if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
-            uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
-//            resumeUpload(getVideoUploadSession(this), false);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                hideKeyboard(this, bottomTabLayout);
+                onBackPressed();
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.dismiss) public void cancelUpload() {
-        if (uploadCall != null) {
-            uploadCall.cancel();
-        }
-        finishVideoUploadSession(getApplicationContext());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 1000);
-    }
-
-    @OnClick(R.id.camera_btn)
-    public void startCamera() {
-        launchVideoUploadCamera(this);
-        finish();
-    }
-
-//    private void initTab() {
-//        for (int i = 0; i < TABS.length; i++) {
-//            bottomTabLayout.addTab(bottomTabLayout.newTab().setCustomView(getTabView(i)));
-//        }
+//    public AppBarLayout.OnOffsetChangedListener appBarOffsetChangeListener() {
+//        return new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                bottomTabLayout.setTranslationY((float) (-verticalOffset));
+//                cameraButton.setTranslationY((float) -(verticalOffset * 2));
+////                int percentage = (Math.abs(verticalOffset)) * 100 / appBarLayout.getTotalScrollRange();
+////                if (percentage > 0) {
+////                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+////                } else
+////                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//            }
+//        };
 //    }
 
-//    @SuppressLint("InflateParams")
-//    private View getTabView(int position) {
-//        ImageView view = (ImageView) LayoutInflater.from(this).inflate(R.layout.item_tab_bottom, null);
-//        StateListDrawable drawable = new StateListDrawable();
-//        if (position != 2) {
-//            drawable.addState(new int[]{android.R.attr.state_selected}, getDrawable(mTabIconsSelected[position]));
-//            drawable.addState(new int[]{android.R.attr.state_enabled}, getDrawable(mTabIconsDefault[position]));
-//            view.setImageDrawable(drawable);
-//        } else
-//            cameraButton.setImageDrawable(getDrawable(mTabIconsSelected[2]));
-//        return view;
-//    }
+    //<editor-fold desc="Fragment navigation methods">
+    private void switchTabDynamically() {
+        if (navigationController.getCurrentFragment() instanceof PostsListFragment)
+            switchTab(0);
+        else if (navigationController.getCurrentFragment() instanceof DiscoverFragment)
+            switchTab(1);
+        else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
+            switchTab(3);
+        else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
+            switchTab(4);
+    }
 
     private void switchTab(final int position) {
         navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
-//        updateToolbar(position == 1 || position == 3);
         if (position == 1 || position == 3)
             setAppBarElevation(0);
         else
-            setAppBarElevation(6);
+            setAppBarElevation(1);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -504,62 +396,9 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-//    public void updateToolbar(boolean isDiscoverPage) {
-//        if (isDiscoverPage) {
-//            if (toolbarPlainTitle.getVisibility() != VISIBLE)
-//                toolbarPlainTitle.setVisibility(VISIBLE);
-//            if (toolbarCenterTitle.getVisibility() != GONE)
-//                toolbarCenterTitle.setVisibility(GONE);
-//        }
-//        else {
-//            if (toolbarCenterTitle.getVisibility() != VISIBLE)
-//                toolbarCenterTitle.setVisibility(VISIBLE);
-//            if (toolbarPlainTitle.getVisibility() != GONE)
-//                toolbarPlainTitle.setVisibility(GONE);
-//        }
-//    }
-
     public void setAppBarElevation(float elevation) {
         if (appBar.getElevation() != elevation)
             appBar.setElevation((int)((elevation * getResources().getDisplayMetrics().density) + 0.5));
-    }
-
-//    public void disappearSearchBar() {
-//        if (toolbarCenterTitle.getVisibility() != GONE)
-//            toolbarCenterTitle.setVisibility(GONE);
-//        if (settings.getVisibility() != GONE)
-//            settings.setVisibility(GONE);
-//    }
-
-//    public void reappearSearchBar() {
-//        toolbarPlainTitle.setVisibility(VISIBLE);
-//    }
-
-    public void updateTabSelection(int currentTab) {
-        for (int i = 0; i < TABS.length; i++) {
-            TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
-            if (selectedTab != null) {
-                if (currentTab != i) {
-                    View view = selectedTab.getCustomView();
-                    if (view != null) {
-                        view.setSelected(false);
-                    }
-                } else {
-                    View view = selectedTab.getCustomView();
-                    if (view != null) {
-                        view.setSelected(true);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (navigationController != null) {
-            navigationController.onSaveInstanceState(outState);
-        }
     }
 
     public void updateToolbar() {
@@ -569,15 +408,6 @@ public class BaseBottomBarActivity extends BaseActivity
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (navigationController.getCurrentFragment() instanceof PostsListFragment && uploadCall != null) {
-                    uploadingStatusLayout.setVisibility(VISIBLE);
-                } else
-                    uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 200);
     }
 
     /**
@@ -598,36 +428,10 @@ public class BaseBottomBarActivity extends BaseActivity
             if (toolbarCenterTitle.getVisibility() != GONE)
                 toolbarCenterTitle.setVisibility(GONE);
         }
-//        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarPlainTitle.getLayoutParams();
-//        if (navigationController.isRootFragment())
-//            params.setMarginStart(getPixel(14));
-//        else
-//            params.leftMargin = getPixel(20) - getPixel(38);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                toolbarPlainTitle.setLayoutParams(params);
-//            }
-//        }, 200);
     }
 
     public String getToolbarTitle() {
         return toolbarPlainTitle.getText().toString();
-    }
-
-    public AppBarLayout.OnOffsetChangedListener appBarOffsetChangeListener() {
-        return new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                bottomTabLayout.setTranslationY((float) (-verticalOffset));
-                cameraButton.setTranslationY((float) -(verticalOffset * 2));
-//                int percentage = (Math.abs(verticalOffset)) * 100 / appBarLayout.getTotalScrollRange();
-//                if (percentage > 0) {
-//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//                } else
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
-        };
     }
 
     @Override
@@ -684,54 +488,30 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         return fragment;
     }
+    //</editor-fold>
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                hideKeyboard(this, bottomTabLayout);
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    //<editor-fold desc="On click methods">
+    @OnClick(R.id.camera_btn) public void startCamera() {
+        launchVideoUploadCamera(this);
+        finish();
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Fragment listener implementations">
     @Override
     public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail,
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, true));
+                PostDetailsActivity.newInstance(this, postDetails, image, true, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 int postOwnerId=postDetails.getPostOwner().getUserId();
                 String username=postDetails.getPostOwner().getUserName();
                 String userType="";
-                boolean candelete=postDetails.canDelete();
-                if(candelete)
-                    pushFragment(ProfileFragment.newInstance());
-
-                else
-                    pushFragment(OthersProfileFragment.newInstance(String.valueOf(postOwnerId),userType,username));
+                pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
+                        OthersProfileFragment.newInstance(String.valueOf(postOwnerId), userType, username));
         }
-    }
-
-    @Override
-    public void onPostDetailsInteraction(int action, PostDetails postDetails) {
-        switch (action) {
-            case ACTION_DISMISS_PLACEHOLDER:
-                break;
-            case ACTION_OPEN_REACTION_CAMERA:
-                launchReactionCamera(this, postDetails);
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onPostReactionInteraction(int action, Pojos.Post.PostReaction postReaction) {
-//        ViewUtils.playVideo(this, postReaction.getMediaDetail().getMediaUrl(), true);
     }
 
     @Override
@@ -745,12 +525,12 @@ public class BaseBottomBarActivity extends BaseActivity
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
                 break;
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(postDetails, image, true, false));
+                PostDetailsActivity.newInstance(this, postDetails, image, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(
-                                String.valueOf(postDetails.getPostOwner().getUserId()), "", ""));
+                        OthersProfileFragment.newInstance(String.valueOf(postDetails.getPostOwner().getUserId()),
+                                "", postDetails.getPostOwner().getUserName()));
                 break;
         }
     }
@@ -759,7 +539,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onSubSearchInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
-                pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
+                PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -778,8 +558,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
-                                pushFragment(PostDetailsFragment.newInstance(response.body(), null, true,
-                                        false));
+                                PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(),
+                                        null, false, false, null);
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }
@@ -802,13 +582,33 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
+            PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
+    }
+
+    @Override
+    public void onFollowerListListener(String id,String identifier) {
+        pushFragment(FollowersListActivity.newInstance(id, identifier));
+    }
+
+    @Override
+    public void onFollowingListListener(String id, String identifier) {
+        pushFragment(FollowingListActivities.newInstance(id, identifier));
+    }
+
+    @Override
+    public void viewOthersProfile(String id, String username, String type) {
+        pushFragment(OthersProfileFragment.newInstance(id, type,username));
+    }
+
+    @Override
+    public void viewOthersProfileFollowing(String id, String username, String type) {
+        pushFragment(OthersProfileFragment.newInstance2(id, type,username));
     }
 
     @Override
@@ -818,72 +618,174 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onProgressUpdate(int percentage) {
-        progressBar.setProgress(percentage);
-    }
-
-    @Override
-    public void onUploadError(Throwable throwable) {
-        uploadingNotificationTextView.setText(R.string.something_went_wrong);
-        Log.e("onUploadError", throwable.getMessage() != null ? throwable.getMessage() : "FAILED!");
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_retry, 0);
-    }
-
-    @Override
-    public void onUploadFinish() {
-        uploadingNotificationTextView.setText(R.string.finished);
-        uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle, 0);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 1000);
-        finishVideoUploadSession(this);
-        if(fragment instanceof PostsListFragment) {
-            ((PostsListFragment)fragment).getHomePagePosts(1,false);
-        }
-        uploadCall = null;
-    }
-
-//    public void hideAppBar() {
-//        appBar.setExpanded(false, true);
-//    }
-
-    public void showAppBar() {
-        appBar.setExpanded(true, true);
-    }
-
-    public void hideBottomBar() {
-        bottomTabLayout.animate().translationY(100).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(100).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        bottomTabLayout.setVisibility(GONE);
-        cameraButton.setVisibility(GONE);
-    }
-
-    public void showBottomBar() {
-        bottomTabLayout.animate().translationY(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        cameraButton.animate().translationY(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        bottomTabLayout.setVisibility(VISIBLE);
-        cameraButton.setVisibility(VISIBLE);
-    }
-
-    @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        pushFragment(PostDetailsFragment.newInstance(postDetails, null, true, false));
+        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Video upload handler">
+    private void setupServiceReceiver() {
+        builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+                .setContentTitle("Teazer video upload")
+                .setContentText("Uploading")
+//                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
+//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSmallIcon(R.drawable.ic_file_upload)
+                .setAutoCancel(false)
+//                .setSound(null)
+                .setDefaults(0)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
+                .setProgress(0, 0, true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
+                    "Upload notification", NotificationManager.IMPORTANCE_NONE);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("videoUploadChanel");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.CYAN);
+//            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+//            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        videoUploadReceiver = new VideoUploadReceiver(new Handler())
+                .setReceiver(new VideoUploadReceiver.Receiver() {
+                    @Override
+                    public void onReceiverResult(int resultCode, Bundle resultData) {
+                        switch(resultCode) {
+                            case UPLOAD_IN_PROGRESS_CODE:
+                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false);
+                                notifyProgressInNotification();
+//                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
+                                break;
+                            case UPLOAD_COMPLETE_CODE:
+                                builder.setOngoing(false);
+                                builder.setContentText("Finished!")
+                                        .setProgress(100, 100, false);
+                                notifyProgressInNotification();
+
+                                finishVideoUploadSession(getApplicationContext());
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        notificationManager.cancel(0);
+                                    }
+                                }, 4000);
+
+                                if(fragment instanceof PostsListFragment) {
+                                    ((PostsListFragment)fragment).getHomePagePosts(1,false);
+                                }
+                                break;
+                            case UPLOAD_ERROR_CODE:
+                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+                                builder.setOngoing(false);
+                                builder.setContentText("Upload failed!")
+                                        .setProgress(100, 0, false);
+                                notifyProgressInNotification();
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        notificationManager.cancel(0);
+                                    }
+                                }, 4000);
+
+                                break;
+                            case REQUEST_CANCEL_UPLOAD:
+                                builder.setOngoing(false);
+                                Toast.makeText(BaseBottomBarActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
     }
 
-//    public void hideSettings(boolean flag) {
-//    }
-//    public void hidereport() {
-//    }
-//    public void hidesettingsReport() {
-//    }
+    private void checkIfAnyVideoIsUploading() {
+        if (getVideoUploadSession(this) != null) {
+            launchVideoUploadService(this, getVideoUploadSession(getApplicationContext()), videoUploadReceiver);
+//            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
+        }
+        else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null ) {
+            launchVideoUploadService(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), videoUploadReceiver);
+//            new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
+        }
+    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        ViewUtils.unbindDrawables(contentFrame);
+    private void notifyProgressInNotification() {
+        if (notificationManager != null) {
+            notificationManager.notify(0, builder.build());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
+
+        private WeakReference<BaseBottomBarActivity> reference;
+
+        ShowShareDialog(BaseBottomBarActivity context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Bitmap bitmap = null;
+            try {
+                final URL url = new URL(strings[0]);
+                try {
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+
+            ShareDialog shareDialog = new ShareDialog(reference.get());
+            shareDialog.show(content);
+            // ShareApi.share(content, null);
+            super.onPostExecute(bitmap);
+        }
+    }
+    //</editor-fold>
+
+    public void updateTabSelection(int currentTab) {
+        for (int i = 0; i < TABS.length; i++) {
+            TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+            if (selectedTab != null) {
+                if (currentTab != i) {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(false);
+                    }
+                } else {
+                    View view = selectedTab.getCustomView();
+                    if (view != null) {
+                        view.setSelected(true);
+                    }
+                }
+            }
+        }
     }
 
     @Override

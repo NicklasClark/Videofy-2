@@ -108,12 +108,16 @@ public class PostsListFragment extends BaseFragment {
                 dismissProgressBar();
             }
         }
-        else {
-            isRefreshing = false;
-//            if (savedPosition[1] > 4)
-//                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
-            postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
-        }
+//        else {
+//            isRefreshing = false;
+//            if (postList != null && postDetails == null) {
+//                postList.remove(positionToUpdate);
+//                postListAdapter.notifyItemRemoved(positionToUpdate);
+//            } else
+//                postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+////            if (savedPosition[1] > 4)
+////                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
+//        }
 //        getParentActivity().showAppBar();
     }
 
@@ -192,6 +196,6 @@ public class PostsListFragment extends BaseFragment {
             postListCall.cancel();
         postListAdapter = null;
         positionToUpdate = -1;
-        postDetails = null;
+//        postDetails = null;
     }
 }

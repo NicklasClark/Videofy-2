@@ -1,6 +1,9 @@
 package com.cncoding.teazer.model.profile.reaction;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.cncoding.teazer.model.profile.followerprofile.MediaDimension;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by farazhabib on 10/11/17.
  */
 
-public class ProfileMedia {
+public class ProfileMedia implements Parcelable {
 
     @SerializedName("media_url")
     @Expose
@@ -69,4 +72,40 @@ public class ProfileMedia {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mediaUrl);
+        dest.writeString(this.thumbUrl);
+        dest.writeString(this.duration);
+        dest.writeValue(this.isImage);
+        dest.writeParcelable(this.mediaDimension, flags);
+    }
+
+    public ProfileMedia() {
+    }
+
+    protected ProfileMedia(Parcel in) {
+        this.mediaUrl = in.readString();
+        this.thumbUrl = in.readString();
+        this.duration = in.readString();
+        this.isImage = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.mediaDimension = in.readParcelable(MediaDimension.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ProfileMedia> CREATOR = new Parcelable.Creator<ProfileMedia>() {
+        @Override
+        public ProfileMedia createFromParcel(Parcel source) {
+            return new ProfileMedia(source);
+        }
+
+        @Override
+        public ProfileMedia[] newArray(int size) {
+            return new ProfileMedia[size];
+        }
+    };
 }

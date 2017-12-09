@@ -6,21 +6,33 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+
+import java.util.List;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  *
  * Created by Prem $ on 12/5/2017.
  */
 
-public class GalleryUtil extends Activity {
-    private final static int RESULT_SELECT_IMAGE = 100;
-//    public static final int MEDIA_TYPE_IMAGE = 1;
-    private static final String TAG = "GalleryUtil";
+public class GalleryUtil extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
+    private final static int RESULT_SELECT_IMAGE = 100;
+//    private static final String TAG = "GalleryUtil";
+    private static final int PERMISSION_REQUEST = 101;
+
+    private String[] PERMISSIONS = new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, CAMERA};
 //    String mCurrentPhotoPath;
 //    File photoFile = null;
 
@@ -28,12 +40,25 @@ public class GalleryUtil extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            //Pick Image From Gallery
-            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, RESULT_SELECT_IMAGE);
+            //Pick Image From Gallery or camera
+            startImagePickerIntent();
         }catch(Exception e){
             e.printStackTrace();
             Toast.makeText(this, R.string.no_app_found_for_intent, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @AfterPermissionGranted(PERMISSION_REQUEST) private void startImagePickerIntent() {
+        if (EasyPermissions.hasPermissions(this, PERMISSIONS)) {
+            startActivityForResult(
+                    Intent.createChooser(
+                            new Intent(Intent.ACTION_PICK,
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                            "Select profile pic"), RESULT_SELECT_IMAGE);
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    PERMISSION_REQUEST, PERMISSIONS);
         }
     }
 
@@ -43,7 +68,6 @@ public class GalleryUtil extends Activity {
 
         switch(requestCode){
             case RESULT_SELECT_IMAGE:
-
                 if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
                     try{
                         Uri selectedImage = data.getData();
@@ -68,13 +92,28 @@ public class GalleryUtil extends Activity {
                         setResult(RESULT_CANCELED, returnFromGalleryIntent);
                         finish();
                     }
-                }else{
-                    Log.i(TAG,"RESULT_CANCELED");
+                }
+                else{
+//                    Log.i(TAG,"RESULT_CANCELED");
                     Intent returnFromGalleryIntent = new Intent();
                     setResult(RESULT_CANCELED, returnFromGalleryIntent);
                     finish();
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        if (requestCode == PERMISSION_REQUEST) {
+            startImagePickerIntent();
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
         }
     }
 }

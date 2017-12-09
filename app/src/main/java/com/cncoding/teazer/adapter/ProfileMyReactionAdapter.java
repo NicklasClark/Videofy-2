@@ -3,7 +3,6 @@ package com.cncoding.teazer.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -22,15 +21,16 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
-import com.cncoding.teazer.ui.fragment.activity.ProfileCreationVideos;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  * Created by farazhabib on 10/11/17.
@@ -85,12 +85,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.playvideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ProfileCreationVideos.class);
-                intent.putExtra("VideoURL", videourl);
-                intent.putExtra("Likes", String.valueOf(likes));
-                intent.putExtra("Views",String.valueOf( views));
-                intent.putExtra("Title", videotitle);
-                context.startActivity(intent);
+//                Intent intent = new Intent(context, ProfileCreationVideos.class);
+//                intent.putExtra("VideoURL", videourl);
+//                intent.putExtra("Likes", String.valueOf(likes));
+//                intent.putExtra("Views",String.valueOf( views));
+//                intent.putExtra("Title", videotitle);
+//                context.startActivity(intent);
+
+                playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {

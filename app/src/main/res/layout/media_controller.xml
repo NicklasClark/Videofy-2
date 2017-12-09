@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@android:color/transparent">
 
     <RelativeLayout
@@ -57,11 +58,21 @@
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/media_controller_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_play_big"
         android:background="@android:color/transparent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        style="?android:attr/progressBarStyleLarge"
+        android:theme="@style/WhiteProgressBarTheme" />
 
     <RelativeLayout
         android:id="@+id/layout_bottom"

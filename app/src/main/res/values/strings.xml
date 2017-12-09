@@ -70,9 +70,9 @@
     </string>-->
     <!--<string name="google_places_api_key">AIzaSyCDAqoBaC1dwPbEONs0dfnDOZjkm13wgeE</string>-->
     <string name="google_web_client_id" tools:ignore="TypographyDashes">
-        962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com
+        441699527747-sh3631k1ed2q4m948j0bhqk2ppffvtvs.apps.googleusercontent.com
     </string>
-    <string name="google_places_api_key">AIzaSyD-Y-E7Z_Piz3TVQ8M8paulF8ZwdPT_vdg</string>
+    <string name="google_places_api_key">AIzaSyAPQLiVYK7EByn0Og-4dl-_8k4rtA9S3IY</string>
     <string name="logout">Logout</string>
     <string name="okay">Okay</string>
     <string name="not_connected_message">No internet connection!</string>
@@ -237,7 +237,7 @@
     <string name="trending">Trending</string>
     <string name="featured_videos">Featured Videos</string>
     <string name="view_all">View all</string>
-    <string name="rationale_storage">App requires external storage permission</string>
+    <string name="rationale_storage">Teazer requires external storage permission</string>
     <string name="no_friends_yet">No friends yet</string>
     <string name="like">Like</string>
     <string name="liked">Liked</string>
@@ -284,4 +284,17 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
+    <string name="upload_profile_pic">Upload profile pic</string>
+    <string name="crop_selected_image">Crop selected image</string>
+    <string name="cannot_start_camera">Cannot start camera, please restart your device</string>
+    <string name="upload_success">Upload successful!</string>
+    <string name="upload_cancelled">Upload cancelled</string>
+    <string name="general_info">General Info</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="bio">Bio</string>
+    <string name="private_info">Private Info</string>
+    <string name="email_id">Email id</string>
+    <string name="mobile_number">Mobile Number</string>
 </resources>

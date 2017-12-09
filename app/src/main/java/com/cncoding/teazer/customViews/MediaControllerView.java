@@ -13,10 +13,10 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +24,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
@@ -39,9 +40,6 @@ import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
  */
 
 public class MediaControllerView extends FrameLayout implements VideoGestureListener {
-
-//    private static final String TAG = "MediaControllerView";
-    public static final String SPACE = "  ";
 
     private static final int HANDLER_ANIMATE_OUT = 1;// out animate
     private static final int HANDLER_UPDATE_PROGRESS = 2;//cycle update progress
@@ -83,7 +81,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     private String reaction3Url;
     private MediaPlayerControlListener mediaPlayerControlListener;
     private ViewGroup anchorView;
-    private TextureView textureView;
     private MotionEvent event;
 
     @DrawableRes private int pauseIcon;
@@ -91,6 +88,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     //top layout
     RelativeLayout topLayout;
+    public ProgressBar progressBar;
     ProximaNovaSemiboldTextView caption;
     ProximaNovaRegularTextView locationView;
     ProximaNovaRegularTextView remainingTime;
@@ -99,7 +97,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     AppCompatImageButton playPauseButton;
 
     //bottom layout
-    RelativeLayout bottomLayout;
+//    RelativeLayout bottomLayout;
     CircularAppCompatImageView profilePic;
     ProximaNovaSemiboldTextView profileNameView;
     ProximaNovaRegularTextView likesView;
@@ -129,7 +127,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         videoTitle = builder.videoTitle;
         pauseIcon = builder.pauseIcon;
         playIcon = builder.playIcon;
-        textureView = builder.textureView;
         location = builder.location;
         profileName = builder.profileName;
         profilePicUrl = builder.profilePicUrl;
@@ -228,12 +225,13 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //            playPauseButton.requestFocus();
 //            playPauseButton.setOnClickListener(mPauseListener);
 //        }
-        topLayout = findViewById(R.id.layout_top);
+//        topLayout = findViewById(R.id.layout_top);
+        progressBar = findViewById(R.id.progress_bar);
         caption = findViewById(R.id.media_controller_caption);
         locationView = findViewById(R.id.media_controller_location);
         remainingTime = findViewById(R.id.media_controller_eta);
         playPauseButton = findViewById(R.id.media_controller_play_pause);
-        bottomLayout = findViewById(R.id.layout_bottom);
+//        bottomLayout = findViewById(R.id.layout_bottom);
         profilePic = findViewById(R.id.media_controller_dp);
         profileNameView = findViewById(R.id.media_controller_name);
         likesView = findViewById(R.id.media_controller_likes);
@@ -281,23 +279,23 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     private void refreshControllerView() {
         caption.setText(videoTitle);
-        String locationText = SPACE + location;
+        String locationText = PostDetailsActivity.SPACE + location;
         locationView.setText(locationText);
         profileNameView.setText(profileName);
-        String likesText = SPACE + likes;
+        String likesText = PostDetailsActivity.SPACE + likes;
         likesView.setText(likesText);
-        String viewsText = SPACE + views;
+        String viewsText = PostDetailsActivity.SPACE + views;
         viewsView.setText(viewsText);
         categoriesView.setText(categories);
 
         if (reactionCount > 4) {
-            String reactionText = SPACE + "+" + (reactionCount - 3) + " R";
+            String reactionText = PostDetailsActivity.SPACE + "+" + (reactionCount - 3) + " R";
             reactionCountView.setText(reactionText);
         } else if (reactionCount == 0){
-            setNoReactions();
+//            setNoReactions();
         }
         else {
-            String reactionText = SPACE + reactionCount + " R";
+            String reactionText = PostDetailsActivity.SPACE + reactionCount + " R";
             reactionCountView.setText(reactionText);
         }
         Glide.with(getContext())
@@ -318,91 +316,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
                     }
                 })
                 .into(profilePic);
-    }
-
-    public void incrementLikes() {
-        String likesText = SPACE + ++likes;
-        likesView.setText(likesText);
-    }
-
-    public void decrementLikes() {
-        String likesText = SPACE + --likes;
-        likesView.setText(likesText);
-    }
-
-    public void incrementViews() {
-        String viewsText = SPACE + ++views;
-        viewsView.setText(viewsText);
-    }
-
-    public void setReaction1Pic(String reaction1PicUrl) {
-        reaction1Pic.setVisibility(VISIBLE);
-        Glide.with(getContext())
-                .load(reaction1PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        reaction1Pic.setImageDrawable(resource);
-                        return true;
-                    }
-                })
-                .into(reaction1Pic);
-    }
-
-    public void setReaction2Pic(String reaction2PicUrl) {
-        reaction2Pic.setVisibility(VISIBLE);
-        Glide.with(getContext())
-                .load(reaction2PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        reaction2Pic.setImageDrawable(resource);
-                        return true;
-                    }
-                })
-                .into(reaction2Pic);
-    }
-
-    public void setReaction3Pic(String reaction3PicUrl) {
-        reaction3Pic.setVisibility(VISIBLE);
-        Glide.with(getContext())
-                .load(reaction3PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        reaction3Pic.setImageDrawable(resource);
-                        return true;
-                    }
-                })
-                .into(reaction3Pic);
-    }
-
-    public void setNoReactions() {
-        reactionCountView.setText("");
     }
 
     private void toggleVolume() {
@@ -494,17 +407,17 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
             anchorView.addView(MediaControllerView.this, frameParams);
 
             if (animate)
-                putOn(topLayout)
+                putOn(playPauseButton)
                     .waitForSize(new Listeners.Size() {
                         @Override
                         public void onSize(ViewAnimator viewAnimator) {
                             viewAnimator.animate()
-                                    .translationY(-topLayout.getHeight(), 0)
-                                    .duration(ANIMATE_TIME)
-                                    .andAnimate(bottomLayout)
-                                    .translationY(bottomLayout.getHeight(), 0)
-                                    .duration(ANIMATE_TIME)
-                                    .andAnimate(playPauseButton)
+//                                    .translationY(-topLayout.getHeight(), 0)
+//                                    .duration(ANIMATE_TIME)
+//                                    .andAnimate(bottomLayout)
+//                                    .translationY(bottomLayout.getHeight(), 0)
+//                                    .duration(ANIMATE_TIME)
+//                                    .andAnimate(playPauseButton)
                                     .scale(0, 1)
                                     .alpha(0, 1)
                                     .duration(ANIMATE_TIME)
@@ -550,7 +463,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //                .andAnimate(bottomLayout)
 //                .translationY(bottomLayout.getHeight())
 //                .duration(ANIMATE_TIME)
-                .andAnimate(playPauseButton)
+//                .andAnimate(playPauseButton)
                 .scale(1, 0)
                 .alpha(1, 0)
                 .duration(ANIMATE_TIME)
@@ -579,9 +492,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         int duration = convert(mediaPlayerControlListener.getDuration() + ".");
 
         String remainingTimeText;
-        remainingTimeText = SPACE + stringToTime(duration - position);
+        remainingTimeText = PostDetailsActivity.SPACE + stringToTime(duration - position);
         if(mediaPlayerControlListener.isComplete()){
-            remainingTimeText = SPACE + stringToTime(duration);
+            remainingTimeText = PostDetailsActivity.SPACE + stringToTime(duration);
         }
         remainingTime.setText(remainingTimeText);
         return position;
@@ -639,7 +552,6 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         private String reaction3Url = "";
         private MediaPlayerControlListener mediaPlayerControlListener;
         private ViewGroup anchorView;
-        private TextureView textureView;
         @DrawableRes private int playIcon;
         @DrawableRes private int pauseIcon;
 //        private boolean canSeekVideo = true;
@@ -732,15 +644,11 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 //            return this;
 //        }
 
-        public Builder withVideoSurfaceView(@Nullable TextureView textureView){
-            this.textureView = textureView;
-            return this;
-        }
-
         public MediaControllerView build(@Nullable ViewGroup anchorView) {
             this.anchorView = anchorView;
             return new MediaControllerView(this);
         }
+
 //        public Builder exitIcon(@DrawableRes int exitIcon) {
 //            this.exitIcon = exitIcon;
 //            return this;

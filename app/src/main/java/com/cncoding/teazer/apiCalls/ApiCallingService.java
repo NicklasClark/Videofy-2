@@ -43,6 +43,7 @@ import com.cncoding.teazer.utilities.SharedPrefs;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -68,7 +69,6 @@ import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class ApiCallingService {
 
-//    private static String AUTH_TOKEN = "Bearer 8c2400ccd8c32d572cc8181ccadc70c08f5df408b14e0c77b60e2277825ef2ad";
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     static final int FAIL = 3;
@@ -243,7 +243,7 @@ public class ApiCallingService {
             return retrofit.create(TeazerApiCall.DiscoverCalls.class);
         }
     }
-    
+
     public static class Friends {
         /**
          * Get the "my circle" with search term
@@ -753,9 +753,18 @@ public class ApiCallingService {
 //                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
                 return chain.proceed(request);
             }
-        }).addInterceptor(logging).build();
+        })
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(logging).build();
     }
+
     private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder().addInterceptor(logging).build();
     }
+
+//    private static HttpStack getOkHttpClientForUpload(Context context) {
+//        HTTP_STACK = new OkHttpStack(getOkHttpClientWithAuthToken(context));
+//        return HTTP_STACK;
+//    }
 }

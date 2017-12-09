@@ -52,13 +52,6 @@ public class NotificationsFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getParentActivity().showAppBar();
-      //  getParentActivity().hideSettings(false);
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {

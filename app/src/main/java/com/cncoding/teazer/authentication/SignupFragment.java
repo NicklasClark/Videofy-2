@@ -158,7 +158,7 @@ public class SignupFragment extends AuthFragment {
             // retrieve data on return
             cropIntent.putExtra("return-data", true);
             // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, RESULT_CROP);
+            startActivityForResult(Intent.createChooser(cropIntent, getString(R.string.crop_selected_image)), RESULT_CROP);
         }
         // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException e) {
@@ -171,28 +171,30 @@ public class SignupFragment extends AuthFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case GALLERY_ACTIVITY_CODE:
-                if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case GALLERY_ACTIVITY_CODE:
                     picturePath = data.getStringExtra("picturePath");
                     //perform Crop on the Image Selected from Gallery
                     performCrop(picturePath);
-                }
-                break;
-            case RESULT_CROP:
-                Bundle extras = data.getExtras();
-                Bitmap selectedBitmap = null;
-                if (extras != null) {
-                    selectedBitmap = extras.getParcelable("data");
-                }
-                if (selectedBitmap == null && data.getData() != null)
-                    selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
-                // Set The Bitmap Data To ImageView
-                dp.setImageBitmap(selectedBitmap);
-                dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
-                break;
-            default:
-                break;
+                    break;
+                case RESULT_CROP:
+                    if (data != null) {
+                        Bundle extras = data.getExtras();
+                        Bitmap selectedBitmap = null;
+                        if (extras != null) {
+                            selectedBitmap = extras.getParcelable("data");
+                        }
+                        if (selectedBitmap == null && data.getData() != null)
+                            selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
+                        // Set The Bitmap Data To ImageView
+                        dp.setImageBitmap(selectedBitmap);
+                        dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
