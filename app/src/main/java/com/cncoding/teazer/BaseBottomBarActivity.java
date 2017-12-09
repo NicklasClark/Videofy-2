@@ -210,37 +210,6 @@ public class BaseBottomBarActivity extends BaseActivity
         getBranchDynamicLinks();
     }
 
-<<<<<<< HEAD
-    @Override
-    public void viewOthersProfile(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance(id, type,username));
-    }
-
-    @Override
-    public void viewOthersProfileFollowing(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance2(id, type,username));
-    }
-
-    @Override
-    public void viewUserProfile() {
-        pushFragment(ProfileFragment.newInstance());
-    }
-
-    private static class ResumeUpload extends AsyncTask<Void, Void, Part> {
-
-        private final Callback<ResultObject> callback;
-        private WeakReference<BaseBottomBarActivity> reference;
-        private boolean isResuming;
-        private UploadParams uploadParams;
-
-        ResumeUpload(BaseBottomBarActivity context, final UploadParams uploadParams, boolean isResuming) {
-            reference = new WeakReference<>(context);
-            this.uploadParams = uploadParams;
-            this.isResuming = isResuming;
-            callback = new Callback<ResultObject>() {
-                @Override
-                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-=======
     private void getBranchDynamicLinks() {
         // listener (within Main Activity's onStart)
         //noinspection ConstantConditions
@@ -248,7 +217,6 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
->>>>>>> master_dev
                     try {
                         Log.d("BranchLog", referringParams.toString());
                         if (referringParams != null) {
@@ -844,5 +812,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }
+    }
+
+    @Override
+    public void viewUserProfile() {
+        pushFragment(ProfileFragment.newInstance());
     }
 }
