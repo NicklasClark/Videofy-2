@@ -30,7 +30,6 @@ import java.util.Locale;
 import VideoHandle.EpEditor;
 import VideoHandle.EpVideo;
 import VideoHandle.OnEditorListener;
-import iknow.android.utils.DeviceUtil;
 import iknow.android.utils.UnitConverter;
 import iknow.android.utils.callback.SingleCallback;
 import iknow.android.utils.thread.BackgroundExecutor;
@@ -41,10 +40,10 @@ public class TrimVideoUtil {
     private static final String TAG = TrimVideoUtil.class.getSimpleName();
     public static final int VIDEO_MAX_DURATION = 60;
     public static final int MIN_TIME_FRAME = 3;
-    public static final int VIDEO_MAX_ALLOWED_DURATION = 60;
-    private static final int thumb_Width = (DeviceUtil.getDeviceWidth() - UnitConverter.dpToPx(20)) / VIDEO_MAX_DURATION;
+//    private static final int thumb_Width = (DeviceUtil.getDeviceWidth() - UnitConverter.dpToPx(50)) / VIDEO_MAX_DURATION;
+    private static final int thumb_Width = UnitConverter.dpToPx(50);
     private static final int thumb_Height = UnitConverter.dpToPx(60);
-    private static final long one_frame_time = 1000000;
+    private static final long one_frame_time = 10000000;
 
     public static void trimVideo(final Context context, String inputFile, String outputFile, final long startMs, final long endMs, final OnTrimVideoListener callback) throws IOException {
         final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());

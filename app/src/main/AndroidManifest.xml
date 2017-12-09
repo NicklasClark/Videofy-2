@@ -71,7 +71,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -90,7 +89,7 @@
             </intent-filter>
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="teazer." android:host="open" />
+                <data android:scheme="teazerapp" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -132,7 +131,7 @@
             android:windowSoftInputMode="adjustPan">
 
             <intent-filter>
-                <data android:scheme="teazer" />
+                <data android:scheme="teazerapp" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -141,9 +140,11 @@
             </intent-filter>
             <intent-filter android:autoVerify="true"
                 tools:targetApi="m">
+                <data android:scheme="teazerapp" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="teazer.test-app.link" android:scheme="http"/>
                 <data android:scheme="https" android:host="teazer.test-app.link" />
             </intent-filter>
         </activity>
@@ -215,7 +216,7 @@
         <activity
             android:name=".ui.fragment.activity.EditProfile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MyCustomTextAppearance" />
         <activity
             android:name=".ui.fragment.activity.BlockUserList"
             android:screenOrientation="portrait"

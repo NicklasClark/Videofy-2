@@ -218,4 +218,6 @@ public class SignupFragment extends AuthFragment {
     public interface OnInitialSignupInteractionListener {
         void onInitialEmailSignupInteraction(int action, Authorize signUpDetails, String picturePath);
     }
+
+
 }

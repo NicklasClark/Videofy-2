@@ -70,9 +70,9 @@
     </string>-->
     <!--<string name="google_places_api_key">AIzaSyCDAqoBaC1dwPbEONs0dfnDOZjkm13wgeE</string>-->
     <string name="google_web_client_id" tools:ignore="TypographyDashes">
-        962455421064-irflqlnjg4gtlj9m017s29ske8q8sucr.apps.googleusercontent.com
+        441699527747-sh3631k1ed2q4m948j0bhqk2ppffvtvs.apps.googleusercontent.com
     </string>
-    <string name="google_places_api_key">AIzaSyD-Y-E7Z_Piz3TVQ8M8paulF8ZwdPT_vdg</string>
+    <string name="google_places_api_key">AIzaSyAPQLiVYK7EByn0Og-4dl-_8k4rtA9S3IY</string>
     <string name="logout">Logout</string>
     <string name="okay">Okay</string>
     <string name="not_connected_message">No internet connection!</string>

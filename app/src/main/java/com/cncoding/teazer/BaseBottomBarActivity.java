@@ -207,7 +207,6 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         });
 
-//        getDynamicLinks();
         getBranchDynamicLinks();
     }
 
@@ -219,29 +218,36 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
                     try {
-                        Log.d("BRANCH", referringParams.getString("post_id"));
-                        String postId = referringParams.getString("post_id");
-                        if (postId != null) {
-                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
-                                    .enqueue(new Callback<PostDetails>() {
-                                        @Override
-                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                            if (response.code() == 200) {
-                                                PostDetailsActivity.newInstance(BaseBottomBarActivity.this,
-                                                        response.body(), null, false);
-                                            } else
-                                                Toast.makeText(BaseBottomBarActivity.this,
-                                                        "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                        }
+                        Log.d("BranchLog", referringParams.toString());
+                        if (referringParams != null) {
+                                if (referringParams.has("post_id")) {
+                                    String postId = referringParams.getString("post_id");
+                                    ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                            .enqueue(new Callback<PostDetails>() {
+                                                @Override
+                                                public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                    if (response.code() == 200) {
+                                                        if (response.body() != null) {
+                                                            PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                                        } else {
+                                                            Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else
+                                                        Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
 
-                                        @Override
-                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-                                            Toast.makeText(BaseBottomBarActivity.this,
-                                                    "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                                @Override
+                                                public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                    Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                                else if(referringParams.has("user_id"))
+                                {
+                                    String userId = referringParams.getString("user_id");
+                                    pushFragment(OthersProfileFragment.newInstance(userId, "",""));
+                                }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -498,7 +504,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image, true);
+                PostDetailsActivity.newInstance(this, postDetails, image, true, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 int postOwnerId=postDetails.getPostOwner().getUserId();
@@ -520,7 +526,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
                 break;
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image, false);
+                PostDetailsActivity.newInstance(this, postDetails, image, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -534,7 +540,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onSubSearchInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, null, false);
+                PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -554,7 +560,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(),
-                                        null, false);
+                                        null, false, false, null);
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }
@@ -580,7 +586,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            PostDetailsActivity.newInstance(this, postDetails, null, false);
+            PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId),userType,"name"));
         }
@@ -614,7 +620,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null, false);
+        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
     }
     //</editor-fold>
 

@@ -43,7 +43,7 @@
             android:id="@+id/video_thumb_listview"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_below="@+id/video_shoot_tip"
             android:paddingLeft="6dp"
             android:paddingRight="6dp" />
@@ -54,6 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:visibility="visible"
             android:max="1000"
             android:layout_alignTop="@+id/video_thumb_listview"

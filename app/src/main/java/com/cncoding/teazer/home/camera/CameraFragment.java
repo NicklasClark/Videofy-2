@@ -359,7 +359,7 @@ public class CameraFragment extends Fragment {
 
     private void animateRecordButton(Context context) {
         cameraFilesView.setVisibility(View.GONE);
-        cameraFlashView.setVisibility(View.GONE);
+//        cameraFlashView.setVisibility(View.GONE);
         cameraFlipView.setVisibility(View.GONE);
         recordBtnInner.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_inner_pulse));
         recordBtnOuter.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_outer_pulse));
@@ -367,7 +367,7 @@ public class CameraFragment extends Fragment {
 
     private void stopRecordButtonAnimations() {
         cameraFilesView.setVisibility(View.VISIBLE);
-        cameraFlashView.setVisibility(View.VISIBLE);
+//        cameraFlashView.setVisibility(View.VISIBLE);
         cameraFlipView.setVisibility(View.VISIBLE);
         recordBtnInner.clearAnimation();
         recordBtnOuter.clearAnimation();

@@ -19,6 +19,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.model.profile.reaction.Reaction;
 import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -41,6 +42,9 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 
 public class ReactionPlayerActivity extends AppCompatActivity {
 
@@ -71,6 +75,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     ProximaNovaRegularTextView postDurationView;
     private String videoURL;
     private Pojos.Post.PostReaction postDetails;
+    private Reaction selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -80,6 +85,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     private long playbackPosition;
     private int currentWindow;
     private boolean playWhenReady = true;
+    private int playSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,38 +93,88 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exo_player);
         ButterKnife.bind(this);
 
-        videoURL = getIntent().getStringExtra("VIDEO_URL");
-        postDetails = getIntent().getParcelableExtra("POST_INFO");
-        if(postDetails != null)
-            reactId = postDetails.getReactId();
+        playSource = getIntent().getIntExtra("SOURCE", 0);
+        switch (playSource) {
+            case POST_REACTION: {
+                try {
+                    videoURL = getIntent().getStringExtra("VIDEO_URL");
+                    postDetails = getIntent().getParcelableExtra("POST_INFO");
+                    if (postDetails != null)
+                        reactId = postDetails.getReactId();
 
-        if (null != toolbar) {
-            this.setSupportActionBar(toolbar);
-            //noinspection ConstantConditions
-            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-//            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+                    if (null != toolbar) {
+                        this.setSupportActionBar(toolbar);
+                        //noinspection ConstantConditions
+                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+                    }
+
+                    isLiked = !postDetails.canLike();
+                    likesCount = postDetails.getLikes();
+                    viewsCount = postDetails.getViews();
+                    reactionTitle = postDetails.getReact_title();
+
+                    Glide.with(this)
+                            .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
+                                    : R.drawable.ic_user_male_dp_small)
+                            .asBitmap()
+                            .into(reactionPostDp);
+                    if (reactionTitle != null) {
+                        reactionPostCaption.setText(reactionTitle);
+                    }
+                    postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
+                    reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+
+                    initView();
+                    incrementView();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case SELF_REACTION:
+            {
+                try {
+                    videoURL = getIntent().getStringExtra("VIDEO_URL");
+                    selfPostDetails = getIntent().getParcelableExtra("POST_INFO");
+                    if (selfPostDetails != null)
+                        reactId = selfPostDetails.getReactId();
+
+                    if (null != toolbar) {
+                        this.setSupportActionBar(toolbar);
+                        //noinspection ConstantConditions
+                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+                    }
+
+                    isLiked = !selfPostDetails.getCanLike();
+                    likesCount = selfPostDetails.getLikes();
+                    viewsCount = selfPostDetails.getViews();
+                    reactionTitle = selfPostDetails.getReactTitle();
+
+                    Glide.with(this)
+                            .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
+                                    : R.drawable.ic_user_male_dp_small)
+                            .asBitmap()
+                            .into(reactionPostDp);
+                    if (reactionTitle != null) {
+                        reactionPostCaption.setText(reactionTitle);
+                    }
+                    postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
+                    reactionPostName.setText(selfPostDetails.getPostOwner().getFirstName());
+
+//                    initView();
+                    incrementView();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
         }
-
-        isLiked = !postDetails.canLike();
-        likesCount = postDetails.getLikes();
-        viewsCount = postDetails.getViews();
-        reactionTitle = postDetails.getReact_title();
-
-        Glide.with(this)
-                .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
-                        : R.drawable.ic_user_male_dp_small)
-                .asBitmap()
-                .into(reactionPostDp);
-        if (reactionTitle != null) {
-            reactionPostCaption.setText(reactionTitle);
-        }
-        postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
-        reactionPostName.setText(postDetails.getReactOwner().getFirstName());
-
-        initView();
-        incrementView();
     }
 
     private void incrementView() {
@@ -230,17 +286,26 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         if (isLiked) {
             likeBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_filled));
             if (animate) {
-                PostsListFragment.postDetails.likes++;
+                switch (playSource) {
+                    case POST_REACTION:
+                        PostsListFragment.postDetails.likes++;
+                        break;
+                    case SELF_REACTION:
+                        break;
+                }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
-//                controller.incrementLikes();
             }
 
         } else {
             likeBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_outline));
             if (animate) {
-                PostsListFragment.postDetails.likes++;
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
-//                controller.incrementLikes();
+                switch (playSource) {
+                    case POST_REACTION:
+                        PostsListFragment.postDetails.likes++;
+                        break;
+                    case SELF_REACTION:
+                        break;
+                }
             }
         }
     }

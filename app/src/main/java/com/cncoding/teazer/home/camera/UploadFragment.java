@@ -43,6 +43,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -104,7 +105,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -156,6 +157,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
+    private static boolean isCompressing = false;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -180,6 +182,22 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isReaction = bundle.getBoolean(IS_REACTION);
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
+
+//        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+//        compressVideoAsyncTask.delegate = this;
+//        compressVideoAsyncTask.execute(videoPath);
+    }
+
+    @Override
+    public void processFinish(String output) {
+        videoPath = output;
+        try {
+            uploadBtn.setEnabled(true);
+            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isCompressing = false;
     }
 
     @Override
@@ -238,6 +256,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        if (isCompressing) {
+//            uploadBtn.setEnabled(false);
+//            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey));
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
         }
@@ -773,24 +794,29 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected String doInBackground(Void... voids) {
-            File file = new File(reference.get().videoPath);
-            if (file.exists()) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(reference.get().videoPath);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration;
-                try {
-                    duration = Long.parseLong(time);
-                    retriever.release();
-                    return "Duration " + String.format(Locale.UK, "%02d:%02d",
-                            MILLISECONDS.toMinutes(duration),
-                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-                } catch (NumberFormatException e) {
-                    Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+            try {
+                File file = new File(reference.get().videoPath);
+                if (file.exists()) {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(reference.get().videoPath);
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long duration;
+                    try {
+                        duration = Long.parseLong(time);
+                        retriever.release();
+                        return "Duration " + String.format(Locale.UK, "%02d:%02d",
+                                MILLISECONDS.toMinutes(duration),
+                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                    } catch (NumberFormatException e) {
+                        Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+                        return "";
+                    }
+                } else
                     return "";
-                }
-            } else
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
                 return "";
+            }
         }
 
         @Override
