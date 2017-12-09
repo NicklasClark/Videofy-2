@@ -36,6 +36,7 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationList
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
@@ -81,6 +82,8 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import retrofit2.Call;
@@ -132,6 +135,8 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarCenterTitle;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
 
@@ -155,6 +160,11 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
+
+        blurView.setupWith(rootLayout)
+                .windowBackground(getWindow().getDecorView().getBackground())
+                .blurAlgorithm(new RenderScriptBlur(this))
+                .blurRadius(20);
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -218,35 +228,35 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
                     try {
-                        Log.d("BranchLog", referringParams.toString());
                         if (referringParams != null) {
-                                if (referringParams.has("post_id")) {
-                                    String postId = referringParams.getString("post_id");
-                                    ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
-                                            .enqueue(new Callback<PostDetails>() {
-                                                @Override
-                                                public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                                    if (response.code() == 200) {
-                                                        if (response.body() != null) {
-                                                            PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
-                                                        } else {
-                                                            Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    } else
-                                                        Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<PostDetails> call, Throwable t) {
+                            Log.d("BranchLog", referringParams.toString());
+                            if (referringParams.has("post_id")) {
+                                String postId = referringParams.getString("post_id");
+                                ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
+                                        .enqueue(new Callback<PostDetails>() {
+                                            @Override
+                                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                                if (response.code() == 200) {
+                                                    if (response.body() != null) {
+                                                        PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                                    } else {
+                                                        Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } else
                                                     Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
-                                else if(referringParams.has("user_id"))
-                                {
-                                    String userId = referringParams.getString("user_id");
-                                    pushFragment(OthersProfileFragment.newInstance(userId, "",""));
-                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                                Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                            else if(referringParams.has("user_id"))
+                            {
+                                String userId = referringParams.getString("user_id");
+                                pushFragment(OthersProfileFragment.newInstance(userId, "",""));
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -390,9 +400,9 @@ public class BaseBottomBarActivity extends BaseActivity
         for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
             if (i != 2) {
                 if (i == position)
-                    bottomTabLayout.getTabAt(position).getIcon().setTint(getResources().getColor(R.color.colorAccent));
+                    bottomTabLayout.getTabAt(position).getIcon().setTint(getResources().getColor(R.color.colorAccent4));
                 else
-                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.parseColor("#999999"));
+                    bottomTabLayout.getTabAt(i).getIcon().setTint(Color.WHITE);
             }
         }
     }

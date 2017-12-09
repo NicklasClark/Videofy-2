@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -99,58 +100,66 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/bottom_tab_layout"
-        style="@style/BottomTabLayout"
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blur_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height"
-        android:layout_gravity="bottom"
-        android:foreground="@drawable/ripple_dark_no_rounded_with_top_margin"
-        android:background="@drawable/bg_bottom_drawer"
-        app:tabBackground="?attr/selectableItemBackground">
+        android:layout_height="wrap_content"
+        app:blurOverlayColor="@color/colorTranslucentBgMainActivity"
+        android:layout_gravity="bottom|center_horizontal">
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@null"
-            android:tag="@string/title_home"
-            android:icon="@drawable/ic_home_default" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/bottom_tab_layout"
+            style="@style/BottomTabLayout"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="@dimen/action_bar_height"
+            android:foreground="@drawable/ripple_dark_no_rounded_with_top_margin"
+            app:tabBackground="?attr/selectableItemBackground">
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@null"
-            android:tag="@string/discover"
-            android:icon="@drawable/ic_binoculars_default" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@null"
+                android:tag="@string/title_home"
+                android:icon="@drawable/ic_home_default" />
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@null"
-            android:visibility="invisible"/>
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@null"
+                android:tag="@string/discover"
+                android:icon="@drawable/ic_binoculars_default" />
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@null"
-            android:tag="@string/title_notifications"
-            android:icon="@drawable/ic_notifications_default" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@null"
+                android:visibility="invisible"/>
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="@null"
-            android:tag="@string/title_dashboard"
-            android:icon="@drawable/ic_person" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@null"
+                android:tag="@string/title_notifications"
+                android:icon="@drawable/ic_notifications_default" />
 
-    </android.support.design.widget.TabLayout>
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@null"
+                android:tag="@string/title_dashboard"
+                android:icon="@drawable/ic_person" />
+
+        </android.support.design.widget.TabLayout>
+
+    </eightbitlab.com.blurview.BlurView>
 
     <ImageButton
         android:id="@+id/camera_btn"
         android:layout_width="62dp"
         android:layout_height="64dp"
-        android:foreground="@drawable/ripple_dark_circle"
         android:layout_gravity="bottom|center_horizontal"
+        android:foreground="@drawable/ripple_dark_circle"
         android:src="@drawable/ic_add_video"
         android:layout_marginBottom="@dimen/padding_10dp"
         android:scaleType="centerCrop"

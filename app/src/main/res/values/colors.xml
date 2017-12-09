@@ -10,7 +10,7 @@
     <color name="profilebackground">#1d1d1d</color>
     <color name="colorPrimaryLight">#80DEEA</color>
     <color name="colorAccent">#26C6DA</color>
-    <!--<color name="colorAccent">#E91E63</color>-->
+    <color name="colorAccent4">#E91E63</color>
     <!--<color name="colorAccent">#8D6E63</color>-->
     <color name="colorAccent2">#00c853</color>
     <color name="colorAccent3">#fb595b</color>
@@ -18,7 +18,7 @@
     <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
     <color name="colorTranslucentBg">#91212121</color>
-    <color name="colorTranslucentBgMainActivity">#c8000000</color>
+    <color name="colorTranslucentBgMainActivity">#8c000000</color>
     <color name="bgInterests">#c8000000</color>
     <color name="colorTranslucentButton">#5a000000</color>
     <color name="colorPrimary_text">#333333</color>
