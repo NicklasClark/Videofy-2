@@ -629,6 +629,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 .setAutoCancel(false)
                 .setSound(null)
                 .setDefaults(0)
+                .setOngoing(true)
                 .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
@@ -657,6 +658,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
+                                builder.setOngoing(false);
                                 builder.setContentText("Finished!")
                                         .setProgress(0, 0, false);
                                 notifyProgressInNotification();
@@ -677,7 +679,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             case UPLOAD_ERROR_CODE:
                                 String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-
+                                builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
                                         .setProgress(0, 0, false);
 
@@ -691,6 +693,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 notifyProgressInNotification();
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
+                                builder.setOngoing(false);
                                 Toast.makeText(BaseBottomBarActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
                                 break;
                             default:

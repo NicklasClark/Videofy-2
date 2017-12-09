@@ -1140,6 +1140,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setSmallIcon(R.drawable.ic_file_upload)
                 .setAutoCancel(false)
                 .setSound(null)
+                .setOngoing(true)
                 .setDefaults(0)
                 .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
                         PendingIntent.getActivity(PostDetailsActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
@@ -1169,6 +1170,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
+                                builder.setOngoing(false);
                                 builder.setContentText("Finished!")
                                         .setProgress(0, 0, false);
                                 notifyProgressInNotification();
@@ -1191,6 +1193,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
 
+                                builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
                                         .setProgress(0, 0, false);
 
