@@ -2895,13 +2895,15 @@ public class Pojos {
             this.postDetails = postDetails;
         }
 
-        public UploadParams(boolean isGallery, String videoPath, String title, String location, double latitude, double longitude) {
+        public UploadParams(boolean isGallery, String videoPath, String title, String location,
+                            double latitude, double longitude, PostDetails postDetails) {
             this.isGallery = isGallery;
             this.videoPath = videoPath;
             this.title = title;
             this.location = location;
             this.latitude = latitude;
             this.longitude = longitude;
+            this.postDetails = postDetails;
         }
 
         public UploadParams(String videoPath, boolean isReaction, String title, PostDetails postDetails) {
@@ -2911,9 +2913,8 @@ public class Pojos {
             this.postDetails = postDetails;
         }
 
-        public UploadParams(String videoPath, PostDetails postDetails) {
+        public UploadParams(String videoPath) {
             this.videoPath = videoPath;
-            this.postDetails = postDetails;
         }
 
 

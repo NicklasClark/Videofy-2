@@ -19,7 +19,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -38,8 +36,6 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationList
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
@@ -128,7 +124,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String TAB_INDEX = "tabIndex";
-    private static final int REQUEST_CANCEL_UPLOAD = 45;
+    public static final int REQUEST_CANCEL_UPLOAD = 45;
 
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
@@ -138,17 +134,12 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
     @BindView(R.id.camera_btn) ImageButton cameraButton;
-    @BindView(R.id.uploading_status_layout) LinearLayout uploadingStatusLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.uploading_notification) ProximaNovaBoldTextView uploadingNotificationTextView;
-    @BindView(R.id.dismiss) AppCompatImageView uploadingNotificationDismiss;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
     private VideoUploadReceiver videoUploadReceiver;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private Call<ResultObject> uploadCall;
     private Fragment fragment;
 
     @Override
@@ -418,15 +409,6 @@ public class BaseBottomBarActivity extends BaseActivity
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (navigationController.getCurrentFragment() instanceof PostsListFragment && uploadCall != null) {
-                    uploadingStatusLayout.setVisibility(VISIBLE);
-                } else
-                    uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 200);
     }
 
     /**
@@ -510,26 +492,6 @@ public class BaseBottomBarActivity extends BaseActivity
     //</editor-fold>
 
     //<editor-fold desc="On click methods">
-    @OnClick(R.id.uploading_notification) public void retryUpload() {
-        if (uploadingNotificationTextView.getCompoundDrawables()[2] != null) {
-            uploadingNotificationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            launchVideoUploadService(this, getVideoUploadSession(getApplicationContext()), videoUploadReceiver);
-        }
-    }
-
-    @OnClick(R.id.dismiss) public void cancelUpload() {
-        if (uploadCall != null) {
-            uploadCall.cancel();
-        }
-        finishVideoUploadSession(getApplicationContext());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadingStatusLayout.setVisibility(GONE);
-            }
-        }, 1000);
-    }
-
     @OnClick(R.id.camera_btn) public void startCamera() {
         launchVideoUploadCamera(this);
         finish();
@@ -673,13 +635,14 @@ public class BaseBottomBarActivity extends BaseActivity
                 .setAutoCancel(false)
                 .setSound(null)
                 .setDefaults(0)
+                .setOngoing(true)
                 .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_MIN);
+                    "Upload notification", NotificationManager.IMPORTANCE_NONE);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");
@@ -701,6 +664,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
+                                builder.setOngoing(false);
                                 builder.setContentText("Finished!")
                                         .setProgress(0, 0, false);
                                 notifyProgressInNotification();
@@ -717,12 +681,11 @@ public class BaseBottomBarActivity extends BaseActivity
                                 if(fragment instanceof PostsListFragment) {
                                     ((PostsListFragment)fragment).getHomePagePosts(1,false);
                                 }
-                                uploadCall = null;
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-
+                                builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
                                         .setProgress(0, 0, false);
 
@@ -736,6 +699,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 notifyProgressInNotification();
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
+                                builder.setOngoing(false);
                                 Toast.makeText(BaseBottomBarActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
                                 break;
                             default:

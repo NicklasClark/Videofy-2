@@ -93,69 +93,11 @@
 
     <!--MAIN FRAGMENT CONTAINER-->
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:id="@+id/uploading_status_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:animateLayoutChanges="true"
-                android:orientation="horizontal">
-
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                    android:id="@+id/uploading_notification"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:foreground="@drawable/ripple_dark_no_rounded"
-                    android:textSize="@dimen/text_size_content"
-                    android:paddingTop="@dimen/padding_half"
-                    android:layout_weight="1"
-                    android:paddingStart="@dimen/padding_default"
-                    android:paddingEnd="@dimen/padding_default"/>
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/dismiss"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:foreground="@drawable/ripple_dark_circle"
-                    android:src="@drawable/ic_cancel_dark"
-                    android:padding="@dimen/padding_half"/>
-
-            </LinearLayout>
-
-            <ProgressBar
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:indeterminate="false"
-                style="?android:attr/progressBarStyleHorizontal"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/main_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/bottom_tab_layout"

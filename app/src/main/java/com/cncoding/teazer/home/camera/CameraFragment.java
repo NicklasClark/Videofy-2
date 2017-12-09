@@ -65,7 +65,6 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
 import java.io.File;
@@ -86,7 +85,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 
 public class CameraFragment extends Fragment {
 
@@ -239,15 +237,13 @@ public class CameraFragment extends Fragment {
     private OnCameraFragmentInteractionListener mListener;
     private String cameraId;
     private boolean isReaction;
-    private PostDetails postDetails;
     private boolean isFlashSupported;
     private boolean isTorchOn = false;
 
-    public static CameraFragment newInstance(boolean isReaction, PostDetails postDetails) {
+    public static CameraFragment newInstance(boolean isReaction) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
         args.putBoolean(IS_REACTION, isReaction);
-        args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
     }
@@ -259,8 +255,6 @@ public class CameraFragment extends Fragment {
         context = getContext();
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
-            if (isReaction)
-                postDetails = getArguments().getParcelable(POST_DETAILS);
         }
         if (activity instanceof OnCameraFragmentInteractionListener) {
             mListener = (OnCameraFragmentInteractionListener) activity;
@@ -909,7 +903,7 @@ public class CameraFragment extends Fragment {
         }).start();
 
         cameraFlashView.setImageResource(R.drawable.ic_flash_off);
-        mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath, postDetails));
+        mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath));
     }
 
     /**

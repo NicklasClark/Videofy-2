@@ -225,8 +225,9 @@ public class ViewUtils {
     }
 
     public static void performReactionUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+        SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, PostDetailsActivity.class);
-        intent.putExtra(UPLOAD_PARAMS, uploadParams);
+//        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
