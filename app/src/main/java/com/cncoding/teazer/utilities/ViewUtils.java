@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -231,6 +232,41 @@ public class ViewUtils {
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
+    }
+
+    public static GradientDrawable getBackground(Context context, TextView textView, int bgColor, int strokeColor, int textColor) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(bgColor);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke((int)((1 * context.getResources().getDisplayMetrics().density) + 0.5), strokeColor);
+        textView.setTextColor(textColor);
+        return gradientDrawable;
+    }
+
+    public static void setActionButtonText(Context context, TextView textView, int resId) {
+        textView.setText(resId);
+        switch (resId) {
+            case R.string.follow:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorAccent),
+                        context.getResources().getColor(R.color.colorAccent)));
+                break;
+            case R.string.following:
+                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_dark, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorPrimary_text),
+                        context.getResources().getColor(R.color.colorPrimary_text)));
+                break;
+            case R.string.requested:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorPrimary_text),
+                        context.getResources().getColor(R.color.colorPrimary_text)));
+                break;
+            default:
+                break;
+        }
     }
 
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,

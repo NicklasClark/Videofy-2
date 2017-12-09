@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,22 +10,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -39,19 +35,16 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -69,18 +62,19 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 
+
+
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
 
     Context context;
     ImageView bgImage;
     CircularAppCompatImageView profile_image;
     AppBarLayout appBarLayout;
-    EditText _username;
-    EditText _firstname;
-    EditText _lastName;
-    EditText _email;
-    EditText _mobileNumber;
-    EditText _bio;
+    TextInputEditText _username;
+    TextInputEditText _firstname;
+    TextInputEditText _email;
+    TextInputEditText _mobileNumber;
+    TextInputEditText _bio;
     String username;
     String firstname;
     String lastname;
@@ -262,12 +256,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), r.getUri());
-                Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap,
-                        300, 300, false);
+                Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, false);
 
                 Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
 
-             //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
+                //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
 
                 SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();

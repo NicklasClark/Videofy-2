@@ -583,7 +583,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
+    public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
             PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
@@ -633,7 +633,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_file_upload)
                 .setAutoCancel(false)
-                .setSound(null)
+//                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
                 .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
@@ -666,7 +666,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             case UPLOAD_COMPLETE_CODE:
                                 builder.setOngoing(false);
                                 builder.setContentText("Finished!")
-                                        .setProgress(0, 0, false);
+                                        .setProgress(100, 100, false);
                                 notifyProgressInNotification();
 
                                 finishVideoUploadSession(getApplicationContext());
@@ -687,7 +687,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
                                 builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
-                                        .setProgress(0, 0, false);
+                                        .setProgress(100, 0, false);
+                                notifyProgressInNotification();
 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -696,7 +697,6 @@ public class BaseBottomBarActivity extends BaseActivity
                                     }
                                 }, 4000);
 
-                                notifyProgressInNotification();
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
                                 builder.setOngoing(false);
@@ -812,5 +812,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }
+    }
+
+    @Override
+    public void viewUserProfile() {
+        pushFragment(ProfileFragment.newInstance());
     }
 }
