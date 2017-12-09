@@ -230,14 +230,10 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
                 updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-<<<<<<< HEAD
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, postDetails, false);
 //                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                compressVideoAsyncTask.delegate = this;
 //                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
-=======
                 uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
->>>>>>> prem_dev
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -251,15 +247,10 @@ public class CameraActivity extends AppCompatActivity
     public void onVideoGalleryAdapterInteraction(String videoPath) {
         if (new File(videoPath).exists()) {
                 if (getVideoDuration(videoPath) < 60) {
-<<<<<<< HEAD
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, postDetails, true);
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;
 //                    compressVideoAsyncTask.execute(videoPath);
-                    Log.d("OriginalLength", String.valueOf(new File(videoPath).length()));
-=======
                     uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
->>>>>>> prem_dev
                     startVideoUploadFragment();
                 }
                 else
