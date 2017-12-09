@@ -218,8 +218,8 @@ public class ProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if( ProfileFragment.checkprofileupdated) {
-            getProfileDetail();
-            checkprofileupdated=false;
+             updateProofile();
+             checkprofileupdated=false;
         }
 
     }
@@ -404,85 +404,6 @@ public class ProfileFragment extends BaseFragment {
     }
 
 
-//    private static class SetBackgroundBlurPic extends AsyncTask<String, Void, Bitmap> {
-//
-//        private WeakReference<ProfileFragment> reference;
-//        private boolean isSavedLocally;
-//
-//        SetBackgroundBlurPic(ProfileFragment context) {
-//            reference = new WeakReference<>(context);
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(String... strings) {
-//            if (isBlurredProfilePicSaved(reference.get().getParentActivity().getApplicationContext())) {
-//                File file = new File(getBlurredProfilePic(reference.get().getParentActivity().getApplicationContext()));
-//                isSavedLocally = true;
-//                return BitmapFactory.decodeFile(file.getAbsolutePath());
-//            } else {
-//                try {
-//                    final URL url = new URL(strings[0]);
-//                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                    isSavedLocally = false;
-//                    return bitmap;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-//        }
-//
-//        private String saveBlurredPic(Bitmap bitmapImage) {
-//            ContextWrapper cw = new ContextWrapper(reference.get().getParentActivity().getApplicationContext());
-//            File directory = cw.getDir("dp", Context.MODE_PRIVATE);
-//            File imagePath = new File(directory,"profile.png");
-//
-//            try {
-//                FileOutputStream fileOutputStream = new FileOutputStream(imagePath);
-//
-//                // Use the compress method on the BitMap object to write image to the OutputStream
-//                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-//                fileOutputStream.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return imagePath.getAbsolutePath();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            reference.get().progressbar.setVisibility(View.VISIBLE);
-//            reference.get().coordinatorLayout.setVisibility(View.GONE);
-//
-//            try {
-//                if (isSavedLocally) {
-//                    reference.get().backgroundProfile.setImageBitmap(bitmap);
-//                } else {
-//                    int width = bitmap.getWidth();
-//                    int height = bitmap.getHeight();
-//                    while (width > 500 && height > 500) {
-//                        width = width / 2;
-//                        height = height / 2;
-//                    }
-//                    Blurry.with(reference.get().context)
-//                            .async(new Blurry.ImageComposer.ImageComposerListener() {
-//                                @Override
-//                                public void onImageReady(BitmapDrawable drawable) {
-//                                    SharedPrefs.saveBlurredProfilePic(reference.get().context, saveBlurredPic(drawable.getBitmap()));
-//                                    reference.get().backgroundProfile.setImageDrawable(drawable);
-//                                }
-//                            })
-//                            .from(Bitmap.createScaledBitmap(bitmap, width, height, false))
-//                            .into(reference.get().backgroundProfile);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            reference.get().progressbar.setVisibility(View.GONE);
-//            reference.get().coordinatorLayout.setVisibility(View.VISIBLE);
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -520,4 +441,73 @@ public class ProfileFragment extends BaseFragment {
         } else {
         }
     }
+
+
+public void updateProofile()
+{
+
+
+    progressbar.setVisibility(View.VISIBLE);
+    coordinatorLayout.setVisibility(View.GONE);
+
+    ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
+        @Override
+        public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+
+            try {
+                userProfile = response.body().getUserProfile();
+                firstname = userProfile.getFirstName();
+                lastname = userProfile.getLastName();
+                username = userProfile.getUserName();
+                email = userProfile.getEmail();
+                accountType = userProfile.getAccountType();
+                hasProfleMedia = userProfile.getHasProfileMedia();
+                totalfollowers = response.body().getFollowers();
+                totalfollowing = response.body().getFollowings();
+                totalvideos = response.body().getTotalVideos();
+                userId = String.valueOf(userProfile.getUserId());
+                gender = userProfile.getGender();
+                Long mobilno = userProfile.getPhoneNumber();
+                if (mobilno == null) {
+                    mobilenumber = 0L;
+                } else {
+                    mobilenumber = mobilno;
+                }
+                countrycode = userProfile.getCountryCode();
+                detail = userProfile.getDescription();
+                if (userProfile.getHasProfileMedia()) {
+                    userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
+                    userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
+                }
+                _detail.setText(detail);
+                _name.setText(firstname);
+                _username.setText(username);
+                _followers.setText(String.valueOf(totalfollowers) + " Followers");
+                _following.setText(String.valueOf(totalfollowing + " Following"));
+                _creations.setText(String.valueOf(totalvideos + " Creations"));
+                coordinatorLayout.setVisibility(View.VISIBLE);
+                if (userProfileThumbnail == null) {
+                }
+                else {
+                    Glide.with(context)
+                            .load(userProfileUrl)
+                            .into(profile_id);
+                    progressbar.setVisibility(View.GONE);
+                    profileBlur(userProfileUrl);
+                }
+
+                coordinatorLayout.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        @Override
+        public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+            progressbar.setVisibility(View.GONE);
+            t.printStackTrace();
+        }
+    });
+}
 }

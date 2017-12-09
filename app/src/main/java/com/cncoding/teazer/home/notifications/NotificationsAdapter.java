@@ -297,11 +297,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             {
                                 holder2.action.setVisibility(View.VISIBLE);
 
+
                                 if(holder2.notification.getNotificationType()==1)
 
-                                    setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
+                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
 
-                                else setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
+                                else setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                     }
                     else
