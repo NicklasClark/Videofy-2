@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.profile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -16,7 +15,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -40,23 +39,16 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.Pojos;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
 
-<<<<<<< HEAD
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
 import io.branch.referral.util.ShareSheetStyle;
-=======
-
->>>>>>> arif_dev
 import jp.wasabeef.blurry.Blurry;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -258,7 +250,7 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getParentActivity().updateToolbarTitle("My Profile");
-        getParentActivity().showAppBar();
+//        getParentActivity().showAppBar();
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
