@@ -75,9 +75,10 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                 ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
                 part = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
 
-                videoUploadCall = ApiCallingService.Posts.uploadVideo(
-                        part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
-                        uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
+                if (videoUploadCall == null)
+                    videoUploadCall = ApiCallingService.Posts.uploadVideo(
+                            part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
+                            uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
                 if (!videoUploadCall.isExecuted())
                     videoUploadCall.enqueue(new Callback<ResultObject>() {

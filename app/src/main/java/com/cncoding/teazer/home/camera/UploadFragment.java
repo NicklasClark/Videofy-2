@@ -69,7 +69,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -239,10 +238,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         setBadge(uploadCategoriesBadge, categoryCount);
         setBadge(tagFriendsBadge, tagCount);
 
-        new GetThumbnail(this).execute();
-
-        new SetVideoDuration(this).execute();
-
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -259,6 +254,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (isCompressing) {
 //            uploadBtn.setEnabled(false);
 //            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey));
+
+        new GetThumbnail(this).execute();
+
+        new SetVideoDuration(this).execute();
+
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
         }
@@ -427,28 +427,30 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         protected void onPostExecute(Bitmap bitmap) {
             try {
                 if (bitmap != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    Glide.with(reference.get())
-                            .load(stream.toByteArray())
-                            .asBitmap()
-                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                            .animate(R.anim.fast_fade_in)
-                            .listener(new RequestListener<byte[], Bitmap>() {
-                                @Override
-                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                               boolean isFromMemoryCache, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(reference.get().thumbnailView);
+                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                    reference.get().thumbnailView.setImageBitmap(bitmap);
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    Glide.with(reference.get())
+//                            .load(stream.toByteArray())
+//                            .asBitmap()
+//                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+//                            .animate(R.anim.fast_fade_in)
+//                            .listener(new RequestListener<byte[], Bitmap>() {
+//                                @Override
+//                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+//                                                               boolean isFromMemoryCache, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//                            })
+//                            .into(reference.get().thumbnailView);
                 } else {
                     Glide.with(reference.get())
                             .load(R.drawable.material_flat)

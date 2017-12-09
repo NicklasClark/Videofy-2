@@ -289,4 +289,12 @@
     <string name="cannot_start_camera">Cannot start camera, please restart your device</string>
     <string name="upload_success">Upload successful!</string>
     <string name="upload_cancelled">Upload cancelled</string>
+    <string name="general_info">General Info</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="bio">Bio</string>
+    <string name="private_info">Private Info</string>
+    <string name="email_id">Email id</string>
+    <string name="mobile_number">Mobile Number</string>
 </resources>
