@@ -39,7 +39,7 @@ public class FragmentProfileMyReactions extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     Context context;
     List<Reaction>list;
-    int page=1;
+    int page;
     ProximaNovaRegularTextView alert1;
     public static FragmentProfileMyReactions newInstance(int page) {
         return new FragmentProfileMyReactions();
@@ -62,10 +62,11 @@ public class FragmentProfileMyReactions extends Fragment {
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
+        page=1;
         getReactions();
     }
     public void getReactions() {
-        ApiCallingService.React.getMyReaction(1,context).enqueue(new Callback<ProfileReaction>() {
+        ApiCallingService.React.getMyReaction(page,context).enqueue(new Callback<ProfileReaction>() {
             @Override
             public void onResponse(Call<ProfileReaction> call, Response<ProfileReaction> response) {
                 if (response.code() == 200) {
@@ -75,8 +76,6 @@ public class FragmentProfileMyReactions extends Fragment {
 
                             alert1.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
-
-
                         }
                         else {
                             boolean next=response.body().getNextPage();

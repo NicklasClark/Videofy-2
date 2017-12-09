@@ -240,32 +240,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder2.isActioned=notificationsList.getNotifications().get(position).isActioned();
                 holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
 
-             //   if(!holder2.isActioned) {
-//                    switch (holder2.notification.getNotificationType()) {
-
-//
-//
-//                            case STARTED_FOLLOWING:
-//                                //setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-//                                holder2.action.setText("Following");
-//                                break;
-//                            case ACCEPTED_REQUEST:
-//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-//                                holder2.action.setText("Requested");
-//                                break;
-//                            case SENT_YOU_A_FOLLOW_REQUEST:
-//                                setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
-//                                holder2.action.setText("Follow");
-//                                break;
-//                            case ALSO_STARTED_FOLLOWING:
-//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-//                                holder2.action.setText("Following");
-//                                break;
-//                            default:
-//                                break;
-//                        }
-//
-//                    }
 
                 if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
                     {

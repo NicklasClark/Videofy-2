@@ -320,6 +320,11 @@ public class BaseBottomBarActivity extends BaseActivity
         pushFragment(OthersProfileFragment.newInstance2(id, type,username));
     }
 
+    @Override
+    public void viewUserProfile() {
+        pushFragment(ProfileFragment.newInstance());
+    }
+
     private static class ResumeUpload extends AsyncTask<Void, Void, Part> {
 
         private final Callback<ResultObject> callback;

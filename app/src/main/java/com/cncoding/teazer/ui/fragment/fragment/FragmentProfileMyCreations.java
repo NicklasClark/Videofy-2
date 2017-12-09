@@ -41,7 +41,7 @@ public class FragmentProfileMyCreations extends Fragment {
     ProfileMyCreationAdapter profileMyCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progress_bar;
-    int page = 1;
+    int page;
     ProximaNovaRegularTextView alert1;
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
@@ -82,6 +82,7 @@ public class FragmentProfileMyCreations extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         list = new ArrayList<>();
+        page = 1;
         getProfileVideos();
 
 
@@ -96,17 +97,14 @@ public class FragmentProfileMyCreations extends Fragment {
 //                }
             }
         };
-        // Adds the scroll listener to RecyclerView
+
         recyclerView.addOnScrollListener(scrollListener);
-        //  getProfileVideos();
+
 
     }
 
     public void getProfileVideos() {
-//        Toast.makeText(context, "Hello Everyone", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(context, "Hello alll", Toast.LENGTH_SHORT).show();
-        //  progress_bar.setVisibility(View.VISIBLE);
-        // recyclerView.setVisibility(View.GONE);
+
 
         ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<Pojos.Post.PostList>() {
             @Override
@@ -140,7 +138,7 @@ public class FragmentProfileMyCreations extends Fragment {
     }
 
     public void loadNextDataFromApi(int offset) {
-        //getProfileVideos();
+
 
     }
 
