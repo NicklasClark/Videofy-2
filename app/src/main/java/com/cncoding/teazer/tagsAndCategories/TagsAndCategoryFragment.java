@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
@@ -115,6 +117,14 @@ public class TagsAndCategoryFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous_dark);
+        }
     }
 
     private void prepareRecyclerView() {
@@ -355,6 +365,14 @@ public class TagsAndCategoryFragment extends Fragment {
                     + " must implement TagsAndCategoriesInteractionListener");
         }
     }
+
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+//            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
+//        }
+//    }
 
     @Override
     public void onDetach() {

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -32,6 +33,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
+import com.cncoding.teazer.home.post.PostDetailsActivity;
+import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
+import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -56,6 +61,8 @@ public class ViewUtils {
     public static final String IS_GALLERY = "IsFromGallery";
     public static final String POST_DETAILS = "postId";
     public static final String UPLOAD_PARAMS = "uploadParams";
+    public static final int POST_REACTION = 0;
+    public static final int SELF_REACTION = 1;
 
     public static void enableView(View view) {
         view.setEnabled(true);
@@ -70,16 +77,46 @@ public class ViewUtils {
         view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
     }
 
-    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (isOnlineVideo) {
-            intent.setDataAndType(Uri.parse(videoPath), "video/*");
-        } else {
-            File file = new File(videoPath);
-            intent.setDataAndType(Uri.fromFile(file), "video/*");
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
+//    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        if (isOnlineVideo) {
+//            intent.setDataAndType(Uri.parse(videoPath), "video/*");
+//        } else {
+//            File file = new File(videoPath);
+//            intent.setDataAndType(Uri.fromFile(file), "video/*");
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        }
+//        context.startActivity(intent);
+//    }
+
+    public static void playVideoInExoPlayer(Context context, String videoPath) {
+        Intent intent = new Intent(context, ExoPlayerActivity.class);
+        intent.putExtra("VIDEO_URL", videoPath);
+//        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction) {
+        switch (source) {
+            case POST_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("POST_INFO", postReaction);
+                intent.putExtra("SOURCE", POST_REACTION);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+            case SELF_REACTION: {
+                Intent intent = new Intent(context, ReactionPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
+                intent.putExtra("POST_INFO", reaction);
+                intent.putExtra("SOURCE", SELF_REACTION);
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            }
+        }
     }
 
     /**
@@ -180,12 +217,56 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void performUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+    public static void performVideoUpload(Context packageContext, Pojos.UploadParams uploadParams) {
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
+    }
+
+    public static void performReactionUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+        SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
+        Intent intent = new Intent(packageContext, PostDetailsActivity.class);
+//        intent.putExtra(UPLOAD_PARAMS, uploadParams);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        packageContext.startActivity(intent);
+        ((AppCompatActivity) packageContext).finish();
+    }
+
+    public static GradientDrawable getBackground(Context context, TextView textView, int bgColor, int strokeColor, int textColor) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(bgColor);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke((int)((1 * context.getResources().getDisplayMetrics().density) + 0.5), strokeColor);
+        textView.setTextColor(textColor);
+        return gradientDrawable;
+    }
+
+    public static void setActionButtonText(Context context, TextView textView, int resId) {
+        textView.setText(resId);
+        switch (resId) {
+            case R.string.follow:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorAccent),
+                        context.getResources().getColor(R.color.colorAccent)));
+                break;
+            case R.string.following:
+                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_dark, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorPrimary_text),
+                        context.getResources().getColor(R.color.colorPrimary_text)));
+                break;
+            case R.string.requested:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorPrimary_text),
+                        context.getResources().getColor(R.color.colorPrimary_text)));
+                break;
+            default:
+                break;
+        }
     }
 
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,

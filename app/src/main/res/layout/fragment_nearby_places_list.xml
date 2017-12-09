@@ -6,6 +6,17 @@
     android:background="@color/material_grey100"
     tools:context=".home.camera.nearbyPlaces.NearbyPlacesList">
 
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:text="@string/select_a_location"
+        android:paddingStart="62dp"
+        android:paddingEnd="14dp"
+        android:gravity="start|center_vertical"
+        android:textSize="@dimen/text_size_h4"
+        android:layout_gravity="center_vertical|start"/>
+
     <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/nearby_places_search"
         android:layout_width="match_parent"
@@ -16,7 +27,7 @@
         android:singleLine="true"
         android:imeOptions="actionGo"
         app:drawableStartCompat="@drawable/ic_search"
-        android:layout_below="@+id/nearby_places_app_bar_layout"/>
+        android:layout_below="@+id/headerTextView"/>
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/clear"
@@ -41,29 +52,13 @@
         android:clipToPadding="false"
         android:layout_below="@+id/nearby_places_search"/>
 
-    <FrameLayout
-        android:id="@+id/nearby_places_app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_alignParentTop="true">
-
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/select_a_location"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_h4"
-            android:layout_gravity="center_vertical|start"/>
-
-    </FrameLayout>
-
     <LinearLayout
         android:id="@+id/location_not_available_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_below="@+id/nearby_places_app_bar_layout"
+        android:layout_below="@+id/headerTextView"
         android:padding="@dimen/padding_default"
         android:visibility="invisible">
 

@@ -1,96 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorDisabled"
-        android:orientation="vertical">
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview"
-            android:layout_width="match_parent"
-            app:cardElevation="5dp"
-            android:layout_height="wrap_content">
+        android:id="@+id/root_layout"
+        android:animateLayoutChanges="true"
+        android:foreground="@drawable/ripple_dark_no_rounded"
+        android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <RelativeLayout
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/dp"
+            android:layout_width="@dimen/padding_double"
+            android:layout_height="@dimen/padding_double"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:layout_margin="14dp"/>
 
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_circle_white_outline">
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_size_14sp"
+            app:font_name="sign_painter"
+            android:text="@string/following"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceListItem" />
 
-                    <com.cncoding.teazer.customViews.CircularAppCompatImageView
-                        android:id="@+id/userDp"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="5dp"
-                        android:background="@drawable/ic_user_male_dp"
-                        android:scaleType="centerCrop"
-                        />
-                    <com.cncoding.teazer.customViews.UniversalTextView
-                        android:id="@+id/following_name"
-                        android:layout_toRightOf="@id/userDp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="5dp"
-                        android:text="UserName"
-                        android:textColor="@color/colorPrimary_text"
-                        android:textAppearance="?attr/textAppearanceListItem"
-                        android:textSize="14sp" />
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_margin="14dp"
+            android:minWidth="90dp"
+            android:foreground="@drawable/ripple_dark_rounded_2dp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:text="@string/accept"
+            android:visibility="visible"
+            android:paddingStart="8dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/bg_outline_rounded_primary"
+            android:contentDescription="@string/post_thumbnail" />
 
-
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                        android:id="@+id/follow_button"
-
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_margin="14dp"
-                        android:minWidth="90dp"
-                        android:foreground="@drawable/ripple_dark_rounded_2dp"
-                        android:gravity="center"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="centerCrop"
-                        android:text=""
-                        android:visibility="visible"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="10dp"
-                        android:background="@drawable/bg_outline_rounded_primary"
-                        android:contentDescription="@string/post_thumbnail"/>
-
-                    <!--<Button-->
-                        <!--android:id="@+id/follow_button"-->
-                        <!--android:layout_width="100dp"-->
-                        <!--android:layout_height="40dp"-->
-                        <!--android:text="@string/unfollow"-->
-                        <!--android:layout_alignParentEnd="true"-->
-                        <!--android:layout_marginEnd="10dp"-->
-                        <!--android:background="@drawable/border_layout"-->
-                        <!--app:srcCompat="@drawable/arif_image" />-->
-
-
-                </RelativeLayout>
-                <View
-
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/decline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_half"
+            android:foreground="@drawable/ripple_dark_circle"
+            android:src="@drawable/ic_cancel_dark"
+            android:layout_marginEnd="14dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
 
     </LinearLayout>
-</RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"/>
+
+</LinearLayout>

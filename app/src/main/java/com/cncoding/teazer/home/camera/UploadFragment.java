@@ -8,11 +8,14 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -40,6 +43,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -47,7 +51,8 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.utilities.Pojos;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -64,7 +69,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -87,22 +91,20 @@ import static android.Manifest.permission.INTERNET;
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.customViews.MediaControllerView.SPACE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
+import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
+import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -116,6 +118,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
+    public static final int VIDEO_UPLOAD = 25;
+    public static final int REACTION_UPLOAD = 26;
 
     @BindView(R.id.share_on_facebook) ProximaNovaRegularCheckedTextView facebookShareBtn;
     @BindView(R.id.share_on_twitter) ProximaNovaRegularCheckedTextView twitterShareBtn;
@@ -144,7 +148,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean isRequestingLocationUpdates;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
-    private Pojos.Post.PostDetails postDetails;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private SelectedPlace selectedPlace;
@@ -153,18 +156,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
+    private static boolean isCompressing = false;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, Pojos.Post.PostDetails postDetails, boolean isGallery) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
-        args.putParcelable(POST_DETAILS, postDetails);
         fragment.setArguments(args);
         return fragment;
     }
@@ -176,10 +179,24 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
-            if (isReaction)
-                postDetails = getArguments().getParcelable(POST_DETAILS);
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
+
+//        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+//        compressVideoAsyncTask.delegate = this;
+//        compressVideoAsyncTask.execute(videoPath);
+    }
+
+    @Override
+    public void processFinish(String output) {
+        videoPath = output;
+        try {
+            uploadBtn.setEnabled(true);
+            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isCompressing = false;
     }
 
     @Override
@@ -221,10 +238,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         setBadge(uploadCategoriesBadge, categoryCount);
         setBadge(tagFriendsBadge, tagCount);
 
-        new GetThumbnail(this).execute();
-
-        new SetVideoDuration(this).execute();
-
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -238,7 +251,62 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        if (isCompressing) {
+//            uploadBtn.setEnabled(false);
+//            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey));
 
+        new GetThumbnail(this).execute();
+
+        new SetVideoDuration(this).execute();
+
+        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @SuppressWarnings({"ConstantConditions", "deprecation", "unused"})
+    public void setupFacebookShareIntent() {
+
+//        if(checkFacebookButtonPressed==true) {
+//            String s="https://www.youtube.com/";
+//            Uri videoFileUri = Uri.parse(s);
+//            ShareVideo shareVideo = new ShareVideo.Builder()
+//                    .setLocalUrl(videoFileUri)
+//                    .build();
+//            ShareVideoContent content = new ShareVideoContent.Builder()
+//                    .setVideo(shareVideo)
+//                    .build();
+//        }
+//        else
+//        {
+//            Toast.makeText(getContext(),"check not upload",Toast.LENGTH_SHORT).show();
+//
+//        }
+
+        try {
+            ShareDialog shareDialog;
+//            FacebookSdk.sdkInitialize(getContext());
+            shareDialog = new ShareDialog(getActivity());
+            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
+
+
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(videoTitle.getText().toString())
+                    .setContentDescription(
+                            "Hello")
+                    .setContentUrl(Uri.parse(videoPath))
+                    .build();
+
+            shareDialog.show(linkContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -359,28 +427,30 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         protected void onPostExecute(Bitmap bitmap) {
             try {
                 if (bitmap != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    Glide.with(reference.get())
-                            .load(stream.toByteArray())
-                            .asBitmap()
-                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-                            .animate(R.anim.fast_fade_in)
-                            .listener(new RequestListener<byte[], Bitmap>() {
-                                @Override
-                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-                                                               boolean isFromMemoryCache, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(reference.get().thumbnailView);
+                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                    reference.get().thumbnailView.setImageBitmap(bitmap);
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    Glide.with(reference.get())
+//                            .load(stream.toByteArray())
+//                            .asBitmap()
+//                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
+//                            .animate(R.anim.fast_fade_in)
+//                            .listener(new RequestListener<byte[], Bitmap>() {
+//                                @Override
+//                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
+//                                                               boolean isFromMemoryCache, boolean isFirstResource) {
+//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                                    return false;
+//                                }
+//                            })
+//                            .into(reference.get().thumbnailView);
                 } else {
                     Glide.with(reference.get())
                             .load(R.drawable.material_flat)
@@ -406,27 +476,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             }
         }
     }
-
-//    void launchPlacePicker() {
-//        try {
-//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(activity);
-//            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
-//        } catch (GooglePlayServicesRepairableException e) {
-//            GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(), REQUEST_CODE_PLACE_AUTOCOMPLETE);
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
-//        }
-////        try {
-////            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-////            Intent intent = intentBuilder.build(this);
-////            // Start the Intent by requesting a result, identified by a request code.
-////            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-////        } catch (GooglePlayServicesRepairableException e) {
-////            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(), REQUEST_PLACE_PICKER);
-////        } catch (GooglePlayServicesNotAvailableException e) {
-////            Snackbar.make(addLocationBtn, "Google Play Services is not available.", Snackbar.LENGTH_LONG).show();
-////        }
-//    }
 
     private String getNearbySearchUrl(Location location) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
@@ -471,11 +520,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
         hideKeyboard(activity, videoTitle);
-        playVideo(context, videoPath, false);
+        playVideoInExoPlayer(context, videoPath);
     }
 
     @OnTouch(R.id.video_upload_location) public boolean addLocation(View view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
+                rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
+//            addLocationBtn.requestFocus();
             hideKeyboard(activity, view);
             if (arePermissionsAllowed(context)) {
                 if (currentLocation != null)
@@ -487,7 +539,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnTouch(R.id.video_upload_tag_friends) public boolean getMyFollowings(View view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
+                rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
+//            tagFriendsBtn.requestFocus();
             hideKeyboard(activity, view);
             mListener.onUploadInteraction(TAG_TAGS_FRAGMENT, null, selectedTagsToShow);
             tagFriendsBtn.clearFocus();
@@ -497,7 +552,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnTouch(R.id.video_upload_categories) public boolean getCategories(View view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
+                rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
+//            uploadCategoriesBtn.requestFocus();
             hideKeyboard(activity, view);
             mListener.onUploadInteraction(TAG_CATEGORIES_FRAGMENT, null, selectedCategoriesToShow);
             uploadCategoriesBtn.clearFocus();
@@ -518,11 +576,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }
-            DecimalFormat df = new DecimalFormat("#.#######");
+            DecimalFormat df = new DecimalFormat("#.######");
 
-            performUpload(activity, new Pojos.UploadParams(isGallery, videoPath, isReaction, title, location,
-                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                    selectedTagsToSend, selectedCategoriesToSend, postDetails));
+            if (!isReaction)
+                mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,
+                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
+                        selectedTagsToSend, selectedCategoriesToSend);
+            else
+                mListener.performUpload(REACTION_UPLOAD, isGallery, videoPath, title, location,
+                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
+                        null, null);
         }
     }
 
@@ -578,27 +641,44 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
-        String placeName = SPACE + selectedPlace.getPlaceName();
-        addLocationBtn.setText(placeName);
+        final String placeName = SPACE + selectedPlace.getPlaceName();
+        addLocationBtn.requestFocus();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                addLocationBtn.setText(placeName);
+            }
+        }, 500);
     }
 
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count) {
-        resultToShow = SPACE + resultToShow;
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, final int count) {
+        final String finalResultToShow = SPACE + resultToShow;
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
                 tagCount = count;
-                selectedTagsToShow = resultToShow;
+                selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
-                resultToShow = SPACE + resultToShow;
-                tagFriendsBtn.setText(resultToShow);
-                setBadge(tagFriendsBadge, count);
+                tagFriendsBtn.requestFocus();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tagFriendsBtn.setText(finalResultToShow);
+                        setBadge(tagFriendsBadge, count);
+                    }
+                }, 500);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
-                selectedCategoriesToShow = resultToShow;
+                selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
-                uploadCategoriesBtn.setText(resultToShow);
-                setBadge(uploadCategoriesBadge, count);
+                uploadCategoriesBtn.requestFocus();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadCategoriesBtn.setText(finalResultToShow);
+                        setBadge(uploadCategoriesBadge, count);
+                    }
+                }, 500);
                 break;
         }
     }
@@ -716,24 +796,29 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected String doInBackground(Void... voids) {
-            File file = new File(reference.get().videoPath);
-            if (file.exists()) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(reference.get().videoPath);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long duration;
-                try {
-                    duration = Long.parseLong(time);
-                    retriever.release();
-                    return "Duration " + String.format(Locale.UK, "%02d:%02d",
-                            MILLISECONDS.toMinutes(duration),
-                            MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
-                } catch (NumberFormatException e) {
-                    Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+            try {
+                File file = new File(reference.get().videoPath);
+                if (file.exists()) {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(reference.get().videoPath);
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long duration;
+                    try {
+                        duration = Long.parseLong(time);
+                        retriever.release();
+                        return "Duration " + String.format(Locale.UK, "%02d:%02d",
+                                MILLISECONDS.toMinutes(duration),
+                                MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)));
+                    } catch (NumberFormatException e) {
+                        Log.e("ErrorParsingDuration", e.getMessage() != null ? e.getMessage() : "FAILED!");
+                        return "";
+                    }
+                } else
                     return "";
-                }
-            } else
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
                 return "";
+            }
         }
 
         @Override
@@ -825,6 +910,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+            ((CameraActivity) getActivity()).updateBackButton(-1);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -832,6 +925,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
+        void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
+                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend);
     }
 
 }
