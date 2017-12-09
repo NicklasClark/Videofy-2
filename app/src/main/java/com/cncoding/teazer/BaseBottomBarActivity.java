@@ -627,9 +627,9 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_file_upload)
                 .setAutoCancel(false)
-                .setSound(null)
+//                .setSound(null)
                 .setDefaults(0)
-                .setOngoing(true)
+//                .setOngoing(true)
                 .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);

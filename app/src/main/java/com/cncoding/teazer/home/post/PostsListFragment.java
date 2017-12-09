@@ -196,6 +196,6 @@ public class PostsListFragment extends BaseFragment {
             postListCall.cancel();
         postListAdapter = null;
         positionToUpdate = -1;
-        postDetails = null;
+//        postDetails = null;
     }
 }
