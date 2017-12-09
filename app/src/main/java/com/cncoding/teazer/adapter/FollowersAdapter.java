@@ -2,15 +2,13 @@ package com.cncoding.teazer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -20,22 +18,22 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.customViews.UniversalTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
-import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
+
 /**
+ *
  * Created by farazhabib on 10/11/17.
  */
 
@@ -44,11 +42,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     private List<OtherFollowers> list;
     private List<Follower> userlist;
     private Context context;
-    List<Following> list2;
-    int counter;
-    final static int PrivateAccount = 1;
-    final static int PublicAccount = 2;
-    OtherProfileListener otherProfileListener;
+//    List<Following> list2;
+    private int counter;
+//    final static int PrivateAccount = 1;
+//    final static int PublicAccount = 2;
+    private OtherProfileListener otherProfileListener;
 
     public FollowersAdapter(Context context, List<Follower> userlist, int counter) {
         this.context = context;
@@ -85,72 +83,54 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final String followername = cont.getFirstName();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getMediaUrl();
-                    Picasso.with(context)
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    Glide.with(context)
                             .load(followrsDp)
-                            .fit().centerInside()
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
-                            .into(viewHolder.userDp);
+                            .placeholder(R.drawable.ic_user_male_dp_small)
+                            .skipMemoryCache(false)
+                            .into(viewHolder.dp);
 
                 }
-                final boolean folower = cont.getFollower();
+//                final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
-                viewHolder.followersname.setText(followername);
+                viewHolder.name.setText(followername);
 
 
                 if (accounttype == 1) {
-
-                    if (following == true) {
-
-                        viewHolder.follow.setText("Following");
+                    if (following) {
+                        setActionButtonText(context, viewHolder.action, R.string.following);
                         usertype = "Following";
-                        viewHolder.follow.setText("Following");
                     } else {
 
-                        if (requestsent == true) {
-                            viewHolder.follow.setText("Requested");
+                        if (requestsent) {
+                            setActionButtonText(context, viewHolder.action, R.string.requested);
                             usertype = "Requested";
-                            viewHolder.follow.setText("Requested");
-                            viewHolder.follow.setTextColor(Color.WHITE);
-                            viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.blur));
-
                         } else {
-
-                            viewHolder.follow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
                             usertype = "Follow";
-                            viewHolder.follow.setText("Follow");
-                            viewHolder.follow.setTextColor(Color.WHITE);
-                            viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
                         }
                     }
 
                 } else {
-                    if (following == true) {
-                        viewHolder.follow.setText("Following");
+                    if (following) {
+                        setActionButtonText(context, viewHolder.action, R.string.following);
                         usertype = "Following";
-                        viewHolder.follow.setText("Following");
                     }
                     else {
-                        if(requestsent==true)
-                        {
-                            viewHolder.follow.setText("Requested");
+                        if(requestsent) {
+                            setActionButtonText(context, viewHolder.action, R.string.requested);
                             usertype = "Requested";
                         }
                         else {
-
-                            viewHolder.follow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
                             usertype = "Follow";
-                            viewHolder.follow.setText("Follow");
-                            viewHolder.follow.setTextColor(Color.WHITE);
-                            viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
                         }
                     }
                 }
-                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -158,107 +138,85 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
                 });
 
-                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        if(viewHolder.follow.getText().equals("Follow"))
-                        {
-
+                        if(viewHolder.action.getText().equals("Follow")) {
                             followUser(followerId, context, viewHolder,accounttype);
-
                         }
-
                     }
                 });
-
             } else {
                 final OtherFollowers cont = list.get(i);
                 final String usertype;
                 final int accounttype = cont.getAccountType();
                 final boolean myself = cont.getMySelf();
-                final boolean folower = cont.getFollower();
+//                final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
                 final String followername = cont.getFirstName();
                 followerId = cont.getUserId();
-                viewHolder.followersname.setText(followername);
+                viewHolder.name.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
 
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getMediaUrl();
+                    String followrsDp = cont.getProfileMedia().getThumbUrl();
 
                     Glide.with(context)
                             .load(followrsDp)
-                            .into(viewHolder.userDp);
-
+                            .placeholder(R.drawable.ic_user_male_dp_small)
+                            .skipMemoryCache(false)
+                            .into(viewHolder.dp);
                 }
 
                 if (myself) {
-                    viewHolder.followersname.setTextColor(Color.BLUE);
-                    viewHolder.follow.setVisibility(View.INVISIBLE);
+                    viewHolder.name.setBackgroundTintList(
+                            ColorStateList.valueOf(context.getResources().getColor(R.color.colorAccent)));
+                    viewHolder.action.setVisibility(View.INVISIBLE);
                     usertype = "";
                 }
                 else {
 
                     if (isblockedyou) {
-                        viewHolder.followersname.setTextColor(Color.GRAY);
-                        viewHolder.follow.setVisibility(View.INVISIBLE);
+                        viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+                        viewHolder.action.setVisibility(View.INVISIBLE);
                         usertype = "";
 
                     }
-                    else
-                        {
-
+                    else                     {
                         if (accounttype == 1) {
-
-                            if (following == true) {
-                                viewHolder.follow.setText("Following");
+                            if (following) {
+                                setActionButtonText(context, viewHolder.action, R.string.following);
                                 usertype = "Following";
-
                             } else {
-
-                                if (requestsent == true) {
+                                if (requestsent) {
                                     usertype = "Requested";
-                                    viewHolder.follow.setText("Requested");
-                                    viewHolder.follow.setTextColor(Color.WHITE);
-                                    viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.blur));
-
+                                    setActionButtonText(context, viewHolder.action, R.string.requested);
                                 } else {
-
-                                    viewHolder.follow.setText("Follow");
+                                    setActionButtonText(context, viewHolder.action, R.string.follow);
                                     usertype = "Follow";
-                                    viewHolder.follow.setTextColor(Color.WHITE);
-                                    viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
                                 }
                             }
 
                         } else {
-
-                            if (following == true) {
-                                viewHolder.follow.setText("Following");
+                            if (following) {
+                                setActionButtonText(context, viewHolder.action, R.string.following);
                                 usertype = "Following";
                             } else {
-                                if (requestsent == true) {
-                                    viewHolder.follow.setText("Requested");
+                                if (requestsent) {
+                                    setActionButtonText(context, viewHolder.action, R.string.requested);
                                     usertype = "Requested";
                                 } else {
-                                    viewHolder.follow.setText("Follow");
+                                    setActionButtonText(context, viewHolder.action, R.string.follow);
                                     usertype = "Follow";
-                                    viewHolder.follow.setTextColor(Color.WHITE);
-                                    viewHolder.follow.setBackgroundColor(viewHolder.follow.getContext().getResources().getColor(R.color.colorTabindicator));
-
                                 }
-
-
                             }
                         }
-
                     }
                 }
 
-                viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -280,11 +238,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 });
 
 
-                viewHolder.follow.setOnClickListener(new View.OnClickListener() {
+                viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        if(viewHolder.follow.getText().equals("Follow"))
+                        if(viewHolder.action.getText().equals("Follow"))
                         {
 
 
@@ -301,7 +259,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
     }
 
-    public void followUser(final int userId, final Context context,final ViewHolder viewHolder, final int accounttype) {
+    private void followUser(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype) {
 
         ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -309,88 +267,65 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 if (response.code() == 200) {
                     try {
                         boolean b = response.body().getStatus();
-                        if (b == true) {
+                        if (b) {
 
 
                             if (accounttype == 1) {
-                                viewHolder.follow.setText("Requested");
+                                setActionButtonText(context, viewHolder.action, R.string.requested);
                                 Toast.makeText(context, "You have sent following request", Toast.LENGTH_LONG).show();
 
 
                             }
                             else {
+                                setActionButtonText(context, viewHolder.action, R.string.following);
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
-                                viewHolder.follow.setText("Following");
                             }
 
 
                         }
                         else {
-
-                            viewHolder.follow.setText("Following");
+                            setActionButtonText(context, viewHolder.action, R.string.following);
                             Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
                         }
 
                     } catch (Exception e) {
-
                         e.printStackTrace();
-
                         Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-
+                t.printStackTrace();
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-
-
-
-
-
-
     @Override
     public int getItemCount() {
-
         if (counter == 100) {
-
             return userlist.size();
         } else {
             return list.size();
         }
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView  address;
-        ProximaNovaSemiboldTextView followersname;
-        ProximaNovaSemiboldTextView follow;
-        CardView cardview;
-        ProgressBar progress_bar;
-        CircularAppCompatImageView userDp;
-
+        @BindView(R.id.root_layout) LinearLayout layout;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+//        @BindView(R.id.decline) AppCompatImageView declineBtn;
 
         public ViewHolder(View view) {
             super(view);
-            followersname = view.findViewById(R.id.followers_name);
-            follow = view.findViewById(R.id.follow_button);
-            cardview = view.findViewById(R.id.cardview);
-            progress_bar = view.findViewById(R.id.progress_bar);
-            userDp = view.findViewById(R.id.userDp);
-
+            ButterKnife.bind(this, view);
         }
     }
 
-  public  interface OtherProfileListener
-    {
-        public void viewOthersProfile(String id, String username, String type);
-
+  public  interface OtherProfileListener {
+        void viewOthersProfile(String id, String username, String type);
     }
 }

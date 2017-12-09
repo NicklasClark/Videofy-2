@@ -15,15 +15,16 @@
         android:orientation="horizontal">
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
-            android:id="@+id/notification_dp"
+            android:id="@+id/dp"
             android:layout_width="@dimen/padding_double"
             android:layout_height="@dimen/padding_double"
+            android:src="@drawable/ic_user_male_dp_small"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
             android:layout_margin="14dp"/>
 
         <com.cncoding.teazer.customViews.UniversalTextView
-            android:id="@+id/notification_content"
+            android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -34,7 +35,7 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-            android:id="@+id/notification_action"
+            android:id="@+id/action"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_margin="14dp"
@@ -51,7 +52,7 @@
             android:contentDescription="@string/post_thumbnail" />
 
         <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/notification_decline"
+            android:id="@+id/decline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_half"
