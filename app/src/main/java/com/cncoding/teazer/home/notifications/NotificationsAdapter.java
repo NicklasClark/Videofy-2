@@ -272,7 +272,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         if(holder2.notification.isActioned() ==true)
                         {
-
                             if(holder2.notification.isFollowing())
 
                             {
@@ -293,16 +292,38 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                         }
+
                         else
                             {
                                 holder2.action.setVisibility(View.VISIBLE);
 
+                                if(holder2.notification.getNotificationType()==1) {
 
-                                if(holder2.notification.getNotificationType()==1)
+                                    if(holder2.notification.isFollowing())
 
-                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                    {
+                                        holder2.action.setVisibility(View.VISIBLE);
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                    }
 
-                                else setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                    else if (holder2.notification.isRequest_sent()==true)
+                                    {
+
+                                        holder2.action.setVisibility(View.VISIBLE);
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                    }
+                                    else
+                                    {
+                                        holder2.action.setVisibility(View.VISIBLE);
+
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                    }
+                                }
+
+
+                                if(holder2.notification.getNotificationType()==3) {
+                                    setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
+                                }
                             }
                     }
                     else
@@ -380,7 +401,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus())
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+
+                                                            if(holder2.notification.isFollowing())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                        }
+                                                        else if(holder2.notification.isRequest_sent())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                        }
+                                                        else {
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+
+                                                            }
+
                                                         else {
 //                                                            Log.d("AcceptJoinRequest", response.code()
 //                                                                    + " : " + response.body().getMessage());
