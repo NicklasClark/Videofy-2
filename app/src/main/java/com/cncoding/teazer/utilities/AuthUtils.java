@@ -44,8 +44,6 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
-import static com.cncoding.teazer.MainActivity.SIGNUP_FAILED_ACTION;
-import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
@@ -206,17 +204,10 @@ public class AuthUtils {
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus()) {
-                        mListener.onFinalEmailSignupInteraction(SIGNUP_WITH_EMAIL_ACTION, authorize, picturePath);
+                        mListener.onFinalEmailSignupInteraction(authorize, picturePath);
                     } else {
                         showSnackBar(signupBtn, "Username, email or phone number already exists.\n" +
                                 "Or you may have reached maximum OTP retry attempts");
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mListener != null)
-                                            mListener.onFinalEmailSignupInteraction(SIGNUP_FAILED_ACTION, null, picturePath);
-                                    }
-                                }, 2000);
                     }
                 } else
                     showSnackBar(signupBtn, getErrorMessage(response.errorBody()));
@@ -253,6 +244,12 @@ public class AuthUtils {
                             case 200:
                                 countDownTimer.cancel();
                                 otpVerifiedTextView.setText(R.string.already_exists);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        otpVerifiedTextView.setText("");
+                                    }
+                                }, 2800);
                                 otpResendBtn.setEnabled(true);
                                 otpResendBtn.setAlpha(1);
                                 break;

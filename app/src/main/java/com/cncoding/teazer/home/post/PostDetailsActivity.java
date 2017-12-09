@@ -123,6 +123,7 @@ import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSess
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
@@ -323,7 +324,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @Override
     public void onResume() {
         super.onResume();
-        checkIfAnyVideoIsUploading();
+        checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
             getPostReactions(postDetails.getPostId(), 1);
@@ -1193,6 +1194,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                         .setProgress(0, 0, false);
                                 notifyProgressInNotification();
 
+                                disableView(reactBtn, true);
+                                if (PostsListFragment.postDetails != null)
+                                    PostsListFragment.postDetails.can_react = false;
+
                                 finishReactionUploadSession(getApplicationContext());
 
                                 new Handler().postDelayed(new Runnable() {
@@ -1205,7 +1210,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 getPostReactions(postDetails.getPostId(), 1);
 //                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
 //                                new ShowShareDialog().execute(s);
-
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
@@ -1214,6 +1218,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
                                         .setProgress(0, 0, false);
+                                notifyProgressInNotification();
+
+                                enableView(reactBtn);
+                                if (PostsListFragment.postDetails != null)
+                                    PostsListFragment.postDetails.can_react = true;
+
+                                finishReactionUploadSession(getApplicationContext());
 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -1222,7 +1233,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                     }
                                 }, 4000);
 
-                                notifyProgressInNotification();
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
                                 Toast.makeText(PostDetailsActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
@@ -1234,9 +1244,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 });
     }
 
-    private void checkIfAnyVideoIsUploading() {
+    private void checkIfAnyReactionIsUploading() {
         UploadParams uploadParams = getReactionUploadSession(getApplicationContext());
         if (uploadParams != null) {
+            disableView(reactBtn, true);
+            if (PostsListFragment.postDetails != null)
+                PostsListFragment.postDetails.can_react = false;
             launchReactionUploadService(getApplicationContext(), uploadParams, reactionUploadReceiver);
         }
     }

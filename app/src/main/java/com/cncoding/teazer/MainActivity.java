@@ -535,7 +535,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFinalEmailSignupInteraction(int action, final Authorize signUpDetails, String picturePath) {
+    public void onFinalEmailSignupInteraction(final Authorize signUpDetails, String picturePath) {
         setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
     }
 
@@ -548,16 +548,20 @@ public class MainActivity extends AppCompatActivity
 
         WeakReference<MainActivity> reference;
 
-        public UpdateProfilePic(MainActivity context) {
+        UpdateProfilePic(MainActivity context) {
             reference = new WeakReference<>(context);
         }
 
         @Override
         protected MultipartBody.Part doInBackground(String... strings) {
-            File profileImage = new File(strings[0]);
-            if (profileImage.exists()) {
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
-                return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+            try {
+                File profileImage = new File(strings[0]);
+                if (profileImage.exists()) {
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                    return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -565,7 +569,14 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(MultipartBody.Part part) {
             if (part != null) {
-                ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(null);
+                ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(new Callback<ResultObject>() {
+                    @Override
+                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    }
+                    @Override
+                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                    }
+                });
             }
         }
     }

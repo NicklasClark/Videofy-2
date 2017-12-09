@@ -267,7 +267,9 @@ public class ConfirmOtpFragment extends AuthFragment {
     @Override
     public void onPause() {
         super.onPause();
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
