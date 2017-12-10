@@ -60,7 +60,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
-
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_following, viewGroup, false);
