@@ -42,6 +42,8 @@ import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -59,6 +61,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
+
+
 
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
 
@@ -252,12 +256,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), r.getUri());
-                Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap,
-                        300, 300, false);
+                Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, false);
 
                 Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
 
-             //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
+                //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
 
                 SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();

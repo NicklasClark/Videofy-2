@@ -240,39 +240,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder2.isActioned=notificationsList.getNotifications().get(position).isActioned();
                 holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
 
-             //   if(!holder2.isActioned) {
-//                    switch (holder2.notification.getNotificationType()) {
-
-//
-//
-//                            case STARTED_FOLLOWING:
-//                                //setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-//                                holder2.action.setText("Following");
-//                                break;
-//                            case ACCEPTED_REQUEST:
-//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-//                                holder2.action.setText("Requested");
-//                                break;
-//                            case SENT_YOU_A_FOLLOW_REQUEST:
-//                                setActionButton(holder2.action, holder2.declineRequest, BUTTON_TYPE_ACCEPT);
-//                                holder2.action.setText("Follow");
-//                                break;
-//                            case ALSO_STARTED_FOLLOWING:
-//                                setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-//                                holder2.action.setText("Following");
-//                                break;
-//                            default:
-//                                break;
-//                        }
-//
-//                    }
 
                 if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
                     {
 
                         if(holder2.notification.isActioned())
                         {
-
                             if(holder2.notification.isFollowing())
 
                             {
@@ -293,15 +266,38 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                         }
+
                         else
                             {
                                 holder2.action.setVisibility(View.VISIBLE);
 
-                                if(holder2.notification.getNotificationType()==1)
+                                if(holder2.notification.getNotificationType()==1) {
 
+                                    if(holder2.notification.isFollowing())
+
+                                    {
+                                        holder2.action.setVisibility(View.VISIBLE);
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                    }
+
+                                    else if (holder2.notification.isRequest_sent()==true)
+                                    {
+
+                                        holder2.action.setVisibility(View.VISIBLE);
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                    }
+                                    else
+                                    {
+                                        holder2.action.setVisibility(View.VISIBLE);
+
+                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                    }
+                                }
+
+
+                                if(holder2.notification.getNotificationType()==3) {
                                     setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
-
-                                else setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
+                                }
                             }
                     }
                     else
@@ -379,14 +375,19 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus())
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-//                                                        else {
-////                                                            Log.d("AcceptJoinRequest", response.code()
-////                                                                    + " : " + response.body().getMessage());
-//                                                        }
-//                                                    } else {
-////                                                        Log.d("AcceptJoinRequest", response.code()
-////                                                                + " : " + response.body().getMessage());
+
+                                                            if(holder2.notification.isFollowing())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                        }
+                                                        else if(holder2.notification.isRequest_sent())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                        }
+                                                        else {
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+
+                                                            }
                                                     }
                                                 }
 

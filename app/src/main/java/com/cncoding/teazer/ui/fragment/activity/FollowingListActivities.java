@@ -23,6 +23,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
@@ -53,8 +54,8 @@ public class FollowingListActivities extends BaseFragment {
     RelativeLayout layout;
     @BindView(R.id.nousertext)
     TextView nousertext;
-    int otherfollowingpage=1;
-    int userfollowingpage=1;
+    int otherfollowingpage;
+    int userfollowingpage;
     String followerid;
     String identifier;
 
@@ -101,12 +102,14 @@ public class FollowingListActivities extends BaseFragment {
         if (identifier.equals("User")) {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
+             userfollowingpage=1;
             getUserfollowinglist();
         }
         else if (identifier.equals("Other"))
         {
             layout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
+            otherfollowingpage=1;
             getOthersFollowingList(Integer.parseInt(followerid));
         }
     }
@@ -136,6 +139,7 @@ public class FollowingListActivities extends BaseFragment {
                             }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            userfollowingpage=1;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -159,6 +163,7 @@ public class FollowingListActivities extends BaseFragment {
     }
     public void getOthersFollowingList(final int userId) {
 
+
         ApiCallingService.Friends.getFriendsFollowings(otherfollowingpage, userId, context).enqueue(new Callback<OthersFollowing>() {
             @Override
             public void onResponse(Call<OthersFollowing> call, Response<OthersFollowing> response) {
@@ -180,9 +185,11 @@ public class FollowingListActivities extends BaseFragment {
                                 otherfollowingpage++;
                                 getOthersFollowingList(userId);
                             }
-                            layout.setVisibility(View.VISIBLE);
+
                         }
+                        layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
+                        //otherfollowingpage=1;
                     } catch (Exception e) {
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
@@ -204,6 +211,14 @@ public class FollowingListActivities extends BaseFragment {
             }
 
         });
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
 
 
     }

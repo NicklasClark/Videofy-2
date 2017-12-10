@@ -823,4 +823,9 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }
     }
+
+    @Override
+    public void viewUserProfile() {
+        pushFragment(ProfileFragment.newInstance());
+    }
 }

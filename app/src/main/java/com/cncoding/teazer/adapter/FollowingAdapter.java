@@ -1,7 +1,6 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -21,6 +19,9 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.following.Following;
 import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -120,12 +121,22 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final String followername = cont.getUserName();
                 final int accounttype = cont.getAccountType();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
+
                 if(isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getThumbUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
+                            .into(viewHolder.dp);
+                }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
                 }
                 followerId = cont.getUserId();
@@ -154,13 +165,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             usertype = "Requested";
                         }
                         else {
-                            if (isfollower) {
-                                setActionButtonText(context, viewHolder.action, R.string.follow);
-                                usertype = "Follow";
-                            } else {
-                                setActionButtonText(context, viewHolder.action, R.string.follow);
-                                usertype = "Follow";
-                            }
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            usertype = "Follow";
                         }
 
                     }
@@ -179,9 +185,11 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     @Override
                     public void onClick(View view) {
                         if (myself) {
-                            Intent intent = new Intent(context, BaseBottomBarActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            context.startActivity(intent);
+//                            Intent intent = new Intent(context, BaseBottomBarActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            context.startActivity(intent);
+                            otherProfileListenerFollowing.viewUserProfile();
+
                         } else {
                             if (isblockedyou) {
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
@@ -269,7 +277,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             ButterKnife.bind(this, view);
         }
     }
-    public  interface OtherProfileListenerFollowing {
-        void viewOthersProfileFollowing(String id, String username, String type);
+    public  interface OtherProfileListenerFollowing
+    {
+        public void viewOthersProfileFollowing(String id, String username, String type);
+        public void viewUserProfile();
     }
 }

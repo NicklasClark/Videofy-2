@@ -199,18 +199,23 @@ public class OthersProfileFragment extends BaseFragment {
 
                 if (accountType == 1) {
 
-                    if (hassentrequest == true) {
+                    if (isfollowing == true)
+                    {
+                        followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
+                    }
+
+                    else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
-
                             followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
-                        } else {
+                        }
+                        else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
 
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-                } else {
+                }else {
 
                     followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
                 }
@@ -223,11 +228,17 @@ public class OthersProfileFragment extends BaseFragment {
             public void onClick(View view) {
                 if (accountType == 1) {
 
-                    if (hassentrequest == true) {
+                    if (isfollowing)
+                    {
+                        followerListListener.onFollowerListListener(String.valueOf(followerfollowingid),"Other");
+                    }
+
+                    else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
                             followerListListener.onFollowerListListener(String.valueOf(followerfollowingid),"Other");
-                        } else {
+                        }
+                        else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
                     } else {
