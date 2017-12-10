@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,23 +18,20 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -48,8 +44,6 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -90,12 +84,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ImageView bgImage;
     CircularAppCompatImageView profile_image;
     AppBarLayout appBarLayout;
-    EditText _username;
-    EditText _firstname;
-    EditText _lastName;
-    EditText _email;
-    EditText _mobileNumber;
-    EditText _bio;
+    TextInputEditText _username;
+    TextInputEditText _firstname;
+    TextInputEditText _email;
+    TextInputEditText _mobileNumber;
+    TextInputEditText _bio;
     String username;
     String firstname;
     String lastname;

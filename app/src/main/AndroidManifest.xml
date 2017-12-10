@@ -28,6 +28,7 @@
     <uses-feature android:name="android.hardware.camera.flash" />
 
     <application
+        android:name=".TeazerApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -67,7 +68,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -77,13 +77,36 @@
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Branch URI scheme -->
+            <intent-filter>
+                <data android:scheme="teazerapp" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
+
+        <!-- Branch init -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_afuHy4HvJC2TwCTtBW7KvppewCbaMrB5" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_acsIC2SrRt7IzDJtLfklaomeAAeoNqMm" />
+
+        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
+        <!-- Branch install referrer tracking -->
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -101,14 +124,36 @@
             android:name=".BaseBottomBarActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/BaseActivityTheme" />
+            android:theme="@style/BaseActivityTheme"
+            android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <data android:scheme="teazerapp" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="teazer.test-app.link" android:scheme="http"/>
+                <data android:host="teazer.test-app.link" android:scheme="https"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true"
+                tools:targetApi="m">
+                <data android:scheme="teazerapp" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="teazer.test-app.link" android:scheme="http"/>
+                <data android:scheme="https" android:host="teazer.test-app.link" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".home.post.PostDetailsActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.FullScreen" />
+            android:theme="@style/AppTheme.FullScreen"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.fragment.activity.Settings"
             android:label="@string/settings"
@@ -142,6 +187,11 @@
             </intent-filter>
         </service>
 
+        <service android:name=".services.VideoUploadService"
+            android:exported="false" />
+        <service android:name=".services.ReactionUploadService"
+            android:exported="false" />
+
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
@@ -163,6 +213,7 @@
         <activity
             android:name=".ui.fragment.activity.EditProfile"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/MyCustomTextAppearance" />
         <activity
             android:name=".ui.fragment.activity.BlockUserList"
@@ -186,7 +237,16 @@
             android:name=".ui.fragment.activity.InviteFriend"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.fragment.activity.EditPost"
+        <activity android:name=".videoTrim.TrimmerActivity" />
+        <activity
+            android:name=".ui.fragment.activity.ReactionPlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DetailAppTheme" />
+        <activity
+            android:name=".ui.fragment.activity.EditPost"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.fragment.activity.ExoPlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".utilities.GalleryUtil" />

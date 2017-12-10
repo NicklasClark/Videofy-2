@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.post;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.support.text.emoji.widget.EmojiAppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -192,7 +193,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.home_screen_post_caption) ProximaNovaSemiboldTextView caption;
+        @BindView(R.id.home_screen_post_caption)
+        EmojiAppCompatTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;

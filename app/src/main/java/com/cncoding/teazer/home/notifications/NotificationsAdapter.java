@@ -165,7 +165,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, -1, null);
+                                                            -1, null);
                                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
@@ -190,7 +190,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
-                                                            null, -1, null);
+                                                            -1, null);
                                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
@@ -216,7 +216,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                         mListener.onNotificationsInteraction(false, null,
-                                null, holder1.notification.getMetaData().getFromId(), "");
+                                holder1.notification.getMetaData().getFromId(), "");
                     }
                 };
 
@@ -244,7 +244,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
                     {
 
-                        if(holder2.notification.isActioned() ==true)
+                        if(holder2.notification.isActioned())
                         {
                             if(holder2.notification.isFollowing())
 
@@ -253,7 +253,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             }
 
-                            else if (holder2.notification.isRequest_sent()==true)
+                            else if (holder2.notification.isRequest_sent())
                             {
 
                                 holder2.action.setVisibility(View.VISIBLE);
@@ -319,17 +319,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             holder2.notification.getMetaData().getNotificationType() == 10) {
                                         userType = "Following";
                                     }
-                                    if (holder2.notification.getMetaData().getNotificationType() == 3) {
+                                    else if (holder2.notification.getMetaData().getNotificationType() == 3) {
                                         userType = "Accept";
                                     } else {
                                         userType = "Accept";
                                     }
 
                                     mListener.onNotificationsInteraction(false, null,
-                                            null, holder2.notification.getMetaData().getFromId(), userType);
+                                            holder2.notification.getMetaData().getFromId(), userType);
                                 }
                                 break;
-                            case R.id.notification_action:
+                            case R.id.action:
                                 String text = holder2.action.getText().toString();
                                 if (text.equals(context.getString(R.string.follow))) {
 //                                    USER IS FOLLOWING ANOTHER USER
@@ -388,14 +388,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
 
                                                             }
-
-                                                        else {
-//                                                            Log.d("AcceptJoinRequest", response.code()
-//                                                                    + " : " + response.body().getMessage());
-                                                        }
-                                                    } else {
-//                                                        Log.d("AcceptJoinRequest", response.code()
-//                                                                + " : " + response.body().getMessage());
                                                     }
                                                 }
 
@@ -477,7 +469,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                }
                                  break;
 
-                            case R.id.notification_decline:
+                            case R.id.decline:
                                 ApiCallingService.Friends.deleteJoinRequest(holder2.notification.getNotificationId(), context)
                                         .enqueue(new Callback<ResultObject>() {
                                             @Override
@@ -506,8 +498,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     } else
                                                         Log.d("DeleteJoinRequest", response.code()
                                                                 + " : " + response.body().getMessage());
-                                                } else {
                                                 }
+//                                                else {
+//                                                }
 //                                                    Log.d("DeleteJoinRequest", response.code()
 //                                                            + " : " + response.message());
                                             }
@@ -661,8 +654,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class FollowingViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.root_layout) LinearLayout layout;
-        @BindView(R.id.notification_dp) CircularAppCompatImageView dp;
-        @BindView(R.id.notification_content) UniversalTextView content;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) UniversalTextView content;
         @BindView(R.id.notification_thumb) ImageView thumbnail;
         Notification notification;
 
@@ -679,10 +672,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class RequestsViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.root_layout) LinearLayout layout;
-        @BindView(R.id.notification_dp) CircularAppCompatImageView dp;
-        @BindView(R.id.notification_content) UniversalTextView content;
-        @BindView(R.id.notification_action) ProximaNovaSemiboldTextView action;
-        @BindView(R.id.notification_decline) AppCompatImageView declineRequest;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) UniversalTextView content;
+        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;
         int accountType;
@@ -699,7 +692,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface OnNotificationsInteractionListener {
-        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails, byte[] byteArrayFromImage,
+        void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                         int profileId, String userType);
     }
 }

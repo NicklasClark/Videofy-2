@@ -22,7 +22,6 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
 
 import java.io.Serializable;
@@ -34,18 +33,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.ViewUtils.playVideo;
+import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
-/**
- * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
- * specified {@link PostReactionAdapterListener}.
- */
 public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapter.ViewHolder> {
 
     private SparseIntArray dimensionSparseArray;
     private ArrayList<PostReaction> postReactions;
     private Context context;
-    private PostReactionAdapterListener listener;
 
     PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
         this.postReactions = postReactions;
@@ -136,27 +131,27 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         String viewsText = "  " + postReaction.getViews();
         holder.views.setText(viewsText);
 
-        if (listener != null) {
-            View.OnClickListener viewReactionDetails = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    playVideo(context, postReaction.getMediaDetail().getMediaUrl(), true);
-                    ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
-                            .enqueue(new Callback<ResultObject>() {
-                                @Override
-                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                    if (response.code() == 200 && response.body().getStatus())
-                                        postReactions.get(holder.getAdapterPosition()).views++;
-                                }
+        View.OnClickListener viewReactionDetails = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
 
-                                @Override
-                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
+                        .enqueue(new Callback<ResultObject>() {
+                            @Override
+                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                if (response.code() == 200 && response.body().getStatus())
+                                    postReactions.get(holder.getAdapterPosition()).views++;
+                            }
 
-                                }
-                            });
+                            @Override
+                            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                            }
+                        });
 //                    listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
-                }
-            };
+            }
+        };
 //            View.OnClickListener viewProfile = new View.OnClickListener() {
 //                @Override
 //                public void onClick(View view) {
@@ -164,11 +159,10 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 //                }
 //            };
 
-            holder.postThumbnail.setOnClickListener(viewReactionDetails);
-            holder.likes.setOnClickListener(viewReactionDetails);
+        holder.postThumbnail.setOnClickListener(viewReactionDetails);
+        holder.likes.setOnClickListener(viewReactionDetails);
 //            holder.profilePic.setOnClickListener(viewProfile);
 //            holder.name.setOnClickListener(viewProfile);
-        }
     }
 
     @Override
@@ -195,29 +189,5 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         public String toString() {
             return super.toString() + " '" + name.getText() + "' : \"" + caption.getText() + "\"";
         }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        if (context instanceof PostReactionAdapterListener) {
-            listener = (PostReactionAdapterListener) context;
-        }
-        else {
-            throw new RuntimeException(context.toString()
-                    + " must implement PostReactionAdapterListener");
-        }
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        listener = null;
-//        postReactions = null;
-//        context = null;
-    }
-
-    public interface PostReactionAdapterListener {
-        void onPostReactionInteraction(int action, PostReaction postReaction);
     }
 }

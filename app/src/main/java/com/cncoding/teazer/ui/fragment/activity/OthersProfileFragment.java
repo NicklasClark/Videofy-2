@@ -254,12 +254,7 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
 
-
-
-
         return view;
-
-
     }
 
     @Override
