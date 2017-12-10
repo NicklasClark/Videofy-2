@@ -284,6 +284,7 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
+    <string name="camera_rationale">Teazer need permission to capture image using camera</string>
     <string name="upload_profile_pic">Upload profile pic</string>
     <string name="crop_selected_image">Crop selected image</string>
     <string name="cannot_start_camera">Cannot start camera, please restart your device</string>
