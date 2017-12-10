@@ -120,7 +120,11 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        previousTitle = getParentActivity().getToolbarTitle();
+        try {
+            previousTitle = getParentActivity().getToolbarTitle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
