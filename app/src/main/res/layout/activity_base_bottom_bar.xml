@@ -154,13 +154,16 @@
 
     </eightbitlab.com.blurview.BlurView>
 
-    <ImageButton
+    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
         android:id="@+id/camera_btn"
-        android:layout_width="62dp"
-        android:layout_height="64dp"
+        android:layout_width="50dp"
+        android:layout_height="52dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:text="@string/plus"
+        android:textSize="39sp"
         android:layout_gravity="bottom|center_horizontal"
-        android:foreground="@drawable/ripple_dark_circle"
-        android:src="@drawable/ic_add_video"
+        android:foreground="@drawable/ripple_light_circle"
         android:layout_marginBottom="@dimen/padding_10dp"
         android:scaleType="centerCrop"
         android:background="@drawable/bg_circle_light_filled_outlined"

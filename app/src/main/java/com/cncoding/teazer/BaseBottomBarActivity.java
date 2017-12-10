@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +36,7 @@ import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowin
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
@@ -138,7 +138,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
     @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ImageButton cameraButton;
+    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;

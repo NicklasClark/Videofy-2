@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_card_no_margin"
+        android:background="@drawable/bg_card_no_margin_white"
         android:animateLayoutChanges="true">
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="@dimen/padding_thin"
-                    android:background="@drawable/bg_card_no_margin"
+                    android:background="@drawable/bg_card_no_margin_white"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
@@ -147,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_card_no_margin">
+                    android:background="@drawable/bg_card_no_margin_white">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/my_interests_list"
@@ -222,7 +222,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/featured_videos_list"
-                    android:background="@drawable/bg_card_no_margin"
+                    android:background="@drawable/bg_card_no_margin_white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="14dp"

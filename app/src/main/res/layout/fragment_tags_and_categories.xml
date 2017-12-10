@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_grey100"
+    android:background="@color/white"
     android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
     tools:context=".tagsAndCategories.TagsAndCategoryFragment">
 
     <ProgressBar
@@ -29,34 +30,60 @@
         android:text="@string/no_friends_yet"
         android:visibility="gone"/>
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:paddingTop="6dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="@dimen/padding_half"
+        android:hint="@string/type_a_name_to_tag"
+        android:background="@drawable/bg_card_no_margin_grey"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:imeOptions="actionGo"
+        app:drawableStartCompat="@drawable/ic_search_padded_left"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cancel_dark_small"
+        android:foreground="@drawable/ripple_dark_circle"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:layout_alignEnd="@+id/headerTextView"
+        android:layout_alignTop="@+id/headerTextView"
+        android:layout_alignBottom="@+id/headerTextView"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/padding_thin"/>
+
+<!--    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/headerTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
         android:textColor="@color/colorSecondary_text"
-        android:background="@drawable/bg_card_no_margin"
         android:textSize="@dimen/text_size_h4"
         android:clickable="true"
         android:focusable="true"
         android:paddingStart="62dp"
         android:paddingEnd="14dp"
         android:gravity="start|center_vertical"
-        android:elevation="2dp" />
+        android:elevation="2dp" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tags_categories_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/headerTextView"/>
+        android:layout_below="@+id/headerTextView"
+        tools:listitem="@layout/item_tags" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/tags_categories_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_check_white"
-        android:layout_marginBottom="@dimen/padding_default"
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/tags_categories_save"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:text="@string/save"
+        android:theme="@style/AppTheme.RoundedMaterialButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>

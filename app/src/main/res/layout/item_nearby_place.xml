@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nearby_place_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:paddingStart="@dimen/padding_half"
-    android:paddingEnd="0dp"
     android:foreground="@drawable/ripple_dark_no_rounded">
+    
+<!--    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/location_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/ic_place"
+        android:scaleType="center"
+        android:tint="#bdbdbd"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"/>-->
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
         android:id="@+id/nearby_place_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_half"
-        android:paddingStart="@dimen/padding_default"
-        android:paddingEnd="@dimen/padding_default"
-        android:paddingBottom="@dimen/padding_thin"
+        android:layout_height="54dp"
+        android:textSize="15sp"
+        android:gravity="start|center_vertical"
+        android:paddingStart="0dp"
+        android:paddingEnd="14dp"
+        android:layout_centerVertical="true"
+        android:background="@color/white"
         android:layout_alignParentTop="true"
-        android:textSize="@dimen/text_size_content_big"
-        android:textColor="@color/colorPrimary_text"/>
+        android:textColor="#666666"/>
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+<!--    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/nearby_place_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,14 +40,12 @@
         android:lines="1"
         android:layout_below="@+id/nearby_place_name"
         android:textSize="14sp"
-        android:textColor="@color/colorSecondary_text"/>
+        android:textColor="@color/colorSecondary_text"/>-->
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/padding_default"
-        android:layout_marginEnd="@dimen/padding_default"
-        android:layout_below="@+id/nearby_place_address"
-        android:background="@color/colorDivider"/>
+        android:layout_below="@+id/nearby_place_name"
+        android:background="@color/material_grey200"/>
 
 </RelativeLayout>
