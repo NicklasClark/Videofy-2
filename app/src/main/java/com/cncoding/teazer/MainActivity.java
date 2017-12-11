@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,15 +24,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.TextureView;
-import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -62,7 +58,6 @@ import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
@@ -81,7 +76,8 @@ import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity
-        implements SurfaceTextureListener,
+        implements
+//        SurfaceTextureListener,
         OnWelcomeInteractionListener,
         LoginInteractionListener, OnOtpInteractionListener,
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
@@ -117,15 +113,15 @@ public class MainActivity extends AppCompatActivity
 //    public static final int BACK_PRESSED_ACTION = 6;
 //    public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
     public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
-    private String VIDEO_PATH;
+    private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
 
     @BindView(R.id.container) RelativeLayout rootView;
 //    @BindView(R.id.blur_view) BlurView blurView;
-    @BindView(R.id.welcome_video) TextureView welcomeVideo;
+    @BindView(R.id.welcome_video) VideoView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
 
-    private MediaPlayer mediaPlayer;
+//    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
 //    private BlurView.ControllerSettings settings;
 //    private ValueAnimator animator;
@@ -153,9 +149,23 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
 
-        VIDEO_PATH = "android.resource://" + getPackageName() + "/" + R.raw.welcome_video;
+//        welcomeVideo.setSurfaceTextureListener(MainActivity.this);
+        try {
+            welcomeVideo.setKeepScreenOn(true);
+            welcomeVideo.setVideoPath(VIDEO_PATH);
+            welcomeVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setLooping(true);
+                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    mediaPlayer.start();
+                }
+            });
+            welcomeVideo.start();
 
-        welcomeVideo.setSurfaceTextureListener(MainActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -308,40 +318,40 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        Surface surface = new Surface(surfaceTexture);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setScreenOnWhilePlaying(true);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
-            mediaPlayer.setSurface(surface);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.prepareAsync();
-
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.start();
-                }
-            });
-        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-    }
+//    @Override
+//    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+//        Surface surface = new Surface(surfaceTexture);
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.setScreenOnWhilePlaying(true);
+//        try {
+//            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
+//            mediaPlayer.setSurface(surface);
+//            mediaPlayer.setLooping(true);
+//            mediaPlayer.prepareAsync();
+//
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mediaPlayer) {
+//                    mediaPlayer.start();
+//                }
+//            });
+//        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+//    }
+//
+//    @Override
+//    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+//    }
 
     @Override
     public void onWelcomeInteraction(int action, Profile facebookProfile, Bundle facebookData,
@@ -766,33 +776,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mediaPlayer != null)
-            if (!mediaPlayer.isPlaying())
-                mediaPlayer.start();
+        if (welcomeVideo != null)
+            if (!welcomeVideo.isPlaying())
+                welcomeVideo.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
+        if (welcomeVideo != null)
+            welcomeVideo.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) {
+        if (welcomeVideo != null) {
             // Make sure we stop video and release resources when activity is destroyed.
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
+            welcomeVideo.stopPlayback();
+//            welcomeVideo.release();
+            welcomeVideo = null;
         }
     }
 

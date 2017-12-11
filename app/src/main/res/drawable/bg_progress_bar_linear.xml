@@ -4,6 +4,6 @@
         <scale
             android:useIntrinsicSizeAsMinimum="true"
             android:scaleWidth="100%"
-            android:drawable="@drawable/bg_card_no_margin" />
+            android:drawable="@drawable/bg_card_no_margin_white" />
     </item>
 </layer-list>

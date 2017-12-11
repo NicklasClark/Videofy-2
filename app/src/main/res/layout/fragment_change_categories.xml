@@ -21,7 +21,7 @@
         android:layout_below="@+id/headerTextView"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/tags_categories_done"
+        android:id="@+id/tags_categories_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"

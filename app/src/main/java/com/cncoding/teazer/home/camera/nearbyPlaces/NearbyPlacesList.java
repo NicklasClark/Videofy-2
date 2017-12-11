@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,6 @@ public class NearbyPlacesList extends Fragment {
                googleApiClient = ((CameraActivity) getActivity()).getGoogleApiClient();
             else
                 googleApiClient = ((EditPost) getActivity()).getGoogleApiClient();
-
         }
         if (googleApiClient != null && !googleApiClient.isConnected())
             googleApiClient.connect();
@@ -112,7 +112,7 @@ public class NearbyPlacesList extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
-            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous_dark);
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back);
         }
     }
 
@@ -168,7 +168,7 @@ public class NearbyPlacesList extends Fragment {
 //            recyclerView.swapAdapter(nearbyPlacesAdapter, true);
         }
 
-        if (charSequence.length() > 3 && googleApiClient.isConnected()) {
+        if (charSequence.length() > 2 && googleApiClient.isConnected()) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -182,7 +182,7 @@ public class NearbyPlacesList extends Fragment {
             } else {
                 handler = new Handler();
             }
-            handler.postDelayed(runnable, 1000);
+            handler.postDelayed(runnable, 500);
         }
     }
 
@@ -198,6 +198,7 @@ public class NearbyPlacesList extends Fragment {
     }
 
     private void performNearbySearch(CharSequence charSequence) {
+        Log.d("performNearbySearch", "called on " + charSequence);
         ((NearbyPlacesAdapter) recyclerView.getAdapter()).getFilter().filter(charSequence);
         recyclerView.getAdapter().notifyDataSetChanged();
 //        placeAutoCompleteAdapter.getFilter().filter(charSequence);
