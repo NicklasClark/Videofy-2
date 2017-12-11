@@ -219,7 +219,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         getBranchDynamicLinks();
     }
-    
+
     private void getBranchDynamicLinks() {
         // listener (within Main Activity's onStart)
         //noinspection ConstantConditions
