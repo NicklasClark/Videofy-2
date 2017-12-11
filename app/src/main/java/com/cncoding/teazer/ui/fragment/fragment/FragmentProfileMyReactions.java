@@ -74,8 +74,8 @@ public class FragmentProfileMyReactions extends Fragment {
                         response.body().getReactions();
                         if (response.body().getReactions() == null||response.body().getReactions().size()==0) {
 
-                           // alert1.setVisibility(View.VISIBLE);
-                           // recyclerView.setVisibility(View.GONE);
+                            alert1.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
                         else {
                             boolean next=response.body().getNextPage();
