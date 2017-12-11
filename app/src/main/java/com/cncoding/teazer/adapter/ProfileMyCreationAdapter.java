@@ -23,7 +23,6 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
-import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -132,14 +131,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 @Override
                 public void onClick(View view) {
                     PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-                    popup.inflate(R.menu.menu_profile);
+                    popup.inflate(R.menu.menu_profile_creation);
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
-
                                     final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                                     alertDialog.setTitle("Confirm Deletion...");
                                     alertDialog.setMessage("Are you sure you want to delete this video.");
@@ -160,10 +158,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         }
                                     });
                                     alertDialog.show();
-
-
-
-
                                     break;
                                 case R.id.edit_post:
                                     Intent intent=new Intent(context, EditPost.class);

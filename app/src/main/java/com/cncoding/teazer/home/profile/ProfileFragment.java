@@ -253,6 +253,7 @@ public class ProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (ProfileFragment.checkprofileupdated) {
+
             updateProfile();
             checkprofileupdated = false;
         }

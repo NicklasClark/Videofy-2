@@ -183,7 +183,7 @@
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FullScreen"
+            android:theme="@style/MyCustomTextAppearance"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.fragment.activity.Settings"
@@ -283,6 +283,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".utilities.GalleryUtil" />
+
+
         <activity android:name=".ui.fragment.activity.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>

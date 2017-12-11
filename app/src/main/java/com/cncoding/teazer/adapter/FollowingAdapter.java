@@ -91,6 +91,15 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
                 }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.dp);
+                }
                 setActionButtonText(context, viewHolder.action, R.string.following);
                 viewHolder.name.setText(followingname);
 

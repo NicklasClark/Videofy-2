@@ -402,9 +402,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 //    }
 
 
-
-
-
     public static int getOrientation(Context context, Uri photoUri) {
 
         Cursor cursor = context.getContentResolver().query(photoUri,
@@ -571,7 +568,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
-       // takePhotoFromCamera();
+        // takePhotoFromCamera();
     }
 
 
@@ -604,23 +601,24 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
                     try {
                         if (response.body().getStatus()) {
-                            Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
+                            ProfileFragment.checkprofileupdated = true;
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_SHORT).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_SHORT).show();
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
                 }
@@ -711,10 +709,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     return bitmap;
                 }
-
                 @Override
                 protected void onPostExecute(final Bitmap result) {
 
@@ -723,25 +719,18 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
                         Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
                 }
             }.execute();
-
-
             simpleProgressBar.setVisibility(View.GONE);
             layoutdetail.setVisibility(View.VISIBLE);
         }
 
     }
-
-
     public void validate() {
         boolean valid = true;
         String usernames = _username.getText().toString();
@@ -751,8 +740,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String mobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
         String details = _bio.getText().toString();
-
-        if (usernames.isEmpty()) {
+        if (usernames.isEmpty() ||usernames.trim().isEmpty()||usernames.trim().equals("")) {
             _username.setError("enter username");
             _username.requestFocus();
             valid = false;
@@ -760,7 +748,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             _username.setError(null);
         }
-        if (firstname.isEmpty()) {
+        if (firstname.isEmpty()|| firstname.trim().isEmpty()||firstname.trim().equals("")) {
             _firstname.setError("enter your name");
             _firstname.requestFocus();
             valid = false;
@@ -768,7 +756,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             _firstname.setError(null);
         }
-        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.isEmpty()) {
+        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.trim().isEmpty()||emailid.trim().equals("")) {
             _email.setError("enter a email address");
             _email.requestFocus();
             valid = false;
@@ -777,8 +765,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             _email.setError(null);
         }
 
-
-        if (mobilenumber.isEmpty() || mobilenumber.length() < 10 || mobilenumber.length() > 10) {
+        if (mobilenumber.isEmpty() || mobilenumber.length() < 10 || mobilenumber.length() > 10||mobilenumber.isEmpty()||mobilenumber.trim().isEmpty()||mobilenumber.trim().equals("")) {
             _mobileNumber.setError("enter valid 10 digit mobile number");
             _mobileNumber.requestFocus();
             valid = false;
@@ -788,7 +775,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
         }
 
-        if (details.isEmpty()) {
+        if (details.isEmpty()||details.trim().isEmpty()||details.trim().equals("")) {
             _bio.setError("Bio is required");
             _bio.requestFocus();
             valid = false;

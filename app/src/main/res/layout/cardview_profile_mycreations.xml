@@ -24,22 +24,22 @@
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="290dp">
+        android:layout_height="280dp">
         <ImageView
             android:id="@+id/demoimage"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:background="@drawable/material_flat"
-            android:layout_height="290dp" />
+            android:layout_height="280dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="290dp">
+        android:layout_height="280dp">
         <ImageView
 
             android:layout_width="match_parent"
             android:background="@drawable/bg_vignette"
-            android:layout_height="290dp" />
+            android:layout_height="280dp" />
 
 
     </RelativeLayout>

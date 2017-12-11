@@ -77,6 +77,7 @@
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="180"
+                android:textColor="#999999"
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
@@ -101,6 +102,7 @@
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
+                    android:letterSpacing="-0.03"
                     android:hint="@string/enter_location"
                     app:drawableStartCompat="@drawable/ic_place"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />

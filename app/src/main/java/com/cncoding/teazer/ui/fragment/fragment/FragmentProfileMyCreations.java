@@ -45,6 +45,7 @@ public class FragmentProfileMyCreations extends Fragment {
     ProximaNovaRegularTextView alert1;
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next = false;
+    public static boolean checkIsLiked=false;
 
     public static FragmentProfileMyCreations newInstance(int page) {
         return new FragmentProfileMyCreations();
@@ -120,7 +121,6 @@ public class FragmentProfileMyCreations extends Fragment {
                         list.addAll(response.body().getPosts());
                         profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list);
                         recyclerView.setAdapter(profileMyCreationAdapter);
-
                         if (next) {
                             page++;
                             getProfileVideos();
