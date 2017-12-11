@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -25,7 +24,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -334,15 +332,13 @@ public class ProfileFragment extends BaseFragment {
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                  //   coordinatorLayout.setVisibility(View.VISIBLE);
-                    if (userProfileThumbnail == null) {
-
-
-                    } else {
+                    if (userProfileThumbnail != null) {
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
                         profileBlur(userProfileUrl);
                     }
+                    progressbar.setVisibility(View.GONE);
                 } catch (Exception e) {
                     progressbar.setVisibility(View.GONE);
                     e.printStackTrace();
@@ -455,7 +451,6 @@ public class ProfileFragment extends BaseFragment {
 
     public void updateProfile() {
         progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
@@ -492,7 +487,6 @@ public class ProfileFragment extends BaseFragment {
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    coordinatorLayout.setVisibility(View.VISIBLE);
                     if (userProfileThumbnail == null) {
                     } else {
                         Glide.with(context)
@@ -501,7 +495,6 @@ public class ProfileFragment extends BaseFragment {
                         profileBlur(userProfileUrl);
                     }
                     progressbar.setVisibility(View.GONE);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     progressbar.setVisibility(View.GONE);
                     e.printStackTrace();
