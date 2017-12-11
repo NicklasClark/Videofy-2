@@ -282,7 +282,6 @@ public class OthersProfileFragment extends BaseFragment {
                     try {
 
                         FollowersProfile followersProfile = response.body();
-                        userCreationTitle.setText("Creations of " + followersProfile.getPublicProfile().getFirstName());
                         int follower = followersProfile.getFollowers();
                         int following = followersProfile.getFollowings();
                         int totalvideos = followersProfile.getTotalVideos();
@@ -299,6 +298,8 @@ public class OthersProfileFragment extends BaseFragment {
                         if (response.body().getPrivateProfile() == null) {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
+                            userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
+
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
@@ -381,8 +382,9 @@ public class OthersProfileFragment extends BaseFragment {
 
                         } else if (response.body().getPublicProfile() == null) {
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
+                            userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
                             String username = privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
@@ -639,6 +641,7 @@ public class OthersProfileFragment extends BaseFragment {
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             }
                         } else {
+
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             _btnfollow.setText("Following");

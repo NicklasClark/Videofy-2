@@ -62,6 +62,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
+
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_following, viewGroup,
@@ -88,6 +89,15 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             .load(followrsDp)
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
+                            .into(viewHolder.dp);
+                }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
                 }
                 setActionButtonText(context, viewHolder.action, R.string.following);
@@ -164,6 +174,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             usertype = "Requested";
                         }
                         else {
+
                             setActionButtonText(context, viewHolder.action, R.string.follow);
                             usertype = "Follow";
                         }
@@ -276,6 +287,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             ButterKnife.bind(this, view);
         }
     }
+
     public  interface OtherProfileListenerFollowing
     {
         public void viewOthersProfileFollowing(String id, String username, String type);

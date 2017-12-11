@@ -21,6 +21,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -88,6 +89,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     private int currentWindow;
     private boolean playWhenReady = true;
     private int playSource;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +234,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
-                finish();
+                onBackPressed();
                 break;
             case R.id.btnLike:
                 if (!isLiked) {
@@ -246,6 +248,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                                     isLiked = true;
                                     likesCount++;
                                     likeAction(isLiked, true);
+                                    FragmentProfileMyCreations.checkIsLiked=true;
                                     initView();
                                 }
                             } catch (Exception e) {

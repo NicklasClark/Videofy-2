@@ -53,14 +53,12 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
     @Override
     public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
-
         final Reaction cont = list.get(i);
         final int reactId = cont.getReactId();
         final String videotitle = cont.getReactTitle();
         final int likes = cont.getLikes();
         final int views = cont.getViews();
         final String reactduration = cont.getMediaDetail().getReactDuration();
-
         final String videourl = cont.getMediaDetail().getReactMediaUrl();
         final String thumb_url = cont.getMediaDetail().getReactThumbUrl();
         final String postowner = cont.getPostOwner().getUserName();
@@ -71,7 +69,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         } else {
             viewHolder.videoTitle.setText(videotitle);
         }
-
         viewHolder.post_owner.setText(postowner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
@@ -85,12 +82,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.playvideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(context, ProfileCreationVideos.class);
-//                intent.putExtra("VideoURL", videourl);
-//                intent.putExtra("Likes", String.valueOf(likes));
-//                intent.putExtra("Views",String.valueOf( views));
-//                intent.putExtra("Title", videotitle);
-//                context.startActivity(intent);
 
                 playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
             }
@@ -98,18 +89,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //creating a popup menu
+
                 PopupMenu popup = new PopupMenu(context, viewHolder.menu);
-
-                popup.inflate(R.menu.menu_profile);
-
+                popup.inflate(R.menu.menu_profile_reaction);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_delete:
-
-
                                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                                 alertDialog.setTitle("Confirm Deletion...");
                                 alertDialog.setMessage("Are you sure you want to delete this video.");
@@ -130,19 +117,16 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                                     }
                                 });
                                 alertDialog.show();
-
                                 break;
 
                         }
                         return false;
                     }
                 });
-                //displaying the popup
                 popup.show();
             }
         });
     }
-
     private void deleteVideos(int deleteId) {
         ApiCallingService.React.deleteReaction(deleteId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -151,12 +135,10 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                     if (response.code() == 200) {
                         boolean status = response.body().getStatus();
                         Toast.makeText(context, "Reaction has been deleted", Toast.LENGTH_SHORT).show();
-
                     } else {
-
                         Toast.makeText(context, "Reaction has not been deleted", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
+                }catch (Exception e) {
                     e.printStackTrace();
                 }
             }

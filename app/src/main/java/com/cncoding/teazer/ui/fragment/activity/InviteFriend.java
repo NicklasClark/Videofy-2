@@ -12,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -36,6 +38,10 @@ public class InviteFriend extends AppCompatActivity {
     @BindView(R.id.smsLayout)
     LinearLayout smsLayout;
 
+    @BindView(R.id.teazersite)
+    ProximaNovaRegularCheckedTextView teazersite;
+    String url = "http://www.cnapplications.com";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +50,14 @@ public class InviteFriend extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-//        toolbar.setNavigationIcon(R.drawable.ic_previous);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -62,7 +68,7 @@ public class InviteFriend extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Invite Friends</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Invite Friends</font>"));
 
         facebookShareLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,42 +83,7 @@ public class InviteFriend extends AppCompatActivity {
                 shareDialog.show(content);
                 ShareApi.share(content, null);
 
-//                final String s = "https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-//                new AsyncTask<Void, Void, Bitmap>() {
-//                    @Override
-//                    protected Bitmap doInBackground(final Void... params) {
-//                        Bitmap bitmap = null;
-//                        try {
-//                            final URL url = new URL(s);
-//                            try {
-//                                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        return bitmap;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(final Bitmap result) {
-//
-////
-////                        SharePhoto photo = new SharePhoto.Builder()
-////                                .setBitmap(result)
-////                                .build();
-////                        SharePhotoContent content = new SharePhotoContent.Builder()
-////                                .addPhoto(photo)
-////                                .build();
-////
-////                        ShareDialog shareDialog = new ShareDialog(InviteFriend.this);
-////                        shareDialog.show(content);
-////                        ShareApi.share(content, null);
-//                    }
-//                }.execute();
+
 
             }
 
@@ -138,8 +109,7 @@ public class InviteFriend extends AppCompatActivity {
         gmailShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.gm");
-//                startActivity(intent);
+
                 Intent intent = new Intent (Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fhabib4@gmail.com"});
@@ -153,20 +123,11 @@ public class InviteFriend extends AppCompatActivity {
         });
 
 
-
-
         smsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                try {
-//                    Intent intent = new Intent(Intent.ACTION_MAIN);
-//                    intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-//                    startActivity(intent);
 
-
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.cnapplications.com"));
-                    startActivity(browserIntent);
 
                     try {
 
@@ -181,13 +142,18 @@ public class InviteFriend extends AppCompatActivity {
                         Log.d("Error" , "Error");
                     }
 
-                } catch (Exception e) {
 
-                    e.printStackTrace();
-                }
+            }
+        });
+
+        teazersite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(InviteFriend.this, WebViewActivity.class).putExtra("Links",url));
             }
         });
     }
+
 
 
 }
