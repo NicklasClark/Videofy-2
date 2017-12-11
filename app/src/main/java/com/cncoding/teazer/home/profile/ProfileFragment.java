@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -96,7 +97,7 @@ public class ProfileFragment extends BaseFragment {
     int gender;
     int countrycode;
     String detail;
-    CoordinatorLayout coordinatorLayout;
+  //  RelativeLayout coordinatorLayout;
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     private FollowerListListener mListener;
@@ -144,7 +145,7 @@ public class ProfileFragment extends BaseFragment {
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         btnedit = view.findViewById(R.id.btnedit);
         btnshare = view.findViewById(R.id.btnshare);
-        coordinatorLayout = view.findViewById(R.id.layout);
+        //coordinatorLayout = view.findViewById(R.id.profile_layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
         bgImage = view.findViewById(R.id.background_profile);
@@ -275,7 +276,7 @@ public class ProfileFragment extends BaseFragment {
     public void getProfileDetail() {
 
         progressbar.setVisibility(View.VISIBLE);
-        coordinatorLayout.setVisibility(View.GONE);
+       // coordinatorLayout.setVisibility(View.GONE);
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
             @Override
@@ -312,7 +313,7 @@ public class ProfileFragment extends BaseFragment {
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    coordinatorLayout.setVisibility(View.VISIBLE);
+                 //   coordinatorLayout.setVisibility(View.VISIBLE);
                     if (userProfileThumbnail == null) {
 
 
@@ -326,7 +327,7 @@ public class ProfileFragment extends BaseFragment {
                         profileBlur(userProfileUrl);
                     }
 
-                    coordinatorLayout.setVisibility(View.VISIBLE);
+                  //  coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -368,7 +369,7 @@ public class ProfileFragment extends BaseFragment {
                     RC_REQUEST_STORAGE, perm);
         } else {
             progressbar.setVisibility(View.VISIBLE);
-            coordinatorLayout.setVisibility(View.GONE);
+         //   coordinatorLayout.setVisibility(View.GONE);
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(final Void... params) {
@@ -391,7 +392,7 @@ public class ProfileFragment extends BaseFragment {
                 @Override
                 protected void onPostExecute(final Bitmap result) {
                     progressbar.setVisibility(View.VISIBLE);
-                    coordinatorLayout.setVisibility(View.GONE);
+                   // coordinatorLayout.setVisibility(View.GONE);
 
                     try {
                         Bitmap userImage=scaleDown(result,  200,true);
@@ -408,13 +409,14 @@ public class ProfileFragment extends BaseFragment {
                     }
 
                     progressbar.setVisibility(View.GONE);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
+
+                    // coordinatorLayout.setVisibility(View.VISIBLE);
                 }
             }.execute();
 
 
             progressbar.setVisibility(View.GONE);
-            coordinatorLayout.setVisibility(View.VISIBLE);
+            //coordinatorLayout.setVisibility(View.VISIBLE);
         }
 
     }
@@ -464,7 +466,7 @@ public void updateProofile()
 
 
     progressbar.setVisibility(View.VISIBLE);
-    coordinatorLayout.setVisibility(View.GONE);
+    //coordinatorLayout.setVisibility(View.GONE);
 
     ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
         @Override
@@ -501,7 +503,7 @@ public void updateProofile()
                 _followers.setText(String.valueOf(totalfollowers) + " Followers");
                 _following.setText(String.valueOf(totalfollowing + " Following"));
                 _creations.setText(String.valueOf(totalvideos + " Creations"));
-                coordinatorLayout.setVisibility(View.VISIBLE);
+               // coordinatorLayout.setVisibility(View.VISIBLE);
                 if (userProfileThumbnail == null) {
                 }
                 else {
@@ -512,7 +514,7 @@ public void updateProofile()
                     profileBlur(userProfileUrl);
                 }
 
-                coordinatorLayout.setVisibility(View.VISIBLE);
+               // coordinatorLayout.setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -13,6 +13,7 @@ import android.view.View;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
+
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
 
@@ -88,4 +89,6 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         ft.commit();
 
     }
+
+
 }
