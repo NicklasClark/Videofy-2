@@ -25,8 +25,6 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
 
     Context context;
     private PublicProfile userProfile;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +33,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         context=this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -44,7 +42,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -57,8 +55,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
             }
         });
 
-
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Settings</font>"));
         Intent intent=getIntent();
         int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
         userProfile=intent.getExtras().getParcelable("UserProfile");
@@ -68,8 +65,6 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         ft.commit();
 
     }
-
-
     @Override
     public void changeCategoriesListener() {
 
@@ -77,10 +72,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment);
         ft.commit();
-
-
     }
-
     @Override
     public void deactivateAccountListener() {
         FragmentDeactivateAccount fragment= FragmentDeactivateAccount.newInstance();
