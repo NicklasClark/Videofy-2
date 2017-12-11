@@ -164,7 +164,11 @@ public class VideosTabFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        noPosts.setText(R.string.search_for_videos);
+        try {
+            noPosts.setText(R.string.search_for_videos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

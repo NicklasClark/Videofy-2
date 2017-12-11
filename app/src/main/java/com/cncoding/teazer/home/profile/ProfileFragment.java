@@ -59,9 +59,8 @@ import retrofit2.Response;
 public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private static final int RC_REQUEST_STORAGE = 1001;
+    public static boolean checkprofileupdated = false;
     ImageView profile_image;
     ImageView bgImage;
     ImageView settings;
@@ -78,7 +77,6 @@ public class ProfileFragment extends BaseFragment {
     TabLayout tabLayout;
     ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundProfile;
-    private CollapsingToolbarLayout collapsingToolbarLayout = null;
     Pojos.User.UserProfile userprofile;
     Button btnedit;
     Button btnshare;
@@ -99,14 +97,15 @@ public class ProfileFragment extends BaseFragment {
     CoordinatorLayout coordinatorLayout;
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
-    private FollowerListListener mListener;
-    private String imageUri;
-    private static final int RC_REQUEST_STORAGE = 1001;
-    private String userProfileThumbnail;
-    private String userProfileUrl;
     PublicProfile userProfile;
     NestedScrollView nestedscrollview;
-    public static boolean checkprofileupdated=false;
+    private String mParam1;
+    private String mParam2;
+    private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    private FollowerListListener mListener;
+    private String imageUri;
+    private String userProfileThumbnail;
+    private String userProfileUrl;
 
     public ProfileFragment() {
     }
@@ -114,6 +113,20 @@ public class ProfileFragment extends BaseFragment {
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
+    }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+
+        return newBitmap;
     }
 
     @Override
@@ -126,7 +139,6 @@ public class ProfileFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
 
     @Override
 
@@ -177,13 +189,13 @@ public class ProfileFragment extends BaseFragment {
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowerListListener(String.valueOf(0),"User");
+                mListener.onFollowerListListener(String.valueOf(0), "User");
             }
         });
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFollowingListListener(String.valueOf(0),"User");
+                mListener.onFollowingListListener(String.valueOf(0), "User");
             }
         });
         btnshare.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +215,7 @@ public class ProfileFragment extends BaseFragment {
                         .addControlParameter("$desktop_url", "https://teazer.online/")
                         .addControlParameter("$ios_url", "https://teazer.online/");
 
-                ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getActivity(), "Teazer",  "Hi, follow me on Teazer and express better")
+                ShareSheetStyle shareSheetStyle = new ShareSheetStyle(getActivity(), "Teazer", "Hi, follow me on Teazer and express better")
                         .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
                         .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
@@ -219,16 +231,20 @@ public class ProfileFragment extends BaseFragment {
                             @Override
                             public void onShareLinkDialogLaunched() {
                             }
+
                             @Override
                             public void onShareLinkDialogDismissed() {
                             }
+
                             @Override
                             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
                             }
+
                             @Override
                             public void onChannelSelected(String channelName) {
                             }
-                        });            }
+                        });
+            }
         });
 
         return view;
@@ -237,9 +253,9 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if( ProfileFragment.checkprofileupdated) {
-             updateProofile();
-             checkprofileupdated=false;
+        if (ProfileFragment.checkprofileupdated) {
+            updateProfile();
+            checkprofileupdated = false;
         }
 
     }
@@ -247,7 +263,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //  super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_user_profile,menu);
+        inflater.inflate(R.menu.menu_user_profile, menu);
     }
 
     @Override
@@ -262,14 +278,14 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
 
             case R.id.action_settings:
-              Intent intent=new Intent(context, Settings.class);
-                        intent.putExtra("AccountType",String.valueOf(accountType));
-                        intent.putExtra("UserProfile",userProfile);
+                Intent intent = new Intent(context, Settings.class);
+                intent.putExtra("AccountType", String.valueOf(accountType));
+                intent.putExtra("UserProfile", userProfile);
 
-              startActivity(intent);
+                startActivity(intent);
             case R.id.action_profile_block:
 
         }
@@ -320,22 +336,19 @@ public class ProfileFragment extends BaseFragment {
                     if (userProfileThumbnail == null) {
 
 
-                    }
-                    else {
-
+                    } else {
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
-                        progressbar.setVisibility(View.GONE);
                         profileBlur(userProfileUrl);
                     }
-
+                    progressbar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
+                    progressbar.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
-
 
             @Override
             public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
@@ -344,23 +357,6 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
-    }
-
-
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-
-
-
-        return newBitmap;
     }
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
@@ -398,8 +394,8 @@ public class ProfileFragment extends BaseFragment {
                     coordinatorLayout.setVisibility(View.GONE);
 
                     try {
-                        Bitmap userImage=scaleDown(result,  200,true);
-                     //   protectedfile_id.setRotation(0);
+                        Bitmap userImage = scaleDown(result, 200, true);
+                        //   protectedfile_id.setRotation(0);
 //                       profile_id.setImageBitmap(userImage);
 
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
@@ -408,6 +404,7 @@ public class ProfileFragment extends BaseFragment {
 
                         Blurry.with(getContext()).from(photobitmap).into(bgImage);
                     } catch (Exception e) {
+                        progressbar.setVisibility(View.GONE);
                         e.printStackTrace();
                     }
 
@@ -424,7 +421,6 @@ public class ProfileFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -437,12 +433,7 @@ public class ProfileFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-       getParentActivity().updateToolbarTitle(previousTitle);
-    }
-
-    public interface FollowerListListener {
-        void onFollowerListListener(String id,String identifier);
-        void onFollowingListListener(String id,String identifier);
+        getParentActivity().updateToolbarTitle(previousTitle);
     }
 
     private void dynamicToolbarColor() {
@@ -462,72 +453,74 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
+    public void updateProfile() {
+        progressbar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
 
-public void updateProofile()
-{
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
+            @Override
+            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
 
-
-    progressbar.setVisibility(View.VISIBLE);
-    coordinatorLayout.setVisibility(View.GONE);
-
-    ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
-        @Override
-        public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
-
-            try {
-                userProfile = response.body().getUserProfile();
-                firstname = userProfile.getFirstName();
-                lastname = userProfile.getLastName();
-                username = userProfile.getUserName();
-                email = userProfile.getEmail();
-                accountType = userProfile.getAccountType();
-                hasProfleMedia = userProfile.getHasProfileMedia();
-                totalfollowers = response.body().getFollowers();
-                totalfollowing = response.body().getFollowings();
-                totalvideos = response.body().getTotalVideos();
-                userId = String.valueOf(userProfile.getUserId());
-                gender = userProfile.getGender();
-                Long mobilno = userProfile.getPhoneNumber();
-                if (mobilno == null) {
-                    mobilenumber = 0L;
-                } else {
-                    mobilenumber = mobilno;
-                }
-                countrycode = userProfile.getCountryCode();
-                detail = userProfile.getDescription();
-                if (userProfile.getHasProfileMedia()) {
-                    userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
-                    userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
-                }
-                _detail.setText(detail);
-                _name.setText(firstname);
-                _username.setText(username);
-                _followers.setText(String.valueOf(totalfollowers) + " Followers");
-                _following.setText(String.valueOf(totalfollowing + " Following"));
-                _creations.setText(String.valueOf(totalvideos + " Creations"));
-                coordinatorLayout.setVisibility(View.VISIBLE);
-                if (userProfileThumbnail == null) {
-                }
-                else {
-                    Glide.with(context)
-                            .load(userProfileUrl)
-                            .into(profile_id);
+                try {
+                    userProfile = response.body().getUserProfile();
+                    firstname = userProfile.getFirstName();
+                    lastname = userProfile.getLastName();
+                    username = userProfile.getUserName();
+                    email = userProfile.getEmail();
+                    accountType = userProfile.getAccountType();
+                    hasProfleMedia = userProfile.getHasProfileMedia();
+                    totalfollowers = response.body().getFollowers();
+                    totalfollowing = response.body().getFollowings();
+                    totalvideos = response.body().getTotalVideos();
+                    userId = String.valueOf(userProfile.getUserId());
+                    gender = userProfile.getGender();
+                    Long mobilno = userProfile.getPhoneNumber();
+                    if (mobilno == null) {
+                        mobilenumber = 0L;
+                    } else {
+                        mobilenumber = mobilno;
+                    }
+                    countrycode = userProfile.getCountryCode();
+                    detail = userProfile.getDescription();
+                    if (userProfile.getHasProfileMedia()) {
+                        userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
+                        userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
+                    }
+                    _detail.setText(detail);
+                    _name.setText(firstname);
+                    _username.setText(username);
+                    _followers.setText(String.valueOf(totalfollowers) + " Followers");
+                    _following.setText(String.valueOf(totalfollowing + " Following"));
+                    _creations.setText(String.valueOf(totalvideos + " Creations"));
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                    if (userProfileThumbnail == null) {
+                    } else {
+                        Glide.with(context)
+                                .load(userProfileUrl)
+                                .into(profile_id);
+                        profileBlur(userProfileUrl);
+                    }
                     progressbar.setVisibility(View.GONE);
-                    profileBlur(userProfileUrl);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    progressbar.setVisibility(View.GONE);
+                    e.printStackTrace();
                 }
-
-                coordinatorLayout.setVisibility(View.VISIBLE);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
 
 
-        @Override
-        public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
-            progressbar.setVisibility(View.GONE);
-            t.printStackTrace();
-        }
-    });
-}
+            @Override
+            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+                progressbar.setVisibility(View.GONE);
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+    public interface FollowerListListener {
+        void onFollowerListListener(String id, String identifier);
+
+        void onFollowingListListener(String id, String identifier);
+    }
 }
