@@ -118,11 +118,15 @@ public class SignupFragment extends AuthFragment {
 
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (areAllViewsFilled()) {
-            if (isPasswordValid(passwordView.getText().toString())) {
-                mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
-                                new Authorize(usernameView.getText().toString(), passwordView.getText().toString()), picturePath);
-            } else
-                Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
+            if (usernameView.getText().toString().length() >= 4 && usernameView.getText().toString().length() <= 50) {
+                if (isPasswordValid(passwordView.getText().toString())) {
+                    mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
+                                    new Authorize(usernameView.getText().toString(), passwordView.getText().toString()), picturePath);
+                } else
+                    Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(signupProceedBtn, "Username must be 4 to 50 characters", Snackbar.LENGTH_SHORT).show();
+            }
         } else
             Snackbar.make(signupProceedBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
     }
@@ -161,9 +165,12 @@ public class SignupFragment extends AuthFragment {
             startActivityForResult(Intent.createChooser(cropIntent, getString(R.string.crop_selected_image)), RESULT_CROP);
         }
         // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException e) {
+        catch (Exception e) {
             // display an error message
-            Toast.makeText(context, R.string.no_crop_action_support_message, Toast.LENGTH_SHORT).show();
+            if (e instanceof ActivityNotFoundException)
+                Toast.makeText(context, R.string.no_crop_action_support_message, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(context, R.string.error_choosing_photo, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

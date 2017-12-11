@@ -1,6 +1,10 @@
 package com.cncoding.teazer.tagsAndCategories;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -13,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
 
 import java.util.ArrayList;
@@ -32,13 +37,18 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     private String selectedTagsString;
     private SparseBooleanArray selectedTagsArray;
     private SparseArray<MiniProfile> tagsSparseArray;
+    private Typeface SEMI_BOLD;
+    private Typeface REGULAR;
 
-    TagsAdapter(ArrayList<MiniProfile> circles, Fragment fragment, String selectedTagsString) {
+    TagsAdapter(Context context, ArrayList<MiniProfile> circles, Fragment fragment, String selectedTagsString) {
         this.circles = circles;
         this.fragment = fragment;
         this.selectedTagsString = selectedTagsString;
         selectedTagsArray = new SparseBooleanArray();
         this.tagsSparseArray = new SparseArray<>();
+        TypeFactory typeFactory = new TypeFactory(context);
+        SEMI_BOLD = typeFactory.semiBold;
+        REGULAR = typeFactory.regular;
     }
 
     @Override
@@ -56,33 +66,39 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         holder.nameView.setText(name);
 
         Glide.with(fragment)
-                .load(circle.hasProfileMedia() ? circle.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .load(circle.getProfileMedia() != null ? circle.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
                 .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade()
                 .into(holder.image);
 
-        holder.nameView.setChecked(selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
-        if (selectedTagsString == null || selectedTagsString.isEmpty())
-            holder.nameView.setChecked(selectedTagsArray.get(position));
+        setCheck(holder.nameView, position, circle,
+                selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
 
-        if (holder.nameView.isChecked()) {
-            tagsSparseArray.put(holder.getAdapterPosition(), circle);
-        }
-        else tagsSparseArray.delete(holder.getAdapterPosition());
+        if (selectedTagsString == null || selectedTagsString.isEmpty())
+            setCheck(holder.nameView, position, circle, selectedTagsArray.get(position));
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isChecked = !holder.nameView.isChecked();
-//                selectedTagsArray.put(holder.getAdapterPosition(), isChecked);
-                holder.nameView.setChecked(isChecked);
-                ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
-                if (isChecked) {
-                    tagsSparseArray.put(holder.getAdapterPosition(), circle);
-                }
-                else tagsSparseArray.delete(holder.getAdapterPosition());
+                setCheck(holder.nameView, holder.getAdapterPosition(), circle, !holder.nameView.isChecked());
             }
         });
+    }
+
+    private void setCheck(AppCompatCheckedTextView textView, int position, MiniProfile circle, boolean checked) {
+        textView.setChecked(checked);
+        if (textView.isChecked()) {
+            textView.setTextColor(Color.parseColor("#26C6DA"));
+            textView.setTypeface(SEMI_BOLD);
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_accent, 0);
+            tagsSparseArray.put(position, circle);
+        }
+        else {
+            textView.setTextColor(Color.parseColor("#333333"));
+            textView.setTypeface(REGULAR);
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tagsSparseArray.delete(position);
+        }
     }
 
     @Override

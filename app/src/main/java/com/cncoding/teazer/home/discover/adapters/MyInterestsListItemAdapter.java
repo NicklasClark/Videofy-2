@@ -99,15 +99,16 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
         /*Setting DP*/
                 Glide.with(context)
-                        .load(holder.postDetails.getPostOwner().hasProfileMedia() &&
-                                holder.postDetails.getPostOwner().getProfileMedia() != null ?
-                                holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                        .load(!(holder.postDetails.getPostOwner().hasProfileMedia() &&
+                                holder.postDetails.getPostOwner().getProfileMedia() != null) ?
+                                R.drawable.ic_user_male_dp_small :
+                                holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
                         .placeholder(R.drawable.ic_user_male_dp_small)
                         .crossFade()
                         .into(holder.dp);
 
         /*Setting reaction thumbnails*/
-                if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getTotalReactions() > 0) {
+                if (holder.postDetails.getReactedUsers() != null && holder.postDetails.getReactedUsers().size() > 0) {
                     holder.reactionImage1.setVisibility(View.VISIBLE);
                     Glide.with(context)
                             .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
@@ -117,7 +118,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                             .crossFade()
                             .into(holder.reactionImage1);
 
-                    if (holder.postDetails.getTotalReactions() > 1) {
+                    if (holder.postDetails.getReactedUsers().size() > 1) {
                         holder.reactionImage2.setVisibility(View.VISIBLE);
                         Glide.with(context)
                                 .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia() == null ?

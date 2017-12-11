@@ -2,21 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/categories_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:foreground="@drawable/ripple_dark_no_rounded"
-    android:paddingTop="@dimen/padding_half"
-    android:paddingStart="@dimen/padding_default"
-    android:paddingEnd="0dp">
+    android:layout_height="54dp"
+    android:foreground="@drawable/ripple_dark_no_rounded">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
         android:id="@+id/chip"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_half"
         android:textColor="@color/colorSecondary_text"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:textSize="@dimen/text_size_content"
+        android:checkMark="@null"
+        android:textSize="15sp"
+        android:layout_centerVertical="true"
         android:gravity="center_vertical"/>
 
     <TextView
@@ -25,6 +22,6 @@
         android:background="@color/colorDivider"
         android:layout_marginStart="-16dp"
         android:layout_marginTop="@dimen/padding_half"
-        android:layout_below="@+id/chip"/>
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

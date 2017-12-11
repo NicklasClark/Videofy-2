@@ -34,7 +34,7 @@
         android:paddingEnd="@dimen/padding_half"
         android:layout_alignParentTop="true">
 
-        <android.support.text.emoji.widget.EmojiAppCompatTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/home_screen_post_caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

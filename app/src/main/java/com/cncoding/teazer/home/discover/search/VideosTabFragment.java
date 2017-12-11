@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
@@ -39,6 +40,7 @@ public class VideosTabFragment extends BaseFragment {
     private ArrayList<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
+    private BaseBottomBarActivity parentContext;
 
     public VideosTabFragment() {
     }
@@ -57,18 +59,17 @@ public class VideosTabFragment extends BaseFragment {
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
         }
+        videosList = new ArrayList<>();
+        parentContext = getParentActivity();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
-        videosList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(getParentActivity(), this, true, null, videosList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
@@ -88,6 +89,18 @@ public class VideosTabFragment extends BaseFragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
+            getVideos(1);
+        } else {
+            noPosts.setVisibility(View.VISIBLE);
+            noPosts.setText(R.string.search_for_videos);
+        }
+
     }
 
     @Override
@@ -121,6 +134,8 @@ public class VideosTabFragment extends BaseFragment {
                                 noPosts.setVisibility(View.GONE);
                                 recyclerView.getRecycledViewPool().clear();
                                 videosList.addAll(response.body().getVideos());
+                                adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this, true, null, videosList);
+                                recyclerView.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             } else {
                                 if (page == 1 && videosList.isEmpty()) {
@@ -149,7 +164,11 @@ public class VideosTabFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        noPosts.setText(R.string.search_for_videos);
+        try {
+            noPosts.setText(R.string.search_for_videos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

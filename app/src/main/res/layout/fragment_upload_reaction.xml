@@ -24,7 +24,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:background="@drawable/bg_vignette_top"
             android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
@@ -102,7 +102,7 @@
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
                     android:hint="@string/enter_location"
-                    app:drawableStartCompat="@drawable/ic_add_location"
+                    app:drawableStartCompat="@drawable/ic_place"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
             </android.support.design.widget.TextInputLayout>

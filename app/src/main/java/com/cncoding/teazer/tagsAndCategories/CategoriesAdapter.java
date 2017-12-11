@@ -1,6 +1,8 @@
 package com.cncoding.teazer.tagsAndCategories;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -48,14 +50,10 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
         final Category category = this.categories.get(position);
         holder.nameView.setText(category.getCategoryName());
 
-        holder.nameView.setChecked(selectedCategoriesString != null && selectedCategoriesString.contains(category.getCategoryName()));
+        setCheck(holder.nameView, position, category,
+                selectedCategoriesString != null && selectedCategoriesString.contains(category.getCategoryName()));
         if (selectedCategoriesString == null || selectedCategoriesString.isEmpty())
-            holder.nameView.setChecked(selectedCategoriesArray.get(holder.getAdapterPosition()));
-
-        if (holder.nameView.isChecked()) {
-            categorySparseArray.put(holder.getAdapterPosition(), category);
-        } else
-            categorySparseArray.delete(holder.getAdapterPosition());
+            setCheck(holder.nameView, position, category, selectedCategoriesArray.get(position));
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,12 +61,8 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
                 if (categorySparseArray.size() < 5) {
                     boolean isChecked = !holder.nameView.isChecked();
                     selectedCategoriesArray.put(holder.getAdapterPosition(), isChecked);
-                    holder.nameView.setChecked(isChecked);
-                    ((TagsAndCategoryFragment) fragment).changeVisibility(View.VISIBLE);
-                    if (isChecked) {
-                        categorySparseArray.put(holder.getAdapterPosition(), category);
-                    } else
-                        categorySparseArray.delete(holder.getAdapterPosition());
+                    ((TagsAndCategoryFragment) fragment).changeDoneBtnVisibility(View.VISIBLE);
+                    setCheck(holder.nameView, holder.getAdapterPosition(), category, !holder.nameView.isChecked());
                 } else {
                     Toast.makeText(fragment.getContext(), "Maximum 5 categories can be selected", Toast.LENGTH_SHORT).show();
                     holder.nameView.setChecked(false);
@@ -76,6 +70,20 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
                 }
             }
         });
+    }
+
+    private void setCheck(AppCompatCheckedTextView textView, int position, Category category, boolean checked) {
+        textView.setChecked(checked);
+        if (textView.isChecked()) {
+            textView.setTextColor(Color.parseColor("#26C6DA"));
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_accent, 0);
+            categorySparseArray.put(position, category);
+        }
+        else {
+            textView.setTextColor(Color.parseColor("#333333"));
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            categorySparseArray.delete(position);
+        }
     }
 
     @Override

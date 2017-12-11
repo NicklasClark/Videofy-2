@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +37,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
@@ -48,7 +48,6 @@ import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
@@ -109,6 +108,8 @@ public class OthersProfileFragment extends BaseFragment {
     List<Pojos.Post.PostDetails> list = new ArrayList<>();
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
+    @BindView(R.id.userCreationTitle)
+    ProximaNovaRegularTextView userCreationTitle;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     int accountType;
@@ -199,25 +200,21 @@ public class OthersProfileFragment extends BaseFragment {
 
                 if (accountType == 1) {
 
-                    if (isfollowing == true)
-                    {
-                        followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
-                    }
-
-                    else if (hassentrequest == true) {
+                    if (isfollowing == true) {
+                        followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                    } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
-                            followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
-                        }
-                        else {
+                            followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+                        } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
 
                     } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
 
-                    followerListListener.onFollowingListListener(String.valueOf(followerfollowingid),"Other");
+                    followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
                 }
             }
 
@@ -228,17 +225,13 @@ public class OthersProfileFragment extends BaseFragment {
             public void onClick(View view) {
                 if (accountType == 1) {
 
-                    if (isfollowing)
-                    {
-                        followerListListener.onFollowerListListener(String.valueOf(followerfollowingid),"Other");
-                    }
-
-                    else if (hassentrequest == true) {
+                    if (isfollowing) {
+                        followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                    } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
-                            followerListListener.onFollowerListListener(String.valueOf(followerfollowingid),"Other");
-                        }
-                        else {
+                            followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
+                        } else {
                             Toast.makeText(context, "You can not view follower List now", Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -248,7 +241,7 @@ public class OthersProfileFragment extends BaseFragment {
                 } else {
 
 
-                    followerListListener.onFollowerListListener(String.valueOf(followerfollowingid),"Other");
+                    followerListListener.onFollowerListListener(String.valueOf(followerfollowingid), "Other");
                 }
 
             }
@@ -289,6 +282,7 @@ public class OthersProfileFragment extends BaseFragment {
                     try {
 
                         FollowersProfile followersProfile = response.body();
+                        userCreationTitle.setText("Creations of " + followersProfile.getPublicProfile().getFirstName());
                         int follower = followersProfile.getFollowers();
                         int following = followersProfile.getFollowings();
                         int totalvideos = followersProfile.getTotalVideos();
@@ -371,18 +365,13 @@ public class OthersProfileFragment extends BaseFragment {
                                 progressBar.setVisibility(View.GONE);
                             }
 
-                            if(accountType==2)
-                            {
+                            if (accountType == 2) {
                                 getProfileVideos(followersid);
-                            }
-                            else
-                            {
-                                if (isfollowing)
-                                {
+                            } else {
+                                if (isfollowing) {
                                     getProfileVideos(followersid);
 
-                                }
-                                else {
+                                } else {
                                     layoutDetail2.setVisibility(View.VISIBLE);
                                     layoutDetail.setVisibility(View.GONE);
                                 }
@@ -390,10 +379,9 @@ public class OthersProfileFragment extends BaseFragment {
                             }
 
 
-
                         } else if (response.body().getPublicProfile() == null) {
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            Toast.makeText(context,"PrivateProfile",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
                             String username = privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
@@ -444,18 +432,13 @@ public class OthersProfileFragment extends BaseFragment {
                                 layout.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
                             }
-                            if(accountType==2)
-                            {
+                            if (accountType == 2) {
                                 getProfileVideos(followersid);
-                            }
-                            else
-                            {
-                                if (isfollowing)
-                                {
+                            } else {
+                                if (isfollowing) {
                                     getProfileVideos(followersid);
 
-                                }
-                                else {
+                                } else {
                                     layoutDetail2.setVisibility(View.VISIBLE);
                                     layoutDetail.setVisibility(View.GONE);
                                 }
@@ -464,8 +447,7 @@ public class OthersProfileFragment extends BaseFragment {
                         }
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
@@ -527,14 +509,14 @@ public class OthersProfileFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_other_profile,menu);
+        inflater.inflate(R.menu.menu_other_profile, menu);
 
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
 
             case R.id.action_profile_report:
                 openReportUser(followerfollowingid);
@@ -756,5 +738,10 @@ public class OthersProfileFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         getParentActivity().updateToolbarTitle(previousTitle);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

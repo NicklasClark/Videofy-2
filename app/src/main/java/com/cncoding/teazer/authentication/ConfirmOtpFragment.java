@@ -93,7 +93,7 @@ public class ConfirmOtpFragment extends AuthFragment {
         Bundle args = new Bundle();
         args.putParcelable(USER_DETAILS, (Parcelable) signUpDetails[0]);
         args.putInt(LAUNCH_ACTION, (Integer) signUpDetails[1]);
-        args.putString(ARG_PICTURE_PATH, (String) signUpDetails[2]);
+        args.putString(ARG_PICTURE_PATH, null);
         fragment.setArguments(args);
         return fragment;
     }
@@ -267,7 +267,9 @@ public class ConfirmOtpFragment extends AuthFragment {
     @Override
     public void onPause() {
         super.onPause();
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 

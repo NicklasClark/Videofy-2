@@ -1,63 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.cncoding.teazer.MainActivity">
+    tools:context="com.cncoding.teazer.MainActivity"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/container"
+    <VideoView
+        android:id="@+id/welcome_video"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 
-        <TextureView
-            android:id="@+id/welcome_video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true" />
+<!--    <TextureView
+        android:id="@+id/welcome_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true" />-->
+
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+<!--    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blur_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:blurOverlayColor="@color/colorTranslucentBgMainActivity">
 
         <FrameLayout
             android:id="@+id/main_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/up_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_previous"
-            android:foreground="@drawable/ripple_dark"
-            android:scaleType="center"
-            android:contentDescription="@string/up"
-            android:layout_marginTop="@dimen/height_24dp"
-            android:layout_alignParentStart="true"
-            android:visibility="invisible"/>
+    </eightbitlab.com.blurview.BlurView>-->
 
-        <FrameLayout
-            android:id="@+id/reveal_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="invisible">
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/up_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_previous"
+        android:foreground="@drawable/ripple_dark"
+        android:scaleType="center"
+        android:contentDescription="@string/up"
+        android:layout_marginTop="@dimen/height_24dp"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"/>
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:indeterminate="true"
-                android:layout_gravity="center"
-                style="?android:attr/progressBarStyleLarge"
-                android:theme="@style/SeekBarTheme" />
+    <!--        <FrameLayout
+                android:id="@+id/reveal_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="invisible">
 
-<!--            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/social_logo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />-->
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:indeterminate="true"
+                    android:layout_gravity="center"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:theme="@style/SeekBarTheme" />
 
-        </FrameLayout>
+    &lt;!&ndash;            <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/social_logo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />&ndash;&gt;
 
-    </RelativeLayout>
+            </FrameLayout>-->
 
-</layout>
+</RelativeLayout>

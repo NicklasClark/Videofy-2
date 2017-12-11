@@ -376,6 +376,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus())
 
+
                                                             if(holder2.notification.isFollowing())
                                                         {
                                                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);

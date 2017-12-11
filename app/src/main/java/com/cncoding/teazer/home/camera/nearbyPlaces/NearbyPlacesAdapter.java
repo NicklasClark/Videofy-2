@@ -1,6 +1,8 @@
 package com.cncoding.teazer.home.camera.nearbyPlaces;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
@@ -11,10 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
 
 public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapter.ViewHolder> implements Filterable {
 
+    static final int TYPE_FIRST_ITEM = 0;
     static final int TYPE_NEARBY_PLACES = 1;
     static final int TYPE_AUTOCOMPLETE = 2;
 
@@ -81,7 +83,8 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     @Override
     public int getItemViewType(int position) {
-        return googleApiClient != null ? TYPE_AUTOCOMPLETE : TYPE_NEARBY_PLACES;
+        if (position == 0) return TYPE_FIRST_ITEM;
+        else return googleApiClient != null ? TYPE_AUTOCOMPLETE : TYPE_NEARBY_PLACES;
     }
 
     /**
@@ -93,14 +96,14 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
         }
     }
 
-    /**
-     * Sets the bounds for all subsequent queries.
-     */
-    public void setBounds(LatLngBounds bounds) {
-        this.bounds = bounds;
-    }
+//    /**
+//     * Sets the bounds for all subsequent queries.
+//     */
+//    public void setBounds(LatLngBounds bounds) {
+//        this.bounds = bounds;
+//    }
 
-    public boolean isAutoCompleteAdapter() {
+    boolean isAutoCompleteAdapter() {
         return googleApiClient != null;
     }
 
@@ -195,40 +198,61 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
+        Drawable drawable;
+        switch (holder.getItemViewType()) {
+            case TYPE_FIRST_ITEM:
+                holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
+                        0, R.drawable.ic_my_location, 0);
+                drawable = holder.placeName.getCompoundDrawables()[0];
+                int color = context.getResources().getColor(R.color.colorAccent);
+                if (drawable != null) drawable.setTint(color);
+                holder.placeName.setTextColor(color);
+                holder.placeName.setText(R.string.current_location);
+                break;
             case TYPE_NEARBY_PLACES:
-                HashMap<String, String> googlePlace = places.get(position);
+                holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
+                        0, 0, 0);
+                drawable = holder.placeName.getCompoundDrawables()[0];
+                if (drawable != null) drawable.setTint(Color.parseColor("#bdbdbd"));
+                holder.placeName.setTextColor(Color.parseColor("#666666"));
+
+                HashMap<String, String> googlePlace = places.get(position - 1);
                 final String placeName = googlePlace.get("place_name");
                 final double latitude = Double.parseDouble(googlePlace.get("lat"));
                 final double longitude = Double.parseDouble(googlePlace.get("lng"));
 
-//        new ImageLoader().load(googlePlace.get("icon")).into(holder.image);
                 holder.placeName.setText(placeName);
-                holder.placeAddress.setText(googlePlace.get("vicinity"));
+                //                holder.placeAddress.setText(googlePlace.get("vicinity"));
 
                 holder.rootLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mListener != null)
                             mListener.onNearbyPlacesAdapterInteraction(new SelectedPlace(placeName, latitude, longitude));
-                        else
-                            Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener", Toast.LENGTH_SHORT)
-                                    .show();
+//                            else
+//                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
+//                                        Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
             case TYPE_AUTOCOMPLETE:
-                holder.placeAddress.setText(resultList.get(position).description);
-                holder.placeName.setText(resultList.get(position).name);
+                holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
+                        0, 0, 0);
+                drawable = holder.placeName.getCompoundDrawables()[0];
+                if (drawable != null) drawable.setTint(Color.parseColor("#bdbdbd"));
+                holder.placeName.setTextColor(Color.parseColor("#666666"));
+
+                holder.placeName.setText(resultList.get(position - 1).name);
+                //                holder.placeAddress.setText(resultList.get(position).description);
 
                 holder.rootLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mListener != null)
                             mListener.onPlaceClick(resultList, holder.getAdapterPosition());
-                        else
-                            Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener", Toast.LENGTH_SHORT)
-                                    .show();
+//                            else
+//                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
+//                                        Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -241,22 +265,22 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
     public int getItemCount() {
         if (googleApiClient != null) {
             if(resultList != null)
-                return resultList.size();
+                return resultList.size() + 1;
             else
                 return 0;
         } else {
             if (places != null)
-                return places.size();
+                return places.size() + 1;
             else
                 return 0;
         }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.nearby_place_item_layout) RelativeLayout rootLayout;
-        @BindView(R.id.nearby_place_name) ProximaNovaRegularTextView placeName;
-        @BindView(R.id.nearby_place_address) ProximaNovaRegularTextView placeAddress;
+//        @BindView(R.id.location_icon) AppCompatImageView locationIcon;
+        @BindView(R.id.nearby_place_name) ProximaNovaSemiboldTextView placeName;
+//        @BindView(R.id.nearby_place_address) ProximaNovaRegularTextView placeAddress;
 
         ViewHolder(View view) {
             super(view);
