@@ -1,11 +1,19 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -13,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,8 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -41,11 +50,15 @@ import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,9 +76,10 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 
 
-
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
 
+    private static final int RC_CAMERA = 11;
+    private static final Object IMAGE_DIRECTORY = 22;
     Context context;
     ImageView bgImage;
     CircularAppCompatImageView profile_image;
@@ -214,9 +228,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileFragment.checkprofileupdated=true;
-
+                ProfileFragment.checkprofileupdated = true;
                 PickImageDialog.build(new PickSetup()).show(EditProfile.this);
+                //showPictureDialog();
+
 
             }
         });
@@ -225,42 +240,36 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
     }
 
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-        return newBitmap;
-    }
 
     @Override
     public void onPickResult(PickResult r) {
         if (r.getError() == null) {
-
-
             try {
 
-                ProfileFragment.checkprofileupdated=true;
+                ProfileFragment.checkprofileupdated = true;
 
 //                SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
 //                final String imageUri = prfs.getString("MYIMAGES", "");
-
-                Picasso.with(EditProfile.this)
-                        .load(r.getUri())
-                        .into(profile_image);
+//               Picasso.with(EditProfile.this)
+//                        .load(r.getUri())
+//                        .into(profile_image);
 
 
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), r.getUri());
-                Bitmap photobitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, false);
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
 
-                Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
 
-                //   Bitmap bitmapimage = scaleDown(bitmap, 300, true);
+//                Bitmap photobitmap = Bitmap.createBitmap(scaledBitmap, scaledBitmap.getWidth() / 2, scaledBitmap.getHeight() / 2, 100, 100);
+//                Bitmap dstBmp;
+//                int dimension = getSquareCropDimensionForBitmap(photobitmap);
+//                dstBmp = ThumbnailUtils.extractThumbnail(bitmap, 200, 200);
+
+
+                Bitmap b = getCorrectlyOrientedImage(context, r.getUri(), 400);
+                profile_image.setImageBitmap(b);
+                bgImage.setImageBitmap(b);
+                byte[] bte = bitmaptoByte(b);
+                Blurry.with(EditProfile.this).from(b).into(bgImage);
 
                 SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -268,7 +277,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 editor.apply();
 
                 File profileImage = new File(r.getPath());
-                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);
 
@@ -279,6 +288,259 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Toast.makeText(this, "oops something went wrong, please try again", Toast.LENGTH_LONG).show();
         }
     }
+
+
+//    public void choosePhotoFromGallary() {
+//        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//
+//        startActivityForResult(galleryIntent, 0);
+//    }
+//
+//    @AfterPermissionGranted(RC_CAMERA)
+//    private void takePhotoFromCamera() {
+//        String[] perms = {Manifest.permission.CAMERA};
+//        if (EasyPermissions.hasPermissions(this, perms)) {
+//            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//            startActivityForResult(intent, 1);
+//
+//
+//        } else {
+//            // Do not have permissions, request them now
+//            EasyPermissions.requestPermissions(this, context.getString(R.string.camera_rationale),
+//                    RC_CAMERA, perms);
+//        }
+//    }
+//
+//    private void showPictureDialog() {
+//        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+//        pictureDialog.setTitle("Select Action");
+//        String[] pictureDialogItems = {
+//                "Select photo from gallery",
+//                "Capture photo from camera"};
+//        pictureDialog.setItems(pictureDialogItems,
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        switch (i) {
+//                            case 0:
+//                                choosePhotoFromGallary();
+//                                break;
+//                            case 1:
+//                                takePhotoFromCamera();
+//                                break;
+//                        }
+//                    }
+//                });
+//
+//        pictureDialog.show();
+//    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == this.RESULT_CANCELED) {
+//            return;
+//        }
+//        if (requestCode == 0) {
+//            if (data != null) {
+//                Uri contentURI = data.getData();
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+//                    Toast.makeText(EditProfile.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+//
+//                    Bitmap b = getCorrectlyOrientedImage(context, contentURI, 200);
+//                    profile_image.setImageBitmap(b);
+//                    //  bgImage.setImageBitmap(b);
+//
+//
+//                    byte[] bte = bitmaptoByte(b);
+//                    Blurry.with(EditProfile.this).from(b).into(bgImage);
+//
+//                    SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = preferences.edit();
+//                    editor.putString("MYIMAGES", contentURI.toString());
+//                    editor.apply();
+//
+//                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
+//                    MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
+//                    saveDataToDatabase(body);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(EditProfile.this, "Failed!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//        } else if (requestCode == 1) {
+//
+//
+//            Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
+//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//            byte[] b = bitmaptoByte(thumbnail);
+//            //Uri imageur = getImageUri(context, thumbnail);
+//
+//
+//            // Toast.makeText(context, String.valueOf(imageur), Toast.LENGTH_LONG).show();
+//            String s = saveImage(thumbnail);
+//
+//            try {
+//
+//                Bitmap bitmap = getCorrectlyOrientedImage(context, Uri.parse(s), 200);
+//                profile_image.setImageBitmap(bitmap);
+//                bgImage.setImageBitmap(bitmap);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//
+//            }
+//
+//
+//            Toast.makeText(EditProfile.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+//
+//        }
+//    }
+
+
+
+
+
+    public static int getOrientation(Context context, Uri photoUri) {
+
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+
+        if (cursor == null || cursor.getCount() != 1) {
+            return 90;  //Assuming it was taken portrait
+        }
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
+    /**
+     * Rotates and shrinks as needed
+     */
+    public static Bitmap getCorrectlyOrientedImage(Context context, Uri photoUri, int maxWidth)
+            throws IOException {
+
+        InputStream is = context.getContentResolver().openInputStream(photoUri);
+        BitmapFactory.Options dbo = new BitmapFactory.Options();
+        dbo.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(is, null, dbo);
+        is.close();
+
+
+        int rotatedWidth, rotatedHeight;
+        int orientation = getOrientation(context, photoUri);
+
+        if (orientation == 90 || orientation == 270) {
+            Log.d("ImageUtil", "Will be rotated");
+            rotatedWidth = dbo.outHeight;
+            rotatedHeight = dbo.outWidth;
+        } else {
+            rotatedWidth = dbo.outWidth;
+            rotatedHeight = dbo.outHeight;
+        }
+
+        Bitmap srcBitmap;
+        is = context.getContentResolver().openInputStream(photoUri);
+        Log.d("ImageUtil", String.format("rotatedWidth=%s, rotatedHeight=%s, maxWidth=%s",
+                rotatedWidth, rotatedHeight, maxWidth));
+        if (rotatedWidth > maxWidth || rotatedHeight > maxWidth) {
+            float widthRatio = ((float) rotatedWidth) / ((float) maxWidth);
+            float heightRatio = ((float) rotatedHeight) / ((float) maxWidth);
+            float maxRatio = Math.max(widthRatio, heightRatio);
+            Log.d("ImageUtil", String.format("Shrinking. maxRatio=%s",
+                    maxRatio));
+
+            // Create the bitmap from file
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = (int) maxRatio;
+            srcBitmap = BitmapFactory.decodeStream(is, null, options);
+        } else {
+            Log.d("ImageUtil", String.format("No need for Shrinking. maxRatio=%s",
+                    1));
+
+            srcBitmap = BitmapFactory.decodeStream(is);
+            Log.d("ImageUtil", String.format("Decoded bitmap successful"));
+        }
+        is.close();
+
+        /*
+         * if the orientation is not 0 (or -1, which means we don't know), we
+         * have to do a rotation.
+         */
+        if (orientation > 0) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+
+            srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(),
+                    srcBitmap.getHeight(), matrix, true);
+        }
+
+        return srcBitmap;
+    }
+
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+
+    public static byte[] bitmaptoByte(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        return data;
+    }
+
+//
+//    public Uri getImageUri(Context inContext, Bitmap inImage) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+//        return Uri.parse(path);
+//    }
+//
+//    public String saveImage(Bitmap myBitmap) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                String.valueOf(Environment.getExternalStorageDirectory()));
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            File f = new File(wallpaperDirectory, Calendar.getInstance()
+//                    .getTimeInMillis() + ".jpg");
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this,
+//                    new String[]{f.getPath()},
+//                    new String[]{"image/jpeg"}, null);
+//            fo.close();
+//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+//
+//            return f.getAbsolutePath();
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -310,6 +572,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+       // takePhotoFromCamera();
     }
 
 
@@ -545,6 +808,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
     }
+
+
 }
 
 

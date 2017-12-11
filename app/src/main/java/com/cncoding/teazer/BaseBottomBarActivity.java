@@ -268,50 +268,6 @@ public class BaseBottomBarActivity extends BaseActivity
         }, this.getIntent().getData(), this);
     }
 
-//    private void getDynamicLinks() {
-//        FirebaseDynamicLinks.getInstance()
-//                .getDynamicLink(getIntent())
-//                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-//                    @Override
-//                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-//                        // Get deep link from result (may be null if no link is found)
-//                        try {
-//                            Uri deepLink = null;
-//                            if (pendingDynamicLinkData != null) {
-//                                deepLink = pendingDynamicLinkData.getLink();
-//                                Log.d("Firebase", deepLink.toString());
-//                            }
-//                            String postId = deepLink.getQueryParameter("link");
-//                            ApiCallingService.Posts.getPostDetails(Integer.parseInt(postId), BaseBottomBarActivity.this)
-//                                    .enqueue(new Callback<PostDetails>() {
-//                                        @Override
-//                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-//                                            if (response.code() == 200) {
-//                                                PostDetailsActivity.newInstance(BaseBottomBarActivity.this,
-//                                                        response.body(), null, false);
-//                                            } else
-//                                                Log.e("Fetching post details", response.code() + "_" + response.message());
-//                                        }
-//
-//                                        @Override
-//                                        public void onFailure(Call<PostDetails> call, Throwable t) {
-//                                            Log.e("Fetching post details", t.getMessage() != null ? t.getMessage() : "Failed!!!");
-//                                        }
-//                                    });
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(this, new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w("Firebase", "getDynamicLink:onFailure", e);
-//                    }
-//                });
-//    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
