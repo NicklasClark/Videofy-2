@@ -206,6 +206,6 @@ public class SignupFragment2 extends AuthFragment {
     }
 
     public interface OnFinalSignupInteractionListener {
-        void onFinalEmailSignupInteraction(int action, Authorize signUpDetails, String picturePath);
+        void onFinalEmailSignupInteraction(Authorize signUpDetails, String picturePath);
     }
 }

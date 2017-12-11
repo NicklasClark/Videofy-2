@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,14 +24,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.TextureView;
-import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -62,7 +58,6 @@ import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
@@ -81,7 +76,8 @@ import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity
-        implements SurfaceTextureListener,
+        implements
+//        SurfaceTextureListener,
         OnWelcomeInteractionListener,
         LoginInteractionListener, OnOtpInteractionListener,
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
@@ -109,7 +105,7 @@ public class MainActivity extends AppCompatActivity
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
-    public static final int SIGNUP_FAILED_ACTION = 23;
+//    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
@@ -117,15 +113,19 @@ public class MainActivity extends AppCompatActivity
 //    public static final int BACK_PRESSED_ACTION = 6;
 //    public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
     public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
-    private String VIDEO_PATH;
+    private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
 
-    @BindView(R.id.welcome_video) TextureView welcomeVideo;
+    @BindView(R.id.container) RelativeLayout rootView;
+//    @BindView(R.id.blur_view) BlurView blurView;
+    @BindView(R.id.welcome_video) VideoView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
 
-    private MediaPlayer mediaPlayer;
+//    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
-    private TransitionDrawable transitionDrawable;
+//    private BlurView.ControllerSettings settings;
+//    private ValueAnimator animator;
+//    private TransitionDrawable transitionDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,11 +140,42 @@ public class MainActivity extends AppCompatActivity
 //                .build());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+//        settings = blurView.setupWith(rootView)
+//                .windowBackground(getWindow().getDecorView().getBackground())
+//                .blurAlgorithm(new RenderScriptBlur(this))
+//                .blurRadius(20);
+//        blurView.setBlurEnabled(false);
+
         fragmentManager = getSupportFragmentManager();
 
-        VIDEO_PATH = "android.resource://" + getPackageName() + "/" + R.raw.welcome_video;
+//        welcomeVideo.setSurfaceTextureListener(MainActivity.this);
+        try {
+            welcomeVideo.setKeepScreenOn(true);
+            welcomeVideo.setVideoPath(VIDEO_PATH);
+            welcomeVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setLooping(true);
+                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    mediaPlayer.start();
+                }
+            });
+            welcomeVideo.start();
 
-        welcomeVideo.setSurfaceTextureListener(MainActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+//        Drawable[] backgrounds = {getResources().getDrawable(android.R.color.transparent),
+//                getResources().getDrawable(R.color.colorTranslucentBgMainActivity)};
+//        transitionDrawable = new TransitionDrawable(backgrounds);
+//        transitionDrawable.setCrossFadeEnabled(true);
+//        mainFragmentContainer.setBackground(transitionDrawable);
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
@@ -163,6 +194,18 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.main_fragment_container, new WelcomeFragment(), TAG_WELCOME_FRAGMENT);
                 break;
             case TAG_LOGIN_FRAGMENT:
+//                blurView.setBlurEnabled(true);
+//                blurView.updateBlur();
+//                animator = ValueAnimator.ofFloat(1f, 15f);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        settings.blurRadius((float) animator.getAnimatedValue());
+//                        blurView.updateBlur();
+//                    }
+//                });
+//                animator.setDuration(400);
+//                animator.start();
                 if (args!= null) {
                     String name = fragmentManager.getBackStackEntryAt(0).getName();
                     fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -186,6 +229,18 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case TAG_SIGNUP_FRAGMENT:
+//                blurView.setBlurEnabled(true);
+//                blurView.updateBlur();
+//                animator = ValueAnimator.ofFloat(1f, 15f);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        settings.blurRadius((float) animator.getAnimatedValue());
+//                        blurView.updateBlur();
+//                    }
+//                });
+//                animator.setDuration(400);
+//                animator.start();
                 toggleUpBtnVisibility(View.VISIBLE);
                 transaction.replace(R.id.main_fragment_container, new SignupFragment(), TAG_SIGNUP_FRAGMENT);
                 break;
@@ -209,26 +264,20 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
-        hideKeyboard(this, upBtn);
-        if (!reverse) {
-            setFragment(tag, addToBackStack, null);
-            Drawable[] backgrounds = {getResources().getDrawable(R.drawable.bg_transparent),
-                    getResources().getDrawable(R.color.colorTranslucentBgMainActivity)};
-            transitionDrawable = new TransitionDrawable(backgrounds);
-            transitionDrawable.setCrossFadeEnabled(true);
-            mainFragmentContainer.setBackground(transitionDrawable);
-            transitionDrawable.startTransition(400);
-//            new Blur(this).execute();
-        }
-        else {
-            if (transitionDrawable != null)
-                transitionDrawable.reverseTransition(400);
-            if (mediaPlayer != null && !mediaPlayer.isPlaying())
-                mediaPlayer.start();
-        }
-    }
+//    private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
+//        hideKeyboard(this, upBtn);
+//        if (!reverse) {
+//            setFragment(tag, addToBackStack, null);
+//            transitionDrawable.startTransition(400);
+////            new Blur(this).execute();
+//        }
+//        else {
+//            if (transitionDrawable != null)
+//                transitionDrawable.reverseTransition(400);
+//            if (mediaPlayer != null && !mediaPlayer.isPlaying())
+//                mediaPlayer.start();
+//        }
+//    }
 
 //    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
 //
@@ -259,7 +308,7 @@ public class MainActivity extends AppCompatActivity
 //                    new BitmapDrawable(reference.get().getResources(), bitmap)};
 //            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
 //            reference.get().transitionDrawable.setCrossFadeEnabled(true);
-//            reference.get().mainFragmentContainer.setBackground(reference.get().transitionDrawable);
+//            reference.get().secondFragmentContainer.setBackground(reference.get().transitionDrawable);
 //            reference.get().transitionDrawable.startTransition(400);
 //        }
 //    }
@@ -269,47 +318,48 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        Surface surface = new Surface(surfaceTexture);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setScreenOnWhilePlaying(true);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
-            mediaPlayer.setSurface(surface);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.prepareAsync();
-
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.start();
-                }
-            });
-        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-    }
+//    @Override
+//    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+//        Surface surface = new Surface(surfaceTexture);
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.setScreenOnWhilePlaying(true);
+//        try {
+//            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
+//            mediaPlayer.setSurface(surface);
+//            mediaPlayer.setLooping(true);
+//            mediaPlayer.prepareAsync();
+//
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mediaPlayer) {
+//                    mediaPlayer.start();
+//                }
+//            });
+//        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+//    }
+//
+//    @Override
+//    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+//    }
 
     @Override
     public void onWelcomeInteraction(int action, Profile facebookProfile, Bundle facebookData,
                                      @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-                startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
+                setFragment(TAG_LOGIN_FRAGMENT, true, null);
+//                startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
 //                mediaPlayer.pause();
@@ -323,7 +373,8 @@ public class MainActivity extends AppCompatActivity
                     handleGoogleSignIn(googleAccount, button, null);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
-                startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
+                setFragment(TAG_SIGNUP_FRAGMENT, true, null);
+//                startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
                 break;
 //            case RESUME_WELCOME_VIDEO_ACTION:
 //                if (mediaPlayer != null && loggingIn)
@@ -483,7 +534,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (!accountAlreadyExists)
-                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+                    setFragment(TAG_SELECT_INTERESTS, false, null);
+//                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
                 else
                     successfullyLoggedIn();
             }
@@ -510,8 +562,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOtpInteraction(Authorize verificationDetails, String picturePath) {
         if (verificationDetails != null) {
-                startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-                new UpdateProfilePic(this).execute(picturePath);
+            setFragment(TAG_SELECT_INTERESTS, false, null);
+//            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+            new UpdateProfilePic(this).execute(picturePath);
         } else {
 //            if (isVerified)
                 successfullyLoggedIn();
@@ -535,7 +588,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFinalEmailSignupInteraction(int action, final Authorize signUpDetails, String picturePath) {
+    public void onFinalEmailSignupInteraction(final Authorize signUpDetails, String picturePath) {
         setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
     }
 
@@ -548,16 +601,20 @@ public class MainActivity extends AppCompatActivity
 
         WeakReference<MainActivity> reference;
 
-        public UpdateProfilePic(MainActivity context) {
+        UpdateProfilePic(MainActivity context) {
             reference = new WeakReference<>(context);
         }
 
         @Override
         protected MultipartBody.Part doInBackground(String... strings) {
-            File profileImage = new File(strings[0]);
-            if (profileImage.exists()) {
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
-                return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+            try {
+                File profileImage = new File(strings[0]);
+                if (profileImage.exists()) {
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                    return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -565,7 +622,14 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(MultipartBody.Part part) {
             if (part != null) {
-                ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(null);
+                ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(new Callback<ResultObject>() {
+                    @Override
+                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    }
+                    @Override
+                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                    }
+                });
             }
         }
     }
@@ -712,33 +776,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mediaPlayer != null)
-            if (!mediaPlayer.isPlaying())
-                mediaPlayer.start();
+        if (welcomeVideo != null)
+            if (!welcomeVideo.isPlaying())
+                welcomeVideo.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mediaPlayer != null)
-            mediaPlayer.pause();
+        if (welcomeVideo != null)
+            welcomeVideo.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) {
+        if (welcomeVideo != null) {
             // Make sure we stop video and release resources when activity is destroyed.
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
+            welcomeVideo.stopPlayback();
+//            welcomeVideo.release();
+            welcomeVideo = null;
         }
     }
 
@@ -758,7 +815,19 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.popBackStack();
             if (backStackCount == 1) {
                 toggleUpBtnVisibility(View.INVISIBLE);
-                startFragmentTransition(true, null, false);
+//                animator = ValueAnimator.ofFloat(15f, 0f);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        settings.blurRadius((float) animator.getAnimatedValue());
+//                        blurView.updateBlur();
+//                    }
+//                });
+//                animator.setDuration(400);
+//                animator.start();
+//                blurView.setBlurEnabled(false);
+//                blurView.updateBlur();
+//                startFragmentTransition(true, null, false);
             }
         }
         else super.onBackPressed();

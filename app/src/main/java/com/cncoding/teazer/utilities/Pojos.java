@@ -422,7 +422,7 @@ public class Pojos {
             private int total_reactions;
             private String title;
             private String created_at;
-            private ArrayList<Medias> post_video_info;
+            private ArrayList<Medias> medias;
 
             public Videos(int post_id, int posted_by, int likes, int views, int total_reactions,
                           String title, String created_at, ArrayList<Medias> post_video_info) {
@@ -433,7 +433,7 @@ public class Pojos {
                 this.total_reactions = total_reactions;
                 this.title = title;
                 this.created_at = created_at;
-                this.post_video_info = post_video_info;
+                this.medias = post_video_info;
             }
 
             protected Videos(Parcel in) {
@@ -444,7 +444,7 @@ public class Pojos {
                 total_reactions = in.readInt();
                 title = in.readString();
                 created_at = in.readString();
-                post_video_info = in.createTypedArrayList(Medias.CREATOR);
+                medias = in.createTypedArrayList(Medias.CREATOR);
             }
 
             @Override
@@ -456,7 +456,7 @@ public class Pojos {
                 dest.writeInt(total_reactions);
                 dest.writeString(title);
                 dest.writeString(created_at);
-                dest.writeTypedList(post_video_info);
+                dest.writeTypedList(medias);
             }
 
             @Override
@@ -505,7 +505,7 @@ public class Pojos {
             }
 
             public ArrayList<Medias> getPostVideoInfo() {
-                return post_video_info;
+                return medias;
             }
         }
     }

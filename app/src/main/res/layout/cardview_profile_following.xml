@@ -32,6 +32,7 @@
             android:text="@string/following"
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem" />
+
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/action"
             android:layout_width="wrap_content"

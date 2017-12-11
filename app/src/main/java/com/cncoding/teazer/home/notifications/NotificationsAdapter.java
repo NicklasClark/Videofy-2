@@ -375,14 +375,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
                                                         if (response.body().getStatus())
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-//                                                        else {
-////                                                            Log.d("AcceptJoinRequest", response.code()
-////                                                                    + " : " + response.body().getMessage());
-//                                                        }
-//                                                    } else {
-////                                                        Log.d("AcceptJoinRequest", response.code()
-////                                                                + " : " + response.body().getMessage());
+
+
+                                                            if(holder2.notification.isFollowing())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                        }
+                                                        else if(holder2.notification.isRequest_sent())
+                                                        {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                        }
+                                                        else {
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+
+                                                            }
                                                     }
                                                 }
 

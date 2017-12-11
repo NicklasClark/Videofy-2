@@ -2,7 +2,7 @@ package com.cncoding.teazer.customViews;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.design.widget.TextInputEditText;
+import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.util.AttributeSet;
 
 import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttrs;
@@ -12,7 +12,7 @@ import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttr
  * Created by Prem $ on 9/19/2017.
  */
 
-public class ProximaNovaRegularTextInputEditText extends TextInputEditText {
+public class ProximaNovaRegularTextInputEditText extends EmojiAppCompatEditText {
     public ProximaNovaRegularTextInputEditText(Context context) {
         super(context);
         applyCustomFont(context);

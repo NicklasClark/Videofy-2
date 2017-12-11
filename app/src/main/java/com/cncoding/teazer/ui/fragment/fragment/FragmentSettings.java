@@ -42,6 +42,9 @@ public class FragmentSettings extends Fragment{
     @BindView(R.id.simpleSwitch)
     Switch simpleSwitch;
 
+    @BindView(R.id.recentelyDeleted)
+    LinearLayout recentelyDeleted;
+
     @BindView(R.id.logoutlayout)
     LinearLayout logout;
     @BindView(R.id.changePassword)
@@ -62,6 +65,9 @@ public class FragmentSettings extends Fragment{
     public static final String   ACCOUNT_TYPE="accountType";
     int accountType;
     ChangeCategoriesListener mlistener;
+
+
+
 
 
     public static FragmentSettings newInstance( String accountType) {
@@ -124,6 +130,13 @@ public class FragmentSettings extends Fragment{
             @Override
             public void onClick(View view) {
                 mlistener.deactivateAccountListener();
+
+            }
+        });
+        recentelyDeleted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
 
             }
         });
@@ -222,6 +235,7 @@ public class FragmentSettings extends Fragment{
     {
         public void changeCategoriesListener();
         public void deactivateAccountListener();
+
     }
 
 

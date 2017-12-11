@@ -244,6 +244,13 @@ public class LoginFragment extends AuthFragment {
     @OnClick(R.id.login_through_otp) public void onLoginThroughOtpClicked() {
 //            Toggle login through OTP
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        //setting padding
+        float scale = getResources().getDisplayMetrics().density;
+        int trbPadding = (int) (14*scale + 0.5f);
+        int leftPadding = (int) (0*scale + 0.5f);
+        usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
         usernameView.setTextAppearance(context, R.style.AppTheme_PhoneNumberEditText);
@@ -267,6 +274,11 @@ public class LoginFragment extends AuthFragment {
         loginOptionsLayout.setVisibility(VISIBLE);
         usernameView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         usernameView.setHint(R.string.username_email_mobile);
+
+        float scale = getResources().getDisplayMetrics().density;
+        int trbPadding = (int) (14*scale + 0.5f);
+        usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
         countryCodePicker.setVisibility(View.GONE);

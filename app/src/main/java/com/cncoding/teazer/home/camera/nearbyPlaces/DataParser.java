@@ -50,10 +50,10 @@ public class DataParser {
     private static HashMap<String, String> getPlace(JSONObject googlePlaceJson) {
         HashMap<String, String> googlePlaceMap = new HashMap<>();
         String placeName = "-NA-";
-        String vicinity = "-NA-";
+//        String vicinity = "-NA-";
         String latitude;
         String longitude;
-        String icon;
+//        String icon;
 //        String nextPageToken;
 //        String reference;
 
@@ -61,19 +61,19 @@ public class DataParser {
             if (!googlePlaceJson.isNull("name")) {
                 placeName = googlePlaceJson.getString("name");
             }
-            if (!googlePlaceJson.isNull("vicinity")) {
-                vicinity = googlePlaceJson.getString("vicinity");
-            }
+//            if (!googlePlaceJson.isNull("vicinity")) {
+//                vicinity = googlePlaceJson.getString("vicinity");
+//            }
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            icon = googlePlaceJson.getString("icon");
+//            icon = googlePlaceJson.getString("icon");
 //            nextPageToken = googlePlaceJson.getString("next_page_token");
 //            reference = googlePlaceJson.getString("reference");
             googlePlaceMap.put("place_name", placeName);
-            googlePlaceMap.put("vicinity", vicinity);
+//            googlePlaceMap.put("vicinity", vicinity);
+//            googlePlaceMap.put("icon", icon);
             googlePlaceMap.put("lat", latitude);
             googlePlaceMap.put("lng", longitude);
-            googlePlaceMap.put("icon", icon);
 //            googlePlaceMap.put("next_page_token", nextPageToken);
 //            googlePlaceMap.put("reference", reference);
         } catch (JSONException e) {

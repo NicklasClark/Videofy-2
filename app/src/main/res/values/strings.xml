@@ -123,7 +123,7 @@
     <string name="select_at_least_5_to_continue">Select at least 5 interests to continue</string>
     <string name="continue_text">Continue</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="find_a_location">\t\tFind a location</string>
+    <string name="find_a_location">Find a location</string>
     <string name="select_a_location">Select a location</string>
     <string name="select_your_interests">Select your interests</string>
     <string name="select_at_least_5_interests">Select at least 5 interests</string>
@@ -284,6 +284,7 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
+    <string name="camera_rationale">Teazer need permission to capture image using camera</string>
     <string name="upload_profile_pic">Upload profile pic</string>
     <string name="crop_selected_image">Crop selected image</string>
     <string name="cannot_start_camera">Cannot start camera, please restart your device</string>
@@ -297,4 +298,8 @@
     <string name="private_info">Private Info</string>
     <string name="email_id">Email id</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="error_choosing_photo">Error choosing photo</string>
+    <string name="current_location">Current location</string>
+    <string name="type_a_name_to_tag">Type a name to tag</string>
+    <string name="plus">+</string>
 </resources>

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,14 +14,14 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
@@ -52,9 +51,9 @@ public class TagsAndCategoryFragment extends Fragment {
 //    private static final int CATEGORIES_LIMIT = 5;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.headerTextView) ProximaNovaRegularTextView headerTextView;
+    @BindView(R.id.headerTextView) ProximaNovaRegularAutoCompleteTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.tags_categories_done) FloatingActionButton doneBtn;
+    @BindView(R.id.tags_categories_save) ProximaNovaSemiboldButton doneBtn;
     @BindView(R.id.no_friends_text_view) ProximaNovaBoldTextView noFriendsTextView;
 
     private String action;
@@ -123,7 +122,7 @@ public class TagsAndCategoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
-            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous_dark);
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back);
         }
     }
 
@@ -131,12 +130,12 @@ public class TagsAndCategoryFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
-                headerTextView.setText(R.string.tag_your_friends);
-                tagsAdapter = new TagsAdapter(circles, this, selectedData);
+                headerTextView.setHint(R.string.tag_your_friends);
+                tagsAdapter = new TagsAdapter(getContext(), circles, this, selectedData);
                 recyclerView.setAdapter(tagsAdapter);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
-                headerTextView.setText(R.string.select_up_to_5_categories);
+                headerTextView.setHint(R.string.select_up_to_5_categories);
                 categoriesAdapter = new CategoriesAdapter(categories, this, selectedData);
                 recyclerView.setAdapter(categoriesAdapter);
                 break;
@@ -147,10 +146,10 @@ public class TagsAndCategoryFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 5) {
-                    changeVisibility(INVISIBLE);
+                    changeDoneBtnVisibility(INVISIBLE);
                 }
                 else if (dy < -5) {
-                    changeVisibility(VISIBLE);
+                    changeDoneBtnVisibility(VISIBLE);
                 }
             }
         });
@@ -165,14 +164,14 @@ public class TagsAndCategoryFragment extends Fragment {
                     if (!tempList.isEmpty()) {
                         categories.addAll(tempList);
                         recyclerView.getAdapter().notifyDataSetChanged();
-                        doneBtn.setVisibility(VISIBLE);
+                        changeDoneBtnVisibility(VISIBLE);
                     } else {
-                        doneBtn.setVisibility(View.GONE);
+                        changeDoneBtnVisibility(View.GONE);
                         noFriendsTextView.setText(R.string.error_fetchng_categories);
                         noFriendsTextView.setVisibility(VISIBLE);
                     }
                 } else {
-                    doneBtn.setVisibility(View.GONE);
+                    changeDoneBtnVisibility(View.GONE);
                     noFriendsTextView.setText(R.string.error_fetchng_categories);
                     noFriendsTextView.setVisibility(VISIBLE);
 //                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
@@ -198,13 +197,13 @@ public class TagsAndCategoryFragment extends Fragment {
                         nextPage = circleList.isNextPage();
                         circles.addAll(circleList.getCircles());
                         recyclerView.getAdapter().notifyDataSetChanged();
-                        doneBtn.setVisibility(VISIBLE);
+                        changeDoneBtnVisibility(VISIBLE);
                     } else {
-                        doneBtn.setVisibility(View.GONE);
+                        changeDoneBtnVisibility(View.GONE);
                         noFriendsTextView.setVisibility(VISIBLE);
                     }
                 } else {
-                    doneBtn.setVisibility(View.GONE);
+                    changeDoneBtnVisibility(View.GONE);
                     noFriendsTextView.setText(getErrorMessage(response.errorBody()));
                     noFriendsTextView.setVisibility(VISIBLE);
 //                    ViewUtils.showSnackBar(doneBtn, getErrorMessage(response.errorBody()));
@@ -221,7 +220,7 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     @SuppressWarnings("unchecked")
-    @OnClick(R.id.tags_categories_done) public void getResult() {
+    @OnClick(R.id.tags_categories_save) public void getResult() {
         try {
             switch (action) {
                 case ACTION_TAGS_FRAGMENT:
@@ -339,18 +338,8 @@ public class TagsAndCategoryFragment extends Fragment {
         return string.toString();
     }
 
-    public void changeVisibility(int visibility) {
-                if (doneBtn.getVisibility() != visibility) {
-            switch (visibility) {
-                case VISIBLE:
-                    doneBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.float_up));
-                    break;
-                case INVISIBLE:
-                    doneBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.sink_down));
-                    break;
-                default:
-                    break;
-            }
+    public void changeDoneBtnVisibility(int visibility) {
+        if (doneBtn.getVisibility() != visibility) {
             doneBtn.setVisibility(visibility);
         }
     }
