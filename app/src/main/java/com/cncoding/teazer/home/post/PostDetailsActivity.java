@@ -286,7 +286,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     .load(thumbUrl)
                     .into(placeholder);
 
-
         loadingProgressBar.setVisibility(VISIBLE);
 
         likeAction(postDetails.canLike(), false);
@@ -1075,12 +1074,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             progressBar.setVisibility(VISIBLE);
                             break;
                         case STATE_READY:
-                            playPauseButton.setImageResource(R.drawable.ic_pause_big);
-                            if (playPauseButton.getVisibility() == VISIBLE)
-                                togglePlayPauseBtnVisibility(false);
-                            progressBar.setVisibility(GONE);
-                            placeholder.setImageBitmap(null);
-                            image = null;
+                            if (player.getPlayWhenReady()) {
+                                playPauseButton.setImageResource(R.drawable.ic_pause_big);
+                                if (playPauseButton.getVisibility() == VISIBLE)
+                                    togglePlayPauseBtnVisibility(false);
+                                progressBar.setVisibility(GONE);
+                                placeholder.setImageBitmap(null);
+                                image = null;
+                            }
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {

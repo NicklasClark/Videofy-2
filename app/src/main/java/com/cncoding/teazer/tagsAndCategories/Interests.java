@@ -165,7 +165,7 @@ public class Interests extends BaseFragment {
 
                 @Override
                 public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
-                    Log.e("getCategories", t.getMessage());
+                    t.printStackTrace();
                 }
             });
             return null;
@@ -188,7 +188,7 @@ public class Interests extends BaseFragment {
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Log.e("Updating categories", t.getMessage());
+                        t.printStackTrace();
                     }
                 });
     }
