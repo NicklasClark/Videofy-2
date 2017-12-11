@@ -699,8 +699,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 }
                             }
                         } else {
-                            Toast.makeText(PostDetailsActivity.this, R.string.error_getting_tagged_users,
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
                         }
                     }
 

@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -157,6 +158,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
     private static boolean isCompressing = false;
+    private static FragmentActivity mActivity;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -175,6 +177,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mActivity = getActivity();
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
@@ -424,11 +429,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
+        protected void onPostExecute(final Bitmap bitmap) {
             try {
                 if (bitmap != null) {
-                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                    reference.get().thumbnailView.setImageBitmap(bitmap);
+                    mActivity.runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                            reference.get().thumbnailView.setImageBitmap(bitmap);
+                        }
+                    });
+
 //                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                    Glide.with(reference.get())

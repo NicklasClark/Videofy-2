@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.annotation.SuppressLint;
+import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +27,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -90,7 +92,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exo_player);
+        setContentView(R.layout.activity_reaction_exo_player);
         ButterKnife.bind(this);
 
         playSource = getIntent().getIntExtra("SOURCE", 0);
@@ -216,8 +218,10 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
+            LoopingMediaSource loopingMediaSource  = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
-            player.prepare(mediaSource);
+            player.prepare(loopingMediaSource);
+            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
             player.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             e.printStackTrace();

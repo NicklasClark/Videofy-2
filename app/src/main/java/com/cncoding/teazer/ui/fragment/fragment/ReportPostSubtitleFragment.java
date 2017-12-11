@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostSubtitleAdapter;
@@ -28,6 +27,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     RecyclerView reportTitlesRecyclerView;
     ReportPostSubtitleAdapter reportPostSubtitleAdapter = null;
     private ReportPostTitlesResponse reportPostTitlesResponse;
+    private View rootView;
 
     public ReportPostSubtitleFragment() {
         // Empty constructor is required for DialogFragment
@@ -52,7 +52,7 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_report_user, container);
+        rootView = inflater.inflate(R.layout.fragment_report_user, container);
         ButterKnife.bind(this, rootView);
         return rootView;
     }
@@ -60,9 +60,6 @@ public class ReportPostSubtitleFragment extends DialogFragment implements Report
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         reportTitlesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         getPostSubReportTypes();
     }
