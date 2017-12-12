@@ -48,9 +48,9 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPl
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.tagsAndCategories.Interests;
-import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
-import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
+import com.cncoding.teazer.home.tagsAndCategories.Interests;
+import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
+import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
@@ -88,7 +88,8 @@ import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.VIDEO_UPLOAD;
-import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
+import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
+import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
@@ -101,7 +102,7 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDE
 
 public class CameraActivity extends AppCompatActivity
         implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
-        TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener,
+        TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener, Interests.OnInterestsInteractionListener,
         NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
@@ -344,6 +345,21 @@ public class CameraActivity extends AppCompatActivity
             @Override
             public void run() {
                 uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
+            }
+        }, 100);
+    }
+
+    @Override
+    public void onInterestsInteraction() {
+    }
+
+    @Override
+    public void onInterestsSelected(final String resultToShow, final String resultToSend, final int count) {
+        fragmentManager.popBackStack();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT, resultToShow, resultToSend, count);
             }
         }, 100);
     }

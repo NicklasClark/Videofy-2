@@ -50,8 +50,8 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.authentication.SignupFragment2.OnFinalSignupInteractionListener;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.tagsAndCategories.Interests;
-import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.home.tagsAndCategories.Interests;
+import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
@@ -572,6 +572,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onInterestsInteraction() {
         successfullyLoggedIn();
+    }
+
+    @Override
+    public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
 
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {

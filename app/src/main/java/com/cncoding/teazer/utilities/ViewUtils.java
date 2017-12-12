@@ -235,11 +235,12 @@ public class ViewUtils {
     }
 
     public static GradientDrawable getBackground(Context context, TextView textView, int bgColor,
-                                                 int strokeColor, int textColor, float strokeWidth) {
+                                                 int strokeColor, int textColor, float cornerRadius) {
+        float density = context.getResources().getDisplayMetrics().density;
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(bgColor);
-        gradientDrawable.setCornerRadius(3);
-        gradientDrawable.setStroke((int)((strokeWidth * context.getResources().getDisplayMetrics().density) + 0.5), strokeColor);
+        gradientDrawable.setCornerRadius((float) (cornerRadius * density + 0.5));
+        gradientDrawable.setStroke((int) (1 * density + 0.5), strokeColor);
         textView.setTextColor(textColor);
         return gradientDrawable;
     }

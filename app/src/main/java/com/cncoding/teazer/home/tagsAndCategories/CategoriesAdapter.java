@@ -1,4 +1,4 @@
-package com.cncoding.teazer.tagsAndCategories;
+package com.cncoding.teazer.home.tagsAndCategories;
 
 import android.graphics.Color;
 import android.support.v4.app.Fragment;

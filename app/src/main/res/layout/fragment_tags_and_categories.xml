@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true"
-    tools:context=".tagsAndCategories.TagsAndCategoryFragment">
+    tools:context=".home.tagsAndCategories.TagsAndCategoryFragment">
 
     <ProgressBar
         android:id="@+id/progress_bar"

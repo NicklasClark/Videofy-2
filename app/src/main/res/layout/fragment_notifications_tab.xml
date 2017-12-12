@@ -33,6 +33,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/action_bar_height"
             app:layoutManager="LinearLayoutManager" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

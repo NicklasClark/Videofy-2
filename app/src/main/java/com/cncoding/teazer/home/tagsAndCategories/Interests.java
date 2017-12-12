@@ -1,4 +1,4 @@
-package com.cncoding.teazer.tagsAndCategories;
+package com.cncoding.teazer.home.tagsAndCategories;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.SELECTED_DATA;
+import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.SELECTED_DATA;
 
 public class Interests extends BaseFragment {
     private static final String ARG_IS_FOR_VIDEO = "isForVideo";
@@ -56,10 +56,11 @@ public class Interests extends BaseFragment {
     private ArrayList<Category> categories;
     private boolean isEditing;
     private boolean isForVideo;
+    private String resultToSend;
+    private String selectedData;
     private InterestsAdapter interestsAdapter;
     private OnInterestsInteractionListener mListener;
     private ArrayList<Category> interestList;
-    private String selectedData;
 
     public Interests() {
         // Required empty public constructor
@@ -196,7 +197,8 @@ public class Interests extends BaseFragment {
             for (Category category : categories[0]) {
                 booleanArray.put(category.getCategoryId() - 1, true);
             }
-            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray, null, false);
+            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray,
+                    null, false);
         }
 
         @Override
@@ -238,8 +240,9 @@ public class Interests extends BaseFragment {
     }
 
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
-        ApiCallingService.User.updateCategories(new Pojos.User.UpdateCategories(
-                getSelectedInterestsToSend(interestsAdapter.getSelectedInterests())), getContext())
+        selectedData = getSelectedInterestsToShow(interestsAdapter.getSelectedInterests());
+        resultToSend = getSelectedInterestsToSend(interestsAdapter.getSelectedInterests());
+        ApiCallingService.User.updateCategories(new Pojos.User.UpdateCategories(resultToSend), getContext())
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -248,7 +251,10 @@ public class Interests extends BaseFragment {
                         } else {
                             Log.d("Updating interests", response.code() + " : " + response.message());
                         }
-                        mListener.onInterestsInteraction();
+                        if (!isForVideo)
+                            mListener.onInterestsInteraction();
+                        else
+                            mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
                     }
 
                     @Override
@@ -256,6 +262,17 @@ public class Interests extends BaseFragment {
                         t.printStackTrace();
                     }
                 });
+    }
+
+    private String getSelectedInterestsToShow(SparseArray<Category> sparseArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            stringBuilder.append(sparseArray.valueAt(i).getCategoryName());
+            if (i < sparseArray.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private String getSelectedInterestsToSend(SparseArray<Category> sparseArray) {
@@ -270,27 +287,33 @@ public class Interests extends BaseFragment {
     }
 
     public void enableSaveBtn() {
-        if (!isEditing) {
-            saveBtn.setText(R.string.save_with_leading_spaces);
+        if (!isForVideo) {
+            if (!isEditing) {
+                saveBtn.setText(R.string.save_with_leading_spaces);
+                saveBtn.setEnabled(true);
+                if (saveBtn.getCompoundDrawables()[2] == null)
+                    saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
+            } else {
+                saveBtn.setEnabled(true);
+                saveBtn.setAlpha(1);
+            }
+        } else
             saveBtn.setEnabled(true);
-            if (saveBtn.getCompoundDrawables()[2] == null)
-                saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
-        } else {
-            saveBtn.setEnabled(true);
-            saveBtn.setAlpha(1);
-        }
     }
 
     public void disableSaveBtn() {
-        if (!isEditing) {
-            saveBtn.setText(R.string.select_at_least_5_interests);
+        if (!isForVideo) {
+            if (!isEditing) {
+                saveBtn.setText(R.string.select_at_least_5_interests);
+                saveBtn.setEnabled(false);
+                if (saveBtn.getCompoundDrawables()[2] != null)
+                    saveBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+            } else {
+                saveBtn.setEnabled(false);
+                saveBtn.setAlpha(0.4f);
+            }
+        } else
             saveBtn.setEnabled(false);
-            if (saveBtn.getCompoundDrawables()[2] != null)
-                saveBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-        } else {
-            saveBtn.setEnabled(false);
-            saveBtn.setAlpha(0.4f);
-        }
     }
 
     public boolean isSaveBtnEnabled() {
@@ -317,5 +340,6 @@ public class Interests extends BaseFragment {
 
     public interface OnInterestsInteractionListener {
         void onInterestsInteraction();
+        void onInterestsSelected(String resultToShow, String resultToSend, int count);
     }
 }

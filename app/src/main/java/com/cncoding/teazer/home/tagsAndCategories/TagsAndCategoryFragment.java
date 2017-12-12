@@ -1,4 +1,4 @@
-package com.cncoding.teazer.tagsAndCategories;
+package com.cncoding.teazer.home.tagsAndCategories;
 
 import android.content.Context;
 import android.os.AsyncTask;
