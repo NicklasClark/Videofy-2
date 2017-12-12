@@ -112,7 +112,7 @@
                     android:id="@+id/likes"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    app:srcCompat="@drawable/likeimage"
+                    app:srcCompat="@drawable/ic_like_outline"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="5dp"
                     />

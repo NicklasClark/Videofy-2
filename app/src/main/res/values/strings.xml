@@ -306,4 +306,5 @@
     <string name="close_button">Close button</string>
     <string name="your_video_is_about">Your video is about</string>
     <string name="select_video_categories">Select Video categories</string>
+    <string name="blockedUserEmptyText">We are happy that no one is in your block list</string>
 </resources>

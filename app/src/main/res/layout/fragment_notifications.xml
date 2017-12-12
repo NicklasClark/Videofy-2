@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="@dimen/action_bar_height"
     tools:context="com.cncoding.teazer.home.notifications.NotificationsFragment">
 
     <android.support.design.widget.TabLayout

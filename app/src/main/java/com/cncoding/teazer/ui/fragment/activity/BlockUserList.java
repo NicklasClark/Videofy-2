@@ -41,7 +41,9 @@ public class BlockUserList extends AppCompatActivity {
     @BindView(R.id.layout)
     RelativeLayout layout;
     @BindView(R.id.blockusertex)
-    TextView blockusertex;
+    TextView blockedUserText;
+    @BindView(R.id.blockedListEmptyView)
+    TextView blockedUserEmptyView;
     int pageId=1;
 
     @Override
@@ -91,13 +93,12 @@ public class BlockUserList extends AppCompatActivity {
                         boolean nextPage=response.body().getNextPage();
 
                         if(list==null||list.size()==0) {
-
                             layout.setVisibility(View.VISIBLE);
+                            blockedUserEmptyView.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
                         }
                         else
                         {
-
                             adapter = new BlockUserListAdapter(context, list);
                             recyclerView.setAdapter(adapter);
                             layout.setVisibility(View.VISIBLE);

@@ -188,12 +188,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:textAlignment="center"
                             android:layout_marginTop="5dp"
                             android:text="@string/male"
                             android:textColor="#5b5b5b"
                             android:layout_below="@+id/male"
                             android:layout_alignStart="@+id/male"
-                            android:layout_alignEnd="@+id/male"
                             android:textSize="@dimen/text_size_14sp" />
 
                         <com.cncoding.teazer.customViews.CircularAppCompatImageView
@@ -213,7 +213,6 @@
                             android:textColor="#5b5b5b"
                             android:layout_below="@+id/female"
                             android:layout_alignStart="@+id/female"
-                            android:layout_alignEnd="@+id/female"
                             android:textSize="@dimen/text_size_14sp" />
 
 

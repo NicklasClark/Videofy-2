@@ -132,6 +132,7 @@ public class VideosTabFragment extends BaseFragment {
                             if (response.body().getVideos().size() > 0) {
                                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                                 noPosts.setVisibility(View.GONE);
+                                videosList.clear();
                                 recyclerView.getRecycledViewPool().clear();
                                 videosList.addAll(response.body().getVideos());
                                 adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this, true, null, videosList);

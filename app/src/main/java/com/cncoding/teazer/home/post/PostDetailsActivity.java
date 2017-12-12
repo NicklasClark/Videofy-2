@@ -28,6 +28,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -442,12 +444,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         if (postDetails.getCategories() != null) {
             StringBuilder categories = new StringBuilder();
             for (int i = 0; i < postDetails.getCategories().size(); i++) {
-                categories.append(postDetails.getCategories().get(i).getCategoryName());
+//                categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
                     categories.append("    ");
-//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
+                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
             }
-//            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
+            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
             return categories.toString();
         } else return null;
     }
