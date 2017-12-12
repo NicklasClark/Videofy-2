@@ -111,8 +111,12 @@ public class PostsListFragment extends BaseFragment {
         else {
             isRefreshing = false;
             if (postList != null && postDetails == null) {
-                postList.remove(positionToUpdate);
-                postListAdapter.notifyItemRemoved(positionToUpdate);
+                try {
+                    postList.remove(positionToUpdate);
+                    postListAdapter.notifyItemRemoved(positionToUpdate);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else
                 postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
 //            if (savedPosition[1] > 4)

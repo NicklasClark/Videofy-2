@@ -48,6 +48,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter.NearbyPl
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.OnNearbyPlacesListInteractionListener;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.tagsAndCategories.Interests;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
 import com.cncoding.teazer.utilities.Pojos;
@@ -87,7 +88,6 @@ import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.VIDEO_UPLOAD;
-import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
@@ -355,7 +355,9 @@ public class CameraActivity extends AppCompatActivity
             switch (tag) {
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
-                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedData), tag);
+                            Interests.newInstance(true, false, null, selectedData),
+//                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
+                            tag);
                     break;
                 case TAG_TAGS_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,

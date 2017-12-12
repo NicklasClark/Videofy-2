@@ -245,7 +245,7 @@
                         android:id="@+id/backbutton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_previous" />
+                        android:src="@drawable/ic_arrow_back_white" />
 
                     <TextView
                         android:id="@+id/toolbarusername"

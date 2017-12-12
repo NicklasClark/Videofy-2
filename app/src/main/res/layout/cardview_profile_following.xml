@@ -19,6 +19,7 @@
             android:layout_width="@dimen/padding_double"
             android:layout_height="@dimen/padding_double"
             android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_user_male_dp_small"
             android:scaleType="centerCrop"
             android:layout_margin="14dp"/>
 

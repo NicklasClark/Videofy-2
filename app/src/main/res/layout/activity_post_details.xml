@@ -46,7 +46,6 @@
             android:id="@+id/controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_alignTop="@+id/relative_layout"
             android:layout_alignBottom="@+id/relative_layout"
             android:background="@android:color/transparent"
@@ -65,32 +64,38 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/btnClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:layout_alignTop="@+id/media_controller_caption"
-                    app:srcCompat="@drawable/ic_previous" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="center"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_back_white" />
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                    android:id="@+id/media_controller_caption"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/padding_half"
-                    android:paddingBottom="@dimen/padding_half"
-                    android:textColor="@android:color/white"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/media_controller_eta"
-                    android:layout_toEndOf="@+id/btnClose"
-                    android:textSize="@dimen/text_size_content_big" />
+                    android:layout_toEndOf="@+id/btnClose">
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                    android:id="@+id/media_controller_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:drawableStartCompat="@drawable/ic_place_black_24dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:layout_toEndOf="@+id/btnClose"
-                    android:layout_below="@id/media_controller_caption"/>
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        android:id="@+id/media_controller_caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/padding_half"
+                        android:paddingBottom="@dimen/padding_half"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_content_big" />
+
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                        android:id="@+id/media_controller_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:drawableStartCompat="@drawable/ic_place_black_24dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="13sp"/>
+
+                </LinearLayout>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:id="@+id/media_controller_eta"

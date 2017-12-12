@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    android:background="@color/gray_mid_dark"
     android:animateLayoutChanges="true">
 
     <include layout="@layout/toolbar"/>
@@ -17,115 +16,122 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-
-    <ImageView
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="17dp"
-        android:id="@+id/btnClose"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_clear_white_24dp"
-        />
-    <TextView
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="17dp"
-        android:layout_toRightOf="@+id/btnClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reactions"
-        android:textColor="#FFFFFFFF"
-        android:textSize="18sp"
-        />
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-        android:id="@+id/reaction_post_caption"
-        android:layout_below="@+id/btnClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:maxLines="1"
-        android:layout_marginLeft="14dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textSize="16sp"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentStart="true" />
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-        android:id="@+id/postDuration"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/btnClose"
-        android:layout_marginRight="14dp"
-        android:layout_alignParentRight="true"
-        android:layout_width="47dp"
-        android:layout_height="17dp"
-        android:textColor="#FFFFFFFF"
-        android:textSize="14sp"
-        />
-
     <RelativeLayout
-        android:id="@+id/reaction_post_name_popularity_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
-        android:layout_marginStart="14dp"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_vignette">
 
-        <com.cncoding.teazer.customViews.CircularAppCompatImageView
-            android:id="@+id/reaction_post_dp"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginRight="13dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_user_male_dp_small"
-            android:src="@drawable/ic_user_male_dp_small"/>
+        <ImageView
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="17dp"
+            android:id="@+id/btnClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_clear_white_24dp"
+            android:contentDescription="@string/close_button" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-            android:id="@+id/reaction_post_name"
+        <TextView
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="17dp"
+            android:layout_toEndOf="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/reaction"
+            android:textColor="#FFFFFFFF"
+            android:textSize="18sp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/reaction_post_caption"
+            android:layout_below="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:maxLines="1"
+            android:layout_marginStart="14dp"
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="16sp"
-            android:layout_toRightOf="@+id/reaction_post_dp"
-            android:textColor="@android:color/white"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_marginTop="20dp"
+            android:layout_alignParentStart="true" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:id="@+id/reaction_post_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_12sp"
-            android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
-            android:gravity="end|center_vertical"
-            android:layout_toRightOf="@+id/reaction_post_dp"
-            android:layout_below="@+id/reaction_post_name"
-            />
+            android:id="@+id/postDuration"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/btnClose"
+            android:layout_marginEnd="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="47dp"
+            android:layout_height="17dp"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:id="@+id/reaction_post_views"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/reaction_post_name_popularity_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_12sp"
-            android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_view_outline_smaller"
-            android:gravity="start|center_vertical"
-            android:layout_marginLeft="9dp"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:layout_below="@+id/reaction_post_name"
-            android:layout_toEndOf="@+id/reaction_post_likes"
-            />
-        <ImageView
-            android:id="@+id/btnLike"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="14dp"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_like_outline"
-            />
+            android:layout_marginBottom="21dp"
+            android:layout_marginStart="14dp"
+            android:layout_alignParentBottom="true">
+
+            <com.cncoding.teazer.customViews.CircularAppCompatImageView
+                android:id="@+id/reaction_post_dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginRight="13dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_user_male_dp_small"
+                android:src="@drawable/ic_user_male_dp_small"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                android:id="@+id/reaction_post_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                android:layout_toRightOf="@+id/reaction_post_dp"
+                android:textColor="@android:color/white"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/reaction_post_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_12sp"
+                android:textColor="@android:color/white"
+                app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+                android:gravity="end|center_vertical"
+                android:layout_toRightOf="@+id/reaction_post_dp"
+                android:layout_below="@+id/reaction_post_name"
+                />
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/reaction_post_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_12sp"
+                android:textColor="@android:color/white"
+                app:drawableStartCompat="@drawable/ic_view_outline_smaller"
+                android:gravity="start|center_vertical"
+                android:layout_marginLeft="9dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_below="@+id/reaction_post_name"
+                android:layout_toEndOf="@+id/reaction_post_likes"
+                />
+            <ImageView
+                android:id="@+id/btnLike"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="14dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_like_outline"
+                />
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

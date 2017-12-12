@@ -110,7 +110,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static android.util.DisplayMetrics.DENSITY_HIGH;
+import static android.util.DisplayMetrics.DENSITY_MEDIUM;
+import static android.util.DisplayMetrics.DENSITY_XHIGH;
+import static android.util.DisplayMetrics.DENSITY_XXHIGH;
+import static android.util.DisplayMetrics.DENSITY_XXXHIGH;
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
@@ -238,7 +244,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        float density = getResources().getDisplayMetrics().density;
+        logTheDensity();
 
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -289,7 +295,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     .load(thumbUrl)
                     .into(placeholder);
 
-
         loadingProgressBar.setVisibility(VISIBLE);
 
         likeAction(postDetails.canLike(), false);
@@ -322,6 +327,30 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         taggedUserListView.setAdapter(new TagListAdapter(this, taggedUsersList));
 
         getTaggedUsers(1);
+    }
+
+    private void logTheDensity() {
+        switch (getResources().getDisplayMetrics().densityDpi) {
+            case DENSITY_MEDIUM:
+                Log.d("DEVICE DENSITY", "mdpi");
+                break;
+            case DENSITY_HIGH:
+                Log.d("DEVICE DENSITY", "hdpi");
+                break;
+            case DENSITY_XHIGH:
+                Log.d("DEVICE DENSITY", "xhdpi");
+                break;
+            case DENSITY_XXHIGH:
+                Log.d("DEVICE DENSITY", "xxhdpi");
+                break;
+            case DENSITY_XXXHIGH:
+                Log.d("DEVICE DENSITY", "xxhdpi");
+                break;
+            default:
+                Log.d("DEVICE DENSITY DPI", String.valueOf(getResources().getDisplayMetrics().densityDpi));
+                Log.d("DEVICE DENSITY", String.valueOf(getResources().getDisplayMetrics().density));
+                break;
+        }
     }
 
     @Override
@@ -492,7 +521,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
+                loadingProgressBar.setVisibility(INVISIBLE);
             }
         }, 280);
     }
@@ -1044,16 +1073,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             playPauseButton.setVisibility(VISIBLE);
         }
         else {
-            playPauseButton.animate()
-                    .scaleY(0)
-                    .scaleX(0)
-                    .setDuration(200)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    playPauseButton.setVisibility(GONE);
+                    playPauseButton.animate()
+                            .scaleY(0)
+                            .scaleX(0)
+                            .setDuration(200)
+                            .setInterpolator(new DecelerateInterpolator())
+                            .start();
+                    playPauseButton.setVisibility(INVISIBLE);
                 }
             }, 500);
         }
@@ -1077,12 +1106,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             progressBar.setVisibility(VISIBLE);
                             break;
                         case STATE_READY:
-                            playPauseButton.setImageResource(R.drawable.ic_pause_big);
-                            if (playPauseButton.getVisibility() == VISIBLE)
-                                togglePlayPauseBtnVisibility(false);
-                            progressBar.setVisibility(GONE);
-                            placeholder.setImageBitmap(null);
-                            image = null;
+                            if (player.getPlayWhenReady()) {
+                                playPauseButton.setImageResource(R.drawable.ic_pause_big);
+                                if (playPauseButton.getVisibility() == VISIBLE)
+                                    togglePlayPauseBtnVisibility(false);
+                                progressBar.setVisibility(GONE);
+                                placeholder.setImageBitmap(null);
+                                image = null;
+                            }
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
@@ -1186,8 +1217,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch(resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false);
+                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
                                 notifyProgressInNotification();
+
+                                if (reactBtn.isEnabled())
+                                    disableView(reactBtn, true);
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
@@ -1249,6 +1284,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private void checkIfAnyReactionIsUploading() {
         UploadParams uploadParams = getReactionUploadSession(getApplicationContext());
         if (uploadParams != null) {
+            finishReactionUploadSession(getApplicationContext());
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.can_react = false;

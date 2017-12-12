@@ -20,6 +20,7 @@
             android:layout_height="@dimen/padding_double"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_user_male_dp_small"
             android:layout_margin="14dp"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView

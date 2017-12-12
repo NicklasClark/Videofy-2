@@ -1,12 +1,10 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.cncoding.teazer.R;
@@ -29,16 +27,14 @@ import butterknife.OnClick;
 
 public class ExoPlayerActivity extends AppCompatActivity{
 
-    @BindView(R.id.video_view)
-    SimpleExoPlayerView playerView;
-    SimpleExoPlayer player;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.btnClose)
-    ImageView btnClose;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.btnClose) ImageView btnClose;
+    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+
+    private SimpleExoPlayer player;
     private String videoURL;
-    private long playbackPosition;
-    private int currentWindow;
+//    private long playbackPosition;
+//    private int currentWindow;
     private boolean playWhenReady = true;
 
     @Override
@@ -79,18 +75,18 @@ public class ExoPlayerActivity extends AppCompatActivity{
             initializePlayer();
         }
     }
-    @SuppressLint("InlinedApi")
-    private void hideSystemUi() {
-        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
+
+//    @SuppressLint("InlinedApi")
+//    private void hideSystemUi() {
+//        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//    }
 
     private void initializePlayer() {
-
         if (player ==null){
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(this),
@@ -121,8 +117,8 @@ public class ExoPlayerActivity extends AppCompatActivity{
     }
     private void releasePlayer() {
         if (player != null) {
-            playbackPosition = player.getCurrentPosition();
-            currentWindow = player.getCurrentWindowIndex();
+//            playbackPosition = player.getCurrentPosition();
+//            currentWindow = player.getCurrentWindowIndex();
             playWhenReady = player.getPlayWhenReady();
             player.release();
             player = null;
@@ -133,10 +129,10 @@ public class ExoPlayerActivity extends AppCompatActivity{
     public void onViewClicked() {
         finish();
     }
+
     private MediaSource buildMediaSource(Uri uri){
         return new ExtractorMediaSource(uri,
                 new DefaultDataSourceFactory(this,"ua"),
                 new DefaultExtractorsFactory(),null,null);
-
     }
 }

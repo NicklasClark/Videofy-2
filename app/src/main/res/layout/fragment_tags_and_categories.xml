@@ -46,14 +46,12 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/clear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_cancel_dark_small"
+        android:layout_width="54dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_clear_dark"
+        android:scaleType="center"
         android:foreground="@drawable/ripple_dark_circle"
-        android:paddingStart="@dimen/padding_default"
-        android:paddingEnd="@dimen/padding_default"
         android:layout_alignEnd="@+id/headerTextView"
-        android:layout_alignTop="@+id/headerTextView"
         android:layout_alignBottom="@+id/headerTextView"
         android:visibility="gone"
         android:layout_marginBottom="@dimen/padding_thin"/>
