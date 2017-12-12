@@ -45,6 +45,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
@@ -329,6 +330,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     try {
 
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
+                        ProfileFragment.checkpostupdated=true;
                         getActivity().onBackPressed();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -611,6 +613,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                                 if (i != taggedUsers.size() - 1) {
                                     stringBuilder.append(",");
                                     selectTagIdBuilder.append(",");
+
                                 }
                             }
                             selectedTags = stringBuilder.toString();

@@ -216,6 +216,32 @@
                             android:layout_alignEnd="@+id/female"
                             android:textSize="@dimen/text_size_14sp" />
 
+
+                        <TextView
+                            android:id="@+id/gender_error_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone"
+                            android:textColor="#ffffff"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/text_size_12sp" />
+                        <TextView
+                            android:id="@+id/gender_error_text2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="5dp"
+                           android:padding="5dp"
+                            android:layout_toLeftOf="@+id/gender_error_text"
+                            android:background="#000000"
+                            android:layout_marginEnd="2dp"
+                            android:visibility="gone"
+                            android:text="Select Gender"
+                            android:textColor="#ffffff"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/text_size_10sp" />
                     </RelativeLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -235,7 +261,7 @@
                             android:backgroundTint="#dddddd"
                             android:layout_marginBottom="5dp"
                             android:layout_weight="1"
-                            android:maxLines="3"
+                            android:maxLines="6"
                             android:maxLength="100" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -250,6 +276,30 @@
                         android:textAllCaps="true"
                         android:textColor="#3b3b3b"
                         android:textSize="@dimen/text_size_14sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
+
+                    <com.cncoding.teazer.customViews.CustomCountryCodePicker
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/signup_country_code"
+                        app:ccp_autoDetectCountry="true"
+                        app:ccp_defaultLanguage="ENGLISH"
+                        app:ccpDialog_allowSearch="true"
+                        app:ccp_defaultNameCode="IN"
+                        app:ccpDialog_fastScroller_bubbleColor="@color/colorAccent"
+                        app:ccpDialog_showFastScroller="true"
+                        app:ccpDialog_keyboardAutoPopup="false"
+                        app:ccp_countryPreference="IN,US,GB"
+                        app:ccpDialog_fastScroller_handleColor="@color/colorAccent"
+                        app:ccpDialog_textColor="@color/colorSecondary_text"
+                        app:ccp_contentColor="@color/colorCcp"
+                        app:ccp_showNameCode="false"
+                        app:ccp_showPhoneCode="true"
+                        android:layout_alignBottom="@+id/signup_phone_number"
+                        android:layout_alignTop="@+id/signup_phone_number"/>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -270,6 +320,7 @@
                             android:backgroundTint="#dddddd"
                             android:textSize="@dimen/text_size_16sp" />
                     </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
