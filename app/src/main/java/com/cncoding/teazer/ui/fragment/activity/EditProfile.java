@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -44,6 +45,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
+import com.hbb20.CountryCodePicker;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -59,6 +61,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +103,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     CircularAppCompatImageView male;
     @BindView(R.id.female)
     CircularAppCompatImageView female;
+    @BindView(R.id.gender_error_text)
+    TextView gender_text;
+    @BindView(R.id.gender_error_text2)
+    TextView gender_error_text2;
+
+    @BindView(R.id.signup_country_code)
+    CountryCodePicker countryCodeView;
 
     @BindView(R.id.maletxt)
     ProximaNovaRegularCheckedTextView maletext;
@@ -183,9 +193,19 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         _firstname.setText(firstname);
         _bio.setText(detail);
         _email.setText(emailId);
-        _mobileNumber.setText(String.valueOf(mobilenumber));
+        if(mobilenumber!=0)
+        {
+            _mobileNumber.setText(String.valueOf(mobilenumber));
+        }
+        if (countryCodeView != null) {
+            if (countrycode != -1)
+                countryCodeView.setCountryForPhoneCode(countrycode);
+            else {
+                countryCodeView.setCountryForNameCode(Locale.getDefault().getCountry());
+                countrycode = countryCodeView.getSelectedCountryCodeAsInt();
 
-
+            }
+        }
         if (gender == 1) {
             male.setBackgroundResource(R.drawable.ic_male_sel);
             female.setBackgroundResource(R.drawable.ic_female_white);
@@ -736,7 +756,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String usernames = _username.getText().toString();
         String firstname = _firstname.getText().toString();
         String lastnames = lastname;
-        Integer countrycodes = countrycode;
+        Integer countrycodes = countryCodeView.getSelectedCountryCodeAsInt();
         String mobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
         String details = _bio.getText().toString();
@@ -758,20 +778,36 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         }
         if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.trim().isEmpty()||emailid.trim().equals("")) {
             _email.setError("enter a email address");
+
             _email.requestFocus();
+
+            gender_text.setError("Select Gender");
+            gender_text.requestFocus();
             valid = false;
 
         } else {
             _email.setError(null);
         }
 
-        if (mobilenumber.isEmpty() || mobilenumber.length() < 10 || mobilenumber.length() > 10||mobilenumber.isEmpty()||mobilenumber.trim().isEmpty()||mobilenumber.trim().equals("")) {
-            _mobileNumber.setError("enter valid 10 digit mobile number");
+        if(gender==0)
+        {
+            gender_text.setError("Select Gender");
+            gender_text.requestFocus();
+            valid = false;
+            gender_text.setVisibility(View.VISIBLE);
+            gender_error_text2.setVisibility(View.VISIBLE);
+
+        }
+
+        if (mobilenumber.isEmpty() || mobilenumber.length() < 4 || mobilenumber.length() > 13||mobilenumber.isEmpty()||mobilenumber.trim().isEmpty()||mobilenumber.trim().equals("")) {
+            _mobileNumber.setError("enter valid mobile number");
             _mobileNumber.requestFocus();
             valid = false;
 
         } else {
+
             _mobileNumber.setError(null);
+            gender_text.requestFocus();
 
         }
 
@@ -786,6 +822,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
         if (valid) {
+
+
             ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
             ProfileUpdate(profileUpdateRequest);
         } else {

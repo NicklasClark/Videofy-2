@@ -46,6 +46,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -122,6 +123,7 @@ public class OthersProfileFragment extends BaseFragment {
     private String userProfileThumbnail;
     private String userProfileUrl;
     int page = 1;
+    String details;
     ProfileFragment.FollowerListListener followerListListener;
 
 
@@ -247,14 +249,26 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
 
+
+        hobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
+                if (fragmentManager != null) {
+                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+
+                }
+            }
+        });
+
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        getParentActivity().hideSettings(true);
-
         getProfileInformation(followerfollowingid);
     }
 
@@ -303,7 +317,7 @@ public class OthersProfileFragment extends BaseFragment {
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
-                            String details = publicProfile.getDescription();
+                            details = publicProfile.getDescription();
                             int gender = publicProfile.getGender();
                             accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);

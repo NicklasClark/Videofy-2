@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+
+        <ImageView
+            android:id="@+id/background_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blur" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/ic_cancel" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bulletslayout"
+            android:layout_centerInParent="true"
+            android:layout_margin="15dp"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/hobby"
+            android:textColor="@color/colorPrimary"
+
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
