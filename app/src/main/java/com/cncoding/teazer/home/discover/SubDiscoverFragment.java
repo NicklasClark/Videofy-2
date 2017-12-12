@@ -27,6 +27,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
@@ -43,6 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
@@ -58,7 +60,8 @@ public class SubDiscoverFragment extends BaseFragment {
     @BindView(R.id.list_layout) LinearLayout listLayout;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
+    @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private ArrayList<Category> categories;
     private String previousTitle;
@@ -217,7 +220,7 @@ public class SubDiscoverFragment extends BaseFragment {
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
+        protected Void doInBackground(final Integer... integers) {
             if (integers[0] == 1)
                 reference.get().postDetailsArrayList.clear();
 
@@ -228,12 +231,19 @@ public class SubDiscoverFragment extends BaseFragment {
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
                             if (reference.get().isAdded()) {
                                 if (response.code() == 200) {
-                                    reference.get().is_next_page = response.body().isNextPage();
-                                    if (!response.body().getPosts().isEmpty()) {
-                                        reference.get().postDetailsArrayList.addAll(response.body().getPosts());
+                                    PostList postList = response.body();
+                                    reference.get().is_next_page = postList.isNextPage();
+                                    if (!postList.getPosts().isEmpty()) {
+                                        reference.get().postDetailsArrayList.addAll(postList.getPosts());
                                         reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else
-                                        reference.get().noPosts.setVisibility(View.VISIBLE);
+                                    } else if (integers[0] == 1) {
+                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged) +
+                                                reference.get().categories.get(0).getCategoryName() +
+                                                reference.get().getString(R.string.yet_uploaded);
+                                        reference.get().noPosts.setText(noVideosText);
+                                        reference.get().noPosts.setVisibility(VISIBLE);
+                                        reference.get().noPosts2.setVisibility(VISIBLE);
+                                    }
                                 } else
                                     Log.e("GetTrendingVideos", response.code() + "_" + response.message());
                             }
@@ -350,7 +360,7 @@ public class SubDiscoverFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return MyInterestsFragmentTab.newInstance(categories.get(position).getCategoryId());
+            return MyInterestsFragmentTab.newInstance(categories.get(position));
         }
 
         @Override

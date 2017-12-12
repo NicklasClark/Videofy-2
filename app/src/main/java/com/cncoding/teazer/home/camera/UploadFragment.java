@@ -658,7 +658,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 tagCount = count;
                 selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
-                tagFriendsBtn.requestFocus();
+                if (finalResultToShow.trim().isEmpty())
+                    tagFriendsBtn.clearFocus();
+                else
+                    tagFriendsBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -671,7 +674,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
-                uploadCategoriesBtn.requestFocus();
+                if (finalResultToShow.trim().isEmpty())
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadCategoriesBtn.setText(null);
+                            uploadCategoriesBtn.clearFocus();
+                        }
+                    }, 200);
+                else
+                    uploadCategoriesBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
