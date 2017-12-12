@@ -121,14 +121,14 @@
                 android:layout_height="wrap_content"
                 android:foreground="@null"
                 android:tag="@string/title_home"
-                android:icon="@drawable/ic_home_default" />
+                android:icon="@drawable/ic_home" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:foreground="@null"
                 android:tag="@string/discover"
-                android:icon="@drawable/ic_binoculars_default" />
+                android:icon="@drawable/ic_discover"/>
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
@@ -141,14 +141,14 @@
                 android:layout_height="wrap_content"
                 android:foreground="@null"
                 android:tag="@string/title_notifications"
-                android:icon="@drawable/ic_notifications_default" />
+                android:icon="@drawable/ic_notifications" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:foreground="@null"
                 android:tag="@string/title_dashboard"
-                android:icon="@drawable/ic_person" />
+                android:icon="@drawable/ic_profile" />
 
         </android.support.design.widget.TabLayout>
 

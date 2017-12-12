@@ -355,10 +355,13 @@ public class BaseBottomBarActivity extends BaseActivity
     private void updateBottomTabIconFocus(int position) {
         for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
             if (i != 2) {
-                if (i == position)
+                if (i == position) {
                     bottomTabLayout.getTabAt(position).getIcon().setTint(getResources().getColor(R.color.colorAccent4));
-                else
+                    bottomTabLayout.getTabAt(position).getIcon().setAlpha(255);
+                } else{
                     bottomTabLayout.getTabAt(i).getIcon().setTint(Color.WHITE);
+                    //bottomTabLayout.getTabAt(position).getIcon().setAlpha(127);
+                }
             }
         }
     }

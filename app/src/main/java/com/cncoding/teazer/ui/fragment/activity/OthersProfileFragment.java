@@ -199,11 +199,11 @@ public class OthersProfileFragment extends BaseFragment {
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (accountType == 1) {
-
                     if (isfollowing == true) {
+
                         followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+
                     } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
@@ -253,12 +253,12 @@ public class OthersProfileFragment extends BaseFragment {
         hobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
-                if (fragmentManager != null) {
-                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
-
-                }
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
+//                if (fragmentManager != null) {
+//                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+//
+//                }
             }
         });
 
