@@ -259,14 +259,14 @@ public class ProfileFragment extends BaseFragment {
 
 
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-
-                    FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
-                    if (fragmentManager != null) {
-                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
-
-                }
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//
+//
+//                    FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
+//                    if (fragmentManager != null) {
+//                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+//
+//                }
            }
         });
 
@@ -313,7 +313,6 @@ public class ProfileFragment extends BaseFragment {
                 Intent intent = new Intent(context, Settings.class);
                 intent.putExtra("AccountType", String.valueOf(accountType));
                 intent.putExtra("UserProfile", userProfile);
-
                 startActivity(intent);
             case R.id.action_profile_block:
 

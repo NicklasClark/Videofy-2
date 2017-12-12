@@ -59,6 +59,7 @@ public class FollowersListActivity extends BaseFragment{
     TextView nousertext;
     int userfollowerpage=1;
     int otherFollowerpage=1;
+    protected String previousTitle;
 
 
     public static FollowersListActivity newInstance(String id,String identifier) {
