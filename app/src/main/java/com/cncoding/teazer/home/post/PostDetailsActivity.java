@@ -927,14 +927,22 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    Toast.makeText(PostDetailsActivity.this, R.string.video_hide_successful,
-                                                            Toast.LENGTH_SHORT).show();
+                                                    if (response.code() == 200) {
+                                                        Toast.makeText(PostDetailsActivity.this,
+                                                                R.string.video_hide_successful,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(PostDetailsActivity.this,
+                                                                R.string.something_went_wrong,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
                                                     t.printStackTrace();
-                                                    Toast.makeText(PostDetailsActivity.this, R.string.something_went_wrong,
+                                                    Toast.makeText(PostDetailsActivity.this,
+                                                            R.string.something_went_wrong,
                                                             Toast.LENGTH_SHORT).show();
                                                 }
                                             });

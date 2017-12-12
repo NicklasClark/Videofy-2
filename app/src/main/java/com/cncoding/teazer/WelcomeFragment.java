@@ -221,7 +221,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                 parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
                 request.setParameters(parameters);
                 request.executeAsync();
-                enableViews();
+//                enableViews();
             }
 
             @Override
@@ -309,8 +309,10 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                     mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
                             null, null, account, signupWithGoogleBtn);
                 else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
-            } else
+            } else {
+                enableViews();
                 Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
+            }
         }
         /*
          * Facebook login action
@@ -318,7 +320,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-        enableViews();
+//        enableViews();
     }
 
 //    @Override
