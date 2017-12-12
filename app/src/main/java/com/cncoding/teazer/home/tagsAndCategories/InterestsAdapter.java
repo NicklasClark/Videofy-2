@@ -116,7 +116,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
                 if (checked)
                     Snackbar.make(interests.saveBtn, R.string.selection_limit_message, Snackbar.LENGTH_SHORT).show();
                 else
-                    checkAction(view, position, checked);
+                    checkAction(view, position, false);
             }
         }
     }
