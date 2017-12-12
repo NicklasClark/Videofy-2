@@ -10,7 +10,6 @@ import android.text.Html;
 import android.view.View;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
@@ -26,8 +25,7 @@ import static com.cncoding.teazer.R.anim.slide_out_right;
 public class Settings extends AppCompatActivity implements FragmentSettings.ChangeCategoriesListener{
 
     Context context;
-    private PublicProfile userProfile;
-
+//    private PublicProfile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +52,16 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK, null);
-
-                    onBackPressed();
+                onBackPressed();
             }
         });
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
         Intent intent=getIntent();
-        int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
-        userProfile=intent.getExtras().getParcelable("UserProfile");
+        int accountType = Integer.parseInt(intent.getStringExtra("AccountType"));
+//        userProfile = intent.getExtras().getParcelable("UserProfile");
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accoutType)))
+                .replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accountType)))
 //                .addToBackStack("FragmentSettings")
                 .commit();
     }
