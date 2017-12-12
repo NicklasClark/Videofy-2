@@ -1,22 +1,20 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.followerprofile.Category;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
@@ -70,24 +68,20 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
     public void onBindViewHolder(final ChangeCategoriesAdapter.ViewHolder holder, int position) {
         final Pojos.Category category = this.categories.get(position);
 
-       for(int i=0;i<usercategoryList.size();i++)
-       {
-          if(usercategoryList.get(i).getCategoryName().equals(category.getCategoryName()))
-          {
+       for(int i=0;i<usercategoryList.size();i++) {
+          if(usercategoryList.get(i).getCategoryName().equals(category.getCategoryName())) {
               Log.d("Categories",String.valueOf(usercategoryList.get(i).getCategoryId()));
-              holder.nameView.setChecked(true);
+              setCheck(holder.nameView, true);
               selectedPositions[position] = true;
-
           }
-
        }
 
         holder.nameView.setText(category.getCategoryName());
 
-        if(selectedPositions[position])
-            holder.nameView.setChecked(true);
-        else {
-            holder.nameView.setChecked(false);
+        if(selectedPositions[position]) {
+            setCheck(holder.nameView, true);
+        } else {
+            setCheck(holder.nameView, false);
         }
 
 
@@ -100,13 +94,13 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
                 boolean ischecked=holder.nameView.isChecked();
                 if(ischecked){
                     selectedcategories.remove((Integer)category.getCategoryId());
-                    holder.nameView.setChecked(false);
+                    setCheck(holder.nameView, false);
                 }
                 else
                     {
                         if(!selectedcategories.contains(category.getCategoryId())) {
                             selectedcategories.add(category.getCategoryId());
-                            holder.nameView.setChecked(true);
+                            setCheck(holder.nameView, true);
                         }
 
                     }
@@ -117,6 +111,17 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
         });
     }
 
+    private void setCheck(AppCompatCheckedTextView textView, boolean checked) {
+        textView.setChecked(checked);
+        if (textView.isChecked()) {
+            textView.setTextColor(Color.parseColor("#26C6DA"));
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_accent, 0);
+        }
+        else {
+            textView.setTextColor(Color.parseColor("#333333"));
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
 
     @Override
     public int getItemCount() {

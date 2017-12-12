@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
@@ -50,8 +51,8 @@ import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.authentication.SignupFragment2.OnFinalSignupInteractionListener;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.tagsAndCategories.Interests;
-import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.home.tagsAndCategories.Interests;
+import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
-                        true, false, null, null),
+                        false, false, null, null),
                         TAG_SELECT_INTERESTS);
                 break;
             default:
@@ -574,6 +575,10 @@ public class MainActivity extends AppCompatActivity
         successfullyLoggedIn();
     }
 
+    @Override
+    public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
+    }
+
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {
 
         WeakReference<MainActivity> reference;
@@ -592,6 +597,7 @@ public class MainActivity extends AppCompatActivity
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
             return null;
         }
@@ -605,9 +611,12 @@ public class MainActivity extends AppCompatActivity
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(reference.get(), R.string.could_not_set_profile_pic, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
+            } else
+                Toast.makeText(reference.get(), R.string.could_not_set_profile_pic, Toast.LENGTH_SHORT).show();
         }
     }
 

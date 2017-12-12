@@ -94,8 +94,8 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
-import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
-import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
+import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
+import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
@@ -670,7 +670,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 tagCount = count;
                 selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
-                tagFriendsBtn.requestFocus();
+                if (finalResultToShow.trim().isEmpty())
+                    tagFriendsBtn.clearFocus();
+                else
+                    tagFriendsBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -683,7 +686,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
-                uploadCategoriesBtn.requestFocus();
+                if (finalResultToShow.trim().isEmpty())
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadCategoriesBtn.setText(null);
+                            uploadCategoriesBtn.clearFocus();
+                        }
+                    }, 200);
+                else
+                    uploadCategoriesBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

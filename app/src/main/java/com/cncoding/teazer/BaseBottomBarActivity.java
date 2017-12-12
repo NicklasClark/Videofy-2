@@ -53,7 +53,7 @@ import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
-import com.cncoding.teazer.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -636,6 +636,10 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onInterestsInteraction() {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
+    }
+
+    @Override
+    public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
 
     @Override

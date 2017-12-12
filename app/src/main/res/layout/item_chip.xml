@@ -8,8 +8,11 @@
     android:paddingEnd="@dimen/padding_default"
     android:paddingTop="@dimen/padding_half"
     android:paddingBottom="@dimen/padding_half"
-    android:layout_margin="@dimen/padding_half"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginStart="7dp"
+    android:layout_marginEnd="7dp"
     android:background="@drawable/chip_default"
     android:layout_gravity="center_horizontal"
-    android:textSize="@dimen/text_size_content_big"
+    android:textSize="16sp"
     android:textColor="@android:color/white" />

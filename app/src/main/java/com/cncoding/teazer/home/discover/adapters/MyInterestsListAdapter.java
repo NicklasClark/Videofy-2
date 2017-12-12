@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.utilities.Pojos.Category;
@@ -19,6 +19,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.View.GONE;
 
 /**
  *
@@ -50,24 +52,30 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
     @Override
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
         if (position < 3) {
-            holder.header.setText(myInterestsCategoriesArrayList.get(position).getCategoryName());
+            String categoryName = myInterestsCategoriesArrayList.get(position).getCategoryName();
+            holder.header.setText(categoryName);
 
-            holder.recyclerView.setVisibility(View.VISIBLE);
-            holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(
-                    myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
+            ArrayList<PostDetails> postDetailsArrayList = myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName());
+            if (!postDetailsArrayList.isEmpty()) {
+                holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(postDetailsArrayList, context, mListener));
+            } else {
+                holder.layout.setVisibility(GONE);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return myInterestsCategoriesArrayList.size() >=3 ? 3 : myInterestsCategoriesArrayList.size();
+        return myInterestsCategoriesArrayList.size() >= 3 ? 3 : myInterestsCategoriesArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.interests_header) ProximaNovaRegularTextView header;
-        @BindView(R.id.no_my_interests_posts) ProximaNovaBoldTextView noMyInterests;
+//        @BindView(R.id.no_my_interests_posts) ProximaNovaRegularTextView noMyInterests;
+//        @BindView(R.id.no_my_interests_posts_2) ProximaNovaBoldTextView noMyInterests2;
         @BindView(R.id.item_my_interests_list) RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {

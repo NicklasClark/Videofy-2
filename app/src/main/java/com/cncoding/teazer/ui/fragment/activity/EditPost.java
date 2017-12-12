@@ -15,7 +15,7 @@ import com.cncoding.teazer.home.camera.CameraFragment;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment;
+import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.ui.fragment.fragment.EditPostFragment;
 import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.gms.common.ConnectionResult;

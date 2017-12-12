@@ -15,8 +15,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
+import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 import com.cncoding.teazer.utilities.Pojos.Post.PostList;
 
@@ -32,12 +34,15 @@ import retrofit2.Response;
 public class MyInterestsFragmentTab extends BaseFragment {
 
     private static final String ARG_CATEGORY_ID = "categoryId";
+    private static final String ARG_CATEGORY_NAME = "categoryName";
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
+    @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private int categoryId;
+    private String categoryName;
     private ArrayList<PostDetails> postDetailsArrayList;
 
 //    private OnFragmentInteractionListener mListener;
@@ -46,10 +51,11 @@ public class MyInterestsFragmentTab extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static MyInterestsFragmentTab newInstance(int categoryId) {
+    public static MyInterestsFragmentTab newInstance(Pojos.Category category) {
         MyInterestsFragmentTab fragment = new MyInterestsFragmentTab();
         Bundle args = new Bundle();
-        args.putInt(ARG_CATEGORY_ID, categoryId);
+        args.putInt(ARG_CATEGORY_ID, category.getCategoryId());
+        args.putString(ARG_CATEGORY_NAME, category.getCategoryName());
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,6 +65,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
+            categoryName = getArguments().getString(ARG_CATEGORY_NAME);
         }
     }
 
@@ -105,7 +112,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
+        protected Void doInBackground(final Integer... integers) {
             if (integers[0] == 1)
                 reference.get().postDetailsArrayList.clear();
 
@@ -120,9 +127,13 @@ public class MyInterestsFragmentTab extends BaseFragment {
                                     if (!response.body().getPosts().isEmpty()) {
                                         reference.get().postDetailsArrayList.addAll(response.body().getPosts());
                                         reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else {
-    //                                    reference.get().recyclerView.setVisibility(View.GONE);
+                                    } else if (integers[0] == 1){
+                                        reference.get().recyclerView.setVisibility(View.GONE);
+                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged) +
+                                                reference.get().categoryName + reference.get().getString(R.string.yet_uploaded);
+                                        reference.get().noPosts.setText(noVideosText);
                                         reference.get().noPosts.setVisibility(View.VISIBLE);
+                                        reference.get().noPosts2.setVisibility(View.VISIBLE);
                                     }
                                 } else
                                     Log.e("GetPosts", response.code() + "_" + response.message());

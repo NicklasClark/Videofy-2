@@ -307,4 +307,9 @@
     <string name="your_video_is_about">Your video is about</string>
     <string name="select_video_categories">Select Video categories</string>
     <string name="blockedUserEmptyText">We are happy that no one is in your block list</string>
+    <string name="selection_limit_message">Only 5 selections are allowed</string>
+    <string name="be_the_first_one_to_upload_one">Be the first one to upload one!</string>
+    <string name="no_videos_tagged">No videos tagged&#160;</string>
+    <string name="yet_uploaded">&#160;yet uploaded</string>
+    <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
 </resources>

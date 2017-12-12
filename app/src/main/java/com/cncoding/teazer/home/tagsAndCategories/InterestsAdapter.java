@@ -1,7 +1,8 @@
-package com.cncoding.teazer.tagsAndCategories;
+package com.cncoding.teazer.home.tagsAndCategories;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -50,13 +51,15 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         this.isForVideo = isForVideo;
         selectedInterests = new SparseArray<>();
 
-        if (selectedInterestsArray.size() >= 5) {
-            if (!interests.isSaveBtnEnabled())
-                interests.enableSaveBtn();
-        } else {
-            if (interests.isSaveBtnEnabled())
-                interests.disableSaveBtn();
-        }
+        if (!isForVideo) {
+            if (selectedInterestsArray.size() >= 5) {
+                if (!interests.isSaveBtnEnabled())
+                    interests.enableSaveBtn();
+            } else {
+                if (interests.isSaveBtnEnabled())
+                    interests.disableSaveBtn();
+            }
+        } else interests.enableSaveBtn();
     }
 
     @Override
@@ -71,7 +74,8 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         holder.chip.setText(categoryText);
 
         setCheck(holder.chip, position, false,
-                selectedCategoriesString != null && selectedCategoriesString.contains(categoryText));
+                selectedCategoriesString != null &&
+                        selectedCategoriesString.contains(categoryText.replace("+ ", "")));
         if (selectedCategoriesString == null || selectedCategoriesString.isEmpty())
             setCheck(holder.chip, position, false, selectedInterestsArray.get(position));
 
@@ -100,36 +104,47 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         }
     }
 
-//    private void setChecked(AppCompatCheckedTextView textView, int position, Category category, boolean checked) {
-//        textView.setChecked(checked);
-//        if (textView.isChecked()) {
-//            textView.setTextColor(Color.parseColor("#26C6DA"));
-//            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_accent, 0);
-//            selectedInterests.put(position, category);
-//        }
-//        else {
-//            textView.setTextColor(Color.parseColor("#333333"));
-//            textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//            selectedInterests.delete(position);
-//        }
-//    }
-
-    @SuppressWarnings("ConstantConditions")
     private void setCheck(ProximaNovaRegularCheckedTextView view, int position, boolean animate, boolean checked) {
+        if (!isForVideo) {
+            checkAction(view, position, checked);
+            if (animate)
+                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+        } else {
+            if (selectedInterests.size() < 5) {
+                checkAction(view, position, checked);
+            } else {
+                if (checked)
+                    Snackbar.make(interests.saveBtn, R.string.selection_limit_message, Snackbar.LENGTH_SHORT).show();
+                else
+                    checkAction(view, position, false);
+            }
+        }
+    }
+
+    private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean checked) {
         view.setChecked(checked);
         if (view.isChecked()) {
             selectedInterests.put(position, interestsList.get(position));
             view.setTypeface(SEMI_BOLD);
-            view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
-                    Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
+//            if (!isForVideo) {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.parseColor("#26C6DA"),
+                        Color.parseColor("#26C6DA"), Color.WHITE, 40));
+//            } else {
+//                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+//                        Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
+//            }
         } else {
             selectedInterests.delete(position);
             view.setTypeface(REGULAR);
-            view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
-                    Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
+            if (!isForVideo) {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                        Color.WHITE, Color.WHITE, 40));
+            } else {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                        Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
+            }
         }
-        if (animate)
-            view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+        view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
     @Override

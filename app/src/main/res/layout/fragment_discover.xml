@@ -37,6 +37,8 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingBottom="@dimen/action_bar_height"
+        android:clipToPadding="false"
         android:background="@color/material_grey200"
         android:id="@+id/root_layout"
         android:layout_weight="1">
@@ -99,7 +101,7 @@
                         android:id="@+id/no_most_popular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="236dp"
+                        android:minHeight="200dp"
                         android:gravity="center"
                         android:textSize="@dimen/text_size_content_big"
                         android:text="@string/no_posts_available"
@@ -227,7 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
+                    android:paddingBottom="0dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
                     android:clipToPadding="false"
