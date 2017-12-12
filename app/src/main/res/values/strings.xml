@@ -310,4 +310,5 @@
     <string name="be_the_first_one_to_upload_one">Be the first one to upload one!</string>
     <string name="no_videos_tagged">No videos tagged&#160;</string>
     <string name="yet_uploaded">&#160;yet uploaded</string>
+    <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
 </resources>

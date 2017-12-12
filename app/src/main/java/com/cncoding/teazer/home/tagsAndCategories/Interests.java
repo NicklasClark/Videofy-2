@@ -10,6 +10,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -85,8 +87,10 @@ public class Interests extends BaseFragment {
         if (getArguments() != null) {
             isForVideo = getArguments().getBoolean(ARG_IS_FOR_VIDEO);
             isEditing = getArguments().getBoolean(ARG_IS_EDITING);
-            if (isEditing)
+            if (isEditing) {
                 categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
+                setHasOptionsMenu(true);
+            }
             selectedData = getArguments().getString(SELECTED_DATA);
         }
     }
@@ -318,6 +322,11 @@ public class Interests extends BaseFragment {
 
     public boolean isSaveBtnEnabled() {
         return saveBtn.isEnabled();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     @Override

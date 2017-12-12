@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,8 +54,8 @@
                 android:paddingBottom="10dp"
                 android:background="@color/colorPrimaryDark"
                 android:textSize="@dimen/text_size_content"
-                android:text="@string/select_video_categories"
-                android:elevation="2dp"/>
+                android:textColor="@color/colorPrimary_text"
+                android:text="@string/select_video_categories"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list"

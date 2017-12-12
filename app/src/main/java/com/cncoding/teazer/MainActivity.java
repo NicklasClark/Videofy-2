@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
-                        true, false, null, null),
+                        false, false, null, null),
                         TAG_SELECT_INTERESTS);
                 break;
             default:
@@ -596,6 +597,7 @@ public class MainActivity extends AppCompatActivity
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
             return null;
         }
@@ -609,9 +611,12 @@ public class MainActivity extends AppCompatActivity
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(reference.get(), R.string.could_not_set_profile_pic, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
+            } else
+                Toast.makeText(reference.get(), R.string.could_not_set_profile_pic, Toast.LENGTH_SHORT).show();
         }
     }
 

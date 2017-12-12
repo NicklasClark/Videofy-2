@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -13,12 +12,15 @@ import android.view.View;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
-
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
 
 import butterknife.ButterKnife;
 
+import static android.R.anim.slide_in_left;
+import static com.cncoding.teazer.R.anim.slide_in_right;
+import static com.cncoding.teazer.R.anim.slide_out_left;
+import static com.cncoding.teazer.R.anim.slide_out_right;
 
 
 public class Settings extends AppCompatActivity implements FragmentSettings.ChangeCategoriesListener{
@@ -57,38 +59,39 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
             }
         });
 
-
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
         Intent intent=getIntent();
         int accoutType=Integer.parseInt(intent.getStringExtra("AccountType"));
         userProfile=intent.getExtras().getParcelable("UserProfile");
-        FragmentSettings fragment= FragmentSettings.newInstance(String.valueOf(accoutType));
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment);
-        ft.commit();
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accoutType)))
+//                .addToBackStack("FragmentSettings")
+                .commit();
     }
-
 
     @Override
     public void changeCategoriesListener() {
-
-        FragmentChangeCategories fragment= FragmentChangeCategories.newInstance();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment);
-        ft.commit();
-
-
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(slide_in_right, slide_out_left, slide_in_left, slide_out_right)
+                .replace(R.id.container, FragmentChangeCategories.newInstance())
+                .addToBackStack("FragmentChangeCategories")
+                .commit();
     }
 
     @Override
     public void deactivateAccountListener() {
-        FragmentDeactivateAccount fragment= FragmentDeactivateAccount.newInstance();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment);
-        ft.commit();
-
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(slide_in_right, slide_out_left, slide_in_left, slide_out_right)
+                .replace(R.id.container, FragmentDeactivateAccount.newInstance())
+                .addToBackStack("FragmentDeactivateAccount")
+                .commit();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else
+            super.onBackPressed();
+    }
 }

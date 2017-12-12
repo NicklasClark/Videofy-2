@@ -126,14 +126,25 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         if (view.isChecked()) {
             selectedInterests.put(position, interestsList.get(position));
             view.setTypeface(SEMI_BOLD);
-            view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
-                    Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
+//            if (!isForVideo) {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.parseColor("#26C6DA"),
+                        Color.parseColor("#26C6DA"), Color.WHITE, 40));
+//            } else {
+//                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+//                        Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
+//            }
         } else {
             selectedInterests.delete(position);
             view.setTypeface(REGULAR);
-            view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
-                    Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
+            if (!isForVideo) {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                        Color.WHITE, Color.WHITE, 40));
+            } else {
+                view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
+                        Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
+            }
         }
+        view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
     @Override

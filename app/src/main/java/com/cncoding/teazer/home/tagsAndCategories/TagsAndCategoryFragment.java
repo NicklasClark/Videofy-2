@@ -85,6 +85,8 @@ public class TagsAndCategoryFragment extends Fragment {
         if (getArguments() != null) {
             action = getArguments().getString(ACTION);
             selectedData = getArguments().getString(SELECTED_DATA);
+            if (selectedData == null)
+                selectedData = "";
         }
         categories = new ArrayList<>();
         circles = new ArrayList<>();

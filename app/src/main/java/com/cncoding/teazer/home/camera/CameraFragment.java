@@ -695,6 +695,7 @@ public class CameraFragment extends Fragment {
 //        mMediaRecorder.setPreviewDisplay();
 //        mMediaRecorder.setVideoEncodingBitRate(10000000);
         mMediaRecorder.setVideoEncodingBitRate(3000000);
+        mMediaRecorder.setMaxDuration(60000);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
@@ -705,6 +706,15 @@ public class CameraFragment extends Fragment {
                 mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));
                 break;
         }
+        mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+            @Override
+            public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+                if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                    stopRecordButtonAnimations();
+                    stopRecordingVideo();
+                }
+            }
+        });
         mMediaRecorder.prepare();
     }
 

@@ -119,10 +119,7 @@ public class FragmentChangeCategories extends Fragment{
 
     }
 
-
-    public void getCategories(final List<Category> usercategoryList)
-    {
-
+    public void getCategories(final List<Category> usercategoryList) {
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Pojos.Category>> call, Response<ArrayList<Pojos.Category>> response) {
@@ -131,8 +128,6 @@ public class FragmentChangeCategories extends Fragment{
                         categories=response.body();
                         adapter = new ChangeCategoriesAdapter(categories,context,usercategoryList);
                         recyclerView.setAdapter(adapter);
-
-
                     }
                 }
             }
@@ -177,8 +172,11 @@ public class FragmentChangeCategories extends Fragment{
 
                     try {
                         if(response.body().getStatus()) {
-
                             Toast.makeText(context,"Categories have been updated successfully",Toast.LENGTH_SHORT).show();
+                            if (isAdded()) {
+                                //noinspection ConstantConditions
+                                getActivity().onBackPressed();
+                            }
                         }
 
                     } catch (Exception e) {
