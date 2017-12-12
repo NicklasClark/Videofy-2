@@ -389,10 +389,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             viewsView.setText(views);
 
             String categories = getUserCategories();
-            if (categories != null && categories.length() > 1) {
-                categories = "Categories:    " + categories;
-                categoriesView.setText(categories);
-            } else categoriesView.setVisibility(GONE);
+//            if (categories != null && categories.length() > 1) {
+//                categories = "Categories:    " + categories;
+//                categoriesView.setText(categories);
+//            } else categoriesView.setVisibility(GONE);
 
             String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration() + " secs";
             remainingTime.setText(duration);
@@ -445,7 +445,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
                     categories.append("    ");
+//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
             }
+//            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
             return categories.toString();
         } else return null;
     }

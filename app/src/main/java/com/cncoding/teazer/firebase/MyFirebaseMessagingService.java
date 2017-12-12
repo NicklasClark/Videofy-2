@@ -25,6 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
+import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATIN_TYPE;
 import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
 
 /**
@@ -64,19 +66,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
             Log.d(TAG, "data: " + remoteMessage.getData());
 
-            sendNotification(notification.getBody(), getBitmapFromUrl(remoteMessage.getData().get("thumb_url")), notification.getTitle());
+            sendNotification(notification.getBody(), getBitmapFromUrl(remoteMessage.getData().get("thumb_url")), notification.getTitle(), remoteMessage.getData());
         }
     }
 
     //This method is only generating push notification
-    private void sendNotification(String messageBody, Bitmap bitmap, String title) {
+    private void sendNotification(String messageBody, Bitmap bitmap, String title, Map<String, String> data) {
         Intent intent = new Intent();
         intent.setClass(this, BaseBottomBarActivity.class);
 //        if (messageBody.contains("follow"))
         Bundle bundle = new Bundle();
         bundle.putInt(TAB_INDEX, 3);
+        bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
+        bundle.putInt(NOTIFICATIN_TYPE, Integer.parseInt(data.get("notification_type")));
         intent.putExtra("bundle", bundle);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
