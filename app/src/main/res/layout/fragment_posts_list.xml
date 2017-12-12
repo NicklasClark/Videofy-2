@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cncoding.teazer.home.post.PostsListFragment"
-    android:layout_marginBottom="@dimen/action_bar_height"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">

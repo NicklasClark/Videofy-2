@@ -54,11 +54,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
             }
         });
 
-<<<<<<< HEAD
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Settings</font>"));
-=======
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Settings</font>"));
->>>>>>> prem_dev
         Intent intent=getIntent();
         int accountType = Integer.parseInt(intent.getStringExtra("AccountType"));
 //        userProfile = intent.getExtras().getParcelable("UserProfile");
