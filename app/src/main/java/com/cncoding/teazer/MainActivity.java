@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -116,7 +117,6 @@ public class MainActivity extends AppCompatActivity
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
 
     @BindView(R.id.container) RelativeLayout rootView;
-//    @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.welcome_video) VideoView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
 //    private BlurView.ControllerSettings settings;
 //    private ValueAnimator animator;
-//    private TransitionDrawable transitionDrawable;
+    private TransitionDrawable transitionDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,12 +140,6 @@ public class MainActivity extends AppCompatActivity
 //                .build());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-//        settings = blurView.setupWith(rootView)
-//                .windowBackground(getWindow().getDecorView().getBackground())
-//                .blurAlgorithm(new RenderScriptBlur(this))
-//                .blurRadius(20);
-//        blurView.setBlurEnabled(false);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -171,11 +165,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        Drawable[] backgrounds = {getResources().getDrawable(android.R.color.transparent),
-//                getResources().getDrawable(R.color.colorTranslucentBgMainActivity)};
-//        transitionDrawable = new TransitionDrawable(backgrounds);
-//        transitionDrawable.setCrossFadeEnabled(true);
-//        mainFragmentContainer.setBackground(transitionDrawable);
+        Drawable[] backgrounds = {getResources().getDrawable(android.R.color.transparent),
+                getResources().getDrawable(R.color.colorTranslucentBgMainActivity)};
+        transitionDrawable = new TransitionDrawable(backgrounds);
+        transitionDrawable.setCrossFadeEnabled(true);
+        mainFragmentContainer.setBackground(transitionDrawable);
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
@@ -188,24 +182,12 @@ public class MainActivity extends AppCompatActivity
 
     private void setFragment(String tag, boolean addToBackStack, Object[] args) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         switch (tag) {
             case TAG_WELCOME_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container, new WelcomeFragment(), TAG_WELCOME_FRAGMENT);
                 break;
             case TAG_LOGIN_FRAGMENT:
-//                blurView.setBlurEnabled(true);
-//                blurView.updateBlur();
-//                animator = ValueAnimator.ofFloat(1f, 15f);
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        settings.blurRadius((float) animator.getAnimatedValue());
-//                        blurView.updateBlur();
-//                    }
-//                });
-//                animator.setDuration(400);
-//                animator.start();
                 if (args!= null) {
                     String name = fragmentManager.getBackStackEntryAt(0).getName();
                     fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -229,31 +211,21 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case TAG_SIGNUP_FRAGMENT:
-//                blurView.setBlurEnabled(true);
-//                blurView.updateBlur();
-//                animator = ValueAnimator.ofFloat(1f, 15f);
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        settings.blurRadius((float) animator.getAnimatedValue());
-//                        blurView.updateBlur();
-//                    }
-//                });
-//                animator.setDuration(400);
-//                animator.start();
                 toggleUpBtnVisibility(View.VISIBLE);
                 transaction.replace(R.id.main_fragment_container, new SignupFragment(), TAG_SIGNUP_FRAGMENT);
                 break;
             case TAG_SECOND_SIGNUP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container,
-                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1]), ((String) args[2])), TAG_SECOND_SIGNUP_FRAGMENT);
+                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1]), ((String) args[2])),
+                        TAG_SECOND_SIGNUP_FRAGMENT);
                 break;
             case TAG_OTP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
-                transaction.replace(R.id.main_fragment_container, Interests.newInstance(false, null),
+                transaction.replace(R.id.main_fragment_container, Interests.newInstance(
+                        true, false, null, null),
                         TAG_SELECT_INTERESTS);
                 break;
             default:
@@ -264,20 +236,20 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-//    private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
-//        hideKeyboard(this, upBtn);
-//        if (!reverse) {
-//            setFragment(tag, addToBackStack, null);
-//            transitionDrawable.startTransition(400);
-////            new Blur(this).execute();
-//        }
-//        else {
-//            if (transitionDrawable != null)
-//                transitionDrawable.reverseTransition(400);
-//            if (mediaPlayer != null && !mediaPlayer.isPlaying())
-//                mediaPlayer.start();
-//        }
-//    }
+    private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
+        hideKeyboard(this, upBtn);
+        if (!reverse) {
+            setFragment(tag, addToBackStack, null);
+            transitionDrawable.startTransition(400);
+//            new Blur(this).execute();
+        }
+        else {
+            if (transitionDrawable != null)
+                transitionDrawable.reverseTransition(400);
+            if (welcomeVideo != null && !welcomeVideo.isPlaying())
+                welcomeVideo.start();
+        }
+    }
 
 //    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
 //
@@ -358,8 +330,8 @@ public class MainActivity extends AppCompatActivity
                                      @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-                setFragment(TAG_LOGIN_FRAGMENT, true, null);
-//                startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
+//                setFragment(TAG_LOGIN_FRAGMENT, true, null);
+                startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
             case SIGNUP_WITH_FACEBOOK_ACTION:
 //                mediaPlayer.pause();
@@ -373,8 +345,8 @@ public class MainActivity extends AppCompatActivity
                     handleGoogleSignIn(googleAccount, button, null);
                 break;
             case SIGNUP_WITH_EMAIL_ACTION:
-                setFragment(TAG_SIGNUP_FRAGMENT, true, null);
-//                startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
+//                setFragment(TAG_SIGNUP_FRAGMENT, true, null);
+                startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
                 break;
 //            case RESUME_WELCOME_VIDEO_ACTION:
 //                if (mediaPlayer != null && loggingIn)
@@ -422,7 +394,8 @@ public class MainActivity extends AppCompatActivity
                                         verificationSuccessful(true,
                                                 button, true);
                                     } else {
-                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this, null,
+                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this,
+                                                null,
                                                 facebookProfile, facebookData, button);
                                     }
                                     break;
@@ -448,14 +421,16 @@ public class MainActivity extends AppCompatActivity
                         button.revertAnimation(new OnAnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0, 0, 0);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0,
+                                        0, 0);
                             }
                         });
                     }
                 });
     }
 
-    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button, String username) {
+    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button,
+                                    String username) {
 
 //        String profilePicUrl = googleAccount.getPhotoUrl().toString();
 
@@ -514,14 +489,16 @@ public class MainActivity extends AppCompatActivity
                         Log.d("handleGoogleSignIn()", t.getMessage());button.revertAnimation(new OnAnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0, 0, 0);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0,
+                                        0, 0);
                             }
                         });
                     }
                 });
     }
 
-    private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button, final boolean accountAlreadyExists) {
+    private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button,
+                                        final boolean accountAlreadyExists) {
         if (isFacebookAccount) {
             button.doneLoadingAnimation(Color.parseColor("#4469AF"),
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
@@ -534,8 +511,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (!accountAlreadyExists)
-                    setFragment(TAG_SELECT_INTERESTS, false, null);
-//                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+//                    setFragment(TAG_SELECT_INTERESTS, false, null);
+                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
                 else
                     successfullyLoggedIn();
             }
@@ -562,8 +539,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOtpInteraction(Authorize verificationDetails, String picturePath) {
         if (verificationDetails != null) {
-            setFragment(TAG_SELECT_INTERESTS, false, null);
-//            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+//            setFragment(TAG_SELECT_INTERESTS, false, null);
+            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
             new UpdateProfilePic(this).execute(picturePath);
         } else {
 //            if (isVerified)
@@ -677,8 +654,10 @@ public class MainActivity extends AppCompatActivity
 
     private class UserNameAlreadyAvailableDialog extends AlertDialog.Builder {
 
-        UserNameAlreadyAvailableDialog(final boolean isFacebook, @NonNull Context context, final GoogleSignInAccount googleAccount,
-                                       final Profile facebookProfile, final Bundle facebookData, final ProximaNovaSemiboldButton button) {
+        UserNameAlreadyAvailableDialog(final boolean isFacebook, @NonNull Context context,
+                                       final GoogleSignInAccount googleAccount,
+                                       final Profile facebookProfile, final Bundle facebookData,
+                                       final ProximaNovaSemiboldButton button) {
             super(context);
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogTheme);
             LayoutInflater inflater = MainActivity.this.getLayoutInflater();
@@ -716,7 +695,8 @@ public class MainActivity extends AppCompatActivity
 //            button.setTextColor(Color.parseColor("#757575"));
 //            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#5a000000"));
 //            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#5a000000"));
-//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(
+// MainActivity.this, R.color.black));
             dialog.show();
         }
 
@@ -815,19 +795,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.popBackStack();
             if (backStackCount == 1) {
                 toggleUpBtnVisibility(View.INVISIBLE);
-//                animator = ValueAnimator.ofFloat(15f, 0f);
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        settings.blurRadius((float) animator.getAnimatedValue());
-//                        blurView.updateBlur();
-//                    }
-//                });
-//                animator.setDuration(400);
-//                animator.start();
-//                blurView.setBlurEnabled(false);
-//                blurView.updateBlur();
-//                startFragmentTransition(true, null, false);
+                startFragmentTransition(true, null, false);
             }
         }
         else super.onBackPressed();

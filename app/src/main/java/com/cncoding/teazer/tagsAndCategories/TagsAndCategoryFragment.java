@@ -47,7 +47,7 @@ public class TagsAndCategoryFragment extends Fragment {
     private static final String ACTION = "action";
     public static final String ACTION_CATEGORIES_FRAGMENT = "categoriesFragment";
     public static final String ACTION_TAGS_FRAGMENT = "tagsFragment";
-    private static final String SELECTED_DATA = "selectedData";
+    public static final String SELECTED_DATA = "selectedData";
 //    private static final int CATEGORIES_LIMIT = 5;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;

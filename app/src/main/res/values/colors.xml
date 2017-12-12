@@ -18,9 +18,9 @@
     <color name="colorLike">#D32F2F</color>
     <color name="colorBg">#eeeeee</color>
     <color name="colorTranslucentBg">#91212121</color>
-    <color name="colorTranslucentBgMainActivity">#50000000</color>
+    <color name="colorTranslucentBgMainActivity">#dc000000</color>
     <color name="bgInterests">#c8000000</color>
-    <color name="colorTranslucentButton">#5a000000</color>
+    <color name="colorTranslucentButton">#50000000</color>
     <color name="colorPrimary_text">#333333</color>
     <color name="colorPrimary_text2">#9e9e9e</color>
     <color name="colorSecondary_text">#757575</color>
@@ -33,7 +33,7 @@
     <color name="colorRippleLight">#bbffffff</color>
     <color name="colorCcp">#0076FF</color>
     <!--69f0ae-->
-    <color name="colorRippleDark">#80bdbdbd</color>
+    <color name="colorRippleDark">#bb757575</color>
     <color name="colorFacebook">#4469AF</color>
     <color name="colorGoogle">#DC4E41</color>
     <color name="colorTabindicator">#26C6DA</color>
@@ -62,7 +62,6 @@
     <color name="line_color">#FF15FF00</color>
     <color name="shadow_color">#7F000000</color>
     <color name="line_button">#565758</color>
-    <color name="black_translucent">#50000000</color>
     <color name="top_bottom">#42BAF8</color>
     <color name="gray_mid_dark">#757575</color>
     <color name="transparent">@android:color/transparent</color>

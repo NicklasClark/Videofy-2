@@ -260,7 +260,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         new SetVideoDuration(this).execute();
 
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
-            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_white);
         }
     }
 

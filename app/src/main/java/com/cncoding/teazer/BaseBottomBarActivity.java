@@ -470,7 +470,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                   RelativeLayout layout, final byte[] image) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image, true, false, null);
+                PostDetailsActivity.newInstance(this, postDetails, image,
+                        true, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 int postOwnerId=postDetails.getPostOwner().getUserId();
@@ -594,7 +595,6 @@ public class BaseBottomBarActivity extends BaseActivity
     private void setupServiceReceiver() {
         builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setContentTitle("Teazer video upload")
-                .setContentText("Uploading")
 //                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
 //                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_file_upload)
@@ -625,7 +625,8 @@ public class BaseBottomBarActivity extends BaseActivity
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch(resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false);
+                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
                                 notifyProgressInNotification();
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
@@ -653,7 +654,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                 Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
                                 builder.setOngoing(false);
                                 builder.setContentText("Upload failed!")
-                                        .setProgress(100, 0, false);
+                                        .setProgress(100, 0, false)
+                                        .setContentText("");
                                 notifyProgressInNotification();
 
                                 new Handler().postDelayed(new Runnable() {

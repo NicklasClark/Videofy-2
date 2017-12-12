@@ -147,7 +147,7 @@
         </activity>
         <activity android:name=".home.post.PostDetailsActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.FullScreen" />
+            android:theme="@style/PostDetailsTheme" />
         <activity
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
@@ -248,7 +248,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.fragment.activity.ExoPlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/PostDetailsTheme"/>
         <activity android:name=".utilities.GalleryUtil" />
     </application>
 

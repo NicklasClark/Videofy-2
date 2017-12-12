@@ -20,6 +20,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Category;
 import com.google.android.flexbox.AlignItems;
@@ -38,7 +39,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.tagsAndCategories.TagsAndCategoryFragment.SELECTED_DATA;
+
 public class Interests extends BaseFragment {
+    private static final String ARG_IS_FOR_VIDEO = "isForVideo";
     private static final String ARG_IS_EDITING = "isEditing";
     private static final String ARG_CATEGORIES = "categories";
 //    private static final String CATEGORIES_LIST = "categoriesList";
@@ -50,18 +55,23 @@ public class Interests extends BaseFragment {
 //    private ActionBar actionBar;
     private ArrayList<Category> categories;
     private boolean isEditing;
+    private boolean isForVideo;
     private InterestsAdapter interestsAdapter;
     private OnInterestsInteractionListener mListener;
     private ArrayList<Category> interestList;
+    private String selectedData;
 
     public Interests() {
         // Required empty public constructor
     }
 
-    public static Interests newInstance(boolean isEditing, ArrayList<Category> categories) {
+    public static Interests newInstance(boolean isForVideo, boolean isEditing, ArrayList<Category> categories,
+                                        String selectedData) {
         Interests interests = new Interests();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_FOR_VIDEO, isForVideo);
         args.putBoolean(ARG_IS_EDITING, isEditing);
+        args.putString(SELECTED_DATA, selectedData);
         if (isEditing)
             args.putParcelableArrayList(ARG_CATEGORIES, categories);
         interests.setArguments(args);
@@ -72,9 +82,11 @@ public class Interests extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            isForVideo = getArguments().getBoolean(ARG_IS_FOR_VIDEO);
             isEditing = getArguments().getBoolean(ARG_IS_EDITING);
             if (isEditing)
                 categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
+            selectedData = getArguments().getString(SELECTED_DATA);
         }
     }
 
@@ -82,26 +94,40 @@ public class Interests extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView;
-        if (!isEditing) {
-            rootView = inflater.inflate(R.layout.fragment_interests, container, false);
+        if (!isForVideo) {
+            if (!isEditing) {
+                rootView = inflater.inflate(R.layout.fragment_interests, container, false);
+            } else {
+                rootView = inflater.inflate(R.layout.fragment_edit_interests, container, false);
+                rootView.findViewById(R.id.root_layout).setBackgroundColor(getResources().getColor(R.color.bgInterests));
+            }
         } else {
-            rootView = inflater.inflate(R.layout.fragment_edit_interests, container, false);
-            rootView.findViewById(R.id.root_layout).setBackgroundColor(getResources().getColor(R.color.bgInterests));
+            rootView = inflater.inflate(R.layout.fragment_video_categories, container, false);
         }
         ButterKnife.bind(this, rootView);
 
         interestList = new ArrayList<>();
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
         flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
-        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        flexboxLayoutManager.setJustifyContent(isForVideo ? JustifyContent.FLEX_START : JustifyContent.CENTER);
         recyclerView.setLayoutManager(flexboxLayoutManager);
-        if (!isEditing) {
-            interestsAdapter = new InterestsAdapter(interestList, this, null);
-            recyclerView.setAdapter(interestsAdapter);
+        if (!isForVideo) {
+            if (!isEditing) {
+                interestsAdapter = new InterestsAdapter(interestList, this, null,
+                        null, false);
+                recyclerView.setAdapter(interestsAdapter);
+            } else {
+                enableSaveBtn();
+                //noinspection unchecked
+                new SetInterestsAdapter(this).execute(categories);
+            }
         } else {
-            enableSaveBtn();
-            //noinspection unchecked
-            new SetInterestsAdapter(this).execute(categories);
+            recyclerView.setHasFixedSize(true);
+            getCategories();
+            if (categories == null) categories = new ArrayList<>();
+            interestsAdapter = new InterestsAdapter(categories, this, null,
+                    selectedData, true);
+            recyclerView.setAdapter(interestsAdapter);
         }
 
         recyclerView.setLayoutAnimation(new LayoutAnimationController(
@@ -111,10 +137,49 @@ public class Interests extends BaseFragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getActivity() != null && getActivity() instanceof CameraActivity) {
+            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (!isEditing && interestList != null && interestList.isEmpty())
             new GetInterests(this).execute();
+    }
+
+    private void getCategories() {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+                if (response.code() == 200) {
+                    ArrayList<Category> tempList = response.body();
+                    if (!tempList.isEmpty()) {
+                        categories.addAll(tempList);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        changeDoneBtnVisibility(VISIBLE);
+                    } else {
+                        changeDoneBtnVisibility(View.GONE);
+                    }
+                } else {
+                    changeDoneBtnVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void changeDoneBtnVisibility(int visibility) {
+        if (saveBtn.getVisibility() != visibility) {
+            saveBtn.setVisibility(visibility);
+        }
     }
 
     private static class SetInterestsAdapter extends AsyncTask<ArrayList<Category>, Void, InterestsAdapter> {
@@ -131,7 +196,7 @@ public class Interests extends BaseFragment {
             for (Category category : categories[0]) {
                 booleanArray.put(category.getCategoryId() - 1, true);
             }
-            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray);
+            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray, null, false);
         }
 
         @Override

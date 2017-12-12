@@ -45,7 +45,7 @@
         android:id="@+id/up_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_previous"
+        app:srcCompat="@drawable/ic_arrow_back_white"
         android:foreground="@drawable/ripple_dark"
         android:scaleType="center"
         android:contentDescription="@string/up"

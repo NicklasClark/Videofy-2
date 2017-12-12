@@ -234,11 +234,12 @@ public class ViewUtils {
         ((AppCompatActivity) packageContext).finish();
     }
 
-    public static GradientDrawable getBackground(Context context, TextView textView, int bgColor, int strokeColor, int textColor) {
+    public static GradientDrawable getBackground(Context context, TextView textView, int bgColor,
+                                                 int strokeColor, int textColor, float strokeWidth) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(bgColor);
         gradientDrawable.setCornerRadius(3);
-        gradientDrawable.setStroke((int)((1 * context.getResources().getDisplayMetrics().density) + 0.5), strokeColor);
+        gradientDrawable.setStroke((int)((strokeWidth * context.getResources().getDisplayMetrics().density) + 0.5), strokeColor);
         textView.setTextColor(textColor);
         return gradientDrawable;
     }
@@ -250,19 +251,19 @@ public class ViewUtils {
                 textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
                         context.getResources().getColor(R.color.colorAccent),
-                        context.getResources().getColor(R.color.colorAccent)));
+                        context.getResources().getColor(R.color.colorAccent), 2));
                 break;
             case R.string.following:
                 textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_dark, 0, 0, 0);
                 textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
                         context.getResources().getColor(R.color.colorPrimary_text),
-                        context.getResources().getColor(R.color.colorPrimary_text)));
+                        context.getResources().getColor(R.color.colorPrimary_text), 2));
                 break;
             case R.string.requested:
                 textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
                         context.getResources().getColor(R.color.colorPrimary_text),
-                        context.getResources().getColor(R.color.colorPrimary_text)));
+                        context.getResources().getColor(R.color.colorPrimary_text), 2));
                 break;
             default:
                 break;

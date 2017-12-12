@@ -10,13 +10,12 @@
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/interests_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="0dp"
+        android:gravity="start|center_vertical"
         android:background="@color/colorPrimary"
         android:textSize="@dimen/text_size_content_big"
-        android:paddingTop="@dimen/padding_default"
-        android:paddingBottom="@dimen/padding_default"
-        android:paddingEnd="@dimen/padding_default"
-        android:paddingStart="@dimen/padding_default"
         android:text="@string/select_your_interests"
         android:elevation="6dp"/>
 
@@ -32,10 +31,11 @@
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
         android:id="@+id/save_interests_btn"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:padding="@dimen/padding_default"
         android:enabled="false"
-        app:drawableStartCompat="@drawable/ic_check"
+        android:paddingTop="12dp"
+        app:drawableTopCompat="@drawable/ic_check"
         android:background="@color/colorPrimary"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/interests_header"
