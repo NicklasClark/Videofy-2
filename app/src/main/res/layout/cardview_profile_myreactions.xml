@@ -17,9 +17,8 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        app:cardElevation="5dp"
+        app:cardElevation="2dp"
 
         android:layout_height="280dp">
         <RelativeLayout
@@ -31,9 +30,22 @@
                 android:id="@+id/demoimage"
                 android:layout_width="match_parent"
                 android:scaleType="centerCrop"
-                android:background="@drawable/material_flat"
                 android:layout_height="280dp"
                 />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="280dp">
+                <ImageView
+
+                    android:layout_width="match_parent"
+                    android:background="@drawable/bg_vignette"
+                    android:layout_height="280dp" />
+
+
+            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/descriptionlayout"
                 android:layout_marginTop="16dp"
@@ -104,15 +116,16 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:gravity="center"
+                android:layout_height="35dp"
+                android:layout_marginBottom="10dp"
                 android:layout_alignParentBottom="true">
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
                     android:id="@+id/likes"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    app:srcCompat="@drawable/ic_like_outline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_like_outline_small"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="5dp"
                     />
@@ -121,15 +134,19 @@
                     android:id="@+id/txtlikes"
                     android:text=""
                     android:textSize="12sp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/likes"/>
 
                 <com.cncoding.teazer.customViews.CircularAppCompatImageView
                     android:id="@+id/view"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    app:srcCompat="@drawable/viewimage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_view_outline"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
                     android:layout_toEndOf="@+id/txtlikes"
@@ -137,8 +154,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:id="@+id/txtview"
-                    android:text="1080"
                     android:textSize="12sp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:textColor="@color/cardview_light_background"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/view"/>

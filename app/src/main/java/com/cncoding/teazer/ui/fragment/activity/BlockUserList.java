@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -53,16 +54,18 @@ public class BlockUserList extends AppCompatActivity {
         ButterKnife.bind(this);
         context=this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-//        toolbar.setNavigationIcon(R.drawable.ic_previous);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#0000000'>Block Users</font>"));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

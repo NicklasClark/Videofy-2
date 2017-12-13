@@ -25,6 +25,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.Pojos;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *
  * Created by farazhabib on 09/11/17.
  */
 
@@ -48,12 +48,12 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
 
-
     public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> list) {
         this.context = context;
         this.list = list;
         listener = (myCreationListener) context;
     }
+
     @Override
     public ProfileMyCreationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_mycreations, viewGroup, false);
@@ -87,38 +87,38 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             views = String.valueOf(cont.getMedias().get(0).getViews());
             likes = String.valueOf(cont.getLikes());
             reactions = cont.getTotalReactions();
-            boolean hascheckin=cont.hasCheckin();
-            if(hascheckin)
-            {
+            boolean hascheckin = cont.hasCheckin();
+            if (hascheckin) {
                 String location2 = cont.getCheckIn().getLocation();
-                if(location2.equals("")||location2==null)
-                {
+                if (location2.equals("") || location2 == null) {
                     viewHolder.location.setText("");
                     viewHolder.locationimage.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     viewHolder.location.setText(location2);
                 }
-            }
-            else
-            {
+            } else {
                 viewHolder.location.setText("");
                 viewHolder.locationimage.setVisibility(View.GONE);
             }
 
-            getPostReaction(viewHolder, postId);
-            if(reactions==0) viewHolder.reactions.setVisibility(View.GONE);
-            else viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
-
+            if (reactions == 0) {
+                viewHolder.reactions.setVisibility(View.GONE);
+                viewHolder.imagelayout1.setVisibility(View.INVISIBLE);
+                viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
+                viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+            } else if (reactions > 3)
+                getPostReactionFour(viewHolder, postId, reactions);
+            else {
+                viewHolder.reactions.setText(String.valueOf(reactions) + " R");
+                viewHolder.reactions.setVisibility(View.GONE);
+                getPostReactionThree(viewHolder, postId, reactions);
+            }
             viewHolder.videoTitle.setText(videotitle);
             viewHolder.txtlikes.setText(likes);
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
 
-
-
             Glide.with(context).load(thumb_url)
-                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                     .into(viewHolder.thumbimage);
 
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -144,11 +144,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
                                     alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                        public void onClick(DialogInterface dialog,int which) {
+                                        public void onClick(DialogInterface dialog, int which) {
                                             deleteVideos(videopostId);
                                             list.remove(i);
                                             notifyItemRemoved(i);
-                                            notifyItemRangeChanged(i,list.size());
+                                            notifyItemRangeChanged(i, list.size());
                                         }
                                     });
                                     alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -160,8 +160,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     alertDialog.show();
                                     break;
                                 case R.id.edit_post:
-                                    Intent intent=new Intent(context, EditPost.class);
-                                    intent.putExtra("PostDetail",cont);
+                                    Intent intent = new Intent(context, EditPost.class);
+                                    intent.putExtra("PostDetail", cont);
                                     context.startActivity(intent);
                                     break;
                             }
@@ -193,7 +193,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         RelativeLayout imagelayout1;
         RelativeLayout imagelayout2;
         RelativeLayout imagelayout3;
-        CircularAppCompatImageView image1, image2, image3,locationimage;
+        CircularAppCompatImageView image1, image2, image3, locationimage;
         CardView cardView;
         View line;
         ImageView playvideo;
@@ -214,8 +214,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             image2 = view.findViewById(R.id.image2);
             image3 = view.findViewById(R.id.image3);
             imagelayout1 = view.findViewById(R.id.image1_layout);
-            imagelayout2 = view.findViewById(R.id.image1_layout);
-            imagelayout3 = view.findViewById(R.id.image1_layout);
+            imagelayout2 = view.findViewById(R.id.image2_layout);
+            imagelayout3 = view.findViewById(R.id.image3_layout);
             locationimage = view.findViewById(R.id.locationimage);
             menu = view.findViewById(R.id.menu);
 
@@ -247,7 +247,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         });
     }
-    public void getPostReaction(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId) {
+
+    public void getPostReactionFour(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
         ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
             @Override
@@ -257,70 +258,63 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                     try {
                         reactiolist = response.body().getReactions();
-                       // viewHolder.reactions.setText("+" + String.valueOf(reactions) + " R");
 
                         if (reactiolist.size() > 3) {
-                           // int counter=reactions-3;
-                          //  viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
-                            for (int i = 0; i < 3; i++)
-                            {
+                            int counter = reactions - 3;
+                            viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
+                            for (int i = 0; i < 3; i++) {
+
                                 Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
-
-
                                     switch (i) {
                                         case 0:
-//                                            Picasso.with(context)
-//                                                    .load(profileurl)
-//                                                    .into(viewHolder.image1);
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
 
                                             break;
                                         case 1:
-//                                            Picasso.with(context)
-//                                                    .load(profileurl)
-//                                                    .into(viewHolder.image2);
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image2);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
-
-
                                             break;
 
                                         case 2:
-//                                            Picasso.with(context)
-//                                                    .load(profileurl)
-//                                                    .into(viewHolder.image3);
-                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image3);
+                                            viewHolder.imagelayout3.setVisibility(View.VISIBLE);
                                             break;
 
                                         default:
-
-
                                     }
 
                                 } else {
 
-                                    switch (0) {
+                                    switch (i) {
                                         case 0:
 
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
-//                                            Picasso.with(context)
-//                                                    .load(pic)
-//                                                    .into(viewHolder.image1);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image1);
                                             break;
                                         case 1:
 
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
-//                                            Picasso.with(context)
-//                                                    .load(pic)
-//                                                    .into(viewHolder.image3);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image3);
                                             break;
                                         case 2:
 
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
-//                                            Picasso.with(context)
-//                                                    .load(pic)
-//                                                    .into(viewHolder.image3);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image3);
                                             break;
                                         default:
 
@@ -331,24 +325,124 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                             }
                         }
-                    }
-
-                    catch(Exception e)
-                        {
-
-                        }
-
+                    } catch (Exception e) {
 
                     }
-                }
-                @Override
-                public void onFailure (Call < Pojos.Post.PostReactionsList > call, Throwable t){
-                }
-            });
-        }
 
-        public interface myCreationListener {
 
-            public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
-        }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pojos.Post.PostReactionsList> call, Throwable t) {
+            }
+        });
     }
+
+    public void getPostReactionThree(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
+        int page = 1;
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+            @Override
+            public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
+
+                if (response.code() == 200) {
+
+                    try {
+                        reactiolist = response.body().getReactions();
+
+                        if (reactiolist.size() <= 3) {
+
+                            for (int i = 0; i < reactiolist.size(); i++) {
+
+                                Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                                if (miniProfile.hasProfileMedia()) {
+                                    String profileurl = miniProfile.getProfileMedia().getThumbUrl();
+                                    switch (i) {
+                                        case 0:
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image1);
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+                                            break;
+                                        case 1:
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image2);
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+                                            break;
+
+                                        case 2:
+                                            Picasso.with(context)
+                                                    .load(profileurl)
+                                                    .into(viewHolder.image3);
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.VISIBLE);
+                                            break;
+
+                                        default:
+                                    }
+
+                                } else {
+
+                                    switch (i) {
+                                        case 0:
+
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image1);
+                                            break;
+                                        case 1:
+
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image3);
+                                            break;
+                                        case 2:
+
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.VISIBLE);
+                                            Picasso.with(context)
+                                                    .load(R.drawable.ic_user_male_dp_small)
+                                                    .into(viewHolder.image3);
+                                            break;
+                                        default:
+
+
+                                    }
+                                }
+
+
+                            }
+                        }
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<Pojos.Post.PostReactionsList> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+
+    public interface myCreationListener {
+
+        public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
+    }
+}

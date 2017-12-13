@@ -29,19 +29,16 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
     private final Context context;
     private ArrayList<Pojos.Category> categories;
     private Fragment fragment;
-//    private SparseBooleanArray selectedCategoriesArray;
-//    private SparseArray<Pojos.Category> selectedCategories;
     private PublicProfile userProfile;
-    List<Category> usercategoryList;
+    ArrayList<Pojos.Category> usercategoryList;
     boolean flag=false;
     boolean[] selectedPositions;
     List<Integer> selectedcategories;
 
-    public ChangeCategoriesAdapter(ArrayList<Pojos.Category> categories, Context context,List<Category> usercategoryList) {
+    public ChangeCategoriesAdapter(ArrayList<Pojos.Category> categories, Context context,ArrayList<Pojos.Category> usercategoryList) {
         this.categories = categories;
         this.userProfile = userProfile;
-//        selectedCategoriesArray = new SparseBooleanArray();
-//        selectedCategories = new SparseArray<>();
+
         selectedcategories=new ArrayList<>();
         for (int i=0;i<usercategoryList.size();i++)
         {
@@ -65,7 +62,7 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
     }
 
     @Override
-    public void onBindViewHolder(final ChangeCategoriesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ChangeCategoriesAdapter.ViewHolder holder, final int position) {
         final Pojos.Category category = this.categories.get(position);
 
        for(int i=0;i<usercategoryList.size();i++) {
@@ -75,13 +72,14 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
               selectedPositions[position] = true;
           }
        }
-
         holder.nameView.setText(category.getCategoryName());
 
         if(selectedPositions[position]) {
             setCheck(holder.nameView, true);
+
         } else {
             setCheck(holder.nameView, false);
+
         }
 
 
@@ -89,23 +87,24 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // selectedcategories.add(usercategoryList.get(i).getCategoryId());
 
                 boolean ischecked=holder.nameView.isChecked();
                 if(ischecked){
                     selectedcategories.remove((Integer)category.getCategoryId());
+                    usercategoryList.remove(usercategoryList.get(position));
                     setCheck(holder.nameView, false);
+                    selectedPositions[position] = false;
                 }
                 else
-                    {
-                        if(!selectedcategories.contains(category.getCategoryId())) {
-                            selectedcategories.add(category.getCategoryId());
-                            setCheck(holder.nameView, true);
-                        }
-
+                {
+                    if(!selectedcategories.contains(category.getCategoryId())) {
+                       // usercategoryList.add(usercategoryList.get(position).getCategoryId());
+                        usercategoryList.add(categories.get(position));
+                        selectedcategories.add(category.getCategoryId());
+                        setCheck(holder.nameView, true);
+                        selectedPositions[position] = true;
                     }
-
-
+                }
 
             }
         });

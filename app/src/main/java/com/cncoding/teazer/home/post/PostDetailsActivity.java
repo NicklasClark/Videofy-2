@@ -461,11 +461,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
                     switch (response.code()) {
                         case 200:
+
                             if (response.body().getReactions().size() > 0) {
                                 postLoadErrorLayout.setVisibility(GONE);
                                 is_next_page = response.body().isNextPage();
                                 if (pageNumber == 1) postReactions.clear();
-
                                 postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
                                 postReactionAdapter.notifyDataSetChanged();

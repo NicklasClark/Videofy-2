@@ -224,6 +224,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder1.content.setOnClickListener(postListener);
                 holder1.thumbnail.setOnClickListener(postListener);
                 break;
+                
             case TYPE_REQUESTS:
                 final RequestsViewHolder holder2 = (RequestsViewHolder) viewHolder;
                 holder2.notification = notificationsList.getNotifications().get(position);
