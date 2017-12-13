@@ -111,6 +111,10 @@ public class SignupFragment extends AuthFragment {
         }
     }
 
+    @OnClick(R.id.dp_edit_btn) public void launchSelector() {
+        launchImageSelector();
+    }
+
     @OnClick(R.id.dp) public void launchImageSelector() {
         Intent gallery_Intent = new Intent(getApplicationContext(), GalleryUtil.class);
         startActivityForResult(gallery_Intent, GALLERY_ACTIVITY_CODE);

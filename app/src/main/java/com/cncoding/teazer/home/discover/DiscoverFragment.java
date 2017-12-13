@@ -304,9 +304,13 @@ public class DiscoverFragment extends BaseFragment {
                                     featuredVideosList.setVisibility(VISIBLE);
                                     noFeaturedVideos.setVisibility(GONE);
                                     featuredPostsList.addAll(postList.getPosts());
-                                    featuredVideosList.getAdapter().notifyDataSetChanged();
+                                    if (page == 1)
+                                        featuredVideosList.getAdapter().notifyDataSetChanged();
+                                    else
+                                        featuredVideosList.getAdapter()
+                                                .notifyItemRangeInserted((page - 1) * 10, postList.getPosts().size());
                                 } else if (page == 1){
-                                    featuredPostsContainer.setVisibility(GONE);
+                                    featuredPostsContainer.setVisibility(VISIBLE);
                                     featuredVideosList.setVisibility(GONE);
                                     noFeaturedVideos.setVisibility(VISIBLE);
                                 }

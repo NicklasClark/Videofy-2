@@ -97,8 +97,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         String likes = BLANK_SPACE + String.valueOf(postDetails.getLikes());
         holder.likes.setText(likes);
 
-        String views = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
-        holder.views.setText(views);
+        if (postDetails.getTotalReactions() > 0) {
+            String reactions = "R " + String.valueOf(postDetails.getTotalReactions());
+            holder.views.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            holder.views.setText(reactions);
+        } else {
+            String views = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
+            holder.views.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_view_outline_smaller, 0, 0, 0);
+            holder.views.setText(views);
+        }
 
         if (listener != null) {
             View.OnClickListener viewPostDetails = new View.OnClickListener() {

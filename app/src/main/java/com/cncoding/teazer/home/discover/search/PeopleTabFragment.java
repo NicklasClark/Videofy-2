@@ -15,6 +15,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Friends.UsersList;
 import com.cncoding.teazer.utilities.Pojos.MiniProfile;
@@ -33,7 +34,8 @@ public class PeopleTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
+    @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;
@@ -117,6 +119,7 @@ public class PeopleTabFragment extends BaseFragment {
                             if (users.getUsers().size() > 0) {
                                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                                 noPosts.setVisibility(View.GONE);
+                                noPosts2.setVisibility(View.GONE);
                                 usersList.addAll(users.getUsers());
                                 recyclerView.getRecycledViewPool().clear();
                                 adapter.notifyDataSetChanged();
@@ -125,6 +128,7 @@ public class PeopleTabFragment extends BaseFragment {
                                     swipeRefreshLayout.setVisibility(View.GONE);
                                     noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
                                     noPosts.setVisibility(View.VISIBLE);
+                                    noPosts2.setVisibility(View.INVISIBLE);
                                 }
                             }
                         } else {
@@ -132,6 +136,7 @@ public class PeopleTabFragment extends BaseFragment {
                             noPosts.setText(R.string.error_fetching_data);
                             noPosts.setCompoundDrawablesWithIntrinsicBounds(
                                     0, R.drawable.ic_no_data_placeholder, 0, 0);
+                            noPosts2.setVisibility(View.INVISIBLE);
                             Log.e("getUsersListToFollow", response.code() + "_" + response.message());
                         }
                         swipeRefreshLayout.setRefreshing(false);

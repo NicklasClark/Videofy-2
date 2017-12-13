@@ -97,6 +97,13 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         holder.views.setText(views);
 
         Glide.with(context)
+                .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
+                        holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .into(holder.dp);
+
+        Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
                 .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
@@ -116,19 +123,12 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
                         holder.layout.getLayoutParams().height = height;
 
                         dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+
                         holder.layout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 })
                 .into(holder.thumbnail);
-
-        Glide.with(context)
-                .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
-                        holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .into(holder.dp);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
