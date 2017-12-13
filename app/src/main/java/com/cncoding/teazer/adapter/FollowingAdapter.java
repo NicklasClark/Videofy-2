@@ -62,6 +62,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
+
     @Override
     public FollowingAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_profile_following, viewGroup,
@@ -82,15 +83,26 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 followerId = cont.getUserId();
                 userType="Following";
                 final boolean isfollowersDp=cont.getHasProfileMedia();
+
                 if(isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getThumbUrl();
                     Glide.with(context)
                             .load(followrsDp)
-                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
                 }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.dp);
+                }
+
                 setActionButtonText(context, viewHolder.action, R.string.following);
+
                 viewHolder.name.setText(followingname);
 
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +115,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         }
                     }
                 });
-
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -122,6 +133,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final boolean isfollowersDp=cont.getHasProfileMedia();
 
                 if(isfollowersDp) {
+
                     String followrsDp = cont.getProfileMedia().getThumbUrl();
                     Glide.with(context)
                             .load(followrsDp)
@@ -151,20 +163,24 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 }
                if (myself) {
                     usertype="";
-                    viewHolder.name.setTextColor(Color.BLUE);
+                   viewHolder.name.setTextColor( Color.parseColor("#333333"));
                     viewHolder.action.setVisibility(View.INVISIBLE);
                 }
+
                 else {
-                    if (isfollowing) {
-                        setActionButtonText(context, viewHolder.action, R.string.following);
-                        usertype = "Following";
-                    } else {
-                        if(isrequestsent) {
+                   viewHolder.name.setTextColor( Color.parseColor("#333333"));
+                   viewHolder.action.setVisibility(View.VISIBLE);
+
+                   if (isfollowing) {
+                       setActionButtonText(context, viewHolder.action, R.string.following);
+                       usertype = "Following";
+                   }else {
+                       if(isrequestsent) {
                             setActionButtonText(context, viewHolder.action, R.string.requested);
                             usertype = "Requested";
-                        }
-                        else {
-                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                       }
+                       else {
+                           setActionButtonText(context, viewHolder.action, R.string.follow);
                             usertype = "Follow";
                         }
 
@@ -184,9 +200,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     @Override
                     public void onClick(View view) {
                         if (myself) {
-//                            Intent intent = new Intent(context, BaseBottomBarActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            context.startActivity(intent);
+
                             otherProfileListenerFollowing.viewUserProfile();
 
                         } else {
@@ -276,6 +290,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             ButterKnife.bind(this, view);
         }
     }
+
     public  interface OtherProfileListenerFollowing
     {
         public void viewOthersProfileFollowing(String id, String username, String type);

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +47,7 @@ import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
 import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 
@@ -122,6 +124,7 @@ public class OthersProfileFragment extends BaseFragment {
     private String userProfileThumbnail;
     private String userProfileUrl;
     int page = 1;
+    String details;
     ProfileFragment.FollowerListListener followerListListener;
 
 
@@ -197,11 +200,11 @@ public class OthersProfileFragment extends BaseFragment {
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (accountType == 1) {
-
                     if (isfollowing == true) {
+
                         followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
+
                     } else if (hassentrequest == true) {
 
                         if (requestRecieved == true) {
@@ -247,14 +250,26 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
 
+
+        hobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
+//                if (fragmentManager != null) {
+//                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+//
+//                }
+            }
+        });
+
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        getParentActivity().hideSettings(true);
-
         getProfileInformation(followerfollowingid);
     }
 
@@ -282,7 +297,6 @@ public class OthersProfileFragment extends BaseFragment {
                     try {
 
                         FollowersProfile followersProfile = response.body();
-                        userCreationTitle.setText("Creations of " + followersProfile.getPublicProfile().getFirstName());
                         int follower = followersProfile.getFollowers();
                         int following = followersProfile.getFollowings();
                         int totalvideos = followersProfile.getTotalVideos();
@@ -299,10 +313,12 @@ public class OthersProfileFragment extends BaseFragment {
                         if (response.body().getPrivateProfile() == null) {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
+                            userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
+
                             String username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
-                            String details = publicProfile.getDescription();
+                            details = publicProfile.getDescription();
                             int gender = publicProfile.getGender();
                             accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);
@@ -381,8 +397,9 @@ public class OthersProfileFragment extends BaseFragment {
 
                         } else if (response.body().getPublicProfile() == null) {
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
-                            Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
+                            userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
                             String username = privateProfile.getUserName();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
@@ -524,6 +541,16 @@ public class OthersProfileFragment extends BaseFragment {
             case R.id.action_profile_block:
                 openBlockUser(followerfollowingid);
                 break;
+            case android.R.id.home:
+                FragmentManager fm = getChildFragmentManager();
+                for (Fragment frag : fm.getFragments()) {
+                    if (frag.isVisible()) {
+                        FragmentManager childFm = frag.getChildFragmentManager();
+                        if (childFm.getBackStackEntryCount() > 0) {
+                            childFm.popBackStack();
+                        }
+                    }
+                }
         }
         return true;
 
@@ -639,6 +666,7 @@ public class OthersProfileFragment extends BaseFragment {
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             }
                         } else {
+
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             _btnfollow.setText("Following");
@@ -744,4 +772,5 @@ public class OthersProfileFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
     }
+
 }

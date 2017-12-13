@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:paddingStart">@dimen/padding_thin</item>
+        <item name="android:paddingEnd">@dimen/padding_default</item>
+        <item name="android:layout_margin">@dimen/padding_half</item>
+        <item name="android:background">@drawable/bg_button_react</item>
+        <item name="android:foreground">@drawable/ripple_dark</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+</resources>

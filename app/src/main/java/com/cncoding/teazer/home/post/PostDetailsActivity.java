@@ -445,8 +445,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             for (int i = 0; i < postDetails.getCategories().size(); i++) {
                 categories.append(postDetails.getCategories().get(i).getCategoryName());
                 if (i < postDetails.getCategories().size() - 1)
-                    categories.append("    ");
+                    categories.append(", ");
+//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
             }
+//            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
             return categories.toString();
         } else return null;
     }
@@ -840,23 +842,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     @OnClick(R.id.share) public void onViewClicked() {
-//        DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-//                .setLink(Uri.parse("https://v6f43.app.goo.gl/?link="+ postDetails.getPostId()))
-//                .setDynamicLinkDomain("v6f43.app.goo.gl")
-//                // Open links with this app on Android
-//                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
-//                // Open links with com.example.ios on iOS
-//                .setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
-//                .buildDynamicLink();
-//
-//        Uri dynamicLinkUri = dynamicLink.getUri();
-//
-//
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_SEND);
-//        sendIntent.putExtra(Intent.EXTRA_TEXT, dynamicLinkUri.toString());
-//        sendIntent.setType("text/plain");
-//        startActivity(sendIntent);
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                 .setCanonicalIdentifier(postDetails.getPostOwner().getFirstName())
                 .setTitle(postDetails.getTitle())
@@ -993,7 +978,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
-                    } else {
+                    }
+                    else {
                         Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;

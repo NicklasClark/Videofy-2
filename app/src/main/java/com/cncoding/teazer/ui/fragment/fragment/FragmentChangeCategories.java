@@ -45,7 +45,7 @@ public class FragmentChangeCategories extends Fragment{
     RecyclerView.LayoutManager layoutManager;
     ChangeCategoriesAdapter adapter;
     PublicProfile userProfile;
-    List<Category> usercategoryList;
+    ArrayList<Pojos.Category> usercategoryList;
     @BindView(R.id.tags_categories_save)
     FloatingActionButton tags_categories_done;
     StringBuilder categoryId;
@@ -119,7 +119,7 @@ public class FragmentChangeCategories extends Fragment{
 
     }
 
-    public void getCategories(final List<Category> usercategoryList) {
+    public void getCategories(final ArrayList<Pojos.Category> usercategoryList) {
         ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Pojos.Category>> call, Response<ArrayList<Pojos.Category>> response) {

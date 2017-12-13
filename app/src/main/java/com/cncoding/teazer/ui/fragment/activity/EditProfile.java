@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -44,6 +45,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdate;
 import com.cncoding.teazer.model.profile.profileupdate.ProfileUpdateRequest;
+import com.hbb20.CountryCodePicker;
 import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -52,14 +54,14 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,6 +103,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     CircularAppCompatImageView male;
     @BindView(R.id.female)
     CircularAppCompatImageView female;
+    @BindView(R.id.gender_error_text)
+    TextView gender_text;
+    @BindView(R.id.gender_error_text2)
+    TextView gender_error_text2;
+
+    @BindView(R.id.signup_country_code)
+    CountryCodePicker countryCodeView;
 
     @BindView(R.id.maletxt)
     ProximaNovaRegularCheckedTextView maletext;
@@ -184,9 +193,19 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         _firstname.setText(firstname);
         _bio.setText(detail);
         _email.setText(emailId);
-        _mobileNumber.setText(String.valueOf(mobilenumber));
+        if(mobilenumber!=0)
+        {
+            _mobileNumber.setText(String.valueOf(mobilenumber));
+        }
+        if (countryCodeView != null) {
+            if (countrycode != -1)
+                countryCodeView.setCountryForPhoneCode(countrycode);
+            else {
+                countryCodeView.setCountryForNameCode(Locale.getDefault().getCountry());
+                countrycode = countryCodeView.getSelectedCountryCodeAsInt();
 
-
+            }
+        }
         if (gender == 1) {
             male.setBackgroundResource(R.drawable.ic_male_sel);
             female.setBackgroundResource(R.drawable.ic_female_white);
@@ -403,9 +422,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 //    }
 
 
-
-
-
     public static int getOrientation(Context context, Uri photoUri) {
 
         Cursor cursor = context.getContentResolver().query(photoUri,
@@ -572,7 +588,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
-       // takePhotoFromCamera();
+        // takePhotoFromCamera();
     }
 
 
@@ -605,23 +621,24 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
                     try {
                         if (response.body().getStatus()) {
-                            Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
+                            ProfileFragment.checkprofileupdated = true;
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Something went wrong Please try again", Toast.LENGTH_SHORT).show();
                         simpleProgressBar.setVisibility(View.GONE);
                         layoutdetail.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please check your data is correct", Toast.LENGTH_SHORT).show();
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
                 }
@@ -712,10 +729,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     return bitmap;
                 }
-
                 @Override
                 protected void onPostExecute(final Bitmap result) {
 
@@ -724,36 +739,28 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
                         Blurry.with(EditProfile.this).from(photobitmap).into(bgImage);
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     simpleProgressBar.setVisibility(View.GONE);
                     layoutdetail.setVisibility(View.VISIBLE);
                 }
             }.execute();
-
-
             simpleProgressBar.setVisibility(View.GONE);
             layoutdetail.setVisibility(View.VISIBLE);
         }
 
     }
-
-
     public void validate() {
         boolean valid = true;
         String usernames = _username.getText().toString();
         String firstname = _firstname.getText().toString();
         String lastnames = lastname;
-        Integer countrycodes = countrycode;
+        Integer countrycodes = countryCodeView.getSelectedCountryCodeAsInt();
         String mobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
         String details = _bio.getText().toString();
-
-        if (usernames.isEmpty()) {
+        if (usernames.isEmpty() ||usernames.trim().isEmpty()||usernames.trim().equals("")) {
             _username.setError("enter username");
             _username.requestFocus();
             valid = false;
@@ -761,7 +768,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             _username.setError(null);
         }
-        if (firstname.isEmpty()) {
+        if (firstname.isEmpty()|| firstname.trim().isEmpty()||firstname.trim().equals("")) {
             _firstname.setError("enter your name");
             _firstname.requestFocus();
             valid = false;
@@ -769,27 +776,42 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             _firstname.setError(null);
         }
-        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.isEmpty()) {
+        if (emailid.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailid).matches() || emailid.trim().isEmpty()||emailid.trim().equals("")) {
             _email.setError("enter a email address");
+
             _email.requestFocus();
+
+            gender_text.setError("Select Gender");
+            gender_text.requestFocus();
             valid = false;
 
         } else {
             _email.setError(null);
         }
 
+        if(gender==0)
+        {
+            gender_text.setError("Select Gender");
+            gender_text.requestFocus();
+            valid = false;
+            gender_text.setVisibility(View.VISIBLE);
+            gender_error_text2.setVisibility(View.VISIBLE);
 
-        if (mobilenumber.isEmpty() || mobilenumber.length() < 10 || mobilenumber.length() > 10) {
-            _mobileNumber.setError("enter valid 10 digit mobile number");
+        }
+
+        if (mobilenumber.isEmpty() || mobilenumber.length() < 4 || mobilenumber.length() > 13||mobilenumber.isEmpty()||mobilenumber.trim().isEmpty()||mobilenumber.trim().equals("")) {
+            _mobileNumber.setError("enter valid mobile number");
             _mobileNumber.requestFocus();
             valid = false;
 
         } else {
+
             _mobileNumber.setError(null);
+            gender_text.requestFocus();
 
         }
 
-        if (details.isEmpty()) {
+        if (details.isEmpty()||details.trim().isEmpty()||details.trim().equals("")) {
             _bio.setError("Bio is required");
             _bio.requestFocus();
             valid = false;
@@ -800,6 +822,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
         if (valid) {
+
+
             ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
             ProfileUpdate(profileUpdateRequest);
         } else {

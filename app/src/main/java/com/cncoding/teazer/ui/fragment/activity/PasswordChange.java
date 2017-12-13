@@ -52,14 +52,14 @@ public class PasswordChange extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-//        toolbar.setNavigationIcon(R.drawable.ic_previous);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -70,7 +70,7 @@ public class PasswordChange extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Change Password</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>Change Password</font>"));
 
         currentPasswordLayout.setVisibility(View.GONE);
         getProfileDetail();

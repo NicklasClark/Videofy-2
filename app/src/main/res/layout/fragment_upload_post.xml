@@ -77,6 +77,7 @@
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="180"
+                android:textColor="#999999"
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
@@ -87,6 +88,7 @@
                     android:hint="@string/title"
                     android:maxLength="180"
                     android:inputType="textCapSentences"
+                    android:backgroundTint="#dddddd"
                     android:imeOptions="actionDone"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -101,8 +103,11 @@
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
+                    android:letterSpacing="-0.03"
                     android:hint="@string/enter_location"
                     app:drawableStartCompat="@drawable/ic_place"
+                    android:backgroundTint="#dddddd"
+
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
             </android.support.design.widget.TextInputLayout>
@@ -135,6 +140,7 @@
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
                     android:hint="@string/tag_friends"
+                    android:backgroundTint="#dddddd"
                     app:drawableStartCompat="@drawable/ic_person_left"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
@@ -168,6 +174,8 @@
                     android:id="@+id/video_upload_categories"
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
+                    android:backgroundTint="#dddddd"
+
                     android:hint="@string/choose_category"
                     app:drawableStartCompat="@drawable/ic_grid"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -196,9 +204,12 @@
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:paddingStart="0dp"
+                android:backgroundTint="#dddddd"
                 android:paddingEnd="@dimen/padding_thin"
                 android:textColor="@color/colorSecondary_text"
                 android:textSize="@dimen/text_size_content"
+
+
                 android:gravity="center_vertical"/>
 
             <TextView
@@ -219,6 +230,7 @@
                 app:drawableEndCompat="@drawable/btn_unchecked"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
+                android:backgroundTint="#dddddd"
                 android:paddingStart="0dp"
                 android:paddingEnd="@dimen/padding_thin"
                 android:textColor="@color/colorSecondary_text"
