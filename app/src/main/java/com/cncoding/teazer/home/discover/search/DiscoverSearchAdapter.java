@@ -262,15 +262,13 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 button.setText(R.string.following);
                 button.setTextColor(Color.parseColor("#333333"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(baseFragment.getParentActivity().getDrawable(R.drawable.ic_check_small),
-                        null, null, null);
+                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_dark, 0, 0, 0);
                 break;
             case BUTTON_TYPE_REQUESTED:
                 button.setText(R.string.requested);
                 button.setTextColor(Color.parseColor("#666666"));
                 button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(baseFragment.getParentActivity().getDrawable(R.drawable.ic_check_small),
-                        null, null, null);
+                button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 break;
 //            case BUTTON_TYPE_NONE:
 //                button.setVisibility(View.GONE);

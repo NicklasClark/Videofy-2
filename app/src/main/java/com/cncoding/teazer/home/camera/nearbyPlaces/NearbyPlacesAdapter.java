@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 
 public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapter.ViewHolder> implements Filterable {
 
-    static final int TYPE_FIRST_ITEM = 0;
+    private static final int TYPE_FIRST_ITEM = 0;
     static final int TYPE_NEARBY_PLACES = 1;
     static final int TYPE_AUTOCOMPLETE = 2;
 
@@ -208,6 +208,13 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                 if (drawable != null) drawable.setTint(color);
                 holder.placeName.setTextColor(color);
                 holder.placeName.setText(R.string.current_location);
+                holder.rootLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mListener != null)
+                            mListener.onCurrentLocationClick();
+                    }
+                });
                 break;
             case TYPE_NEARBY_PLACES:
                 holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
@@ -249,7 +256,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                     @Override
                     public void onClick(View v) {
                         if (mListener != null)
-                            mListener.onPlaceClick(resultList, holder.getAdapterPosition());
+                            mListener.onPlaceClick(resultList, holder.getAdapterPosition() - 1);
 //                            else
 //                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
 //                                        Toast.LENGTH_SHORT).show();
@@ -265,7 +272,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
     public int getItemCount() {
         if (googleApiClient != null) {
             if(resultList != null)
-                return resultList.size() + 1;
+                return resultList.size();
             else
                 return 0;
         } else {
@@ -312,5 +319,6 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
     public interface NearbyPlacesInteractionListener {
         void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace);
         void onPlaceClick(ArrayList<PlaceAutocomplete> mResultList, int position);
+        void onCurrentLocationClick();
     }
 }

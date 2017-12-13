@@ -19,6 +19,8 @@ package com.cncoding.teazer.home.camera;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -65,9 +67,12 @@ import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,6 +97,7 @@ import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
@@ -269,7 +275,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void processFinish(String output) {
-        File trimmedFile = new File(output);
+//        File trimmedFile = new File(output);
         Log.d("CompressedLength", String.valueOf(new File(output).length()));
         startVideoUploadFragment();
     }
@@ -335,6 +341,38 @@ public class CameraActivity extends AppCompatActivity
                 Log.e("onPlaceClick()", e.getMessage());
             }
 
+        }
+    }
+
+    @Override
+    public void onCurrentLocationClick() {
+        uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
+                getAddress(uploadFragment.currentLocation.getLatitude(), uploadFragment.currentLocation.getLongitude()),
+                uploadFragment.currentLocation.getLatitude(),
+                uploadFragment.currentLocation.getLongitude()
+        ));
+        fragmentManager.popBackStack();
+    }
+
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            //            add = add + "\n" + obj.getCountryName();
+//            add = add + "\n" + obj.getCountryCode();
+//            add = add + "\n" + obj.getAdminArea();
+//            add = add + "\n" + obj.getPostalCode();
+//            add = add + "\n" + obj.getSubAdminArea();
+//            add = add + "\n" + obj.getLocality();
+//            add = add + "\n" + obj.getSubThoroughfare();
+
+//            Log.v("IGA", "Address" + add);
+            return obj.getSubLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
+//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
         }
     }
 
@@ -563,6 +601,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.up_btn) public void retakeVideo() {
+        hideKeyboard(this, upBtn);
         onBackPressed();
     }
 
