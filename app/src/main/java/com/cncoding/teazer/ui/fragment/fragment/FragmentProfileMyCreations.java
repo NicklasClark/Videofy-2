@@ -116,7 +116,8 @@ public class FragmentProfileMyCreations extends Fragment {
                         alert1.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                         progress_bar.setVisibility(View.GONE);
-                    } else {
+                    }
+                    else {
                         next = response.body().isNextPage();
                         list.addAll(response.body().getPosts());
                         profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list);
