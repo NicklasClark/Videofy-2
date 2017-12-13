@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/padding_thin"
     android:paddingBottom="@dimen/padding_thin"
     android:gravity="center"
-    android:foreground="@drawable/ripple_dark_no_rounded"
+    android:foreground="@drawable/ripple_semi_dark_no_rounded"
     android:id="@+id/root_layout"
     android:animateLayoutChanges="true"
     android:orientation="horizontal">

@@ -34,6 +34,7 @@
     <color name="colorCcp">#0076FF</color>
     <!--69f0ae-->
     <color name="colorRippleDark">#bb757575</color>
+    <color name="colorRippleSemiDark">#60757575</color>
     <color name="colorFacebook">#4469AF</color>
     <color name="colorGoogle">#DC4E41</color>
     <color name="colorTabindicator">#26C6DA</color>

@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
-import com.cncoding.teazer.utilities.SharedPrefs;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -99,8 +98,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         ButterKnife.bind(this, rootView);
 
         marqueeText.setSelected(true);
-
-        SharedPrefs.resetAuthToken(getActivity().getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
         fbLoginButton.setReadPermissions("email");
