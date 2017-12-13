@@ -607,7 +607,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
-                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                .addAction(R.drawable.ic_clear_dark, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 

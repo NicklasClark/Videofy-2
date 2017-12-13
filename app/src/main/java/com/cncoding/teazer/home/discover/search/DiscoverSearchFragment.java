@@ -81,7 +81,7 @@ public class DiscoverSearchFragment extends BaseFragment {
         if (charSequence.length() > 0) {
             if (searchBtn.getCompoundDrawables()[2] == null)
                     searchBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded,
-                            0, R.drawable.ic_cancel_dark_small, 0);
+                            0, R.drawable.ic_clear_dark, 0);
         } else {
             if (searchBtn.getCompoundDrawables()[2] != null)
                 searchBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_padded, 0, 0, 0);

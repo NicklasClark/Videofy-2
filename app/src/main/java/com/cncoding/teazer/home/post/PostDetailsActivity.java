@@ -1214,7 +1214,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setSound(null)
                 .setOngoing(true)
                 .setDefaults(0)
-                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                .addAction(R.drawable.ic_clear_dark, "Cancel",
                         PendingIntent.getActivity(PostDetailsActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 
