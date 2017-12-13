@@ -175,7 +175,6 @@
                     style="@style/AppTheme.FullScreen.EditText"
                     android:cursorVisible="false"
                     android:backgroundTint="#dddddd"
-
                     android:hint="@string/choose_category"
                     app:drawableStartCompat="@drawable/ic_grid"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />

@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.notifications;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -289,6 +291,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @SuppressLint("ResourceType")
                     @Override
                     public void onClick(View view) {
                         switch (view.getId()) {
@@ -373,39 +376,122 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 }
                                             });
                                 } else if (text.equals(context.getString(R.string.following))) {
-                                    new AlertDialog.Builder(context)
-                                            .setMessage(context.getString(R.string.unfollow_confirmation) +
-                                                    holder2.notification.getHighlights().get(0) + "?")
-                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
-                                                            context).enqueue(new Callback<ResultObject>() {
-                                                        @Override
-                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                            if (response.code() == 200) {
-                                                                if (response.body().getStatus()) {
-                                                                    setActionButton(holder2.action, null,
-                                                                            BUTTON_TYPE_FOLLOW);
-                                                                }
-                                                            }
-                                                        }
 
-                                                        @Override
-                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
-                                                        }
-                                                    });
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                                    //dialogBuilder.setTitle("Confirmation");
+                                    dialogBuilder.setMessage("Are you sure you want to Unfollow "+ holder2.notification.getHighlights().get(0) + "?");
+                                    dialogBuilder.setPositiveButton("CONFIRM", null);
+                                    dialogBuilder.setNegativeButton("CANCEL", null);
+
+                                    final AlertDialog alertDialog = dialogBuilder.create();
+                                    alertDialog.show();
+
+                                    Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                                    // override the text color of positive button
+                                    positiveButton.setTextColor(Color.parseColor("#666666"));
+                                    // provides custom implementation to positive button click
+                                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+
+                                            ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
+                                                    context).enqueue(new Callback<ResultObject>() {
                                                 @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    dialogInterface.dismiss();
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    if (response.code() == 200) {
+                                                        if (response.body().getStatus()) {
+                                                            setActionButton(holder2.action, null,
+                                                                    BUTTON_TYPE_FOLLOW);
+                                                            alertDialog.dismiss();
+                                                        }
+                                                    }
                                                 }
-                                            })
-                                            .show();
+
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    Log.d("FAIL - UnfollowUser", t.getMessage());
+                                                }
+                                            });
+
+
+
+                                        }
+                                    });
+
+                                    Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                                    negativeButton.setTextColor(Color.parseColor("#999999"));
+
+                                    negativeButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+                                        }
+                                    });
+
+
+
+//
+//                                    new AlertDialog.Builder(context)
+//                                            .setMessage(context.getString(R.string.unfollow_confirmation) +
+//                                                    holder2.notification.getHighlights().get(0) + "?")
+//                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
+//                                                            context).enqueue(new Callback<ResultObject>() {
+//                                                        @Override
+//                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                                                            if (response.code() == 200) {
+//                                                                if (response.body().getStatus()) {
+//                                                                    setActionButton(holder2.action, null,
+//                                                                            BUTTON_TYPE_FOLLOW);
+//                                                                }
+//                                                            }
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+//                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
+//                                                        }
+//                                                    });
+//
+// ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
+//                                                            context).enqueue(new Callback<ResultObject>() {
+//                                                        @Override
+//                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                                                            if (response.code() == 200) {
+//                                                                if (response.body().getStatus()) {
+//                                                                    setActionButton(holder2.action, null,
+//                                                                            BUTTON_TYPE_FOLLOW);
+//                                                                }
+//                                                            }
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+//                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
+//                                                        }
+//                                                    });
+//                                                }
+//                                            })
+//
+//
+//                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    dialogInterface.dismiss();
+//                                                }
+//                                            })
+//
+//
+//
+//                                            .show();
                                 }
+
+
 //                                else if (text.equals(context.getString(R.string.requested))) {
 //                                    new AlertDialog.Builder(context)
 //                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +

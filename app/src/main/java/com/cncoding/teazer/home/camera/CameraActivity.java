@@ -299,6 +299,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void onNearbyPlacesListInteraction(int action) {
+        uploadFragment.toggleInteraction(true);
         uploadFragment.onNearbyPlacesListInteraction(action);
     }
 
@@ -574,6 +575,8 @@ public class CameraActivity extends AppCompatActivity
         }
         else if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+//            if (uploadFragment != null)
+//                uploadFragment.toggleInteraction(true);
         }
         else {
             if (!isReaction) {
