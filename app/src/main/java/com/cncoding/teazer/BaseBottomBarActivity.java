@@ -163,16 +163,6 @@ public class BaseBottomBarActivity extends BaseActivity
         ButterKnife.bind(this);
 
         Log.d("NOTIFYM", "onCreate called");
-//        if (intent.getExtras() != null) {
-//        Bundle bundle = getIntent().getExtras().getBundle("bundle");
-//        if (bundle != null) {
-////                int index = bundle.getInt(TAB_INDEX);
-////                if (index != -1)
-////                    switchTab(index);
-//            int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
-//            int source_id = bundle.getInt(SOURCE_ID);
-//            notificationAction(notification_type, source_id);
-//        }
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -230,18 +220,34 @@ public class BaseBottomBarActivity extends BaseActivity
         });
 
         getBranchDynamicLinks();
+
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+//                int index = bundle.getInt(TAB_INDEX);
+//                if (index != -1)
+//                    switchTab(index);
+                try {
+                    Log.d("NOTIFYM", bundle.toString());
+                    String notification_type = bundle.getString("notification_type");
+                    String source_id = bundle.getString("source_id");
+                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         Log.d("NOTIFYM", "onNewIntent called");
         if (intent.getExtras() != null) {
             Bundle bundle = intent.getExtras().getBundle("bundle");
             if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                if (index != -1)
-//                    switchTab(index);
+                Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                 int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
                 int source_id = bundle.getInt(SOURCE_ID);
                 notificationAction(notification_type, source_id);
@@ -255,24 +261,13 @@ public class BaseBottomBarActivity extends BaseActivity
 //        initTab();
         Log.d("NOTIFYM", "onPostCreate called");
         if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras().getBundle("bundle");
-            if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                switchTab(index);
-
-                int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
-                int source_id = bundle.getInt(SOURCE_ID);
-                notificationAction(notification_type, source_id);
-
-            } else {
-                bundle = getIntent().getExtras().getBundle("profileBundle");
+            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
                 if (bundle != null) {
                     int userId = bundle.getInt("userId");
                     boolean isSelf = bundle.getBoolean("isSelf");
                     pushFragment(isSelf ? ProfileFragment.newInstance() :
                             OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
                 } else switchTabDynamically();
-            }
         } else {
             switchTabDynamically();
         }

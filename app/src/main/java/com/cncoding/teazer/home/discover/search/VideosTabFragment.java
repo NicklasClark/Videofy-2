@@ -15,7 +15,7 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
 import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
@@ -34,7 +34,8 @@ public class VideosTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
+    @BindView(R.id.no_posts)
+    ProximaNovaRegularTextView noPosts;
 
     private Call<VideosList> videosListCall;
     private ArrayList<Videos> videosList;
