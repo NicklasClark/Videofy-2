@@ -147,6 +147,7 @@
         </activity>
         <activity android:name=".home.post.PostDetailsActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/PostDetailsTheme" />
         <activity
             android:name=".home.camera.CameraActivity"

@@ -1,7 +1,5 @@
 package com.cncoding.teazer.home.discover.search;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,7 +37,6 @@ public class DiscoverSearchFragment extends BaseFragment {
     @BindView(R.id.view_pager) ViewPager viewPager;
 
     private Handler handler;
-    private OnFragmentInteractionListener mListener;
     private String searchTerm;
     private SectionsPagerAdapter sectionsPagerAdapter;
 
@@ -135,22 +132,9 @@ public class DiscoverSearchFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
     public void onDetach() {
         getParentActivity().updateToolbarTitle(previousTitle);
         hideKeyboard(getActivity(), searchBtn);
-        mListener = null;
         super.onDetach();
     }
 
@@ -194,9 +178,5 @@ public class DiscoverSearchFragment extends BaseFragment {
             searchTerm = newText;
             notifyDataSetChanged();
         }
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 }
