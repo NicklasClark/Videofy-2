@@ -13,7 +13,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
 
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
 
     private ArrayList<PostDetails> mostPopularList;
     private Context context;
-    private OnSearchInteractionListener mListener;
+    private OnDiscoverInteractionListener mListener;
 
-    public MostPopularListAdapter(ArrayList<PostDetails> mostPopularList, Context context, OnSearchInteractionListener mListener) {
+    public MostPopularListAdapter(ArrayList<PostDetails> mostPopularList, Context context, OnDiscoverInteractionListener mListener) {
         this.mostPopularList = mostPopularList;
         this.context = context;
         this.mListener = mListener;
@@ -114,16 +114,16 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.root_layout:
-                        mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_POST, null, null,
+                                holder.postDetails);
                         break;
                     case R.id.dp:
-                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails);
                         break;
                     case R.id.name:
-                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails);
                         break;
                     default:
                         break;

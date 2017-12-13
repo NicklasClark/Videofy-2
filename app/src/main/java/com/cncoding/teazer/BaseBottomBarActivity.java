@@ -40,7 +40,7 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
-import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingListInteractionListener;
@@ -117,7 +117,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Post related listeners
         OnPostAdapterInteractionListener, OnInterestsInteractionListener,
 //    Discover page listeners
-        OnDiscoverSearchInteractionListener, OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
+        OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener,
 //    Profile listeners
@@ -534,8 +534,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
-                                    PostDetails postDetails, byte[] image) {
+    public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
+                                      PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_MY_INTERESTS:
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
@@ -544,7 +544,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
                 break;
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image, false, false, null);
+                PostDetailsActivity.newInstance(this, postDetails,
+                        null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -657,7 +658,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
-                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                .addAction(R.drawable.ic_clear_dark, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 

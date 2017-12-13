@@ -85,6 +85,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class CameraFragment extends Fragment {
 
@@ -695,7 +697,7 @@ public class CameraFragment extends Fragment {
 //        mMediaRecorder.setPreviewDisplay();
 //        mMediaRecorder.setVideoEncodingBitRate(10000000);
         mMediaRecorder.setVideoEncodingBitRate(3000000);
-        mMediaRecorder.setMaxDuration(60000);
+        mMediaRecorder.setMaxDuration(59999);
 //        mMediaRecorder.setAudioSamplingRate(16000);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         switch (mSensorOrientation) {
@@ -803,7 +805,6 @@ public class CameraFragment extends Fragment {
                             videoDuration.setVisibility(View.VISIBLE);
                             startTime = SystemClock.uptimeMillis();
                             customHandler.postDelayed(updateTimerThread, 0);
-
                         }
                     });
                 }
@@ -844,6 +845,26 @@ public class CameraFragment extends Fragment {
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
 
             updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            try {
+                //noinspection ConstantConditions
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (updatedTime < 3000 && mButtonVideo.isEnabled()) {
+                            disableView(recordBtnInner, true);
+                            disableView(mButtonVideo, true);
+                        } else {
+                            if (!mButtonVideo.isEnabled()) {
+                                enableView(recordBtnInner);
+                                enableView(mButtonVideo);
+                            }
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             int secs = (int) (updatedTime / 1000);
             int minutes = secs / 60;

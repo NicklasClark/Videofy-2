@@ -172,6 +172,8 @@ public class MainActivity extends AppCompatActivity
         transitionDrawable.setCrossFadeEnabled(true);
         mainFragmentContainer.setBackground(transitionDrawable);
 
+        SharedPrefs.resetAuthToken(getApplicationContext());
+
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
     }

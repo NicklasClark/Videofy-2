@@ -39,8 +39,8 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private SparseBooleanArray selectedInterestsArray;
     private SparseArray<Category> selectedInterests;
 
-    InterestsAdapter(ArrayList<Category> interestsList, Interests interests, SparseBooleanArray categories,
-                     String selectedCategoriesString, boolean isForVideo) {
+    InterestsAdapter(ArrayList<Category> interestsList, final Interests interests, SparseBooleanArray categories,
+                     String selectedCategoriesString, final boolean isForVideo) {
         this.interestsList = interestsList;
         this.interests = interests;
         REGULAR = new TypeFactory(interests.getContext()).regular;
@@ -51,15 +51,25 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         this.isForVideo = isForVideo;
         selectedInterests = new SparseArray<>();
 
-        if (!isForVideo) {
-            if (selectedInterestsArray.size() >= 5) {
-                if (!interests.isSaveBtnEnabled())
-                    interests.enableSaveBtn();
-            } else {
-                if (interests.isSaveBtnEnabled())
-                    interests.disableSaveBtn();
-            }
-        } else interests.enableSaveBtn();
+        try {
+            //noinspection ConstantConditions
+            interests.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isForVideo) {
+                        if (selectedInterestsArray.size() >= 5) {
+                            if (!interests.isSaveBtnEnabled())
+                                interests.enableSaveBtn();
+                        } else {
+                            if (interests.isSaveBtnEnabled())
+                                interests.disableSaveBtn();
+                        }
+                    } else interests.enableSaveBtn();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -144,7 +154,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
                         Color.parseColor("#333333"), Color.parseColor("#333333"), 40));
             }
         }
-        view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
+//        view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
     @Override

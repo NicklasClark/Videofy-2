@@ -1272,6 +1272,11 @@ public class Pojos {
                 }
             }
 
+//            public boolean areListsEmpty() {
+//                return most_popular.isEmpty() && user_interests.isEmpty() && trending_categories.isEmpty() &&
+//                        Collections.frequency(my_interests.values(), Collections.EMPTY_LIST) == my_interests.size();
+//            }
+
             public ArrayList<PostDetails> getMostPopular() {
                 return most_popular;
             }

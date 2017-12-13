@@ -606,12 +606,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             view.setChecked(true);
             view.setCompoundDrawablesWithIntrinsicBounds(type.equals("facebook") ? R.drawable.ic_facebook
                             : R.drawable.ic_twitter,
-                    0, R.drawable.ic_tick_circle_large, 0);
+                    0, R.drawable.btn_checked, 0);
         } else {
             view.setChecked(false);
             view.setCompoundDrawablesWithIntrinsicBounds(type.equals("facebook") ? R.drawable.ic_facebook :
                             R.drawable.ic_twitter,
-                    0, R.drawable.ic_unchecked, 0);
+                    0, R.drawable.btn_unchecked, 0);
         }
     }
 

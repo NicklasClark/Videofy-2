@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/root_layout"
-        android:foreground="@drawable/ripple_dark_no_rounded"
+        android:foreground="@drawable/ripple_semi_dark_no_rounded"
         android:orientation="horizontal">
 
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
