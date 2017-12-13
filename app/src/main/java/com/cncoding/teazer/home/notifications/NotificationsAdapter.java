@@ -109,6 +109,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         View.OnClickListener profileListener;
 
         switch (viewHolder.getItemViewType()) {
+
+
             case TYPE_FOLLOWING:
                 final FollowingViewHolder holder1 = (FollowingViewHolder) viewHolder;
                 holder1.notification = notificationsList.getNotifications().get(position);
@@ -127,24 +129,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 @Override
                                 public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                                boolean isFromMemoryCache, boolean isFirstResource) {
-
                                     holder1.dp.setImageDrawable(resource);
                                     return true;
                                 }
                             })
                             .into(holder1.dp);
+                else {
+
+                    Glide.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .crossFade()
+                            .into(holder1.dp);
+                }
 
                 holder1.content.setText(getString(getHighlights(holder1.notification.getHighlights()), holder1.notification.getMessage()));
-
-
-//                holder1.dp.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                        mListener.onNotificationsInteraction(false, null,
-//                                null, holder1.notification.getMetaData().getFromId(),"");
-//                    }
-//                });
 
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
@@ -224,7 +222,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder1.content.setOnClickListener(postListener);
                 holder1.thumbnail.setOnClickListener(postListener);
                 break;
-                
+
             case TYPE_REQUESTS:
                 final RequestsViewHolder holder2 = (RequestsViewHolder) viewHolder;
                 holder2.notification = notificationsList.getNotifications().get(position);
@@ -232,80 +230,63 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder2.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder2.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .crossFade()
                             .into(holder2.dp);
-
+                else {
+                    Glide.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .crossFade()
+                            .into(holder2.dp);
+                }
                 holder2.content.setText(getString(getHighlights(holder2.notification.getHighlights()), holder2.notification.getMessage()));
+                holder2.isActioned = notificationsList.getNotifications().get(position).isActioned();
+                holder2.accountType = notificationsList.getNotifications().get(position).getAccountType();
 
-                holder2.isActioned=notificationsList.getNotifications().get(position).isActioned();
-                holder2.accountType=notificationsList.getNotifications().get(position).getAccountType();
+                if (holder2.notification.getNotificationType() == 3 || holder2.notification.getNotificationType() == 1) {
 
-
-                if(holder2.notification.getNotificationType()==3||holder2.notification.getNotificationType()==1)
-                    {
-
-                        if(holder2.notification.isActioned())
+                    if (holder2.notification.isActioned()) {
+                        if (holder2.notification.isFollowing())
                         {
-                            if(holder2.notification.isFollowing())
+                            holder2.action.setVisibility(View.VISIBLE);
+                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                        }
+                        else if (holder2.notification.isRequest_sent()) {
+                            holder2.action.setVisibility(View.VISIBLE);
+                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                        } else {
+                            holder2.action.setVisibility(View.VISIBLE);
+                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                        }
+                    }
+
+                    else {
+
+                        if (holder2.notification.getNotificationType() == 1) {
+
+                            if (holder2.notification.isFollowing())
 
                             {
                                 holder2.action.setVisibility(View.VISIBLE);
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             }
-
-                            else if (holder2.notification.isRequest_sent())
-                            {
-
+                            else if (holder2.notification.isRequest_sent() == true) {
                                 holder2.action.setVisibility(View.VISIBLE);
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                            }
-                            else
-                            {
+                            } else {
                                 holder2.action.setVisibility(View.VISIBLE);
-
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
                             }
                         }
-
-                        else
-                            {
-                                holder2.action.setVisibility(View.VISIBLE);
-
-                                if(holder2.notification.getNotificationType()==1) {
-
-                                    if(holder2.notification.isFollowing())
-
-                                    {
-                                        holder2.action.setVisibility(View.VISIBLE);
-                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                    }
-
-                                    else if (holder2.notification.isRequest_sent()==true)
-                                    {
-
-                                        holder2.action.setVisibility(View.VISIBLE);
-                                        setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                    }
-                                    else
-                                    {
-                                        holder2.action.setVisibility(View.VISIBLE);
-
-                                        setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                                    }
-                                }
-
-
-                                if(holder2.notification.getNotificationType()==3) {
-                                    setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
-                                }
-                            }
+                        else {
+                            setActionButton(holder2.action, null, BUTTON_TYPE_ACCEPT);
+                            holder2.action.setVisibility(View.VISIBLE);
+                        }
                     }
-                    else
-                    {
-                        setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                    }
-
+                }
+                else {
+                    setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
+                    holder2.action.setVisibility(View.INVISIBLE);
+                }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
@@ -319,8 +300,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             holder2.notification.getMetaData().getNotificationType() == 2 ||
                                             holder2.notification.getMetaData().getNotificationType() == 10) {
                                         userType = "Following";
-                                    }
-                                    else if (holder2.notification.getMetaData().getNotificationType() == 3) {
+                                    } else if (holder2.notification.getMetaData().getNotificationType() == 3) {
                                         userType = "Accept";
                                     } else {
                                         userType = "Accept";
@@ -335,38 +315,36 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 if (text.equals(context.getString(R.string.follow))) {
 //                                    USER IS FOLLOWING ANOTHER USER
 
-                                    followUser( holder2.notification.getMetaData().getFromId(), context,holder2);
+                                    followUser(holder2.notification.getMetaData().getFromId(), context, holder2);
 
                                     ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context)
                                             .enqueue(new Callback<ResultObject>() {
-                                        @Override
-                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                            try {
-                                                if (response.code() == 200) {
-                                                    if (response.body().getStatus()) {
-                                                        if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                        else
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                        holder2.declineRequest.setVisibility(View.GONE);
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    try {
+                                                        if (response.code() == 200) {
+                                                            if (response.body().getStatus()) {
+                                                                if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                                else
+                                                                    setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                                holder2.declineRequest.setVisibility(View.GONE);
+                                                            } else {
+                                                                sendJoinRequest(holder2);
+                                                            }
+                                                        } else
+                                                            Log.d("FOLLOW BACK", response.code() + " : " + response.message());
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
+                                                }
 
-                                                    else {
-                                                        sendJoinRequest(holder2);
-                                                    }
-                                                } else
-                                                    Log.d("FOLLOW BACK", response.code() + " : " + response.message());
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    Log.d("FAIL - FOLLOW BACK", t.getMessage());
+                                                }
 
-                                        @Override
-                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                                            Log.d("FAIL - FOLLOW BACK", t.getMessage());
-                                        }
-
-                                    });
+                                            });
 
                                 } else if (text.equals(context.getString(R.string.accept))) {
 //                                    USER IS ACCEPTING A FOLLOW REQUEST
@@ -378,15 +356,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body().getStatus())
 
 
-                                                            if(holder2.notification.isFollowing())
-                                                        {
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                        }
-                                                        else if(holder2.notification.isRequest_sent())
-                                                        {
-                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                        }
-                                                        else {
+                                                            if (holder2.notification.isFollowing()) {
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                            } else if (holder2.notification.isRequest_sent()) {
+                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                            } else {
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
 
                                                             }
@@ -469,7 +443,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                            })
 //                                            .show();
 //                                }
-                                 break;
+                                break;
 
                             case R.id.decline:
                                 ApiCallingService.Friends.deleteJoinRequest(holder2.notification.getNotificationId(), context)
@@ -624,8 +598,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             else
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                             holder2.declineRequest.setVisibility(View.GONE);
-                        }
-                        else {
+                        } else {
 
                             Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
                         }
@@ -655,10 +628,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class FollowingViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_layout) LinearLayout layout;
-        @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.name) UniversalTextView content;
-        @BindView(R.id.notification_thumb) ImageView thumbnail;
+        @BindView(R.id.root_layout)
+        LinearLayout layout;
+        @BindView(R.id.dp)
+        CircularAppCompatImageView dp;
+        @BindView(R.id.name)
+        UniversalTextView content;
+        @BindView(R.id.notification_thumb)
+        ImageView thumbnail;
         Notification notification;
 
         FollowingViewHolder(View view) {
@@ -673,11 +650,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class RequestsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_layout) LinearLayout layout;
-        @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.name) UniversalTextView content;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
-        @BindView(R.id.decline) AppCompatImageView declineRequest;
+        @BindView(R.id.root_layout)
+        LinearLayout layout;
+        @BindView(R.id.dp)
+        CircularAppCompatImageView dp;
+        @BindView(R.id.name)
+        UniversalTextView content;
+        @BindView(R.id.action)
+        ProximaNovaSemiboldTextView action;
+        @BindView(R.id.decline)
+        AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;
         int accountType;
