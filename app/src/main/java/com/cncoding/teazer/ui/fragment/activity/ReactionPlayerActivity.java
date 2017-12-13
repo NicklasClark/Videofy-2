@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.annotation.SuppressLint;
+import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -20,12 +21,14 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -87,10 +90,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     private boolean playWhenReady = true;
     private int playSource;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exo_player);
+        setContentView(R.layout.activity_reaction_exo_player);
         ButterKnife.bind(this);
 
         playSource = getIntent().getIntExtra("SOURCE", 0);
@@ -216,8 +220,10 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
+            LoopingMediaSource loopingMediaSource  = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
-            player.prepare(mediaSource);
+            player.prepare(loopingMediaSource);
+            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
             player.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,7 +234,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
-                finish();
+                onBackPressed();
                 break;
             case R.id.btnLike:
                 if (!isLiked) {
@@ -242,6 +248,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                                     isLiked = true;
                                     likesCount++;
                                     likeAction(isLiked, true);
+                                    FragmentProfileMyCreations.checkIsLiked=true;
                                     initView();
                                 }
                             } catch (Exception e) {

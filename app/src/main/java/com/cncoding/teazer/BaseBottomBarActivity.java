@@ -1,6 +1,5 @@
 package com.cncoding.teazer;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -127,6 +126,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String TAB_INDEX = "tabIndex";
+    public static final String SOURCE_ID = "from_id";
+    public static final String NOTIFICATIN_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
     @BindArray(R.array.tab_name) String[] TABS;
@@ -160,6 +161,8 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
+
+        Log.d("NOTIFYM", "onCreate called");
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -210,15 +213,96 @@ public class BaseBottomBarActivity extends BaseActivity
         });
         LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
         tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
             }
         });
 
         getBranchDynamicLinks();
+
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+//                int index = bundle.getInt(TAB_INDEX);
+//                if (index != -1)
+//                    switchTab(index);
+                try {
+                    Log.d("NOTIFYM", bundle.toString());
+                    String notification_type = bundle.getString("notification_type");
+                    String source_id = bundle.getString("source_id");
+                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Log.d("NOTIFYM", "onNewIntent called");
+        if (intent.getExtras() != null) {
+            Bundle bundle = intent.getExtras().getBundle("bundle");
+            if (bundle != null) {
+                Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
+                int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
+                int source_id = bundle.getInt(SOURCE_ID);
+                notificationAction(notification_type, source_id);
+            }
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+//        initTab();
+        Log.d("NOTIFYM", "onPostCreate called");
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
+                if (bundle != null) {
+                    int userId = bundle.getInt("userId");
+                    boolean isSelf = bundle.getBoolean("isSelf");
+                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+                } else switchTabDynamically();
+        } else {
+            switchTabDynamically();
+        }
+    }
+
+
+    private void notificationAction(int notification_type, int source_id) {
+        if(notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10)
+        {
+            pushFragment(OthersProfileFragment.newInstance(String.valueOf(source_id), "",""));
+        }
+        else
+        {
+            ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)
+                    .enqueue(new Callback<PostDetails>() {
+                        @Override
+                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                            if (response.code() == 200) {
+                                if (response.body() != null) {
+                                    PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                } else {
+                                    Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                }
+                            } else
+                                Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                            Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
 
     private void getBranchDynamicLinks() {
         // listener (within Main Activity's onStart)
@@ -266,42 +350,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }, this.getIntent().getData(), this);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (intent.getExtras() != null) {
-            Bundle bundle = intent.getExtras().getBundle("bundle");
-            if (bundle != null) {
-                int index = bundle.getInt(TAB_INDEX);
-                if (index != -1)
-                    switchTab(index);
-            }
-        }
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-//        initTab();
-        if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras().getBundle("bundle");
-            if (bundle != null) {
-                int index = bundle.getInt(TAB_INDEX);
-                switchTab(index);
-            } else {
-                bundle = getIntent().getExtras().getBundle("profileBundle");
-                if (bundle != null) {
-                    int userId = bundle.getInt("userId");
-                    boolean isSelf = bundle.getBoolean("isSelf");
-                    pushFragment(isSelf ? ProfileFragment.newInstance() :
-                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-                } else switchTabDynamically();
-            }
-        } else {
-            switchTabDynamically();
-        }
     }
 
     @Override
@@ -355,10 +403,13 @@ public class BaseBottomBarActivity extends BaseActivity
     private void updateBottomTabIconFocus(int position) {
         for (int i = 0; i < bottomTabLayout.getTabCount(); i++) {
             if (i != 2) {
-                if (i == position)
+                if (i == position) {
                     bottomTabLayout.getTabAt(position).getIcon().setTint(getResources().getColor(R.color.colorAccent4));
-                else
+                    bottomTabLayout.getTabAt(position).getIcon().setAlpha(255);
+                } else{
                     bottomTabLayout.getTabAt(i).getIcon().setTint(Color.WHITE);
+                    //bottomTabLayout.getTabAt(position).getIcon().setAlpha(127);
+                }
             }
         }
     }

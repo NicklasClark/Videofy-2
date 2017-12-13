@@ -45,6 +45,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
@@ -184,8 +185,10 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private String selectedCategories;
     List<Pojos.TaggedUser> taggedUsers;
     StringBuilder stringBuilder;
+    StringBuilder selectTagIdBuilder;
     private String selectedTags;
     private String sTags;
+    private String selectedTagIDToSend;
 
 
     public EditPostFragment() {
@@ -300,7 +303,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 }
                 if(selectedTagsToSend==null)
                 {
-                    sTags=selectedTags;
+                    sTags=selectedTagIDToSend;
                 }
                 else
                 {
@@ -327,6 +330,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     try {
 
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
+                        ProfileFragment.checkpostupdated=true;
                         getActivity().onBackPressed();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -593,22 +597,30 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
                         taggedUsers = response.body().getTaggedUsers();
                         stringBuilder = new StringBuilder();
+
+
                         if(taggedUsers.size()==0||taggedUsers==null) {
                             selectedTags="";
+                            selectedTagIDToSend="";
+
                         }
                         else
                         {
                             for (int i = 0; i < taggedUsers.size(); i++)
                             {
                                 stringBuilder.append(taggedUsers.get(i).getFirstName());
+                                selectTagIdBuilder.append(taggedUsers.get(i).getUserId());
                                 if (i != taggedUsers.size() - 1) {
                                     stringBuilder.append(",");
-                                }
+                                    selectTagIdBuilder.append(",");
 
+                                }
                             }
                             selectedTags = stringBuilder.toString();
+                            selectedTagIDToSend=selectTagIdBuilder.toString();
+                            tagFriendsText.setText(selectedTags);
                         }
-                        tagFriendsText.setText(selectedTags);
+
 
                     } catch (Exception e) {
                         e.printStackTrace();

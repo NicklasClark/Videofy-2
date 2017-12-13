@@ -43,7 +43,6 @@
                         android:id="@+id/background_profile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_default_bg"
                         android:scaleType="centerCrop"
                         android:transitionName="profile" />
 
@@ -111,15 +110,13 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
-                                            android:layout_marginBottom="5dp"
-
-
+                                            android:paddingBottom="5dp"
                                             android:layout_marginTop="10dp"
                                             android:gravity="center_vertical"
                                             android:maxLines="1"
                                             android:text="usernamezp"
                                             android:textColor="@color/colorIcons"
-                                            android:textSize="32sp" />
+                                            android:textSize="24sp" />
                                         <LinearLayout
                                             android:id="@+id/bulletslayout"
                                             android:layout_width="match_parent"
@@ -145,7 +142,6 @@
                                                 android:layout_marginStart="5dp"
                                                 android:layout_toEndOf="@+id/bullets"
                                                 android:maxLines="1"
-
                                                 android:text="@string/name"
                                                 android:textColor="@color/colorIcons"
                                                 android:textSize="12sp" />
@@ -158,16 +154,14 @@
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/bulletslayout"
                                             android:layout_marginBottom="15dp"
-                                            android:lineSpacingExtra="2dp"
-                                            android:layout_marginTop="5dp"
                                             android:layout_marginRight="20dp"
-                                            android:maxLines="3"
+                                            android:layout_marginTop="5dp"
                                             android:ellipsize="end"
+                                            android:lineSpacingExtra="2dp"
+                                            android:maxLines="2"
                                             android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
-
-
                                         <Button
                                             android:id="@+id/btnfollow"
                                             android:layout_width="85dp"
@@ -193,232 +187,27 @@
                         </LinearLayout>
 
 
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_marginTop="20dp"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:layout_gravity="center_vertical"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:layout_marginRight="10dp"-->
-                            <!--android:orientation="horizontal">-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView-->
-                                    <!--android:id="@+id/creations"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-                                    <!--android:drawableStart="@drawable/ic_creations"-->
-                                    <!--android:text="@string/creation"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="13sp" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight=".1"-->
-                                <!--android:layout_marginStart="2dp"-->
-
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<View-->
-                                    <!--android:layout_width="1dp"-->
-                                    <!--android:layout_height="26dp"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="2dp"-->
-                                    <!--android:background="#64ffffff"-->
-                                    <!--android:textColor="@color/colorIcons" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView-->
-                                    <!--android:id="@+id/following"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-                                    <!--android:drawableStart="@drawable/ic_following"-->
-                                    <!--android:text="@string/following"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="13sp" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight=".1"-->
-                                <!--android:layout_marginStart="2dp"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<View-->
-                                    <!--android:layout_width="1dp"-->
-                                    <!--android:layout_height="26dp"-->
-                                    <!--android:background="#64ffffff"/>-->
-
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView-->
-                                    <!--android:id="@+id/followers"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-
-                                    <!--android:drawableStart="@drawable/ic_followers"-->
-                                    <!--android:text="@string/followers"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="13sp" />-->
-                            <!--</LinearLayout>-->
-                        <!--</LinearLayout>-->
-
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_marginTop="20dp"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:layout_marginRight="10dp"-->
-                            <!--android:orientation="horizontal">-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<TextView-->
-                                    <!--android:id="@+id/creations"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-                                    <!--android:drawableStart="@drawable/ic_creations"-->
-                                    <!--android:text="@string/creation"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="14sp" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight=".1"-->
-
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<View-->
-                                    <!--android:layout_width="1dp"-->
-                                    <!--android:layout_height="30dp"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="2dp"-->
-                                    <!--android:background="@color/colorIcons"-->
-                                    <!--android:textColor="@color/colorIcons" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<TextView-->
-                                    <!--android:id="@+id/following"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-                                    <!--android:drawableStart="@drawable/ic_following"-->
-                                    <!--android:text="@string/following"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="14sp" />-->
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight=".1"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<View-->
-                                    <!--android:layout_width="1dp"-->
-                                    <!--android:layout_height="30dp"-->
-                                    <!--android:layout_marginStart="2dp"-->
-                                    <!--android:background="@color/colorIcons" />-->
-
-                            <!--</LinearLayout>-->
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_weight="1"-->
-                                <!--android:orientation="horizontal">-->
-
-                                <!--<TextView-->
-                                    <!--android:id="@+id/followers"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_below="@+id/username_title"-->
-                                    <!--android:layout_marginStart="5dp"-->
-                                    <!--android:layout_toEndOf="@+id/bullets"-->
-                                    <!--android:drawablePadding="5dp"-->
-                                    <!--android:drawableStart="@drawable/ic_followers"-->
-                                    <!--android:text="@string/followers"-->
-                                    <!--android:textColor="@color/colorIcons"-->
-                                    <!--android:textSize="14sp" />-->
-                            <!--</LinearLayout>-->
-                        <!--</LinearLayout>-->
-
-
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/layout1"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_below="@+id/layout1"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+
+                        android:layout_marginTop="20dp"
                         android:gravity="center_vertical"
-                        android:layout_marginRight="10dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-
                             android:gravity="center_vertical"
-
                             android:orientation="horizontal">
 
                             <TextView
@@ -426,22 +215,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/username_title"
-                                android:layout_gravity="center_vertical"
-                                android:gravity="center_vertical"
-                                android:layout_marginStart="5dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
                                 android:layout_toEndOf="@+id/bullets"
-                                android:drawablePadding="5dp"
+                                android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_creations"
+                                android:maxLines="1"
                                 android:text="@string/creation"
                                 android:textColor="@color/colorIcons"
-                                android:textSize="13sp" />
+                                android:textSize="11sp" />
+
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".1"
                             android:layout_marginStart="2dp"
+                            android:layout_weight=".1"
 
                             android:orientation="horizontal">
 
@@ -465,26 +255,28 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/username_title"
+                                android:layout_gravity="center"
                                 android:layout_marginStart="5dp"
                                 android:layout_toEndOf="@+id/bullets"
-                                android:drawablePadding="5dp"
+                                android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_following"
+                                android:maxLines="1"
                                 android:text="@string/following"
                                 android:textColor="@color/colorIcons"
-                                android:textSize="13sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".1"
                             android:layout_marginStart="2dp"
+                            android:layout_weight=".1"
                             android:orientation="horizontal">
 
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="26dp"
-                                android:background="#64ffffff"/>
+                                android:background="#64ffffff" />
 
                         </LinearLayout>
 
@@ -499,22 +291,24 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/username_title"
+                                android:layout_gravity="center"
                                 android:layout_marginStart="5dp"
                                 android:layout_toEndOf="@+id/bullets"
-                                android:drawablePadding="5dp"
-
+                                android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_followers"
+                                android:maxLines="1"
                                 android:text="@string/followers"
                                 android:textColor="@color/colorIcons"
-                                android:textSize="13sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
+
+
 
 
                 </RelativeLayout>
 
                 <android.support.v7.widget.Toolbar
-
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -915,10 +709,10 @@
 
             <android.support.v7.widget.RecyclerView
                 android:layout_below="@+id/videotitle"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recycler_view"
+                android:paddingBottom="?attr/actionBarSize"
                />
         </RelativeLayout>
         </RelativeLayout>

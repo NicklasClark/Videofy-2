@@ -7,9 +7,11 @@ package com.cncoding.teazer.model.profile.followerprofile;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.utilities.Pojos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicProfile implements Parcelable {
@@ -60,7 +62,7 @@ public class PublicProfile implements Parcelable {
     private ProfileMedia_ profileMedia;
     @SerializedName("categories")
     @Expose
-    private List<Category> categories = null;
+    private ArrayList<Pojos.Category> categories = null;
 
     protected PublicProfile(Parcel in) {
         if (in.readByte() == 0) {
@@ -233,11 +235,11 @@ public class PublicProfile implements Parcelable {
         this.profileMedia = profileMedia;
     }
 
-    public List<Category> getCategories() {
+    public ArrayList<Pojos.Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(ArrayList<Pojos.Category> categories) {
         this.categories = categories;
     }
 

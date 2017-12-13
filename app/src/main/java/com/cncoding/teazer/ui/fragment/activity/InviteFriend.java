@@ -12,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -32,26 +34,28 @@ public class InviteFriend extends AppCompatActivity {
     LinearLayout watsppLayout;
     @BindView(R.id.gmailShare)
     LinearLayout gmailShare;
-
     @BindView(R.id.smsLayout)
     LinearLayout smsLayout;
+    @BindView(R.id.teazersite)
+    ProximaNovaRegularCheckedTextView teazersite;
+    String url = "http://www.cnapplications.com";
+    String teazerLink="https://play.google.com/store/apps/details?id=com.cncoding.teazer&hl=en";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friend);
-
         ButterKnife.bind(this);
         context = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.statusbar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-//        toolbar.setNavigationIcon(R.drawable.ic_previous);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -62,57 +66,19 @@ public class InviteFriend extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>Invite Friends</font>"));
-
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Invite Friends</font>"));
         facebookShareLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://www.youtube.com/watch?v=jBfo87raroE"))
+                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.cncoding.teazer&hl=en"))
                         .setContentTitle("Teazer")
                         .setContentDescription(
                                 "Hello").build();
                 ShareDialog shareDialog = new ShareDialog(InviteFriend.this);
                 shareDialog.show(content);
                 ShareApi.share(content, null);
-
-//                final String s = "https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-//                new AsyncTask<Void, Void, Bitmap>() {
-//                    @Override
-//                    protected Bitmap doInBackground(final Void... params) {
-//                        Bitmap bitmap = null;
-//                        try {
-//                            final URL url = new URL(s);
-//                            try {
-//                                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        return bitmap;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(final Bitmap result) {
-//
-////
-////                        SharePhoto photo = new SharePhoto.Builder()
-////                                .setBitmap(result)
-////                                .build();
-////                        SharePhotoContent content = new SharePhotoContent.Builder()
-////                                .addPhoto(photo)
-////                                .build();
-////
-////                        ShareDialog shareDialog = new ShareDialog(InviteFriend.this);
-////                        shareDialog.show(content);
-////                        ShareApi.share(content, null);
-//                    }
-//                }.execute();
 
             }
 
@@ -126,7 +92,7 @@ public class InviteFriend extends AppCompatActivity {
                     Intent watsppIntent = new Intent(Intent.ACTION_SEND);
                     watsppIntent.setType("text/plain");
                     watsppIntent.setPackage("com.whatsapp");
-                    watsppIntent.putExtra(Intent.EXTRA_TEXT, "https://www.youtube.com/watch?v=jBfo87raroE");
+                    watsppIntent.putExtra(Intent.EXTRA_TEXT, teazerLink);
                     startActivity(watsppIntent);
                 } catch (PackageManager.NameNotFoundException e) {
                     Toast.makeText(InviteFriend.this, "Please install whatsapp app", Toast.LENGTH_SHORT)
@@ -138,12 +104,11 @@ public class InviteFriend extends AppCompatActivity {
         gmailShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.gm");
-//                startActivity(intent);
+
                 Intent intent = new Intent (Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fhabib4@gmail.com"});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "https://www.youtube.com/watch?v=jBfo87raroE");
+                intent.putExtra(Intent.EXTRA_SUBJECT, teazerLink);
                 intent.setPackage("com.google.android.gm");
                 if (intent.resolveActivity(getPackageManager())!=null)
                     startActivity(intent);
@@ -152,42 +117,33 @@ public class InviteFriend extends AppCompatActivity {
             }
         });
 
-
-
-
         smsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 try {
-//                    Intent intent = new Intent(Intent.ACTION_MAIN);
-//                    intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-//                    startActivity(intent);
-
-
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.cnapplications.com"));
-                    startActivity(browserIntent);
-
-                    try {
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.putExtra("sms_body", "https://www.youtube.com/watch?v=jBfo87raroE");
+                        intent.putExtra("sms_body", teazerLink);
                         intent.setData(Uri.parse("sms:"));
                         startActivity(intent);
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        Toast.makeText(getApplicationContext(),
-                                "SMS faild, please try again later!",
-                                Toast.LENGTH_LONG).show();
+
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    Toast.makeText(getApplicationContext(),
+                            "SMS faild, please try again later!",
+                            Toast.LENGTH_LONG).show();
                         Log.d("Error" , "Error");
                     }
+            }
+        });
 
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                }
+        teazersite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(InviteFriend.this, WebViewActivity.class).putExtra("Links",url));
             }
         });
     }
+
 
 
 }

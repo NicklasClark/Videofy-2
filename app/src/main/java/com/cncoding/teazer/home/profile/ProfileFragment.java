@@ -1,6 +1,9 @@
 package com.cncoding.teazer.home.profile;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,15 +14,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,8 +41,11 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
+import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.io.IOException;
@@ -60,6 +69,7 @@ public class ProfileFragment extends BaseFragment {
     private static final String ARG_PARAM2 = "param2";
     private static final int RC_REQUEST_STORAGE = 1001;
     public static boolean checkprofileupdated = false;
+    public static boolean checkpostupdated = false;
     ImageView profile_image;
     ImageView bgImage;
     ImageView settings;
@@ -93,7 +103,6 @@ public class ProfileFragment extends BaseFragment {
     int gender;
     int countrycode;
     String detail;
-  //  RelativeLayout coordinatorLayout;
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     PublicProfile userProfile;
@@ -154,12 +163,10 @@ public class ProfileFragment extends BaseFragment {
         _following = view.findViewById(R.id.following);
         _detail = view.findViewById(R.id.hobby);
 
-
         backgroundProfile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         btnedit = view.findViewById(R.id.btnedit);
         btnshare = view.findViewById(R.id.btnshare);
-        //coordinatorLayout = view.findViewById(R.id.profile_layout);
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
         bgImage = view.findViewById(R.id.background_profile);
@@ -197,6 +204,7 @@ public class ProfileFragment extends BaseFragment {
                 mListener.onFollowingListListener(String.valueOf(0), "User");
             }
         });
+
         btnshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -245,6 +253,22 @@ public class ProfileFragment extends BaseFragment {
                         });
             }
         });
+        _detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//
+//
+//                    FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
+//                    if (fragmentManager != null) {
+//                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
+//
+//                }
+           }
+        });
 
         return view;
     }
@@ -255,6 +279,13 @@ public class ProfileFragment extends BaseFragment {
         if (ProfileFragment.checkprofileupdated) {
             updateProfile();
             checkprofileupdated = false;
+        }
+
+        if(ProfileFragment.checkpostupdated)
+        {
+            viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
+            tabLayout.setupWithViewPager(viewPager);
+            checkpostupdated=false;
         }
 
     }
@@ -269,7 +300,6 @@ public class ProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getParentActivity().updateToolbarTitle("My Profile");
-//        getParentActivity().showAppBar();
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
         getProfileDetail();
@@ -283,7 +313,6 @@ public class ProfileFragment extends BaseFragment {
                 Intent intent = new Intent(context, Settings.class);
                 intent.putExtra("AccountType", String.valueOf(accountType));
                 intent.putExtra("UserProfile", userProfile);
-
                 startActivity(intent);
             case R.id.action_profile_block:
 

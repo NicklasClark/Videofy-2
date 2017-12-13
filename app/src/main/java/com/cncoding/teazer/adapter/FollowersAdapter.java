@@ -21,6 +21,9 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.profile.followers.Follower;
 import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -82,14 +85,23 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final Follower cont = userlist.get(i);
                 final String followername = cont.getFirstName();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
+
                 if(isfollowersDp) {
+
                     String followrsDp = cont.getProfileMedia().getThumbUrl();
                     Glide.with(context)
                             .load(followrsDp)
-                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
-
+                }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.dp);
                 }
 //                final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
@@ -158,22 +170,30 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 followerId = cont.getUserId();
                 viewHolder.name.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
-
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getThumbUrl();
-
                     Glide.with(context)
                             .load(followrsDp)
-                            .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
                 }
+                else
+                {
+                    Picasso.with(context)
+                            .load(R.drawable.ic_user_male_dp_small)
+                            .fit().centerInside()
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .into(viewHolder.dp);
+                }
+
 
                 if (myself) {
-                    viewHolder.name.setBackgroundTintList(
-                            ColorStateList.valueOf(context.getResources().getColor(R.color.colorAccent)));
-                    viewHolder.action.setVisibility(View.INVISIBLE);
+
+                            viewHolder.name.setTextColor( Color.parseColor("#333333"));
+
+                            viewHolder.action.setVisibility(View.INVISIBLE);
                     usertype = "";
                 }
                 else {
@@ -184,7 +204,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         usertype = "";
 
                     }
-                    else                     {
+                    else                    {
+
+                        viewHolder.action.setVisibility(View.VISIBLE);
+                        viewHolder.name.setTextColor( Color.parseColor("#333333"));
+
                         if (accounttype == 1) {
                             if (following) {
                                 setActionButtonText(context, viewHolder.action, R.string.following);

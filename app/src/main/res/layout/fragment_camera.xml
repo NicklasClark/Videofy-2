@@ -11,6 +11,7 @@
     app:umanoAnchorPoint="0.4"
     sothree:umanoPanelHeight="0dp"
     sothree:umanoShadowHeight="0dp"
+    android:keepScreenOn="true"
     tools:context=".home.camera.CameraFragment">
 
     <!--CAMERA FRAGMENT-->
