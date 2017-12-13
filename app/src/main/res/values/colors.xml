@@ -69,4 +69,6 @@
     <color name="white">#FFFFFF</color>
     <color name="grey">#cccccc</color>
     <color name="grey_700">#646464</color>
+    <color name="DialogBoxConfirm">#666666</color>
+    <color name="DialogBoxCancel">#999999</color>
 </resources>
