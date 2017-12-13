@@ -169,6 +169,11 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
     }
 
     @Override
+    public void onCurrentLocationClick() {
+
+    }
+
+    @Override
     public void onCameraInteraction(int action, Pojos.UploadParams uploadParams) {
 
     }

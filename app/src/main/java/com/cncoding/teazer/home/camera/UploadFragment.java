@@ -147,7 +147,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     String selectedTagsToShow = null;
     private boolean isRequestingLocationUpdates;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location currentLocation;
+    public Location currentLocation;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private SelectedPlace selectedPlace;
@@ -659,7 +659,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
                 if (finalResultToShow.trim().isEmpty())
-                    tagFriendsBtn.clearFocus();
+                    tagFriendsBtn.setText(null);
+//                    tagFriendsBtn.clearFocus();
                 else
                     tagFriendsBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
@@ -679,7 +680,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(null);
-                            uploadCategoriesBtn.clearFocus();
+//                            uploadCategoriesBtn.clearFocus();
                         }
                     }, 200);
                 else
