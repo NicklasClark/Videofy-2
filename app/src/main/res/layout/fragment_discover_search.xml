@@ -13,8 +13,7 @@
         android:orientation="vertical"
         android:layout_marginBottom="@dimen/padding_thin"
         android:background="@color/colorPrimary"
-        android:animateLayoutChanges="true"
-        android:elevation="4dp">
+        android:animateLayoutChanges="true">
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
             android:id="@+id/discover_search"
