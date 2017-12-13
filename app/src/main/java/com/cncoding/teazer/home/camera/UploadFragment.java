@@ -427,7 +427,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
             try {
@@ -504,7 +503,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         Log.d("getNearbySearchUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
     }
-
     @OnEditorAction(R.id.video_upload_title) public boolean titleDone(TextView view, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             hideKeyboard(activity, view);
@@ -571,8 +569,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             hideKeyboard(activity, view);
             mListener.onUploadInteraction(TAG_CATEGORIES_FRAGMENT, null, selectedCategoriesToShow);
             uploadCategoriesBtn.clearFocus();
+//            motionEvent.setAction(MotionEvent.ACTION_DOWN);
             return true;
         }
+
         return false;
     }
 
@@ -670,10 +670,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 tagCount = count;
                 selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
-                if (finalResultToShow.trim().isEmpty())
+                if (finalResultToShow.trim().isEmpty()) {
                     tagFriendsBtn.setText(null);
-//                    tagFriendsBtn.clearFocus();
-                else
+                    tagFriendsBtn.clearFocus();
+                } else
                     tagFriendsBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -684,10 +684,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 }, 500);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
+
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
-                if (finalResultToShow.trim().isEmpty())
+                if (finalResultToShow.trim().isEmpty()||finalResultToShow.equals(""))
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -723,18 +724,19 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             topProgressBar.setVisibility(INVISIBLE);
         else
             topProgressBar.setVisibility(VISIBLE);
+
         if (isEnabled) {
             enableView(videoTitle);
             enableView(addLocationBtn);
             enableView(tagFriendsBtn);
             enableView(uploadCategoriesBtn);
-            enableView(uploadBtn);
+//            enableView(uploadBtn);
         } else {
-            disableView(videoTitle, true);
-            disableView(addLocationBtn, true);
-            disableView(tagFriendsBtn, true);
-            disableView(uploadCategoriesBtn, true);
-            disableView(uploadBtn, false);
+            disableView(videoTitle, false);
+            disableView(addLocationBtn, false);
+            disableView(tagFriendsBtn, false);
+            disableView(uploadCategoriesBtn, false);
+//            disableView(uploadBtn, false);
         }
     }
 
@@ -746,11 +748,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d("HomeFragment", "onPermissionsDenied:" + requestCode + ":" + perms.size());
-        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
-        // This will display a dialog directing them to enable the permission in app settings.
-//        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-////            new AppSettingsDialog.Builder(this).build().show();
-//        }
+
     }
 
     @Override
@@ -806,7 +804,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
-            reference.get().toggleInteraction(true);
+//            reference.get().toggleInteraction(true);
             reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
         }
     }

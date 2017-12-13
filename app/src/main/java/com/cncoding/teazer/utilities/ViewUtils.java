@@ -72,9 +72,10 @@ public class ViewUtils {
 
     public static void disableView(View view, boolean setAlpha) {
         view.setEnabled(false);
-        if (setAlpha)
+        if (setAlpha) {
             view.setAlpha(0.5f);
-        view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+            view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+        }
     }
 
 //    public static void playVideo(Context context, String videoPath, boolean isOnlineVideo) {

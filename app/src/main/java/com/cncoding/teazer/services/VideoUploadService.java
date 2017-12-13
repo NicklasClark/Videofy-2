@@ -88,6 +88,8 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                                 if (response.code() == 201) {
                                     onUploadFinish();
                                     finishVideoUploadSession(getApplicationContext());
+                                 //   String videoUrl=response.body().
+
                                 } else onUploadError(new Throwable(response.code() + " : " +response.message()));
                             } catch (Exception e) {
                                 e.printStackTrace();
