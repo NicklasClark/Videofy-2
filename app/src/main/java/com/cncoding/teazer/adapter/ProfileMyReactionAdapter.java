@@ -21,7 +21,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.model.react.Reactions;
 
 import java.util.List;
 
@@ -33,16 +33,17 @@ import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
+ *
  * Created by farazhabib on 10/11/17.
  */
 
 public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReactionAdapter.ViewHolder> {
 
-    private List<Reaction> list;
+    private List<Reactions> list;
     private Context context;
 
 
-    public ProfileMyReactionAdapter(Context context, List<Reaction> list) {
+    public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
         this.context = context;
         this.list = list;
     }
@@ -53,14 +54,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
     @Override
     public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
-        final Reaction cont = list.get(i);
+        final Reactions cont = list.get(i);
         final int reactId = cont.getReactId();
         final String videotitle = cont.getReactTitle();
         final int likes = cont.getLikes();
         final int views = cont.getViews();
         final String reactduration = cont.getMediaDetail().getReactDuration();
-        final String videourl = cont.getMediaDetail().getReactMediaUrl();
-        final String thumb_url = cont.getMediaDetail().getReactThumbUrl();
+        final String videourl = cont.getMediaDetail().getMediaUrl();
+        final String thumb_url = cont.getMediaDetail().getThumbUrl();
         final String postowner = cont.getPostOwner().getUserName();
         final int reaction = cont.getReactedBy();
 

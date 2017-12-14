@@ -2,6 +2,7 @@ package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +17,8 @@ import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.model.profile.reaction.ProfileReaction;
-import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.ReactionsList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProfileMyReactionAdapter profileMyReactionAdapter;
     RecyclerView.LayoutManager layoutManager;
     Context context;
-    List<Reaction>list;
+    List<Reactions>list;
     int page;
     ProximaNovaRegularTextView alert1;
     public static FragmentProfileMyReactions newInstance(int page) {
@@ -49,7 +50,7 @@ public class FragmentProfileMyReactions extends Fragment {
         super.onCreate(savedInstanceState);
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_myreactions, container, false);
         context=container.getContext();
         recyclerView=view.findViewById(R.id.recycler_view);
@@ -58,7 +59,7 @@ public class FragmentProfileMyReactions extends Fragment {
         return view;
     }
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
@@ -66,19 +67,19 @@ public class FragmentProfileMyReactions extends Fragment {
         getReactions();
     }
     public void getReactions() {
-        ApiCallingService.React.getMyReaction(page,context).enqueue(new Callback<ProfileReaction>() {
+        ApiCallingService.React.getMyReactions(page,context).enqueue(new Callback<ReactionsList>() {
             @Override
-            public void onResponse(Call<ProfileReaction> call, Response<ProfileReaction> response) {
+            public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
                 if (response.code() == 200) {
                     try {
-                        response.body().getReactions();
+//                        response.body().getReactions();
                         if (response.body().getReactions() == null||response.body().getReactions().size()==0) {
 
                             alert1.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }
                         else {
-                            boolean next=response.body().getNextPage();
+                            boolean next=response.body().isNextPage();
                             list.addAll(response.body().getReactions());
                             profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
                             recyclerView.setAdapter(profileMyReactionAdapter);
@@ -100,7 +101,7 @@ public class FragmentProfileMyReactions extends Fragment {
                 }
             }
             @Override
-            public void onFailure(Call<ProfileReaction> call, Throwable t)
+            public void onFailure(Call<ReactionsList> call, Throwable t)
             {
                 Toast.makeText(context, "Oops Something went wrong, Please try again", Toast.LENGTH_LONG).show();
             }

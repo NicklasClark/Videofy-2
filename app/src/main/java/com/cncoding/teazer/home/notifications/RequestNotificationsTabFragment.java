@@ -17,8 +17,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.model.user.Notification;
+import com.cncoding.teazer.model.user.NotificationsList;
 
 import java.util.ArrayList;
 
@@ -60,7 +60,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications_tab, container, false);
         ButterKnife.bind(this, rootView);
-        notificationsList = new NotificationsList(new ArrayList<Pojos.User.Notification>(), 0, false);
+        notificationsList = new NotificationsList(new ArrayList<Notification>(), 0, false);
 
         adapter = new NotificationsAdapter(getContext(), false, notificationsList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());

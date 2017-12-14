@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostSubtitleAdapter;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

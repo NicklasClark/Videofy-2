@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.utilities.Pojos.TaggedUser;
+import com.cncoding.teazer.model.base.TaggedUser;
 
 import java.io.Serializable;
 import java.util.ArrayList;

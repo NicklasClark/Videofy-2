@@ -46,12 +46,14 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
-import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.MiniProfile;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.model.friends.CircleList;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostUploadResult;
+import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -99,6 +101,7 @@ import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 /**
+ * 
  * Created by farazhabib on 29/11/17.
  */
 
@@ -178,12 +181,12 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     String categories;
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
-    Pojos.Post.PostDetails postDetails;
+    PostDetails postDetails;
     StringBuilder categoryId;
     StringBuilder categoryName;
     String location;
     private String selectedCategories;
-    List<Pojos.TaggedUser> taggedUsers;
+    List<TaggedUser> taggedUsers;
     StringBuilder stringBuilder;
     StringBuilder selectTagIdBuilder;
     private String selectedTags;
@@ -194,7 +197,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     public EditPostFragment() {
     }
 
-    public static EditPostFragment newInstance(Pojos.Post.PostDetails postDetails) {
+    public static EditPostFragment newInstance(PostDetails postDetails) {
         EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();
         args.putParcelable(POST_DETAILS, postDetails);
@@ -322,13 +325,12 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     private void updatePost(UpdatePostRequest updatePostRequest) {
-        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<UpdatePostResultObject>() {
+        ApiCallingService.Posts.updatePost(updatePostRequest, context).enqueue(new Callback<PostUploadResult>() {
             @Override
-            public void onResponse(Call<UpdatePostResultObject> call, Response<UpdatePostResultObject> response) {
+            public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
 
                 if (response.code() == 200) {
                     try {
-
                         Toast.makeText(context, "Your post has been updated sucessfully", Toast.LENGTH_SHORT).show();
                         ProfileFragment.checkpostupdated=true;
                         getActivity().onBackPressed();
@@ -342,7 +344,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             }
 
             @Override
-            public void onFailure(Call<UpdatePostResultObject> call, Throwable t) {
+            public void onFailure(Call<PostUploadResult> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -532,9 +534,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     private void getMyCircle(final int page) {
-        ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<Pojos.Friends.CircleList>() {
+        ApiCallingService.Friends.getMyCircle(page, context).enqueue(new Callback<CircleList>() {
             @Override
-            public void onResponse(Call<Pojos.Friends.CircleList> call, Response<Pojos.Friends.CircleList> response) {
+            public void onResponse(Call<CircleList> call, Response<CircleList> response) {
                 if (response.body().getCircles() != null) {
                     switch (isResponseOk(response)) {
                         case SUCCESS_OK_TRUE:
@@ -557,7 +559,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             }
 
             @Override
-            public void onFailure(Call<Pojos.Friends.CircleList> call, Throwable t) {
+            public void onFailure(Call<CircleList> call, Throwable t) {
                 Log.e("getMyCircle", t.getMessage());
                 toggleInteraction(true);
             }
@@ -589,9 +591,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public void getTagFriends(final int postId) {
 
-        ApiCallingService.Posts.getPostDetails(postId, context).enqueue(new Callback<Pojos.Post.PostDetails>() {
+        ApiCallingService.Posts.getPostDetails(postId, context).enqueue(new Callback<PostDetails>() {
             @Override
-            public void onResponse(Call<Pojos.Post.PostDetails> call, Response<Pojos.Post.PostDetails> response) {
+            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                 if (response.code() == 200) {
                     try {
 
@@ -654,7 +656,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
 
             @Override
-            public void onFailure(Call<Pojos.Post.PostDetails> call, Throwable t) {
+            public void onFailure(Call<PostDetails> call, Throwable t) {
                 toggleInteraction(true);
             }
         });

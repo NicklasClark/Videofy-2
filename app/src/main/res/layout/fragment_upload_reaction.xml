@@ -84,7 +84,7 @@
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
                     android:id="@+id/video_upload_title"
-                    android:hint="@string/title"
+                    android:hint="@string/react_title"
                     android:maxLength="180"
                     android:inputType="textCapSentences"
                     android:imeOptions="actionDone"/>

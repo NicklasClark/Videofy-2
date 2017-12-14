@@ -30,6 +30,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
+import com.cncoding.teazer.model.base.Authorize;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
@@ -197,7 +198,7 @@ public class AuthUtils {
     }
 
     public static void performInitialSignup(final SignupFragment2.OnFinalSignupInteractionListener mListener,
-                                            final Pojos.Authorize authorize, final ProximaNovaSemiboldButton signupBtn,
+                                            final Authorize authorize, final ProximaNovaSemiboldButton signupBtn,
                                             final String picturePath) {
         ApiCallingService.Auth.performSignUp(authorize).enqueue(new Callback<ResultObject>() {
             @Override
@@ -222,7 +223,7 @@ public class AuthUtils {
         });
     }
 
-    public static void performFinalSignup(final Context context, final Pojos.Authorize verify, final CountDownTimer countDownTimer,
+    public static void performFinalSignup(final Context context, final Authorize verify, final CountDownTimer countDownTimer,
                                           final ProximaNovaRegularTextView otpVerifiedTextView,
                                           final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn,
                                           final String picturePath) {
@@ -284,7 +285,7 @@ public class AuthUtils {
                                     final LoginInteractionListener mListener, final ProximaNovaSemiboldButton loginBtn,
                                     final ProgressBar progressBar, final ProximaNovaRegularTextView otpVerifiedTextView,
                                     final CountDownTimer[] countDownTimer, final boolean isResendAction) {
-        final Pojos.Authorize authorize = new Pojos.Authorize(Long.parseLong(username), countryCode);
+        final Authorize authorize = new Authorize(Long.parseLong(username), countryCode);
         ApiCallingService.Auth.loginWithOtp(authorize).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -320,11 +321,11 @@ public class AuthUtils {
     /**
      * Login step 2.
      * */
-    public static void verifyOtpLogin(final Context context, Pojos.Authorize userSignUpDetails, int otp, final CountDownTimer countDownTimer,
+    public static void verifyOtpLogin(final Context context, Authorize userSignUpDetails, int otp, final CountDownTimer countDownTimer,
                                       final ProximaNovaRegularTextView otpVerifiedTextView,
                                       final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
         ApiCallingService.Auth.verifyLoginWithOtp(
-                new Pojos.Authorize(
+                new Authorize(
                         getFcmToken(context),
                         getDeviceId(context),
                         DEVICE_TYPE_ANDROID,

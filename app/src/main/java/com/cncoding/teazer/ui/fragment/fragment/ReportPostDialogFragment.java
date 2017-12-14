@@ -14,9 +14,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.post.ReportPost;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 
 import java.util.List;
 
@@ -120,7 +120,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void reportPostServiceCall() {
 
-        ApiCallingService.Posts.reportPost(new ReportPostRequest(postId, selectedReportId), getContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId), getContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {

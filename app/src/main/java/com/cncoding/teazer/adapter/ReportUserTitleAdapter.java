@@ -2,7 +2,6 @@ package com.cncoding.teazer.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 

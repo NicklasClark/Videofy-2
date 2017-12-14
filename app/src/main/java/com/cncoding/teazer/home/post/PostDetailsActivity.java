@@ -57,15 +57,14 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.TagListAdapter.TaggedListInteractionListener;
-import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.post.PostReactionsList;
+import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
-import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
-import com.cncoding.teazer.utilities.Pojos.TaggedUser;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -425,7 +424,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //            reaction2Url = builder.reaction2Url;
 //            reaction3Url = builder.reaction3Url;
 //            controller = new MediaControllerView.Builder(this, PostDetailsActivity.this)
-//                    .withVideoTitle(postDetails.getTitle())
+//                    .withVideoTitle(postDetails.getReactTitle())
 ////                    .withVideoSurfaceView(textureView)
 //                    .withLocation(location)
 //                    .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
@@ -986,9 +985,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     private void deleteVideo(int postId) {
-        ApiCallingService.Posts.deletePosts(postId, getApplicationContext()).enqueue(new Callback<DeleteMyVideos>() {
+        ApiCallingService.Posts.deletePosts(postId, getApplicationContext()).enqueue(new Callback<ResultObject>() {
             @Override
-            public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     if (response.code() == 200) {
                         Toast.makeText(PostDetailsActivity.this, "Video has been deleted", Toast.LENGTH_SHORT).show();
@@ -1002,7 +1001,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             }
 
             @Override
-            public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
+            public void onFailure(Call<ResultObject> call, Throwable t) {
                 t.printStackTrace();
             }
         });

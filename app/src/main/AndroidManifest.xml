@@ -181,7 +181,7 @@
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/MyCustomTextAppearance"
+            android:theme="@style/CameraTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.fragment.activity.Settings"

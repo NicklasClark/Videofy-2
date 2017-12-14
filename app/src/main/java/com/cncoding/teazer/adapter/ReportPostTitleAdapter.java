@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
 
@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 

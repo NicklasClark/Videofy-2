@@ -14,9 +14,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
-import com.cncoding.teazer.model.profile.reportuser.ReportUser;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.user.ReportUser;
 
 import java.util.List;
 
@@ -27,6 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 

@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.model.profile.blockuser.BlockUserResponse;
-import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
+import com.cncoding.teazer.model.user.BlockedUsersList;
+import com.cncoding.teazer.model.user.BlockedUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +84,9 @@ public class BlockUserList extends AppCompatActivity {
     public void getBlockUserList()
     {
 
-        ApiCallingService.Friends.getBlockedUsers(pageId,context).enqueue(new Callback<BlockUserResponse>() {
+        ApiCallingService.Friends.getBlockedUsers(pageId,context).enqueue(new Callback<BlockedUsersList>() {
             @Override
-            public void onResponse(Call<BlockUserResponse> call, Response<BlockUserResponse> response) {
+            public void onResponse(Call<BlockedUsersList> call, Response<BlockedUsersList> response) {
                 if(response.code()==200)
                 {
                     try
@@ -130,7 +130,7 @@ public class BlockUserList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<BlockUserResponse> call, Throwable t) {
+            public void onFailure(Call<BlockedUsersList> call, Throwable t) {
 
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);

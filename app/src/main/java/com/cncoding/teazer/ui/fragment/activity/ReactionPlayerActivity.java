@@ -20,9 +20,9 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
-import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -77,8 +77,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.postDuration)
     ProximaNovaRegularTextView postDurationView;
     private String videoURL;
-    private Pojos.Post.PostReaction postDetails;
-    private Reaction selfPostDetails;
+    private PostReaction postDetails;
+    private Reactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -155,7 +155,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
                     }
 
-                    isLiked = !selfPostDetails.getCanLike();
+                    isLiked = !selfPostDetails.canLike();
                     likesCount = selfPostDetails.getLikes();
                     viewsCount = selfPostDetails.getViews();
                     reactionTitle = selfPostDetails.getReactTitle();
@@ -223,7 +223,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             LoopingMediaSource loopingMediaSource  = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
             player.prepare(loopingMediaSource);
-            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             player.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             e.printStackTrace();

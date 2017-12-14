@@ -18,9 +18,9 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.Post.PostList;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static MyInterestsFragmentTab newInstance(Pojos.Category category) {
+    public static MyInterestsFragmentTab newInstance(Category category) {
         MyInterestsFragmentTab fragment = new MyInterestsFragmentTab();
         Bundle args = new Bundle();
         args.putInt(ARG_CATEGORY_ID, category.getCategoryId());

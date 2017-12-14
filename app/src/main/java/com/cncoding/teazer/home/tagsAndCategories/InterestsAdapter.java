@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;

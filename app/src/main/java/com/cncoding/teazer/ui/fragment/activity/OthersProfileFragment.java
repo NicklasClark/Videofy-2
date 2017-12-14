@@ -42,14 +42,12 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
-import com.cncoding.teazer.model.profile.followerprofile.FollowersProfile;
-import com.cncoding.teazer.model.profile.followerprofile.PrivateProfile;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.FollowersProfileCreations;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
+import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.user.PrivateProfile;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
-import com.cncoding.teazer.utilities.Pojos;
 
 import java.io.IOException;
 import java.net.URL;
@@ -101,13 +99,13 @@ public class OthersProfileFragment extends BaseFragment {
     ProximaNovaRegularCheckedTextView hobby;
 
     Context context;
-    FollowersProfile followersProfile;
+    ProfileInfo profileInfo;
     public static final int PRIVATE_ACCOUNT = 1;
     public static final int PUBLIC_ACCOUNT = 2;
     public static final boolean FRIENDS = true;
     public static final boolean NOTFRIEND = false;
     CircularAppCompatImageView menu;
-    List<Pojos.Post.PostDetails> list = new ArrayList<>();
+    List<PostDetails> list = new ArrayList<>();
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     @BindView(R.id.userCreationTitle)
@@ -290,21 +288,21 @@ public class OthersProfileFragment extends BaseFragment {
     public void getProfileInformation(final int followersid) {
 
 
-        ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<FollowersProfile>() {
+        ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
             @Override
-            public void onResponse(Call<FollowersProfile> call, Response<FollowersProfile> response) {
+            public void onResponse(Call<ProfileInfo> call, Response<ProfileInfo> response) {
                 if (response.code() == 200) {
                     try {
 
-                        FollowersProfile followersProfile = response.body();
-                        int follower = followersProfile.getFollowers();
-                        int following = followersProfile.getFollowings();
-                        int totalvideos = followersProfile.getTotalVideos();
-                        hassentrequest = followersProfile.getFollowInfo().getRequestSent();
-                        requestRecieved = followersProfile.getFollowInfo().getRequestReceived();
-                        isBlockedyou = followersProfile.getFollowInfo().getIsBlockedYou();
-                        isfollower = followersProfile.getFollowInfo().getFollower();
-                        isfollowing = followersProfile.getFollowInfo().getFollowing();
+                        ProfileInfo profileInfo = response.body();
+                        int follower = profileInfo.getFollowers();
+                        int following = profileInfo.getFollowings();
+                        int totalvideos = profileInfo.getTotalVideos();
+                        hassentrequest = profileInfo.getFollowInfo().getRequestSent();
+                        requestRecieved = profileInfo.getFollowInfo().getRequestReceived();
+                        isBlockedyou = profileInfo.getFollowInfo().getIsBlockedYou();
+                        isfollower = profileInfo.getFollowInfo().getFollower();
+                        isfollowing = profileInfo.getFollowInfo().getFollowing();
 
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
@@ -400,11 +398,11 @@ public class OthersProfileFragment extends BaseFragment {
                             //Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
                             userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
-                            String username = privateProfile.getUserName();
+                            String username = privateProfile.getUsername();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
-                            Boolean hasProfileMedia = privateProfile.getHasProfileMedia();
+                            Boolean hasProfileMedia = privateProfile.hasProfileMedia();
                             if (hasProfileMedia) {
                                 userProfileThumbnail = privateProfile.getProfileMedia().getThumbUrl();
                                 userProfileUrl = privateProfile.getProfileMedia().getMediaUrl();
@@ -472,7 +470,7 @@ public class OthersProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<FollowersProfile> call, Throwable t) {
+            public void onFailure(Call<ProfileInfo> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }
@@ -562,14 +560,13 @@ public class OthersProfileFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
         Log.d("getProfileVideos", "hello");
-        ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<FollowersProfileCreations>() {
+        ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<PostList>() {
             @Override
-            public void onResponse(Call<FollowersProfileCreations> call, Response<FollowersProfileCreations> response) {
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
                 Log.d("getProfileVideos", String.valueOf(response));
                 if (response.code() == 200) {
                     try {
-
-                        boolean next = response.body().getNextPage();
+                        boolean next = response.body().isNextPage();
                         list.addAll(response.body().getPosts());
                         followerCreationAdapter = new FollowersCreationAdapter(context, list);
                         _recycler_view.setAdapter(followerCreationAdapter);
@@ -590,7 +587,7 @@ public class OthersProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<FollowersProfileCreations> call, Throwable t) {
+            public void onFailure(Call<PostList> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -727,10 +724,10 @@ public class OthersProfileFragment extends BaseFragment {
 
         layout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<BlockUnBlockUser>() {
+        ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<ResultObject>() {
 
             @Override
-            public void onResponse(Call<BlockUnBlockUser> call, Response<BlockUnBlockUser> response) {
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     boolean b = response.body().getStatus();
                     if (b == true) {
@@ -754,7 +751,7 @@ public class OthersProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<BlockUnBlockUser> call, Throwable t) {
+            public void onFailure(Call<ResultObject> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();

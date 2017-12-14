@@ -19,8 +19,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.followers.Follower;
-import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
+import com.cncoding.teazer.model.friends.UserInfo;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -42,8 +41,8 @@ import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.ViewHolder> {
 
-    private List<OtherFollowers> list;
-    private List<Follower> userlist;
+    private List<UserInfo> list;
+    private List<UserInfo> userlist;
     private Context context;
 //    List<Following> list2;
     private int counter;
@@ -51,7 +50,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 //    final static int PublicAccount = 2;
     private OtherProfileListener otherProfileListener;
 
-    public FollowersAdapter(Context context, List<Follower> userlist, int counter) {
+    public FollowersAdapter(Context context, List<UserInfo> userlist, int counter) {
         this.context = context;
         this.userlist = userlist;
         this.counter = counter;
@@ -59,7 +58,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             otherProfileListener = (OtherProfileListener) context;
         }
     }
-    public FollowersAdapter(Context context, List<OtherFollowers> list) {
+    public FollowersAdapter(Context context, List<UserInfo> list) {
         this.context = context;
         this.list = list;
 
@@ -82,7 +81,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             if (counter == 100) {
 
                 final String usertype;
-                final Follower cont = userlist.get(i);
+                final UserInfo cont = userlist.get(i);
                 final String followername = cont.getFirstName();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
 
@@ -159,7 +158,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
                 });
             } else {
-                final OtherFollowers cont = list.get(i);
+                final UserInfo cont = list.get(i);
                 final String usertype;
                 final int accounttype = cont.getAccountType();
                 final boolean myself = cont.getMySelf();

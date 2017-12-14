@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Intent;
+import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -97,6 +98,7 @@ public class ExoPlayerActivity extends AppCompatActivity{
             MediaSource mediaSource=buildMediaSource(Uri.parse(videoURL));
             LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
             player.prepare(loopingSource,true,false);
+            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
         }
     }
 

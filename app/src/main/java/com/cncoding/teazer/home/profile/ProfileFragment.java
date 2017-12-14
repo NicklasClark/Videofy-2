@@ -1,9 +1,6 @@
 package com.cncoding.teazer.home.profile;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,18 +11,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,13 +34,10 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.ui.fragment.activity.EditPost;
+import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.utilities.Pojos;
 
 import java.io.IOException;
 import java.net.URL;
@@ -86,7 +77,7 @@ public class ProfileFragment extends BaseFragment {
     TabLayout tabLayout;
     ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundProfile;
-    Pojos.User.UserProfile userprofile;
+    UserProfile userprofile;
     Button btnedit;
     Button btnshare;
     int totalfollowers;
@@ -325,9 +316,9 @@ public class ProfileFragment extends BaseFragment {
         progressbar.setVisibility(View.VISIBLE);
        // coordinatorLayout.setVisibility(View.GONE);
 
-        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
 
                 try {
                     userProfile = response.body().getUserProfile();
@@ -375,7 +366,7 @@ public class ProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
                 t.printStackTrace();
             }
@@ -481,9 +472,9 @@ public class ProfileFragment extends BaseFragment {
     public void updateProfile() {
         progressbar.setVisibility(View.VISIBLE);
 
-        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
 
                 try {
                     userProfile = response.body().getUserProfile();
@@ -531,7 +522,7 @@ public class ProfileFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
                 t.printStackTrace();
             }

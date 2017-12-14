@@ -1,34 +1,24 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowersAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.profile.blockuser.Followers;
-import com.cncoding.teazer.model.profile.followers.Follower;
-import com.cncoding.teazer.model.profile.followers.ProfileMyFollowers;
-import com.cncoding.teazer.model.profile.otherfollower.FreindFollower;
-import com.cncoding.teazer.model.profile.otherfollower.OtherFollowers;
+import com.cncoding.teazer.model.friends.FollowersList;
+import com.cncoding.teazer.model.friends.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +36,8 @@ public class FollowersListActivity extends BaseFragment{
     String identifier;
     String followerid;
     Context context;
-    List<OtherFollowers> list=new ArrayList<>();
-    List<Follower> userfollowerlist;
+    List<UserInfo> list=new ArrayList<>();
+    List<UserInfo> userfollowerlist;
     RecyclerView recyclerView;
     FollowersAdapter profileMyFollowerAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -131,13 +121,13 @@ public class FollowersListActivity extends BaseFragment{
 
     public void getUserfollowerList()
     {
-        ApiCallingService.Friends.getMyFollowers(userfollowerpage,context).enqueue(new Callback<ProfileMyFollowers>() {
+        ApiCallingService.Friends.getMyFollowers(userfollowerpage,context).enqueue(new Callback<FollowersList>() {
             @Override
-            public void onResponse(Call<ProfileMyFollowers> call, Response<ProfileMyFollowers> response) {
+            public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
                 if(response.code()==200)
                 {
                     try {
-                        userfollowerlist.addAll(response.body().getFollowers());
+                        userfollowerlist.addAll(response.body().getUserInfos());
                         boolean next=response.body().getNextPage();
                         if (userfollowerlist == null || userfollowerlist.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
@@ -168,7 +158,7 @@ public class FollowersListActivity extends BaseFragment{
                 }
             }
             @Override
-            public void onFailure(Call<ProfileMyFollowers> call, Throwable t) {
+            public void onFailure(Call<FollowersList> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
 
@@ -179,15 +169,15 @@ public class FollowersListActivity extends BaseFragment{
     }
     public void getOthersFollowerDetails(int followerid)
     {
-        ApiCallingService.Friends.getFriendsFollowers(otherFollowerpage,followerid,context).enqueue(new Callback<FreindFollower>() {
+        ApiCallingService.Friends.getFriendsFollowers(otherFollowerpage,followerid,context).enqueue(new Callback<FollowersList>() {
             @Override
-            public void onResponse(Call<FreindFollower> call, Response<FreindFollower> response) {
+            public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
                 if(response.code()==200)
                 {
                     try
                     {
                         boolean next=response.body().getNextPage();
-                        list.addAll(response.body().getFollowers());
+                        list.addAll(response.body().getUserInfos());
                         if (list == null || list.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
@@ -218,7 +208,7 @@ public class FollowersListActivity extends BaseFragment{
                 }
             }
             @Override
-            public void onFailure(Call<FreindFollower> call, Throwable t) {
+            public void onFailure(Call<FollowersList> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
 
