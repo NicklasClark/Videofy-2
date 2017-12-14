@@ -427,7 +427,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
             try {
@@ -504,7 +503,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         Log.d("getNearbySearchUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
     }
-
     @OnEditorAction(R.id.video_upload_title) public boolean titleDone(TextView view, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             hideKeyboard(activity, view);
@@ -571,8 +569,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             hideKeyboard(activity, view);
             mListener.onUploadInteraction(TAG_CATEGORIES_FRAGMENT, null, selectedCategoriesToShow);
             uploadCategoriesBtn.clearFocus();
+//            motionEvent.setAction(MotionEvent.ACTION_DOWN);
             return true;
         }
+
         return false;
     }
 
@@ -670,10 +670,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 tagCount = count;
                 selectedTagsToShow = finalResultToShow;
                 selectedTagsToSend = resultToSend;
-                if (finalResultToShow.trim().isEmpty())
+                if (finalResultToShow.trim().isEmpty()) {
                     tagFriendsBtn.setText(null);
-//                    tagFriendsBtn.clearFocus();
-                else
+                    tagFriendsBtn.clearFocus();
+                } else
                     tagFriendsBtn.requestFocus();
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -684,6 +684,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 }, 500);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
+
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
@@ -723,6 +724,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             topProgressBar.setVisibility(INVISIBLE);
         else
             topProgressBar.setVisibility(VISIBLE);
+
         if (isEnabled) {
             enableView(videoTitle);
             enableView(addLocationBtn);
