@@ -101,11 +101,13 @@ public class PostsListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (postList != null && !isRefreshing) {
-            if (postList.isEmpty())
+            if (postList.isEmpty()) {
                 getHomePagePosts(1, false);
-            else {
+                return;
+            } else {
                 recyclerView.getAdapter().notifyDataSetChanged();
                 dismissProgressBar();
+                return;
             }
         }
         else {
@@ -117,12 +119,15 @@ public class PostsListFragment extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else
+            } else {
                 postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+                return;
+            }
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
         }
-//        getParentActivity().showAppBar();
+
+        getHomePagePosts(1, false);
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
