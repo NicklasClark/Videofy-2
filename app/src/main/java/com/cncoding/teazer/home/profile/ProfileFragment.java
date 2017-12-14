@@ -1,9 +1,6 @@
 package com.cncoding.teazer.home.profile;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,18 +11,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,11 +35,8 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.Pojos;
 
 import java.io.IOException;
@@ -213,7 +204,7 @@ public class ProfileFragment extends BaseFragment {
                         .setCanonicalIdentifier(String.valueOf(userProfile.getUserId()))
                         .setTitle(userProfile.getFirstName())
                         .setContentDescription("Hi, follow me on Teazer and share cool videos")
-                        .setContentImageUrl(userProfile.getProfileMedia().getMediaUrl());
+                        .setContentImageUrl(userProfile.getProfileMedia() == null? null:userProfile.getProfileMedia().getMediaUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")
@@ -231,26 +222,38 @@ public class ProfileFragment extends BaseFragment {
                         .setAsFullWidthStyle(true)
                         .setSharingTitle("Share With");
 
-                branchUniversalObject.showShareSheet(getActivity(),
-                        linkProperties,
-                        shareSheetStyle,
-                        new Branch.BranchLinkShareListener() {
-                            @Override
-                            public void onShareLinkDialogLaunched() {
-                            }
-
-                            @Override
-                            public void onShareLinkDialogDismissed() {
-                            }
-
-                            @Override
-                            public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                            }
-
-                            @Override
-                            public void onChannelSelected(String channelName) {
-                            }
-                        });
+                branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
+                    @Override
+                    public void onLinkCreate(String url, BranchError error) {
+                        if (error == null) {
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                        }
+                    }
+                });
+//                branchUniversalObject.showShareSheet(getActivity(),
+//                        linkProperties,
+//                        shareSheetStyle,
+//                        new Branch.BranchLinkShareListener() {
+//                            @Override
+//                            public void onShareLinkDialogLaunched() {
+//                            }
+//
+//                            @Override
+//                            public void onShareLinkDialogDismissed() {
+//                            }
+//
+//                            @Override
+//                            public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+//                            }
+//
+//                            @Override
+//                            public void onChannelSelected(String channelName) {
+//                            }
+//                        });
             }
         });
         _detail.setOnClickListener(new View.OnClickListener() {

@@ -484,7 +484,7 @@
         <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
         <item name="android:progressDrawable">@null</item>
         <item name="android:minHeight">20.0dip</item>
-        <item name="android:thumb">@drawable/icon_seek_bar</item>
+        <item name="android:thumb">@null</item>
         <item name="android:thumbOffset">4dip</item>
     </style>
 isConnected<![CDATA[

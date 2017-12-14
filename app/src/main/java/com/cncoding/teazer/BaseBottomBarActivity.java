@@ -221,22 +221,22 @@ public class BaseBottomBarActivity extends BaseActivity
 
         getBranchDynamicLinks();
 
-        if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                if (index != -1)
-//                    switchTab(index);
-                try {
-                    Log.d("NOTIFYM", bundle.toString());
-                    String notification_type = bundle.getString("notification_type");
-                    String source_id = bundle.getString("source_id");
-                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//        if (getIntent().getExtras() != null) {
+//            Bundle bundle = getIntent().getExtras();
+//            if (bundle != null) {
+////                int index = bundle.getInt(TAB_INDEX);
+////                if (index != -1)
+////                    switchTab(index);
+//                try {
+//                    Log.d("NOTIFYM", bundle.toString());
+//                    String notification_type = bundle.getString("notification_type");
+//                    String source_id = bundle.getString("source_id");
+//                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
+//                } catch (NumberFormatException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     @Override
