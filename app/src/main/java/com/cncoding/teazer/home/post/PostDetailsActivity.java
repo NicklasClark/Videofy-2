@@ -447,6 +447,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 if (i < postDetails.getCategories().size() - 1)
                     categories.append(", ");
 //                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
+//                categories.append("<font color='"+postDetails.getCategories().get(i).getColor()+"'>"+postDetails.getCategories().get(i).getCategoryName()+"</font> ");
             }
 //            categoriesView.setText(Html.fromHtml(categories.toString()), TextView.BufferType.SPANNABLE);
             return categories.toString();
@@ -460,37 +461,35 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
                 @Override
                 public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                    try {
-                        switch (response.code()) {
-                            case 200:
-                                if (response.body().getReactions().size() > 0) {
-                                    postLoadErrorLayout.setVisibility(GONE);
-                                    is_next_page = response.body().isNextPage();
-                                    if (pageNumber == 1) postReactions.clear();
+                    try {switch (response.code()) {
+                        case 200:
+                            if (response.body().getReactions().size() > 0) {
+                                postLoadErrorLayout.setVisibility(GONE);
+                                is_next_page = response.body().isNextPage();
+                                if (pageNumber == 1) postReactions.clear();
 
-                                    postReactions.addAll(response.body().getReactions());
-    //                                    recyclerView.setVisibility(View.VISIBLE);
-                                    postReactionAdapter.notifyDataSetChanged();
-                                    if (postReactions.size() > 0) {
-                                        if (postReactions.size() >= 1) {
-                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 2) {
-                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                        }
-                                        if (postReactions.size() >= 3) {
-                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                        }
+                                postReactions.addAll(response.body().getReactions());
+//                                    recyclerView.setVisibility(View.VISIBLE);
+                                postReactionAdapter.notifyDataSetChanged();
+                                if (postReactions.size() > 0) {
+                                    if (postReactions.size() >= 1) {
+                                        setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
                                     }
-                                } else {
-                                    setNoReactions();
-                                    showNoReactionMessage();
+                                    if (postReactions.size() >= 2) {
+                                        setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                    }
+                                    if (postReactions.size() >= 3) {
+                                        setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                    }
                                 }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() + ": " + response.message());
-                                break;
-                        }
+                            } else {
+                                setNoReactions();
+                                showNoReactionMessage();
+                            }
+                            break;
+                        default:
+                            showErrorMessage("Error " + response.code() + ": " + response.message());
+                            break;}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -705,41 +704,40 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 if (page == 1)
                                     taggedUsersList.clear();
 
-                                taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                getTaggedUsers(page + 1);
-                                noTaggedUsers.setVisibility(GONE);
-                            }
-                            else if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                taggedUsersList.clear();
-                                noTaggedUsers.setVisibility(VISIBLE);
-                                //                                    new Handler().postDelayed(new Runnable() {
-                                //                                        @Override
-                                //                                        public void run() {
-                                //                                            horizontalListViewParent.setVisibility(GONE);
-                                //                                        }
-                                //                                    }, 2000);
+                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                    getTaggedUsers(page + 1);
+                                    noTaggedUsers.setVisibility(GONE);
+                                }
+                                else if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                    taggedUsersList.clear();
+                                    noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
+                                }
+                            } else {
+                                if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                    taggedUsersList.clear();
+                                    noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
+                                } else {
+                                    noTaggedUsers.setVisibility(GONE);
+                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                    taggedUserListView.getAdapter().notifyDataSetChanged();
+                                }
                             }
                         } else {
-                            if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                taggedUsersList.clear();
-                                noTaggedUsers.setVisibility(VISIBLE);
-                                //                                    new Handler().postDelayed(new Runnable() {
-                                //                                        @Override
-                                //                                        public void run() {
-                                //                                            horizontalListViewParent.setVisibility(GONE);
-                                //                                        }
-                                //                                    }, 2000);
-                            } else {
-                                noTaggedUsers.setVisibility(GONE);
-                                taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                taggedUserListView.getAdapter().notifyDataSetChanged();
-                            }
+                            Log.d("PostDetailActivity", getString( R.string.error_getting_tagged_users));
                         }
-                    } else {
-                        Toast.makeText(PostDetailsActivity.this, R.string.error_getting_tagged_users,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
+                    }catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -978,8 +976,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;

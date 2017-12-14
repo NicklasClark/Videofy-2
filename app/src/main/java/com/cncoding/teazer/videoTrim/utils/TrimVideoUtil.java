@@ -8,13 +8,11 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
 import com.cncoding.teazer.videoTrim.models.VideoInfo;
-import com.googlecode.mp4parser.authoring.Track;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
@@ -142,35 +139,35 @@ public class TrimVideoUtil {
         }
     }
 
-
-    private static double correctTimeToSyncSample(@NonNull Track track, double cutHere, boolean next) {
-        double[] timeOfSyncSamples = new double[track.getSyncSamples().length];
-        long currentSample = 0;
-        double currentTime = 0;
-        for (int i = 0; i < track.getSampleDurations().length; i++) {
-            long delta = track.getSampleDurations()[i];
-
-            if (Arrays.binarySearch(track.getSyncSamples(), currentSample + 1) >= 0) {
-                // samples always start with 1 but we start with zero therefore +1
-                timeOfSyncSamples[Arrays.binarySearch(track.getSyncSamples(), currentSample + 1)] = currentTime;
-            }
-            currentTime += (double) delta / (double) track.getTrackMetaData().getTimescale();
-            currentSample++;
-
-        }
-        double previous = 0;
-        for (double timeOfSyncSample : timeOfSyncSamples) {
-            if (timeOfSyncSample > cutHere) {
-                if (next) {
-                    return timeOfSyncSample;
-                } else {
-                    return previous;
-                }
-            }
-            previous = timeOfSyncSample;
-        }
-        return timeOfSyncSamples[timeOfSyncSamples.length - 1];
-    }
+//
+//    private static double correctTimeToSyncSample(@NonNull Track track, double cutHere, boolean next) {
+//        double[] timeOfSyncSamples = new double[track.getSyncSamples().length];
+//        long currentSample = 0;
+//        double currentTime = 0;
+//        for (int i = 0; i < track.getSampleDurations().length; i++) {
+//            long delta = track.getSampleDurations()[i];
+//
+//            if (Arrays.binarySearch(track.getSyncSamples(), currentSample + 1) >= 0) {
+//                // samples always start with 1 but we start with zero therefore +1
+//                timeOfSyncSamples[Arrays.binarySearch(track.getSyncSamples(), currentSample + 1)] = currentTime;
+//            }
+//            currentTime += (double) delta / (double) track.getTrackMetaData().getTimescale();
+//            currentSample++;
+//
+//        }
+//        double previous = 0;
+//        for (double timeOfSyncSample : timeOfSyncSamples) {
+//            if (timeOfSyncSample > cutHere) {
+//                if (next) {
+//                    return timeOfSyncSample;
+//                } else {
+//                    return previous;
+//                }
+//            }
+//            previous = timeOfSyncSample;
+//        }
+//        return timeOfSyncSamples[timeOfSyncSamples.length - 1];
+//    }
 
     public static String stringForTime(int timeMs) {
         int totalSeconds = timeMs / 1000;
