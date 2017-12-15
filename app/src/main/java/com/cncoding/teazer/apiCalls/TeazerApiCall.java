@@ -23,6 +23,7 @@ import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
+import com.cncoding.teazer.uploadvideo.VideoDetailsResultObject;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
@@ -366,6 +367,9 @@ import retrofit2.http.Query;
         @DELETE("/api/v1/friend/unfollow/{user_id}")
         Call<ResultObject> unfollowUser(@Path("user_id") int userId);
 
+        @DELETE("/api/v1/friend/cancel/join/request/{user_id}")
+        Call<ResultObject> cancelRequest(@Path("user_id") int userId);
+
 
         @POST("/api/v1/friend/join/request/by/userid/{user_id}")
         Call<ResultObject>followUser(@Path("user_id") int userId);
@@ -527,7 +531,7 @@ import retrofit2.http.Query;
          * */
         @Multipart
         @POST("/api/v1/post/create")
-        Call<ResultObject> uploadVideoToServer(
+        Call<VideoDetailsResultObject> uploadVideoToServer(
                 @Part MultipartBody.Part video,
                 @Part("title") String title,
                 @Part("location") String location,

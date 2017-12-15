@@ -865,7 +865,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
 //            @Override
 //            public void onLinkCreate(String url, BranchError error) {
-//                if (error == null) {
+//                if (error == null)    {
 //                    Log.i("MyApp", "got my Branch link to share: " + url);
 //                }
 //            }

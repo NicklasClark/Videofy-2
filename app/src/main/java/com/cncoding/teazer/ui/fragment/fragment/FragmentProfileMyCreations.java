@@ -112,9 +112,9 @@ public class FragmentProfileMyCreations extends Fragment {
             public void onResponse(Call<Pojos.Post.PostList> call, Response<Pojos.Post.PostList> response) {
 
                 if (response.code() == 200) {
-                    if (response.body().getPosts().size() == 0 || response.body().getPosts() == null) {
+                    if (response.body().getPosts() == null) {
                         alert1.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
+                       recyclerView.setVisibility(View.GONE);
                         progress_bar.setVisibility(View.GONE);
                     }
                     else {
@@ -122,6 +122,7 @@ public class FragmentProfileMyCreations extends Fragment {
                         list.addAll(response.body().getPosts());
                         profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list);
                         recyclerView.setAdapter(profileMyCreationAdapter);
+
                         if (next) {
                             page++;
                             getProfileVideos();

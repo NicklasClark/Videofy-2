@@ -153,8 +153,15 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+
                         if(viewHolder.action.getText().equals("Follow")) {
                             followUser(followerId, context, viewHolder,accounttype);
+                        }
+                        if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
+                        {
+                            cancelRequest(followerId, context, viewHolder,accounttype);
+
                         }
                     }
                 });
@@ -191,9 +198,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                 if (myself) {
 
-                            viewHolder.name.setTextColor( Color.parseColor("#333333"));
 
-                            viewHolder.action.setVisibility(View.INVISIBLE);
+                    viewHolder.name.setTextColor( Color.parseColor("#333333"));
+                    viewHolder.action.setVisibility(View.INVISIBLE);
                     usertype = "";
                 }
                 else {
@@ -268,9 +275,12 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                         if(viewHolder.action.getText().equals("Follow"))
                         {
-
-
                             followUser(followerId, context, viewHolder,accounttype);
+                        }
+                        if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
+                        {
+                            cancelRequest(followerId, context, viewHolder,accounttype);
+
                         }
                     }
                 });
@@ -326,6 +336,48 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             }
         });
     }
+
+
+
+    private void cancelRequest(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype) {
+
+        ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b) {
+
+                               setActionButtonText(context, viewHolder.action, R.string.follow);
+                                Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
+
+
+
+                        }
+                        else {
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
+
 
     @Override
     public int getItemCount() {

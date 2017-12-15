@@ -377,7 +377,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             });
                                 } else if (text.equals(context.getString(R.string.following))) {
 
-
                                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
                                     //dialogBuilder.setTitle("Confirmation");
                                     dialogBuilder.setMessage("Are you sure you want to Unfollow "+ holder2.notification.getHighlights().get(0) + "?");
@@ -492,43 +491,43 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 }
 
 
-//                                else if (text.equals(context.getString(R.string.requested))) {
-//                                    new AlertDialog.Builder(context)
-//                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
-//                                                    holder2.notification.getHighlights().get(0) + "?")
-//                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                    ApiCallingService.Friends.unfollowUser(holder2.notification.getMetaData().getSourceId(),
-//                                                            context).enqueue(new Callback<ResultObject>() {
-//                                                        @Override
-//                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-//                                                            if (response.code() == 200) {
-//                                                                if (response.body().getStatus()) {
-//                                                                    setActionButton(holder2.action, null,
-//                                                                            BUTTON_TYPE_FOLLOW);
-//                                                                }
-//                                                                else
-//                                                                    Log.d("CancelRequest", response.code()
-//                                                                            + " : " + response.body().getMessage());
-//                                                            }
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-//                                                            Log.d("FAIL - CancelRequest", t.getMessage());
-//                                                        }
-//                                                    });
-//                                                }
-//                                            })
-//                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                    dialogInterface.dismiss();
-//                                                }
-//                                            })
-//                                            .show();
-//                                }
+                                else if (text.equals(context.getString(R.string.requested))) {
+                                    new AlertDialog.Builder(context)
+                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
+                                                    holder2.notification.getHighlights().get(0) + "?")
+                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    ApiCallingService.Friends.cancelRequest(holder2.notification.getMetaData().getSourceId(),
+                                                            context).enqueue(new Callback<ResultObject>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                            if (response.code() == 200) {
+                                                                if (response.body().getStatus()) {
+                                                                    setActionButton(holder2.action, null,
+                                                                            BUTTON_TYPE_FOLLOW);
+                                                                }
+                                                                else
+                                                                    Log.d("CancelRequest", response.code()
+                                                                            + " : " + response.body().getMessage());
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                            Log.d("FAIL - CancelRequest", t.getMessage());
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
                                 break;
 
                             case R.id.decline:

@@ -39,7 +39,7 @@ public class InviteFriend extends AppCompatActivity {
     @BindView(R.id.teazersite)
     ProximaNovaRegularCheckedTextView teazersite;
     String url = "http://www.cnapplications.com";
-    String teazerLink="https://play.google.com/store/apps/details?id=com.cncoding.teazer&hl=en";
+    String teazerLink="https://teazer.app.link/d/WKSOqISORI";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class InviteFriend extends AppCompatActivity {
             public void onClick(View view) {
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.cncoding.teazer&hl=en"))
+                        .setContentUrl(Uri.parse("https://teazer.app.link/d/WKSOqISORI"))
                         .setContentTitle("Teazer")
                         .setContentDescription(
                                 "Hello").build();

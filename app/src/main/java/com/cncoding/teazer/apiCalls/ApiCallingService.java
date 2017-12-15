@@ -27,6 +27,7 @@ import com.cncoding.teazer.model.profile.updatepost.UpdatePostRequest;
 import com.cncoding.teazer.model.profile.updatepost.UpdatePostResultObject;
 import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
 import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
+import com.cncoding.teazer.uploadvideo.VideoDetailsResultObject;
 import com.cncoding.teazer.utilities.Pojos;
 import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
@@ -291,6 +292,10 @@ public class ApiCallingService {
             return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
+         public static Call<ResultObject> cancelRequest(int notificationId, Context context) {
+            return getFriendsService(context).cancelRequest(notificationId);
+        }
+
         /**
          * Call this service to get the my circle list
          * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.
@@ -551,9 +556,9 @@ public class ApiCallingService {
 
     public static class Posts {
 
-        public static Call<ResultObject> uploadVideo(MultipartBody.Part videoPartFile, String title, @NonNull String location,
-                                                     double latitude, double longitude,
-                                                     String tags, String categories, Context context) {
+        public static Call<VideoDetailsResultObject> uploadVideo(MultipartBody.Part videoPartFile, String title, @NonNull String location,
+                                                                 double latitude, double longitude,
+                                                                 String tags, String categories, Context context) {
             return getPostalService(context).uploadVideoToServer(videoPartFile, title, location, latitude, longitude, tags, categories);
         }
 

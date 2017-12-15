@@ -1,18 +1,26 @@
 package com.cncoding.teazer.services;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
+import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
+import com.cncoding.teazer.uploadvideo.VideoDetailsResultObject;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.facebook.share.ShareApi;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 
@@ -44,7 +52,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     private ResultReceiver receiver;
     private Bundle bundle;
 //    private int resultCode;
-    private Call<ResultObject> videoUploadCall;
+    private Call<VideoDetailsResultObject> videoUploadCall;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
         Intent intent = new Intent(context, VideoUploadService.class);
@@ -81,14 +89,21 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
                 if (!videoUploadCall.isExecuted())
-                    videoUploadCall.enqueue(new Callback<ResultObject>() {
+
+                    videoUploadCall.enqueue(new Callback<VideoDetailsResultObject>() {
                         @Override
-                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        public void onResponse(Call<VideoDetailsResultObject> call, Response<VideoDetailsResultObject> response) {
                             try {
                                 if (response.code() == 201) {
+                                   int postId= response.body().getPostDetails().getPostId();
+                                   String postTitle= response.body().getPostDetails().getTitle();
+                                   String postTumbUrl=response.body().getPostDetails().getMedias().get(0).getThumbUrl();
+                                   String postOwner=response.body().getPostDetails().getPostOwner().getUserName();
                                     onUploadFinish();
                                     finishVideoUploadSession(getApplicationContext());
-                                 //   String videoUrl=response.body().
+
+                                    sendBroadcast (postId,postTitle,postTumbUrl,postOwner);
+
 
                                 } else onUploadError(new Throwable(response.code() + " : " +response.message()));
                             } catch (Exception e) {
@@ -98,7 +113,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                         }
 
                         @Override
-                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                        public void onFailure(Call<VideoDetailsResultObject> call, Throwable t) {
                             t.printStackTrace();
                             onUploadError(t);
                         }
@@ -107,6 +122,14 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                 e.printStackTrace();
             }
         }
+    }
+    private void sendBroadcast (int postId,String postTitle,String postURL,String postOwner){
+        Intent intent = new Intent ("message");
+        intent.putExtra("PostID", String.valueOf(postId));
+        intent.putExtra("PostTitle", postTitle);
+        intent.putExtra("PostURL",postURL );
+        intent.putExtra("PostOwner", postOwner);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Override

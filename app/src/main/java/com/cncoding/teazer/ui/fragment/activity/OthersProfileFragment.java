@@ -168,7 +168,7 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
@@ -184,15 +184,19 @@ public class OthersProfileFragment extends BaseFragment {
 
                 if (_btnfollow.getText().equals("Follow")) {
 
+
                     followUser(followerfollowingid, context);
 
                 } else if (_btnfollow.getText().equals("Following")) {
 
+                    _btnfollow.setText("Follow");
                     unFollowUser(followerfollowingid, context);
+
 
                 } else if (_btnfollow.getText().equals("Requested")) {
 
-                    Toast.makeText(context, "You have already sent the request", Toast.LENGTH_SHORT).show();
+                    _btnfollow.setText("Follow");
+                    cancelRequest(followerfollowingid,context);
                 }
             }
         });
@@ -598,6 +602,51 @@ public class OthersProfileFragment extends BaseFragment {
         });
     }
 
+
+
+
+    public void cancelRequest(int userId, final Context context)
+
+    {
+        layout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b == true) {
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(context, "Your Request has been cancelled", Toast.LENGTH_LONG).show();
+                            _btnfollow.setText("Follow");
+
+                        } else {
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            _btnfollow.setText("Follow");
+                            Toast.makeText(context, "Your Request has already been cancelled", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                        layout.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                layout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
     public void unFollowUser(int userId, final Context context)
 
     {
@@ -614,7 +663,6 @@ public class OthersProfileFragment extends BaseFragment {
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
                             _btnfollow.setText("Follow");
-
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
@@ -718,7 +766,6 @@ public class OthersProfileFragment extends BaseFragment {
     public void openReportUser(final int blockuserId) {
         FragmentManager fm = getFragmentManager();
         ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
-        // SETS the target fragment for use later when sending results
         reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
         reportUserDialogFragment.show(fm, "fragment_report_post");
     }

@@ -61,7 +61,6 @@ public class FollowersListActivity extends BaseFragment{
     int otherFollowerpage=1;
     protected String previousTitle;
 
-
     public static FollowersListActivity newInstance(String id,String identifier) {
         FollowersListActivity followersListActivity = new FollowersListActivity();
 
@@ -139,7 +138,7 @@ public class FollowersListActivity extends BaseFragment{
                     try {
                         userfollowerlist.addAll(response.body().getFollowers());
                         boolean next=response.body().getNextPage();
-                        if (userfollowerlist == null || userfollowerlist.size() == 0) {
+                        if (userfollowerlist == null) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
@@ -150,6 +149,7 @@ public class FollowersListActivity extends BaseFragment{
                             if(next)
                             {
                                 userfollowerpage++;
+                                getUserfollowerList();
                             }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);

@@ -113,6 +113,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         {
                             followUser(followerId, context, viewHolder,accounttype);
                         }
+
+
+
                     }
                 });
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +196,11 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         if(viewHolder.action.getText().equals("Follow")) {
                             followUser(followerId, context, viewHolder,accounttype);
                         }
+                        if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
+                        {
+                            cancelRequest(followerId, context, viewHolder,accounttype);
+
+                        }
                     }
                 });
 
@@ -267,6 +275,42 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         });
     }
 
+
+
+    private void cancelRequest(final int userId, final Context context, final FollowingAdapter.ViewHolder viewHolder, final int accounttype) {
+
+        ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b) {
+
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                        }
+
+                        else {
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            Toast.makeText(context, "Your request has alread been cancelled", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         if(counter==100)
@@ -296,4 +340,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         public void viewOthersProfileFollowing(String id, String username, String type);
         public void viewUserProfile();
     }
+
+
+
 }
