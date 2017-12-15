@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,11 +19,14 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
-import com.cncoding.teazer.utilities.Pojos;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,8 +41,8 @@ import retrofit2.Response;
 
 public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCreationAdapter.ViewHolder> {
 
-    private ArrayList<Pojos.Post.PostDetails> list;
-    private ArrayList<Pojos.Post.PostReaction> reactiolist;
+    private ArrayList<PostDetails> list;
+    private ArrayList<PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
 
@@ -48,7 +50,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
 
-    public ProfileMyCreationAdapter(Context context, ArrayList<Pojos.Post.PostDetails> list) {
+    public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list) {
         this.context = context;
         this.list = list;
         listener = (myCreationListener) context;
@@ -63,7 +65,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     @Override
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
 
-        final Pojos.Post.PostDetails cont;
+        final PostDetails cont;
         final String videotitle;
         final int videopostId;
         final String thumb_url;
@@ -223,9 +225,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     }
 
     private void deleteVideos(int deleteId) {
-        ApiCallingService.Posts.deletePosts(deleteId, context).enqueue(new Callback<DeleteMyVideos>() {
+        ApiCallingService.Posts.deletePosts(deleteId, context).enqueue(new Callback<ResultObject>() {
             @Override
-            public void onResponse(Call<DeleteMyVideos> call, Response<DeleteMyVideos> response) {
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
                     if (response.code() == 200) {
                         boolean status = response.body().getStatus();
@@ -240,7 +242,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             }
 
             @Override
-            public void onFailure(Call<DeleteMyVideos> call, Throwable t) {
+            public void onFailure(Call<ResultObject> call, Throwable t) {
 
                 Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
             }
@@ -250,9 +252,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public void getPostReactionFour(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
             @Override
-            public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
+            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -264,7 +266,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                             viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
                             for (int i = 0; i < 3; i++) {
 
-                                Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                                MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
                                     switch (i) {
@@ -334,16 +336,16 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             }
 
             @Override
-            public void onFailure(Call<Pojos.Post.PostReactionsList> call, Throwable t) {
+            public void onFailure(Call<PostReactionsList> call, Throwable t) {
             }
         });
     }
 
     public void getPostReactionThree(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
             @Override
-            public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
+            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -354,7 +356,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                             for (int i = 0; i < reactiolist.size(); i++) {
 
-                                Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                                MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
                                     switch (i) {
@@ -433,7 +435,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 }
             }
             @Override
-            public void onFailure(Call<Pojos.Post.PostReactionsList> call, Throwable t) {
+            public void onFailure(Call<PostReactionsList> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -443,6 +445,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public interface myCreationListener {
 
-        public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
+        public void myCreationVideos(int i, PostDetails postDetails);
     }
 }

@@ -18,7 +18,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.base.Authorize;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,16 +126,16 @@ public class ForgotPasswordResetFragment extends AuthFragment {
         hideKeyboard(getParentActivity(), resetPasswordStatusView);
         if (!resetOtpView.getText().toString().isEmpty()) {
             if (resetNewPasswordView.getText().toString().equals(resetConfirmPasswordView.getText().toString())) {
-                Pojos.Authorize authorize;
+                Authorize authorize;
                 if (isEmail) {
-                    authorize = new Pojos.Authorize(
+                    authorize = new Authorize(
                             resetConfirmPasswordView.getText().toString(),
                             enteredText,
                             -1,
                             countryCode,
                             Integer.parseInt(resetOtpView.getText().toString()));
                 } else {
-                    authorize = new Pojos.Authorize(
+                    authorize = new Authorize(
                             resetConfirmPasswordView.getText().toString(),
                             null,
                             Long.parseLong(enteredText),

@@ -53,9 +53,8 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.videoTrim.TrimmerActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -81,8 +80,6 @@ import butterknife.OnClick;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.R.anim.fade_in;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
@@ -442,7 +439,7 @@ public class CameraActivity extends AppCompatActivity
         switch (whichUpload) {
             case VIDEO_UPLOAD:
                 performVideoUpload(this,
-                        new Pojos.UploadParams(
+                        new UploadParams(
                                 isGallery,
                                 videoPath,
                                 title,
@@ -455,7 +452,7 @@ public class CameraActivity extends AppCompatActivity
                 break;
             case REACTION_UPLOAD:
                 performReactionUpload(this,
-                        new Pojos.UploadParams(
+                        new UploadParams(
                                 isGallery,
                                 videoPath,
                                 title,
@@ -596,9 +593,10 @@ public class CameraActivity extends AppCompatActivity
 
     public void updateBackButton(@DrawableRes int resId) {
         if (resId != -1) {
-            upBtn.setVisibility(VISIBLE);
             upBtn.setImageResource(resId);
-        } else upBtn.setVisibility(GONE);
+        } else {
+            upBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+        }
     }
 
     @OnClick(R.id.up_btn) public void retakeVideo() {

@@ -1,16 +1,11 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +18,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowingAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.model.profile.following.ProfileMyFollowing;
-import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
-import com.cncoding.teazer.model.profile.othersfollowing.OthersFollowing;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.friends.FollowingsList;
+import com.cncoding.teazer.model.friends.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +34,8 @@ public class FollowingListActivities extends BaseFragment {
     private static final String ARG_ID ="FollowingId" ;
     private static final String ARG_IDENTIFIER ="identifier" ;
     Context context;
-    List<Following> list;
-    List<OtherUserFollowings> otherlist;
+    List<UserInfo> list;
+    List<UserInfo> otherlist;
     RecyclerView recyclerView;
     FollowingAdapter profileMyFollowingAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -116,9 +107,9 @@ public class FollowingListActivities extends BaseFragment {
 
     public void getUserfollowinglist() {
 
-        ApiCallingService.Friends.getMyFollowing(userfollowingpage, context).enqueue(new Callback<ProfileMyFollowing>() {
+        ApiCallingService.Friends.getMyFollowing(userfollowingpage, context).enqueue(new Callback<FollowingsList>() {
             @Override
-            public void onResponse(Call<ProfileMyFollowing> call, Response<ProfileMyFollowing> response) {
+            public void onResponse(Call<FollowingsList> call, Response<FollowingsList> response) {
                 if (response.code() == 200) {
 
                     try {
@@ -153,7 +144,7 @@ public class FollowingListActivities extends BaseFragment {
                 }
             }
             @Override
-            public void onFailure(Call<ProfileMyFollowing> call, Throwable t) {
+            public void onFailure(Call<FollowingsList> call, Throwable t) {
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -164,9 +155,9 @@ public class FollowingListActivities extends BaseFragment {
     public void getOthersFollowingList(final int userId) {
 
 
-        ApiCallingService.Friends.getFriendsFollowings(otherfollowingpage, userId, context).enqueue(new Callback<OthersFollowing>() {
+        ApiCallingService.Friends.getFriendsFollowings(otherfollowingpage, userId, context).enqueue(new Callback<FollowingsList>() {
             @Override
-            public void onResponse(Call<OthersFollowing> call, Response<OthersFollowing> response) {
+            public void onResponse(Call<FollowingsList> call, Response<FollowingsList> response) {
                 if (response.code() == 200) {
                     try {
                         boolean next=response.body().getNextPage();
@@ -204,7 +195,7 @@ public class FollowingListActivities extends BaseFragment {
                 progressBar.setVisibility(View.GONE);
             }
             @Override
-            public void onFailure(Call<OthersFollowing> call, Throwable t) {
+            public void onFailure(Call<FollowingsList> call, Throwable t) {
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);

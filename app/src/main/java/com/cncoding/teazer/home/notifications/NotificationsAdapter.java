@@ -30,9 +30,9 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.UniversalTextView;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.User.Notification;
-import com.cncoding.teazer.utilities.Pojos.User.NotificationsList;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.user.Notification;
+import com.cncoding.teazer.model.user.NotificationsList;
 
 import java.util.ArrayList;
 
@@ -43,10 +43,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
+import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Notification}
+ * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
  */
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

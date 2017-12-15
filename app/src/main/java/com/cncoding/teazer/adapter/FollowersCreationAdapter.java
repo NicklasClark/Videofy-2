@@ -1,7 +1,6 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -20,11 +19,10 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.profile.delete.DeleteMyVideos;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.model.profile.followerprofile.postvideos.Post;
-import com.cncoding.teazer.ui.fragment.activity.ProfileCreationVideos;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.post.PostReactionsList;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,20 +32,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
 /**
+ * 
  * Created by farazhabib on 11/11/17.
  */
 
 public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCreationAdapter.ViewHolder> {
 
-    private List<Pojos.Post.PostDetails> _list;
+    private List<PostDetails> _list;
     Context context;
-    private ArrayList<Pojos.Post.PostReaction> reactiolist;
+    private ArrayList<PostReaction> reactiolist;
     FollowerCreationListener listener;
 
-    public FollowersCreationAdapter(Context context, List<Pojos.Post.PostDetails> _list) {
+    public FollowersCreationAdapter(Context context, List<PostDetails> _list) {
         this.context = context;
         this._list = _list;
         listener = (FollowerCreationListener) context;
@@ -67,7 +64,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         try {
 
 
-            final Pojos.Post.PostDetails cont = _list.get(i);
+            final PostDetails cont = _list.get(i);
             final String videotitle = cont.getTitle();
             final int postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
@@ -216,9 +213,9 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
     public void getPostReaction(final FollowersCreationAdapter.ViewHolder viewHolder, int postId) {
         int page = 1;
-        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<Pojos.Post.PostReactionsList>() {
+        ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
             @Override
-            public void onResponse(Call<Pojos.Post.PostReactionsList> call, Response<Pojos.Post.PostReactionsList> response) {
+            public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
 
                 if (response.code() == 200) {
 
@@ -231,9 +228,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                         if (reactiolist.size() > 1) {
                             // int counter=reactions-3;
                             //  viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
-                            for (int i = 0; i < 1; i++)
-                            {
-                                Pojos.MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                            for (int i = 0; i < 1; i++) {
+                                MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
                                     switch (i) {
@@ -309,7 +305,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 }
             }
             @Override
-            public void onFailure (Call < Pojos.Post.PostReactionsList > call, Throwable t){
+            public void onFailure (Call < PostReactionsList > call, Throwable t){
             }
         });
     }
@@ -317,6 +313,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
     public interface FollowerCreationListener
 
     {
-        public void myCreationVideos(int i, Pojos.Post.PostDetails postDetails);
+        public void myCreationVideos(int i, PostDetails postDetails);
     }
 }

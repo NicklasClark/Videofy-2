@@ -18,8 +18,8 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
-import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
+import com.cncoding.teazer.model.discover.Videos;
+import com.cncoding.teazer.model.discover.VideosList;
 
 import java.util.ArrayList;
 

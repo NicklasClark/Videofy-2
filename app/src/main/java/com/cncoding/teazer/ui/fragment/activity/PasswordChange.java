@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.userProfile.SetPasswordRequest;
-import com.cncoding.teazer.model.profile.userProfile.UpdatePasswordRequest;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.user.SetPasswordRequest;
+import com.cncoding.teazer.model.user.UpdatePasswordRequest;
+import com.cncoding.teazer.model.user.UserProfile;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -147,13 +147,13 @@ public class PasswordChange extends AppCompatActivity {
 
     public void getProfileDetail() {
         currentPasswordLayout.setVisibility(View.GONE);
-        ApiCallingService.User.getUserProfile(this).enqueue(new Callback<Pojos.User.UserProfile>() {
+        ApiCallingService.User.getUserProfile(this).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 try {
-                    Pojos.User.UserProfile userProfile = response.body();
+                    UserProfile userProfile = response.body();
                     if (userProfile != null) {
-                        canChangePassword = userProfile.isCan_change_password();
+                        canChangePassword = userProfile.canChangePassword();
                         if (canChangePassword) {
                             currentPasswordLayout.setVisibility(View.VISIBLE);
                             oldPassword = getCurrentPassword(PasswordChange.this);
@@ -170,7 +170,7 @@ public class PasswordChange extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 t.printStackTrace();
             }
         });

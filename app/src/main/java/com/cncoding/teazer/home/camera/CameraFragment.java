@@ -59,13 +59,12 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.model.base.UploadParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,8 +84,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.disableView;
-import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class CameraFragment extends Fragment {
 
@@ -94,7 +91,7 @@ public class CameraFragment extends Fragment {
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     public static final int ACTION_START_UPLOAD_FRAGMENT = 21;
     public static final int ACTION_SHOW_GALLERY = 22;
-    public static final int ACTION_EXIT = 23;
+//    public static final int ACTION_EXIT = 23;
 
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
@@ -125,14 +122,12 @@ public class CameraFragment extends Fragment {
     }
 
     @BindView(R.id.camera_preview) AutoFitTextureView mTextureView;
-    @BindView(R.id.camera_record) FrameLayout mButtonVideo;
-    @BindView(R.id.camera_record_inner) AppCompatImageView recordBtnInner;
-    @BindView(R.id.camera_record_outer) AppCompatImageView recordBtnOuter;
-    //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
+    @BindView(R.id.camera_record) AppCompatImageView recordBtn;
     @BindView(R.id.camera_files) AppCompatImageView cameraFilesView;
     @BindView(R.id.camera_flip) AppCompatImageView cameraFlipView;
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
+//    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;
 
@@ -302,8 +297,10 @@ public class CameraFragment extends Fragment {
 
     @OnClick(R.id.camera_record) public void toggleRecording() {
         if (mIsRecordingVideo) {
-            stopRecordButtonAnimations();
-            stopRecordingVideo();
+            if (updatedTime > 3000) {
+                stopRecordButtonAnimations();
+                stopRecordingVideo();
+            }
         } else {
             animateRecordButton(activity);
             startRecordingVideo();
@@ -363,16 +360,14 @@ public class CameraFragment extends Fragment {
         cameraFilesView.setVisibility(View.GONE);
 //        cameraFlashView.setVisibility(View.GONE);
         cameraFlipView.setVisibility(View.GONE);
-        recordBtnInner.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_inner_pulse));
-        recordBtnOuter.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_outer_pulse));
+        recordBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.camera_inner_pulse));
     }
 
     private void stopRecordButtonAnimations() {
         cameraFilesView.setVisibility(View.VISIBLE);
 //        cameraFlashView.setVisibility(View.VISIBLE);
         cameraFlipView.setVisibility(View.VISIBLE);
-        recordBtnInner.clearAnimation();
-        recordBtnOuter.clearAnimation();
+        recordBtn.clearAnimation();
     }
 
     /**
@@ -845,26 +840,6 @@ public class CameraFragment extends Fragment {
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
 
             updatedTime = timeSwapBuff + timeInMilliseconds;
-
-            try {
-                //noinspection ConstantConditions
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (updatedTime < 3000 && mButtonVideo.isEnabled()) {
-                            disableView(recordBtnInner, true);
-                            disableView(mButtonVideo, true);
-                        } else {
-                            if (!mButtonVideo.isEnabled()) {
-                                enableView(recordBtnInner);
-                                enableView(mButtonVideo);
-                            }
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             int secs = (int) (updatedTime / 1000);
             int minutes = secs / 60;

@@ -17,10 +17,16 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+<<<<<<< HEAD
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.profile.reportuser.ReportUser;
+=======
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.user.ReportUser;
+>>>>>>> prem_dev
 
 import java.util.List;
 
@@ -35,6 +41,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 

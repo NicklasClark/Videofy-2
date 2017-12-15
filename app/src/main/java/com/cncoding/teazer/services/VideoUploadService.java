@@ -10,9 +10,9 @@ import android.support.annotation.Nullable;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
-import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
 import java.io.File;
 
@@ -44,7 +44,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     private ResultReceiver receiver;
     private Bundle bundle;
 //    private int resultCode;
-    private Call<ResultObject> videoUploadCall;
+    private Call<PostUploadResult> videoUploadCall;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
         Intent intent = new Intent(context, VideoUploadService.class);
@@ -81,9 +81,9 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
                 if (!videoUploadCall.isExecuted())
-                    videoUploadCall.enqueue(new Callback<ResultObject>() {
+                    videoUploadCall.enqueue(new Callback<PostUploadResult>() {
                         @Override
-                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
                             try {
                                 if (response.code() == 201) {
                                     onUploadFinish();
@@ -98,7 +98,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                         }
 
                         @Override
-                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                        public void onFailure(Call<PostUploadResult> call, Throwable t) {
                             t.printStackTrace();
                             onUploadError(t);
                         }

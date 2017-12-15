@@ -24,8 +24,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.utilities.GalleryUtil;
-import com.cncoding.teazer.utilities.Pojos.Authorize;
 
 import java.io.File;
 

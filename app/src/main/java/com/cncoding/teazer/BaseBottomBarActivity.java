@@ -1,5 +1,6 @@
 package com.cncoding.teazer;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -52,8 +53,11 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
-import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -61,9 +65,6 @@ import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -213,6 +214,7 @@ public class BaseBottomBarActivity extends BaseActivity
         });
         LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
         tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
@@ -559,7 +561,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onSubSearchInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
+                PostDetailsActivity.newInstance(this, postDetails,
+                        null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -702,7 +705,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 }, 4000);
 
                                 if(fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment)fragment).getHomePagePosts(1,false);
+                                    ((PostsListFragment)fragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:

@@ -17,9 +17,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ChangeCategoriesAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.followerprofile.Category;
-import com.cncoding.teazer.model.profile.followerprofile.PublicProfile;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.user.UpdateCategories;
+import com.cncoding.teazer.model.user.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 
 
 /**
+ * 
  * Created by farazhabib on 03/12/17.
  */
 
@@ -40,19 +42,15 @@ public class FragmentChangeCategories extends Fragment{
 
     Context context;
     static final String USER_PROFILE = "postdetails";
-    private ArrayList<Pojos.Category> categories;
+    private ArrayList<Category> categories;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     ChangeCategoriesAdapter adapter;
     PublicProfile userProfile;
-    ArrayList<Pojos.Category> usercategoryList;
+    ArrayList<Category> usercategoryList;
     @BindView(R.id.tags_categories_save)
     FloatingActionButton tags_categories_done;
     StringBuilder categoryId;
-
-
-
-
 
     public static FragmentChangeCategories newInstance() {
         FragmentChangeCategories fragment= new FragmentChangeCategories();
@@ -96,7 +94,7 @@ public class FragmentChangeCategories extends Fragment{
                        categoryId.append(",");
                    }
                }
-                Pojos.User.UpdateCategories categories= new Pojos.User.UpdateCategories(categoryId.toString());
+                UpdateCategories categories= new UpdateCategories(categoryId.toString());
                 updateCategories(categories);
 
 
@@ -119,10 +117,10 @@ public class FragmentChangeCategories extends Fragment{
 
     }
 
-    public void getCategories(final ArrayList<Pojos.Category> usercategoryList) {
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Pojos.Category>>() {
+    public void getCategories(final ArrayList<Category> usercategoryList) {
+        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
             @Override
-            public void onResponse(Call<ArrayList<Pojos.Category>> call, Response<ArrayList<Pojos.Category>> response) {
+            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         categories=response.body();
@@ -133,9 +131,8 @@ public class FragmentChangeCategories extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
                 Log.e("getCategories", t.getMessage());
-
             }
         });
     }
@@ -143,9 +140,9 @@ public class FragmentChangeCategories extends Fragment{
     public void getProfileInfo()
     {
 
-        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<Pojos.User.UserProfile>() {
+        ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<Pojos.User.UserProfile> call, Response<Pojos.User.UserProfile> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
 
                 try {
                     usercategoryList = response.body().getUserProfile().getCategories();
@@ -157,12 +154,12 @@ public class FragmentChangeCategories extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<Pojos.User.UserProfile> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 t.printStackTrace();
             }
         });
     }
-    public void updateCategories(Pojos.User.UpdateCategories categories)
+    public void updateCategories(UpdateCategories categories)
     {
 
         ApiCallingService.User.updateCategories(categories,context).enqueue(new Callback<ResultObject>() {

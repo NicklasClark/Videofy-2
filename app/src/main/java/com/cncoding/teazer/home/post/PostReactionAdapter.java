@@ -19,8 +19,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.MiniProfile;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostReaction;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -22,9 +22,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.utilities.AuthUtils;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.hbb20.CountryCodePicker;
@@ -248,7 +247,7 @@ public class LoginFragment extends AuthFragment {
         //setting padding
         float scale = getResources().getDisplayMetrics().density;
         int trbPadding = (int) (14*scale + 0.5f);
-        int leftPadding = (int) (0*scale + 0.5f);
+//        int leftPadding = (int) (0*scale + 0.5f);
         usernameView.setPadding(0, trbPadding, trbPadding, trbPadding);
 
         usernameView.setHint(R.string.phone_number);
@@ -290,7 +289,7 @@ public class LoginFragment extends AuthFragment {
     @OnClick(R.id.already_have_otp) public void alreadyHaveOtp() {
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
         if (!username.isEmpty() && TextUtils.isDigitsOnly(username)) {
-            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, new Pojos.Authorize(Long.parseLong(username), countryCode));
+            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, new Authorize(Long.parseLong(username), countryCode));
         } else {
             setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
             Snackbar.make(usernameView, R.string.enter_phone_number, Snackbar.LENGTH_SHORT)
@@ -306,7 +305,7 @@ public class LoginFragment extends AuthFragment {
         if (AuthUtils.isPasswordValid(passwordView)) {
             loginBtn.setEnabled(false);
             startProgressBar();
-            final Pojos.Authorize authorize = new Pojos.Authorize(
+            final Authorize authorize = new Authorize(
                     getFcmToken(context),
                     getDeviceId(context),
                     DEVICE_TYPE_ANDROID,

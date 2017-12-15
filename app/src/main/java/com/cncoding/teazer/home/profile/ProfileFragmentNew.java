@@ -29,11 +29,11 @@ import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 
 /**
+ *
  * Created by farazhabib on 18/11/17.
  */
 
 public class ProfileFragmentNew extends BaseFragment {
-
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

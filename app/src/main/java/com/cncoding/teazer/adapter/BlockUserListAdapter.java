@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
-import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
+import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.model.user.BlockedUser;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
 import java.util.List;
@@ -25,6 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ *
  * Created by farazhabib on 15/11/17.
  */
 
@@ -93,9 +94,9 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
     }
 
     public void unBlock(int userId, int status, final BlockUserListAdapter.ViewHolder viewHolder) {
-        ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<BlockUnBlockUser>() {
+        ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<ResultObject>() {
             @Override
-            public void onResponse(Call<BlockUnBlockUser> call, Response<BlockUnBlockUser> response) {
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
 
                     try {
                         boolean b = response.body().getStatus();
@@ -119,7 +120,7 @@ public class BlockUserListAdapter extends RecyclerView.Adapter<BlockUserListAdap
                     }
             }
             @Override
-            public void onFailure(Call<BlockUnBlockUser> call, Throwable t) {
+            public void onFailure(Call<ResultObject> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
                 ((BlockUserList)context).InVisibleVisibile();
             }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.model.base.Category;
 
 import java.util.ArrayList;
 

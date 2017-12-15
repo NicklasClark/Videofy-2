@@ -23,10 +23,9 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.Friends.CircleList;
-import com.cncoding.teazer.utilities.Pojos.MiniProfile;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.friends.CircleList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -182,7 +181,7 @@ public class TagsAndCategoryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
                 t.printStackTrace();
                 progressBar.setVisibility(View.GONE);
             }

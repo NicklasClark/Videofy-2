@@ -20,8 +20,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PostDetails postDetails = posts.get(position);
-        Pojos.MiniProfile postOwner = postDetails.getPostOwner();
+        MiniProfile postOwner = postDetails.getPostOwner();
 
         if (dimensionSparseArray.get(position) != 0) {
             holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);

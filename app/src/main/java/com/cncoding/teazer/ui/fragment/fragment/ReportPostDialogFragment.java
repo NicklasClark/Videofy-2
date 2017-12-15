@@ -17,10 +17,16 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+<<<<<<< HEAD
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostRequest;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+=======
+import com.cncoding.teazer.model.post.ReportPost;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+>>>>>>> prem_dev
 
 import java.util.List;
 
@@ -135,7 +141,11 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void reportPostServiceCall(String reportRemark) {
 
+<<<<<<< HEAD
         ApiCallingService.Posts.reportPost(new ReportPostRequest(postId, selectedReportId, reportRemark), getContext()).enqueue(new Callback<ResultObject>() {
+=======
+        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId), getContext()).enqueue(new Callback<ResultObject>() {
+>>>>>>> prem_dev
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {

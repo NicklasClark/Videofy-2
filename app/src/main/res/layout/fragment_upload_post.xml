@@ -85,7 +85,7 @@
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
                     android:id="@+id/video_upload_title"
-                    android:hint="@string/title"
+                    android:hint="@string/react_title"
                     android:maxLength="180"
                     android:inputType="textCapSentences"
                     android:backgroundTint="#dddddd"
@@ -207,8 +207,6 @@
                 android:paddingEnd="@dimen/padding_thin"
                 android:textColor="@color/colorSecondary_text"
                 android:textSize="@dimen/text_size_content"
-
-
                 android:gravity="center_vertical"/>
 
             <TextView

@@ -12,9 +12,14 @@ import android.widget.EditText;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostSubtitleAdapter;
+<<<<<<< HEAD
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+=======
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+>>>>>>> prem_dev
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

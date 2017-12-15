@@ -21,9 +21,8 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
-import com.cncoding.teazer.utilities.Pojos.MiniProfile;
-import com.cncoding.teazer.utilities.Pojos.User.Notification;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.discover.Videos;
 
 import java.util.ArrayList;
 
@@ -33,15 +32,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PRIVATE;
+import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOW;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOWING;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_REQUESTED;
-import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PRIVATE;
-import static com.cncoding.teazer.utilities.Pojos.ACCOUNT_TYPE_PUBLIC;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Notification}
+ * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
  */
 public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

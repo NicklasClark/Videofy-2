@@ -3,7 +3,6 @@ package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,27 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.BlockUserListAdapter;
 import com.cncoding.teazer.adapter.DeactivateAccountUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateAccountRequest;
-import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateReasonList;
-import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
-import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
-import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
+import com.cncoding.teazer.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.model.application.DeactivateTypes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,7 +61,7 @@ public class FragmentDeactivateAccount extends Fragment {
 
     @BindView(R.id.deactivateAccount)
     Button deactivateAccount;
-    List<DeactivateReasonList> list;
+    List<DeactivateTypes> list;
     RecyclerView recyclerView;
     DeactivateAccountUserAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -144,10 +135,10 @@ public class FragmentDeactivateAccount extends Fragment {
     }
 
     public void getDeactivationResonList() {
-        ApiCallingService.Application.getDeactivationTypesList().enqueue(new Callback<List<DeactivateReasonList>>() {
+        ApiCallingService.Application.getDeactivationTypesList().enqueue(new Callback<List<DeactivateTypes>>() {
 
             @Override
-            public void onResponse(Call<List<DeactivateReasonList>> call, Response<List<DeactivateReasonList>> response) {
+            public void onResponse(Call<List<DeactivateTypes>> call, Response<List<DeactivateTypes>> response) {
 
                 if (response.code() == 200) {
                     try {
@@ -169,7 +160,7 @@ public class FragmentDeactivateAccount extends Fragment {
 
 
             @Override
-            public void onFailure(Call<List<DeactivateReasonList>> call, Throwable t) {
+            public void onFailure(Call<List<DeactivateTypes>> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }

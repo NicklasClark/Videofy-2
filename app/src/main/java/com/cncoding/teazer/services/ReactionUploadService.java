@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 
 import java.io.File;
 
@@ -74,9 +74,9 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
 
                 ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
                         getApplicationContext(), uploadParams.getTitle())
-                        .enqueue(new Callback<ResultObject>() {
+                        .enqueue(new Callback<ReactionUploadResult>() {
                             @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            public void onResponse(Call<ReactionUploadResult> call, Response<ReactionUploadResult> response) {
 //                                resultCode = response.code();
                                 try {
                                     if (response.code() == 201) {
@@ -90,7 +90,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                             }
 
                             @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
+                            public void onFailure(Call<ReactionUploadResult> call, Throwable t) {
                                 t.printStackTrace();
                                 onUploadError(t);
                             }

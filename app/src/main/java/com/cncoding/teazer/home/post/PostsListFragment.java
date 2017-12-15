@@ -1,13 +1,16 @@
 package com.cncoding.teazer.home.post;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -16,8 +19,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.Post.PostList;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 
 import java.util.ArrayList;
 
@@ -27,10 +30,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostsListFragment extends BaseFragment {
+import static android.view.KeyEvent.ACTION_DOWN;
+import static android.view.KeyEvent.KEYCODE_VOLUME_DOWN;
+import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
+
+public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
@@ -66,6 +73,7 @@ public class PostsListFragment extends BaseFragment {
         postListAdapter = new PostsListAdapter(postList, getContext());
         recyclerView.setAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
+        recyclerView.setOnKeyListener(this);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
@@ -81,14 +89,45 @@ public class PostsListFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (postListCall != null)
-                    postListCall.cancel();
-                getHomePagePosts(1, true);
-                scrollListener.resetState();
+                refreshPosts();
             }
         });
 
         return rootView;
+    }
+
+    private void refreshPosts() {
+//        if (postListCall != null)
+//            postListCall.cancel();
+        getHomePagePosts(1, true);
+        scrollListener.resetState();
+    }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+        try {
+            if (keyEvent.getAction() == ACTION_DOWN) {
+                switch (keyCode) {
+                    case KEYCODE_VOLUME_DOWN:
+                        recyclerView.smoothScrollBy(0, (int) recyclerView.getChildAt(recyclerView.getChildCount() - 2).getY(),
+                                new DecelerateInterpolator());
+                        return true;
+                    case KEYCODE_VOLUME_UP:
+                        int[] positions = new int[2];
+                        if (((StaggeredGridLayoutManager) recyclerView.getLayoutManager())
+                                .findFirstCompletelyVisibleItemPositions(positions)[0] == 0)
+                            refreshPosts();
+                        else
+                            recyclerView.smoothScrollBy(0, -((int) recyclerView.getChildAt(recyclerView.getChildCount() - 1).getY()),
+                                new DecelerateInterpolator());
+                        return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 //    @Override
@@ -101,11 +140,13 @@ public class PostsListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (postList != null && !isRefreshing) {
-            if (postList.isEmpty())
+            if (postList.isEmpty()) {
                 getHomePagePosts(1, false);
-            else {
+                return;
+            } else {
                 recyclerView.getAdapter().notifyDataSetChanged();
                 dismissProgressBar();
+                return;
             }
         }
         else {
@@ -117,15 +158,19 @@ public class PostsListFragment extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else
+            } else {
                 postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+                return;
+            }
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
         }
-//        getParentActivity().showAppBar();
+
+        getHomePagePosts(1, false);
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
+        if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
         progressBar.setVisibility(View.VISIBLE);
 
         postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
@@ -157,8 +202,10 @@ public class PostsListFragment extends BaseFragment {
                                 showErrorMessage("Error " + response.code() + " : " + response.message());
                                 break;
                         }
+                        dismissRefreshView();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        dismissRefreshView();
                     }
                     dismissProgressBar();
                 }
@@ -171,6 +218,16 @@ public class PostsListFragment extends BaseFragment {
                     postLoadErrorTextView.setText(errorString);
                 }
 
+                private void dismissRefreshView() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isRefreshing)
+                                swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }, 1000);
+                }
+
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
                     if (isAdded()) {
@@ -178,12 +235,11 @@ public class PostsListFragment extends BaseFragment {
                             showErrorMessage("No internet connection found!");
                         else
                             showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
+                        dismissRefreshView();
                     }
                 }
             });
 
-        if (isRefreshing)
-            swipeRefreshLayout.setRefreshing(false);
     }
 
     public void dismissProgressBar() {

@@ -71,7 +71,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -80,8 +79,8 @@
         </activity>
         <activity
             android:name=".SplashScreen"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,33 +89,21 @@
             </intent-filter>
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data
-                    android:host="open"
-                    android:scheme="teazerapp" />
-
+                <data android:scheme="teazerapp" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
         <!-- Branch init -->
-        <meta-data
-            android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_afuHy4HvJC2TwCTtBW7KvppewCbaMrB5" />
-        <meta-data
-            android:name="io.branch.sdk.BranchKey.test"
-            android:value="key_test_acsIC2SrRt7IzDJtLfklaomeAAeoNqMm" />
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_afuHy4HvJC2TwCTtBW7KvppewCbaMrB5" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_acsIC2SrRt7IzDJtLfklaomeAAeoNqMm" />
 
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
-        <meta-data
-            android:name="io.branch.sdk.TestMode"
-            android:value="true" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
         <!-- Branch install referrer tracking -->
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true"
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -142,11 +129,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme"
             android:windowSoftInputMode="adjustPan">
+
             <intent-filter>
                 <data android:scheme="teazerapp" />
-
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -173,6 +159,13 @@
                 <data
                     android:host="teazer.test-app.link"
                     android:scheme="https" />
+
+                <data
+                    android:host="teazer.test-app.link"
+                    android:scheme="http" />
+                <data
+                    android:host="teazer.test-app.link"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="launch_activity" />
@@ -188,7 +181,7 @@
             android:name=".home.camera.CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/MyCustomTextAppearance"
+            android:theme="@style/CameraTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.fragment.activity.Settings"
@@ -294,7 +287,7 @@
 
         <activity android:name=".ui.fragment.activity.WebViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DetailAppTheme"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
