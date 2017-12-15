@@ -265,8 +265,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 //                        .start(EditProfile.this);
 
 
-                CropImage.activity(Uri.parse(userProfileUrl))
-                        .start(EditProfile.this);
+//                CropImage.activity(Uri.parse(userProfileUrl))
+//                        .start(EditProfile.this);
 
                 //showPictureDialog();
 
@@ -303,14 +303,16 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Uri resultUri = result.getUri();
                // cropImageView.setImageUriAsync(resultUri);
 
-                Picasso.with(EditProfile.this)
-                        .load(resultUri)
-                        .into(profile_image);
+//                Picasso.with(EditProfile.this)
+//                        .load(resultUri)
+//                        .into(profile_image);
                 try {
 
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), resultUri);
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+
                     Blurry.with(EditProfile.this).from(scaledBitmap).into(bgImage);
+                    profile_image.setImageBitmap(scaledBitmap);
 
 
                     byte[] bte = bitmaptoByte(scaledBitmap);
@@ -377,7 +379,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 editor.putString("MYIMAGES", r.getUri().toString());
                 editor.apply();
 
-                File profileImage = new File(r.getPath());
+                //File profileImage = new File(r.getPath());
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);

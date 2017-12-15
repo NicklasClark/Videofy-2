@@ -28,7 +28,6 @@
                 android:id="@+id/demoimage"
                 android:layout_width="match_parent"
                 android:scaleType="centerCrop"
-                android:background="@drawable/material_flat"
                 android:layout_height="280dp" />
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -101,12 +100,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="14dp"
-
                     android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-
-                    android:background="@drawable/bg_circle_white_outline"
-                    >
+                    android:gravity="center_vertical">
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
                         android:id="@+id/userReactionImage"
                         android:layout_width="24dp"
