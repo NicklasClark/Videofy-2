@@ -1,7 +1,7 @@
 package com.cncoding.teazer.uploadvideo;
 
-import com.cncoding.teazer.model.profile.updatepost.Media;
-import com.cncoding.teazer.utilities.Pojos;
+import com.cncoding.teazer.model.base.CheckIn;
+import com.cncoding.teazer.model.base.Medias;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -51,10 +51,10 @@ public class PostDetails {
     private String createdAt;
     @SerializedName("check_in")
     @Expose
-    private Pojos.CheckIn checkIn;
+    private CheckIn checkIn;
     @SerializedName("medias")
     @Expose
-    private List<Media> medias = null;
+    private List<Medias> medias = null;
     @SerializedName("tagged_users")
     @Expose
     private List<TaggedUser> taggedUsers = null;
@@ -161,19 +161,19 @@ public class PostDetails {
         this.createdAt = createdAt;
     }
 
-    public Pojos.CheckIn getCheckIn() {
+    public CheckIn getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Pojos.CheckIn checkIn) {
+    public void setCheckIn(CheckIn checkIn) {
         this.checkIn = checkIn;
     }
 
-    public List<Media> getMedias() {
+    public List<Medias> getMedias() {
         return medias;
     }
 
-    public void setMedias(List<Media> medias) {
+    public void setMedias(List<Medias> medias) {
         this.medias = medias;
     }
 
