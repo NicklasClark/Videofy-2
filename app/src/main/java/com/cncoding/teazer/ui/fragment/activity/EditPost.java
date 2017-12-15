@@ -16,8 +16,9 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesAdapter;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.fragment.EditPostFragment;
-import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -35,8 +36,7 @@ import static android.R.anim.fade_out;
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
         TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
         NearbyPlacesAdapter.NearbyPlacesInteractionListener, GoogleApiClient.OnConnectionFailedListener {
-
-
+    
     private Context context;
     EditPostFragment editPostFragment;
     private GoogleApiClient googleApiClient;
@@ -52,7 +52,7 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
 
 
         Intent intent=getIntent();
-        Pojos.Post.PostDetails postDetails=intent.getExtras().getParcelable("PostDetail");
+        PostDetails postDetails=intent.getExtras().getParcelable("PostDetail");
         editPostFragment=EditPostFragment.newInstance(postDetails);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -169,7 +169,10 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
     }
 
     @Override
-    public void onCameraInteraction(int action, Pojos.UploadParams uploadParams) {
+    public void onCurrentLocationClick() {
+    }
 
+    @Override
+    public void onCameraInteraction(int action, UploadParams uploadParams) {
     }
 }

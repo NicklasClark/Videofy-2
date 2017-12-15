@@ -28,75 +28,74 @@
             android:layout_alignParentTop="true"
             tools:ignore="RelativeOverlap" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:layout_alignParentEnd="true"
-            android:background="@android:color/black"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             android:minWidth="120dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/camera_files"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerVertical="true"
+                android:padding="@dimen/padding_double"
                 android:contentDescription="@string/show_videos_on_device"
                 android:foreground="@drawable/ripple_light_circle"
-                android:padding="@dimen/padding_default"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/padding_half"
                 app:srcCompat="@drawable/ic_video_files" />
 
-            <FrameLayout
-                android:id="@+id/camera_record"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_centerInParent="true"
-                android:foreground="@drawable/ripple_light_circle">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/camera_record_outer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/padding_double"
-                    android:contentDescription="@string/record_video"
-                    app:srcCompat="@drawable/ic_record_outer" />
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/camera_record_inner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/record_video"
-                    app:srcCompat="@drawable/ic_record_inner" />
-
-                <com.cncoding.teazer.customViews.ProximaNovaRegularChronometer
-                    android:id="@+id/chronometer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_content_big"
-                    android:visibility="invisible" />
-
-            </FrameLayout>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/camera_gif"
-                android:visibility="gone"
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:id="@+id/video_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
+                android:padding="4dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_content" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/camera_record"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:contentDescription="@string/record_video"
+                app:srcCompat="@drawable/ic_record" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/camera_flip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_double"
                 android:contentDescription="@string/flip_camera"
                 android:foreground="@drawable/ripple_light_circle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/padding_half"
-                app:srcCompat="@drawable/ic_gif" />
+                app:srcCompat="@drawable/ic_rotate" />
 
-        </RelativeLayout>
+            <!--                <com.cncoding.teazer.customViews.ProximaNovaRegularChronometer
+                                android:id="@+id/chronometer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/text_size_content_big"
+                                android:visibility="invisible" />-->
+
+            <!--            <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/camera_gif"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding_half"
+                            android:contentDescription="@string/flip_camera"
+                            android:foreground="@drawable/ripple_light_circle"
+                            android:padding="@dimen/padding_default"
+                            app:srcCompat="@drawable/ic_gif" />-->
+
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/camera_flash"
@@ -104,22 +103,12 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_flash_off"
             android:foreground="@drawable/ripple_light_circle"
-            android:layout_marginStart="@dimen/padding_half"
-            android:layout_below="@+id/camera_flip"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
             android:padding="@dimen/padding_default"
             android:contentDescription="@string/camera_flash"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/camera_flip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="@dimen/padding_half"
-            android:contentDescription="@string/flip_camera"
-            android:foreground="@drawable/ripple_light_circle"
-            android:padding="@dimen/padding_default"
-            app:srcCompat="@drawable/ic_rotate" />
 
     </RelativeLayout>
 

@@ -33,7 +33,7 @@
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:layout_marginTop="3dp"
-            app:srcCompat="@drawable/ic_arrow_back_white"
+            app:srcCompat="@drawable/ic_clear_white_24dp"
             android:foreground="@drawable/ripple_dark"
             android:visibility="invisible"
             android:scaleType="center"

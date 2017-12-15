@@ -149,7 +149,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     String selectedTagsToShow = null;
     private boolean isRequestingLocationUpdates;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location currentLocation;
+    public Location currentLocation;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private SelectedPlace selectedPlace;
@@ -619,13 +619,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private void checkAction(String type, ProximaNovaRegularCheckedTextView view) {
         if (!view.isChecked()) {
             view.setChecked(true);
-
-            view.setCompoundDrawablesWithIntrinsicBounds(type.equals("facebook") ? R.drawable.ic_facebook : R.drawable.ic_twitter, 0, R.drawable.ic_tick_circle_large, 0);
+            view.setCompoundDrawablesWithIntrinsicBounds(type.equals("facebook") ? R.drawable.ic_facebook
+                            : R.drawable.ic_twitter,
+                    0, R.drawable.btn_checked, 0);
         } else {
             view.setChecked(false);
             view.setCompoundDrawablesWithIntrinsicBounds(type.equals("facebook") ? R.drawable.ic_facebook :
                             R.drawable.ic_twitter,
-                    0, R.drawable.ic_unchecked, 0);
+                    0, R.drawable.btn_unchecked, 0);
         }
     }
 
@@ -707,7 +708,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(null);
-                            uploadCategoriesBtn.clearFocus();
+//                            uploadCategoriesBtn.clearFocus();
                         }
                     }, 200);
                 else

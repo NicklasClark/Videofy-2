@@ -13,11 +13,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
-import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.uploadvideo.VideoDetailsResultObject;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -52,7 +52,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     private ResultReceiver receiver;
     private Bundle bundle;
 //    private int resultCode;
-    private Call<VideoDetailsResultObject> videoUploadCall;
+    private Call<PostUploadResult> videoUploadCall;
 
     public static void launchVideoUploadService(Context context, UploadParams uploadParams, VideoUploadReceiver videoUploadReceiver) {
         Intent intent = new Intent(context, VideoUploadService.class);
@@ -89,10 +89,9 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
                 if (!videoUploadCall.isExecuted())
-
-                    videoUploadCall.enqueue(new Callback<VideoDetailsResultObject>() {
+                    videoUploadCall.enqueue(new Callback<PostUploadResult>() {
                         @Override
-                        public void onResponse(Call<VideoDetailsResultObject> call, Response<VideoDetailsResultObject> response) {
+                        public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
                             try {
                                 if (response.code() == 201) {
                                    int postId= response.body().getPostDetails().getPostId();
@@ -113,7 +112,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                         }
 
                         @Override
-                        public void onFailure(Call<VideoDetailsResultObject> call, Throwable t) {
+                        public void onFailure(Call<PostUploadResult> call, Throwable t) {
                             t.printStackTrace();
                             onUploadError(t);
                         }

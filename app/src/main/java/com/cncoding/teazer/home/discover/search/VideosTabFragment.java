@@ -16,9 +16,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.utilities.Pojos.Discover.Videos;
-import com.cncoding.teazer.utilities.Pojos.Discover.VideosList;
+import com.cncoding.teazer.model.discover.Videos;
+import com.cncoding.teazer.model.discover.VideosList;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,8 @@ public class VideosTabFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.no_posts) ProximaNovaBoldTextView noPosts;
+    @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
+    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private Call<VideosList> videosListCall;
     private ArrayList<Videos> videosList;
@@ -99,6 +101,7 @@ public class VideosTabFragment extends BaseFragment {
         } else {
             noPosts.setVisibility(View.VISIBLE);
             noPosts.setText(R.string.search_for_videos);
+            noPosts2.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -111,6 +114,7 @@ public class VideosTabFragment extends BaseFragment {
         } else {
             noPosts.setVisibility(View.VISIBLE);
             noPosts.setText(R.string.search_for_videos);
+            noPosts2.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -133,6 +137,7 @@ public class VideosTabFragment extends BaseFragment {
                                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                                 noPosts.setVisibility(View.GONE);
                                 videosList.clear();
+                                noPosts2.setVisibility(View.GONE);
                                 recyclerView.getRecycledViewPool().clear();
                                 videosList.addAll(response.body().getVideos());
                                 adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this, true, null, videosList);
@@ -143,6 +148,7 @@ public class VideosTabFragment extends BaseFragment {
                                     swipeRefreshLayout.setVisibility(View.GONE);
                                     noPosts.setText(R.string.no_videos_match_your_search_criteria);
                                     noPosts.setVisibility(View.VISIBLE);
+                                    noPosts2.setVisibility(View.INVISIBLE);
                                 }
                             }
                         } else {

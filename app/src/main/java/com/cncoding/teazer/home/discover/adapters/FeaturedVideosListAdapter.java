@@ -20,8 +20,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.ArrayList;
 
@@ -44,9 +44,9 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     private SparseIntArray dimensionSparseArray;
     private final ArrayList<PostDetails> featuredVideosArrayList;
     private final Context context;
-    private OnSearchInteractionListener mListener;
+    private OnDiscoverInteractionListener mListener;
 
-    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context, OnSearchInteractionListener mListener) {
+    public FeaturedVideosListAdapter(ArrayList<PostDetails> featuredVideosArrayList, Context context, OnDiscoverInteractionListener mListener) {
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
         this.mListener = mListener;
@@ -97,6 +97,13 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         holder.views.setText(views);
 
         Glide.with(context)
+                .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
+                        holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .placeholder(R.drawable.ic_user_male_dp_small)
+                .crossFade()
+                .into(holder.dp);
+
+        Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
                 .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
@@ -116,35 +123,28 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
                         holder.layout.getLayoutParams().height = height;
 
                         dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
+
                         holder.layout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 })
                 .into(holder.thumbnail);
 
-        Glide.with(context)
-                .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
-                        holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .into(holder.dp);
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.root_layout:
-                        mListener.onSearchInteraction(ACTION_VIEW_POST, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_POST, null, null,
+                                holder.postDetails);
                         break;
                     case R.id.dp:
-                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails);
                         break;
                     case R.id.name:
-                        mListener.onSearchInteraction(ACTION_VIEW_PROFILE, null, null,
-                                holder.postDetails, null);
+                        mListener.onDiscoverInteraction(ACTION_VIEW_PROFILE, null, null,
+                                holder.postDetails);
                         break;
                     default:
                         break;

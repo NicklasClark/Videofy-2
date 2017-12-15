@@ -15,6 +15,9 @@ public class ReportUser {
     @SerializedName("report_type_id")
     @Expose
     private Integer reportTypeId;
+    @SerializedName("other_reason")
+    @Expose
+    private String reportRemarks;
 
     public Integer getUserId() {
         return userId;
@@ -32,8 +35,17 @@ public class ReportUser {
         this.reportTypeId = reportTypeId;
     }
 
-    public ReportUser(Integer userId, Integer reportTypeId) {
+    public ReportUser(Integer userId, Integer reportTypeId, String reportRemarks) {
         this.userId = userId;
         this.reportTypeId = reportTypeId;
+        this.reportRemarks = reportRemarks;
+    }
+
+    public String getReportRemarks() {
+        return reportRemarks;
+    }
+
+    public void setReportRemarks(String reportRemarks) {
+        this.reportRemarks = reportRemarks;
     }
 }

@@ -157,7 +157,7 @@
     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
         android:id="@+id/camera_btn"
         android:layout_width="50dp"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:text="@string/plus"

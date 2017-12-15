@@ -3,7 +3,7 @@
     android:id="@+id/tags_item_layout"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    android:foreground="@drawable/ripple_dark_no_rounded">
+    android:foreground="@drawable/ripple_semi_dark_no_rounded">
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
         android:id="@+id/chip"

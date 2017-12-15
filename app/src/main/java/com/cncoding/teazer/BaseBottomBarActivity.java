@@ -1,6 +1,6 @@
 package com.cncoding.teazer;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -49,7 +49,7 @@ import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
-import com.cncoding.teazer.home.discover.DiscoverFragment.OnSearchInteractionListener;
+import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.home.discover.SubDiscoverFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter.OnSubSearchInteractionListener;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingListInteractionListener;
@@ -61,8 +61,11 @@ import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionLi
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
-import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
@@ -71,9 +74,6 @@ import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
@@ -136,7 +136,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Post related listeners
         OnPostAdapterInteractionListener, OnInterestsInteractionListener,
 //    Discover page listeners
-        OnDiscoverSearchInteractionListener, OnSearchInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
+        OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
         OnNotificationsInteractionListener,
 //    Profile listeners
@@ -193,16 +193,6 @@ public class BaseBottomBarActivity extends BaseActivity
         ButterKnife.bind(this);
 
         Log.d("NOTIFYM", "onCreate called");
-//        if (intent.getExtras() != null) {
-//        Bundle bundle = getIntent().getExtras().getBundle("bundle");
-//        if (bundle != null) {
-////                int index = bundle.getInt(TAB_INDEX);
-////                if (index != -1)
-////                    switchTab(index);
-//            int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
-//            int source_id = bundle.getInt(SOURCE_ID);
-//            notificationAction(notification_type, source_id);
-//        }
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -253,6 +243,7 @@ public class BaseBottomBarActivity extends BaseActivity
         });
         LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
         tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
@@ -316,6 +307,23 @@ public class BaseBottomBarActivity extends BaseActivity
         };
 
         getBranchDynamicLinks();
+
+//        if (getIntent().getExtras() != null) {
+//            Bundle bundle = getIntent().getExtras();
+//            if (bundle != null) {
+////                int index = bundle.getInt(TAB_INDEX);
+////                if (index != -1)
+////                    switchTab(index);
+//                try {
+//                    Log.d("NOTIFYM", bundle.toString());
+//                    String notification_type = bundle.getString("notification_type");
+//                    String source_id = bundle.getString("source_id");
+//                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
+//                } catch (NumberFormatException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
 
@@ -374,13 +382,12 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         Log.d("NOTIFYM", "onNewIntent called");
         if (intent.getExtras() != null) {
             Bundle bundle = intent.getExtras().getBundle("bundle");
             if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                if (index != -1)
-//                    switchTab(index);
+                Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                 int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
                 int source_id = bundle.getInt(SOURCE_ID);
                 notificationAction(notification_type, source_id);
@@ -394,24 +401,13 @@ public class BaseBottomBarActivity extends BaseActivity
 //        initTab();
         Log.d("NOTIFYM", "onPostCreate called");
         if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras().getBundle("bundle");
-            if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                switchTab(index);
-
-                int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
-                int source_id = bundle.getInt(SOURCE_ID);
-                notificationAction(notification_type, source_id);
-
-            } else {
-                bundle = getIntent().getExtras().getBundle("profileBundle");
+            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
                 if (bundle != null) {
                     int userId = bundle.getInt("userId");
                     boolean isSelf = bundle.getBoolean("isSelf");
                     pushFragment(isSelf ? ProfileFragment.newInstance() :
                             OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
                 } else switchTabDynamically();
-            }
         } else {
             switchTabDynamically();
         }
@@ -678,8 +674,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onSearchInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
-                                    PostDetails postDetails, byte[] image) {
+    public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
+                                      PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_MY_INTERESTS:
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
@@ -688,7 +684,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
                 break;
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image, false, false, null);
+                PostDetailsActivity.newInstance(this, postDetails,
+                        null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -702,7 +699,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onSubSearchInteraction(int action, PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
+                PostDetailsActivity.newInstance(this, postDetails,
+                        null, false, false, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -801,7 +799,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
-                .addAction(R.drawable.ic_cancel_dark_small, "Cancel",
+                .addAction(R.drawable.ic_clear_dark, "Cancel",
                         PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 
@@ -844,8 +842,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                     }
                                 }, 4000);
 
-                                if (fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment) fragment).getHomePagePosts(1, false);
+                                if(fragment instanceof PostsListFragment) {
+                                    ((PostsListFragment)fragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:

@@ -1,6 +1,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.cncoding.teazer.authentication.LoginFragment"
+    tools:context="com.cncoding.teazer.authentication.SignupFragment"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,6 +51,7 @@
                     android:layout_alignParentEnd="true"
                     app:srcCompat="@drawable/ic_add" />
             </RelativeLayout>
+
 <!--            <ImageView
                 android:id="@+id/signup_profile_pic"
                 android:layout_width="100dp"
@@ -66,7 +67,6 @@
                 android:hint="@string/choose_a_username"
                 android:maxLength="15"
                 android:inputType="text"
-                android:digits="@string/validUsername"
                 android:imeOptions="actionNext" />
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
@@ -75,9 +75,8 @@
                 android:layout_marginBottom="24dp"
                 android:hint="@string/password"
                 android:maxLength="32"
-                android:digits="@string/validPassword"
                 android:inputType="textPassword"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionGo" />
 
 <!--            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_confirm_password"

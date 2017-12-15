@@ -10,25 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.utilities.Pojos;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ * 
  * Created by MOHD ARIF on 07-11-2017.
  */
 
@@ -36,7 +35,7 @@ public class FragmentProfileMyCreations extends Fragment {
 
     CircularAppCompatImageView menuitem;
     Context context;
-    ArrayList<Pojos.Post.PostDetails> list = new ArrayList<>();
+    ArrayList<PostDetails> list = new ArrayList<>();
     RecyclerView recyclerView;
     ProfileMyCreationAdapter profileMyCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -107,9 +106,9 @@ public class FragmentProfileMyCreations extends Fragment {
     public void getProfileVideos() {
 
 
-        ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<Pojos.Post.PostList>() {
+        ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<PostList>() {
             @Override
-            public void onResponse(Call<Pojos.Post.PostList> call, Response<Pojos.Post.PostList> response) {
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
 
                 if (response.code() == 200) {
                     if (response.body().getPosts() == null) {
@@ -134,7 +133,7 @@ public class FragmentProfileMyCreations extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Pojos.Post.PostList> call, Throwable t) {
+            public void onFailure(Call<PostList> call, Throwable t) {
             }
         });
     }

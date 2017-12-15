@@ -14,6 +14,9 @@ public class ReportPostRequest {
     @SerializedName("report_type_id")
     @Expose
     private Integer reportTypeId;
+    @SerializedName("other_reason")
+    @Expose
+    private String reportRemark;
 
     public Integer getPostId() {
         return postId;
@@ -31,8 +34,17 @@ public class ReportPostRequest {
         this.reportTypeId = reportTypeId;
     }
 
-    public ReportPostRequest(Integer postId, Integer reportTypeId) {
+    public String getReportRemark() {
+        return reportRemark;
+    }
+
+    public void setReportRemark(String reportRemark) {
+        this.reportRemark = reportRemark;
+    }
+
+    public ReportPostRequest(Integer postId, Integer reportTypeId, String reportRemark) {
         this.postId = postId;
         this.reportTypeId = reportTypeId;
+        this.reportRemark = reportRemark;
     }
 }

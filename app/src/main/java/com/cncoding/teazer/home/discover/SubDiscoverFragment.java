@@ -31,9 +31,9 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.Post.PostList;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

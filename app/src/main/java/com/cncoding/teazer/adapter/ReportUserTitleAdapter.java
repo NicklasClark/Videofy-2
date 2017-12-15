@@ -2,7 +2,6 @@ package com.cncoding.teazer.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostSubTitleResponse;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 
@@ -37,6 +34,7 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
     private Context context;
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
+    private int lastSelectedRow = -1;
 
     public ReportUserTitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportUserDialogFragment reportUserDialogFragment) {
         this.reportsType = reportsType;
@@ -62,14 +60,23 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
     }
 
     @Override
-    public void onBindViewHolder(final ReportUserTitleAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ReportUserTitleAdapter.ViewHolder holder, final int position) {
         final ReportPostSubTitleResponse report = reportsType.get(position);
+
+        if(position == lastSelectedRow)
+            holder.tickView.setVisibility(View.VISIBLE);
+        else
+            holder.tickView.setVisibility(View.GONE);
+
         holder.reportTitle.setText(report.getTitle());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    mAdapterCallback.titleSelected(report);
+                lastSelectedRow = position;
+                holder.tickView.setVisibility(View.VISIBLE);
+                notifyDataSetChanged();
 
+                mAdapterCallback.titleSelected(report);
             }
         });
 
@@ -93,6 +100,8 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
         RelativeLayout layout;
         @BindView(R.id.reportTitle)
         TextView reportTitle;
+        @BindView(R.id.tickView)
+        ImageView tickView;
 
         ViewHolder(View view) {
             super(view);

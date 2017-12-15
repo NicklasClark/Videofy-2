@@ -23,8 +23,8 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.user.UpdateCategories;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -175,7 +175,7 @@ public class Interests extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Pojos.Category>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -246,7 +246,7 @@ public class Interests extends BaseFragment {
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
         selectedData = getSelectedInterestsToShow(interestsAdapter.getSelectedInterests());
         resultToSend = getSelectedInterestsToSend(interestsAdapter.getSelectedInterests());
-        ApiCallingService.User.updateCategories(new Pojos.User.UpdateCategories(resultToSend), getContext())
+        ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.utilities.Pojos.Category;
+import com.cncoding.teazer.model.base.Category;
 
 import java.util.ArrayList;
 

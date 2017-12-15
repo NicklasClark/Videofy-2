@@ -53,7 +53,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.utilities.Pojos.Authorize;
+import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity
 
 //    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
+    public static final int ACCOUNT_TYPE_PRIVATE = 1;
+    public static final int ACCOUNT_TYPE_PUBLIC = 2;
+
     public static final int DEVICE_TYPE_ANDROID = 2;
 //    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
@@ -112,9 +115,6 @@ public class MainActivity extends AppCompatActivity
 //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
-//    public static final int BACK_PRESSED_ACTION = 6;
-//    public static final int RESUME_WELCOME_VIDEO_ACTION = 8;
-    public static final String BASE_URL = "http://restdev.ap-south-1.elasticbeanstalk.com/";
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
 
     @BindView(R.id.container) RelativeLayout rootView;
@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity
         transitionDrawable = new TransitionDrawable(backgrounds);
         transitionDrawable.setCrossFadeEnabled(true);
         mainFragmentContainer.setBackground(transitionDrawable);
+
+        SharedPrefs.resetAuthToken(getApplicationContext());
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);

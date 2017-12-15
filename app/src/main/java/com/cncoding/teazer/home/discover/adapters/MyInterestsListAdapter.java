@@ -11,16 +11,14 @@ import android.widget.LinearLayout;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
-import com.cncoding.teazer.utilities.Pojos.Category;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
 
 /**
  *
@@ -32,10 +30,10 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
     private ArrayList<Category> myInterestsCategoriesArrayList;
     private Map<String, ArrayList<PostDetails>> myInterests;
     private Context context;
-    private DiscoverFragment.OnSearchInteractionListener mListener;
+    private DiscoverFragment.OnDiscoverInteractionListener mListener;
 
     public MyInterestsListAdapter(ArrayList<Category> myInterestsCategoriesArrayList, Map<String, ArrayList<PostDetails>> myInterests,
-                                  Context context, DiscoverFragment.OnSearchInteractionListener mListener) {
+                                  Context context, DiscoverFragment.OnDiscoverInteractionListener mListener) {
         this.myInterestsCategoriesArrayList = myInterestsCategoriesArrayList;
         this.myInterests = myInterests;
         this.context = context;
@@ -51,31 +49,36 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
 
     @Override
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
-        if (position < 3) {
-            String categoryName = myInterestsCategoriesArrayList.get(position).getCategoryName();
-            holder.header.setText(categoryName);
+        try {
+            if (position < 3) {
+                String categoryName = myInterestsCategoriesArrayList.get(position).getCategoryName();
+                holder.header.setText(categoryName);
 
-            ArrayList<PostDetails> postDetailsArrayList = myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName());
-            if (!postDetailsArrayList.isEmpty()) {
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                holder.recyclerView.setAdapter(new MyInterestsListItemAdapter(postDetailsArrayList, context, mListener));
-            } else {
-                holder.layout.setVisibility(GONE);
+                holder.recyclerView.setAdapter(
+                        new MyInterestsListItemAdapter(
+                                myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
+//                ArrayList<PostDetails> postDetailsArrayList =
+//                      myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName());
+//                if (!postDetailsArrayList.isEmpty()) {
+//                } else {
+//                    holder.layout.setVisibility(GONE);
+//                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public int getItemCount() {
-        return myInterestsCategoriesArrayList.size() >= 3 ? 3 : myInterestsCategoriesArrayList.size();
+        return myInterests.size() >= 3 ? 3 : myInterests.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.interests_header) ProximaNovaRegularTextView header;
-//        @BindView(R.id.no_my_interests_posts) ProximaNovaRegularTextView noMyInterests;
-//        @BindView(R.id.no_my_interests_posts_2) ProximaNovaBoldTextView noMyInterests2;
         @BindView(R.id.item_my_interests_list) RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {

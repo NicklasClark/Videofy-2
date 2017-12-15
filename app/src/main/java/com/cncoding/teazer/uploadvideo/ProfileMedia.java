@@ -1,6 +1,6 @@
 package com.cncoding.teazer.uploadvideo;
 
-import com.cncoding.teazer.model.profile.followerprofile.MediaDimension;
+import com.cncoding.teazer.model.base.Dimension;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,7 +24,7 @@ public class ProfileMedia {
     private Boolean isImage;
     @SerializedName("media_dimension")
     @Expose
-    private MediaDimension mediaDimension;
+    private Dimension mediaDimension;
 
     public String getMediaUrl() {
         return mediaUrl;
@@ -58,11 +58,11 @@ public class ProfileMedia {
         this.isImage = isImage;
     }
 
-    public MediaDimension getMediaDimension() {
+    public Dimension getMediaDimension() {
         return mediaDimension;
     }
 
-    public void setMediaDimension(MediaDimension mediaDimension) {
+    public void setMediaDimension(Dimension mediaDimension) {
         this.mediaDimension = mediaDimension;
     }
 }

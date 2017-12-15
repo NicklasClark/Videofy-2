@@ -33,58 +33,112 @@
 
     </LinearLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingBottom="@dimen/action_bar_height"
-        android:clipToPadding="false"
-        android:background="@color/material_grey200"
-        android:id="@+id/root_layout"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:animateLayoutChanges="true">
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/action_bar_height"
+            android:clipToPadding="false"
+            android:background="@color/material_grey200"
+            android:id="@+id/root_layout"
+            android:layout_weight="1">
 
-            <LinearLayout
-                android:id="@+id/discover_posts_container"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:animateLayoutChanges="true"
-                android:visibility="invisible">
+                android:animateLayoutChanges="true">
 
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/discover_posts_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="@dimen/padding_thin"
-                    android:background="@drawable/bg_card_no_margin_white"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical">
+                    android:visibility="invisible">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/padding_thin"
+                        android:background="@drawable/bg_card_no_margin_white"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/most_popular_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:orientation="horizontal">
+
+                            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                                android:id="@+id/most_popular"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/most_popular"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
+                                android:layout_weight="1"
+                                android:textSize="16sp"/>
+
+                            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                                android:id="@+id/most_popular_view_all"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
+                                android:text="@string/view_all"
+                                android:layout_gravity="center_vertical"
+                                android:foreground="@drawable/ripple_dark_no_rounded"
+                                android:textSize="14sp"/>
+
+                        </LinearLayout>
+
+                        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                            android:id="@+id/no_most_popular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="200dp"
+                            android:gravity="center"
+                            android:textSize="@dimen/text_size_content_big"
+                            android:text="@string/no_posts_available"
+                            android:layout_below="@+id/most_popular_layout"
+                            android:visibility="gone"/>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/most_popular_list"
+                            android:layout_below="@+id/most_popular_layout"
+                            android:layout_marginBottom="20dp"
+                            style="@style/BottomTabLayout.RecyclerView" />
+
+                    </RelativeLayout>
 
                     <LinearLayout
-                        android:id="@+id/most_popular_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
+                        android:layout_marginTop="8dp"
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:orientation="horizontal">
 
                         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                            android:id="@+id/most_popular"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/most_popular"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
+                            android:text="@string/my_interests"
                             android:layout_weight="1"
                             android:textSize="16sp"/>
 
                         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                            android:id="@+id/most_popular_view_all"
+                            android:id="@+id/my_interests_view_all"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="10dp"
@@ -96,180 +150,133 @@
 
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_card_no_margin_white">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/my_interests_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"/>
+
+                        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                            android:id="@+id/trending"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:text="@string/trending"
+                            android:textSize="16sp"
+                            android:layout_below="@id/my_interests_list"/>
+
+                        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                            android:id="@+id/no_trending"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="60dp"
+                            android:gravity="center"
+                            android:textSize="@dimen/text_size_content_big"
+                            android:text="@string/no_posts_available"
+                            android:layout_below="@+id/trending"
+                            android:visibility="gone"/>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/trending_list"
+                            android:layout_below="@+id/trending"
+                            android:layout_marginBottom="0dp"
+                            style="@style/BottomTabLayout.RecyclerView" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/featured_posts_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="true"
+                    android:layout_below="@+id/discover_posts_container"
+                    android:visibility="invisible">
+
                     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:id="@+id/no_most_popular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="@dimen/padding_10dp"
+                        android:paddingBottom="@dimen/padding_10dp"
+                        android:text="@string/featured_videos"
+                        android:textSize="16sp"/>
+
+                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                        android:id="@+id/no_featured_videos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="200dp"
                         android:gravity="center"
                         android:textSize="@dimen/text_size_content_big"
                         android:text="@string/no_posts_available"
-                        android:layout_below="@+id/most_popular_layout"
                         android:visibility="gone"/>
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/most_popular_list"
-                        android:layout_below="@+id/most_popular_layout"
-                        android:layout_marginBottom="20dp"
-                        style="@style/BottomTabLayout.RecyclerView" />
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:orientation="horizontal">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:text="@string/my_interests"
-                        android:layout_weight="1"
-                        android:textSize="16sp"/>
-
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                        android:id="@+id/my_interests_view_all"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:text="@string/view_all"
-                        android:layout_gravity="center_vertical"
-                        android:foreground="@drawable/ripple_dark_no_rounded"
-                        android:textSize="14sp"/>
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card_no_margin_white">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/my_interests_list"
+                        android:id="@+id/featured_videos_list"
+                        android:background="@drawable/bg_card_no_margin_white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="0dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:id="@+id/trending"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:text="@string/trending"
-                        android:textSize="16sp"
-                        android:layout_below="@id/my_interests_list"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/post_load_error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/padding_including_action_bar"
+                    android:paddingBottom="@dimen/padding_including_action_bar"
+                    android:foreground="@drawable/ripple_dark_no_rounded"
+                    android:layout_below="@+id/featured_posts_container"
+                    android:visibility="gone">
 
                     <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:id="@+id/no_trending"
+                        android:id="@+id/post_load_error"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="60dp"
+                        android:gravity="center"
+                        android:textAllCaps="true"
+                        app:drawableTopCompat="@drawable/ic_no_data_placeholder"
+                        android:textSize="@dimen/text_size_h5"
+                        android:text="@string/could_not_load_posts"/>
+
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                        android:id="@+id/tap_to_retry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="@dimen/text_size_content_big"
-                        android:text="@string/no_posts_available"
-                        android:layout_below="@+id/trending"
-                        android:visibility="gone"/>
+                        android:text="@string/tap_to_retry"/>
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/trending_list"
-                        android:layout_below="@+id/trending"
-                        android:layout_marginBottom="0dp"
-                        style="@style/BottomTabLayout.RecyclerView" />
+                </LinearLayout>
 
-                </RelativeLayout>
+            </RelativeLayout>
 
-            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
-            <LinearLayout
-                android:id="@+id/featured_posts_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:animateLayoutChanges="true"
-                android:layout_below="@+id/discover_posts_container"
-                android:visibility="invisible">
-
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:paddingTop="@dimen/padding_10dp"
-                    android:paddingBottom="@dimen/padding_10dp"
-                    android:text="@string/featured_videos"
-                    android:textSize="16sp"/>
-
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                    android:id="@+id/no_featured_videos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="200dp"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_size_content_big"
-                    android:text="@string/no_posts_available"
-                    android:visibility="gone"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/featured_videos_list"
-                    android:background="@drawable/bg_card_no_margin_white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="0dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/post_load_error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="@dimen/padding_including_action_bar"
-                android:paddingBottom="@dimen/padding_including_action_bar"
-                android:foreground="@drawable/ripple_dark_no_rounded"
-                android:layout_below="@+id/featured_posts_container"
-                android:visibility="gone">
-
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                    android:id="@+id/post_load_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAllCaps="true"
-                    app:drawableTopCompat="@drawable/ic_no_data_placeholder"
-                    android:textSize="@dimen/text_size_h5"
-                    android:text="@string/could_not_load_posts"/>
-
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                    android:id="@+id/tap_to_retry"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_size_content_big"
-                    android:text="@string/tap_to_retry"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

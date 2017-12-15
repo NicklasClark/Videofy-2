@@ -34,7 +34,10 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.home.post.PostDetailsActivity;
-import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
@@ -97,7 +100,7 @@ public class ViewUtils {
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(Context context, Integer source, Pojos.Post.PostReaction postReaction, Reaction reaction) {
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, Reactions reaction) {
         switch (source) {
             case POST_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
@@ -110,7 +113,7 @@ public class ViewUtils {
             }
             case SELF_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getMediaUrl());
                 intent.putExtra("POST_INFO", reaction);
                 intent.putExtra("SOURCE", SELF_REACTION);
 //                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -211,14 +214,14 @@ public class ViewUtils {
         packageContext.startActivity(intent);
     }
 
-    public static void launchReactionCamera(Context packageContext, Pojos.Post.PostDetails postDetails) {
+    public static void launchReactionCamera(Context packageContext, PostDetails postDetails) {
         Intent intent = new Intent(packageContext, CameraActivity.class);
         intent.putExtra(IS_REACTION, true);
         intent.putExtra(POST_DETAILS, postDetails);
         packageContext.startActivity(intent);
     }
 
-    public static void performVideoUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+    public static void performVideoUpload(Context packageContext, UploadParams uploadParams) {
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
         intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -226,7 +229,7 @@ public class ViewUtils {
         ((AppCompatActivity) packageContext).finish();
     }
 
-    public static void performReactionUpload(Context packageContext, Pojos.UploadParams uploadParams) {
+    public static void performReactionUpload(Context packageContext, UploadParams uploadParams) {
         SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, PostDetailsActivity.class);
 //        intent.putExtra(UPLOAD_PARAMS, uploadParams);

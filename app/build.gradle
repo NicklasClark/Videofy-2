@@ -20,7 +20,7 @@ android {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 5
+        versionCode 6
         versionName "1.0"
         dataBinding.enabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -105,11 +105,11 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.2'
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
     implementation 'com.github.yangjie10930:EpMedia:v0.9.1'
-    implementation 'com.iceteck.silicompressorr:silicompressor:2.1'
     implementation "com.android.support:support-emoji-bundled:$supportLibVersion"
     implementation "com.android.support:support-emoji:$supportLibVersion"
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'io.branch.sdk.android:library:2.14.1'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 }
 
 configurations.all {
@@ -123,3 +123,4 @@ configurations.all {
     }
 }
 apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'realm-android'

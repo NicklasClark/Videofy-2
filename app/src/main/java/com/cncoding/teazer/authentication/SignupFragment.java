@@ -24,8 +24,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.utilities.GalleryUtil;
-import com.cncoding.teazer.utilities.Pojos.Authorize;
 
 import java.io.File;
 
@@ -109,6 +109,10 @@ public class SignupFragment extends AuthFragment {
                 setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
             }
         }
+    }
+
+    @OnClick(R.id.dp_edit_btn) public void launchSelector() {
+        launchImageSelector();
     }
 
     @OnClick(R.id.dp) public void launchImageSelector() {

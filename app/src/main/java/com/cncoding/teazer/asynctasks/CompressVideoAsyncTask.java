@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 import java.io.File;
 
 /**
+ *
  * Created by amit on 6/12/17.
  */
-
 
 public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
 

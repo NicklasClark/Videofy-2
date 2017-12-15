@@ -109,7 +109,7 @@
     <string name="title_activity_video_upload">Upload Video</string>
     <string name="action_settings">Settings</string>
     <string name="video_preview_thumbnail">Video preview thumbnail</string>
-    <string name="title">Title</string>
+    <string name="react_title">Title</string>
     <string name="share_to">Share to</string>
     <string name="retake">Retake</string>
     <string name="see_nearby_places">See nearby places</string>
@@ -218,7 +218,7 @@
     <string name="be_the_first_one_to_react">Be the first one to react!</string>
     <string name="finished">Finished!</string>
     <string name="optional_title">
-        Set an optional title if you wish to.
+        Set an optional react_title if you wish to.
     </string>
     <string name="uploading_your_reaction">Uploading your reaction…</string>
     <string name="requests">Requests</string>
@@ -278,9 +278,9 @@
     <string name="error_getting_tagged_users">Error fetching tagged users, please try again</string>
     <string name="resetting_password_failed">Resetting password failed or wrong OTP entered</string>
     <string name="hiding_post">Hiding post</string>
-    <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, only you will be able to see this post.</string>
+    <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, you will NOT be able to see this post.</string>
     <string name="yes_hide">Yes, hide</string>
-    <string name="video_hide_successful">The video was hidden successfully\nOnly you are able to view it now</string>
+    <string name="video_hide_successful">The video was hidden successfully</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
@@ -312,4 +312,9 @@
     <string name="no_videos_tagged">No videos tagged&#160;</string>
     <string name="yet_uploaded">&#160;yet uploaded</string>
     <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
+    <string name="send_to">Share</string>
+    <string name="report_extra_remark_hint">Remarks(optional)</string>
+    <string name="repot_post_dialog_title">Report User</string>
+    <string name="report_post_dialog_message">Are you sure you want to report this video</string>
+    <string name="report_btn_text">Report</string>
 </resources>

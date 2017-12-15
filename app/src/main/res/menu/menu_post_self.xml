@@ -5,12 +5,12 @@
     tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
 <!--    <item android:id="@+id/action_share"
-        android:title="@string/share"
+        andrreact_titleitle="@string/share"
         android:icon="@drawable/ic_share"
         app:showAsAction="never" />-->
 
 <!--    <item android:id="@+id/action_hide"
-        android:title="@string/hide"
+        andrreact_titleitle="@string/hide"
         app:showAsAction="withText"
         android:visible="true" />-->
 
@@ -20,7 +20,7 @@
         android:visible="true" />
 
 <!--    <item android:id="@+id/action_profile_report"
-        android:title="@string/report"
+        andrreact_titleitle="@string/report"
         app:showAsAction="withText"
         android:visible="true" />-->
 

@@ -10,18 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.model.profile.blockuser.BlockUnBlockUser;
-import com.cncoding.teazer.model.profile.blockuser.BlockedUser;
-import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateAccountRequest;
-import com.cncoding.teazer.model.profile.deactivateaccount.DeactivateReasonList;
-import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
+import com.cncoding.teazer.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 
 import java.util.List;
@@ -33,19 +29,20 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
 
 /**
+ *
  * Created by farazhabib on 06/12/17.
  */
 
 public class DeactivateAccountUserAdapter extends RecyclerView.Adapter<DeactivateAccountUserAdapter.ViewHolder> {
 
-    private List<DeactivateReasonList> list;
+    private List<DeactivateTypes> list;
      Context context;
     public static final int UNBLOCK_STATUS=2;
     FragmentDeactivateAccount fragment;
     boolean flag=true;
 
 
-    public DeactivateAccountUserAdapter(Context context, List<DeactivateReasonList> list,FragmentDeactivateAccount fragment) {
+    public DeactivateAccountUserAdapter(Context context, List<DeactivateTypes> list, FragmentDeactivateAccount fragment) {
         this.context = context;
         this.list = list;
         this.fragment = fragment;
@@ -59,7 +56,7 @@ public class DeactivateAccountUserAdapter extends RecyclerView.Adapter<Deactivat
     @Override
     public void onBindViewHolder(final DeactivateAccountUserAdapter.ViewHolder viewHolder, final int i) {
 
-        final DeactivateReasonList cont = list.get(i);
+        final DeactivateTypes cont = list.get(i);
         try {
 
             final boolean ownReason= cont.getOwnReason();

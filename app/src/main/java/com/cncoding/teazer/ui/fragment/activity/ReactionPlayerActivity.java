@@ -20,9 +20,9 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reaction.Reaction;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
-import com.cncoding.teazer.utilities.Pojos;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -48,6 +48,8 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class ReactionPlayerActivity extends AppCompatActivity {
 
@@ -77,8 +79,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.postDuration)
     ProximaNovaRegularTextView postDurationView;
     private String videoURL;
-    private Pojos.Post.PostReaction postDetails;
-    private Reaction selfPostDetails;
+    private PostReaction postDetails;
+    private Reactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -106,14 +108,14 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if (postDetails != null)
                         reactId = postDetails.getReactId();
 
-                    if (null != toolbar) {
-                        this.setSupportActionBar(toolbar);
-                        //noinspection ConstantConditions
-                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-                    }
+//                    if (null != toolbar) {
+//                        this.setSupportActionBar(toolbar);
+//                        //noinspection ConstantConditions
+//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+//                    }
 
                     isLiked = !postDetails.canLike();
                     likesCount = postDetails.getLikes();
@@ -131,7 +133,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(postDetails.getReactOwner().getFirstName());
 
-                    initView();
                     incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -146,16 +147,16 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if (selfPostDetails != null)
                         reactId = selfPostDetails.getReactId();
 
-                    if (null != toolbar) {
-                        this.setSupportActionBar(toolbar);
-                        //noinspection ConstantConditions
-                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-                    }
+//                    if (null != toolbar) {
+//                        this.setSupportActionBar(toolbar);
+//                        //noinspection ConstantConditions
+//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+//                    }
 
-                    isLiked = !selfPostDetails.getCanLike();
+                    isLiked = !selfPostDetails.canLike();
                     likesCount = selfPostDetails.getLikes();
                     viewsCount = selfPostDetails.getViews();
                     reactionTitle = selfPostDetails.getReactTitle();
@@ -171,8 +172,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(selfPostDetails.getPostOwner().getFirstName());
 
-//                    initView();
-                    incrementView();
+                    initView();
+//                    incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -186,13 +187,14 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200 && response.body().getStatus())
+                        if (response.body().getStatus())
                             viewsCount++;
                         initView();
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();
+                        initView();
                     }
                 });
     }
@@ -223,7 +225,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             LoopingMediaSource loopingMediaSource  = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
             player.prepare(loopingMediaSource);
-            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             player.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,49 +241,67 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             case R.id.btnLike:
                 if (!isLiked) {
 //            Like the post
+                    isLiked = true;
+                    likesCount++;
+                    initView();
+                    disableView(likeBtn, false);
                     ApiCallingService.React.likeDislikeReaction(reactId, 1, this).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
                                 if(response.body().getStatus())
                                 {
-                                    isLiked = true;
-                                    likesCount++;
-                                    likeAction(isLiked, true);
                                     FragmentProfileMyCreations.checkIsLiked=true;
-                                    initView();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                isLiked = false;
+                                likesCount--;
+                                initView();
                             }
+                            enableView(likeBtn);
                         }
 
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
                             t.printStackTrace();
+                            isLiked = false;
+                            likesCount--;
+                            initView();
+                            enableView(likeBtn);
                         }
                     });
                 } else {
 //            Unlike the post
+                    isLiked = false;
+                    likesCount--;
+                    likeAction(isLiked, true);
+                    initView();
+                    disableView(likeBtn, false);
                     ApiCallingService.React.likeDislikeReaction(reactId, 2, this).enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                     try {
                                         if(response.body().getStatus())
                                         {
-                                            isLiked = false;
-                                            likesCount--;
-                                            likeAction(isLiked, true);
-                                            initView();
+                                            FragmentProfileMyCreations.checkIsLiked = false;
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        isLiked = true;
+                                        likesCount++;
+                                        initView();
                                     }
+                                    enableView(likeBtn);
                                 }
 
                                 @Override
                                 public void onFailure(Call<ResultObject> call, Throwable t) {
                                     t.printStackTrace();
+                                    isLiked = true;
+                                    likesCount++;
+                                    initView();
+                                    enableView(likeBtn);
                                 }
                             });
 

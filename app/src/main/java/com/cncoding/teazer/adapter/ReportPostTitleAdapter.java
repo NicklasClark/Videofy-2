@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.model.profile.reportPost.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
 
@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ *
  * Created by amit on 24/11/17.
  */
 
@@ -35,6 +36,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
     private Context context;
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
+    private int lastSelectedRow = -1;
 
     public ReportPostTitleAdapter(List<ReportPostTitlesResponse> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment) {
         this.reportsType = reportsType;
@@ -60,19 +62,31 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
     }
 
     @Override
-    public void onBindViewHolder(final ReportPostTitleAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ReportPostTitleAdapter.ViewHolder holder, final int position) {
         final ReportPostTitlesResponse report = reportsType.get(position);
+
+        if(position == lastSelectedRow)
+            holder.tickView.setVisibility(View.VISIBLE);
+        else
+            holder.tickView.setVisibility(View.GONE);
+
         holder.reportTitle.setText(report.getTitle());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (report.getSubReports().size()>0) {
+                    ReportPostDialogFragment.postReportOptionSelected = false;
+                    lastSelectedRow = -1;
                     FragmentManager fm = fragmentContext.getFragmentManager();
                     ReportPostSubtitleFragment reportPostSubTitleDialogFragment = ReportPostSubtitleFragment.newInstance(report);
                     // SETS the target fragment for use later when sending results
                     reportPostSubTitleDialogFragment.setTargetFragment(fragmentContext, 300);
                     reportPostSubTitleDialogFragment.show(fm, "fragment_report_post");
                 } else {
+                    ReportPostDialogFragment.postReportOptionSelected = false;
+                    lastSelectedRow = position;
+                    holder.tickView.setVisibility(View.VISIBLE);
+                    notifyDataSetChanged();
                     mAdapterCallback.titleSelected(report);
                 }
 
@@ -98,6 +112,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
         @BindView(R.id.reportTitleLayout) RelativeLayout layout;
         @BindView(R.id.reportTitle)
         TextView reportTitle;
+        @BindView(R.id.tickView) ImageView tickView;
 
         ViewHolder(View view) {
             super(view);

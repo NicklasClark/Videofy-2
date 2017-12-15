@@ -16,22 +16,17 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.utilities.Pojos.MiniProfile;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReaction;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostReaction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
@@ -136,20 +131,6 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             public void onClick(View view) {
                 playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
 
-                ApiCallingService.React.incrementReactionViewCount(postReaction.getMediaDetail().getMediaId(), context)
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                if (response.code() == 200 && response.body().getStatus())
-                                    postReactions.get(holder.getAdapterPosition()).views++;
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-
-                            }
-                        });
-//                    listener.onPostReactionInteraction(ACTION_VIEW_REACTION, postReaction);
             }
         };
 //            View.OnClickListener viewProfile = new View.OnClickListener() {

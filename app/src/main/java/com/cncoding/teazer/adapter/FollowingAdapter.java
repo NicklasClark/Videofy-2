@@ -17,8 +17,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.profile.following.Following;
-import com.cncoding.teazer.model.profile.othersfollowing.OtherUserFollowings;
+import com.cncoding.teazer.model.friends.UserInfo;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -40,13 +39,13 @@ import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.ViewHolder> {
 
-    private List<Following> list;
-    private List<OtherUserFollowings> otherlist;
+    private List<UserInfo> list;
+    private List<UserInfo> otherlist;
     private Context context;
     private int counter=0;
     private OtherProfileListenerFollowing otherProfileListenerFollowing;
 
-    public FollowingAdapter(Context context, List<OtherUserFollowings> otherlist) {
+    public FollowingAdapter(Context context, List<UserInfo> otherlist) {
         this.context = context;
         this.otherlist = otherlist;
 
@@ -54,7 +53,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
-    public FollowingAdapter(Context context, List<Following> list, int counter) {
+    public FollowingAdapter(Context context, List<UserInfo> list, int counter) {
         this.context = context;
         this.list = list;
         this.counter = counter;
@@ -76,7 +75,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             final int followerId;
             if (counter == 100) {
 
-                final Following cont = list.get(i);
+                final UserInfo cont = list.get(i);
                 final String followingname = cont.getUserName();
                 final int accounttype = cont.getAccountType();
                 final String userType;
@@ -128,7 +127,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 });
             }
             else {
-                final OtherUserFollowings cont = otherlist.get(i);
+                final UserInfo cont = otherlist.get(i);
                 final String usertype;
                 final boolean myself = cont.getMySelf();
                 final String followername = cont.getUserName();

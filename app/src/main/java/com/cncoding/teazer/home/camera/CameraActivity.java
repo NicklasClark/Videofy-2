@@ -19,6 +19,8 @@ package com.cncoding.teazer.home.camera;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,9 +53,8 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
-import com.cncoding.teazer.utilities.Pojos;
-import com.cncoding.teazer.utilities.Pojos.Post.PostDetails;
-import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.videoTrim.TrimmerActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -65,9 +66,12 @@ import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,8 +80,6 @@ import butterknife.OnClick;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.R.anim.fade_in;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
@@ -92,6 +94,7 @@ import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
+import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
@@ -269,7 +272,7 @@ public class CameraActivity extends AppCompatActivity
 
     @Override
     public void processFinish(String output) {
-        File trimmedFile = new File(output);
+//        File trimmedFile = new File(output);
         Log.d("CompressedLength", String.valueOf(new File(output).length()));
         startVideoUploadFragment();
     }
@@ -340,6 +343,38 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
+    public void onCurrentLocationClick() {
+        uploadFragment.onNearbyPlacesAdapterInteraction(new SelectedPlace(
+                getAddress(uploadFragment.currentLocation.getLatitude(), uploadFragment.currentLocation.getLongitude()),
+                uploadFragment.currentLocation.getLatitude(),
+                uploadFragment.currentLocation.getLongitude()
+        ));
+        fragmentManager.popBackStack();
+    }
+
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            //            add = add + "\n" + obj.getCountryName();
+//            add = add + "\n" + obj.getCountryCode();
+//            add = add + "\n" + obj.getAdminArea();
+//            add = add + "\n" + obj.getPostalCode();
+//            add = add + "\n" + obj.getSubAdminArea();
+//            add = add + "\n" + obj.getLocality();
+//            add = add + "\n" + obj.getSubThoroughfare();
+
+//            Log.v("IGA", "Address" + add);
+            return obj.getSubLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
+//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    @Override
     public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend, final int count) {
         fragmentManager.popBackStack();
         new Handler().postDelayed(new Runnable() {
@@ -404,7 +439,7 @@ public class CameraActivity extends AppCompatActivity
         switch (whichUpload) {
             case VIDEO_UPLOAD:
                 performVideoUpload(this,
-                        new Pojos.UploadParams(
+                        new UploadParams(
                                 isGallery,
                                 videoPath,
                                 title,
@@ -417,7 +452,7 @@ public class CameraActivity extends AppCompatActivity
                 break;
             case REACTION_UPLOAD:
                 performReactionUpload(this,
-                        new Pojos.UploadParams(
+                        new UploadParams(
                                 isGallery,
                                 videoPath,
                                 title,
@@ -558,12 +593,14 @@ public class CameraActivity extends AppCompatActivity
 
     public void updateBackButton(@DrawableRes int resId) {
         if (resId != -1) {
-            upBtn.setVisibility(VISIBLE);
             upBtn.setImageResource(resId);
-        } else upBtn.setVisibility(GONE);
+        } else {
+            upBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+        }
     }
 
     @OnClick(R.id.up_btn) public void retakeVideo() {
+        hideKeyboard(this, upBtn);
         onBackPressed();
     }
 
