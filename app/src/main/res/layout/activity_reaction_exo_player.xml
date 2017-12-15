@@ -78,7 +78,7 @@
                 android:id="@+id/reaction_post_dp"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
-                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_user_male_dp_small"
                 android:src="@drawable/ic_user_male_dp_small"/>
@@ -91,7 +91,7 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:textSize="16sp"
-                android:layout_toRightOf="@+id/reaction_post_dp"
+                android:layout_toEndOf="@+id/reaction_post_dp"
                 android:textColor="@android:color/white"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
@@ -102,11 +102,10 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_12sp"
                 android:textColor="@android:color/white"
-                app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+                app:drawableStartCompat="@drawable/ic_like_smaller"
                 android:gravity="end|center_vertical"
-                android:layout_toRightOf="@+id/reaction_post_dp"
-                android:layout_below="@+id/reaction_post_name"
-                />
+                android:layout_toEndOf="@+id/reaction_post_dp"
+                android:layout_below="@+id/reaction_post_name" />
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/reaction_post_views"
@@ -116,21 +115,23 @@
                 android:textColor="@android:color/white"
                 app:drawableStartCompat="@drawable/ic_view_outline_smaller"
                 android:gravity="start|center_vertical"
-                android:layout_marginLeft="9dp"
+                android:layout_marginStart="9dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:layout_below="@+id/reaction_post_name"
                 android:layout_toEndOf="@+id/reaction_post_likes"
-                />
+                android:layout_alignBottom="@+id/reaction_post_likes"/>
+
             <ImageView
                 android:id="@+id/btnLike"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="14dp"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_like_outline"
-                />
+                android:contentDescription="@string/like" />
+
         </RelativeLayout>
 
     </RelativeLayout>

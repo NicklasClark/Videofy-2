@@ -566,11 +566,12 @@ public class CameraFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error configuring camera", Toast.LENGTH_SHORT).show();
                 }
             }, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(context, "Error preparing camera", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -672,19 +672,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 selectedTagsToSend = resultToSend;
                 if (finalResultToShow.trim().isEmpty()) {
                     tagFriendsBtn.setText(null);
-                    tagFriendsBtn.clearFocus();
-                } else
+                } else {
                     tagFriendsBtn.requestFocus();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tagFriendsBtn.setText(finalResultToShow);
-                        setBadge(tagFriendsBadge, count);
-                    }
-                }, 500);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tagFriendsBtn.setText(finalResultToShow);
+                            setBadge(tagFriendsBadge, count);
+                        }
+                    }, 500);
+                }
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
-
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
@@ -693,18 +692,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(null);
-//                            uploadCategoriesBtn.clearFocus();
                         }
                     }, 200);
-                else
+                else {
                     uploadCategoriesBtn.requestFocus();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        uploadCategoriesBtn.setText(finalResultToShow);
-                        setBadge(uploadCategoriesBadge, count);
-                    }
-                }, 500);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadCategoriesBtn.setText(finalResultToShow);
+                            setBadge(uploadCategoriesBadge, count);
+                        }
+                    }, 500);
+                }
                 break;
         }
     }

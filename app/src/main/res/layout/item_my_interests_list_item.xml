@@ -57,7 +57,7 @@
             android:layout_height="12dp"
             android:textSize="@dimen/text_size_8sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+            app:drawableStartCompat="@drawable/ic_like_smaller"
             android:gravity="end|center_vertical"
             android:layout_below="@+id/name"
             android:layout_alignStart="@+id/name" />

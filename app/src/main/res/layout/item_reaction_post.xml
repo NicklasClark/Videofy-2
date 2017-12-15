@@ -78,7 +78,7 @@
             android:paddingTop="1dp"
             android:layout_marginEnd="@dimen/padding_10dp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+            app:drawableStartCompat="@drawable/ic_like_smaller"
             android:gravity="end|bottom"
             android:layout_below="@+id/reaction_post_name"
             android:layout_toEndOf="@+id/reaction_post_dp" />

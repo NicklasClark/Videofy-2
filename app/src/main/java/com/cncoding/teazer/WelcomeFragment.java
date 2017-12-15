@@ -280,8 +280,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     private void disableViews(View viewToExclude) {
         disableView(loginBtn, true);
         disableView(signupWithEmailBtn, true);
-        disableView(signupWithFbBtn, false);
-        disableView(signupWithGoogleBtn, false);
+        disableView(signupWithFbBtn, true);
+        disableView(signupWithGoogleBtn, true);
         enableView(viewToExclude);
     }
 
