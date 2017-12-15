@@ -9,4 +9,20 @@
         android:id="@+id/reportTitlesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <EditText
+        android:hint="@string/report_extra_remark_hint"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/reportTitlesRecyclerView"
+        android:id="@+id/report_remark"
+        android:maxLines="8"
+        android:lines="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+        android:id="@+id/submitReport"
+        style="@style/AppTheme.CancelUploadButtonsTheme"
+        android:text="@string/report_btn_text"
+        android:contentDescription="@string/check"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

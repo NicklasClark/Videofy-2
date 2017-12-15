@@ -63,6 +63,7 @@
             android:layout_width="47dp"
             android:layout_height="17dp"
             android:textColor="#FFFFFFFF"
+            android:visibility="gone"
             android:textSize="14sp" />
 
         <RelativeLayout

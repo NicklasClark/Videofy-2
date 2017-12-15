@@ -48,6 +48,8 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class ReactionPlayerActivity extends AppCompatActivity {
 
@@ -131,7 +133,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(postDetails.getReactOwner().getFirstName());
 
-                    initView();
                     incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -171,8 +172,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(selfPostDetails.getPostOwner().getFirstName());
 
-//                    initView();
-                    incrementView();
+                    initView();
+//                    incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -186,13 +187,14 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200 && response.body().getStatus())
+                        if (response.body().getStatus())
                             viewsCount++;
                         initView();
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();
+                        initView();
                     }
                 });
     }
@@ -239,49 +241,67 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             case R.id.btnLike:
                 if (!isLiked) {
 //            Like the post
+                    isLiked = true;
+                    likesCount++;
+                    initView();
+                    disableView(likeBtn, false);
                     ApiCallingService.React.likeDislikeReaction(reactId, 1, this).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
                                 if(response.body().getStatus())
                                 {
-                                    isLiked = true;
-                                    likesCount++;
-                                    likeAction(isLiked, true);
                                     FragmentProfileMyCreations.checkIsLiked=true;
-                                    initView();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                isLiked = false;
+                                likesCount--;
+                                initView();
                             }
+                            enableView(likeBtn);
                         }
 
                         @Override
                         public void onFailure(Call<ResultObject> call, Throwable t) {
                             t.printStackTrace();
+                            isLiked = false;
+                            likesCount--;
+                            initView();
+                            enableView(likeBtn);
                         }
                     });
                 } else {
 //            Unlike the post
+                    isLiked = false;
+                    likesCount--;
+                    likeAction(isLiked, true);
+                    initView();
+                    disableView(likeBtn, false);
                     ApiCallingService.React.likeDislikeReaction(reactId, 2, this).enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                     try {
                                         if(response.body().getStatus())
                                         {
-                                            isLiked = false;
-                                            likesCount--;
-                                            likeAction(isLiked, true);
-                                            initView();
+                                            FragmentProfileMyCreations.checkIsLiked = false;
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        isLiked = true;
+                                        likesCount++;
+                                        initView();
                                     }
+                                    enableView(likeBtn);
                                 }
 
                                 @Override
                                 public void onFailure(Call<ResultObject> call, Throwable t) {
                                     t.printStackTrace();
+                                    isLiked = true;
+                                    likesCount++;
+                                    initView();
+                                    enableView(likeBtn);
                                 }
                             });
 

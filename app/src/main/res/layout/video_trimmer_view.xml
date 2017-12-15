@@ -111,7 +111,7 @@
             android:layout_alignTop="@+id/video_thumb_listview"
             android:layout_below="@+id/video_shoot_tip"
             android:progressDrawable="@android:color/transparent"
-            android:secondaryProgress="0" />
+            android:secondaryProgress="0"/>
 
         <com.cncoding.teazer.videoTrim.widget.RangeSeekBarView
             android:id="@+id/timeLineBar"

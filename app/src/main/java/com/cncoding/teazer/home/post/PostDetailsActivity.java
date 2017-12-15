@@ -66,6 +66,7 @@ import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.Pojos.Post.TaggedUsersList;
 import com.cncoding.teazer.utilities.Pojos.TaggedUser;
 import com.cncoding.teazer.utilities.Pojos.UploadParams;
+import com.cncoding.teazer.utilities.StartCountDownClass;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -95,6 +96,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,7 +143,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
     public static final String ARG_THUMBNAIL = "thumbnail";
-//    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
+    //    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
     public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
     //</editor-fold>
 
@@ -158,13 +160,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
     @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
     @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
-//    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
+    //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
     @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
     @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-//    @BindView(R.id.share) ProximaNovaRegularTextView share;
+    //    @BindView(R.id.share) ProximaNovaRegularTextView share;
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
     //</editor-fold>
 
@@ -202,6 +204,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private int likes;
     private int views;
     private boolean oneShotFlag;
+
+    StartCountDownClass startCountDownClass;
+    private Handler customHandler = new Handler();
     //</editor-fold>
 
     //<editor-fold desc="Objects">
@@ -252,6 +257,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
                         View.SYSTEM_UI_FLAG_FULLSCREEN |                                            // hide status bar
                         View.SYSTEM_UI_FLAG_IMMERSIVE);
+
         setContentView(R.layout.activity_post_details);
         ButterKnife.bind(this);
 
@@ -389,12 +395,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
             String categories = getUserCategories();
             if (categories != null && categories.length() > 1) {
-                categories = "Categories:    " + categories;
+                categories = "  " + categories;
                 categoriesView.setText(categories);
             } else categoriesView.setVisibility(GONE);
 
             String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
-            remainingTime.setText(duration);
+//            remainingTime.setText(duration);
 
             reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()));
             tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
@@ -467,7 +473,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                     if (pageNumber == 1) postReactions.clear();
 
                                     postReactions.addAll(response.body().getReactions());
-    //                                    recyclerView.setVisibility(View.VISIBLE);
+                                    //                                    recyclerView.setVisibility(View.VISIBLE);
                                     postReactionAdapter.notifyDataSetChanged();
                                     if (postReactions.size() > 0) {
                                         if (postReactions.size() >= 1) {
@@ -617,6 +623,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     @OnClick(R.id.btnClose) public void goBack() {
+        customHandler.removeCallbacks(updateTimerThread);
         finish();
     }
 
@@ -789,6 +796,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
         try {
+//            if(player.getPlayWhenReady())
+//                startCountDownClass.pause();
+//            else
+//                startCountDownClass.resume();
+
             player.setPlayWhenReady(!player.getPlayWhenReady());
             playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
                     : R.drawable.ic_pause_big);
@@ -923,7 +935,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200) {
+                                                    if (response.body().getStatus() == true) {
                                                         Toast.makeText(PostDetailsActivity.this,
                                                                 R.string.video_hide_successful,
                                                                 Toast.LENGTH_SHORT).show();
@@ -1033,6 +1045,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postReactionsListCall.cancel();
         if (taggedUsersListCall != null)
             taggedUsersListCall.cancel();
+        customHandler.removeCallbacks(updateTimerThread);
     }
 
     @Override
@@ -1121,6 +1134,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 progressBar.setVisibility(GONE);
                                 placeholder.setImageBitmap(null);
                                 image = null;
+//                                startCountDownClass = new StartCountDownClass(player.getDuration(), 1000, remainingTime);
+//                                startCountDownClass.start();
+                                customHandler.postDelayed(updateTimerThread, 0);
                             }
                             if (oneShotFlag) {
                                 oneShotFlag = false;
@@ -1145,6 +1161,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             }
                             break;
                         case STATE_ENDED:
+//                            startCountDownClass.cancel();
                             break;
                         default:
                             break;
@@ -1365,6 +1382,25 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     @Override
     public void onBackPressed() {
+        customHandler.removeCallbacks(updateTimerThread);
         super.onBackPressed();
     }
+
+
+    //thread to update recording time
+    private Runnable updateTimerThread = new Runnable() {
+
+        public void run() {
+
+
+            int secs = (int) (player.getCurrentPosition() / 1000);
+            int minutes = secs / 60;
+            secs = secs % 60;
+//            int milliseconds = (int) (updatedTime % 1000);
+            String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+            remainingTime.setText(duration);
+            customHandler.postDelayed(this, 0);
+        }
+
+    };
 }
