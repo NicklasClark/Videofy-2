@@ -108,14 +108,14 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if (postDetails != null)
                         reactId = postDetails.getReactId();
 
-                    if (null != toolbar) {
-                        this.setSupportActionBar(toolbar);
-                        //noinspection ConstantConditions
-                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-                    }
+//                    if (null != toolbar) {
+//                        this.setSupportActionBar(toolbar);
+//                        //noinspection ConstantConditions
+//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+//                    }
 
                     isLiked = !postDetails.canLike();
                     likesCount = postDetails.getLikes();
@@ -147,14 +147,14 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if (selfPostDetails != null)
                         reactId = selfPostDetails.getReactId();
 
-                    if (null != toolbar) {
-                        this.setSupportActionBar(toolbar);
-                        //noinspection ConstantConditions
-                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-                    }
+//                    if (null != toolbar) {
+//                        this.setSupportActionBar(toolbar);
+//                        //noinspection ConstantConditions
+//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+//                    }
 
                     isLiked = !selfPostDetails.canLike();
                     likesCount = selfPostDetails.getLikes();

@@ -65,7 +65,6 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.utilities.Pojos.Post.PostReactionsList;
 import com.cncoding.teazer.utilities.StartCountDownClass;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -108,7 +107,6 @@ import io.branch.referral.util.LinkProperties;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HEAD;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.util.DisplayMetrics.DENSITY_HIGH;
@@ -1029,6 +1027,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         player.setPlayWhenReady(!player.getPlayWhenReady());
 
         if (Util.SDK_INT <= 23) {
+            customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
         }
     }
@@ -1067,6 +1066,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23) {
+            customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
         }
     }
@@ -1391,13 +1391,17 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         public void run() {
 
 
-            int secs = (int) (player.getCurrentPosition() / 1000);
-            int minutes = secs / 60;
-            secs = secs % 60;
+            try {
+                int secs = (int) (player.getCurrentPosition() / 1000);
+                int minutes = secs / 60;
+                secs = secs % 60;
 //            int milliseconds = (int) (updatedTime % 1000);
-            String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
-            remainingTime.setText(duration);
-            customHandler.postDelayed(this, 0);
+                String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+                remainingTime.setText(duration);
+                customHandler.postDelayed(this, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     };
