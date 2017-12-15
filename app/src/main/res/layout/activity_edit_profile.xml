@@ -64,16 +64,43 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
+                        <RelativeLayout
+                            android:id="@+id/profile_layout1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_image_whiter_outline_solid"
+                            android:layout_centerInParent="true"
+                           >
+
                         <com.cncoding.teazer.customViews.CircularAppCompatImageView
                             android:id="@+id/profile_id"
                             android:layout_width="84dp"
                             android:layout_height="84dp"
                             android:scaleType="centerCrop"
+
                             android:layout_centerInParent="true"
                             android:background="@drawable/bg_circle_white_outline"
                             android:src="@drawable/ic_user_male_dp"
                             android:layout_margin="2dp"
                             android:transitionName="profile" />
+
+
+
+                            <!--<com.theartofdev.edmodo.cropper.CropImageView-->
+                                <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+                                <!--android:id="@+id/cropImageView"-->
+                                <!--android:layout_width="84dp"-->
+                                <!--android:layout_height="84dp"-->
+                                <!--android:scaleType="centerCrop"-->
+                              <!---->
+                                <!--android:visibility="gone"-->
+                                <!--android:layout_centerInParent="true"-->
+                                <!--android:background="@drawable/bg_circle_white_outline"-->
+                                <!--android:src="@drawable/ic_user_male_dp"-->
+                                <!--android:layout_margin="2dp"-->
+                                <!--android:transitionName="profile"-->
+                                <!--/>-->
+                        </RelativeLayout>
 
                         <com.cncoding.teazer.customViews.CircularAppCompatImageView
                             android:id="@+id/empname"
@@ -83,8 +110,8 @@
                             android:textColor="#efefef"
                             android:background="@drawable/bg_image_whiter_outline_solid"
                             android:transitionName="empname"
-                            android:layout_alignBottom="@+id/profile_id"
-                            android:layout_alignEnd="@+id/profile_id"
+                            android:layout_alignBottom="@+id/profile_layout1"
+                            android:layout_alignEnd="@+id/profile_layout1"
                             app:srcCompat="@drawable/ic_create_back_black" />
 
                     </RelativeLayout>
@@ -105,6 +132,12 @@
                     android:layout_height="wrap_content"
                     android:padding="12dp"
                     android:orientation="vertical">
+                    <!--<com.theartofdev.edmodo.cropper.CropImageView-->
+                        <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+                    <!---->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="100dp"-->
+                       <!--/>-->
 
                     <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
@@ -332,6 +365,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:textColor="#999999"
+                        android:enabled="false"
                         android:textSize="@dimen/text_size_12sp"
                         android:hint="@string/email_id">
 
@@ -342,6 +376,7 @@
                             android:layout_marginBottom="5dp"
                             android:layout_weight="1"
                             android:backgroundTint="#dddddd"
+                            android:enabled="false"
                             android:textColor="#333333"
                             android:inputType="textEmailAddress"
                             android:textSize="@dimen/text_size_16sp" />

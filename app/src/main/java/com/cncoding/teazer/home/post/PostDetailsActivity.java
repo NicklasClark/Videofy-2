@@ -103,7 +103,9 @@ import butterknife.OnClick;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -862,46 +864,42 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .addControlParameter("$desktop_url", "https://teazer.in/")
                 .addControlParameter("$ios_url", "https://teazer.in/");
 
-        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
-            @Override
-            public void onLinkCreate(String url, BranchError error) {
-                if (error == null) {
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, url);
-                    sendIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-                }
-            }
-        });
-//        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
-//                "Check this out!", "This video is awesome: ")
-//                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
-//                        "Copy", "Added to clipboard")
-//                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
-//                .setAsFullWidthStyle(true)
-//                .setSharingTitle("Share With");
-//
-//        branchUniversalObject.showShareSheet(this,
-//                linkProperties,
-//                shareSheetStyle,
-//                new Branch.BranchLinkShareListener() {
-//                    @Override
-//                    public void onShareLinkDialogLaunched() {
-//                    }
-//                    @Override
-//                    public void onShareLinkDialogDismissed() {
-//                    }
-//                    @Override
-//                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-//                    }
-//                    @Override
-//                    public void onChannelSelected(String channelName) {
-//                    }
-//                });
+//        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+//            @Override
+//            public void onLinkCreate(String url, BranchError error) {
+//                if (error == null)    {
+//                    Log.i("MyApp", "got my Branch link to share: " + url);
+//                }
+//            }
+//        });
+        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
+                "Check this out!", "This video is awesome: ")
+                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
+                        "Copy", "Added to clipboard")
+                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
+                .setAsFullWidthStyle(true)
+                .setSharingTitle("Share With");
+
+        branchUniversalObject.showShareSheet(this,
+                linkProperties,
+                shareSheetStyle,
+                new Branch.BranchLinkShareListener() {
+                    @Override
+                    public void onShareLinkDialogLaunched() {
+                    }
+                    @Override
+                    public void onShareLinkDialogDismissed() {
+                    }
+                    @Override
+                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                    }
+                    @Override
+                    public void onChannelSelected(String channelName) {
+                    }
+                });
     }
 
     @Override

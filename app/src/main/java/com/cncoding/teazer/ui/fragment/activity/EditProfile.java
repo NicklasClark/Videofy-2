@@ -38,6 +38,9 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
 import com.hbb20.CountryCodePicker;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -63,7 +66,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
@@ -103,6 +108,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProximaNovaRegularCheckedTextView maletext;
     @BindView(R.id.femaletxt)
     ProximaNovaRegularCheckedTextView femaletxt;
+//    @BindView(R.id.cropImageView)
+//    CropImageView cropImageView;
 
     Button fab;
     ProgressBar simpleProgressBar;
@@ -232,19 +239,94 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 validate();
             }
         });
+
+
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ProfileFragment.checkprofileupdated = true;
-                PickImageDialog.build(new PickSetup()).show(EditProfile.this);
+
+               // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
+
+
+
+//                CropImage.activity(Uri.parse(userProfileUrl))
+//                        .start(EditProfile.this);
+
+
+                CropImage.activity(Uri.parse(userProfileUrl))
+                        .start(EditProfile.this);
+
                 //showPictureDialog();
 
-
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(EditProfile.this);
             }
         });
 
-        initProfileImage();
 
+
+
+        if (userProfileUrl == null) {
+
+        } else {
+            Glide.with(context)
+                    .load(Uri.parse(userProfileUrl))
+                    .into(profile_image);
+            profileBlur(userProfileUrl);
+        }
+
+
+        //initProfileImage();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            ProfileFragment.checkprofileupdated = true;
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+               // cropImageView.setImageUriAsync(resultUri);
+
+                Picasso.with(EditProfile.this)
+                        .load(resultUri)
+                        .into(profile_image);
+                try {
+
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), resultUri);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+                    Blurry.with(EditProfile.this).from(scaledBitmap).into(bgImage);
+
+
+                    byte[] bte = bitmaptoByte(scaledBitmap);
+                    SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("MYIMAGES", resultUri.toString());
+                    editor.apply();
+
+                   // File profileImage = new File(r.getPath());
+                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
+                    saveDataToDatabase(body);
+
+
+
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+
+            }
+        }
     }
 
 
@@ -275,6 +357,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 Bitmap b = getCorrectlyOrientedImage(context, r.getUri(), 400);
                 profile_image.setImageBitmap(b);
                 bgImage.setImageBitmap(b);
+
                 byte[] bte = bitmaptoByte(b);
                 Blurry.with(EditProfile.this).from(b).into(bgImage);
 
@@ -296,118 +379,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         }
     }
 
-
-//    public void choosePhotoFromGallary() {
-//        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//        startActivityForResult(galleryIntent, 0);
-//    }
-//
-//    @AfterPermissionGranted(RC_CAMERA)
-//    private void takePhotoFromCamera() {
-//        String[] perms = {Manifest.permission.CAMERA};
-//        if (EasyPermissions.hasPermissions(this, perms)) {
-//            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//            startActivityForResult(intent, 1);
-//
-//
-//        } else {
-//            // Do not have permissions, request them now
-//            EasyPermissions.requestPermissions(this, context.getString(R.string.camera_rationale),
-//                    RC_CAMERA, perms);
-//        }
-//    }
-//
-//    private void showPictureDialog() {
-//        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-//        pictureDialog.setTitle("Select Action");
-//        String[] pictureDialogItems = {
-//                "Select photo from gallery",
-//                "Capture photo from camera"};
-//        pictureDialog.setItems(pictureDialogItems,
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        switch (i) {
-//                            case 0:
-//                                choosePhotoFromGallary();
-//                                break;
-//                            case 1:
-//                                takePhotoFromCamera();
-//                                break;
-//                        }
-//                    }
-//                });
-//
-//        pictureDialog.show();
-//    }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == 0) {
-//            if (data != null) {
-//                Uri contentURI = data.getData();
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    Toast.makeText(EditProfile.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//
-//                    Bitmap b = getCorrectlyOrientedImage(context, contentURI, 200);
-//                    profile_image.setImageBitmap(b);
-//                    //  bgImage.setImageBitmap(b);
-//
-//
-//                    byte[] bte = bitmaptoByte(b);
-//                    Blurry.with(EditProfile.this).from(b).into(bgImage);
-//
-//                    SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = preferences.edit();
-//                    editor.putString("MYIMAGES", contentURI.toString());
-//                    editor.apply();
-//
-//                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
-//                    MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
-//                    saveDataToDatabase(body);
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(EditProfile.this, "Failed!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//        } else if (requestCode == 1) {
-//
-//
-//            Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
-//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//            byte[] b = bitmaptoByte(thumbnail);
-//            //Uri imageur = getImageUri(context, thumbnail);
-//
-//
-//            // Toast.makeText(context, String.valueOf(imageur), Toast.LENGTH_LONG).show();
-//            String s = saveImage(thumbnail);
-//
-//            try {
-//
-//                Bitmap bitmap = getCorrectlyOrientedImage(context, Uri.parse(s), 200);
-//                profile_image.setImageBitmap(bitmap);
-//                bgImage.setImageBitmap(bitmap);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//
-//            }
-//
-//
-//            Toast.makeText(EditProfile.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//
-//        }
-//    }
 
 
     public static int getOrientation(Context context, Uri photoUri) {
@@ -508,42 +479,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         return data;
     }
 
-//
-//    public Uri getImageUri(Context inContext, Bitmap inImage) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-//        return Uri.parse(path);
-//    }
-//
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                String.valueOf(Environment.getExternalStorageDirectory()));
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
 
 
     @Override
@@ -568,7 +503,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         .load(Uri.parse(userProfileUrl))
                         .into(profile_image);
                 profileBlur(userProfileUrl);
+
+
+
+
+               // cropImageView.setImageUriAsync(Uri.parse(userProfileUrl));
             }
+
+
 
         }
     }
@@ -812,13 +754,47 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         if (valid) {
 
 
-            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
+           // sendOTP(Long.parseLong(mobilenumber),countrycodes,firstname, lastnames, usernames, emailid, details);
+
+            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(lastnames, firstname, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
             ProfileUpdate(profileUpdateRequest);
+
+
         } else {
 
         }
 
 
+    }
+
+
+    void sendOTP(final long mobilenumber,final  int countrycode,final String firstname,final String lastname,final String username,final String emailId,final String details)
+    {
+        ApiCallingService.Auth.requestResetPasswordByPhone(mobilenumber, countrycode)
+                .enqueue(new Callback<ResultObject>() {
+                    @Override
+                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                        if (response.code() == 200) {
+                            if (response.body().getStatus()) {
+
+                                Toast.makeText(context,"OTP SENT",Toast.LENGTH_LONG).show();
+
+
+                                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastname, username, emailId, mobilenumber, countrycode, gender, details);
+                                ProfileUpdate(profileUpdateRequest);
+
+
+                            } else {
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
     }
 
 
