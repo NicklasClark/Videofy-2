@@ -96,8 +96,8 @@ public class SignupFragment extends AuthFragment {
             setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
     }
 
-    @OnTouch(R.id.signup_password) public boolean onSignupPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event, context);
+    @OnClick(R.id.signup_password) public void onSignupPasswordShow() {
+        togglePasswordVisibility(passwordView, context);
     }
 
     @OnFocusChange(R.id.signup_username) public void onUsernameFocusChanged(boolean isFocused) {

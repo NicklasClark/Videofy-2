@@ -318,4 +318,5 @@
     <string name="report_post_dialog_message">Are you sure you want to report this video</string>
     <string name="report_btn_text">Report</string>
     <string name="reaction_not_found">Reaction might be deleted by user</string>
+    <string name="logo">logo</string>
 </resources>

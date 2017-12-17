@@ -22,6 +22,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.SharedPrefs;
@@ -69,6 +70,7 @@ public class LoginFragment extends AuthFragment {
     public static final int EMAIL_FORMAT = 11;
     public static final int USERNAME_FORMAT = 12;
 
+
     @BindView(R.id.login_btn) ProximaNovaSemiboldButton loginBtn;
     @BindView(R.id.forgot_password_btn) ProximaNovaSemiboldButton forgotPasswordBtn;
     @BindView(R.id.login_username) ProximaNovaRegularAutoCompleteTextView usernameView;
@@ -85,6 +87,7 @@ public class LoginFragment extends AuthFragment {
     private String enteredText;
 //    private boolean isEmail;
     private boolean isComingFromResetPassword = false;
+    public  static boolean isAlreadyOTP=false;
 
     private LoginInteractionListener mListener;
 
@@ -110,6 +113,16 @@ public class LoginFragment extends AuthFragment {
             countryCode = getArguments().getInt(COUNTRY_CODE);
 //            isEmail = getArguments().getBoolean(IS_EMAIL);
             isComingFromResetPassword = true;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isAlreadyOTP)
+        {
+            isAlreadyOTP=false;
+            onLoginthroughOTP();
         }
     }
 
@@ -193,9 +206,55 @@ public class LoginFragment extends AuthFragment {
     }
 
     @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(passwordView, event, context);
-    }
+        if (passwordView.getCompoundDrawables()[2] != null) {
+            if (event.getAction() == MotionEvent.ACTION_UP &&
+                    event.getRawX() >= passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+                if(isPasswodShown) {
+                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
+                    passwordView.setSelection(passwordView.getText().length());
+                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    passwordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=false;
+                }
+                else
+                {
+                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                    passwordView.setSelection(passwordView.getText().length());
+                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    passwordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=true;
 
+                }
+                return true;
+    //            return togglePasswordVisibility(passwordView, context);
+            }
+            return false;
+        }
+        return false;
+    }
+//    @OnTouchClick(R.id.login_password) public void onPasswordShow() {
+//        if(isPasswodShown) {
+//
+//            passwordView.setTypeface(new TypeFactory(context).regular);
+//            passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_viewfilled_cross, 0);
+//            passwordView.setTypeface(new TypeFactory(context).regular);
+//            passwordView.setTypeface(new TypeFactory(context).regular);
+//            passwordView.setSelection(passwordView.getText().length());
+//            passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//            isPasswodShown=false;
+//        }
+//        else
+//        {
+//            passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_viewfilled, 0);
+//            passwordView.setTypeface(new TypeFactory(context).regular);
+//            passwordView.setTypeface(new TypeFactory(context).regular);
+//            passwordView.setSelection(passwordView.getText().length());
+//            passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+//            isPasswodShown=true;
+//
+//        }
+//        togglePasswordVisibility(passwordView, context);
+//    }
     @OnEditorAction(R.id.login_password) public boolean onLoginByKeyboard(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_GO) {
             onLoginBtnClick();
@@ -240,8 +299,15 @@ public class LoginFragment extends AuthFragment {
         mListener.onLoginFragmentInteraction(FORGOT_PASSWORD_ACTION, new Authorize(username));
     }
 
-    @OnClick(R.id.login_through_otp) public void onLoginThroughOtpClicked() {
+    @OnClick(R.id.login_through_otp)
+    public void onLoginThroughOtpClicked() {
 //            Toggle login through OTP
+
+        onLoginthroughOTP();
+
+    }
+    public void onLoginthroughOTP()
+    {
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         //setting padding
@@ -249,11 +315,9 @@ public class LoginFragment extends AuthFragment {
         int trbPadding = (int) (14*scale + 0.5f);
 //        int leftPadding = (int) (0*scale + 0.5f);
         usernameView.setPadding(0, trbPadding, trbPadding, trbPadding);
-
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
         usernameView.setTextAppearance(context, R.style.AppTheme_PhoneNumberEditText);
-        //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
         countryCodePicker.setVisibility(VISIBLE);
         if (countryCode == -1) {

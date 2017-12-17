@@ -93,8 +93,8 @@ public class ForgotPasswordResetFragment extends AuthFragment {
         }
     }
 
-    @OnTouch(R.id.forgot_pwd_reset_new_password) public boolean onNewPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(resetNewPasswordView, event, context);
+    @OnClick(R.id.forgot_pwd_reset_new_password) public void onNewPasswordShow() {
+        togglePasswordVisibility(resetNewPasswordView, context);
     }
 
     @OnTextChanged(R.id.forgot_pwd_reset_confirm_password) public void confirmPasswordTextChanged(CharSequence charSequence) {
@@ -106,8 +106,8 @@ public class ForgotPasswordResetFragment extends AuthFragment {
         }
     }
 
-    @OnTouch(R.id.forgot_pwd_reset_confirm_password) public boolean onConfirmPasswordShow(MotionEvent event) {
-        return togglePasswordVisibility(resetConfirmPasswordView, event, context);
+    @OnClick(R.id.forgot_pwd_reset_confirm_password) public void onConfirmPasswordShow() {
+        togglePasswordVisibility(resetConfirmPasswordView, context);
     }
 
     @OnEditorAction(R.id.forgot_pwd_reset_confirm_password) public boolean resetByKeyboard(TextView v, int actionId) {

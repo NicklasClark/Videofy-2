@@ -114,6 +114,7 @@ public class ConfirmOtpFragment extends AuthFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
+        LoginFragment.isAlreadyOTP=true;
         return rootView;
     }
 

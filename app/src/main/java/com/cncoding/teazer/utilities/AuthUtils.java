@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -63,24 +62,26 @@ public class AuthUtils {
         return SharedPrefs.getAuthToken(context) != null;
     }
 
-    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, MotionEvent event, Context context) {
+    public static boolean togglePasswordVisibility(ProximaNovaRegularAutoCompleteTextView view, Context context) {
         if (view.getCompoundDrawables()[2] != null) {
-            if (event.getRawX() >= (view.getRight() - view.getCompoundDrawables()[2].getBounds().width() * 1.5)) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                        view.setTypeface(new TypeFactory(context).regular);
-                        view.setSelection(view.getText().length());
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
-                        view.setTypeface(new TypeFactory(context).regular);
-                        view.setSelection(view.getText().length());
-                        view.setTypeface(new TypeFactory(context).regular);
-                        return true;
-                    default:
-                        return false;
-                }
+            switch (view.getInputType()) {
+                case InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT:
+                    view.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    view.setTypeface(new TypeFactory(context).regular);
+                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_viewfilled_cross, 0, 0, 0);
+
+                    view.setSelection(view.getText().length());
+                    return true;
+                case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
+                    view.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    view.setTypeface(new TypeFactory(context).regular);
+                    view.setSelection(view.getText().length());
+                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_view_filled, 0, 0, 0);
+
+                    view.setTypeface(new TypeFactory(context).regular);
+                    return true;
+                default:
+                    return false;
             }
         }
         return false;
