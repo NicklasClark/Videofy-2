@@ -1,5 +1,6 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,7 +37,10 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentVerifyOTP;
 import com.hbb20.CountryCodePicker;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -122,6 +126,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     boolean flag = false;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    public static final String VERIFY_OTP="fragment_verify_otp";
 
 
     @Override
@@ -380,9 +385,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Toast.makeText(this, "oops something went wrong, please try again", Toast.LENGTH_LONG).show();
         }
     }
-
-
-
     public static int getOrientation(Context context, Uri photoUri) {
 
         Cursor cursor = context.getContentResolver().query(photoUri,
@@ -432,7 +434,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Log.d("ImageUtil", String.format("Shrinking. maxRatio=%s",
                     maxRatio));
 
-            // Create the bitmap from file
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = (int) maxRatio;
             srcBitmap = BitmapFactory.decodeStream(is, null, options);
@@ -460,7 +461,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         return srcBitmap;
     }
 
-
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
@@ -480,8 +480,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         byte[] data = baos.toByteArray();
         return data;
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -505,15 +503,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                         .load(Uri.parse(userProfileUrl))
                         .into(profile_image);
                 profileBlur(userProfileUrl);
-
-
-
-
-               // cropImageView.setImageUriAsync(Uri.parse(userProfileUrl));
             }
-
-
-
         }
     }
 
@@ -559,7 +549,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             ProfileFragment.checkprofileupdated = true;
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet,Please try again", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         }
@@ -689,7 +679,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String firstname = _firstname.getText().toString();
         String lastnames = lastname;
         Integer countrycodes = countryCodeView.getSelectedCountryCodeAsInt();
-        String mobilenumber = _mobileNumber.getText().toString();
+        String newmobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
         String details = _bio.getText().toString();
         if (usernames.isEmpty() ||usernames.trim().isEmpty()||usernames.trim().equals("")) {
@@ -731,7 +721,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
         }
 
-        if (mobilenumber.isEmpty() || mobilenumber.length() < 4 || mobilenumber.length() > 13||mobilenumber.isEmpty()||mobilenumber.trim().isEmpty()||mobilenumber.trim().equals("")) {
+        if (newmobilenumber.isEmpty() || newmobilenumber.length() < 4 || newmobilenumber.length() > 13||newmobilenumber.isEmpty()||newmobilenumber.trim().isEmpty()||newmobilenumber.trim().equals("")) {
             _mobileNumber.setError("enter valid mobile number");
             _mobileNumber.requestFocus();
             valid = false;
@@ -752,42 +742,42 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             _bio.setError(null);
         }
 
-
         if (valid) {
 
+            if(Long.parseLong(newmobilenumber)==mobilenumber)
+            {
+                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, details, emailid, gender);
+                ProfileUpdate(profileUpdateRequest);
 
-           // sendOTP(Long.parseLong(mobilenumber),countrycodes,firstname, lastnames, usernames, emailid, details);
+            }
+            else
+                {
+                    sendOTP(Long.parseLong(newmobilenumber),countrycodes,firstname, lastnames, usernames, emailid, details, gender);
 
-            ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(lastnames, firstname, usernames, emailid, Long.parseLong(mobilenumber), countrycodes, gender, details);
-            ProfileUpdate(profileUpdateRequest);
-
-
-        } else {
-
+                }
         }
-
-
     }
 
-
-    void sendOTP(final long mobilenumber,final  int countrycode,final String firstname,final String lastname,final String username,final String emailId,final String details)
+    void sendOTP(final long mobilenumber,final  int countrycode,final String firstname,final String lastname,final String username,final String emailId,final String details,final int gender)
     {
-        ApiCallingService.Auth.requestResetPasswordByPhone(mobilenumber, countrycode)
+        ChangeMobileNumber changeMobileNumber=new ChangeMobileNumber(mobilenumber,countrycode);
+
+        ApiCallingService.User.changeMobileNumber(context,changeMobileNumber)
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
 
-                                Toast.makeText(context,"OTP SENT",Toast.LENGTH_LONG).show();
+                                Toast.makeText(context,"OTP has sent to your number",Toast.LENGTH_LONG).show();
+                                android.support.v4.app.FragmentManager fragmentManager =getSupportFragmentManager();
+                                FragmentVerifyOTP reportPostDialogFragment = FragmentVerifyOTP.newInstance(mobilenumber, countrycode, firstname,lastname,username,emailId,details,gender);
+                                if (fragmentManager != null) {
+                                    reportPostDialogFragment.show(fragmentManager, "fragment_verify_otp");
+                                }
 
-
-                                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastname, username, emailId, mobilenumber, countrycode, gender, details);
-                                ProfileUpdate(profileUpdateRequest);
-
-
-                            } else {
-
+                            }
+                            else {
                             }
                         }
                     }
@@ -798,6 +788,11 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     }
                 });
     }
+
+//8073083586
+
+
+
 
 
 }

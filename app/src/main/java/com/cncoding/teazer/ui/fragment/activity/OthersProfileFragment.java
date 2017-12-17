@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,8 +41,10 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
@@ -60,6 +66,8 @@ import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class OthersProfileFragment extends BaseFragment {
 
@@ -109,7 +117,7 @@ public class OthersProfileFragment extends BaseFragment {
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     @BindView(R.id.userCreationTitle)
-    ProximaNovaRegularTextView userCreationTitle;
+    ProximaNovaBoldTextView userCreationTitle;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     int accountType;
@@ -165,12 +173,16 @@ public class OthersProfileFragment extends BaseFragment {
         previousTitle = getParentActivity().getToolbarTitle();
     }
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
-        context = container.getContext();
+
+
+
+
 
         getParentActivity().updateToolbarTitle("Profile");
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
@@ -185,19 +197,21 @@ public class OthersProfileFragment extends BaseFragment {
 
                     followUser(followerfollowingid, context);
 
-                } else if (_btnfollow.getText().equals("Following")) {
+                } else if (_btnfollow.getText().equals(context.getString(R.string.following))) {
 
                     _btnfollow.setText("Follow");
                     unFollowUser(followerfollowingid, context);
 
 
-                } else if (_btnfollow.getText().equals("Requested")) {
+                } else if (_btnfollow.getText().equals(context.getString(R.string.requested))) {
 
                     _btnfollow.setText("Follow");
                     cancelRequest(followerfollowingid,context);
                 }
             }
         });
+
+
 
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,21 +377,27 @@ public class OthersProfileFragment extends BaseFragment {
 
                             if (isfollowing) {
 
-                                _btnfollow.setText("Following");
+                                //_btnfollow.setText("Following");
 
-                            } else {
+                                setActionButtonText(context, _btnfollow, R.string.following);
+
+                            }
+                            else {
                                 if (hassentrequest == true) {
 
                                     if (requestRecieved == true) {
 
-                                        _btnfollow.setText("Following");
+                                       // _btnfollow.setText("Following");
+                                        setActionButtonText(context, _btnfollow, R.string.following);
 
                                     } else {
-                                        _btnfollow.setText("Requested");
+                                       // _btnfollow.setText("Requested");
+                                        setActionButtonText(context, _btnfollow, R.string.requested);
 
                                     }
                                 } else {
-                                    _btnfollow.setText("Follow");
+                                   // _btnfollow.setText("Follow");
+                                    setActionButtonText(context, _btnfollow, R.string.follow);
                                 }
                                 layout.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
@@ -429,23 +449,28 @@ public class OthersProfileFragment extends BaseFragment {
 
                             if (isfollowing) {
 
-                                _btnfollow.setText("Following");
+                              //  _btnfollow.setText("Following");
+
+                                setActionButtonText(context, _btnfollow, R.string.following);
 
                             } else {
                                 if (hassentrequest == true) {
 
                                     if (requestRecieved == true) {
 
-                                        _btnfollow.setText("Following");
+                                   //     _btnfollow.setText("Following");
+                                        setActionButtonText(context, _btnfollow, R.string.following);
 
                                     } else {
 
-                                        _btnfollow.setText("Requested");
+                                       // _btnfollow.setText("Requested");
+                                        setActionButtonText(context, _btnfollow, R.string.requested);
                                     }
                                 } else {
 
 
-                                    _btnfollow.setText("Follow");
+                                   // _btnfollow.setText("Follow");
+                                    setActionButtonText(context, _btnfollow, R.string.follow);
 
                                 }
                                 layout.setVisibility(View.VISIBLE);
@@ -617,12 +642,14 @@ public class OthersProfileFragment extends BaseFragment {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(context, "Your Request has been cancelled", Toast.LENGTH_LONG).show();
-                            _btnfollow.setText("Follow");
+                          //  _btnfollow.setText("Follow");
+                            setActionButtonText(context, _btnfollow, R.string.follow);
 
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            _btnfollow.setText("Follow");
+                           // _btnfollow.setText("Follow");
+                            setActionButtonText(context, _btnfollow, R.string.follow);
                             Toast.makeText(context, "Your Request has already been cancelled", Toast.LENGTH_LONG).show();
                         }
 
@@ -659,11 +686,13 @@ public class OthersProfileFragment extends BaseFragment {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
-                            _btnfollow.setText("Follow");
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, _btnfollow, R.string.follow);
                         } else {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            _btnfollow.setText("Follow");
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, _btnfollow, R.string.follow);
                             Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_LONG).show();
                         }
 
@@ -703,18 +732,21 @@ public class OthersProfileFragment extends BaseFragment {
                             progressBar.setVisibility(View.GONE);
 
                             if (accountType == 1) {
-                                _btnfollow.setText("Requested");
+                                //_btnfollow.setText("Requested");
+                                setActionButtonText(context, _btnfollow, R.string.requested);
                                 Toast.makeText(context, "Your request has been sent", Toast.LENGTH_LONG).show();
 
                             } else {
-                                _btnfollow.setText("Following");
+                               // _btnfollow.setText("Following");
+
+                                setActionButtonText(context, _btnfollow, R.string.following);
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
                             }
                         } else {
 
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            _btnfollow.setText("Following");
+                           // _btnfollow.setText("Following");
                             Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
                         }
 
@@ -738,6 +770,9 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
     }
+
+
+
 
     public void openBlockUser(final int blockuserId) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
@@ -815,6 +850,45 @@ public class OthersProfileFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+
+    public static void setActionButtonText(Context context, TextView textView, int resId) {
+        textView.setText(resId);
+        switch (resId) {
+            case R.string.follow:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorIcons),
+                        context.getResources().getColor(R.color.colorIcons), 2));
+                break;
+            case R.string.following:
+                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_light, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorIcons),
+                        context.getResources().getColor(R.color.colorIcons), 2));
+                break;
+            case R.string.requested:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorIcons),
+                        context.getResources().getColor(R.color.colorIcons), 2));
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    public static GradientDrawable getBackground(Context context, TextView textView, int bgColor,
+                                                 int strokeColor, int textColor, float cornerRadius) {
+        float density = context.getResources().getDisplayMetrics().density;
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(bgColor);
+        gradientDrawable.setCornerRadius((float) (cornerRadius * density + 0.5));
+        gradientDrawable.setStroke((int) (1 * density + 0.5), strokeColor);
+        textView.setTextColor(textColor);
+        return gradientDrawable;
     }
 
 }

@@ -18,6 +18,7 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 import com.cncoding.teazer.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.model.application.DeactivateTypes;
@@ -36,6 +37,7 @@ import com.cncoding.teazer.model.user.NotificationsList;
 import com.cncoding.teazer.model.user.ReportUser;
 import com.cncoding.teazer.model.user.UpdateCategories;
 import com.cncoding.teazer.model.user.UserProfile;
+import com.cncoding.teazer.ui.fragment.activity.UpdateMobileNumber;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.IOException;
@@ -656,7 +658,17 @@ public class ApiCallingService {
             return getUserService(context).getUserProfile();
 
         }
-        
+
+        public static Call<ResultObject> changeMobileNumber(Context context, ChangeMobileNumber changeMobileNumber) {
+            return getUserService(context).changeMobileNumber(changeMobileNumber);
+
+        }
+
+          public static Call<ResultObject> updateMobileNumber(Context context, UpdateMobileNumber updateMobileNumber) {
+            return getUserService(context).updateMobileNumber(updateMobileNumber);
+
+        }
+
         public static Call<ResultObject> updateUserProfiles(ProfileUpdateRequest updateProfileDetails, Context context) {
             return getUserService(context).updateUserProfile(updateProfileDetails);
         }

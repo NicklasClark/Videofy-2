@@ -69,12 +69,22 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             final int postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
             String postUser=cont.getPostOwner().getUserName();
-            String userDp=cont.getPostOwner().getProfileMedia().getThumbUrl();
-            if (userDp!=null)
+            boolean hasProfilemedia=cont.getPostOwner().hasProfileMedia();
+            if(hasProfilemedia) {
+                String userDp = cont.getPostOwner().getProfileMedia().getMediaUrl();
+                if (userDp!=null)
+                {
+                    Glide.with(context).load(userDp)
+                            .into(viewHolder.userReactionImage);
+                }
+            }
+          else
             {
-                Glide.with(context).load(userDp)
+                Glide.with(context).load(R.drawable.ic_user_male_dp_small)
                         .into(viewHolder.userReactionImage);
             }
+
+
 
             final int videopostId = cont.getPostId();
             final String thumb_url = cont.getMedias().get(0).getThumbUrl();
@@ -94,7 +104,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             }
 
             Glide.with(context).load(thumb_url)
-                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                     .into(viewHolder.thumbimage);
 
             viewHolder.location.setText(postUser);
@@ -104,8 +113,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             viewHolder.txtview.setText(String.valueOf(txtview));
 
             getPostReaction(viewHolder, postId);
-
-
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -115,7 +122,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 }
             });
-
 
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -210,9 +216,9 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
                                     switch (i) {
                                         case 0:
-                                            Picasso.with(context)
-                                                    .load(profileurl)
-                                                    .into(viewHolder.userReactionImage);
+//                                            Picasso.with(context)
+//                                                    .load(profileurl)
+//                                                    .into(viewHolder.userReactionImage);
                                            // viewHolder.imagelayout1.setVisibility(View.VISIBLE);
 
                                             break;

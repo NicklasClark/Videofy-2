@@ -1,12 +1,16 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -80,16 +84,19 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final int accounttype = cont.getAccountType();
                 final String userType;
                 followerId = cont.getUserId();
-                userType="Following";
+                userType=context.getString(R.string.follow);
                 final boolean isfollowersDp=cont.getHasProfileMedia();
+               // viewHolder.action.setText(context.getString(R.string.following));
+                setActionButtonText(context, viewHolder.action, R.string.following);
 
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
                 }
+
                 else
                 {
                     Picasso.with(context)
@@ -100,7 +107,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             .into(viewHolder.dp);
                 }
 
-                setActionButtonText(context, viewHolder.action, R.string.following);
+
 
                 viewHolder.name.setText(followingname);
 
@@ -108,9 +115,54 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     @Override
                     public void onClick(View view) {
 
-                        if(viewHolder.action.getText().equals("Follow"))
+                        if(viewHolder.action.getText().equals(context.getString(R.string.follow)))
                         {
+
                             followUser(followerId, context, viewHolder,accounttype);
+                        }
+
+                        if(viewHolder.action.getText().equals(context.getString(R.string.following)))
+
+                        {
+
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                            dialogBuilder.setMessage("Are you sure you want to Unfollow " + followingname + "?");
+                            dialogBuilder.setPositiveButton("CONFIRM", null);
+                            dialogBuilder.setNegativeButton("CANCEL", null);
+
+                            final AlertDialog alertDialog = dialogBuilder.create();
+                            alertDialog.show();
+
+                            Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                            // override the text color of positive button
+                            positiveButton.setTextColor(Color.parseColor("#666666"));
+                            // provides custom implementation to positive button click
+                            positiveButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+
+                                    unFollowUser(followerId, context, viewHolder, accounttype);
+                                    alertDialog.dismiss();
+
+
+                                }
+                            });
+
+                            Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                            negativeButton.setTextColor(Color.parseColor("#999999"));
+
+                            negativeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+
+
+
                         }
 
 
@@ -136,7 +188,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                 if(isfollowersDp) {
 
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .placeholder(R.drawable.ic_user_male_dp_small)
@@ -192,16 +244,59 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(viewHolder.action.getText().equals("Follow")) {
+                        if(viewHolder.action.getText().equals(context.getString(R.string.follow))) {
                             followUser(followerId, context, viewHolder,accounttype);
                         }
+
                         if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
                         {
                             cancelRequest(followerId, context, viewHolder,accounttype);
 
                         }
+                        if(viewHolder.action.getText().equals(context.getString(R.string.following))) {
+
+
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                            dialogBuilder.setMessage("Are you sure you want to Unfollow " + followername + "?");
+                            dialogBuilder.setPositiveButton("CONFIRM", null);
+                            dialogBuilder.setNegativeButton("CANCEL", null);
+
+                            final AlertDialog alertDialog = dialogBuilder.create();
+                            alertDialog.show();
+
+                            Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                            // override the text color of positive button
+                            positiveButton.setTextColor(Color.parseColor("#666666"));
+                            // provides custom implementation to positive button click
+                            positiveButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+
+                                    unFollowUser(followerId, context, viewHolder, accounttype);
+                                    alertDialog.dismiss();
+
+
+                                }
+                            });
+
+                            Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                            negativeButton.setTextColor(Color.parseColor("#999999"));
+
+                            negativeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+
+                        }
+
                     }
                 });
+
 
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -273,9 +368,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             }
         });
     }
-
-
-
     private void cancelRequest(final int userId, final Context context, final FollowingAdapter.ViewHolder viewHolder, final int accounttype) {
 
         ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
@@ -310,11 +402,52 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         });
     }
 
+    public void unFollowUser(int userId,final Context context,final FollowingAdapter.ViewHolder viewHolder, final  int accountType)
+
+    {
+
+        ApiCallingService.Friends.unfollowUser(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b == true) {
+
+                            Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                        } else {
+
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
     @Override
     public int getItemCount() {
         if(counter==100)
         {
-        return list.size();
+            return list.size();
     }
     else{
             return otherlist.size();

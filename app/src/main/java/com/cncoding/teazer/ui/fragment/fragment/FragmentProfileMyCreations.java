@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
@@ -111,7 +112,7 @@ public class FragmentProfileMyCreations extends Fragment {
             public void onResponse(Call<PostList> call, Response<PostList> response) {
 
                 if (response.code() == 200) {
-                    if (response.body().getPosts() == null) {
+                    if (response.body().getPosts().size()==0) {
                         alert1.setVisibility(View.VISIBLE);
                        recyclerView.setVisibility(View.GONE);
                         progress_bar.setVisibility(View.GONE);
