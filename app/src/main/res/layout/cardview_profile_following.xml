@@ -17,7 +17,7 @@
         <com.cncoding.teazer.customViews.CircularAppCompatImageView
             android:id="@+id/dp"
             android:layout_width="@dimen/padding_double"
-            android:layout_height="@dimen/padding_double"
+            android:layout_height="36dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_user_male_dp_small"
             android:scaleType="centerCrop"
@@ -28,9 +28,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="@dimen/text_size_14sp"
+            android:textSize="@dimen/text_size_13sp"
             app:font_name="sign_painter"
             android:text="@string/following"
+            android:textColor="@color/colorPrimary_text"
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -44,7 +45,7 @@
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            android:text="@string/accept"
+            android:text="@string/follow"
             android:visibility="visible"
             android:paddingStart="8dp"
             android:paddingEnd="10dp"

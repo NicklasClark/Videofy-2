@@ -90,13 +90,16 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             likes = String.valueOf(cont.getLikes());
             reactions = cont.getTotalReactions();
             boolean hascheckin = cont.hasCheckin();
+
             if (hascheckin) {
                 String location2 = cont.getCheckIn().getLocation();
+
                 if (location2.equals("") || location2 == null) {
                     viewHolder.location.setText("");
                     viewHolder.locationimage.setVisibility(View.GONE);
                 } else {
                     viewHolder.location.setText(location2);
+                    viewHolder.locationimage.setVisibility(View.VISIBLE);
                 }
             } else {
                 viewHolder.location.setText("");
@@ -268,13 +271,16 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                 MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
-                                    String profileurl = miniProfile.getProfileMedia().getThumbUrl();
+                                    String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
                                             Picasso.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+
 
                                             break;
                                         case 1:
@@ -300,19 +306,25 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         case 0:
 
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             Picasso.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image1);
                                             break;
                                         case 1:
 
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             Picasso.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
                                         case 2:
 
+                                            viewHolder.imagelayout1.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
                                             Picasso.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
@@ -358,7 +370,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                 MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
-                                    String profileurl = miniProfile.getProfileMedia().getThumbUrl();
+
+                                    String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
                                             Picasso.with(context)
@@ -389,7 +402,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         default:
                                     }
 
-                                } else {
+                                }
+                                else {
 
                                     switch (i) {
                                         case 0:
@@ -413,7 +427,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         case 2:
 
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
-                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                           viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
                                             Picasso.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)

@@ -87,7 +87,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                 if(isfollowersDp) {
 
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .skipMemoryCache(false)
@@ -154,7 +154,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
 
-                        if(viewHolder.action.getText().equals("Follow")) {
+                        if(viewHolder.action.getText().equals(context.getString(R.string.follow))) {
                             followUser(followerId, context, viewHolder,accounttype);
                         }
                         if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
@@ -162,6 +162,14 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             cancelRequest(followerId, context, viewHolder,accounttype);
 
                         }
+
+                        if(viewHolder.action.getText().equals(context.getString(R.string.following)))
+                        {
+                            unFollowUser(followerId, context, viewHolder,accounttype);
+                        }
+
+
+
                     }
                 });
             } else {
@@ -178,7 +186,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean isblockedyou = cont.getIsBlockedYou();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
                 if(isfollowersDp) {
-                    String followrsDp = cont.getProfileMedia().getThumbUrl();
+                    String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .skipMemoryCache(false)
@@ -272,7 +280,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     @Override
                     public void onClick(View view) {
 
-                        if(viewHolder.action.getText().equals("Follow"))
+                        if(viewHolder.action.getText().equals(context.getString(R.string.follow)))
                         {
                             followUser(followerId, context, viewHolder,accounttype);
                         }
@@ -280,6 +288,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         {
                             cancelRequest(followerId, context, viewHolder,accounttype);
 
+                        }
+                        if(viewHolder.action.getText().equals(context.getString(R.string.following)))
+                        {
+                            unFollowUser(followerId, context, viewHolder,accounttype);
                         }
                     }
                 });
@@ -375,6 +387,46 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
 
+    public void unFollowUser(int userId,final Context context,final FollowersAdapter.ViewHolder viewHolder, final  int accountType)
+
+    {
+
+        ApiCallingService.Friends.unfollowUser(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+                        boolean b = response.body().getStatus();
+                        if (b == true) {
+
+                            Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                        } else {
+
+                            //_btnfollow.setText("Follow");
+                            setActionButtonText(context, viewHolder.action, R.string.follow);
+                            Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
 
 

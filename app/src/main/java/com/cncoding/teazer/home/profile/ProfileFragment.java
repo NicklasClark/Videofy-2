@@ -38,6 +38,7 @@ import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
 
 import java.io.IOException;
 import java.net.URL;
@@ -265,7 +266,7 @@ public class ProfileFragment extends BaseFragment {
 //                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //
 //
-//                    FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
+     //               FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
 //                    if (fragmentManager != null) {
 //                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
 //

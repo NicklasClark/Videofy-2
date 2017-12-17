@@ -66,18 +66,16 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="10dp"
-                                        android:background="@drawable/bg_circle_white_outline"
-                                        android:padding="1.5dp">
+                                        android:background="@drawable/bg_circle_white_outline">
 
                                         <com.cncoding.teazer.customViews.CircularAppCompatImageView
                                             android:id="@+id/profile_id"
                                             android:layout_width="84dp"
                                             android:layout_height="84dp"
                                             android:layout_gravity="center_vertical"
-
                                             android:fitsSystemWindows="true"
                                             android:scaleType="centerCrop"
-                                            android:src="@drawable/ic_user_male_dp"
+                                            android:background="@drawable/ic_user_male_dp"
                                             app:layout_collapseMode="parallax" />
                                     </RelativeLayout>
                                 </LinearLayout>

@@ -24,9 +24,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="@dimen/text_size_14sp"
+            android:textSize="@dimen/text_size_13sp"
             app:font_name="sign_painter"
             android:layout_weight="1"
+            android:textColor="@color/colorPrimary_text"
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <ImageView

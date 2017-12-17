@@ -14,6 +14,7 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 import com.cncoding.teazer.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.model.application.DeactivateTypes;
@@ -33,6 +34,7 @@ import com.cncoding.teazer.model.user.Profile;
 import com.cncoding.teazer.model.user.ReportUser;
 import com.cncoding.teazer.model.user.UpdateCategories;
 import com.cncoding.teazer.model.user.UserProfile;
+import com.cncoding.teazer.ui.fragment.activity.UpdateMobileNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -703,6 +705,14 @@ import retrofit2.http.Query;
          * */
         @GET("/api/v1/user/profile")
         Call<UserProfile> getUserProfile();
+
+
+        @POST("/api/v1/user/change/phonenumber")
+        Call<ResultObject> changeMobileNumber(@Body ChangeMobileNumber changeMobileNumber);
+
+
+        @PUT("/api/v1/user/change/phonenumber/verify/otp")
+        Call<ResultObject> updateMobileNumber(@Body UpdateMobileNumber updateMobileNumber);
 
 
         @GET("/api/v1/user/profile")

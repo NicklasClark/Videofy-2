@@ -26,12 +26,6 @@ public class ProfileUpdateRequest {
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("phone_number")
-    @Expose
-    private Long phoneNumber;
-    @SerializedName("country_code")
-    @Expose
-    private Integer countryCode;
     @SerializedName("gender")
     @Expose
     private Integer gender;
@@ -76,22 +70,6 @@ public class ProfileUpdateRequest {
         this.email = email;
     }
 
-    public Long getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(Long phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Integer getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(Integer countryCode) {
-        this.countryCode = countryCode;
-    }
-
     public Integer getGender() {
         return gender;
     }
@@ -100,16 +78,14 @@ public class ProfileUpdateRequest {
         this.gender = gender;
     }
 
-    public ProfileUpdateRequest(String firstName, String lastName, String userName, String email, Long phoneNumber, Integer countryCode, Integer gender,String description) {
 
+    public ProfileUpdateRequest(String firstName, String lastName, String userName, String description, String email, Integer gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.countryCode = countryCode;
-        this.gender = gender;
         this.description = description;
+        this.email = email;
+        this.gender = gender;
     }
 }
 

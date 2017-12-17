@@ -27,6 +27,7 @@
             app:contentInsetRight="0dp"
             android:gravity="center"
             app:title="@null"
+            android:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <RelativeLayout

@@ -111,7 +111,7 @@ public class ConfirmOtpFragment extends AuthFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
         return rootView;
@@ -180,7 +180,8 @@ public class ConfirmOtpFragment extends AuthFragment {
         }
     }
 
-    @OnTextChanged(R.id.otp_1) public void Otp1TextChanged(CharSequence charSequence) {
+    @OnTextChanged(R.id.otp_1)
+    public void Otp1TextChanged(CharSequence charSequence) {
         if (charSequence.toString().length() >= 1) {
             otp2EditText.requestFocus();
         }
@@ -210,10 +211,12 @@ public class ConfirmOtpFragment extends AuthFragment {
             otp3EditText.requestFocus();
     }
 
+
     @SuppressWarnings("ConstantConditions")
     private void verifyOtp() {
         otpVerifiedTextView.setText("");
         ViewUtils.hideKeyboard(getParentActivity(), otp4EditText);
+
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 final Authorize verify = new Authorize(
