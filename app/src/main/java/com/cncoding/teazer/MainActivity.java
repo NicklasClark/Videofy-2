@@ -597,7 +597,7 @@ public class MainActivity extends AppCompatActivity
                 File profileImage = new File(strings[0]);
                 if (profileImage.exists()) {
                     RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
-                    return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+                    return MultipartBody.Part.createFormData("media", profileImage.getName(), requestBody);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

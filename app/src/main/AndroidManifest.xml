@@ -283,7 +283,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".videoTrim.TrimmerActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.fragment.activity.ReactionPlayerActivity"
             android:screenOrientation="portrait"

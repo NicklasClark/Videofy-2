@@ -1157,6 +1157,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             togglePlayPauseBtnVisibility(true);
                             break;
                         case STATE_BUFFERING:
+                            playPauseButton.setVisibility(INVISIBLE);
                             progressBar.setVisibility(VISIBLE);
                             break;
                         case STATE_READY:

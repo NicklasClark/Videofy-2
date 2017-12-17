@@ -13,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+<!--        <TextView
             android:layout_width="match_parent"
             android:layout_height="16dp"
             android:layout_margin="7dp"
-            android:background="@color/colorShimmer"/>
+            android:background="@color/colorShimmer"/>-->
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -59,28 +59,9 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_home_screen_post" />
 
-<!--        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
-            android:id="@+id/post_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="0.25dp"
-            android:paddingEnd="0.25dp"
-            android:paddingTop="@dimen/padding_x_thin"
-            android:paddingBottom="@dimen/padding_with_navigation_bar_height"
-            android:clipToPadding="false"
-            app:spanCount="2"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:shimmer_demo_child_count="10"
-            app:shimmer_demo_layout="@layout/item_home_screen_shimmer"
-            app:shimmer_demo_layout_manager_type="grid"
-            app:shimmer_demo_grid_child_count="2"
-            app:shimmer_demo_shimmer_color="#C1C1C1"
-            app:shimmer_demo_view_holder_item_background="@color/material_grey200"
-            app:shimmer_demo_angle="30"/>-->
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/progress_bar_horizontal"/>
+    <!--<include layout="@layout/progress_bar_horizontal"/>-->
 
 <!--    <ProgressBar
         android:id="@+id/customProgress"

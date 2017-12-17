@@ -42,7 +42,6 @@
                     android:src="@drawable/ic_teazer_top"
                     android:textColor="@color/colorPrimary_text"
                     android:layout_centerInParent="true"
-
                     android:textSize="@dimen/text_size_h3"
                     android:gravity="center"
                     tools:ignore="PrivateResource,RelativeOverlap"

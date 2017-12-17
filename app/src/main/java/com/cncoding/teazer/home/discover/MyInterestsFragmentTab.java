@@ -133,7 +133,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
                                                 reference.get().categoryName + reference.get().getString(R.string.yet_uploaded);
                                         reference.get().noPosts.setText(noVideosText);
                                         reference.get().noPosts.setVisibility(View.VISIBLE);
-                                        reference.get().noPosts2.setVisibility(View.VISIBLE);
+                                        reference.get().noPosts2.setVisibility(View.INVISIBLE);
                                     }
                                 } else
                                     Log.e("GetPosts", response.code() + "_" + response.message());

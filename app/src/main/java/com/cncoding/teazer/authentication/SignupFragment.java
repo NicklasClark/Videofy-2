@@ -56,6 +56,7 @@ public class SignupFragment extends AuthFragment {
 
     private OnInitialSignupInteractionListener mListener;
     private String picturePath;
+    private Bitmap selectedBitmap;
     //    private Context context;
 
     public SignupFragment() {
@@ -76,6 +77,11 @@ public class SignupFragment extends AuthFragment {
         ButterKnife.bind(this, rootView);
 //        nameView.setFilters(new InputFilter[] {FilterFactory.nameFilter});
 //        emailView.setFilters(new InputFilter[] {FilterFactory.emailFilter});
+        if (selectedBitmap != null) {
+            dp.setImageBitmap(selectedBitmap);
+            dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+        }
+
         return rootView;
     }
 
@@ -192,7 +198,7 @@ public class SignupFragment extends AuthFragment {
                 case RESULT_CROP:
                     if (data != null) {
                         Bundle extras = data.getExtras();
-                        Bitmap selectedBitmap = null;
+                        selectedBitmap = null;
                         if (extras != null) {
                             selectedBitmap = extras.getParcelable("data");
                         }

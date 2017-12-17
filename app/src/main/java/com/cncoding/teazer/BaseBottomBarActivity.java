@@ -155,7 +155,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
     @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) public AppBarLayout appBar;
+    @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
@@ -832,7 +832,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_NONE);
+                    "Upload notification", NotificationManager.IMPORTANCE_LOW);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");
