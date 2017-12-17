@@ -162,6 +162,11 @@ public class LoginFragment extends AuthFragment {
                 if (countryCodePicker.getVisibility() != VISIBLE) {
                     countryCodePicker.setVisibility(VISIBLE);
                     usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+                    float scale = getResources().getDisplayMetrics().density;
+                    int trbPadding = (int) (14*scale + 0.5f);
+                    int leftPadding = (int) (0*scale + 0.5f);
+                    usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+
                 }
             } else {
                 if (countryCodePicker.getVisibility() == VISIBLE) {
@@ -247,8 +252,8 @@ public class LoginFragment extends AuthFragment {
         //setting padding
         float scale = getResources().getDisplayMetrics().density;
         int trbPadding = (int) (14*scale + 0.5f);
-//        int leftPadding = (int) (0*scale + 0.5f);
-        usernameView.setPadding(0, trbPadding, trbPadding, trbPadding);
+        int leftPadding = (int) (0*scale + 0.5f);
+        usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
 
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
