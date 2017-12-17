@@ -85,7 +85,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (page > 1 && is_next_page)
+                if (is_next_page)
                     new GetPosts(MyInterestsFragmentTab.this).execute(page);
             }
         };
