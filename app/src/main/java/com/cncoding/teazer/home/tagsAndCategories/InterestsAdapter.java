@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.tagsAndCategories;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
@@ -117,18 +117,18 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private void setCheck(ProximaNovaRegularCheckedTextView view, int position, boolean animate, boolean checked) {
         if (!isForVideo) {
             checkAction(view, position, checked);
-            if (animate)
-                view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
         } else {
             if (selectedInterests.size() < 5) {
                 checkAction(view, position, checked);
             } else {
                 if (checked)
-                    Snackbar.make(interests.saveBtn, R.string.selection_limit_message, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(interests.getContext(), R.string.selection_limit_message, Toast.LENGTH_SHORT).show();
                 else
                     checkAction(view, position, false);
             }
         }
+        if (animate)
+            view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
     private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean checked) {

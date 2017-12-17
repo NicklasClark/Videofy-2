@@ -570,6 +570,21 @@ public class BaseBottomBarActivity extends BaseActivity
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
+        toggleBottomBar(navigationController.isRootFragment());
+    }
+
+    public void toggleBottomBar(boolean isVisible) {
+        if (isVisible) {
+            if (blurView.getVisibility() != VISIBLE && cameraButton.getVisibility() != VISIBLE) {
+                blurView.setVisibility(VISIBLE);
+                cameraButton.setVisibility(VISIBLE);
+            }
+        } else {
+            if (blurView.getVisibility() == VISIBLE && cameraButton.getVisibility() == VISIBLE) {
+                blurView.setVisibility(GONE);
+                cameraButton.setVisibility(GONE);
+            }
+        }
     }
 
     /**

@@ -17,6 +17,7 @@ public class Medias implements Parcelable {
     private boolean is_image;
     public int views;
     private String created_at;
+
     public Medias(int media_id, String media_url, String thumb_url, String duration,
                   Dimension dimension, boolean is_image, int views, String created_at) {
         this.media_id = media_id;

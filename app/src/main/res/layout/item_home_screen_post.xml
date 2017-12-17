@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
-            app:drawableStartCompat="@drawable/ic_like_outline_8x8"
+            app:drawableStartCompat="@drawable/ic_like_smaller"
             android:gravity="end|center_vertical"
             android:maxLines="1"
             android:singleLine="true"

@@ -4,7 +4,7 @@
     tools:context="com.cncoding.teazer.home.discover.SubDiscoverFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_grey200"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="7dp"
-                android:paddingBottom="57dp"
+                android:paddingBottom="7dp"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
                 android:clipToPadding="false"
@@ -52,8 +52,6 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/padding_half"
-        android:paddingBottom="@dimen/padding_half"
         android:visibility="gone"
         android:layout_below="@+id/my_interests_tab_layout" />
 
