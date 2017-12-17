@@ -171,7 +171,12 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
     @Override
     public int getItemCount() {
-        return postDetailsArrayList.size() < 3 ? 3 : postDetailsArrayList.size();
+        try {
+            return postDetailsArrayList.size() < 3 ? 3 : postDetailsArrayList.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

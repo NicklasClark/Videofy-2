@@ -58,7 +58,7 @@ public class NavigationTransactionOptions {
         private String breadCrumbTitle;
         private String breadCrumbShortTitle;
 
-        private Builder() {
+        public Builder() {
         }
 
         public Builder addSharedElement(Pair<View, String> val) {
@@ -91,7 +91,6 @@ public class NavigationTransactionOptions {
             this.popExitAnimation = popExitAnimation;
             return customAnimations(enterAnimation, exitAnimation);
         }
-
 
         public Builder transitionStyle(@StyleRes int val) {
             transitionStyle = val;

@@ -8,8 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -44,8 +42,6 @@
     <RelativeLayout
         android:layout_below="@+id/videoOptions"
         android:id="@+id/layout_surface_view"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout"
@@ -91,8 +87,6 @@
             android:id="@+id/video_thumb_listview"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginLeft="14dp"
             android:layout_marginTop="16dp"
             android:layout_below="@+id/video_shoot_tip"
             android:paddingLeft="6dp"

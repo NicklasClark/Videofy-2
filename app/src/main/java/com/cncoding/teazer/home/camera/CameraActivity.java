@@ -97,7 +97,6 @@ import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
 import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
@@ -209,7 +208,9 @@ public class CameraActivity extends AppCompatActivity
         };
         slidingUpPanelLayout.addPanelSlideListener(panelSlideListener);
 
-        new GetVideoGalleryData(this).execute();
+//        if (videosList != null && videosList.isEmpty())
+            new GetVideoGalleryData(this).execute();
+//        else recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void startVideoUploadFragment() {
@@ -233,7 +234,7 @@ public class CameraActivity extends AppCompatActivity
         switch (action) {
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
-                updateMediaStoreDatabase(this, uploadParams.getVideoPath());
+//                updateMediaStoreDatabase(this, uploadParams.getVideoPath());
 //                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                compressVideoAsyncTask.delegate = this;
 //                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
@@ -257,8 +258,7 @@ public class CameraActivity extends AppCompatActivity
                     uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
                     startVideoUploadFragment();
                 }
-                else
-                {
+                else {
                     Bundle bundle = new Bundle();
                     bundle.putString("path", videoPath);
                     bundle.putInt("MAX_DURATION", (int)getVideoDuration(videoPath));
@@ -267,7 +267,7 @@ public class CameraActivity extends AppCompatActivity
                     startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
                 }
         } else
-            Toast.makeText(this, "Cannot find this file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -277,8 +277,7 @@ public class CameraActivity extends AppCompatActivity
         startVideoUploadFragment();
     }
 
-    private long getVideoDuration(String videoFile)
-    {
+    private long getVideoDuration(String videoFile) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(videoFile);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -490,30 +489,35 @@ public class CameraActivity extends AppCompatActivity
             Cursor cursor;
             int columnIndexData;
 //                int columnId;
-//                int columnFolderName;
+            int duration;
             int thumbnailData;
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
             String[] projection = {
                     MediaStore.MediaColumns.DATA,
-//                        MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+                    MediaStore.Video.VideoColumns.DURATION,
 //                        MediaStore.Video.Media._ID,
-                    MediaStore.Video.Thumbnails.DATA
+//                    MediaStore.Video.Thumbnails.DATA
             };
             final String orderByDateTaken = MediaStore.Video.Media.DATE_TAKEN;
 
-            cursor = reference.get().getContentResolver().query(uri, projection, null, null,
+//            cursor = reference.get().getContentResolver().query(uri, projection,
+//                    MediaStore.Video.Media.DURATION + ">=3000", null,
+//                    orderByDateTaken + " DESC");
+            cursor = reference.get().getContentResolver().query(uri, projection,
+                    null, null,
                     orderByDateTaken + " DESC");
             if (cursor != null) {
                 columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-//                    columnFolderName = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
+                duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
 //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
                 thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
                 while (cursor.moveToNext()) {
                     reference.get().videosList.add(new Videos(
                             cursor.getString(columnIndexData),              //Video path
-                            cursor.getString(thumbnailData)                 //Thumbnail
+//                            cursor.getString(thumbnailData),                //Thumbnail
+                            cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
                     ));
                 }
                 cursor.close();

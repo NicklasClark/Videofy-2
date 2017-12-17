@@ -7,11 +7,13 @@ package com.cncoding.teazer.home.camera;
 
 public class Videos {
     private String path;
-    private String thumbnail;
+//    private String thumbnail;
+    private long duration;
 
-    Videos(String path, String thumbnail) {
+    Videos(String path, long duration) {
         this.path = path;
-        this.thumbnail = thumbnail;
+//        this.thumbnail = thumbnail;
+        this.duration = duration;
     }
 
     public String getPath() {
@@ -22,9 +24,14 @@ public class Videos {
         this.path = path;
     }
 
-    String getThumbnail() {
-        return thumbnail;
+//    String getThumbnail() {
+//        return thumbnail;
+//    }
+
+    public long getDuration() {
+        return duration;
     }
+
 
 //    public void setThumbnail(String thumbnail) {
 //        this.thumbnail = thumbnail;

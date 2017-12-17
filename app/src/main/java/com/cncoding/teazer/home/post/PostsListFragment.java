@@ -74,6 +74,11 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         recyclerView.setAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
         recyclerView.setOnKeyListener(this);
+//        recyclerView.setLayoutAnimation(
+//                new LayoutAnimationController(
+//                        AnimationUtils.loadAnimation(getContext(), R.anim.float_down),
+//                        0.2f
+//                ));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
@@ -230,16 +235,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
-                    if (isAdded()) {
-                        if (t.getMessage().contains("resolve"))
-                            showErrorMessage("No internet connection found!");
-                        else
-                            showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
-                        dismissRefreshView();
-                    }
+                    dismissRefreshView();
                 }
             });
-
     }
 
     public void dismissProgressBar() {

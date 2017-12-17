@@ -68,4 +68,9 @@
         <attr name="android:requiresFadingEdge" />
         <attr name="android:fadingEdgeLength" />
     </declare-styleable>
+    <declare-styleable name="ButteryProgressBar">
+        <attr name="barColor" format="color"/>
+        <attr name="barHeight" format="dimension"/>
+        <attr name="detentWidth" format="dimension"/>
+    </declare-styleable>
 </resources>

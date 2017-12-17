@@ -246,26 +246,31 @@ public class Interests extends BaseFragment {
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
         selectedData = getSelectedInterestsToShow(interestsAdapter.getSelectedInterests());
         resultToSend = getSelectedInterestsToSend(interestsAdapter.getSelectedInterests());
-        ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            Log.d("Updating interests", "Updated successfully");
-                        } else {
-                            Log.d("Updating interests", response.code() + " : " + response.message());
+        if (!isForVideo) {
+            ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
+                    .enqueue(new Callback<ResultObject>() {
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            try {
+                                if (response.code() == 200) {
+                                    Log.d("Updating interests", "Updated successfully");
+                                } else {
+                                    Log.d("Updating interests", response.code() + " : " + response.message());
+                                }
+                                mListener.onInterestsInteraction();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        if (!isForVideo)
-                            mListener.onInterestsInteraction();
-                        else
-                            mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
-                    }
 
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+        }
+        else
+            mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
     }
 
     private String getSelectedInterestsToShow(SparseArray<Category> sparseArray) {

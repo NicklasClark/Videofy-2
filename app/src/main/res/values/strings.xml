@@ -255,7 +255,7 @@
     <string name="swipe_down_to_retry">Swipe down to retry</string>
     <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
     <string name="something_went_wrong">Something went wrong\nPlease try again later.</string>
-    <string name="edit">EDIT</string>
+    <string name="edit">Edit</string>
     <string name="people">People</string>
     <string name="error_fetching_posts">There was an error fetching posts. Please try again later.</string>
     <string name="error_fetching_data">There was an error fetching the data. Please try again later.</string>
@@ -317,4 +317,5 @@
     <string name="repot_post_dialog_title">Report User</string>
     <string name="report_post_dialog_message">Are you sure you want to report this video</string>
     <string name="report_btn_text">Report</string>
+    <string name="reaction_not_found">Reaction might be deleted by user</string>
 </resources>

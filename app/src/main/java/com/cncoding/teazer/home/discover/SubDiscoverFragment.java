@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -160,8 +161,16 @@ public class SubDiscoverFragment extends BaseFragment {
         populateTabs();
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(0).getColor()));
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(position).getColor()));
+                fadeOtherTabColorsOut(position);
+                setCurrentTabTextColor(position);
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
@@ -197,13 +206,32 @@ public class SubDiscoverFragment extends BaseFragment {
             LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
             linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
             AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
-            view.setTextColor(Color.parseColor(categories.get(i).getColor()));
-            
+            view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            view.setTextColor(i == 0 ? Color.parseColor(categories.get(i).getColor()) : Color.parseColor("#666666"));
         }
     }
 
+    private void setCurrentTabTextColor(int position) {
+        LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(position));
+        linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
+        AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
+        view.setTextColor(Color.parseColor(categories.get(position).getColor()));
+    }
+
+    private void fadeOtherTabColorsOut(int excludePosition) {
+        for (int i = 0; i < categories.size(); i++) {
+            if (i != excludePosition) {
+                LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(i));
+                linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
+                AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
+                view.setTextColor(Color.parseColor("#666666"));
+            }
+        }
+
+    }
+
     private int getPixel() {
-        return (int)((8 * getResources().getDisplayMetrics().density) + 0.5);
+        return (int)((34 * getResources().getDisplayMetrics().density) + 0.5);
     }
 
     private static class GetTrendingVideos extends AsyncTask<Integer, Void, Void> {

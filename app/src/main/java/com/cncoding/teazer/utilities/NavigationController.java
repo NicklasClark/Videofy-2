@@ -688,18 +688,17 @@ public class NavigationController {
         }
         if (transactionOptions != null) {
 
-            ft.setCustomAnimations(transactionOptions.enterAnimation, transactionOptions.exitAnimation, transactionOptions.popEnterAnimation, transactionOptions.popExitAnimation);
+            ft.setCustomAnimations(transactionOptions.enterAnimation, transactionOptions.exitAnimation,
+                    transactionOptions.popEnterAnimation, transactionOptions.popExitAnimation);
             ft.setTransitionStyle(transactionOptions.transitionStyle);
 
             ft.setTransition(transactionOptions.transition);
-
 
             if (transactionOptions.sharedElements != null) {
                 for (Pair<View, String> sharedElement : transactionOptions.sharedElements) {
                     ft.addSharedElement(sharedElement.first, sharedElement.second);
                 }
             }
-
 
             if (transactionOptions.breadCrumbTitle != null) {
                 ft.setBreadCrumbTitle(transactionOptions.breadCrumbTitle);

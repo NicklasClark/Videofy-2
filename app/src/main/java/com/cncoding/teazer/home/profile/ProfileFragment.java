@@ -144,6 +144,8 @@ public class ProfileFragment extends BaseFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
+        getParentActivity().appBar.setExpanded(true, true);
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
         tabLayout = view.findViewById(R.id.sliding_tabs);

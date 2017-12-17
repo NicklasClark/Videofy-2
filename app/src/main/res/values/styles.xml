@@ -71,6 +71,8 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionMenuTextColor">@color/colorPrimary_text</item>
+        <item name="android:actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
+        <item name="android:actionMenuTextAppearance">@style/AppTheme.Widget.ActionButton</item>
         <!--<item name="android:textColor">@color/colorPrimary_text</item>-->
         <!--<item name="android:textColorPrimary">@color/colorPrimary_text</item>-->
         <item name="android:textColorSecondary">@color/colorSecondary_text</item>
@@ -548,6 +550,7 @@ isConnected<![CDATA[
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:textColor">#333333</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:navigationBarColor">@android:color/black</item>
@@ -584,5 +587,17 @@ isConnected<![CDATA[
 
     </style>
 
+    <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:capitalize">words</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal</item>
+        <item name="android:minHeight">10dip</item>
+        <item name="android:maxHeight">20dip</item>
+    </style>
 
 </resources>

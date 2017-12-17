@@ -64,8 +64,13 @@ public class SharedPrefs {
     }
 
     public static String getAuthToken(Context context) {
-        return getSharedPreferences(context)
-                .getString(AUTH_TOKEN, null);
+        try {
+            return getSharedPreferences(context)
+                    .getString(AUTH_TOKEN, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static void resetAuthToken(Context context) {

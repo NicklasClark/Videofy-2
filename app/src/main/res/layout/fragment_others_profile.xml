@@ -104,8 +104,6 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="10dp"
                                             android:maxLines="1"
-                                            android:paddingBottom="5dp"
-                                            android:text="usernamezp"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="27sp" />
 
@@ -151,7 +149,6 @@
                                             android:ellipsize="end"
                                             android:lineSpacingExtra="2dp"
                                             android:maxLines="2"
-                                            android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
 

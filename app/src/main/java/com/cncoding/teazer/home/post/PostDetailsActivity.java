@@ -94,8 +94,13 @@ import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,9 +108,7 @@ import butterknife.OnClick;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
-import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -144,6 +147,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
     public static final String ARG_THUMBNAIL = "thumbnail";
+    public static final String ARG_REACT_ID = "react_id";
     //    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
     public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
     //</editor-fold>
@@ -204,6 +208,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private boolean isAudioEnabled;
     private int likes;
     private int views;
+    private long totalDuration;
     private boolean oneShotFlag;
 
     StartCountDownClass startCountDownClass;
@@ -224,6 +229,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private ReactionUploadReceiver reactionUploadReceiver;
     private static boolean isDeepLink = false;
     private String thumbUrl;
+    private String reactId;
+    private static boolean isReactionPlayed = false;
     //</editor-fold>
 
     public PostDetailsActivity() {
@@ -231,7 +238,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     }
 
     public static void newInstance(Context packageContext, @NonNull PostDetails postDetails, byte[] image,
-                                   boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl) {
+                                   boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
         Intent intent = new Intent(packageContext, PostDetailsActivity.class);
         intent.putExtra(ARG_POST_DETAILS, postDetails);
         if (!isDeepLink) {
@@ -239,6 +246,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         } else {
             PostDetailsActivity.isDeepLink = true;
             intent.putExtra(ARG_THUMBNAIL, thumbUrl);
+            intent.putExtra(ARG_REACT_ID, react_id);
         }
 //        intent.putExtra(ARG_ENABLE_REACT_BTN, enableReactBtn);
         intent.putExtra(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
@@ -277,11 +285,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             else
             {
                 thumbUrl = getIntent().getStringExtra(ARG_THUMBNAIL);
+                reactId = getIntent().getStringExtra(ARG_REACT_ID);
+                isReactionPlayed = false;
             }
 //            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
             isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
     }
 
     @Override
@@ -333,6 +344,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         taggedUserListView.setAdapter(new TagListAdapter(this, taggedUsersList));
 
         getTaggedUsers(1);
+
     }
 
     private void logTheDensity() {
@@ -400,8 +412,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 categoriesView.setText(categories);
             } else categoriesView.setVisibility(GONE);
 
-            String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
-//            remainingTime.setText(duration);
+            try {
+                String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
+                remainingTime.setText(duration);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd mm:ss", Locale.getDefault());
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date date = sdf.parse("1970-01-01 " + duration);
+                totalDuration = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()));
             tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
@@ -486,6 +506,18 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                     if (postReactions.size() >= 3) {
                                         setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
                                     }
+                                }
+
+                                if(reactId != null && postReactions.size()>0 && !isReactionPlayed)
+                                {
+                                    if(postReactions.contains(new PostReaction(Integer.parseInt(reactId))))
+                                    {
+                                        int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
+                                        postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
+                                    }
+                                    else
+                                        Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
+                                    isReactionPlayed = true;
                                 }
                             } else {
                                 setNoReactions();
@@ -762,7 +794,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes++;
+                    PostsListFragment.postDetails.likes += 1;
                     PostsListFragment.postDetails.can_like = false;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
@@ -774,7 +806,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes--;
+                    PostsListFragment.postDetails.likes -= 1;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
@@ -864,42 +896,47 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .addControlParameter("$desktop_url", "https://teazer.in/")
                 .addControlParameter("$ios_url", "https://teazer.in/");
 
-//        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
-//            @Override
-//            public void onLinkCreate(String url, BranchError error) {
-//                if (error == null)    {
-//                    Log.i("MyApp", "got my Branch link to share: " + url);
-//                }
-//            }
-//        });
-        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
-                "Check this out!", "This video is awesome: ")
-                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
-                        "Copy", "Added to clipboard")
-                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
-                .setAsFullWidthStyle(true)
-                .setSharingTitle("Share With");
+        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+            @Override
+            public void onLinkCreate(String url, BranchError error) {
+                if (error == null)    {
 
-        branchUniversalObject.showShareSheet(this,
-                linkProperties,
-                shareSheetStyle,
-                new Branch.BranchLinkShareListener() {
-                    @Override
-                    public void onShareLinkDialogLaunched() {
-                    }
-                    @Override
-                    public void onShareLinkDialogDismissed() {
-                    }
-                    @Override
-                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                    }
-                    @Override
-                    public void onChannelSelected(String channelName) {
-                    }
-                });
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                }
+            }
+        });
+//        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
+//                "Check this out!", "This video is awesome: ")
+//                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
+//                        "Copy", "Added to clipboard")
+//                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
+//                .setAsFullWidthStyle(true)
+//                .setSharingTitle("Share With");
+//
+//        branchUniversalObject.showShareSheet(this,
+//                linkProperties,
+//                shareSheetStyle,
+//                new Branch.BranchLinkShareListener() {
+//                    @Override
+//                    public void onShareLinkDialogLaunched() {
+//                    }
+//                    @Override
+//                    public void onShareLinkDialogDismissed() {
+//                    }
+//                    @Override
+//                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+//                    }
+//                    @Override
+//                    public void onChannelSelected(String channelName) {
+//                    }
+//                });
     }
 
     @Override
@@ -1382,19 +1419,21 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         super.onBackPressed();
     }
 
-
     //thread to update recording time
     private Runnable updateTimerThread = new Runnable() {
 
         public void run() {
-
-
             try {
-                int secs = (int) (player.getCurrentPosition() / 1000);
-                int minutes = secs / 60;
-                secs = secs % 60;
+                long timeInMilliseconds = totalDuration - player.getCurrentPosition();
+//                int secs = (int) ((totalDuration - player.getCurrentPosition()) / 1000) + 1;
+//                int minutes = secs / 60;
+//                secs = secs % 60;
 //            int milliseconds = (int) (updatedTime % 1000);
-                String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+//                String duration = BLANK_SPACE + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+                String duration = BLANK_SPACE + String.format(Locale.getDefault(), "%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds),
+                        TimeUnit.MILLISECONDS.toSeconds(timeInMilliseconds) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds)) + 1);
                 remainingTime.setText(duration);
                 customHandler.postDelayed(this, 0);
             } catch (Exception e) {

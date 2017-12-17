@@ -58,8 +58,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
-//5346800017115465
-//136
 
 /**
  *
@@ -296,8 +294,8 @@ public class ApiCallingService {
             return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
-         public static Call<ResultObject> cancelRequest(int notificationId, Context context) {
-            return getFriendsService(context).cancelRequest(notificationId);
+         public static Call<ResultObject> cancelRequest(int userId, Context context) {
+            return getFriendsService(context).cancelRequest(userId);
         }
 
         /**

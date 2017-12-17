@@ -10,7 +10,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATIN_TYPE;
+import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.utilities.AuthUtils.isUserLoggedIn;
 
 public class SplashScreen extends AppCompatActivity {
@@ -32,8 +32,8 @@ public class SplashScreen extends AppCompatActivity {
 ////                if (index != -1)
 ////                    switchTab(index);
 //                    Log.d("NOTIFYM", "BUNDLE Exists on splash");
-//                    Log.d("NOTIFYM", String.valueOf(bundle.getInt(NOTIFICATIN_TYPE)));
-////                    int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
+//                    Log.d("NOTIFYM", String.valueOf(bundle.getInt(NOTIFICATION_TYPE)));
+////                    int notification_type = bundle.getInt(NOTIFICATION_TYPE);
 ////                    int source_id = bundle.getInt(SOURCE_ID);
 ////                    notificationAction(notification_type, source_id);
 //                }
@@ -63,8 +63,8 @@ public class SplashScreen extends AppCompatActivity {
 //                if (index != -1)
 //                    switchTab(index);
                 Log.d("NOTIFYM", "BUNDLE Exists on splash");
-                Log.d("NOTIFYM", String.valueOf(bundle.getInt(NOTIFICATIN_TYPE)));
-//                    int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
+                Log.d("NOTIFYM", String.valueOf(bundle.getInt(NOTIFICATION_TYPE)));
+//                    int notification_type = bundle.getInt(NOTIFICATION_TYPE);
 //                    int source_id = bundle.getInt(SOURCE_ID);
 //                    notificationAction(notification_type, source_id);
             }

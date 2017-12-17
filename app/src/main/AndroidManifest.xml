@@ -71,6 +71,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -79,8 +80,8 @@
         </activity>
         <activity
             android:name=".SplashScreen"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -89,21 +90,33 @@
             </intent-filter>
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="teazerapp" android:host="open" />
+                <data
+                    android:host="open"
+                    android:scheme="teazerapp" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
         <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_afuHy4HvJC2TwCTtBW7KvppewCbaMrB5" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_acsIC2SrRt7IzDJtLfklaomeAAeoNqMm" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="key_live_afuHy4HvJC2TwCTtBW7KvppewCbaMrB5" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey.test"
+            android:value="key_test_acsIC2SrRt7IzDJtLfklaomeAAeoNqMm" />
 
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
+        <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="true" />
         <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true"
+        <receiver
+            android:name="io.branch.referral.InstallListener"
+            android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -131,7 +144,9 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <data android:scheme="teazerapp" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -158,7 +173,6 @@
                 <data
                     android:host="teazer.test-app.link"
                     android:scheme="https" />
-
                 <data
                     android:host="teazer.test-app.link"
                     android:scheme="http" />
@@ -168,7 +182,8 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="launch_activity" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -266,9 +281,9 @@
             android:name=".ui.fragment.activity.InviteFriend"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".videoTrim.TrimmerActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".videoTrim.TrimmerActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.fragment.activity.ReactionPlayerActivity"
             android:screenOrientation="portrait"
@@ -280,17 +295,15 @@
         <activity
             android:name=".ui.fragment.activity.ExoPlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/PostDetailsTheme"/>
+            android:theme="@style/PostDetailsTheme" />
         <activity android:name=".utilities.GalleryUtil" />
-
-
-        <activity android:name=".ui.fragment.activity.WebViewActivity"
+        <activity
+            android:name=".ui.fragment.activity.WebViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>

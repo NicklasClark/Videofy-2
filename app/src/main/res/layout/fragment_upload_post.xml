@@ -7,62 +7,9 @@
     android:background="@color/colorPrimary"
     tools:context="com.cncoding.teazer.home.camera.CameraActivity">
 
-    <RelativeLayout
-        android:id="@+id/video_preview_thumbnail_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:elevation="5dp">
-
-        <ImageView
-            android:id="@+id/video_preview_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:background="#dddddd"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/video_preview_thumbnail" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/bg_vignette_top"
-            android:layout_alignTop="@+id/video_preview_thumbnail"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ic_play_big"
-            android:clickable="false"/>
-
-        <ProgressBar
-            android:id="@+id/thumbnail_progress_bar"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:indeterminate="true"
-            style="?android:attr/progressBarStyleLarge"
-            android:theme="@style/ProgressBarTheme"
-            android:layout_centerInParent="true" />
-
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-            android:id="@+id/video_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="18dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:ignore="RelativeOverlap" />
-
-    </RelativeLayout>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/video_preview_thumbnail_container">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:orientation="vertical"
@@ -70,6 +17,58 @@
             android:animateLayoutChanges="true"
             android:paddingBottom="55dp"
             android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/video_preview_thumbnail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:elevation="5dp">
+
+        <ImageView
+            android:id="@+id/video_preview_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="@color/colorDisabled"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/video_preview_thumbnail" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_vignette_top"
+                    android:layout_alignTop="@+id/video_preview_thumbnail"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@drawable/ic_play_big"
+                    android:clickable="false"/>
+
+                <ProgressBar
+                    android:id="@+id/thumbnail_progress_bar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:indeterminate="true"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:theme="@style/ProgressBarTheme"
+                    android:layout_centerInParent="true" />
+
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    android:id="@+id/video_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="18dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    tools:ignore="RelativeOverlap" />
+
+            </RelativeLayout>
 
             <include layout="@layout/progress_bar_horizontal"/>
 
@@ -199,6 +198,7 @@
                 android:layout_marginStart="14dp"
                 android:text="@string/share_on_facebook"
                 android:layout_marginEnd="14dp"
+                android:foreground="@drawable/ripple_semi_dark_no_rounded"
                 app:drawableStartCompat="@drawable/ic_facebook"
                 app:drawableEndCompat="@drawable/btn_unchecked"
                 android:paddingTop="18dp"
@@ -224,6 +224,7 @@
                 android:layout_marginStart="14dp"
                 android:text="@string/share_on_twitter"
                 android:layout_marginEnd="14dp"
+                android:foreground="@drawable/ripple_semi_dark_no_rounded"
                 app:drawableStartCompat="@drawable/ic_twitter"
                 app:drawableEndCompat="@drawable/btn_unchecked"
                 android:paddingTop="18dp"

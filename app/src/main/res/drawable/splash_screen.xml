@@ -5,8 +5,8 @@
         <color android:color="@color/material_grey100"/>
     </item>
 
-    <item
-        android:gravity="center|clip_horizontal|clip_vertical"
-        android:drawable="@mipmap/ic_launcher"/>
+    <item>
+        <bitmap android:gravity="center" android:src="@mipmap/ic_launcher"/>
+    </item>
 
 </layer-list>
