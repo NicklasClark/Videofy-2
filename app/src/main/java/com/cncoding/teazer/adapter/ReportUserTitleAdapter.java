@@ -34,6 +34,7 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
     private Context context;
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
+    private int lastSelectedRow = -1;
 
     public ReportUserTitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportUserDialogFragment reportUserDialogFragment) {
         this.reportsType = reportsType;
@@ -59,14 +60,23 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
     }
 
     @Override
-    public void onBindViewHolder(final ReportUserTitleAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ReportUserTitleAdapter.ViewHolder holder, final int position) {
         final ReportPostSubTitleResponse report = reportsType.get(position);
+
+        if(position == lastSelectedRow)
+            holder.tickView.setVisibility(View.VISIBLE);
+        else
+            holder.tickView.setVisibility(View.GONE);
+
         holder.reportTitle.setText(report.getTitle());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    mAdapterCallback.titleSelected(report);
+                lastSelectedRow = position;
+                holder.tickView.setVisibility(View.VISIBLE);
+                notifyDataSetChanged();
 
+                mAdapterCallback.titleSelected(report);
             }
         });
 
@@ -90,6 +100,8 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
         RelativeLayout layout;
         @BindView(R.id.reportTitle)
         TextView reportTitle;
+        @BindView(R.id.tickView)
+        ImageView tickView;
 
         ViewHolder(View view) {
             super(view);

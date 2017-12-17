@@ -312,4 +312,9 @@
     <string name="no_videos_tagged">No videos tagged&#160;</string>
     <string name="yet_uploaded">&#160;yet uploaded</string>
     <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
+    <string name="send_to">Share</string>
+    <string name="report_extra_remark_hint">Remarks(optional)</string>
+    <string name="repot_post_dialog_title">Report User</string>
+    <string name="report_post_dialog_message">Are you sure you want to report this video</string>
+    <string name="report_btn_text">Report</string>
 </resources>

@@ -204,7 +204,7 @@ public class ProfileFragment extends BaseFragment {
                         .setCanonicalIdentifier(String.valueOf(userProfile.getUserId()))
                         .setTitle(userProfile.getFirstName())
                         .setContentDescription("Hi, follow me on Teazer and share cool videos")
-                        .setContentImageUrl(userProfile.getProfileMedia().getMediaUrl());
+                        .setContentImageUrl(userProfile.getProfileMedia() == null? null:userProfile.getProfileMedia().getMediaUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")
@@ -222,26 +222,38 @@ public class ProfileFragment extends BaseFragment {
                         .setAsFullWidthStyle(true)
                         .setSharingTitle("Share With");
 
-                branchUniversalObject.showShareSheet(getActivity(),
-                        linkProperties,
-                        shareSheetStyle,
-                        new Branch.BranchLinkShareListener() {
-                            @Override
-                            public void onShareLinkDialogLaunched() {
-                            }
-
-                            @Override
-                            public void onShareLinkDialogDismissed() {
-                            }
-
-                            @Override
-                            public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                            }
-
-                            @Override
-                            public void onChannelSelected(String channelName) {
-                            }
-                        });
+                branchUniversalObject.generateShortUrl(getContext(), linkProperties, new Branch.BranchLinkCreateListener() {
+                    @Override
+                    public void onLinkCreate(String url, BranchError error) {
+                        if (error == null) {
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                        }
+                    }
+                });
+//                branchUniversalObject.showShareSheet(getActivity(),
+//                        linkProperties,
+//                        shareSheetStyle,
+//                        new Branch.BranchLinkShareListener() {
+//                            @Override
+//                            public void onShareLinkDialogLaunched() {
+//                            }
+//
+//                            @Override
+//                            public void onShareLinkDialogDismissed() {
+//                            }
+//
+//                            @Override
+//                            public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+//                            }
+//
+//                            @Override
+//                            public void onChannelSelected(String channelName) {
+//                            }
+//                        });
             }
         });
         _detail.setOnClickListener(new View.OnClickListener() {

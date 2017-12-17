@@ -138,6 +138,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @BindView(R.id.categories_badge) ProximaNovaSemiboldTextView uploadCategoriesBadge;
 
     public static boolean checkFacebookButtonPressed = false;
+    public static boolean checkedTwitterButton = false;
     public String videoPath;
     public boolean isReaction;
     private int tagCount;
@@ -159,6 +160,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean isGallery;
     private static boolean isCompressing = false;
     private static FragmentActivity mActivity;
+
 
     public UploadFragment() {
         // Required empty public constructor
@@ -526,6 +528,19 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     @OnClick(R.id.share_on_twitter) public void shareOnTwitterAction() {
         checkAction("twitter", twitterShareBtn);
+
+        if (!checkedTwitterButton) {
+
+            checkedTwitterButton = true;
+            twitterShareBtn.setChecked(true);
+            twitterShareBtn.setBackgroundTintList(null);
+        }
+        else
+            {
+            checkedTwitterButton = false;
+            twitterShareBtn.setChecked(false);
+            twitterShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
+        }
     }
 
     @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {

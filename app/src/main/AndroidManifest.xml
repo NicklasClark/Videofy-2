@@ -129,7 +129,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme"
             android:windowSoftInputMode="adjustPan">
-
             <intent-filter>
                 <data android:scheme="teazerapp" />
                 <action android:name="android.intent.action.VIEW" />
@@ -267,7 +266,9 @@
             android:name=".ui.fragment.activity.InviteFriend"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".videoTrim.TrimmerActivity" />
+        <activity android:name=".videoTrim.TrimmerActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".ui.fragment.activity.ReactionPlayerActivity"
             android:screenOrientation="portrait"
@@ -286,6 +287,10 @@
         <activity android:name=".ui.fragment.activity.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

@@ -362,6 +362,9 @@ import retrofit2.http.Query;
         @DELETE("/api/v1/friend/unfollow/{user_id}")
         Call<ResultObject> unfollowUser(@Path("user_id") int userId);
 
+        @DELETE("/api/v1/friend/cancel/join/request/{user_id}")
+        Call<ResultObject> cancelRequest(@Path("user_id") int userId);
+
 
         @POST("/api/v1/friend/join/request/by/userid/{user_id}")
         Call<ResultObject>followUser(@Path("user_id") int userId);

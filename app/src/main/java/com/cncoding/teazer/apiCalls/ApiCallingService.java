@@ -294,6 +294,10 @@ public class ApiCallingService {
             return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
+         public static Call<ResultObject> cancelRequest(int notificationId, Context context) {
+            return getFriendsService(context).cancelRequest(notificationId);
+        }
+
         /**
          * Call this service to get the my circle list
          * @return If “nextPage” is true some more records present. So, you can call again with increase the page count by 1.

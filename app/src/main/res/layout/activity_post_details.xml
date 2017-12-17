@@ -202,10 +202,10 @@
 
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:id="@+id/media_controller_categories"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_14sp"
+                    android:textSize="@dimen/text_size_12sp"
                     android:layout_below="@+id/media_controller_dp"
                     android:singleLine="true"
                     android:ellipsize="marquee"

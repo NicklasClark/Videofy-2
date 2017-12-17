@@ -2,6 +2,7 @@ package com.cncoding.teazer.videoTrim.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -76,6 +77,10 @@ public class VideoTrimmerView extends FrameLayout {
     private boolean isFromRestore = false;
 
     private final MessageHandler mMessageHandler = new MessageHandler(this);
+    private ImageView videoMuteButton;
+    private AudioManager audioManager;
+    private boolean isAudioEnabled;
+    private int currentVolume;
 
     public VideoTrimmerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -96,6 +101,7 @@ public class VideoTrimmerView extends FrameLayout {
         mVideoView = ((VideoView) findViewById(R.id.video_loader));
         mPlayView = ((ImageView) findViewById(R.id.icon_video_play));
         videoThumbListView = (VideoThumbHorizontalListView) findViewById(R.id.video_thumb_listview);
+        videoMuteButton = (ImageView) findViewById(R.id.icon_video_sound);
         videoThumbAdapter = new VideoThumbAdapter(mContext);
         videoThumbListView.setAdapter(videoThumbAdapter);
 
@@ -103,6 +109,7 @@ public class VideoTrimmerView extends FrameLayout {
         setUpListeners();
 
         setUpSeekBar();
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     private void setUpSeekBar() {
@@ -392,6 +399,16 @@ public class VideoTrimmerView extends FrameLayout {
                 onClickVideoPlayPause();
             }
         });
+        videoMuteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickVideoMuteUnMute();
+            }
+        });
+        if (currentVolume <= 0 && audioManager != null) {
+            currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        }
+        isAudioEnabled = currentVolume > 0;
     }
 
     private void setUpProgressBarMarginsAndWidth(int left, int right) {
@@ -443,6 +460,38 @@ public class VideoTrimmerView extends FrameLayout {
         }
 
         setPlayPauseViewIcon(mVideoView.isPlaying());
+    }
+
+    private void onClickVideoMuteUnMute() {
+            if (audioManager != null) {
+                int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+                int volume;
+
+                if (isAudioEnabled) {
+                    volume = 0;
+//                    setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_mute);
+                    isAudioEnabled = false;
+                } else {
+                    if (currentVolume > 0)
+                        volume = currentVolume;
+                    else volume = maxVolume;
+//                volume = 100 * maxVolume + currentVolume;
+//                    setTextViewDrawableStart(remainingTime, R.drawable.ic_volume);
+                    isAudioEnabled = true;
+                }
+
+                if (volume > maxVolume) {
+                    volume = maxVolume;
+                }
+
+                if (volume < 0) {
+                    volume = 0;
+                }
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+            }
+
+        setMuteUnMuteViewIcon(isAudioEnabled);
     }
 
     private long PixToTime(float value) {
@@ -518,7 +567,11 @@ public class VideoTrimmerView extends FrameLayout {
     }
 
     private void setPlayPauseViewIcon(boolean isPlaying) {
-        mPlayView.setImageResource(isPlaying ? R.drawable.icon_video_pause_black : R.drawable.icon_video_play_black);
+        mPlayView.setImageResource(isPlaying ? R.drawable.ic_play_big : R.drawable.ic_pause_big);
+    }
+
+    private void setMuteUnMuteViewIcon(boolean isAudioEnabled) {
+        videoMuteButton.setImageResource(isAudioEnabled ? R.drawable.ic_volume_black : R.drawable.ic_volume_mute_black);
     }
 
     private VideoThumbHorizontalListView.OnScrollStateChangedListener onScrollStateChangedListener = new VideoThumbHorizontalListView.OnScrollStateChangedListener() {

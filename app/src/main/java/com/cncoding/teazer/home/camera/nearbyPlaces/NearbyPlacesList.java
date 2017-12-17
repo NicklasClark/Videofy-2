@@ -151,38 +151,42 @@ public class NearbyPlacesList extends Fragment {
 //    }
 
     @OnTextChanged(R.id.nearby_places_search) public void searchNearby(final CharSequence charSequence) {
-        if (!((NearbyPlacesAdapter) recyclerView.getAdapter()).isAutoCompleteAdapter()) {
-            recyclerView.setAdapter(getNearbyPlacesAdapter(TYPE_AUTOCOMPLETE));
-        }
-        if (charSequence.length() > 0) {
-            if (clearBtn.getVisibility() != View.VISIBLE)
-                clearBtn.setVisibility(View.VISIBLE);
-//            recyclerView.swapAdapter(placeAutoCompleteAdapter, false);
-//            if (placeAutoCompleteAdapter != null) {
-//                recyclerView.setAdapter(placeAutoCompleteAdapter);
-//            }
-        } else {
-            if (clearBtn.getVisibility() == View.VISIBLE)
-                clearBtn.setVisibility(View.GONE);
-            recyclerView.setAdapter(getNearbyPlacesAdapter(TYPE_NEARBY_PLACES));
-//            recyclerView.swapAdapter(nearbyPlacesAdapter, true);
-        }
-
-        if (charSequence.length() > 2 && googleApiClient.isConnected()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    performNearbySearch(charSequence);
-                }
-            };
-            // only canceling the network calls will not help, you need to remove all callbacks as well
-            // otherwise the pending callbacks and messages will again invoke the handler and will send the request
-            if (handler != null) {
-                handler.removeCallbacksAndMessages(null);
-            } else {
-                handler = new Handler();
+        try {
+            if (!((NearbyPlacesAdapter) recyclerView.getAdapter()).isAutoCompleteAdapter()) {
+                recyclerView.setAdapter(getNearbyPlacesAdapter(TYPE_AUTOCOMPLETE));
             }
-            handler.postDelayed(runnable, 500);
+            if (charSequence.length() > 0) {
+                if (clearBtn.getVisibility() != View.VISIBLE)
+                    clearBtn.setVisibility(View.VISIBLE);
+    //            recyclerView.swapAdapter(placeAutoCompleteAdapter, false);
+    //            if (placeAutoCompleteAdapter != null) {
+    //                recyclerView.setAdapter(placeAutoCompleteAdapter);
+    //            }
+            } else {
+                if (clearBtn.getVisibility() == View.VISIBLE)
+                    clearBtn.setVisibility(View.GONE);
+                recyclerView.setAdapter(getNearbyPlacesAdapter(TYPE_NEARBY_PLACES));
+    //            recyclerView.swapAdapter(nearbyPlacesAdapter, true);
+            }
+
+            if (charSequence.length() > 2 && googleApiClient.isConnected()) {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        performNearbySearch(charSequence);
+                    }
+                };
+                // only canceling the network calls will not help, you need to remove all callbacks as well
+                // otherwise the pending callbacks and messages will again invoke the handler and will send the request
+                if (handler != null) {
+                    handler.removeCallbacksAndMessages(null);
+                } else {
+                    handler = new Handler();
+                }
+                handler.postDelayed(runnable, 500);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

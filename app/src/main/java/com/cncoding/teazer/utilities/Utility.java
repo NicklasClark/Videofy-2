@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
+import java.util.Locale;
+
 public class Utility {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
@@ -49,5 +51,15 @@ public class Utility {
         } else {
             return true;
         }
+    }
+
+    public static String getFormattedTime(long timeinMillis)
+    {
+        int secs = (int) (timeinMillis / 1000);
+        int minutes = secs / 60;
+        secs = secs % 60;
+//            int milliseconds = (int) (updatedTime % 1000);
+        String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+        return duration;
     }
 }
