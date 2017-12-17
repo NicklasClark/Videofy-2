@@ -30,6 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
+                    android:background="@color/colorDisabled"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/video_preview_thumbnail" />
 
@@ -190,6 +191,7 @@
                 android:layout_marginStart="14dp"
                 android:text="@string/share_on_facebook"
                 android:layout_marginEnd="14dp"
+                android:foreground="@drawable/ripple_semi_dark_no_rounded"
                 app:drawableStartCompat="@drawable/ic_facebook"
                 app:drawableEndCompat="@drawable/btn_unchecked"
                 android:paddingTop="18dp"
@@ -214,6 +216,7 @@
                 android:layout_marginStart="14dp"
                 android:text="@string/share_on_twitter"
                 android:layout_marginEnd="14dp"
+                android:foreground="@drawable/ripple_semi_dark_no_rounded"
                 app:drawableStartCompat="@drawable/ic_twitter"
                 app:drawableEndCompat="@drawable/btn_unchecked"
                 android:paddingTop="18dp"

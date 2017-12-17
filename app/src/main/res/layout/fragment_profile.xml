@@ -85,14 +85,12 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginStart="5dp"
                                     android:orientation="horizontal">
 
                                     <RelativeLayout
-
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
-
 
                                         <com.cncoding.teazer.customViews.SignPainterTextView
                                             android:id="@+id/username_title"
@@ -101,7 +99,6 @@
                                             android:layout_marginTop="10dp"
                                             android:maxLines="1"
                                             android:paddingBottom="5dp"
-                                            android:text="usernamezp"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="27sp" />
 
@@ -120,17 +117,15 @@
                                                 android:gravity="center_vertical"
                                                 android:text="\u25CF"
                                                 android:textColor="#b1ffffff"
-                                                android:textSize="13dp" />
+                                                android:textSize="13sp" />
 
                                             <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                                                 android:id="@+id/username"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginStart="5dp"
-                                                android:layout_toEndOf="@+id/bullets"
                                                 android:gravity="center_vertical"
                                                 android:maxLines="1"
-                                                android:text="@string/name"
                                                 android:textColor="@color/colorIcons"
                                                 android:textSize="12sp" />
                                         </LinearLayout>
@@ -142,12 +137,11 @@
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/bulletslayout"
                                             android:layout_marginBottom="15dp"
-                                            android:layout_marginRight="20dp"
+                                            android:layout_marginEnd="20dp"
                                             android:layout_marginTop="5dp"
                                             android:ellipsize="end"
                                             android:lineSpacingExtra="2dp"
                                             android:maxLines="2"
-                                            android:text="@string/hobby"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
 
@@ -163,10 +157,10 @@
                                             android:drawableStart="@drawable/ic_share_white"
                                             android:gravity="center"
                                             android:paddingBottom="5dp"
-                                            android:paddingLeft="5dp"
-                                            android:paddingRight="3dp"
+                                            android:paddingStart="5dp"
+                                            android:paddingEnd="3dp"
                                             android:paddingTop="5dp"
-                                            android:text="Share"
+                                            android:text="@string/share"
                                             android:textAllCaps="false"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp"
@@ -182,22 +176,18 @@
                                             android:drawablePadding="-8dp"
                                             android:drawableStart="@drawable/ic_edit"
                                             android:paddingBottom="5dp"
-                                            android:paddingLeft="5dp"
-                                            android:paddingRight="3dp"
+                                            android:paddingStart="5dp"
+                                            android:paddingEnd="3dp"
                                             android:paddingTop="5dp"
-                                            android:text="Edit"
+                                            android:text="@string/edit"
                                             android:textAllCaps="false"
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
 
-
                                     </RelativeLayout>
                                 </LinearLayout>
-
-
                             </LinearLayout>
                         </LinearLayout>
-
 
                     </LinearLayout>
 
@@ -208,9 +198,8 @@
                         android:layout_below="@+id/layout1"
                         android:layout_gravity="center"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"
-
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_marginTop="20dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -227,11 +216,9 @@
                                 android:id="@+id/creations"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/username_title"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_toEndOf="@+id/bullets"
+                                android:layout_marginStart="5dp"
                                 android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_creations"
                                 android:maxLines="1"
@@ -248,13 +235,11 @@
                             android:layout_marginStart="2dp"
                             android:layout_weight=".1"
                             android:gravity="center"
-
                             android:orientation="horizontal">
 
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="26dp"
-                                android:layout_below="@+id/username_title"
                                 android:background="#64ffffff"
                                 android:textColor="@color/colorIcons" />
                         </LinearLayout>
@@ -270,11 +255,8 @@
                                 android:id="@+id/following"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/username_title"
                                 android:layout_gravity="center"
-
                                 android:gravity="center"
-                                android:layout_toEndOf="@+id/bullets"
                                 android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_following"
                                 android:maxLines="1"
@@ -310,10 +292,7 @@
                                 android:id="@+id/followers"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/username_title"
                                 android:layout_gravity="center"
-
-                                android:layout_toEndOf="@+id/bullets"
                                 android:drawablePadding="3dp"
                                 android:drawableStart="@drawable/ic_followers"
                                 android:maxLines="1"

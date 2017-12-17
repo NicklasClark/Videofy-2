@@ -9,6 +9,7 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -22,6 +23,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +34,6 @@ import butterknife.ButterKnife;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
-import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -41,7 +42,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.getByteArrayFromImage;
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.ViewHolder> {
 
     private SparseIntArray colorArray;
-    private SparseIntArray dimensionSparseArray;
+//    private SparseIntArray dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
     private ArrayList<PostDetails> posts;
     private Context context;
@@ -49,7 +50,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
-        dimensionSparseArray = new SparseIntArray();
+//        dimensionSparseArray = new SparseIntArray();
         colorArray = new SparseIntArray();
 
         if (context instanceof OnPostAdapterInteractionListener) {
@@ -69,13 +70,29 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         return new ViewHolder(view);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.shimmerLayout.setVisibility(View.VISIBLE);
+        holder.topLayout.setVisibility(View.INVISIBLE);
+        holder.bottomLayout.setVisibility(View.INVISIBLE);
+        holder.vignetteLayout.setVisibility(View.INVISIBLE);
         final PostDetails postDetails = posts.get(position);
         MiniProfile postOwner = postDetails.getPostOwner();
 
-        if (dimensionSparseArray.get(position) != 0) {
-            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
+        int postWidth = postDetails.getMedias().get(0).getDimension().getWidth();
+        int postHeight = postDetails.getMedias().get(0).getDimension().getHeight();
+        int width = (ViewUtils.getDeviceWidth(context) -
+                (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
+
+        holder.layout.getLayoutParams().width = width;
+        if (postHeight < postWidth) {
+            holder.layout.setBackgroundResource(R.color.black);
+            postHeight = width;
+            holder.layout.getLayoutParams().height = postHeight;
+        } else {
+            holder.layout.setBackgroundResource(R.color.material_grey200);
+            holder.layout.getLayoutParams().height = width * postHeight / postWidth;
         }
 
         String title = postDetails.getTitle();
@@ -113,15 +130,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 public void onClick(View view) {
                     PostsListFragment.positionToUpdate = holder.getAdapterPosition();
                     PostsListFragment.postDetails = postDetails;
-                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail,
-                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail,
-                            holder.layout, getByteArrayFromImage(holder.postThumbnail));
+                    listener.onPostInteraction(ACTION_VIEW_PROFILE, postDetails, holder.postThumbnail, holder.layout);
                 }
             };
 
@@ -151,10 +166,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
         Glide.with(context)
                 .load(postDetails.getMedias().get(0).getThumbUrl())
-//                .crossFade()
-                .placeholder(R.drawable.bg_placeholder)
-                .skipMemoryCache(false)
-//                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -164,15 +175,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                        if (height < holder.layout.getWidth())
-                            height = holder.layout.getWidth();
-
-                        holder.layout.getLayoutParams().height = height;
-
-                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
-
-                        holder.layout.setVisibility(View.VISIBLE);
+                        holder.shimmerLayout.setVisibility(View.VISIBLE);
+                        holder.topLayout.setVisibility(View.VISIBLE);
+                        holder.bottomLayout.setVisibility(View.VISIBLE);
+                        holder.vignetteLayout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 })
@@ -199,9 +205,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.top_layout) RelativeLayout topLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
+        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.home_screen_post_caption)
-        EmojiAppCompatTextView caption;
+        @BindView(R.id.home_screen_post_caption) EmojiAppCompatTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
@@ -220,6 +229,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     public interface OnPostAdapterInteractionListener {
-        void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout, byte[] image);
+        void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
     }
 }

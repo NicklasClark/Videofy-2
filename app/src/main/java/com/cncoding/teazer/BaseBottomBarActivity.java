@@ -68,12 +68,12 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
+import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
@@ -101,15 +101,21 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
-import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.R.anim.float_down;
+import static com.cncoding.teazer.R.anim.float_up;
+import static com.cncoding.teazer.R.anim.sink_down;
+import static com.cncoding.teazer.R.anim.sink_up;
+import static com.cncoding.teazer.R.anim.slide_in_left;
+import static com.cncoding.teazer.R.anim.slide_in_right;
+import static com.cncoding.teazer.R.anim.slide_out_left;
+import static com.cncoding.teazer.R.anim.slide_out_right;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
@@ -146,29 +152,20 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String TAB_INDEX = "tabIndex";
     public static final String SOURCE_ID = "from_id";
-    public static final String NOTIFICATIN_TYPE = "notification_type";
+    public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
-    @BindArray(R.array.tab_name)
-    String[] TABS;
+    @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar)
-    AppBarLayout appBar;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title)
-    SignPainterTextView toolbarCenterTitle;
-    @BindView(R.id.toolbar_plain_title)
-    ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container)
-    FrameLayout contentFrame;
-    @BindView(R.id.root_layout)
-    NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view)
-    BlurView blurView;
-    @BindView(R.id.bottom_tab_layout)
-    TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn)
-    ProximaNovaBoldTextView cameraButton;
+    public AppBarLayout appBar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarCenterTitle;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view) BlurView blurView;
+    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -219,6 +216,14 @@ public class BaseBottomBarActivity extends BaseActivity
                 .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_fragment_container)
                 .transactionListener(this)
                 .rootFragmentListener(this, TABS.length)
+                .build();
+
+        NavigationTransactionOptions transactionOptions = new NavigationTransactionOptions.Builder()
+                .customAnimations(
+                        navigationController.isRootFragment() ? float_up : slide_in_right,
+                        navigationController.isRootFragment() ? sink_down : slide_out_left,
+                        navigationController.isRootFragment() ? float_down : slide_in_left,
+                        navigationController.isRootFragment() ? sink_up : slide_out_right)
                 .build();
 
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -388,7 +393,7 @@ public class BaseBottomBarActivity extends BaseActivity
             Bundle bundle = intent.getExtras().getBundle("bundle");
             if (bundle != null) {
                 Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
-                int notification_type = bundle.getInt(NOTIFICATIN_TYPE);
+                int notification_type = bundle.getInt(NOTIFICATION_TYPE);
                 int source_id = bundle.getInt(SOURCE_ID);
                 notificationAction(notification_type, source_id);
             }
@@ -673,10 +678,10 @@ public class BaseBottomBarActivity extends BaseActivity
     //<editor-fold desc="Fragment listener implementations">
     @Override
     public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail,
-                                  RelativeLayout layout, final byte[] image) {
+                                  RelativeLayout layout) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, image,
+                PostDetailsActivity.newInstance(this, postDetails, null,
                         true, false, null);
                 break;
             case ACTION_VIEW_PROFILE:

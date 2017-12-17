@@ -294,8 +294,8 @@ public class ApiCallingService {
             return getFriendsService(context).deleteJoinRequest(notificationId);
         }
 
-         public static Call<ResultObject> cancelRequest(int notificationId, Context context) {
-            return getFriendsService(context).cancelRequest(notificationId);
+         public static Call<ResultObject> cancelRequest(int userId, Context context) {
+            return getFriendsService(context).cancelRequest(userId);
         }
 
         /**

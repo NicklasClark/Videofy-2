@@ -71,4 +71,5 @@
     <color name="grey_700">#646464</color>
     <color name="DialogBoxConfirm">#666666</color>
     <color name="DialogBoxCancel">#999999</color>
+    <color name="colorShimmer">#C1C1C1</color>
 </resources>

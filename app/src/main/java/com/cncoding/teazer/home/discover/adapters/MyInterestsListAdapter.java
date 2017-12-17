@@ -51,13 +51,13 @@ public class MyInterestsListAdapter extends RecyclerView.Adapter<MyInterestsList
     public void onBindViewHolder(MyInterestsListAdapter.ViewHolder holder, int position) {
         try {
             if (position < 3) {
-                String categoryName = myInterestsCategoriesArrayList.get(position).getCategoryName();
+                String categoryName = (String) myInterests.keySet().toArray()[position];
                 holder.header.setText(categoryName);
 
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 holder.recyclerView.setAdapter(
                         new MyInterestsListItemAdapter(
-                                myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName()), context, mListener));
+                                myInterests.get(categoryName), context, mListener));
 //                ArrayList<PostDetails> postDetailsArrayList =
 //                      myInterests.get(myInterestsCategoriesArrayList.get(position).getCategoryName());
 //                if (!postDetailsArrayList.isEmpty()) {

@@ -6,7 +6,7 @@
         android:toXDelta="0"
         android:fromYDelta="0"
         android:toYDelta="100"
-        android:duration="400"
+        android:duration="280"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
 
 <!--    <scale
@@ -23,5 +23,5 @@
         android:fromAlpha="1"
         android:toAlpha="0"
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:duration="400" />
+        android:duration="280" />
 </set>

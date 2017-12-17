@@ -255,7 +255,7 @@
     <string name="swipe_down_to_retry">Swipe down to retry</string>
     <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
     <string name="something_went_wrong">Something went wrong\nPlease try again later.</string>
-    <string name="edit">EDIT</string>
+    <string name="edit">Edit</string>
     <string name="people">People</string>
     <string name="error_fetching_posts">There was an error fetching posts. Please try again later.</string>
     <string name="error_fetching_data">There was an error fetching the data. Please try again later.</string>

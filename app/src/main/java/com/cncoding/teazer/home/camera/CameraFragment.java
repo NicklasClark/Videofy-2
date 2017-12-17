@@ -84,6 +84,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.updateMediaStoreDatabase;
 
 public class CameraFragment extends Fragment {
 
@@ -846,7 +847,8 @@ public class CameraFragment extends Fragment {
             int minutes = secs / 60;
             secs = secs % 60;
 //            int milliseconds = (int) (updatedTime % 1000);
-            String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+            String duration = "" + String.format(Locale.getDefault(), "%02d", minutes) +
+                    ":" + String.format(Locale.getDefault(), "%02d", secs);
             videoDuration.setText(duration);
             customHandler.postDelayed(this, 0);
         }
@@ -912,6 +914,8 @@ public class CameraFragment extends Fragment {
             }
         }).start();
 
+//        SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
+        updateMediaStoreDatabase(context, mNextVideoAbsolutePath);
         cameraFlashView.setImageResource(R.drawable.ic_flash_off);
         mListener.onCameraInteraction(ACTION_START_UPLOAD_FRAGMENT, new UploadParams(mNextVideoAbsolutePath));
     }
