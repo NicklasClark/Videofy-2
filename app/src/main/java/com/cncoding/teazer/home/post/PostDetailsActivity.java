@@ -94,8 +94,13 @@ import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -203,6 +208,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private boolean isAudioEnabled;
     private int likes;
     private int views;
+    private long totalDuration;
     private boolean oneShotFlag;
 
     StartCountDownClass startCountDownClass;
@@ -406,8 +412,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 categoriesView.setText(categories);
             } else categoriesView.setVisibility(GONE);
 
-            String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
-//            remainingTime.setText(duration);
+            try {
+                String duration = BLANK_SPACE + postDetails.getMedias().get(0).getDuration();
+                remainingTime.setText(duration);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd mm:ss", Locale.getDefault());
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date date = sdf.parse("1970-01-01 " + duration);
+                totalDuration = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()));
             tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
@@ -780,7 +794,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_filled, 0, 0);
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes++;
+                    PostsListFragment.postDetails.likes += 1;
                     PostsListFragment.postDetails.can_like = false;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
@@ -792,7 +806,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
-                    PostsListFragment.postDetails.likes--;
+                    PostsListFragment.postDetails.likes -= 1;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
@@ -1405,19 +1419,21 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         super.onBackPressed();
     }
 
-
     //thread to update recording time
     private Runnable updateTimerThread = new Runnable() {
 
         public void run() {
-
-
             try {
-                int secs = (int) (player.getCurrentPosition() / 1000);
-                int minutes = secs / 60;
-                secs = secs % 60;
+                long timeInMilliseconds = totalDuration - player.getCurrentPosition();
+//                int secs = (int) ((totalDuration - player.getCurrentPosition()) / 1000) + 1;
+//                int minutes = secs / 60;
+//                secs = secs % 60;
 //            int milliseconds = (int) (updatedTime % 1000);
-                String duration = "" + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+//                String duration = BLANK_SPACE + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
+                String duration = BLANK_SPACE + String.format(Locale.getDefault(), "%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds),
+                        TimeUnit.MILLISECONDS.toSeconds(timeInMilliseconds) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds)) + 1);
                 remainingTime.setText(duration);
                 customHandler.postDelayed(this, 0);
             } catch (Exception e) {

@@ -74,6 +74,11 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         recyclerView.setAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
         recyclerView.setOnKeyListener(this);
+//        recyclerView.setLayoutAnimation(
+//                new LayoutAnimationController(
+//                        AnimationUtils.loadAnimation(getContext(), R.anim.float_down),
+//                        0.2f
+//                ));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
@@ -233,7 +238,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                     dismissRefreshView();
                 }
             });
-
     }
 
     public void dismissProgressBar() {

@@ -39,10 +39,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
@@ -421,71 +417,34 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected Bitmap doInBackground(Void... voids) {
             try {
-                Bitmap bitmap;
-                bitmap = ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-                return bitmap;
+                return ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
+
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
-            try {
-                if (bitmap != null) {
-                    mActivity.runOnUiThread(new Runnable() {
+            if (reference.get().isAdded()) {
+                try {
+                    if (bitmap != null) {
+                        mActivity.runOnUiThread(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                            reference.get().thumbnailView.setImageBitmap(bitmap);
-                        }
-                    });
-
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    Glide.with(reference.get())
-//                            .load(stream.toByteArray())
-//                            .asBitmap()
-//                            //                        .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable())
-//                            .animate(R.anim.fast_fade_in)
-//                            .listener(new RequestListener<byte[], Bitmap>() {
-//                                @Override
-//                                public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
-//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-//                                    return false;
-//                                }
-//
-//                                @Override
-//                                public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target,
-//                                                               boolean isFromMemoryCache, boolean isFirstResource) {
-//                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-//                                    return false;
-//                                }
-//                            })
-//                            .into(reference.get().thumbnailView);
-                } else {
-                    Glide.with(reference.get())
-                            .load(R.drawable.material_flat)
-                            .crossFade()
-                            .listener(new RequestListener<Integer, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target,
-                                                               boolean isFromMemoryCache, boolean isFirstResource) {
-                                    reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(reference.get().thumbnailView);
+                            @Override
+                            public void run() {
+                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+                                reference.get().thumbnailView.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+//                    else {
+//                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
+//                        reference.get().thumbnailView.setImageResource(R.color.colorDisabled);
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -693,22 +652,17 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             tagFriendsBtn.setText(finalResultToShow);
-                            setBadge(tagFriendsBadge, count);
                         }
                     }, 500);
                 }
+                setBadge(tagFriendsBadge, count);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
                 selectedCategoriesToShow = finalResultToShow;
                 selectedCategoriesToSend = resultToSend;
                 if (finalResultToShow.trim().isEmpty()||finalResultToShow.equals(""))
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            uploadCategoriesBtn.setText(null);
-                        }
-                    }, 200);
+                    uploadCategoriesBtn.setText(null);
                 else {
                     uploadCategoriesBtn.requestFocus();
                     new Handler().postDelayed(new Runnable() {
@@ -719,6 +673,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         }
                     }, 500);
                 }
+                setBadge(uploadCategoriesBadge, count);
                 break;
         }
     }

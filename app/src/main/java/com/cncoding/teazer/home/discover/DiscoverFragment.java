@@ -91,6 +91,7 @@ public class DiscoverFragment extends BaseFragment {
         // Inflate the searchContainer for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         ButterKnife.bind(this, rootView);
+        progressBar.setVisibility(VISIBLE);
 
         initMembersIfEmpty();
 

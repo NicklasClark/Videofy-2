@@ -229,6 +229,43 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             })
                                             .show();
                                 }
+                                else if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.requested))) {
+                                    new AlertDialog.Builder(baseFragment.getParentActivity())
+                                            .setMessage(R.string.cancel_request_confirmation +
+                                                    holder2.user.getUserName() + "?")
+                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    ApiCallingService.Friends.cancelRequest(holder2.user.getUserId(),
+                                                            baseFragment.getContext()).enqueue(new Callback<ResultObject>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                            if (response.code() == 200) {
+                                                                if (response.body().getStatus()) {
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                            holder2.getAdapterPosition(), true);
+                                                                }
+                                                                else
+                                                                    Log.d("CancelRequest", response.code()
+                                                                            + " : " + response.body().getMessage());
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                            t.printStackTrace();
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
                         }
                     }
                 };

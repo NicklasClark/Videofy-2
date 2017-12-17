@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.Map;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
-import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATIN_TYPE;
+import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
 
 /**
@@ -78,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Bundle bundle = new Bundle();
         bundle.putInt(TAB_INDEX, 3);
         bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
-        bundle.putInt(NOTIFICATIN_TYPE, Integer.parseInt(data.get("notification_type")));
+        bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
         intent.putExtra("bundle", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);

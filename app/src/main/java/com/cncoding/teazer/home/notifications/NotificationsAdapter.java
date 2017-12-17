@@ -490,7 +490,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                            .show();
                                 }
 
-
                                 else if (text.equals(context.getString(R.string.requested))) {
                                     new AlertDialog.Builder(context)
                                             .setMessage(context.getString(R.string.cancel_request_confirmation) +
@@ -515,7 +514,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                         @Override
                                                         public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                            Log.d("FAIL - CancelRequest", t.getMessage());
+                                                            t.printStackTrace();
                                                         }
                                                     });
                                                 }
