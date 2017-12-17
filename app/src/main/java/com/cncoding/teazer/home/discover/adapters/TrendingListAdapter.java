@@ -61,7 +61,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
     private GradientDrawable getBackground(ProximaNovaSemiboldTextView title, int position) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         if (sparseIntArray.get(position) == 0) {
-            sparseIntArray.put(position, Color.parseColor(trendingCategories.get(position).getColor()));
+            sparseIntArray.put(position, Color.parseColor(trendingCategories.get(position).getMyColor()));
         }
         gradientDrawable.setColor(Color.TRANSPARENT);
         gradientDrawable.setCornerRadius(3);

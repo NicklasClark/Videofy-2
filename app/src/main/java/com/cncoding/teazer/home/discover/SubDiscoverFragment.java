@@ -170,13 +170,13 @@ public class SubDiscoverFragment extends BaseFragment {
             populateTabs();
             SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-            tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(0).getColor()));
+            tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(0).getMyColor()));
 
             viewPager.setAdapter(sectionsPagerAdapter);
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
                 @Override
                 public void onPageSelected(int position) {
-                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(position).getColor()));
+                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(position).getMyColor()));
                     fadeOtherTabColorsOut(position);
                     setCurrentTabTextColor(position);
                 }
@@ -227,7 +227,7 @@ public class SubDiscoverFragment extends BaseFragment {
             linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
             AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
             view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-            view.setTextColor(i == 0 ? Color.parseColor(categories.get(i).getColor()) : Color.parseColor("#666666"));
+            view.setTextColor(i == 0 ? Color.parseColor(categories.get(i).getMyColor()) : Color.parseColor("#666666"));
         }
     }
 
@@ -235,7 +235,7 @@ public class SubDiscoverFragment extends BaseFragment {
         LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(position));
         linearLayout.setPadding(getPixel(), 0, getPixel(), 0);
         AppCompatTextView view = ((AppCompatTextView) linearLayout.getChildAt(1));
-        view.setTextColor(Color.parseColor(categories.get(position).getColor()));
+        view.setTextColor(Color.parseColor(categories.get(position).getMyColor()));
     }
 
     private void fadeOtherTabColorsOut(int excludePosition) {
