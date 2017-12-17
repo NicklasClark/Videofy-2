@@ -562,7 +562,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }
-            DecimalFormat df = new DecimalFormat("#.######");
+            DecimalFormat df = new DecimalFormat("#.#####");
 
             if (!isReaction)
                 mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,

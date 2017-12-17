@@ -45,7 +45,6 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -156,10 +155,9 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
     @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar)
-    public AppBarLayout appBar;
+    @BindView(R.id.app_bar) public AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) SignPainterTextView toolbarCenterTitle;
+    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
@@ -174,6 +172,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private FragmentHistory fragmentHistory;
     private Fragment fragment;
     private BroadcastReceiver BReceiver;
+    private NavigationTransactionOptions transactionOptions;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -219,7 +218,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 .rootFragmentListener(this, TABS.length)
                 .build();
 
-        NavigationTransactionOptions transactionOptions = new NavigationTransactionOptions.Builder()
+        transactionOptions = new NavigationTransactionOptions.Builder()
                 .customAnimations(
                         navigationController.isRootFragment() ? float_up : slide_in_right,
                         navigationController.isRootFragment() ? sink_down : slide_out_left,
@@ -543,7 +542,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void switchTab(final int position) {
-        navigationController.switchTab(position);
+        navigationController.switchTab(position, transactionOptions);
         updateBottomTabIconFocus(position);
         if (position == 1 || position == 3)
             setAppBarElevation(0);

@@ -87,11 +87,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
         holder.layout.getLayoutParams().width = width;
         if (postHeight < postWidth) {
-            holder.layout.setBackgroundResource(R.color.black);
+//            holder.layout.setBackgroundResource(R.color.black);
             postHeight = width;
             holder.layout.getLayoutParams().height = postHeight;
         } else {
-            holder.layout.setBackgroundResource(R.color.material_grey200);
+//            holder.layout.setBackgroundResource(R.color.material_grey200);
             holder.layout.getLayoutParams().height = width * postHeight / postWidth;
         }
 
@@ -175,7 +175,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.shimmerLayout.setVisibility(View.VISIBLE);
+                        holder.layout.setBackgroundResource(
+                                resource.getIntrinsicHeight() < resource.getIntrinsicWidth() ?
+                                        R.color.black :
+                                        R.color.material_grey200);
+                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
                         holder.topLayout.setVisibility(View.VISIBLE);
                         holder.bottomLayout.setVisibility(View.VISIBLE);
                         holder.vignetteLayout.setVisibility(View.VISIBLE);
@@ -216,6 +220,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
+        int postWidth;
+        int postHeight;
 
         ViewHolder(View view) {
             super(view);

@@ -229,15 +229,19 @@ public class DiscoverFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Map<String, ArrayList<PostDetails>> tempMap = new HashMap<>();
-            tempMap.putAll(reference.get().landingPosts.getMyInterests());
-            for (int i = 0; i < reference.get().landingPosts.getMyInterests().size(); i++) {
-                String categoryName = reference.get().landingPosts.getUserInterests().get(i).getCategoryName();
-                if (tempMap.get(categoryName).isEmpty())
-                    tempMap.remove(categoryName);
+            try {
+                Map<String, ArrayList<PostDetails>> tempMap = new HashMap<>();
+                tempMap.putAll(reference.get().landingPosts.getMyInterests());
+                for (int i = 0; i < reference.get().landingPosts.getMyInterests().size(); i++) {
+                    String categoryName = reference.get().landingPosts.getUserInterests().get(i).getCategoryName();
+                    if (tempMap.get(categoryName).isEmpty())
+                        tempMap.remove(categoryName);
+                }
+                reference.get().landingPosts.getMyInterests().clear();
+                reference.get().landingPosts.getMyInterests().putAll(tempMap);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            reference.get().landingPosts.getMyInterests().clear();
-            reference.get().landingPosts.getMyInterests().putAll(tempMap);
             return null;
         }
 
