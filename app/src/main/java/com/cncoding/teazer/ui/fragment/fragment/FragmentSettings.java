@@ -3,15 +3,13 @@ package com.cncoding.teazer.ui.fragment.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -23,6 +21,8 @@ import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import io.branch.referral.Branch;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,43 +32,28 @@ import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
+ *
  * Created by farazhabib on 03/12/17.
  */
 
 public class FragmentSettings extends Fragment{
 
-    @BindView(R.id.text_block_layout)
-    LinearLayout text_block;
-    @BindView(R.id.simpleSwitch)
-    Switch simpleSwitch;
+    @BindView(R.id.simpleSwitch) Switch simpleSwitch;
+//    @BindView(R.id.text_block_layout) ProximaNovaRegularTextView text_block;
+//    @BindView(R.id.recentlyDeleted) ProximaNovaRegularTextView recentlyDeleted;
+//    @BindView(R.id.logoutLayout) ProximaNovaRegularTextView logout;
+//    @BindView(R.id.changePassword) TextView changePassword;
+//    @BindView(R.id.changeCategoriesLayout) ProximaNovaRegularTextView changeCategoriesLayout;
+//    @BindView(R.id.invite_friends) ProximaNovaSemiboldTextView inviteFriendsLayout;
+//    @BindView(R.id.deactivateAccountLayout) ProximaNovaRegularTextView deactivateAccountLayout;
 
-    @BindView(R.id.recentelyDeleted)
-    LinearLayout recentelyDeleted;
-
-    @BindView(R.id.logoutlayout)
-    LinearLayout logout;
-    @BindView(R.id.changePassword)
-    TextView changePassword;
-
-    @BindView(R.id.changecategoriesLayout)
-    LinearLayout changecategoriesLayout;
-
-    @BindView(R.id.invitefriendslayout)
-    LinearLayout invitefriendslayout;
-
-    @BindView(R.id.dectivateAccountLayout)
-    LinearLayout dectivateAccountLayout;
     Context context;
     private static final  int PRIVATE_STATUS=1;
     private static final  int PUBLIC_STATUS=2;
-    boolean flag =false;
+    boolean flag = false;
     public static final String   ACCOUNT_TYPE="accountType";
     int accountType;
-    ChangeCategoriesListener mlistener;
-
-
-
-
+    ChangeCategoriesListener mListener;
 
     public static FragmentSettings newInstance( String accountType) {
         FragmentSettings fragment=new FragmentSettings();
@@ -79,10 +64,8 @@ public class FragmentSettings extends Fragment{
 
     }
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -91,152 +74,97 @@ public class FragmentSettings extends Fragment{
     }
     @Override
 
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        context=container.getContext();
+        context = container.getContext();
         ButterKnife.bind(this,view);
-        if(accountType==1)
-        {
-            simpleSwitch.setChecked(true);
+        if (!flag) {
+            simpleSwitch.setChecked(accountType == 1);
+            flag = true;
         }
-        else
-        {
-            simpleSwitch.setChecked(false);
-        }
-
-        text_block.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context,BlockUserList.class);
-                startActivity(intent);
-            }
-        });
-
-        simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    flag=true;
-                    publicprivateProfile(PRIVATE_STATUS);
-                } else {
-                    flag=true;
-                    publicprivateProfile(PUBLIC_STATUS);
-                }
-            }
-        });
-
-        dectivateAccountLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mlistener.deactivateAccountListener();
-
-            }
-        });
-        recentelyDeleted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logout(context, getActivity());
-                Branch.getInstance(getApplicationContext()).logout();
-            }
-        });
-
-        changePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context,PasswordChange.class);
-                startActivity(intent);
-            }
-        });
-        invitefriendslayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context,InviteFriend.class);
-                startActivity(intent);
-            }
-        });
-
-        changecategoriesLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mlistener.changeCategoriesListener();
-
-
-            }
-        });
         return view;
     }
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    }
 
+    @OnClick(R.id.text_block_layout) public void blockListClicked() {
+        startActivity(new Intent(context,BlockUserList.class));
+    }
 
+    @OnCheckedChanged(R.id.simpleSwitch) public void switchClicked(boolean isChecked) {
+        if (flag) {
+            publicPrivateProfile(isChecked ? PRIVATE_STATUS : PUBLIC_STATUS);
+        }
+    }
+
+    @OnClick(R.id.deactivateAccountLayout) public void deactivateClicked() {
+        mListener.deactivateAccountListener();
+    }
+
+//    @OnClick(R.id.recentlyDeleted) public void recentlyDeletedClicked() {
+//    }
+
+    @OnClick(R.id.changePassword) public void changePasswordClicked() {
+        startActivity(new Intent(context,PasswordChange.class));
+    }
+
+    @OnClick(R.id.invite_friends) public void inviteFriendsClicked() {
+        startActivity(new Intent(context,InviteFriend.class));
+    }
+
+    @OnClick(R.id.changeCategoriesLayout) public void changeCategoriesClicked() {
+        mListener.changeCategoriesListener();
+    }
+
+    @OnClick(R.id.logoutLayout) public void logoutClicked() {
+        logout(context, getActivity());
+        Branch.getInstance(getApplicationContext()).logout();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mlistener=(ChangeCategoriesListener)context;
-
+        mListener =(ChangeCategoriesListener)context;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
-    public void publicprivateProfile(final int status)
-    {
+    public void publicPrivateProfile(final int status) {
         ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
-
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
 
                 try {
                     boolean b = response.body().getStatus();
-                    if (b == true)
-                    {
-
+                    if (b) {
                         if(status==1)
                             Toast.makeText(context, "Your account has become private", Toast.LENGTH_LONG).show();
                         else
                             Toast.makeText(context, "Your account has become public", Toast.LENGTH_LONG).show();}
-                    else
-                    {
-
+                    else {
                         Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
                     }
-
                 }
                 catch (Exception e) {
-
                     e.printStackTrace();
-                    Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
                 }
-
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public interface ChangeCategoriesListener
-    {
-        public void changeCategoriesListener();
-        public void deactivateAccountListener();
-
+    public interface ChangeCategoriesListener {
+        void changeCategoriesListener();
+        void deactivateAccountListener();
     }
-
-
 }

@@ -124,7 +124,7 @@ public class FragmentDeactivateAccount extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        mlistener=(DeactivateAccountListener)context;
+//        mListener=(DeactivateAccountListener)context;
 
     }
 

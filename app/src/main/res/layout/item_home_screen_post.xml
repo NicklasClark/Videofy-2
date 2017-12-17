@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="0.25dp"
     android:animateLayoutChanges="true"
-    android:background="@color/material_grey200">
+    android:background="@color/colorDisabled">
 
     <RelativeLayout
         android:id="@+id/shimmer_layout"
@@ -38,8 +38,8 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                 android:id="@+id/shimmer_username"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
+                android:layout_width="50dp"
+                android:layout_height="10dp"
                 android:textSize="@dimen/text_size_12sp"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -50,25 +50,14 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/shimmer_likes"
-                android:layout_width="40dp"
-                android:layout_height="12dp"
+                android:layout_width="35dp"
+                android:layout_height="10dp"
                 android:textSize="@dimen/text_size_10sp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="6dp"
                 android:background="@color/colorShimmer"
                 android:layout_toEndOf="@+id/shimmer_dp"
                 android:layout_below="@+id/shimmer_username"/>
-
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                android:id="@+id/shimmer_views"
-                android:layout_width="40dp"
-                android:layout_height="12dp"
-                android:textSize="@dimen/text_size_10sp"
-                android:layout_alignTop="@+id/shimmer_likes"
-                android:background="@color/colorShimmer"
-                android:layout_alignBottom="@+id/shimmer_likes"
-                android:layout_below="@+id/shimmer_username"
-                android:layout_toEndOf="@+id/shimmer_likes"/>
 
         </RelativeLayout>
 

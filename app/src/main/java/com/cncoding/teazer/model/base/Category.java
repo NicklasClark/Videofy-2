@@ -12,17 +12,20 @@ public class Category implements Parcelable {
     private int category_id;
     private String category_name;
     private String color;
+    private String my_color;
 
-    public Category(int category_id, String category_name, String color) {
+    public Category(int category_id, String category_name, String color, String my_color) {
         this.category_id = category_id;
         this.category_name = category_name;
         this.color = color;
+        this.my_color = my_color;
     }
 
     protected Category(Parcel in) {
         category_id = in.readInt();
         category_name = in.readString();
         color = in.readString();
+        my_color = in.readString();
     }
 
     @Override
@@ -30,6 +33,7 @@ public class Category implements Parcelable {
         dest.writeInt(category_id);
         dest.writeString(category_name);
         dest.writeString(color);
+        dest.writeString(my_color);
     }
 
     @Override
@@ -60,4 +64,9 @@ public class Category implements Parcelable {
     public String getColor() {
         return color;
     }
+
+    public String getMyColor() {
+        return my_color;
+    }
+
 }

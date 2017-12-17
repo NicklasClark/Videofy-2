@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -107,6 +110,12 @@ public class SubDiscoverFragment extends BaseFragment {
         if (postDetailsArrayList == null)
             postDetailsArrayList = new ArrayList<>();
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         switch (action) {
             case ACTION_VIEW_MOST_POPULAR:
                 getParentActivity().updateToolbarTitle(getString(R.string.most_popular));
@@ -126,7 +135,6 @@ public class SubDiscoverFragment extends BaseFragment {
             default:
                 break;
         }
-        return rootView;
     }
 
     private void prepareMostPopularLayout() {
@@ -155,23 +163,35 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void prepareMyInterestsLayout() {
-        tabLayout.setVisibility(View.VISIBLE);
-        viewPager.setVisibility(View.VISIBLE);
+        if (categories != null && !categories.isEmpty()) {
+            tabLayout.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
 
-        populateTabs();
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+            populateTabs();
+            SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-        tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(0).getColor()));
-        viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
-            @Override
-            public void onPageSelected(int position) {
-                tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(position).getColor()));
-                fadeOtherTabColorsOut(position);
-                setCurrentTabTextColor(position);
-            }
-        });
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+            tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(0).getColor()));
+
+            viewPager.setAdapter(sectionsPagerAdapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+                @Override
+                public void onPageSelected(int position) {
+                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor(categories.get(position).getColor()));
+                    fadeOtherTabColorsOut(position);
+                    setCurrentTabTextColor(position);
+                }
+            });
+            tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        } else {
+            Toast.makeText(getContext(), R.string.no_interests_selected_message, Toast.LENGTH_LONG).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getParentActivity().pushFragmentOnto(Interests.newInstance(
+                            false, true, categories, null));
+                }
+            }, 1000);
+        }
     }
 
     private void prepareTrendingLayout() {

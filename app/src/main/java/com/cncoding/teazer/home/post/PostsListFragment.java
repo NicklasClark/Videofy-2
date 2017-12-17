@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -36,7 +35,7 @@ import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
+//    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
@@ -67,18 +66,13 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         ButterKnife.bind(this, rootView);
         if (postList == null)
             postList = new ArrayList<>();
-        else
-            progressBar.setVisibility(View.GONE);
+//        else
+//            progressBar.setVisibility(View.GONE);
 
         postListAdapter = new PostsListAdapter(postList, getContext());
         recyclerView.setAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
         recyclerView.setOnKeyListener(this);
-//        recyclerView.setLayoutAnimation(
-//                new LayoutAnimationController(
-//                        AnimationUtils.loadAnimation(getContext(), R.anim.float_down),
-//                        0.2f
-//                ));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(manager);
@@ -150,7 +144,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 return;
             } else {
                 recyclerView.getAdapter().notifyDataSetChanged();
-                dismissProgressBar();
+//                dismissProgressBar();
                 return;
             }
         }
@@ -176,7 +170,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
         if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
 
         postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
 
@@ -197,7 +191,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                     else
                                         postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    dismissProgressBar();
+//                                    dismissProgressBar();
                                 } else {
                                     if (page == 1 && postList.isEmpty())
                                         showErrorMessage(getString(R.string.no_posts_available));
@@ -212,11 +206,11 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                         e.printStackTrace();
                         dismissRefreshView();
                     }
-                    dismissProgressBar();
+//                    dismissProgressBar();
                 }
 
                 private void showErrorMessage(String message) {
-                    dismissProgressBar();
+//                    dismissProgressBar();
                     recyclerView.setVisibility(View.INVISIBLE);
                     postLoadErrorLayout.setVisibility(View.VISIBLE);
                     String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
@@ -240,11 +234,11 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             });
     }
 
-    public void dismissProgressBar() {
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
+//    public void dismissProgressBar() {
+//        if (progressBar.getVisibility() == View.VISIBLE) {
+//            progressBar.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public void onDestroy() {

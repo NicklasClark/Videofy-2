@@ -227,6 +227,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
+                String name = fragmentManager.getBackStackEntryAt(0).getName();
+                fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
                         false, false, null, null),
                         TAG_SELECT_INTERESTS);

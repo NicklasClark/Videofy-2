@@ -89,7 +89,7 @@
     </style>
 
     <style name="PostDetailsTransition">
-        <!--<item name="android:windowEnterAnimation">@anim/slide_in_right</item>-->
+        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
         <!--<item name="android:windowExitAnimation">@anim/slide_out_left</item>-->
         <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
