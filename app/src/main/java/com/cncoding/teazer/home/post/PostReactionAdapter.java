@@ -171,4 +171,9 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             return super.toString() + " '" + name.getText() + "' : \"" + caption.getText() + "\"";
         }
     }
+
+    public void playFromDeepLink(PostReaction postReaction)
+    {
+        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+    }
 }

@@ -367,8 +367,12 @@ public class DiscoverFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        landingPostCall.cancel();
-        featuredPostsCall.cancel();
+        try {
+            landingPostCall.cancel();
+            featuredPostsCall.cancel();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

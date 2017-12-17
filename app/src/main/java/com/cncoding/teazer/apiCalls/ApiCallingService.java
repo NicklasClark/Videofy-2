@@ -56,8 +56,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
-//5346800017115465
-//136
 
 /**
  *

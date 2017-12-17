@@ -46,8 +46,8 @@ public class VideoTrimmerView extends FrameLayout {
 
     private static final String TAG = VideoTrimmerView.class.getSimpleName();
     private static final int margin = UnitConverter.dpToPx(6);
-    private static final int SCREEN_WIDTH = (DeviceUtil.getDeviceWidth() - margin * 2);
-    private static final int SCREEN_WIDTH_FULL = DeviceUtil.getDeviceWidth();
+    private static final int SCREEN_WIDTH = (DeviceUtil.getDeviceWidth() - margin * 2 - UnitConverter.dpToPx(30));
+    private static final int SCREEN_WIDTH_FULL = DeviceUtil.getDeviceWidth() - UnitConverter.dpToPx(14);
     private static final int SHOW_PROGRESS = 2;
 
     private Context mContext;

@@ -1,6 +1,7 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,10 @@ import com.google.android.exoplayer2.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -139,8 +144,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 }
                 break;
             }
-            case SELF_REACTION:
-            {
+            case SELF_REACTION: {
                 try {
                     videoURL = getIntent().getStringExtra("VIDEO_URL");
                     selfPostDetails = getIntent().getParcelableExtra("POST_INFO");
@@ -191,6 +195,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                             viewsCount++;
                         initView();
                     }
+
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();
@@ -222,7 +227,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
-            LoopingMediaSource loopingMediaSource  = new LoopingMediaSource(mediaSource);
+            LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSource);
             playerView.setPlayer(player);
             player.prepare(loopingMediaSource);
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
@@ -249,9 +254,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
-                                if(response.body().getStatus())
-                                {
-                                    FragmentProfileMyCreations.checkIsLiked=true;
+                                if (response.body().getStatus()) {
+                                    FragmentProfileMyCreations.checkIsLiked = true;
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -279,36 +283,36 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     initView();
                     disableView(likeBtn, false);
                     ApiCallingService.React.likeDislikeReaction(reactId, 2, this).enqueue(new Callback<ResultObject>() {
-                                @Override
-                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                    try {
-                                        if(response.body().getStatus())
-                                        {
-                                            FragmentProfileMyCreations.checkIsLiked = false;
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        isLiked = true;
-                                        likesCount++;
-                                        initView();
-                                    }
-                                    enableView(likeBtn);
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            try {
+                                if (response.body().getStatus()) {
+                                    FragmentProfileMyCreations.checkIsLiked = false;
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                isLiked = true;
+                                likesCount++;
+                                initView();
+                            }
+                            enableView(likeBtn);
+                        }
 
-                                @Override
-                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                    t.printStackTrace();
-                                    isLiked = true;
-                                    likesCount++;
-                                    initView();
-                                    enableView(likeBtn);
-                                }
-                            });
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            t.printStackTrace();
+                            isLiked = true;
+                            likesCount++;
+                            initView();
+                            enableView(likeBtn);
+                        }
+                    });
 
                 }
                 break;
         }
     }
+
     private void likeAction(boolean isLiked, boolean animate) {
         if (isLiked) {
             likeBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_filled));
@@ -353,6 +357,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             initializePlayer();
         }
     }
+
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
         playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -378,6 +383,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             releasePlayer();
         }
     }
+
     private void releasePlayer() {
         if (player != null) {
             playbackPosition = player.getCurrentPosition();
@@ -388,4 +394,71 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.btnShare)
+    public void onViewClicked() {
+        switch (playSource) {
+            case POST_REACTION: {
+                BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                        .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
+                        .setTitle(postDetails.getReact_title())
+                        .setContentDescription("View this awesome video on Teazer app")
+                        .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
+
+                LinkProperties linkProperties = new LinkProperties()
+                        .setChannel("facebook")
+                        .setFeature("sharing")
+                        .addControlParameter("react_id", String.valueOf(postDetails.getReactId()))
+                        .addControlParameter("post_id", String.valueOf(postDetails.getPostId()))
+                        .addControlParameter("$desktop_url", "https://teazer.in/")
+                        .addControlParameter("$ios_url", "https://teazer.in/");
+
+                branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+                    @Override
+                    public void onLinkCreate(String url, BranchError error) {
+                        if (error == null) {
+
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                        }
+                    }
+                });
+                break;
+            }
+            case SELF_REACTION:
+            {
+                BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                        .setCanonicalIdentifier(String.valueOf(selfPostDetails.getPostOwner().getUserId()))
+                        .setTitle(selfPostDetails.getReactTitle())
+                        .setContentDescription("View this awesome video on Teazer app")
+                        .setContentImageUrl(selfPostDetails.getMediaDetail().getThumbUrl());
+
+                LinkProperties linkProperties = new LinkProperties()
+                        .setChannel("facebook")
+                        .setFeature("sharing")
+                        .addControlParameter("react_id", String.valueOf(selfPostDetails.getReactId()))
+                        .addControlParameter("post_id", String.valueOf(selfPostDetails.getPostId()))
+                        .addControlParameter("$desktop_url", "https://teazer.in/")
+                        .addControlParameter("$ios_url", "https://teazer.in/");
+
+                branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+                    @Override
+                    public void onLinkCreate(String url, BranchError error) {
+                        if (error == null) {
+
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                        }
+                    }
+                });
+                break;
+            }
+        }
+
+    }
 }

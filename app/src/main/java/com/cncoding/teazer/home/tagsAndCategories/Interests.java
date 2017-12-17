@@ -250,15 +250,19 @@ public class Interests extends BaseFragment {
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            Log.d("Updating interests", "Updated successfully");
-                        } else {
-                            Log.d("Updating interests", response.code() + " : " + response.message());
+                        try {
+                            if (response.code() == 200) {
+                                Log.d("Updating interests", "Updated successfully");
+                            } else {
+                                Log.d("Updating interests", response.code() + " : " + response.message());
+                            }
+                            if (!isForVideo)
+                                mListener.onInterestsInteraction();
+                            else
+                                mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        if (!isForVideo)
-                            mListener.onInterestsInteraction();
-                        else
-                            mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
                     }
 
                     @Override

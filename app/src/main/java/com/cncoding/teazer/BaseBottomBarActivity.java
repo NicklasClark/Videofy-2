@@ -68,7 +68,6 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
-import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -101,9 +100,7 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
-import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -424,7 +421,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 if (response.body() != null) {
-                                    PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                    PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, null, response.body().getMedias().get(0).getThumbUrl());
                                 } else {
                                     Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                 }
@@ -448,7 +445,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
             @Override
-            public void onInitFinished(JSONObject referringParams, BranchError error) {
+            public void onInitFinished(final JSONObject referringParams, BranchError error) {
                 if (error == null) {
                     try {
                         if (referringParams != null) {
@@ -463,8 +460,15 @@ public class BaseBottomBarActivity extends BaseActivity
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200) {
                                                     if (response.body() != null) {
-                                                        Toast.makeText(BaseBottomBarActivity.this, "Post is Available check", Toast.LENGTH_SHORT).show();
-                                                        PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl());
+                                                        if (referringParams.has("react_id")) {
+                                                            try {
+                                                                PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id"));
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        } else {
+                                                            PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null);
+                                                        }
                                                     } else {
                                                         Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                                     }
@@ -662,7 +666,7 @@ public class BaseBottomBarActivity extends BaseActivity
         switch (action) {
             case ACTION_VIEW_POST:
                 PostDetailsActivity.newInstance(this, postDetails, image,
-                        true, false, null);
+                        true, false, null, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 int postOwnerId = postDetails.getPostOwner().getUserId();
@@ -685,7 +689,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 break;
             case ACTION_VIEW_POST:
                 PostDetailsActivity.newInstance(this, postDetails,
-                        null, false, false, null);
+                        null, false, false, null, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -700,7 +704,7 @@ public class BaseBottomBarActivity extends BaseActivity
         switch (action) {
             case ACTION_VIEW_POST:
                 PostDetailsActivity.newInstance(this, postDetails,
-                        null, false, false, null);
+                        null, false, false, null, null);
                 break;
             case ACTION_VIEW_PROFILE:
                 pushFragment(postDetails.canDelete() ? ProfileFragment.newInstance() :
@@ -720,7 +724,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(),
-                                        null, false, false, null);
+                                        null, false, false, null, null);
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
                         }
@@ -746,7 +750,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
+            PostDetailsActivity.newInstance(this, postDetails, null, false, false, null, null);
         } else {
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
         }
@@ -784,7 +788,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null);
+        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null, null);
     }
     //</editor-fold>
 

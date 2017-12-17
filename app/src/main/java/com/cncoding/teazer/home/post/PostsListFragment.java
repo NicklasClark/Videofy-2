@@ -230,13 +230,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
-                    if (isAdded()) {
-                        if (t.getMessage().contains("resolve"))
-                            showErrorMessage("No internet connection found!");
-                        else
-                            showErrorMessage(t.getMessage() != null ? t.getMessage() : "Something went wrong!");
-                        dismissRefreshView();
-                    }
+                    dismissRefreshView();
                 }
             });
 

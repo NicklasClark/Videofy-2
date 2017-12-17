@@ -51,14 +51,14 @@ public class ExoPlayerActivity extends AppCompatActivity{
 
         videoURL = getIntent().getStringExtra("VIDEO_URL");
 
-        if (null != toolbar) {
-            this.setSupportActionBar(toolbar);
-            //noinspection ConstantConditions
-            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-//            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-        }
+//        if (null != toolbar) {
+//            this.setSupportActionBar(toolbar);
+//            //noinspection ConstantConditions
+//            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+////            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
+//        }
     }
 
     @Override

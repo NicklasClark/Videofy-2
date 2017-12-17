@@ -115,5 +115,22 @@ public class PostReaction implements Parcelable {
         return 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        PostReaction that = (PostReaction) o;
+
+        return react_id == that.react_id;
+    }
+
+    @Override
+    public int hashCode() {
+        return react_id;
+    }
+
+    public PostReaction(int react_id) {
+        this.react_id = react_id;
+    }
 }
