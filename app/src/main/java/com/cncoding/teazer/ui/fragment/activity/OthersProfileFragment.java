@@ -93,8 +93,8 @@ public class OthersProfileFragment extends BaseFragment {
     RecyclerView _recycler_view;
     @BindView(R.id.btnfollow)
     Button _btnfollow;
-    @BindView(R.id.layout)
-    CoordinatorLayout layout;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout layout;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.nomessagetxt)

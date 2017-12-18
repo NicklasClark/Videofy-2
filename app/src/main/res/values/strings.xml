@@ -325,4 +325,5 @@
     <string name="no_creations_message">Your profile is still empty. Create your first video to start your journey on Teazer</string>
     <string name="no_reactions_message">You haven\'t reacted on any post yet.</string>
     <string name="could_not_find_location">Couldn\'t find your location, try searching for it.</string>
+    <string name="logo">logo</string>
 </resources>

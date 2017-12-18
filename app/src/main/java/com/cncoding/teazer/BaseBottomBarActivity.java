@@ -187,7 +187,7 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
-        
+
 
         Log.d("NOTIFYM", "onCreate called");
 

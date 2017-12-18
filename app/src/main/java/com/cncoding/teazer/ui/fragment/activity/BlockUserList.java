@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.BlockUserListAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 import com.cncoding.teazer.model.user.BlockedUser;
 
@@ -45,7 +46,9 @@ public class BlockUserList extends AppCompatActivity {
     TextView blockedUserText;
     @BindView(R.id.blockedListEmptyView)
     TextView blockedUserEmptyView;
-    int pageId=1;
+    boolean nextPage;
+
+    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,45 +76,56 @@ public class BlockUserList extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
         recyclerView = findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         layout.setVisibility(View.GONE);
         progress_bar.setVisibility(View.VISIBLE);
         list=new ArrayList<>();
-        getBlockUserList();
+
+        endlessRecyclerViewScrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if(nextPage) {
+                    getBlockUserList(page);
+                    Toast.makeText(context,"onLoad",Toast.LENGTH_LONG).show();
+                }
+
+            }
+        };
+
+        getBlockUserList(1);
     }
-    public void getBlockUserList()
+
+
+
+
+    public void getBlockUserList(final int pageId)
     {
 
         ApiCallingService.Friends.getBlockedUsers(pageId,context).enqueue(new Callback<BlockedUsersList>() {
             @Override
             public void onResponse(Call<BlockedUsersList> call, Response<BlockedUsersList> response) {
-                if(response.code()==200)
-                {
-                    try
+                if(response.code()==200) {
+                    try {
+                        list.addAll(response.body().getBlockedUsers());
 
-                    {
-                        list= response.body().getBlockedUsers();
-                        boolean nextPage=response.body().getNextPage();
-
-                        if(list==null||list.size()==0) {
+                        if((list==null||list.size()==0) && pageId == 1) {
                             layout.setVisibility(View.VISIBLE);
                             blockedUserEmptyView.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
                         }
-                        else
-                        {
-                            adapter = new BlockUserListAdapter(context, list);
-                            recyclerView.setAdapter(adapter);
+                        else {
+                            nextPage=response.body().getNextPage();
                             layout.setVisibility(View.VISIBLE);
                             progress_bar.setVisibility(View.GONE);
-                            if(nextPage)
-                            {
-                                pageId++;
-                                getBlockUserList();
+                          //  list.addAll(response.body().getBlockedUsers());
 
-                            }
+                            adapter = new BlockUserListAdapter(context, list);
+                            recyclerView.setAdapter(adapter);
+                            recyclerView.getAdapter().notifyDataSetChanged();
                         }
                     }
                     catch (Exception e) {
@@ -148,6 +162,4 @@ public class BlockUserList extends AppCompatActivity {
         layout.setVisibility(View.VISIBLE);
         progress_bar.setVisibility(View.GONE);
     }
-
-
 }

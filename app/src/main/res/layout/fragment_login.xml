@@ -22,12 +22,12 @@
 
             <!--<include layout="@layout/custom_action_bar" />-->
 
-            <com.cncoding.teazer.customViews.SignPainterTextView
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:padding="@dimen/padding_default"
-                android:textSize="@dimen/text_size_h2"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_teazer_logo"
                 android:layout_marginTop="@dimen/padding_big"/>
 
             <RelativeLayout
@@ -96,7 +96,10 @@
                     android:textSize="@dimen/text_size_content"
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/ripple_dark"
-                    android:padding="@dimen/padding_default"
+
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default"
                     android:textColor="@color/colorIcons"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/spacer" />
@@ -118,7 +121,9 @@
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/ripple_dark"
                     android:layout_centerVertical="true"
-                    android:padding="@dimen/padding_default"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default"
                     android:textColor="@color/colorIcons"
                     android:layout_alignParentEnd="true"
                     android:layout_toEndOf="@+id/spacer"/>
@@ -152,10 +157,19 @@
                     android:visibility="invisible"/>
 
             </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="@dimen/padding_default"
+
+
+            android:animateLayoutChanges="true">
 
             <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                 android:id="@+id/already_have_otp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/already_have_otp"
@@ -163,23 +177,24 @@
                 android:textSize="@dimen/text_size_content"
                 android:background="@android:color/transparent"
                 android:foreground="@drawable/ripple_dark"
-                android:padding="@dimen/padding_default"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/colorIcons"
                 android:visibility="invisible" />
 
             <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                 android:id="@+id/login_through_password"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_alignParentEnd="true"
                 android:text="@string/login_through_password"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_size_content"
                 android:background="@android:color/transparent"
                 android:foreground="@drawable/ripple_dark"
-                android:padding="@dimen/padding_default"
                 android:textColor="@color/colorIcons"
                 android:visibility="invisible" />
+        </RelativeLayout>
 
         </LinearLayout>
 

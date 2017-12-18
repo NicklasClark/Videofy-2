@@ -23,6 +23,7 @@ public class AuthFragment extends Fragment implements NetworkStateReceiver.Netwo
     public boolean isConnected;
     public Context context;
     private NetworkStateReceiver networkStateReceiver;
+    protected  boolean isPasswodShown=true;
 
     public AuthFragment() {
         // Required empty public constructor

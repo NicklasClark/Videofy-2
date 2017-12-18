@@ -52,14 +52,14 @@
             android:gravity="center"
             android:id="@+id/linearLayout">
 
-            <com.cncoding.teazer.customViews.SignPainterTextView
+            <ImageView
                 android:id="@+id/teazer_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:src="@drawable/ic_teazer_logo"
                 android:gravity="center"
-                android:padding="@dimen/padding_default"
-                android:textSize="@dimen/text_size_h1" />
+                android:padding="10dp"
+                 />
 
             <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
                 android:id="@+id/marquee_text"
@@ -139,22 +139,28 @@
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/signup_with_facebook"
-            style="@style/AppTheme.RoundedFacebookButtonWelcomePage"
+            style="@style/RoundedFacebookButtonWelcomePage"
             app:spinning_bar_color="@android:color/white"
             app:spinning_bar_padding="@dimen/padding_half"
+            android:drawablePadding="33dp"
+            android:stateListAnimator="@null"
+            android:gravity="start"
             app:initialCornerAngle="@dimen/rounded_edge_radius_2dp"
             app:drawableStartCompat="@drawable/ic_facebook_white"
             android:layout_above="@+id/signup_with_google" />
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
             android:id="@+id/signup_with_google"
-            style="@style/AppTheme.RoundedGoogleButtonWelcomePage"
+            style="@style/RoundedGoogleButtonWelcomePage"
+            android:stateListAnimator="@null"
             android:layout_marginTop="@dimen/padding_default"
             android:layout_marginBottom="@dimen/padding_double"
             app:spinning_bar_color="@android:color/white"
+            android:drawablePadding="27dp"
+            android:gravity="start"
             app:spinning_bar_padding="@dimen/padding_half"
             app:initialCornerAngle="@dimen/rounded_edge_radius_2dp"
-            app:drawableStartCompat="@drawable/ic_google_white"
+            app:drawableStartCompat="@drawable/ic_google_plus"
             android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
