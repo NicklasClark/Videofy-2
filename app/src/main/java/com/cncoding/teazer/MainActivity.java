@@ -97,11 +97,11 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
-    private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
+    public static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
     public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
-    private static final String TAG_OTP_FRAGMENT = "otpFragment";
+    public static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
 //    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;

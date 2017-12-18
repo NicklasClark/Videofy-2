@@ -305,7 +305,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".ui.fragment.activity.ForgotPasswordActivity"></activity>
+        <activity android:name=".ui.fragment.activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DetailAppTheme" />
     </application>
 
 </manifest>
