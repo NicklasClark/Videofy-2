@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -24,8 +26,13 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.GalleryUtil;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 
@@ -36,7 +43,12 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
+import jp.wasabeef.blurry.Blurry;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
+import static android.app.Activity.RESULT_OK;
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
 import static com.cncoding.teazer.utilities.ViewUtils.GALLERY_ACTIVITY_CODE;
@@ -116,16 +128,29 @@ public class SignupFragment extends AuthFragment {
     }
 
     @OnClick(R.id.dp) public void launchImageSelector() {
-        Intent gallery_Intent = new Intent(getApplicationContext(), GalleryUtil.class);
-        startActivityForResult(gallery_Intent, GALLERY_ACTIVITY_CODE);
+
+//        CropImage.activity()
+//                .setGuidelines(CropImageView.Guidelines.ON)
+//                .start(getActivity());
+//
+        CropImage.activity()
+                .start(getContext(), this);
+
+
+//
+//        Intent gallery_Intent = new Intent(getApplicationContext(), GalleryUtil.class);
+//        startActivityForResult(gallery_Intent, GALLERY_ACTIVITY_CODE);
     }
 
     @OnClick(R.id.signup__proceed_btn) public void signupProceed() {
         if (areAllViewsFilled()) {
             if (usernameView.getText().toString().length() >= 4 && usernameView.getText().toString().length() <= 50) {
+
                 if (isPasswordValid(passwordView.getText().toString())) {
+
                     mListener.onInitialEmailSignupInteraction(EMAIL_SIGNUP_PROCEED_ACTION,
                                     new Authorize(usernameView.getText().toString(), passwordView.getText().toString()), picturePath);
+
                 } else
                     Snackbar.make(signupProceedBtn, "Password must be 8 to 32 characters", Snackbar.LENGTH_SHORT).show();
             } else {
@@ -180,34 +205,104 @@ public class SignupFragment extends AuthFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+        final String imageUri = prfs.getString("USER_DP_IMAGES", "");
+        if(imageUri!=null)
+        {
+            Picasso.with(getActivity())
+                    .load(Uri.parse(imageUri))
+                    .into(dp);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SharedPreferences preferences = getActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case GALLERY_ACTIVITY_CODE:
-                    picturePath = data.getStringExtra("picturePath");
-                    //perform Crop on the Image Selected from Gallery
-                    performCrop(picturePath);
-                    break;
-                case RESULT_CROP:
-                    if (data != null) {
-                        Bundle extras = data.getExtras();
-                        Bitmap selectedBitmap = null;
-                        if (extras != null) {
-                            selectedBitmap = extras.getParcelable("data");
-                        }
-                        if (selectedBitmap == null && data.getData() != null)
-                            selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
-                        // Set The Bitmap Data To ImageView
-                        dp.setImageBitmap(selectedBitmap);
-                        dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
-                    }
-                    break;
-                default:
-                    break;
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+               // Toast.makeText(context, String.valueOf(resultUri), Toast.LENGTH_SHORT).show();
+                picturePath = resultUri.toString();
+                SharedPreferences preferences = getActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("USER_DP_IMAGES", resultUri.toString());
+                editor.apply();
+                Picasso.with(getActivity())
+                        .load(resultUri)
+                        .into(dp);
+                try {
+
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+
+
+                //    Blurry.with(getActivity()).from(scaledBitmap).into(bgImage);
+                  //   dp.setImageBitmap(scaledBitmap);
+                    //  byte[] bte = bitmaptoByte(scaledBitmap);
+                    // File profileImage = new File(r.getPath());
+                  //  RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
+                  //  MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
+                 //   saveDataToDatabase(body);
+
+
+
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+
             }
         }
     }
+
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == Activity.RESULT_OK) {
+//            switch (requestCode) {
+//                case GALLERY_ACTIVITY_CODE:
+//                    picturePath = data.getStringExtra("picturePath");
+//                    //perform Crop on the Image Selected from Gallery
+//                    performCrop(picturePath);
+//                    break;
+//                case RESULT_CROP:
+//                    if (data != null) {
+//                        Bundle extras = data.getExtras();
+//                        Bitmap selectedBitmap = null;
+//                        if (extras != null) {
+//                            selectedBitmap = extras.getParcelable("data");
+//                        }
+//                        if (selectedBitmap == null && data.getData() != null)
+//                            selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
+//                        // Set The Bitmap Data To ImageView
+//                        dp.setImageBitmap(selectedBitmap);
+//                        dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {

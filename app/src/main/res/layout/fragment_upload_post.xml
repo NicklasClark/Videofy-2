@@ -41,8 +41,8 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_centerInParent="true"
                     app:srcCompat="@drawable/ic_play_big"
                     android:clickable="false"/>
@@ -114,17 +114,16 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                 android:id="@+id/tag_friends_badge"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#26C6DA"
                 android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="@dimen/text_size_8sp"
+                android:textSize="@dimen/text_size_12sp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="22dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_circle_primary"
                 android:layout_marginBottom="-24dp"
                 android:visibility="invisible"/>
 
@@ -148,17 +147,16 @@
 
             <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                 android:id="@+id/categories_badge"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#26C6DA"
                 android:gravity="center"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="@dimen/text_size_8sp"
+                android:textSize="@dimen/text_size_12sp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="22dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_circle_primary"
                 android:layout_marginBottom="-24dp"
                 android:visibility="invisible"/>
 

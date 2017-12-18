@@ -367,10 +367,11 @@ public class ProfileFragment extends BaseFragment {
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
                  //   coordinatorLayout.setVisibility(View.VISIBLE);
-                    if (userProfileThumbnail != null) {
+                    if (userProfileUrl != null) {
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
+
                         profileBlur(userProfileUrl);
                     }
                     progressbar.setVisibility(View.GONE);

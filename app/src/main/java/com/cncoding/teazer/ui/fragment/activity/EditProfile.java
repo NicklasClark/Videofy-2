@@ -245,11 +245,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             }
         });
 
-
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ProfileFragment.checkprofileupdated = true;
+
 
                // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
 
@@ -267,6 +268,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .start(EditProfile.this);
+
+
             }
         });
 

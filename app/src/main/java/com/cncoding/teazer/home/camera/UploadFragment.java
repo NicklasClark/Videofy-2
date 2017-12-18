@@ -156,6 +156,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean isGallery;
     private static boolean isCompressing = false;
     private static FragmentActivity mActivity;
+    static final int Taggedcategories=2;
+    static final int TaggedFriends=1;
 
 
     public UploadFragment() {
@@ -238,8 +240,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         context = getContext();
         activity = getActivity();
 
-        setBadge(uploadCategoriesBadge, categoryCount);
-        setBadge(tagFriendsBadge, tagCount);
+        setBadge(uploadCategoriesBadge, categoryCount,Taggedcategories);
+        setBadge(tagFriendsBadge, tagCount,TaggedFriends);
 
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
@@ -655,7 +657,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         }
                     }, 500);
                 }
-                setBadge(tagFriendsBadge, count);
+                setBadge(tagFriendsBadge, count,TaggedFriends);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
@@ -669,22 +671,26 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(finalResultToShow);
-                            setBadge(uploadCategoriesBadge, count);
+                            setBadge(uploadCategoriesBadge, count,Taggedcategories);
                         }
                     }, 500);
                 }
-                setBadge(uploadCategoriesBadge, count);
+                setBadge(uploadCategoriesBadge, count,Taggedcategories);
                 break;
         }
     }
 
-    private void setBadge(ProximaNovaSemiboldTextView view, int count) {
+    private void setBadge(ProximaNovaSemiboldTextView view, int count,int check) {
         view.setVisibility(count == 0 ? View.GONE : VISIBLE);
         if (view.getVisibility() == VISIBLE) {
             String countText = String.valueOf(count);
             if (count <= 9)
                 countText = "0" + countText;
-            view.setText(countText);
+            if(check==TaggedFriends)
+            view.setText(countText+" Tagged Friends");
+            else
+                view.setText(countText+" Tagged Categories");
+
         }
     }
 

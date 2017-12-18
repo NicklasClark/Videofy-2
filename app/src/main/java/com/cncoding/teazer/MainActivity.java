@@ -4,15 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -54,18 +57,23 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -116,11 +124,14 @@ public class MainActivity extends AppCompatActivity
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
+     static byte[] bte;
 
     @BindView(R.id.container) RelativeLayout rootView;
     @BindView(R.id.welcome_video) VideoView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
+
+   String imageUri;
 
 //    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
@@ -176,6 +187,25 @@ public class MainActivity extends AppCompatActivity
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
+
+
+
+
+        SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+        imageUri = prfs.getString("USER_DP_IMAGES", "");
+
+        if(imageUri!=null)
+        {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+                bte = bitmaptoByte(scaledBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void successfullyLoggedIn() {
@@ -580,6 +610,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
+    public static byte[] bitmaptoByte(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        return data;
+    }
 
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {
 
@@ -587,21 +623,31 @@ public class MainActivity extends AppCompatActivity
 
         UpdateProfilePic(MainActivity context) {
             reference = new WeakReference<>(context);
+
         }
+
+
+       // 3790
+
+       // 6665
 
         @Override
         protected MultipartBody.Part doInBackground(String... strings) {
             try {
+
                 File profileImage = new File(strings[0]);
-                if (profileImage.exists()) {
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
-                    return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
-                }
+//                if (profileImage.exists()) {
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), bte);
+                return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
+
+
+                // }
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-            return null;
+           // return null;
         }
 
         @Override
@@ -610,6 +656,9 @@ public class MainActivity extends AppCompatActivity
                 ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                       // Log.d("IMAGE Url",picturePath)
+                        Toast.makeText(reference.get(), "Profile pic Updated", Toast.LENGTH_SHORT).show();
+
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {

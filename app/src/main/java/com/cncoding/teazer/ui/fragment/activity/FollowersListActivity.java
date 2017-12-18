@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.FollowersAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.UserInfo;
@@ -50,6 +52,8 @@ public class FollowersListActivity extends BaseFragment{
     int userfollowerpage=1;
     int otherFollowerpage=1;
     protected String previousTitle;
+    boolean next;
+    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     public static FollowersListActivity newInstance(String id,String identifier) {
         FollowersListActivity followersListActivity = new FollowersListActivity();
@@ -105,21 +109,38 @@ public class FollowersListActivity extends BaseFragment{
         else if(identifier.equals("User"))
         {
 
-            getUserfollowerList();
+            getUserfollowerList(1);
         }
+
+        endlessRecyclerViewScrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if(next) {
+                    getUserfollowerList(page);
+
+                }
+
+            }
+        };
+
+        getUserfollowerList(1);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Toast.makeText(context,"Hell to all",Toast.LENGTH_LONG).show();
 
 
     }
 
 
 
-    public void getUserfollowerList()
+    public void getUserfollowerList(final int page)
+
     {
+
         ApiCallingService.Friends.getMyFollowers(userfollowerpage,context).enqueue(new Callback<FollowersList>() {
             @Override
             public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
@@ -127,20 +148,22 @@ public class FollowersListActivity extends BaseFragment{
                 {
                     try {
                         userfollowerlist.addAll(response.body().getUserInfos());
-                        boolean next=response.body().getNextPage();
-                        if (userfollowerlist == null) {
+                        // next=response.body().getNextPage();
+
+                        if ((list==null||list.size()==0) && page == 1) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
                         }
                         else{
+                            next=response.body().getNextPage();
                             profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, 100);
                             recyclerView.setAdapter(profileMyFollowerAdapter);
-                            if(next)
-                            {
-                                userfollowerpage++;
-                                getUserfollowerList();
-                            }
+//                            if(next)
+//                            {
+//                                userfollowerpage++;
+//                                getUserfollowerList();
+//                            }
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                         }

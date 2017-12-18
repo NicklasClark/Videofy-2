@@ -155,7 +155,7 @@
                     android:layout_marginEnd="13dp"
                     android:layout_alignBottom="@+id/media_controller_likes"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:id="@+id/media_controller_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -302,6 +302,8 @@
                         android:id="@+id/react_btn"
                         style="@style/AppTheme.ReactButton"
                         android:text="@string/react"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
                         app:drawableStartCompat="@drawable/ic_react"/>
 
                 </FrameLayout>
@@ -463,7 +465,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:drawableTopCompat="@drawable/ic_no_data_placeholder"
                 android:textSize="@dimen/text_size_14sp"/>
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView

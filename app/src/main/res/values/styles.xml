@@ -279,7 +279,7 @@
 
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">50dp</item>
         <!--<item name="android:paddingTop">@dimen/padding_half</item>-->
         <!--<item name="android:paddingBottom">@dimen/padding_half</item>-->
         <item name="android:paddingStart">@dimen/padding_thin</item>
