@@ -12,6 +12,8 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.utilities.AuthUtils.isUserLoggedIn;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.getFollowingNotificationsUnreadCount;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.getRequestNotificationsUnreadCount;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -43,6 +45,9 @@ public class SplashScreen extends AppCompatActivity {
 //            }
 //            else
 //                Log.d("NOTIFYM", "Intent is null");
+            getFollowingNotificationsUnreadCount(this, 1);
+            getRequestNotificationsUnreadCount(this, 1);
+
             startActivity(new Intent(SplashScreen.this, BaseBottomBarActivity.class));
         } else {
             startActivity(new Intent(SplashScreen.this, MainActivity.class));

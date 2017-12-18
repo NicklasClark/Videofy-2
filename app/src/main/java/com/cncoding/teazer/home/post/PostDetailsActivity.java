@@ -156,6 +156,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
     @BindView(R.id.placeholder) ImageView placeholder;
     @BindView(R.id.loading) ProgressBar loadingProgressBar;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -321,8 +322,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        if (!enableReactBtn) disableView(reactBtn, true);
 //        else enableView(reactBtn);
 
+
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
         tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
+        tagsLayout.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
 
         prepareController();
 

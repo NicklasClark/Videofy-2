@@ -28,6 +28,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -130,6 +131,8 @@ import static com.cncoding.teazer.utilities.NavigationController.TAB4;
 import static com.cncoding.teazer.utilities.NavigationController.TAB5;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getAuthToken;
+import static com.cncoding.teazer.utilities.SharedPrefs.getFollowingNotificationCount;
+import static com.cncoding.teazer.utilities.SharedPrefs.getRequestNotificationCount;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
@@ -255,7 +258,6 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         });
 
-
         BReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -311,8 +313,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
         };
 
-        getBranchDynamicLinks();
-
 //        if (getIntent().getExtras() != null) {
 //            Bundle bundle = getIntent().getExtras();
 //            if (bundle != null) {
@@ -330,7 +330,6 @@ public class BaseBottomBarActivity extends BaseActivity
 //            }
 //        }
     }
-
 
     private void shareTwitter(String message) {
         Intent tweetIntent = new Intent(Intent.ACTION_SEND);
@@ -404,20 +403,59 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        initTab();
+//        Log.d("NOTIFYM", "onPostCreate called");
+//        if (getIntent().getExtras() != null) {
+//            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
+//                if (bundle != null) {
+//                    int userId = bundle.getInt("userId");
+//                    boolean isSelf = bundle.getBoolean("isSelf");
+//                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+//                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+//                } else switchTabDynamically();
+//        } else {
+//            switchTabDynamically();
+//        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
+//        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
+        TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
+        tab.setCustomView(getTabView(unreadNotificationCount));
+
         Log.d("NOTIFYM", "onPostCreate called");
         if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
-                if (bundle != null) {
-                    int userId = bundle.getInt("userId");
-                    boolean isSelf = bundle.getBoolean("isSelf");
-                    pushFragment(isSelf ? ProfileFragment.newInstance() :
-                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-                } else switchTabDynamically();
+            if (bundle != null) {
+                int userId = bundle.getInt("userId");
+                boolean isSelf = bundle.getBoolean("isSelf");
+                pushFragment(isSelf ? ProfileFragment.newInstance() :
+                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+            } else switchTabDynamically();
         } else {
             switchTabDynamically();
         }
+
+        getBranchDynamicLinks();
     }
 
+
+    public View getTabView(int value) {
+        View v = null;
+        try {
+            v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
+//        ProximaNovaSemiboldTextView tv = (ProximaNovaSemiboldTextView) v.findViewById(R.id.notification_badge);
+//        tv.setText(value);
+            ImageView img = (ImageView) v.findViewById(R.id.notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
 
     private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
@@ -1009,4 +1047,5 @@ public class BaseBottomBarActivity extends BaseActivity
     public void viewUserProfile() {
         pushFragment(ProfileFragment.newInstance());
     }
+
 }
