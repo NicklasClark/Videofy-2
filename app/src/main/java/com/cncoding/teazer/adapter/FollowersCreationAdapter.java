@@ -63,7 +63,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
         try {
 
-
             final PostDetails cont = _list.get(i);
             final String videotitle = cont.getTitle();
             final int postId = cont.getPostId();
@@ -134,6 +133,11 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
+                                    Toast.makeText(context,"Report User",Toast.LENGTH_LONG).show();
+
+
+
+
 
                                     break;
                             }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
@@ -63,53 +64,57 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
 
     @Override
     public void onBindViewHolder(final ChangeCategoriesAdapter.ViewHolder holder, final int position) {
-        final Category category = this.categories.get(position);
+        try {
 
-       for(int i=0;i<usercategoryList.size();i++) {
-          if(usercategoryList.get(i).getCategoryName().equals(category.getCategoryName())) {
-              Log.d("Categories",String.valueOf(usercategoryList.get(i).getCategoryId()));
-              setCheck(holder.nameView, true);
-              selectedPositions[position] = true;
-          }
-       }
-        holder.nameView.setText(category.getCategoryName());
+            final Category category = this.categories.get(position);
 
-        if(selectedPositions[position]) {
-            setCheck(holder.nameView, true);
-
-        } else {
-            setCheck(holder.nameView, false);
-
-        }
-
-
-
-        holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                boolean ischecked=holder.nameView.isChecked();
-                if(ischecked){
-                    selectedcategories.remove((Integer)category.getCategoryId());
-                    usercategoryList.remove(usercategoryList.get(position));
-                    setCheck(holder.nameView, false);
-                    selectedPositions[position] = false;
+            for (int i = 0; i < usercategoryList.size(); i++) {
+                if (usercategoryList.get(i).getCategoryName().equals(category.getCategoryName())) {
+                    Log.d("Categories", String.valueOf(usercategoryList.get(i).getCategoryId()));
+                    setCheck(holder.nameView, true);
+                    selectedPositions[position] = true;
                 }
-                else
-                {
-                    if(!selectedcategories.contains(category.getCategoryId())) {
-                       // usercategoryList.add(usercategoryList.get(position).getCategoryId());
-                        usercategoryList.add(categories.get(position));
-                        selectedcategories.add(category.getCategoryId());
-                        setCheck(holder.nameView, true);
-                        selectedPositions[position] = true;
-                    }
-                }
+            }
+            holder.nameView.setText(category.getCategoryName());
+
+            if (selectedPositions[position]) {
+                setCheck(holder.nameView, true);
+
+            } else {
+                setCheck(holder.nameView, false);
 
             }
-        });
-    }
 
+            holder.rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    boolean ischecked = holder.nameView.isChecked();
+                    if (ischecked) {
+                        selectedcategories.remove((Integer) category.getCategoryId());
+                        usercategoryList.remove((Integer) category.getCategoryId());
+                        setCheck(holder.nameView, false);
+                        selectedPositions[position] = false;
+                    } else {
+                        if (!selectedcategories.contains(category.getCategoryId())) {
+                            // usercategoryList.add(usercategoryList.get(position).getCategoryId());
+                            // usercategoryList.add(categories.get(position));
+                            usercategoryList.add(category);
+                            selectedcategories.add(category.getCategoryId());
+                            setCheck(holder.nameView, true);
+                            selectedPositions[position] = true;
+                        }
+                    }
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(context,"Something went wrong please try again",Toast.LENGTH_LONG).show();
+
+        }
+    }
     private void setCheck(AppCompatCheckedTextView textView, boolean checked) {
         textView.setChecked(checked);
         if (textView.isChecked()) {
@@ -121,7 +126,6 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
             textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
-
     @Override
     public int getItemCount() {
         return categories.size();
@@ -138,7 +142,6 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
             nameView = view.findViewById(R.id.chip);
         }
     }
-
     public List<Integer> getSelectedCategories() {
         return selectedcategories;
    }

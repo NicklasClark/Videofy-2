@@ -735,6 +735,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             gender_text.requestFocus();
 
         }
+       // 2052
+        //4141
+
 
         if (details.isEmpty()||details.trim().isEmpty()||details.trim().equals("")) {
             _bio.setError("Bio is required");

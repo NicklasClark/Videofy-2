@@ -129,9 +129,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @BindView(R.id.video_upload_title) ProximaNovaRegularTextInputEditText videoTitle;
     @BindView(R.id.video_upload_location) ProximaNovaRegularTextInputEditText addLocationBtn;
     @BindView(R.id.video_upload_tag_friends) ProximaNovaRegularTextInputEditText tagFriendsBtn;
-    @BindView(R.id.tag_friends_badge) ProximaNovaSemiboldTextView tagFriendsBadge;
+    @BindView(R.id.tag_friends_badge) ProximaNovaRegularTextView tagFriendsBadge;
     @BindView(R.id.video_upload_categories) ProximaNovaRegularTextInputEditText uploadCategoriesBtn;
-    @BindView(R.id.categories_badge) ProximaNovaSemiboldTextView uploadCategoriesBadge;
+    @BindView(R.id.categories_badge) ProximaNovaRegularTextView uploadCategoriesBadge;
 
     public static boolean checkFacebookButtonPressed = false;
     public static boolean checkedTwitterButton = false;
@@ -685,7 +685,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    private void setBadge(ProximaNovaSemiboldTextView view, int count,int check) {
+    private void setBadge(ProximaNovaRegularTextView view, int count,int check) {
         view.setVisibility(count == 0 ? View.GONE : VISIBLE);
         if (view.getVisibility() == VISIBLE) {
             String countText = String.valueOf(count);
