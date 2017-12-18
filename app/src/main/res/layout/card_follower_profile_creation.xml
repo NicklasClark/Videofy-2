@@ -89,7 +89,6 @@
 
 
 
-
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_below="@+id/descriptionlayout"
