@@ -85,9 +85,9 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 
         setCheck(holder.chip, position, false,
                 selectedCategoriesString != null &&
-                        selectedCategoriesString.contains(categoryText.replace("+ ", "")));
+                        selectedCategoriesString.contains(categoryText.replace("+ ", "")), false);
         if (selectedCategoriesString == null || selectedCategoriesString.isEmpty())
-            setCheck(holder.chip, position, false, selectedInterestsArray.get(position));
+            setCheck(holder.chip, position, false, selectedInterestsArray.get(position), false);
 
         checkButtonAccess();
 
@@ -96,7 +96,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
             @Override
             public void onClick(View view) {
                 selectedInterestsArray.put(holder.getAdapterPosition(), !holder.chip.isChecked());
-                setCheck(holder.chip, holder.getAdapterPosition(), true, !holder.chip.isChecked());
+                setCheck(holder.chip, holder.getAdapterPosition(), true, !holder.chip.isChecked(), true);
                 checkButtonAccess();
             }
         });
@@ -114,20 +114,21 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
         }
     }
 
-    private void setCheck(ProximaNovaRegularCheckedTextView view, int position, boolean animate, boolean checked) {
+    private void setCheck(ProximaNovaRegularCheckedTextView view, int position, boolean animate, boolean checked, boolean isOnClick) {
         if (!isForVideo) {
             checkAction(view, position, checked);
         } else {
-            if (selectedInterests.size() < 5) {
+            if (isOnClick ? selectedInterests.size() < 5 : selectedInterests.size() <= 5) {
                 checkAction(view, position, checked);
             } else {
-                if (checked)
+                if (checked) {
+                    view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.deselected));
                     Toast.makeText(interests.getContext(), R.string.selection_limit_message, Toast.LENGTH_SHORT).show();
-                else
+                } else
                     checkAction(view, position, false);
             }
         }
-        if (animate)
+        if (animate && view.getAnimation() != null)
             view.startAnimation(AnimationUtils.loadAnimation(interests.getContext(), R.anim.selected));
     }
 
