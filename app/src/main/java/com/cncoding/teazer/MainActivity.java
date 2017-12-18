@@ -54,6 +54,7 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
@@ -61,6 +62,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
@@ -575,7 +577,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
         successfullyLoggedIn();
     }
 

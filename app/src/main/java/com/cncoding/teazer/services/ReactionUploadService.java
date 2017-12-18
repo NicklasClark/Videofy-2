@@ -40,6 +40,7 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
     private static final String REACTION_UPLOAD_RECEIVER = "reactionUploadReceiver";
     private ResultReceiver receiver;
     private Bundle bundle;
+    private Call<ReactionUploadResult> reactionUploadCall;
 //    private int resultCode;
 
     public static void launchReactionUploadService(Context context, UploadParams uploadParams, ReactionUploadReceiver reactionUploadReceiver) {
@@ -72,29 +73,34 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                 ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
                 part = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
 
-                ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
-                        getApplicationContext(), uploadParams.getTitle())
-                        .enqueue(new Callback<ReactionUploadResult>() {
-                            @Override
-                            public void onResponse(Call<ReactionUploadResult> call, Response<ReactionUploadResult> response) {
-//                                resultCode = response.code();
-                                try {
-                                    if (response.code() == 201) {
-                                        onUploadFinish();
-                                        finishReactionUploadSession(getApplicationContext());
-                                    } else onUploadError(new Throwable(response.code() + " : " +response.message()));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    onUploadError(e);
-                                }
-                            }
+                if (reactionUploadCall == null) {
+                    reactionUploadCall = ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
+                            getApplicationContext(), uploadParams.getTitle());
+                }
 
-                            @Override
-                            public void onFailure(Call<ReactionUploadResult> call, Throwable t) {
-                                t.printStackTrace();
-                                onUploadError(t);
+                if (!reactionUploadCall.isExecuted()) {
+                    reactionUploadCall.enqueue(new Callback<ReactionUploadResult>() {
+                        @Override
+                        public void onResponse(Call<ReactionUploadResult> call, Response<ReactionUploadResult> response) {
+    //                                resultCode = response.code();
+                            try {
+                                if (response.code() == 201) {
+                                    onUploadFinish();
+                                    finishReactionUploadSession(getApplicationContext());
+                                } else onUploadError(new Throwable(response.code() + " : " +response.message()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                onUploadError(e);
                             }
-                        });
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReactionUploadResult> call, Throwable t) {
+                            t.printStackTrace();
+                            onUploadError(t);
+                        }
+                    });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

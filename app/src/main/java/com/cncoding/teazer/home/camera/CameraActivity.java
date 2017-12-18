@@ -53,6 +53,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.TagsAndCategoriesInteractionListener;
+import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.videoTrim.TrimmerActivity;
@@ -385,7 +386,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
     }
 
     @Override

@@ -187,9 +187,8 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
-        
 
-        Log.d("NOTIFYM", "onCreate called");
+        Log.d("NOTIFY", "onCreate called");
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -703,6 +702,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
                                       PostDetails postDetails) {
+
         switch (action) {
             case ACTION_VIEW_MY_INTERESTS:
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, postDetailsArrayList));
@@ -800,9 +800,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
+        if (isEditing)
+            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
     }
 
     @Override
@@ -811,7 +813,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null, null);
+        PostDetailsActivity.newInstance(this, postDetails, null,
+                false, false, null, null);
     }
     //</editor-fold>
 

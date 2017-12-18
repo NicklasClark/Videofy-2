@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
+import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
@@ -37,7 +39,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     public static final String UPLOAD_PROGRESS = "uploadProgress";
     public static final String UPLOAD_ERROR = "uploadErrorMessage";
     public static final String UPLOAD_COMPLETE = "uploadComplete";
-    public static final String RESPONSE_CODE = "responseCode";
+//    public static final String RESPONSE_CODE = "responseCode";
     public static final int UPLOAD_IN_PROGRESS_CODE = 10;
     public static final int UPLOAD_ERROR_CODE = 11;
     public static final int UPLOAD_COMPLETE_CODE = 12;
@@ -81,22 +83,24 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
-                if (!videoUploadCall.isExecuted())
+                if (!videoUploadCall.isExecuted()) {
+                    Toast.makeText(this, R.string.video_upload_confirm_notification, Toast.LENGTH_SHORT).show();
                     videoUploadCall.enqueue(new Callback<PostUploadResult>() {
                         @Override
                         public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
                             try {
                                 if (response.code() == 201) {
-                                   int postId= response.body().getPostDetails().getPostId();
-                                   String postTitle= response.body().getPostDetails().getTitle();
-                                   String postTumbUrl=response.body().getPostDetails().getMedias().get(0).getThumbUrl();
-                                   String postOwner=response.body().getPostDetails().getPostOwner().getUserName();
+                                    int postId = response.body().getPostDetails().getPostId();
+                                    String postTitle = response.body().getPostDetails().getTitle();
+                                    String postTumbUrl = response.body().getPostDetails().getMedias().get(0).getThumbUrl();
+                                    String postOwner = response.body().getPostDetails().getPostOwner().getUserName();
                                     onUploadFinish();
                                     finishVideoUploadSession(getApplicationContext());
 
-                                    sendBroadcast (postId,postTitle,postTumbUrl,postOwner);
+                                    sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
 
-                                } else onUploadError(new Throwable(response.code() + " : " +response.message()));
+                                } else
+                                    onUploadError(new Throwable(response.code() + " : " + response.message()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 onUploadError(e);
@@ -109,6 +113,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             onUploadError(t);
                         }
                     });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
