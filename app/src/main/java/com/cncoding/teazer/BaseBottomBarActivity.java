@@ -835,7 +835,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_LOW);
+                    "Upload notification", NotificationManager.IMPORTANCE_DEFAULT);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");
