@@ -283,7 +283,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".videoTrim.TrimmerActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.fragment.activity.ReactionPlayerActivity"
             android:screenOrientation="portrait"
@@ -304,6 +305,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".ui.fragment.activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DetailAppTheme" />
     </application>
 
 </manifest>

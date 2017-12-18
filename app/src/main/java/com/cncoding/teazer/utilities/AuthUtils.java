@@ -239,13 +239,18 @@ public class AuthUtils {
                                 countDownTimer.cancel();
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
                                 SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
-                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_tick_circle);
-                                mListener.onOtpInteraction(verify, picturePath);
+                                ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.btn_checked);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mListener.onOtpInteraction(verify, picturePath);
+                                    }
+                                }, 1000);
                                 break;
 //                    Username, Email or Phone Number already exists
                             case 200:
                                 countDownTimer.cancel();
-                                otpVerifiedTextView.setText(R.string.already_exists);
+                                otpVerifiedTextView.setText(R.string.wrong_otp);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {

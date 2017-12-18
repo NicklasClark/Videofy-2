@@ -318,5 +318,12 @@
     <string name="report_post_dialog_message">Are you sure you want to report this video</string>
     <string name="report_btn_text">Report</string>
     <string name="reaction_not_found">Reaction might be deleted by user</string>
+    <string name="top_logo">Top logo</string>
+    <string name="no_interests_selected_message">You have not selected any interests yet, please select at least 5 interests</string>
+    <string name="recently_deleted">Recently Deleted</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="no_creations_message">Your profile is still empty. Create your first video to start your journey on Teazer</string>
+    <string name="no_reactions_message">You haven\'t reacted on any post yet.</string>
+    <string name="could_not_find_location">Couldn\'t find your location, try searching for it.</string>
     <string name="logo">logo</string>
 </resources>

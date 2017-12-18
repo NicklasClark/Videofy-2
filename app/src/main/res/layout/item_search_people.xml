@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -54,12 +55,15 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_margin="14dp"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="@dimen/padding_half"
-            android:paddingEnd="@dimen/padding_half"
+            android:minWidth="90dp"
             android:foreground="@drawable/ripple_dark_rounded_2dp"
-            android:background="@drawable/bg_outline_rounded_primary" />
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            android:paddingStart="8dp"
+            android:paddingEnd="10dp"
+            android:contentDescription="@string/post_thumbnail" />
 
     </LinearLayout>
 

@@ -68,6 +68,7 @@ public class SignupFragment extends AuthFragment {
 
     private OnInitialSignupInteractionListener mListener;
     private String picturePath;
+    private Bitmap selectedBitmap;
     //    private Context context;
 
     public SignupFragment() {
@@ -88,6 +89,11 @@ public class SignupFragment extends AuthFragment {
         ButterKnife.bind(this, rootView);
 //        nameView.setFilters(new InputFilter[] {FilterFactory.nameFilter});
 //        emailView.setFilters(new InputFilter[] {FilterFactory.emailFilter});
+        if (selectedBitmap != null) {
+            dp.setImageBitmap(selectedBitmap);
+            dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+        }
+
         return rootView;
     }
 
@@ -228,6 +234,7 @@ public class SignupFragment extends AuthFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -269,6 +276,32 @@ public class SignupFragment extends AuthFragment {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
 
+//=======
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == Activity.RESULT_OK) {
+//            switch (requestCode) {
+//                case GALLERY_ACTIVITY_CODE:
+//                    picturePath = data.getStringExtra("picturePath");
+//                    //perform Crop on the Image Selected from Gallery
+//                    performCrop(picturePath);
+//                    break;
+//                case RESULT_CROP:
+//                    if (data != null) {
+//                        Bundle extras = data.getExtras();
+//                        selectedBitmap = null;
+//                        if (extras != null) {
+//                            selectedBitmap = extras.getParcelable("data");
+//                        }
+//                        if (selectedBitmap == null && data.getData() != null)
+//                            selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
+//                        // Set The Bitmap Data To ImageView
+//                        dp.setImageBitmap(selectedBitmap);
+//                        dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
+//                    }
+//                    break;
+//                default:
+//                    break;
+//>>>>>>> master_dev
             }
         }
     }

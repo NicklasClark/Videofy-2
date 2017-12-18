@@ -1,5 +1,6 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.cncoding.teazer.model.user.UserProfile;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,12 +82,9 @@ public class PasswordChange extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (validate()) {
-                    if(canChangePassword)
-                    {
-                        updateNewPassword(new UpdatePasswordRequest(currentPass,newPass));
-                    }
-                    else
-                    {
+                    if (canChangePassword) {
+                        updateNewPassword(new UpdatePasswordRequest(currentPass, newPass));
+                    } else {
                         setNewPassword(new SetPasswordRequest(newPass));
                     }
                 }
@@ -111,12 +110,12 @@ public class PasswordChange extends AppCompatActivity {
                 valid = false;
                 return valid;
             }
-                if (!currentPass.equals(oldPassword)) {
-                    currentPassword.setError("Incorrect password");
-                    currentPassword.requestFocus();
-                    valid = false;
-                    return valid;
-                }
+            if (!currentPass.equals(oldPassword)) {
+                currentPassword.setError("Incorrect password");
+                currentPassword.requestFocus();
+                valid = false;
+                return valid;
+            }
         }
         if (newPass.isEmpty() || newPass.length() == 0 || newPass.length() < 8) {
             newPassword.setError("Your password should be more than 8 characters");
@@ -135,13 +134,13 @@ public class PasswordChange extends AppCompatActivity {
         }
 
         if (confirmPass.equals(newPass)) {
-                confirmPassword.setError(null);
-            } else {
-                confirmPassword.setError("Confirm password and New Password should be same");
-                confirmPassword.requestFocus();
-                valid = false;
-                return valid;
-            }
+            confirmPassword.setError(null);
+        } else {
+            confirmPassword.setError("Confirm password and New Password should be same");
+            confirmPassword.requestFocus();
+            valid = false;
+            return valid;
+        }
         return valid;
     }
 
@@ -157,9 +156,11 @@ public class PasswordChange extends AppCompatActivity {
                         if (canChangePassword) {
                             currentPasswordLayout.setVisibility(View.VISIBLE);
                             oldPassword = getCurrentPassword(PasswordChange.this);
-                        }
-                        else
+                            currentPassword.requestFocus();
+                        } else {
                             currentPasswordLayout.setVisibility(View.GONE);
+                            newPassword.requestFocus();
+                        }
 
                         save.setEnabled(true);
                     }
@@ -178,12 +179,12 @@ public class PasswordChange extends AppCompatActivity {
     }
 
     public void setNewPassword(final SetPasswordRequest setPasswordRequest) {
-        ApiCallingService.User.setPassword(setPasswordRequest ,this).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.setPassword(setPasswordRequest, this).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    if(response.code() == 200) {
-                        setCurrentPassword(PasswordChange.this , setPasswordRequest.getNewPassword());
+                    if (response.code() == 200) {
+                        setCurrentPassword(PasswordChange.this, setPasswordRequest.getNewPassword());
                         Toast.makeText(PasswordChange.this, "Password has been created", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -201,12 +202,13 @@ public class PasswordChange extends AppCompatActivity {
             }
         });
     }
+
     public void updateNewPassword(final UpdatePasswordRequest updatePasswordRequest) {
-        ApiCallingService.User.updatePassword(updatePasswordRequest ,this).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.updatePassword(updatePasswordRequest, this).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 try {
-                    if (response.code() == 200){
+                    if (response.code() == 200) {
                         Toast.makeText(PasswordChange.this, "Password changed", Toast.LENGTH_SHORT).show();
                         setCurrentPassword(PasswordChange.this, updatePasswordRequest.getNewPassword());
                     }
@@ -226,4 +228,9 @@ public class PasswordChange extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.forgot_password_btn)
+    public void onViewClicked() {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
+    }
 }

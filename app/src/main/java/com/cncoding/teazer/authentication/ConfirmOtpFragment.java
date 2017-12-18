@@ -93,7 +93,7 @@ public class ConfirmOtpFragment extends AuthFragment {
         Bundle args = new Bundle();
         args.putParcelable(USER_DETAILS, (Parcelable) signUpDetails[0]);
         args.putInt(LAUNCH_ACTION, (Integer) signUpDetails[1]);
-        args.putString(ARG_PICTURE_PATH, null);
+        args.putString(ARG_PICTURE_PATH, (String) signUpDetails[2]);
         fragment.setArguments(args);
         return fragment;
     }

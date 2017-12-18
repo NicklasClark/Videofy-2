@@ -846,7 +846,6 @@ public class CameraFragment extends Fragment {
             int secs = (int) (updatedTime / 1000);
             int minutes = secs / 60;
             secs = secs % 60;
-//            int milliseconds = (int) (updatedTime % 1000);
             String duration = "" + String.format(Locale.getDefault(), "%02d", minutes) +
                     ":" + String.format(Locale.getDefault(), "%02d", secs);
             videoDuration.setText(duration);

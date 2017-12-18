@@ -1,444 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true">
 
-    <ScrollView
-        android:layout_below="@+id/app_bar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        android:layout_alignParentStart="true">
-
-
-        <RelativeLayout
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/invite_friends"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/invitefriends"
+            android:textColor="#FF26C6DA"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp">
+            android:text="@string/personasettings"
+            android:textColor="#FF333333"
+            android:textSize="16sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/changeCategoriesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:text="@string/change_categories"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:text="@string/account_settings"
+            android:textColor="#FF333333"
+            android:textSize="16sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/change_password"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/recentlyDeleted"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:text="@string/recently_deleted"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:text="@string/link_accounts"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:text="@string/privacy_settings"
+            android:textColor="#FF333333"
+            android:textSize="16sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/text_block_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/my_block_list"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="@color/colorPrimary_text"
+            android:textSize="@dimen/text_size_content"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:gravity="center_vertical"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/invitefriendslayout"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="@string/invitefriends"
-                        android:textColor="#FF26C6DA"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/personasettings"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/changecategoriesLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/change_categories"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp"
-                        /> />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/account_settings"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                        android:id="@+id/changePassword"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/change_password"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp"
-                        />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-                <LinearLayout
-                    android:id="@+id/recentelyDeleted"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="Recently Deleted"
-
-                        android:textColor="#FF333333"
-                        android:textSize="14sp"
-                        />
-
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:visibility="gone"
-                    android:background="@color/colorSecondary_text_light" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:visibility="gone"
-
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/link_accounts"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp"/>
-
-
-                </LinearLayout>
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="Privacy Settings"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/text_block_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/text_block"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/my_block_list"
-                        android:textColor="@color/colorPrimary_text"
-                        android:textSize="@dimen/text_size_content" />
-
-                </LinearLayout>
-
-                <View
-
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginBottom="5dp"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:gravity="center_vertical"
-                        android:layout_weight="3"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                    android:text="@string/private_account"
+                    android:textColor="#FF333333"
+                    android:textSize="14sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp" />
 
-                        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginBottom="5dp"
-
-                            android:text="@string/private_account"
-                            android:textColor="#FF333333"
-                            android:textSize="14sp" />
-                        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="@string/private_account_detail"
-                            android:textColor="#FF666666"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center_vertical">
-
-
-                        <Switch
-                            android:id="@+id/simpleSwitch"
-                            android:layout_width="wrap_content"
-                            android:thumbTint="#26C6DA"
-                            android:layout_height="wrap_content"
-                            />
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/community"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/like_on_facebook"
-
-                        android:textColor="#FF333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/followus_on_instagram"
-
-                        android:textColor="#FF333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/help_center"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/leagal"
-                        android:textColor="#FF333333"
-                        android:textSize="16sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/privacy_policy"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/termsofservice"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/colorSecondary_text_light" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/Licence"
-                        android:textColor="#FF333333"
-                        android:textSize="14sp"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/dectivateAccountLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/deactivate_account"
-                        android:textColor="#FFD32F2F"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/logoutlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                        android:id="@+id/logout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/account_logout"
-                        android:textColor="#FFD32F2F"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
+                    android:text="@string/private_account_detail"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp" />
 
             </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
 
-</RelativeLayout>
+            <Switch
+                android:id="@+id/simpleSwitch"
+                android:layout_width="wrap_content"
+                android:thumbTint="#26C6DA"
+                android:padding="@dimen/padding_default"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <View
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/community"
+            android:textColor="#FF333333"
+            android:textSize="16sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/like_on_facebook"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/followus_on_instagram"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/help_center"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+        <View
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/leagal"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="16sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/privacy_policy"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/termsofservice"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/Licence"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FF333333"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSecondary_text_light" />
+
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/deactivateAccountLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/deactivate_account"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FFD32F2F"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/logoutLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/account_logout"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="#FFD32F2F"
+            android:textSize="14sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
+
+    </LinearLayout>
+
+</ScrollView>

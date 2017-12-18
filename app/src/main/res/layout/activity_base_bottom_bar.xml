@@ -35,16 +35,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.cncoding.teazer.customViews.SignPainterTextView
+                <ImageView
                     android:id="@+id/toolbar_center_title"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/action_bar_height"
-                    android:text="@string/app_name"
+                    android:src="@drawable/ic_teazer_top"
                     android:textColor="@color/colorPrimary_text"
                     android:layout_centerInParent="true"
                     android:textSize="@dimen/text_size_h3"
                     android:gravity="center"
-                    tools:ignore="PrivateResource,RelativeOverlap"/>
+                    tools:ignore="PrivateResource,RelativeOverlap"
+                    android:contentDescription="@string/top_logo" />
 
                 <ImageView
                     android:id="@+id/settings"

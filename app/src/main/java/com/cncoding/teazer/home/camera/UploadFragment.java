@@ -564,7 +564,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }
-            DecimalFormat df = new DecimalFormat("#.######");
+            DecimalFormat df = new DecimalFormat("#.#####");
 
             if (!isReaction)
                 mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,
@@ -630,13 +630,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
         this.selectedPlace = selectedPlace;
         final String placeName = SPACE + selectedPlace.getPlaceName();
-        addLocationBtn.requestFocus();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                addLocationBtn.setText(placeName);
-            }
-        }, 500);
+        if (!placeName.contains("null")) {
+            addLocationBtn.requestFocus();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    addLocationBtn.setText(placeName);
+                }
+            }, 500);
+        } else {
+            addLocationBtn.setText(null);
+            Toast.makeText(context, R.string.could_not_find_location, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, final int count) {

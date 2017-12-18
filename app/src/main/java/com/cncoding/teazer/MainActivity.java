@@ -105,11 +105,11 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
-    private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
+    public static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
     public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
-    private static final String TAG_OTP_FRAGMENT = "otpFragment";
+    public static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
 //    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
@@ -257,6 +257,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
+                String name = fragmentManager.getBackStackEntryAt(0).getName();
+                fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
                         false, false, null, null),
                         TAG_SELECT_INTERESTS);
@@ -636,6 +638,7 @@ public class MainActivity extends AppCompatActivity
             try {
 
                 File profileImage = new File(strings[0]);
+
 //                if (profileImage.exists()) {
 
                 RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), bte);
@@ -643,6 +646,12 @@ public class MainActivity extends AppCompatActivity
 
 
                 // }
+//=======
+//                if (profileImage.exists()) {
+//                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
+//                    return MultipartBody.Part.createFormData("media", profileImage.getName(), requestBody);
+//                }
+//>>>>>>> master_dev
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

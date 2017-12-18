@@ -72,6 +72,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
                 .addToBackStack("FragmentChangeCategories")
                 .commit();
     }
+
     @Override
     public void deactivateAccountListener() {
         getSupportFragmentManager().beginTransaction()

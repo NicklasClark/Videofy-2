@@ -1,10 +1,8 @@
 package com.cncoding.teazer.services;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
@@ -16,11 +14,6 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
-import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
-import com.cncoding.teazer.uploadvideo.VideoDetailsResultObject;
-import com.facebook.share.ShareApi;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 
@@ -102,7 +95,6 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                                     finishVideoUploadSession(getApplicationContext());
 
                                     sendBroadcast (postId,postTitle,postTumbUrl,postOwner);
-
 
                                 } else onUploadError(new Throwable(response.code() + " : " +response.message()));
                             } catch (Exception e) {

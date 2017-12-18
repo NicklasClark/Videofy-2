@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.discover.search;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,6 +37,7 @@ import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOWING;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_REQUESTED;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -47,6 +47,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int TYPE_VIDEOS = 0;
     private static final int TYPE_PEOPLE = 1;
 
+    private Context context;
     private BaseFragment baseFragment;
     private boolean isVideosTab;
     private ArrayList<Videos> videosList;
@@ -56,6 +57,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     DiscoverSearchAdapter(Context context, BaseFragment baseFragment, boolean isVideosTab, ArrayList<MiniProfile> usersList,
                           ArrayList<Videos> videosList) {
+        this.context = context;
         this.baseFragment = baseFragment;
         this.isVideosTab = isVideosTab;
         actionArray = new SparseIntArray();
@@ -156,7 +158,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                     mListener.onDiscoverSearchInteraction(isVideosTab, holder2.user.getUserId());
                                 break;
                             case R.id.action:
-                                if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.follow))) {
+                                if (holder2.action.getText().equals(context.getString(R.string.follow))) {
                                     ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), baseFragment.getContext())
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
@@ -189,9 +191,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                 }
                                             });
                                 }
-                                else if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.following))) {
+                                else if (holder2.action.getText().equals(context.getString(R.string.following))) {
                                     new AlertDialog.Builder(baseFragment.getParentActivity())
-                                            .setMessage(baseFragment.getParentActivity().getString(R.string.unfollow_confirmation) +
+                                            .setMessage(context.getString(R.string.unfollow_confirmation) +
                                                     holder2.user.getUserName() + "?")
                                             .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                 @Override
@@ -229,9 +231,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             })
                                             .show();
                                 }
-                                else if (holder2.action.getText().equals(baseFragment.getParentActivity().getString(R.string.requested))) {
+                                else if (holder2.action.getText().equals(context.getString(R.string.requested))) {
                                     new AlertDialog.Builder(baseFragment.getParentActivity())
-                                            .setMessage(R.string.cancel_request_confirmation +
+                                            .setMessage(context.getString(R.string.cancel_request_confirmation) +
                                                     holder2.user.getUserName() + "?")
                                             .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                 @Override
@@ -282,33 +284,15 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (savePosition)
             actionArray.put(position, type);
         switch (type) {
-//            case BUTTON_TYPE_ACCEPT:
-//                button.setText(R.string.accept);
-//                button.setTextColor(Color.parseColor("#546E7A"));
-//                button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
-//                button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//                break;
             case BUTTON_TYPE_FOLLOW:
-                button.setText(R.string.follow);
-                button.setTextColor(Color.parseColor("#546E7A"));
-                button.setBackgroundResource(R.drawable.bg_outline_rounded_primary);
-                button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                setActionButtonText(context, button, R.string.follow);
                 break;
             case BUTTON_TYPE_FOLLOWING:
-                button.setText(R.string.following);
-                button.setTextColor(Color.parseColor("#333333"));
-                button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_dark, 0, 0, 0);
+                setActionButtonText(context, button, R.string.following);
                 break;
             case BUTTON_TYPE_REQUESTED:
-                button.setText(R.string.requested);
-                button.setTextColor(Color.parseColor("#666666"));
-                button.setBackgroundResource(R.drawable.bg_outline_rounded_black);
-                button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                setActionButtonText(context, button, R.string.requested);
                 break;
-//            case BUTTON_TYPE_NONE:
-//                button.setVisibility(View.GONE);
-//                break;
             default:
                 break;
         }

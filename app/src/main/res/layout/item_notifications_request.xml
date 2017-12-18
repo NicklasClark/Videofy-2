@@ -45,7 +45,6 @@
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            android:text="@string/accept"
             android:visibility="visible"
             android:paddingStart="8dp"
             android:paddingEnd="10dp"

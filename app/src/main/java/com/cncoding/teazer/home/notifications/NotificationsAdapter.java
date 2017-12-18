@@ -170,20 +170,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
-                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, "Error fetching post", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
                                             @Override
                                             public void onFailure(Call<PostDetails> call, Throwable t) {
-                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                                t.printStackTrace();
                                                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
                                     holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
                                     holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
-                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getPostId(), context)
+                                ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                         .enqueue(new Callback<PostDetails>() {
 
                                             @Override
@@ -195,13 +195,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
-                                                    Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, "Error fetching post", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
                                             @Override
                                             public void onFailure(Call<PostDetails> call, Throwable t) {
-                                                Log.d("FAIL - GET PostDetails", t.getMessage());
+                                                t.printStackTrace();
                                                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -344,7 +344,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Log.d("FAIL - FOLLOW BACK", t.getMessage());
+                                                    t.printStackTrace();
                                                 }
 
                                             });
@@ -372,7 +372,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-//                                                    Log.d("FAIL- AcceptJoinRequest", t.getMessage());
+                                                    t.printStackTrace();
                                                 }
                                             });
                                 } else if (text.equals(context.getString(R.string.following))) {
@@ -410,7 +410,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    Log.d("FAIL - UnfollowUser", t.getMessage());
+                                                    t.printStackTrace();
                                                 }
                                             });
 
@@ -453,7 +453,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //
 //                                                        @Override
 //                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-//                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
+//                                                           t.printStackTrace();
 //                                                        }
 //                                                    });
 //
@@ -471,7 +471,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //
 //                                                        @Override
 //                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
-//                                                            Log.d("FAIL - UnfollowUser", t.getMessage());
+//                                                           t.printStackTrace();
 //                                                        }
 //                                                    });
 //                                                }
@@ -567,7 +567,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                             @Override
                                             public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                Log.d("FAIL- DeleteJoinRequest", t.getMessage());
+                                                t.printStackTrace();
                                             }
                                         });
                                 break;
@@ -606,7 +606,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Log.d("FAIL-SendJoinRqstUserId", t.getMessage());
+                        t.printStackTrace();
                     }
                 });
     }
@@ -700,6 +700,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
+                t.printStackTrace();
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
             }
         });
