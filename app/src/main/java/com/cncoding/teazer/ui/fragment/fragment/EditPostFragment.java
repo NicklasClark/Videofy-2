@@ -99,6 +99,7 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.ViewUtils.makeSnackbarWithBottomMargin;
 
 /**
  * 
@@ -152,7 +153,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     ProximaNovaRegularTextView addLocationText;
     @BindView(R.id.video_upload_tag_friends)
     ProximaNovaBoldButton tagFriendsBtn;
-
     @BindView(R.id.video_upload_tag_friends_text)
     ProximaNovaRegularTextView tagFriendsText;
     @BindView(R.id.video_upload_categories)
@@ -163,7 +163,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     AppCompatImageView upBtn;
     @BindView(R.id.save)
     FloatingActionButton save;
-
 
     public String videoPath;
     public boolean isReaction;
@@ -193,10 +192,8 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private String sTags;
     private String selectedTagIDToSend;
 
-
     public EditPostFragment() {
     }
-
     public static EditPostFragment newInstance(PostDetails postDetails) {
         EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();
@@ -204,7 +201,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,25 +209,23 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
             postDetails = bundle.getParcelable(POST_DETAILS);
         }
     }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, isRequestingLocationUpdates);
         super.onSaveInstanceState(outState);
     }
-
     private void updateValuesFromBundle(Bundle savedInstanceState) {
-        // Update the value of mRequestingLocationUpdates from the Bundle.
         if (savedInstanceState != null) {
+
             if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
                 isRequestingLocationUpdates = savedInstanceState.getBoolean(REQUESTING_LOCATION_UPDATES_KEY);
             }
+
             if (savedInstanceState.keySet().contains(KEY_LOCATION)) {
                 currentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             }
         }
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -283,6 +277,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 categoryId.append(",");
             }
         }
+
         selectedCategories = categoryName.toString();
         uploadCategoriesText.setText(selectedCategories);
         getTagFriends(postDetails.getPostId());
@@ -316,7 +311,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 String title = videoTitle.getText().toString();
                 int postId = postDetails.getPostId();
                 //    Log.d("Selected Friend",selectedTagsToSend);
-                Toast.makeText(context, selectedTagsToSend, Toast.LENGTH_SHORT).show();
+
                 UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, sTags, categories);
                 updatePost(updatePostRequest);
             }
@@ -591,6 +586,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public void getTagFriends(final int postId) {
 
+
         ApiCallingService.Posts.getPostDetails(postId, context).enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
@@ -599,12 +595,10 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
                         taggedUsers = response.body().getTaggedUsers();
                         stringBuilder = new StringBuilder();
-
-
+                        selectTagIdBuilder=new StringBuilder();
                         if(taggedUsers.size()==0||taggedUsers==null) {
                             selectedTags="";
                             selectedTagIDToSend="";
-
                         }
                         else
                         {
@@ -623,38 +617,14 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                             tagFriendsText.setText(selectedTags);
                         }
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
 
                     }
 
-
-//                if (response.body().getCircles() != null) {
-//                    switch (isResponseOk(response)) {
-//                        case SUCCESS_OK_TRUE:
-//                            myFollowingsList.addAll(response.body().getCircles());
-//                            getMyCircle(page + 1);
-//                            break;
-//                        case SUCCESS_OK_FALSE:
-//                            myFollowingsList.addAll(response.body().getCircles());
-//                            toggleUpBtnVisibility(VISIBLE);
-//                            mListener.onUploadInteraction(false,
-//                                    TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, getSelectedTagsToShow(myFollowingsList)),
-//                                    TAG_TAGS_FRAGMENT);
-//                            break;
-//                        default:
-//                            Log.e("getMyCircle", response.message());
-//                            break;
-//                    }
-//                } else Toast.makeText(context, "No friends yet!", Toast.LENGTH_SHORT).show();
-//                toggleInteraction(true);
-
                 }
 
             }
-
-
             @Override
             public void onFailure(Call<PostDetails> call, Throwable t) {
                 toggleInteraction(true);
