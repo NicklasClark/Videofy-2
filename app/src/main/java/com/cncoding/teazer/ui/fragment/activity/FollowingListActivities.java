@@ -152,6 +152,7 @@ public class FollowingListActivities extends BaseFragment {
                         else {
                             progressBar.setVisibility(View.VISIBLE);
                             next=response.body().getNextPage();
+                            profileMyFollowingAdapter.notifyDataSetChanged();
                             profileMyFollowingAdapter.notifyItemRangeInserted(profileMyFollowingAdapter.getItemCount(), list.size() - 1);
                             progressBar.setVisibility(View.GONE);
                             layout.setVisibility(View.VISIBLE);

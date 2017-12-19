@@ -231,6 +231,24 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:maxLines">1</item>
     </style>
+    <style name="AppTheme.OtpEditText2" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/text_size_otp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:digits">@string/validNumber</item>
+        <item name="android:inputType">number</item>
+        <item name="android:textColor">@color/colorPrimary_text</item>
+        <item name="android:layout_marginStart">@dimen/otp_edit_text_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/otp_edit_text_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/otp_edit_text_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/otp_edit_text_vertical_margin</item>
+        <item name="android:backgroundTint">@color/colorPrimary_text</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
     <style name="RoundedFacebookButtonWelcomePage" parent="BaseLoginButton">
         <item name="android:background">@drawable/bg_button_facebook</item>

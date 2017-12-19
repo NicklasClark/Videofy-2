@@ -83,6 +83,8 @@ public class OthersProfileFragment extends BaseFragment {
     RelativeLayout layoutDetail;
     @BindView(R.id.layoutDetail2)
     RelativeLayout layoutDetail2;
+    @BindView(R.id.layoutDetail3)
+    RelativeLayout layoutDetail3;
     @BindView(R.id.username)
     ProximaNovaRegularCheckedTextView _name;
     @BindView(R.id.following)
@@ -179,11 +181,6 @@ public class OthersProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
-
-
-
-
-
         getParentActivity().updateToolbarTitle("Profile");
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
@@ -210,8 +207,6 @@ public class OthersProfileFragment extends BaseFragment {
                 }
             }
         });
-
-
 
         _following.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,7 +299,6 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
     public void getProfileInformation(final int followersid) {
-
 
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
             @Override
@@ -584,6 +578,7 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
     public void getProfileVideos(final int followerId) {
+      FragmentManager f=  getActivity().getSupportFragmentManager();
 
 
         layoutManager = new LinearLayoutManager(context);
@@ -596,16 +591,27 @@ public class OthersProfileFragment extends BaseFragment {
                 if (response.code() == 200) {
                     try {
                         boolean next = response.body().isNextPage();
-                        list.addAll(response.body().getPosts());
-                        followerCreationAdapter = new FollowersCreationAdapter(context, list);
-                        _recycler_view.setAdapter(followerCreationAdapter);
 
-                        if (next) {
-                            page++;
-                            getProfileVideos(followerId);
+                        list.addAll(response.body().getPosts());
+                        if((list==null||list.size()==0)&& page==1)
+                        {
+
+                            layoutDetail3.setVisibility(View.VISIBLE);
+                            layoutDetail.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.GONE);
                         }
-                        layout.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
+                        else {
+                            followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
+                            _recycler_view.setAdapter(followerCreationAdapter);
+
+                            if (next) {
+                                page++;
+                                getProfileVideos(followerId);
+                            }
+                        }
+
+                        //layout.setVisibility(View.VISIBLE);
+                        //progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();

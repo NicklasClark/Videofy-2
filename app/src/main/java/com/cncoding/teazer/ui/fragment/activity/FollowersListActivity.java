@@ -77,7 +77,6 @@ public class FollowersListActivity extends BaseFragment{
         }
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +118,7 @@ public class FollowersListActivity extends BaseFragment{
 
         if(identifier.equals("Other"))
         {
+
             profileMyFollowerAdapter = new FollowersAdapter(context, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             getOthersFollowerDetails(Integer.parseInt(followerid),1);
@@ -157,6 +157,7 @@ public class FollowersListActivity extends BaseFragment{
                         else
                             {
                             next=response.body().getNextPage();
+                                profileMyFollowerAdapter.notifyDataSetChanged();
 
                             profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                                 layout.setVisibility(View.VISIBLE);
@@ -202,7 +203,9 @@ public class FollowersListActivity extends BaseFragment{
                             nousertext.setVisibility(View.VISIBLE);
                         }
                         else {
+
                             next=response.body().getNextPage();
+                            profileMyFollowerAdapter.notifyDataSetChanged();
                             profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
