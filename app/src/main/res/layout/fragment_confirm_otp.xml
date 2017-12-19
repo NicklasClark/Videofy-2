@@ -20,14 +20,14 @@
 
             <!--<include layout="@layout/custom_action_bar" />-->
 
-            <com.cncoding.teazer.customViews.SignPainterTextView
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:padding="@dimen/padding_default"
-                android:textSize="@dimen/text_size_h2"
-                android:layout_marginTop="@dimen/padding_big"
-                tools:ignore="PrivateResource" />
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_teazer_logo"
+                android:layout_marginTop="@dimen/padding_big"/>
+
 
             <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/otp_sent_text_view"

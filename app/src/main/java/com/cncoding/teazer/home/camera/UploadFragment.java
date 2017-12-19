@@ -130,9 +130,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @BindView(R.id.video_upload_title) ProximaNovaRegularTextInputEditText videoTitle;
     @BindView(R.id.video_upload_location) ProximaNovaRegularTextInputEditText addLocationBtn;
     @BindView(R.id.video_upload_tag_friends) ProximaNovaRegularTextInputEditText tagFriendsBtn;
-    @BindView(R.id.tag_friends_badge) ProximaNovaSemiboldTextView tagFriendsBadge;
+    @BindView(R.id.tag_friends_badge) ProximaNovaRegularTextView tagFriendsBadge;
     @BindView(R.id.video_upload_categories) ProximaNovaRegularTextInputEditText uploadCategoriesBtn;
-    @BindView(R.id.categories_badge) ProximaNovaSemiboldTextView uploadCategoriesBadge;
+    @BindView(R.id.categories_badge) ProximaNovaRegularTextView uploadCategoriesBadge;
 
     public static boolean checkFacebookButtonPressed = false;
     public static boolean checkedTwitterButton = false;
@@ -158,6 +158,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static boolean isCompressing = false;
     private static boolean addingWatermark = true;
     private static FragmentActivity mActivity;
+    static final int Taggedcategories=2;
+    static final int TaggedFriends=1;
 
 
     public UploadFragment() {
@@ -252,8 +254,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         context = getContext();
         activity = getActivity();
 
-        setBadge(uploadCategoriesBadge, categoryCount);
-        setBadge(tagFriendsBadge, tagCount);
+        setBadge(uploadCategoriesBadge, categoryCount,Taggedcategories);
+        setBadge(tagFriendsBadge, tagCount,TaggedFriends);
 
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
@@ -674,7 +676,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         }
                     }, 500);
                 }
-                setBadge(tagFriendsBadge, count);
+                setBadge(tagFriendsBadge, count,TaggedFriends);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
@@ -688,22 +690,26 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(finalResultToShow);
-                            setBadge(uploadCategoriesBadge, count);
+                            setBadge(uploadCategoriesBadge, count,Taggedcategories);
                         }
                     }, 500);
                 }
-                setBadge(uploadCategoriesBadge, count);
+                setBadge(uploadCategoriesBadge, count,Taggedcategories);
                 break;
         }
     }
 
-    private void setBadge(ProximaNovaSemiboldTextView view, int count) {
+    private void setBadge(ProximaNovaRegularTextView view, int count,int check) {
         view.setVisibility(count == 0 ? View.GONE : VISIBLE);
         if (view.getVisibility() == VISIBLE) {
             String countText = String.valueOf(count);
             if (count <= 9)
                 countText = "0" + countText;
-            view.setText(countText);
+            if(check==TaggedFriends)
+            view.setText(countText+" Tagged Friends");
+            else
+                view.setText(countText+" Tagged Categories");
+
         }
     }
 

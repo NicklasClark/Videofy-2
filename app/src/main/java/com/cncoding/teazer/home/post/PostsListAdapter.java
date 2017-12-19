@@ -119,8 +119,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         holder.likes.setText(likes);
 
         if (postDetails.getTotalReactions() > 0) {
-            String reactions = "R " + String.valueOf(postDetails.getTotalReactions());
-            holder.views.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            String reactions = BLANK_SPACE + String.valueOf(postDetails.getTotalReactions());
+            holder.views.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_reaction_home, 0, 0, 0);
             holder.views.setText(reactions);
         } else {
             String views = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
@@ -149,7 +149,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         }
 
         Glide.with(context)
-                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getMediaUrl() : R.drawable.ic_user_male_dp_small)
                 .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade()
                 .listener(new RequestListener<Serializable, GlideDrawable>() {
@@ -220,7 +220,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_caption) EmojiAppCompatTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
-        @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         int postWidth;

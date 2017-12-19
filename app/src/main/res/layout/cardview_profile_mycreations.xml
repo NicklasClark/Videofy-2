@@ -75,12 +75,7 @@
                 android:layout_marginLeft="16dp"
                 android:padding="5dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginEnd="@dimen/padding_default"
-
-
-
-
-                />
+                android:layout_marginEnd="@dimen/padding_default" />
             <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/duration"
                 android:layout_height="wrap_content"

@@ -41,8 +41,8 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
                     android:layout_centerInParent="true"
                     app:srcCompat="@drawable/ic_play_big"
                     android:clickable="false"/>
