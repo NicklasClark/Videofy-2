@@ -69,8 +69,8 @@
                         android:foreground="@drawable/ripple_dark_no_rounded"
                         android:layout_alignParentEnd="true"
                         android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
                         android:padding="5dp"
-                        android:visibility="gone"
                         android:layout_marginRight="16dp"
                         android:layout_marginEnd="@dimen/padding_default"
                         />
@@ -80,13 +80,14 @@
                         android:layout_width="wrap_content"
                         android:text="48 secs"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        android:layout_alignParentEnd="true"
+
+
                         android:layout_marginTop="5dp"
                         android:textSize="14sp"
                         android:textColor="@color/cardview_light_background"
-
                         android:layout_toStartOf="@+id/menu"/>
+
+
 
                 </RelativeLayout>
                 <RelativeLayout

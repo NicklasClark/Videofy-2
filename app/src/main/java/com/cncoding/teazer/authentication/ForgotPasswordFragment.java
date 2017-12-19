@@ -118,17 +118,32 @@ public class ForgotPasswordFragment extends AuthFragment {
                 if (countryCodePicker.getVisibility() != View.VISIBLE) {
                     countryCodePicker.setVisibility(View.VISIBLE);
                     forgotPasswordEditText.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+                    //setting padding
+                    float scale = getResources().getDisplayMetrics().density;
+                    int trbPadding = (int) (14*scale + 0.5f);
+                    int leftPadding = (int) (0*scale + 0.5f);
+                    forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
                 }
             } else {
                 if (countryCodePicker.getVisibility() == View.VISIBLE) {
                     countryCodePicker.setVisibility(View.GONE);
                     forgotPasswordEditText.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
+                    //setting padding
+                    float scale = getResources().getDisplayMetrics().density;
+                    int trbPadding = (int) (14*scale + 0.5f);
+                    int leftPadding = (int) (14*scale + 0.5f);
+                    forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
                 }
             }
         } else {
             if (countryCodePicker.getVisibility() == View.VISIBLE) {
                 countryCodePicker.setVisibility(View.GONE);
                 forgotPasswordEditText.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+                //setting padding
+                float scale = getResources().getDisplayMetrics().density;
+                int trbPadding = (int) (14*scale + 0.5f);
+                int leftPadding = (int) (14*scale + 0.5f);
+                forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
             }
         }
     }

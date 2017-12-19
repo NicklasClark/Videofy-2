@@ -1,0 +1,35 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tags_container"
+    android:layout_width="60dp"
+    android:layout_height="76dp"
+    android:layout_weight="0.1"
+    android:paddingStart="@dimen/padding_thin"
+    android:paddingEnd="@dimen/padding_thin">
+
+    <ImageView
+        android:id="@+id/notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_notifications"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/padding_thin"/>
+
+    <TextView
+        android:id="@+id/notification_badge"
+        android:layout_alignParentRight="true"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_size_10sp"
+        android:background="@drawable/bg_circle_primary_red"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/padding_default"
+        android:layout_alignEnd="@+id/tags"/>
+
+</RelativeLayout>

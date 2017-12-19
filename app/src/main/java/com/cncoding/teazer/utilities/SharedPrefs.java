@@ -20,6 +20,8 @@ public class SharedPrefs {
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
     private static final String BLURRED_PROFILE_PIC = "homePageCache";
     private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
+    private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
+    private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -115,5 +117,20 @@ public class SharedPrefs {
 
     public static String getCurrentPassword(Context context) {
         return getSharedPreferences(context).getString(CURRENT_PASSWORD, null);
+    }
+
+    public static void setFollowingNotificationCount(Context context, int value) {
+        getSharedPreferences(context).edit().putInt(FOLLOWING_NOTIFICATION, value).apply();
+    }
+
+    public static int getFollowingNotificationCount(Context context) {
+        return getSharedPreferences(context).getInt(FOLLOWING_NOTIFICATION, 0);
+    }
+    public static void setRequestNotificationCount(Context context, int value) {
+        getSharedPreferences(context).edit().putInt(REQUEST_NOTIFICATION, value).apply();
+    }
+
+    public static int getRequestNotificationCount(Context context) {
+        return getSharedPreferences(context).getInt(REQUEST_NOTIFICATION, 0);
     }
 }

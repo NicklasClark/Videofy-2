@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -158,7 +157,7 @@
                         android:layout_marginEnd="13dp"
                         android:layout_alignBottom="@+id/media_controller_likes"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                         android:id="@+id/media_controller_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -284,8 +283,10 @@
                 android:id="@+id/post_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:animateLayoutChanges="true"
                 android:layout_below="@+id/controls">
+
 
                 <LinearLayout
                     android:id="@+id/main_actions"
@@ -295,11 +296,13 @@
                     android:orientation="horizontal"
                     android:layout_alignParentTop="true">
 
+
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:minWidth="115dp"
                         android:layout_weight="10">
+
 
                         <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                             android:id="@+id/react_btn"
@@ -466,7 +469,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    app:drawableTopCompat="@drawable/ic_no_data_placeholder"
                     android:textSize="@dimen/text_size_14sp"/>
 
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
@@ -496,6 +498,7 @@
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/btnClose"

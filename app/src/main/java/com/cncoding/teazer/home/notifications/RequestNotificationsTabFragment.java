@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
@@ -43,6 +44,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     private NotificationsList notificationsList;
     private NotificationsAdapter adapter;
     private Call<NotificationsList> notificationsListCall;
+    private Call<ResultObject> resetNotificationCall;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -90,6 +92,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
+        resetRequestNotification();
 
         if (notificationsList.getNotifications() != null && notificationsList.getNotifications().isEmpty())
             getRequestNotifications(1);
@@ -178,4 +181,30 @@ public class RequestNotificationsTabFragment extends BaseFragment {
 //    public interface OnListFragmentInteractionListener {
 //        void onListFragmentInteraction(Notification item);
 //    }
+
+    private void resetRequestNotification() {
+        resetNotificationCall = ApiCallingService.User.resetUnreadNotification(getContext(), 2);
+
+        if (!resetNotificationCall.isExecuted())
+            resetNotificationCall.enqueue(new Callback<ResultObject>() {
+                @Override
+                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+
+                            } else {
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultObject> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+    }
 }

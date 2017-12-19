@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
@@ -30,8 +32,10 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
@@ -115,8 +119,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         holder.likes.setText(likes);
 
         if (postDetails.getTotalReactions() > 0) {
-            String reactions = "R " + String.valueOf(postDetails.getTotalReactions());
-            holder.views.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            String reactions = BLANK_SPACE + String.valueOf(postDetails.getTotalReactions());
+            holder.views.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_reaction_home, 0, 0, 0);
             holder.views.setText(reactions);
         } else {
             String views = BLANK_SPACE + String.valueOf(postDetails.getMedias().get(0).getViews());
@@ -129,8 +133,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 @Override
                 public void onClick(View view) {
                     PostsListFragment.positionToUpdate = holder.getAdapterPosition();
-                    PostsListFragment.postDetails = postDetails;
-                    listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+                    fetchPostDetails(postDetails.getPostId());
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
@@ -146,7 +149,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         }
 
         Glide.with(context)
-                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
+                .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getMediaUrl() : R.drawable.ic_user_male_dp_small)
                 .placeholder(R.drawable.ic_user_male_dp_small)
                 .crossFade()
                 .listener(new RequestListener<Serializable, GlideDrawable>() {
@@ -217,7 +220,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_caption) EmojiAppCompatTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
-        @BindView(R.id.home_screen_post_username) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         int postWidth;
@@ -236,5 +239,30 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
+    }
+
+    public void fetchPostDetails(int postId)
+    {
+        ApiCallingService.Posts.getPostDetails(postId, context)
+                .enqueue(new Callback<PostDetails>() {
+                    @Override
+                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                        if (response.code() == 200) {
+                            if (response.body() != null) {
+                                PostDetailsActivity.newInstance(context, response.body(), null, true, true, null, response.body().getMedias().get(0).getThumbUrl());
+                                PostsListFragment.postDetails = response.body();
+//                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+                            } else {
+                                Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                            }
+                        } else
+                            Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostDetails> call, Throwable t) {
+                        Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

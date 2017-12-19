@@ -112,7 +112,7 @@
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
         <meta-data
             android:name="io.branch.sdk.TestMode"
-            android:value="true" />
+            android:value="false" />
         <!-- Branch install referrer tracking -->
         <receiver
             android:name="io.branch.referral.InstallListener"
@@ -138,48 +138,65 @@
         </activity>
         <activity
             android:name=".BaseBottomBarActivity"
-            android:label=""
+            android:label="Teazer"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/BaseActivityTheme"
             android:windowSoftInputMode="adjustPan">
+            <!--<intent-filter>-->
+                <!--<data android:scheme="teazerapp" />-->
+
+                <!--<action android:name="android.intent.action.VIEW" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="http" />-->
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="https" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter-->
+                <!--android:autoVerify="true"-->
+                <!--tools:targetApi="m">-->
+                <!--<data android:scheme="teazerapp" />-->
+
+                <!--<action android:name="android.intent.action.VIEW" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="http" />-->
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="https" />-->
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="http" />-->
+                <!--<data-->
+                    <!--android:host="teazer.test-app.link"-->
+                    <!--android:scheme="https" />-->
+            <!--</intent-filter>-->
+            <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="teazerapp" />
-
+                <data android:scheme="teazerapp" android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="http" />
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="https" />
             </intent-filter>
-            <intent-filter
-                android:autoVerify="true"
-                tools:targetApi="m">
-                <data android:scheme="teazerapp" />
 
+            <!-- Branch App Links -->
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="http" />
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="https" />
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="http" />
-                <data
-                    android:host="teazer.test-app.link"
-                    android:scheme="https" />
+                <data android:scheme="https" android:host="teazer.app.link" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="launch_activity" />
 
@@ -283,7 +300,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".videoTrim.TrimmerActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.fragment.activity.ReactionPlayerActivity"
             android:screenOrientation="portrait"
@@ -304,6 +322,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".ui.fragment.activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DetailAppTheme" />
     </application>
 
 </manifest>

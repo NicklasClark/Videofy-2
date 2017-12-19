@@ -156,6 +156,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
     @BindView(R.id.placeholder) ImageView placeholder;
     @BindView(R.id.loading) ProgressBar loadingProgressBar;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -186,7 +187,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     //bottom layout
     @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name) ProximaNovaSemiboldTextView profileNameView;
+    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
     @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
     @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
     @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
@@ -321,8 +322,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        if (!enableReactBtn) disableView(reactBtn, true);
 //        else enableView(reactBtn);
 
+
         tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
         tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
+        tagsLayout.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
 
         prepareController();
 
@@ -555,8 +558,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-        postLoadErrorTextView.setText(R.string.no_reactions_yet);
-        postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
+      //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
+        if(postDetails.canDelete())
+        {
+            postLoadErrorSubtitle.setText("There is no reaction yet");
+
+        }
+        else {
+            postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
+
+        }
     }
 
     private void dismissProgressBar() {

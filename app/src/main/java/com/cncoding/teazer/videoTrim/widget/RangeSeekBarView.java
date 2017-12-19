@@ -349,12 +349,6 @@ public class RangeSeekBarView extends View {
         invalidate();
     }
 
-    /**
-     * 设置游标的位置
-     *
-     * @param index
-     * @param pos
-     */
     private void setThumbPos(int index, float pos) {
         mThumbs.get(index).setPos(pos);
         calculateThumbValue(index);

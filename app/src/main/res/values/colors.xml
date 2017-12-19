@@ -63,7 +63,7 @@
     <color name="line_color">#FF15FF00</color>
     <color name="shadow_color">#7F000000</color>
     <color name="line_button">#565758</color>
-    <color name="top_bottom">#42BAF8</color>
+    <color name="top_bottom">#FFED3E51</color>
     <color name="gray_mid_dark">#757575</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="white">#FFFFFF</color>

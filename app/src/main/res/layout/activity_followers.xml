@@ -9,9 +9,11 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/nousertext"
@@ -34,6 +36,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:paddingBottom="?attr/actionBarSize" />
 
     </RelativeLayout>

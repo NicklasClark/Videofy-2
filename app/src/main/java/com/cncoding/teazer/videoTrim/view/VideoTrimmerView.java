@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.videoTrim.interfaces.OnProgressVideoListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnRangeSeekBarListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import iknow.android.utils.DeviceUtil;
 import iknow.android.utils.UnitConverter;
@@ -81,6 +83,7 @@ public class VideoTrimmerView extends FrameLayout {
     private AudioManager audioManager;
     private boolean isAudioEnabled;
     private int currentVolume;
+    private ProximaNovaSemiboldTextView videoDuration;
 
     public VideoTrimmerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -102,6 +105,7 @@ public class VideoTrimmerView extends FrameLayout {
         mPlayView = ((ImageView) findViewById(R.id.icon_video_play));
         videoThumbListView = (VideoThumbHorizontalListView) findViewById(R.id.video_thumb_listview);
         videoMuteButton = (ImageView) findViewById(R.id.icon_video_sound);
+        videoDuration = (ProximaNovaSemiboldTextView) findViewById(R.id.video_shoot_tip);
         videoThumbAdapter = new VideoThumbAdapter(mContext);
         videoThumbListView.setAdapter(videoThumbAdapter);
 
@@ -183,7 +187,7 @@ public class VideoTrimmerView extends FrameLayout {
     private void initSeekBarFromRestore() {
 
         seekTo(mStartPosition);
-        setUpProgressBarMarginsAndWidth((int)leftThumbValue, (int)(SCREEN_WIDTH_FULL - rightThumbValue - margin));//设置seekar的左偏移量
+        setUpProgressBarMarginsAndWidth((int)leftThumbValue, (int)(SCREEN_WIDTH_FULL - rightThumbValue - margin));
 
         setProgressBarMax();
         setProgressBarPosition(mStartPosition);
@@ -234,6 +238,7 @@ public class VideoTrimmerView extends FrameLayout {
             setRestoreState(false);
             initSeekBarFromRestore();
         }
+        videoDuration.setText("Duration: " + formatMilliseconds(mDuration));
     }
 
 
@@ -246,7 +251,7 @@ public class VideoTrimmerView extends FrameLayout {
             }
             case Thumb.RIGHT: {
                 mEndPosition = PixToTime(value);
-                if(mEndPosition > mDuration)//实现归位
+                if(mEndPosition > mDuration)
                     mEndPosition = mDuration;
                 break;
             }
@@ -257,7 +262,7 @@ public class VideoTrimmerView extends FrameLayout {
         seekTo(mStartPosition);
         mTimeVideo = mEndPosition - mStartPosition;
 
-        setUpProgressBarMarginsAndWidth((int)leftThumbValue, (int)(SCREEN_WIDTH_FULL - rightThumbValue - margin));//设置seekar的左偏移量
+        setUpProgressBarMarginsAndWidth((int)leftThumbValue, (int)(SCREEN_WIDTH_FULL - rightThumbValue - margin));
     }
 
     private void onStopSeekThumbs() {
@@ -280,7 +285,7 @@ public class VideoTrimmerView extends FrameLayout {
         if (mVideoView.isPlaying()){
             mMessageHandler.removeMessages(SHOW_PROGRESS);
             mVideoView.pause();
-            seekTo(mStartPosition);//复位
+            seekTo(mStartPosition);
             setPlayPauseViewIcon(false);
         }
     }
@@ -298,7 +303,7 @@ public class VideoTrimmerView extends FrameLayout {
     }
 
     /**
-     * Cancel trim thread execut action when finish
+     * Cancel trim thread execute action when finish
      */
     public void destroy() {
         BackgroundExecutor.cancelAll("", true);
@@ -349,6 +354,8 @@ public class VideoTrimmerView extends FrameLayout {
                 }
 
                 onSeekThumbs(index, value + Math.abs(mScrolledOffset));
+
+                videoDuration.setText("Duration: " + formatMilliseconds(mEndPosition-mStartPosition));
             }
 
             @Override
@@ -411,6 +418,15 @@ public class VideoTrimmerView extends FrameLayout {
         isAudioEnabled = currentVolume > 0;
     }
 
+    private String formatMilliseconds(long input) {
+        int secs = (int) (input / 1000);
+        int minutes = secs / 60;
+        secs = secs % 60;
+        return "" + String.format(Locale.getDefault(), "%02d", minutes) +
+                ":" + String.format(Locale.getDefault(), "%02d", secs);
+
+    }
+
     private void setUpProgressBarMarginsAndWidth(int left, int right) {
         if(left == 0)
             left = margin;
@@ -424,7 +440,7 @@ public class VideoTrimmerView extends FrameLayout {
 
     private void onSaveClicked() {
         if (mEndPosition/1000 - mStartPosition/1000 < TrimVideoUtil.MIN_TIME_FRAME) {
-            Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Video length can not be less than 5 seconds", Toast.LENGTH_SHORT).show();
         }
         else if(mEndPosition/1000 - mStartPosition/1000 > TrimVideoUtil.VIDEO_MAX_DURATION)
         {

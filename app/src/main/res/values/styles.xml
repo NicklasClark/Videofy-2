@@ -232,23 +232,23 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AppTheme.RoundedFacebookButtonWelcomePage" parent="AppTheme.BaseLoginButton">
+    <style name="RoundedFacebookButtonWelcomePage" parent="BaseLoginButton">
         <item name="android:background">@drawable/bg_button_facebook</item>
         <item name="android:text">@string/continue_with_facebook</item>
     </style>
 
-    <style name="AppTheme.RoundedGoogleButtonWelcomePage" parent="AppTheme.BaseLoginButton">
+    <style name="RoundedGoogleButtonWelcomePage" parent="BaseLoginButton">
         <item name="android:background">@drawable/bg_button_google</item>
         <item name="android:text">@string/continue_with_google</item>
     </style>
 
-    <style name="AppTheme.BaseLoginButton" parent="Widget.AppCompat.Button.Colored">
+    <style name="BaseLoginButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">55dp</item>
         <item name="android:foreground">@drawable/ripple_light_rounded_2dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">@dimen/text_size_content_big</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:padding">@dimen/padding_default</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_marginStart">@dimen/padding_default</item>
@@ -279,7 +279,7 @@
 
     <style name="AppTheme.ReactButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">50dp</item>
         <!--<item name="android:paddingTop">@dimen/padding_half</item>-->
         <!--<item name="android:paddingBottom">@dimen/padding_half</item>-->
         <item name="android:paddingStart">@dimen/padding_thin</item>
@@ -492,9 +492,7 @@
         <item name="android:thumb">@null</item>
         <item name="android:thumbOffset">4dip</item>
     </style>
-isConnected<![CDATA[
-
-]]>    <style name="blue_text_18_style">
+    <style name="blue_text_18_style">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#33bbff</item>
         <item name="android:textStyle">bold</item>

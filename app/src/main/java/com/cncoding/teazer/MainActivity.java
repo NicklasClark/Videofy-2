@@ -4,15 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +40,7 @@ import android.widget.VideoView;
 import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.asynctasks.GenerateBitmapFromUrl;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
@@ -54,13 +58,17 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -68,6 +76,7 @@ import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -99,11 +108,11 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
-    private static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
+    public static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
     public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
-    private static final String TAG_OTP_FRAGMENT = "otpFragment";
+    public static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
 //    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
@@ -118,12 +127,14 @@ public class MainActivity extends AppCompatActivity
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
+     static byte[] bte;
 
     @BindView(R.id.container) RelativeLayout rootView;
     @BindView(R.id.welcome_video) VideoView welcomeVideo;
     @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
     @BindView(R.id.up_btn) ImageView upBtn;
 
+    String imageUri;
 //    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
 //    private BlurView.ControllerSettings settings;
@@ -178,6 +189,25 @@ public class MainActivity extends AppCompatActivity
 
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
+
+
+
+
+        SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
+        imageUri = prfs.getString("USER_DP_IMAGES", "");
+
+        if(imageUri!=null)
+        {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+                bte = bitmaptoByte(scaledBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void successfullyLoggedIn() {
@@ -193,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.main_fragment_container, new WelcomeFragment(), TAG_WELCOME_FRAGMENT);
                 break;
             case TAG_LOGIN_FRAGMENT:
-                if (args!= null) {
+                if (args != null) {
                     String name = fragmentManager.getBackStackEntryAt(0).getName();
                     fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     transaction.replace(R.id.main_fragment_container,
@@ -229,8 +259,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
-                String name = fragmentManager.getBackStackEntryAt(0).getName();
-                fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                try {
+                    String name = fragmentManager.getBackStackEntryAt(0).getName();
+                    fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
                         false, false, null, null),
                         TAG_SELECT_INTERESTS);
@@ -249,8 +283,7 @@ public class MainActivity extends AppCompatActivity
             setFragment(tag, addToBackStack, null);
             transitionDrawable.startTransition(400);
 //            new Blur(this).execute();
-        }
-        else {
+        } else {
             if (transitionDrawable != null)
                 transitionDrawable.reverseTransition(400);
             if (welcomeVideo != null && !welcomeVideo.isPlaying())
@@ -407,7 +440,7 @@ public class MainActivity extends AppCompatActivity
                                     }
                                     break;
                                 default:
-                                    Log.d("handleFacebookLogin()", response.code() + "_" +response.message());
+                                    Log.d("handleFacebookLogin()", response.code() + "_" + response.message());
                                     button.revertAnimation(new OnAnimationEndListener() {
                                         @Override
                                         public void onAnimationEnd() {
@@ -434,6 +467,9 @@ public class MainActivity extends AppCompatActivity
                         });
                     }
                 });
+
+        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
+        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
     }
 
     private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button,
@@ -479,7 +515,7 @@ public class MainActivity extends AppCompatActivity
                                 }
                                 break;
                             default:
-                                Log.d("handleGoogleSignIn()", response.code() + "_" +response.message());
+                                Log.d("handleGoogleSignIn()", response.code() + "_" + response.message());
                                 button.revertAnimation(new OnAnimationEndListener() {
                                     @Override
                                     public void onAnimationEnd() {
@@ -493,7 +529,8 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Log.d("handleGoogleSignIn()", t.getMessage());button.revertAnimation(new OnAnimationEndListener() {
+                        t.printStackTrace();
+                        button.revertAnimation(new OnAnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
                                 button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0,
@@ -502,6 +539,9 @@ public class MainActivity extends AppCompatActivity
                         });
                     }
                 });
+
+        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
+        generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
     }
 
     private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button,
@@ -514,7 +554,7 @@ public class MainActivity extends AppCompatActivity
                     getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
         }
 
-            new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!accountAlreadyExists)
@@ -533,10 +573,10 @@ public class MainActivity extends AppCompatActivity
                 successfullyLoggedIn();
                 break;
             case LOGIN_WITH_OTP_ACTION:
-                setFragment(TAG_OTP_FRAGMENT, true, new Object[] {authorize, LOGIN_WITH_OTP_ACTION});
+                setFragment(TAG_OTP_FRAGMENT, true, new Object[]{authorize, LOGIN_WITH_OTP_ACTION});
                 break;
             case FORGOT_PASSWORD_ACTION:
-                setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[] {authorize.getUsername()});
+                setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[]{authorize.getUsername()});
                 break;
             default:
                 break;
@@ -551,7 +591,7 @@ public class MainActivity extends AppCompatActivity
             new UpdateProfilePic(this).execute(picturePath);
         } else {
 //            if (isVerified)
-                successfullyLoggedIn();
+            successfullyLoggedIn();
         }
     }
 
@@ -585,6 +625,12 @@ public class MainActivity extends AppCompatActivity
     public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
 
+    public static byte[] bitmaptoByte(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {
 
         WeakReference<MainActivity> reference;
@@ -614,6 +660,8 @@ public class MainActivity extends AppCompatActivity
                 ApiCallingService.User.updateUserProfileMedia(part, reference.get()).enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                       // Log.d("IMAGE Url",picturePath)
+//                        Toast.makeText(reference.get(), "Profile pic Updated", Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
@@ -722,8 +770,7 @@ public class MainActivity extends AppCompatActivity
                     if (editText.getText().toString().equals("")) {
                         editText.setCompoundDrawablesWithIntrinsicBounds(
                                 0, 0, R.drawable.ic_error, 0);
-                    }
-                    else {
+                    } else {
                         if (editText.getCompoundDrawables()[2] != null) {
                             editText.setCompoundDrawablesWithIntrinsicBounds(
                                     0, 0, 0, 0);
@@ -746,8 +793,7 @@ public class MainActivity extends AppCompatActivity
                     if (editable.toString().equals("")) {
                         editText.setCompoundDrawablesWithIntrinsicBounds(
                                 0, 0, R.drawable.ic_error, 0);
-                    }
-                    else {
+                    } else {
                         if (editText.getCompoundDrawables()[2] != null) {
                             editText.setCompoundDrawablesWithIntrinsicBounds(
                                     0, 0, 0, 0);
@@ -812,7 +858,6 @@ public class MainActivity extends AppCompatActivity
                 toggleUpBtnVisibility(View.INVISIBLE);
                 startFragmentTransition(true, null, false);
             }
-        }
-        else super.onBackPressed();
+        } else super.onBackPressed();
     }
 }

@@ -12,12 +12,15 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.utilities.AuthUtils.isUserLoggedIn;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.getFollowingNotificationsUnreadCount;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.getRequestNotificationsUnreadCount;
 
 public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        setContentView(R.layout.;
 //        Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
@@ -42,6 +45,9 @@ public class SplashScreen extends AppCompatActivity {
 //            }
 //            else
 //                Log.d("NOTIFYM", "Intent is null");
+            getFollowingNotificationsUnreadCount(this, 1);
+            getRequestNotificationsUnreadCount(this, 1);
+
             startActivity(new Intent(SplashScreen.this, BaseBottomBarActivity.class));
         } else {
             startActivity(new Intent(SplashScreen.this, MainActivity.class));

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import com.cncoding.teazer.MainActivity;
+import com.cncoding.teazer.ui.fragment.activity.ForgotPasswordActivity;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -21,6 +23,7 @@ public class AuthFragment extends Fragment implements NetworkStateReceiver.Netwo
     public boolean isConnected;
     public Context context;
     private NetworkStateReceiver networkStateReceiver;
+    protected  boolean isPasswodShown=true;
 
     public AuthFragment() {
         // Required empty public constructor
@@ -36,10 +39,12 @@ public class AuthFragment extends Fragment implements NetworkStateReceiver.Netwo
     }
 
     @NonNull
-    public MainActivity getParentActivity() {
+    public FragmentActivity getParentActivity() {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             return (MainActivity) getActivity();
         }
+        else if (getActivity() != null && getActivity() instanceof ForgotPasswordActivity)
+            return (ForgotPasswordActivity)getActivity();
         else throw new IllegalStateException("Fragment is not attached to MainActivity");
     }
 

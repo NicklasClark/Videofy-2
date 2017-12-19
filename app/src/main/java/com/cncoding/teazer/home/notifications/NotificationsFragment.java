@@ -1,9 +1,9 @@
 package com.cncoding.teazer.home.notifications;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +24,7 @@ public class NotificationsFragment extends BaseFragment {
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
-    private OnFragmentInteractionListener mListener;
+    private OnNotificationsFragmentInteractionListener mListener;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -32,6 +32,12 @@ public class NotificationsFragment extends BaseFragment {
 
     public static NotificationsFragment newInstance() {
         return new NotificationsFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mListener.onNotificationFragmentInteraction();
     }
 
     @Override
@@ -54,8 +60,8 @@ public class NotificationsFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnNotificationsFragmentInteractionListener) {
+            mListener = (OnNotificationsFragmentInteractionListener) context;
         }
 //        else {
 //            throw new RuntimeException(context.toString()
@@ -99,7 +105,7 @@ public class NotificationsFragment extends BaseFragment {
         }
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface OnNotificationsFragmentInteractionListener {
+        void onNotificationFragmentInteraction();
     }
 }

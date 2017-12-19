@@ -45,7 +45,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
     private String categoryName;
     private ArrayList<PostDetails> postDetailsArrayList;
 
-//    private OnFragmentInteractionListener mListener;
+//    private OnNotificationsFragmentInteractionListener mListener;
 
     public MyInterestsFragmentTab() {
         // Required empty public constructor
@@ -160,12 +160,12 @@ public class MyInterestsFragmentTab extends BaseFragment {
 //    @Override
 //    public void onAttach(Context context) {
 //        super.onAttach(context);
-////        if (context instanceof OnFragmentInteractionListener) {
-////            mListener = (OnFragmentInteractionListener) context;
+////        if (context instanceof OnNotificationsFragmentInteractionListener) {
+////            mListener = (OnNotificationsFragmentInteractionListener) context;
 ////        }
 ////        else {
 ////            throw new RuntimeException(context.toString()
-////                    + " must implement OnFragmentInteractionListener");
+////                    + " must implement OnNotificationsFragmentInteractionListener");
 ////        }
 //    }
 
@@ -175,7 +175,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
 ////        mListener = null;
 //    }
 
-//    public interface OnFragmentInteractionListener {
+//    public interface OnNotificationsFragmentInteractionListener {
 //        void onFragmentInteraction(Uri uri);
 //    }
 }
