@@ -85,6 +85,7 @@ public class FollowingListActivities extends BaseFragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
         endlessRecyclerViewScrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -95,7 +96,6 @@ public class FollowingListActivities extends BaseFragment {
                     }
                     else
                     {
-
                         getOthersFollowingList(Integer.parseInt(followerid),page);
                     }
 
@@ -200,15 +200,11 @@ public class FollowingListActivities extends BaseFragment {
 
                             profileMyFollowingAdapter.notifyItemRangeInserted(profileMyFollowingAdapter.getItemCount(), otherlist.size() - 1);
 
-//                            if(next)
-//                            {
-//                                otherfollowingpage++;
-//                                getOthersFollowingList(userId);
-//                            }
+
                         }
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
-                        //otherfollowingpage=1;
+
                     } catch (Exception e) {
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
