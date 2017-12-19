@@ -128,7 +128,7 @@ public class Notification implements Parcelable {
     public boolean isFollowing() {
         return following;
     }
-    public boolean isRequest_sent() {
+    public boolean isRequestSent() {
         return request_sent;
     }
     public String getMessage() {

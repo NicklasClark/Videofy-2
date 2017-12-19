@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -53,8 +51,6 @@ public class DiscoverFragment extends BaseFragment {
 //    private static final String TAG_DISCOVER_SEARCH_FRAGMENT = "discoverSearchFragment";
 
     @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.discover_posts_container) LinearLayout discoverPostsContainer;
     @BindView(R.id.featured_posts_container) LinearLayout featuredPostsContainer;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
@@ -71,7 +67,11 @@ public class DiscoverFragment extends BaseFragment {
     private int page;
     private OnDiscoverInteractionListener mListener;
     private ArrayList<PostDetails> featuredPostsList;
-    private LandingPosts landingPosts;
+//    private LandingPosts landingPosts;
+    private ArrayList<PostDetails> mostPopular;
+    private ArrayList<Category> userInterests;
+    private ArrayList<Category> trendingCategories;
+    private HashMap<String, ArrayList<PostDetails>> myInterests;
     private Call<PostList> featuredPostsCall;
     private Call<LandingPosts> landingPostCall;
 
@@ -91,7 +91,6 @@ public class DiscoverFragment extends BaseFragment {
         // Inflate the searchContainer for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
         ButterKnife.bind(this, rootView);
-        progressBar.setVisibility(VISIBLE);
 
         initMembersIfEmpty();
 
@@ -110,16 +109,23 @@ public class DiscoverFragment extends BaseFragment {
         page = 1;
 
         if (featuredPostsList == null) {
-            progressBar.setVisibility(VISIBLE);
             featuredPostsList = new ArrayList<>();
-        } else
-            dismissProgressBar();
-        if (landingPosts == null) {
-            progressBar.setVisibility(VISIBLE);
-            landingPosts = new LandingPosts(new ArrayList<PostDetails>(), new ArrayList<Category>(),
-                    new ArrayList<Category>(), new HashMap<String, ArrayList<PostDetails>>());
-        } else
-            dismissProgressBar();
+        }
+        if (mostPopular == null) {
+            mostPopular = new ArrayList<>();
+        }
+        if (userInterests == null) {
+            userInterests = new ArrayList<>();
+        }
+        if (trendingCategories == null) {
+            trendingCategories = new ArrayList<>();
+        }
+        if (myInterests == null) {
+            myInterests = new HashMap<>();
+        }
+//        if (landingPosts == null) {
+//            landingPosts = new LandingPosts(mostPopular, userInterests, trendingCategories, myInterests);
+//        }
 
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -129,17 +135,6 @@ public class DiscoverFragment extends BaseFragment {
                     is_next_page = false;
                     getFeaturedPosts(++page);
                 }
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                page = 1;
-                is_next_page = false;
-                landingPosts.clearData();
-                featuredPostsList.clear();
-                loadPosts();
             }
         });
     }
@@ -155,14 +150,13 @@ public class DiscoverFragment extends BaseFragment {
                 2, StaggeredGridLayoutManager.VERTICAL);
 
         mostPopularList.setLayoutManager(horizontalLinearLayoutManager);
-        mostPopularList.setAdapter(new MostPopularListAdapter(landingPosts.getMostPopular(), getContext(), mListener));
+        mostPopularList.setAdapter(new MostPopularListAdapter(mostPopular, getContext(), mListener));
 
         myInterestsList.setLayoutManager(verticalLinearLayoutManager);
-        myInterestsList.setAdapter(new MyInterestsListAdapter(landingPosts.getUserInterests(),
-                landingPosts.getMyInterests(), getContext(), mListener));
+        myInterestsList.setAdapter(new MyInterestsListAdapter(userInterests, myInterests, getContext(), mListener));
 
         trendingList.setLayoutManager(horizontalLinearLayoutManager2);
-        trendingList.setAdapter(new TrendingListAdapter(landingPosts.getTrendingCategories(), getContext()));
+        trendingList.setAdapter(new TrendingListAdapter(trendingCategories, getContext()));
 
         featuredVideosList.setLayoutManager(staggeredGridLayoutManager);
         featuredVideosList.setAdapter(new FeaturedVideosListAdapter(featuredPostsList, getContext(), mListener));
@@ -170,22 +164,23 @@ public class DiscoverFragment extends BaseFragment {
 
     private void loadPosts() {
         postLoadErrorLayout.setVisibility(GONE);
-        if (landingPosts != null)
+        if (!isLandingPostListsNull())
             getDiscoverLandingPosts();
 
         if (featuredPostsList != null)
             getFeaturedPosts(page);
-        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private boolean isLandingPostListsNull() {
+        return mostPopular == null && userInterests == null && trendingCategories == null && myInterests == null;
     }
 
     @OnClick(R.id.most_popular_view_all) public void viewAllMostPopular() {
-        mListener.onDiscoverInteraction(ACTION_VIEW_MOST_POPULAR, null, landingPosts.getMostPopular(),
-                null);
+        mListener.onDiscoverInteraction(ACTION_VIEW_MOST_POPULAR, null, mostPopular, null);
     }
 
     @OnClick(R.id.my_interests_view_all) public void viewAllMyInterests() {
-        mListener.onDiscoverInteraction(ACTION_VIEW_MY_INTERESTS, landingPosts.getUserInterests(),
-                null, null);
+        mListener.onDiscoverInteraction(ACTION_VIEW_MY_INTERESTS, userInterests, null, null);
     }
 
     @OnClick(R.id.discover_search) public void toggleSearch() {
@@ -198,9 +193,8 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     private void notifyLandingPostsDataSetChanged() {
-        dismissProgressBar();
         discoverPostsContainer.setVisibility(VISIBLE);
-        if (landingPosts.getMostPopular().isEmpty()) {
+        if (mostPopular.isEmpty()) {
             mostPopularList.setVisibility(GONE);
             noMostPopular.setVisibility(VISIBLE);
         }
@@ -209,7 +203,7 @@ public class DiscoverFragment extends BaseFragment {
 //            myInterestsList.setVisibility(View.GONE);
 //            noMyInterests.setVisibility(View.VISIBLE);
 //        }
-        if (landingPosts.getTrendingCategories().isEmpty()) {
+        if (trendingCategories.isEmpty()) {
             trendingList.setVisibility(GONE);
             noTrending.setVisibility(VISIBLE);
         }
@@ -231,14 +225,14 @@ public class DiscoverFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             try {
                 Map<String, ArrayList<PostDetails>> tempMap = new HashMap<>();
-                tempMap.putAll(reference.get().landingPosts.getMyInterests());
-                for (int i = 0; i < reference.get().landingPosts.getMyInterests().size(); i++) {
-                    String categoryName = reference.get().landingPosts.getUserInterests().get(i).getCategoryName();
-                    if (tempMap.get(categoryName).isEmpty())
+                tempMap.putAll(reference.get().myInterests);
+                for (int i = 0; i < reference.get().myInterests.size(); i++) {
+                    String categoryName = reference.get().userInterests.get(i).getCategoryName();
+                    if (tempMap.get(categoryName) != null && tempMap.get(categoryName).isEmpty())
                         tempMap.remove(categoryName);
                 }
-                reference.get().landingPosts.getMyInterests().clear();
-                reference.get().landingPosts.getMyInterests().putAll(tempMap);
+                reference.get().myInterests.clear();
+                reference.get().myInterests.putAll(tempMap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -252,7 +246,6 @@ public class DiscoverFragment extends BaseFragment {
     }
     
     private void getDiscoverLandingPosts() {
-        landingPosts.clearData();
         landingPostCall = ApiCallingService.Discover.getDiscoverPagePosts(getContext());
         if (!landingPostCall.isExecuted())
             landingPostCall.enqueue(new Callback<LandingPosts>() {
@@ -261,12 +254,7 @@ public class DiscoverFragment extends BaseFragment {
                     try {
                         if (isAdded()) {
                             if (response.code() == 200) {
-                                LandingPosts tempLandingPosts = response.body();
-                                landingPosts.getMostPopular().addAll(tempLandingPosts.getMostPopular());
-                                landingPosts.getUserInterests().addAll(tempLandingPosts.getUserInterests());
-                                landingPosts.getTrendingCategories().addAll(tempLandingPosts.getTrendingCategories());
-                                landingPosts.getMyInterests().putAll(tempLandingPosts.getMyInterests());
-                                notifyLandingPostsDataSetChanged();
+                                new RefreshLandingPosts(DiscoverFragment.this).execute(response.body());
                             } else {
                                 Log.e("GetDiscoverLandingPosts", response.code() + "_" + response.message());
                                 showErrorMessage(getString(R.string.something_went_wrong), true);
@@ -287,10 +275,38 @@ public class DiscoverFragment extends BaseFragment {
             });
     }
 
-    private void getFeaturedPosts(final int page) {
-        if (page == 1)
-            featuredPostsList.clear();
+    private static class RefreshLandingPosts extends AsyncTask<LandingPosts, Void, Void> {
 
+        private WeakReference<DiscoverFragment> reference;
+
+        RefreshLandingPosts(DiscoverFragment context) {
+            reference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(LandingPosts... landingPosts) {
+            reference.get().clearLandingPostData();
+            reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
+            reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
+            reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
+            reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            reference.get().notifyLandingPostsDataSetChanged();
+        }
+    }
+
+    private void clearLandingPostData() {
+        if (mostPopular != null) mostPopular.clear();
+        if (userInterests != null) userInterests.clear();
+        if (trendingCategories != null) trendingCategories.clear();
+        if (myInterests != null) myInterests.clear();
+    }
+
+    private void getFeaturedPosts(final int page) {
         featuredPostsCall = ApiCallingService.Discover.getFeaturedPosts(page, getContext());
         if (!featuredPostsCall.isExecuted()) {
             featuredPostsCall.enqueue(new Callback<PostList>() {
@@ -341,7 +357,6 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     private void showErrorMessage(String message, boolean isLandingPosts) {
-        dismissProgressBar();
         if (isLandingPosts)
             discoverPostsContainer.setVisibility(GONE);
         else
@@ -349,12 +364,6 @@ public class DiscoverFragment extends BaseFragment {
         postLoadErrorLayout.setVisibility(VISIBLE);
         String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
         postLoadErrorTextView.setText(errorString);
-    }
-
-    public void dismissProgressBar() {
-        if (progressBar.getVisibility() == VISIBLE) {
-            progressBar.setVisibility(View.GONE);
-        }
     }
 
     @Override

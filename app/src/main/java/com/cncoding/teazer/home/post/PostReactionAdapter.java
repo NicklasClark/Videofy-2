@@ -2,12 +2,11 @@ package com.cncoding.teazer.home.post;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseIntArray;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -19,6 +18,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostReaction;
 
@@ -29,18 +29,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
+import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapter.ViewHolder> {
 
-    private SparseIntArray dimensionSparseArray;
+    private SparseArray<Dimension> dimensionSparseArray;
     private ArrayList<PostReaction> postReactions;
     private Context context;
 
     PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
         this.postReactions = postReactions;
         this.context = context;
-        dimensionSparseArray = new SparseIntArray();
+        dimensionSparseArray = new SparseArray<>();
     }
 
     @Override
@@ -52,52 +53,22 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.shimmerLayout.setVisibility(View.VISIBLE);
+        holder.vignetteLayout.setVisibility(View.INVISIBLE);
+        holder.caption.setVisibility(View.INVISIBLE);
+        holder.bottomLayout.setVisibility(View.INVISIBLE);
+
         final PostReaction postReaction = postReactions.get(position);
         MiniProfile postOwner = postReaction.getReactOwner();
 
-        if (dimensionSparseArray.get(position) != 0)
-            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
-
-        Glide.with(context)
-                .load(postReaction.getMediaDetail().getThumbUrl())
-                .crossFade()
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        if (!isFromMemoryCache) {
-                            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-                            animation.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                    dimensionSparseArray.put(holder.getAdapterPosition(), holder.layout.getHeight());
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    holder.layout.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-                                }
-                            });
-                            holder.layout.startAnimation(animation);
-                        } else {
-                            holder.layout.animate().alpha(1).setDuration(280).start();
-                            holder.layout.setVisibility(View.VISIBLE);
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-//                .animate(R.anim.float_up)
-                .into(holder.postThumbnail);
+        if (dimensionSparseArray.get(position) == null) {
+            adjustViewSize(context, postReaction.getMediaDetail().getReactDimension().getWidth(),
+                    postReaction.getMediaDetail().getReactDimension().getHeight(),
+                    holder.layout.getLayoutParams(), position, dimensionSparseArray, false);
+        } else {
+            holder.layout.getLayoutParams().width = dimensionSparseArray.get(position).getWidth();
+            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
+        }
 
         Glide.with(context)
                 .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
@@ -126,24 +97,54 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         String viewsText = "  " + postReaction.getViews();
         holder.views.setText(viewsText);
 
-        View.OnClickListener viewReactionDetails = new View.OnClickListener() {
+        Glide.with(context)
+                .load(postReaction.getMediaDetail().getThumbUrl())
+                .crossFade()
+                .skipMemoryCache(false)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                        holder.vignetteLayout.setVisibility(View.VISIBLE);
+                        holder.caption.setVisibility(View.VISIBLE);
+                        holder.bottomLayout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+//                .animate(R.anim.float_up)
+                .into(holder.postThumbnail);
+
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-
+                switch (view.getId()) {
+                    case R.id.root_layout:
+                        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                        break;
+                    case R.id.reaction_post_dp | R.id.reaction_post_name:
+                        //region TODO
+                        // If there is a way to know that the person who posted the reaction
+                        // is the user-self or some other, apply that logic here.
+                        // call
+//                        if (context instanceof PostDetailsActivity) {
+//                            ((PostDetailsActivity) context).onTaggedUserInteraction(
+//                                    postReaction.getReactOwner().getUserId(),
+//                                    /*apply "isSelf logic here"*/);
+//                        }
+                        //endregion
+                        break;
+                }
             }
         };
-//            View.OnClickListener viewProfile = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    listener.onPostReactionInteraction(ACTION_VIEW_PROFILE, postReaction);
-//                }
-//            };
-
-        holder.postThumbnail.setOnClickListener(viewReactionDetails);
-        holder.likes.setOnClickListener(viewReactionDetails);
-//            holder.profilePic.setOnClickListener(viewProfile);
-//            holder.name.setOnClickListener(viewProfile);
+        holder.layout.setOnClickListener(listener);
+        holder.profilePic.setOnClickListener(listener);
+        holder.name.setOnClickListener(listener);
     }
 
     @Override
@@ -154,6 +155,9 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.reaction_post_thumb) ImageView postThumbnail;
         @BindView(R.id.reaction_post_caption) ProximaNovaSemiboldTextView caption;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView profilePic;
@@ -172,8 +176,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         }
     }
 
-    public void playFromDeepLink(PostReaction postReaction)
-    {
+    void playFromDeepLink(PostReaction postReaction) {
         playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
     }
 }

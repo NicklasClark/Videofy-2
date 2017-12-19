@@ -5,10 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -51,6 +55,10 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         try {
+            holder.shimmerLayout.setVisibility(View.VISIBLE);
+            holder.topLayout.setVisibility(View.INVISIBLE);
+            holder.bottomLayout.setVisibility(View.INVISIBLE);
+
             holder.postDetails = mostPopularList.get(position);
 
             holder.title.setText(holder.postDetails.getTitle());
@@ -70,12 +78,6 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                 holder.reactions.getLayoutParams().width = 0;
 //                reactionText = String.valueOf(holder.postDetails.getTotalReactions()) + " R";
             holder.reactions.setText(reactionText);
-
-            Glide.with(context)
-                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                    .placeholder(R.drawable.bg_placeholder)
-                    .crossFade()
-                    .into(holder.thumbnail);
 
             Glide.with(context)
                     .load(holder.postDetails.getPostOwner().getProfileMedia() != null &&
@@ -105,6 +107,26 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
                             .into(holder.reactionImage2);
                 }
             }
+
+            Glide.with(context)
+                    .load(holder.postDetails.getMedias().get(0).getThumbUrl())
+                    .crossFade()
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                            holder.topLayout.setVisibility(View.VISIBLE);
+                            holder.bottomLayout.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+                    })
+                    .into(holder.thumbnail);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,7 +165,10 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.root_layout) FrameLayout layout;
+        @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.top_layout) LinearLayout topLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.duration) ProximaNovaRegularTextView duration;

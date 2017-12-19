@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.text.emoji.widget.EmojiAppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +38,9 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
+import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
+import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -46,7 +49,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.ViewHolder> {
 
     private SparseIntArray colorArray;
-//    private SparseIntArray dimensionSparseArray;
+    private SparseArray<Dimension> dimensionSparseArray;
     private OnPostAdapterInteractionListener listener;
     private ArrayList<PostDetails> posts;
     private Context context;
@@ -54,7 +57,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
-//        dimensionSparseArray = new SparseIntArray();
+        dimensionSparseArray = new SparseArray<>();
         colorArray = new SparseIntArray();
 
         if (context instanceof OnPostAdapterInteractionListener) {
@@ -77,26 +80,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.shimmerLayout.setVisibility(View.VISIBLE);
-        holder.topLayout.setVisibility(View.INVISIBLE);
-        holder.bottomLayout.setVisibility(View.INVISIBLE);
-        holder.vignetteLayout.setVisibility(View.INVISIBLE);
+        initializeShimmer(holder.shimmerLayout, holder.topLayout, holder.bottomLayout, holder.vignetteLayout);
+
         final PostDetails postDetails = posts.get(position);
         MiniProfile postOwner = postDetails.getPostOwner();
 
-        int postWidth = postDetails.getMedias().get(0).getDimension().getWidth();
-        int postHeight = postDetails.getMedias().get(0).getDimension().getHeight();
-        int width = (ViewUtils.getDeviceWidth(context) -
-                (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
-
-        holder.layout.getLayoutParams().width = width;
-        if (postHeight < postWidth) {
-//            holder.layout.setBackgroundResource(R.color.black);
-            postHeight = width;
-            holder.layout.getLayoutParams().height = postHeight;
+        /*Adjust view size before loading anything*/
+        if (dimensionSparseArray.get(position) == null) {
+            adjustViewSize(context, postDetails.getMedias().get(0).getDimension().getWidth(),
+                    postDetails.getMedias().get(0).getDimension().getHeight(),
+                    holder.layout.getLayoutParams(), position, dimensionSparseArray, true);
         } else {
-//            holder.layout.setBackgroundResource(R.color.material_grey200);
-            holder.layout.getLayoutParams().height = width * postHeight / postWidth;
+            holder.layout.getLayoutParams().width = dimensionSparseArray.get(position).getWidth();
+            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
         }
 
         String title = postDetails.getTitle();
@@ -178,14 +174,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.layout.setBackgroundResource(
-                                resource.getIntrinsicHeight() < resource.getIntrinsicWidth() ?
-                                        R.color.black :
-                                        R.color.material_grey200);
-                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
-                        holder.topLayout.setVisibility(View.VISIBLE);
-                        holder.bottomLayout.setVisibility(View.VISIBLE);
-                        holder.vignetteLayout.setVisibility(View.VISIBLE);
+                        prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                                holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
                     }
                 })
@@ -223,8 +213,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
-        int postWidth;
-        int postHeight;
 
         ViewHolder(View view) {
             super(view);
@@ -241,15 +229,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
     }
 
-    public void fetchPostDetails(int postId)
-    {
+    private void fetchPostDetails(int postId) {
         ApiCallingService.Posts.getPostDetails(postId, context)
                 .enqueue(new Callback<PostDetails>() {
                     @Override
                     public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                         if (response.code() == 200) {
                             if (response.body() != null) {
-                                PostDetailsActivity.newInstance(context, response.body(), null, true, true, null, response.body().getMedias().get(0).getThumbUrl());
+                                PostDetailsActivity.newInstance(context, response.body(), null, true,
+                                        true, null, response.body().getMedias().get(0).getThumbUrl());
                                 PostsListFragment.postDetails = response.body();
 //                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
                             } else {
