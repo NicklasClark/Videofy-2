@@ -66,8 +66,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class ApiCallingService {
 
-    static final String BASE_URL = "http://dev-api.teazer.online/";
-//    static final String BASE_URL = "https://www.teazer.online/";
+    static final String BASE_URL = "http://api.teazer.online/";
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     //    public static final int BACK_PRESSED_ACTION = 6;
@@ -705,6 +704,10 @@ public class ApiCallingService {
 
         public static Call<ResultObject> deactivateAccount(Context context, DeactivateAccountRequest deactivateAccountRequest) {
             return getUserService(context).deactivateAccount(deactivateAccountRequest);
+        }
+
+        public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
+            return getUserService(context).resetUnreadNotification(type);
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {

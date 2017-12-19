@@ -2,8 +2,12 @@ package com.cncoding.teazer.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.File;
+
+import VideoHandle.EpEditor;
+import VideoHandle.OnEditorListener;
 
 /**
  *
@@ -34,30 +38,31 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
 //        }
 //        return filePath;
         String[] command = {"-y", "-i", sourceFile.getAbsolutePath(), "-s", "160x120", "-r", "25", "-vcodec", "mp4", "-b:v", "150k", "-b:a", "48000", "-ac", "2", "-ar", "22050", destFile.getAbsolutePath()};
-//        String cmd =  "-y "+"-i "+sourceFile.getAbsolutePath()+" -s "+"160x120 "+"-r "+"25 "+"-vcodec "+"mpeg4 "+"-b:v "+"150k "+"-b:a "+"48000 "+"-ac "+"2 "+"-ar "+"22050 " +"-pix_fmt yuv420p "+ destFile.getAbsolutePath();
+        String cmd =  "-y "+"-i "+sourceFile.getAbsolutePath()+" -s "+"160x120 "+"-r "+"25 "+"-vcodec "+"mpeg4 "+"-b:v "+"150k "+"-b:a "+"48000 "+"-ac "+"2 "+"-ar "+"22050 " +"-pix_fmt yuv420p "+ destFile.getAbsolutePath();
 //        String cmd =  "-i "+ sourceFile.getAbsolutePath()+ " -vcodec h264 -acodec mp2" + destFile.getAbsolutePath();
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath()+" -c:v libx264 -preset ultrafast -tune fastdecode "+destFile.getAbsolutePath();;
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -strict experimental -vcodec libx264 -preset ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 320x240 -aspect 4:3 "+ destFile.getAbsolutePath();
+//        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -vcodec libx264 -movflags +faststart "+ destFile.getAbsolutePath();
 //
 //
-//        EpEditor epEditor =  new EpEditor(context);
-//        epEditor.execCmd(cmd, 0, new OnEditorListener(){
-//            @Override
-//            public void onSuccess(){
-//                Log.d("Compress", "Success");
-//            }
-//
-//            @Override
-//            public void onFailure(){
-//                Log.d("Compress", "Failed");
-//            }
-//
-//            @Override
-//            public void onProgress(float progress){
-//                Log.d("Compress", "Running");
-//            }
-//        });
-        return sourceVideoPath[0];
+        EpEditor epEditor =  new EpEditor(context);
+        epEditor.execCmd(cmd, 0, new OnEditorListener(){
+            @Override
+            public void onSuccess(){
+                Log.d("Compress", "Success");
+            }
+
+            @Override
+            public void onFailure(){
+                Log.d("Compress", "Failed");
+            }
+
+            @Override
+            public void onProgress(float progress){
+                Log.d("Compress", "Running");
+            }
+        });
+        return destFile.getAbsolutePath();
     }
 
     @Override

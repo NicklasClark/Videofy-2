@@ -36,6 +36,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
@@ -148,7 +149,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Notification listeners
         OnNotificationsInteractionListener,
 //    Profile listeners
-        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener {
+        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
+        NotificationsFragment.OnNotificationsFragmentInteractionListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -313,22 +315,22 @@ public class BaseBottomBarActivity extends BaseActivity
 
         };
 
-//        if (getIntent().getExtras() != null) {
-//            Bundle bundle = getIntent().getExtras();
-//            if (bundle != null) {
-////                int index = bundle.getInt(TAB_INDEX);
-////                if (index != -1)
-////                    switchTab(index);
-//                try {
-//                    Log.d("NOTIFYM", bundle.toString());
-//                    String notification_type = bundle.getString("notification_type");
-//                    String source_id = bundle.getString("source_id");
-//                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
-//                } catch (NumberFormatException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+//                int index = bundle.getInt(TAB_INDEX);
+//                if (index != -1)
+//                    switchTab(index);
+                try {
+                    Log.d("NOTIFYM", bundle.toString());
+                    String notification_type = bundle.getString("notification_type");
+                    String source_id = bundle.getString("source_id");
+                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void shareTwitter(String message) {
@@ -425,6 +427,7 @@ public class BaseBottomBarActivity extends BaseActivity
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
 //        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
+        tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
 
         Log.d("NOTIFYM", "onPostCreate called");
@@ -448,8 +451,12 @@ public class BaseBottomBarActivity extends BaseActivity
         View v = null;
         try {
             v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
-//        ProximaNovaSemiboldTextView tv = (ProximaNovaSemiboldTextView) v.findViewById(R.id.notification_badge);
-//        tv.setText(value);
+        TextView tv = v.findViewById(R.id.notification_badge);
+            if (value != 0) {
+                tv.setText(String.valueOf(value));
+            } else {
+                tv.setVisibility(GONE);
+            }
             ImageView img = (ImageView) v.findViewById(R.id.notification);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1048,4 +1055,14 @@ public class BaseBottomBarActivity extends BaseActivity
         pushFragment(ProfileFragment.newInstance());
     }
 
+    @Override
+    public void onNotificationFragmentInteraction() {
+        try {
+            TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
+            tab.setCustomView(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        tab.setCustomView(getTabView(0));
+    }
 }

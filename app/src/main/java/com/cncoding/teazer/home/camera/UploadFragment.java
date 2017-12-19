@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
@@ -101,7 +102,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse, AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -155,6 +156,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
     private static boolean isCompressing = false;
+    private static boolean addingWatermark = true;
     private static FragmentActivity mActivity;
 
 
@@ -188,6 +190,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
 //        compressVideoAsyncTask.delegate = this;
 //        compressVideoAsyncTask.execute(videoPath);
+
+//        AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getContext());
+//        addWaterMarkAsyncTask.delegate = this;
+//        addWaterMarkAsyncTask.execute(videoPath);
+    }
+
+    @Override
+    public void waterMarkProcessFinish(String output) {
+        Log.d("Watermark", output);
+        addingWatermark = false;
+        enableView(uploadBtn);
+        videoPath = output;
     }
 
     @Override
@@ -254,9 +268,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        if (isCompressing) {
-//            uploadBtn.setEnabled(false);
-//            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey));
+        if (isCompressing && addingWatermark) {
+            disableView(uploadBtn, true);
+        }
 
         new GetThumbnail(this).execute();
 

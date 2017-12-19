@@ -764,5 +764,8 @@ import retrofit2.http.Query;
 
         @POST("/api/v1/user/deactivate")
         Call<ResultObject> deactivateAccount(@Body DeactivateAccountRequest deactivateAccountRequest);
+
+        @PUT("api/v1/user/reset/notification/count")
+        Call<ResultObject> resetUnreadNotification(@Query("type") int notificatioType);
     }
 }
