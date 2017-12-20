@@ -203,7 +203,8 @@ public class MainActivity extends AppCompatActivity
                 bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
                 bte = bitmaptoByte(scaledBitmap);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 

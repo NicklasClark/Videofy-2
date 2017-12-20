@@ -107,7 +107,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/tag_friends_badge"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
@@ -140,7 +140,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                 android:id="@+id/categories_badge"
                 android:layout_width="14dp"
                 android:layout_height="14dp"

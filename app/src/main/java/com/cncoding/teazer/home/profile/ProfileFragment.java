@@ -42,6 +42,8 @@ import com.cncoding.teazer.ui.fragment.activity.Settings;
 import java.io.IOException;
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -49,6 +51,7 @@ import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
 import io.branch.referral.util.ShareSheetStyle;
 import jp.wasabeef.blurry.Blurry;
+import pl.droidsonroids.gif.GifTextView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
@@ -105,6 +108,7 @@ public class ProfileFragment extends BaseFragment {
     private String imageUri;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    @BindView(R.id.loader)GifTextView loader;
 
     public ProfileFragment() {
     }
@@ -145,6 +149,8 @@ public class ProfileFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
+        ButterKnife.bind(this,view);
+       // loader = view.findViewById(R.id.loader);
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
         _name = view.findViewById(R.id.username);
@@ -270,7 +276,7 @@ public class ProfileFragment extends BaseFragment {
 //                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //
 //
-     //               FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
+//                   FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(detail,userProfileUrl);
 //                    if (fragmentManager != null) {
 //                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
 //
@@ -330,7 +336,10 @@ public class ProfileFragment extends BaseFragment {
 
     public void getProfileDetail() {
 
-        progressbar.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.GONE);
+        loader.setVisibility(View.VISIBLE);
+
+
        // coordinatorLayout.setVisibility(View.GONE);
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
@@ -376,9 +385,10 @@ public class ProfileFragment extends BaseFragment {
 
                         profileBlur(userProfileUrl);
                     }
-                    progressbar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                 } catch (Exception e) {
                     progressbar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
@@ -386,6 +396,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
                 t.printStackTrace();
             }
         });
@@ -488,7 +499,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     public void updateProfile() {
-        progressbar.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.VISIBLE);
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
@@ -532,16 +543,16 @@ public class ProfileFragment extends BaseFragment {
                                 .into(profile_id);
                         profileBlur(userProfileUrl);
                     }
-                    progressbar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                 } catch (Exception e) {
-                    progressbar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
-                progressbar.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
                 t.printStackTrace();
             }
         });

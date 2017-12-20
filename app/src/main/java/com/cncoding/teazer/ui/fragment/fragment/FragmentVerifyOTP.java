@@ -7,10 +7,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -57,10 +59,11 @@ public class FragmentVerifyOTP extends DialogFragment {
     @BindView(R.id.otp_3) ProximaNovaRegularAutoCompleteTextView otp3EditText;
     @BindView(R.id.otp_4) ProximaNovaRegularAutoCompleteTextView otp4EditText;
     @BindView(R.id.otp_verified_view) ProximaNovaRegularTextView otpVerifiedTextView;
-    @BindView(R.id.otp_resend_btn)
-    ProximaNovaSemiboldButton otpResendBtn;
-    Context context;
+    @BindView(R.id.otp_resend_btn) ProximaNovaSemiboldButton otpResendBtn;
+    @BindView(R.id.btnClose) AppCompatImageView btnClose;
 
+
+    Context context;
     private Integer selectedReportId;
     private long mobilenumber;
     private int countrycode;
@@ -113,13 +116,20 @@ public class FragmentVerifyOTP extends DialogFragment {
         ButterKnife.bind(this, rootView);
         context=getContext();
 
-//        close.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //  getActivity().onBackPressed();
-//                getDialog().dismiss();
-//            }
-//        });
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+            }
+        });
+
+        otpResendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                reSendOTP(mobilenumber,countrycode);
+            }
+        });
 
         return rootView;
     }
@@ -184,12 +194,9 @@ public class FragmentVerifyOTP extends DialogFragment {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
 
-                                Toast.makeText(context,"OTP verified",Toast.LENGTH_LONG).show();
-
+                             //   Toast.makeText(context,"OTP verified",Toast.LENGTH_LONG).show();
                                 ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firsName, lastName, userName, details, email, gender);
                                 ProfileUpdate(profileUpdateRequest);
-                                getDialog().dismiss();
-
                             } else {
 
                                 Toast.makeText(context,response.body().getMessage()+" Enter correct OTP",Toast.LENGTH_LONG).show();
@@ -218,8 +225,9 @@ public class FragmentVerifyOTP extends DialogFragment {
                     try {
                         if (response.body().getStatus()) {
                             Toast.makeText(context, "Your Profile has been updated", Toast.LENGTH_SHORT).show();
-
                             ProfileFragment.checkprofileupdated = true;
+                            getDialog().dismiss();
+                            getActivity().finish();
 
                         } else {
                             Toast.makeText(context, "Your Profile has not been updated yet,Please try again", Toast.LENGTH_SHORT).show();
@@ -250,7 +258,11 @@ public class FragmentVerifyOTP extends DialogFragment {
 
 
     void reSendOTP(final long mobilenumber,final  int countrycode)
+
     {
+
+
+        Toast.makeText(context,"OTP has sent to your number",Toast.LENGTH_LONG).show();
         ChangeMobileNumber changeMobileNumber=new ChangeMobileNumber(mobilenumber,countrycode);
 
         ApiCallingService.User.changeMobileNumber(context,changeMobileNumber)
@@ -261,11 +273,7 @@ public class FragmentVerifyOTP extends DialogFragment {
                             if (response.body().getStatus()) {
 
                                 Toast.makeText(context,"OTP has sent to your number",Toast.LENGTH_LONG).show();
-
-
-
-
-
+                                verifyOTP();
 
                             } else {
 

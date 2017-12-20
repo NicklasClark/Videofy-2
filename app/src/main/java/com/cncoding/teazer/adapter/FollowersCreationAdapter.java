@@ -1,7 +1,10 @@
 package com.cncoding.teazer.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +26,8 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,11 +48,13 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
     Context context;
     private ArrayList<PostReaction> reactiolist;
     FollowerCreationListener listener;
+    Activity othersProfileFragment;
 
-    public FollowersCreationAdapter(Context context, List<PostDetails> _list) {
+    public FollowersCreationAdapter(Context context, List<PostDetails> _list, Activity othersProfileFragment) {
         this.context = context;
         this._list = _list;
         listener = (FollowerCreationListener) context;
+        this.othersProfileFragment = othersProfileFragment;
 
     }
 
@@ -133,12 +140,12 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
-                                    Toast.makeText(context,"Report User",Toast.LENGTH_LONG).show();
-
-
-
-
-
+                                    FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
+                                    ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
+                                            newInstance(cont.getPostId(), cont.canReact());
+                                    if (fm != null) {
+                                        reportPostDialogFragment.show(fm, "fragment_report_post");
+                                    }
                                     break;
                             }
                             return false;

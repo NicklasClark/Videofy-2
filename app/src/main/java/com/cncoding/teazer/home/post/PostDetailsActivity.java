@@ -1040,7 +1040,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
-                    } else {
+                    }
+                    else {
                         Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;

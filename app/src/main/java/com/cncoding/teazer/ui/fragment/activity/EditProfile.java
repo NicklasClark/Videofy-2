@@ -119,6 +119,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     private String userProfileThumbnail;
     private String userProfileUrl;
     public static final String VERIFY_OTP="fragment_verify_otp";
+    public static boolean isNumberUpdated=false;
 
 
     @Override
@@ -150,7 +151,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             }
         });
 
-
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Edit Profile</font>"));
         context = EditProfile.this;
         bgImage = findViewById(R.id.profile_id2);
@@ -171,7 +171,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         String mobileno = intent.getStringExtra("MobileNumber");
         userProfileThumbnail = intent.getStringExtra("ProfileThumb");
         userProfileUrl = intent.getStringExtra("ProfileMedia");
-
         if (mobileno != null) {
             mobilenumber = Long.parseLong(mobileno);
         }
@@ -202,11 +201,19 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             female.setBackgroundResource(R.drawable.ic_female_white);
             maletext.setTextColor(Color.parseColor("#2196F3"));
             femaletxt.setTextColor(Color.parseColor("#333333"));
-        } else {
+        } else if(gender==2) {
             female.setBackgroundResource(R.drawable.ic_female_sel);
             male.setBackgroundResource(R.drawable.ic_male_white);
             femaletxt.setTextColor(Color.parseColor("#F48fb1"));
             maletext.setTextColor(Color.parseColor("#333333"));
+        }
+        else
+        {
+            female.setBackgroundResource(R.drawable.ic_female_white);
+            male.setBackgroundResource(R.drawable.ic_male_white);
+            maletext.setTextColor(Color.parseColor("#333333"));
+            femaletxt.setTextColor(Color.parseColor("#333333"));
+
         }
 
         male.setOnClickListener(new View.OnClickListener() {
@@ -306,8 +313,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 {
                     e.printStackTrace();
                 }
-
-
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -525,7 +530,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             ProfileFragment.checkprofileupdated = true;
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Your Profile has not been updated yet,Please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
                         }
@@ -713,12 +718,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
         if (details.isEmpty()||details.trim().isEmpty()||details.trim().equals("")) {
-            _bio.setError("Bio is required");
-            _bio.requestFocus();
-            valid = false;
+          //  _bio.setError("Bio is required");
+          //  _bio.requestFocus();
+          //  valid = false;
+            _bio.setText("");
 
         } else {
             _bio.setError(null);
+
         }
 
         if (valid) {
@@ -753,10 +760,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                                 FragmentVerifyOTP reportPostDialogFragment = FragmentVerifyOTP.newInstance(mobilenumber, countrycode, firstname,lastname,username,emailId,details,gender);
                                 if (fragmentManager != null) {
                                     reportPostDialogFragment.show(fragmentManager, "fragment_verify_otp");
+                                    //finish();
                                 }
-
                             }
-                            else {
+                            else
+                            {
+                                Toast.makeText(context,response.body().getMessage(),Toast.LENGTH_LONG).show();
                             }
                         }
                     }
