@@ -172,12 +172,10 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
         });
     }
 
-
     private void showReportPostAlertDialog(final String reportRemark) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getContext().getString(R.string.repot_post_dialog_title));
         builder.setMessage(getContext().getString(R.string.report_post_dialog_message));
-
         String positiveText = getContext().getString(android.R.string.ok);
         builder.setPositiveButton(positiveText,
                 new DialogInterface.OnClickListener() {

@@ -80,7 +80,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             if (counter == 100) {
 
                 final UserInfo cont = list.get(i);
-                final String followingname = cont.getUserName();
+                final String followingname = cont.getFirstName();
                 final int accounttype = cont.getAccountType();
                 final String userType;
                 followerId = cont.getUserId();
@@ -182,7 +182,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final UserInfo cont = otherlist.get(i);
                 final String usertype;
                 final boolean myself = cont.getMySelf();
-                final String followername = cont.getUserName();
+                final String followername = cont.getFirstName();
                 final int accounttype = cont.getAccountType();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
 
