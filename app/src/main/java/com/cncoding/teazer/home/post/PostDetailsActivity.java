@@ -109,6 +109,7 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -155,46 +156,79 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //<editor-fold desc="Main layout views">
     //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
-    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
+    @BindView(R.id.relative_layout)
+    RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container)
+    RelativeLayout tagsLayout;
+    @BindView(R.id.placeholder)
+    ImageView placeholder;
+    @BindView(R.id.loading)
+    ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.react_btn)
+    ProximaNovaSemiboldButton reactBtn;
+    @BindView(R.id.like)
+    ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users)
+    ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list)
+    RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent)
+    RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge)
+    ProximaNovaSemiboldTextView tagsCountBadge;
     //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
-    @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header)
+    ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle)
+    ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout)
+    LinearLayout postLoadErrorLayout;
     //    @BindView(R.id.share) ProximaNovaRegularTextView share;
-    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.video_view)
+    SimpleExoPlayerView playerView;
     //</editor-fold>
 
     //<editor-fold desc="Controller views">
-    @BindView(R.id.controls) FrameLayout controlsContainer;
+    @BindView(R.id.controls)
+    FrameLayout controlsContainer;
     //top layout
-    @BindView(R.id.media_controller_caption) ProximaNovaSemiboldTextView caption;
-    @BindView(R.id.media_controller_location) ProximaNovaRegularTextView locationView;
-    @BindView(R.id.media_controller_eta) ProximaNovaRegularTextView remainingTime;
+    @BindView(R.id.media_controller_caption)
+    ProximaNovaSemiboldTextView caption;
+    @BindView(R.id.media_controller_location)
+    ProximaNovaRegularTextView locationView;
+    @BindView(R.id.media_controller_eta)
+    ProximaNovaRegularTextView remainingTime;
     //center layout
-    @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
+    @BindView(R.id.media_controller_play_pause)
+    AppCompatImageButton playPauseButton;
 
     //bottom layout
-    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
-    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
-    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
-    @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
-    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiboldTextView reactionCountView;
-    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
-    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
-    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.media_controller_dp)
+    CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name)
+    ProximaNovaRegularTextView profileNameView;
+    @BindView(R.id.media_controller_likes)
+    ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views)
+    ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories)
+    ProximaNovaSemiboldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count)
+    ProximaNovaSemiboldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1)
+    CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2)
+    CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3)
+    CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.loader)
+    GifTextView loader;
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -282,9 +316,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postDetails = getIntent().getParcelableExtra(ARG_POST_DETAILS);
             if (!isDeepLink) {
                 image = getIntent().getByteArrayExtra(ARG_THUMBNAIL);
-            }
-            else
-            {
+            } else {
                 thumbUrl = getIntent().getStringExtra(ARG_THUMBNAIL);
                 reactId = getIntent().getStringExtra(ARG_REACT_ID);
                 isReactionPlayed = false;
@@ -489,47 +521,46 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
                 @Override
                 public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                    try {switch (response.code()) {
-                        case 200:
-                            if (response.body().getReactions().size() > 0) {
-                                postLoadErrorLayout.setVisibility(GONE);
-                                is_next_page = response.body().isNextPage();
-                                if (pageNumber == 1) postReactions.clear();
+                    try {
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getReactions().size() > 0) {
+                                    postLoadErrorLayout.setVisibility(GONE);
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1) postReactions.clear();
 
-                                postReactions.addAll(response.body().getReactions());
+                                    postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
-                                postReactionAdapter.notifyDataSetChanged();
-                                if (postReactions.size() > 0) {
-                                    if (postReactions.size() >= 1) {
-                                        setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                    postReactionAdapter.notifyDataSetChanged();
+                                    if (postReactions.size() > 0) {
+                                        if (postReactions.size() >= 1) {
+                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 2) {
+                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 3) {
+                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                        }
                                     }
-                                    if (postReactions.size() >= 2) {
-                                        setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                    }
-                                    if (postReactions.size() >= 3) {
-                                        setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                    }
-                                }
 
-                                if(reactId != null && postReactions.size()>0 && !isReactionPlayed)
-                                {
-                                    if(postReactions.contains(new PostReaction(Integer.parseInt(reactId))))
-                                    {
-                                        int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
-                                        postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
+                                    if (reactId != null && postReactions.size() > 0 && !isReactionPlayed) {
+                                        if (postReactions.contains(new PostReaction(Integer.parseInt(reactId)))) {
+                                            int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
+                                            postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
+                                        } else
+                                            Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
+                                        isReactionPlayed = true;
                                     }
-                                    else
-                                        Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
-                                    isReactionPlayed = true;
+                                } else {
+                                    setNoReactions();
+                                    showNoReactionMessage();
                                 }
-                            } else {
-                                setNoReactions();
-                                showNoReactionMessage();
-                            }
-                            break;
-                        default:
-                            showErrorMessage("Error " + response.code() + ": " + response.message());
-                            break;}
+                                break;
+                            default:
+                                showErrorMessage("Error " + response.code() + ": " + response.message());
+                                break;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -558,13 +589,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-      //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
-        if(postDetails.canDelete())
-        {
+        //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
+        if (postDetails.canDelete()) {
             postLoadErrorSubtitle.setText("There is no reaction yet");
 
-        }
-        else {
+        } else {
             postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
 
         }
@@ -670,12 +699,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         reactionCountView.setText("");
     }
 
-    @OnClick(R.id.btnClose) public void goBack() {
+    @OnClick(R.id.btnClose)
+    public void goBack() {
         customHandler.removeCallbacks(updateTimerThread);
         finish();
     }
 
-    @OnClick(R.id.media_controller_eta) public void toggleSound() {
+    @OnClick(R.id.media_controller_eta)
+    public void toggleSound() {
         if (audioManager != null) {
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
@@ -705,11 +736,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    @OnClick(R.id.react_btn) public void react() {
+    @OnClick(R.id.react_btn)
+    public void react() {
         launchReactionCamera(this, postDetails);
     }
 
-    @OnClick(R.id.like) public void likePost() {
+    @OnClick(R.id.like)
+    public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -736,7 +769,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags) public void getTaggedList() {
+    @OnClick(R.id.tags)
+    public void getTaggedList() {
         if (horizontalListViewParent.getVisibility() == GONE) {
             horizontalListViewParent.setVisibility(VISIBLE);
         } else {
@@ -758,40 +792,39 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 if (page == 1)
                                     taggedUsersList.clear();
 
-                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                    getTaggedUsers(page + 1);
-                                    noTaggedUsers.setVisibility(GONE);
-                                }
-                                else if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                    taggedUsersList.clear();
-                                    noTaggedUsers.setVisibility(VISIBLE);
+                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                getTaggedUsers(page + 1);
+                                noTaggedUsers.setVisibility(GONE);
+                            } else if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                taggedUsersList.clear();
+                                noTaggedUsers.setVisibility(VISIBLE);
 //                                    new Handler().postDelayed(new Runnable() {
 //                                        @Override
 //                                        public void run() {
 //                                            horizontalListViewParent.setVisibility(GONE);
 //                                        }
 //                                    }, 2000);
-                                }
-                            } else {
-                                if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                    taggedUsersList.clear();
-                                    noTaggedUsers.setVisibility(VISIBLE);
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            horizontalListViewParent.setVisibility(GONE);
-//                                        }
-//                                    }, 2000);
-                                } else {
-                                    noTaggedUsers.setVisibility(GONE);
-                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                    taggedUserListView.getAdapter().notifyDataSetChanged();
-                                }
                             }
                         } else {
-                            Log.d("PostDetailActivity", getString( R.string.error_getting_tagged_users));
+                            if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                taggedUsersList.clear();
+                                noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
+                            } else {
+                                noTaggedUsers.setVisibility(GONE);
+                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                taggedUserListView.getAdapter().notifyDataSetChanged();
+                            }
                         }
-                    }catch (Exception e) {
+                    } else {
+                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -831,7 +864,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor) {
+    @OnClick(R.id.menu)
+    public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(this, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
@@ -841,7 +875,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         popupMenu.show();
     }
 
-    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.controls)
+    public void toggleMediaControllerVisibility() {
         try {
 //            if(player.getPlayWhenReady())
 //                startCountDownClass.pause();
@@ -898,7 +933,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
-    @OnClick(R.id.share) public void onViewClicked() {
+    @OnClick(R.id.share)
+    public void onViewClicked() {
+        loader.setVisibility(VISIBLE);
+
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                 .setCanonicalIdentifier(String.valueOf(postDetails.getPostOwner().getUserId()))
                 .setTitle(postDetails.getTitle())
@@ -909,20 +947,22 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setChannel("facebook")
                 .setFeature("sharing")
                 .addControlParameter("post_id", String.valueOf(postDetails.getPostId()))
-                .addControlParameter("$desktop_url", "https://teazer.in/")
-                .addControlParameter("$ios_url", "https://teazer.in/");
+                .addControlParameter("$desktop_url", "https://teazer.online/")
+                .addControlParameter("$ios_url", "https://teazer.online/");
 
         branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
             @Override
             public void onLinkCreate(String url, BranchError error) {
-                if (error == null)    {
-
+                if (error == null) {
+                    loader.setVisibility(GONE);
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, url);
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
                 }
+                else
+                    loader.setVisibility(GONE);
             }
         });
 //        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
@@ -1018,11 +1058,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             .setMessage("Are you sure you want to delete this video?")
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                public void onClick(DialogInterface dialog,int which) {
+                                public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
                                     PostsListFragment.postDetails = null;
                                     finish();
-                                }})
+                                }
+                            })
                             .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -1034,14 +1075,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     if (!postDetails.canDelete()) {
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
-                                newInstance(postDetails.getPostId(), postDetails.canReact());
+                                newInstance(postDetails.getPostId(), postDetails.canReact(), postDetails.getPostOwner().getUserName());
                         // SETS the target fragment for use later when sending results
 //                        reportPostDialogFragment.setTargetFragment(PostDetailsActivity.this, 301);
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;
@@ -1142,8 +1182,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
             playPauseButton.setVisibility(VISIBLE);
-        }
-        else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1228,18 +1267,23 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 @Override
                 public void onTimelineChanged(Timeline timeline, Object o) {
                 }
+
                 @Override
                 public void onTracksChanged(TrackGroupArray trackGroupArray, TrackSelectionArray trackSelectionArray) {
                 }
+
                 @Override
                 public void onLoadingChanged(boolean b) {
                 }
+
                 @Override
                 public void onPlayerError(ExoPlaybackException e) {
                 }
+
                 @Override
                 public void onPositionDiscontinuity() {
                 }
+
                 @Override
                 public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
                 }
@@ -1297,7 +1341,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
                     @Override
                     public void onReceiverResult(int resultCode, Bundle resultData) {
-                        switch(resultCode) {
+                        switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
                                 builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
                                         .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,15 +28,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 /**
- *
  * Created by amit on 24/11/17.
  */
 
@@ -48,10 +50,13 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
     EditText reportRemark;
     @BindView(R.id.submitReport)
     ProximaNovaSemiboldButton submitReport;
+    @BindView(R.id.loader)
+    GifTextView loader;
     private Integer selectedReportId;
     private int userId;
     private boolean canReact;
     private boolean userReportSelected = false;
+    private String userName;
 
     public ReportUserDialogFragment() {
         // Empty constructor is required for DialogFragment
@@ -59,10 +64,11 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         // Use `newInstance` instead as shown below
     }
 
-    public static ReportUserDialogFragment newInstance(Integer userId) {
+    public static ReportUserDialogFragment newInstance(Integer userId, String username) {
         ReportUserDialogFragment frag = new ReportUserDialogFragment();
         Bundle args = new Bundle();
         args.putInt("userId", userId);
+        args.putString("userName", username);
         frag.setArguments(args);
         return frag;
     }
@@ -71,6 +77,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userId = getArguments().getInt("userId");
+        userName = getArguments().getString("userName");
     }
 
     @Override
@@ -85,26 +92,38 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+        reportTitlesRecyclerView.addItemDecoration(decoration);
         reportTitlesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if(!userReportSelected)
+
+
+        if (!userReportSelected)
             disableView(submitReport, true);
         getPostReportTypes();
     }
 
     private void getPostReportTypes() {
+        loader.setVisibility(View.VISIBLE);
         ApiCallingService.Application.getProfileReportTypes().enqueue(new Callback<List<ReportPostTitlesResponse>>() {
             @Override
             public void onResponse(Call<List<ReportPostTitlesResponse>> call, Response<List<ReportPostTitlesResponse>> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        reportuserTitleAdapter = new ReportUserTitleAdapter(response.body().get(0).getSubReports(), getContext(), ReportUserDialogFragment.this);
-                        reportTitlesRecyclerView.setAdapter(reportuserTitleAdapter);
+                try {
+                    if (response.code() == 200) {
+                        if (response.body() != null) {
+                            reportuserTitleAdapter = new ReportUserTitleAdapter(response.body().get(0).getSubReports(), getContext(), ReportUserDialogFragment.this, userName);
+                            reportTitlesRecyclerView.setAdapter(reportuserTitleAdapter);
+                        }
+                        loader.setVisibility(View.GONE);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    loader.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<ReportPostTitlesResponse>> call, Throwable t) {
+                loader.setVisibility(View.GONE);
             }
         });
     }

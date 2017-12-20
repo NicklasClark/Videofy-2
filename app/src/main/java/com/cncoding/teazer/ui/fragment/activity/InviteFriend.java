@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -38,14 +37,18 @@ public class InviteFriend extends AppCompatActivity {
     LinearLayout smsLayout;
     @BindView(R.id.teazersite)
     ProximaNovaRegularCheckedTextView teazersite;
-    String url = "http://www.cnapplications.com";
-    String teazerLink="https://teazer.app.link/d/WKSOqISORI";
+    String url;
+    String teazerLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friend);
         ButterKnife.bind(this);
+
+        url = getString(R.string.teazer_support_url);
+        teazerLink = getString(R.string.teazer_universal_link);
+
         context = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -72,10 +75,10 @@ public class InviteFriend extends AppCompatActivity {
             public void onClick(View view) {
 
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://teazer.app.link/d/WKSOqISORI"))
+                        .setContentUrl(Uri.parse(getString(R.string.teazer_universal_link)))
                         .setContentTitle("Teazer")
                         .setContentDescription(
-                                "Hello").build();
+                                "Express better").build();
                 ShareDialog shareDialog = new ShareDialog(InviteFriend.this);
                 shareDialog.show(content);
                 ShareApi.share(content, null);
@@ -95,7 +98,7 @@ public class InviteFriend extends AppCompatActivity {
                     watsppIntent.putExtra(Intent.EXTRA_TEXT, teazerLink);
                     startActivity(watsppIntent);
                 } catch (PackageManager.NameNotFoundException e) {
-                    Toast.makeText(InviteFriend.this, "Please install whatsapp app", Toast.LENGTH_SHORT)
+                    Toast.makeText(InviteFriend.this, "Please install Whatsapp app", Toast.LENGTH_SHORT)
                             .show();
                 }
             }
@@ -107,8 +110,9 @@ public class InviteFriend extends AppCompatActivity {
 
                 Intent intent = new Intent (Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fhabib4@gmail.com"});
-                intent.putExtra(Intent.EXTRA_SUBJECT, teazerLink);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Teazer-Express better");
+                intent.putExtra(Intent.EXTRA_TEXT, "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going " + teazerLink);
                 intent.setPackage("com.google.android.gm");
                 if (intent.resolveActivity(getPackageManager())!=null)
                     startActivity(intent);
@@ -123,7 +127,7 @@ public class InviteFriend extends AppCompatActivity {
                 try {
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.putExtra("sms_body", teazerLink);
+                        intent.putExtra("sms_body", "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going " + teazerLink);
                         intent.setData(Uri.parse("sms:"));
                         startActivity(intent);
 

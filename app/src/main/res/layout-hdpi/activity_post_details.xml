@@ -506,4 +506,12 @@
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_arrow_back_off_white" />
 
+    <pl.droidsonroids.gif.GifTextView
+        android:layout_width="100dp"
+        android:id="@+id/loader"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_height="100dp"
+        android:background="@drawable/ic_loader"/>
+
 </RelativeLayout>

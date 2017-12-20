@@ -346,7 +346,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateDrawable="@drawable/loader2"
+        android:indeterminateDrawable="@drawable/ic_loader"
         android:layout_gravity="center" />
 
 
@@ -355,7 +355,7 @@
         android:layout_width="72dp"
         android:layout_gravity="center"
         android:layout_height="72dp"
-        android:background="@drawable/loader2"
+        android:background="@drawable/ic_loader"
         />
 
 

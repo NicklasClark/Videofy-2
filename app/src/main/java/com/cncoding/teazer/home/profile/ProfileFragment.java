@@ -237,12 +237,15 @@ public class ProfileFragment extends BaseFragment {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
+                            loader.setVisibility(View.GONE);
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);
                             sendIntent.putExtra(Intent.EXTRA_TEXT, url);
                             sendIntent.setType("text/plain");
                             startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
                         }
+                        else
+                            loader.setVisibility(View.GONE);
                     }
                 });
 //                branchUniversalObject.showShareSheet(getActivity(),

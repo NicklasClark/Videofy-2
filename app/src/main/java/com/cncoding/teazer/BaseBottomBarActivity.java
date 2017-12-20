@@ -317,17 +317,15 @@ public class BaseBottomBarActivity extends BaseActivity
         };
 
         if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                if (index != -1)
-//                    switchTab(index);
+            Bundle notificationBundle = getIntent().getExtras().getBundle("bundle");
+            if (notificationBundle != null) {
                 try {
-                    Log.d("NOTIFYM", bundle.toString());
-                    String notification_type = bundle.getString("notification_type");
-                    String source_id = bundle.getString("source_id");
-                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
-                } catch (NumberFormatException e) {
+                    if (notificationBundle != null) {
+                        Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
+                        int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
+                        int source_id = notificationBundle.getInt(SOURCE_ID);
+                        notificationAction(notification_type, source_id);
+                    }} catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }

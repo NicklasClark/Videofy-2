@@ -37,11 +37,13 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
     private int lastSelectedRow = -1;
+    private String userName;
 
-    public ReportPostTitleAdapter(List<ReportPostTitlesResponse> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment) {
+    public ReportPostTitleAdapter(List<ReportPostTitlesResponse> reportsType, Context context, ReportPostDialogFragment reportPostDialogFragment, String userName) {
         this.reportsType = reportsType;
         this.context = context;
         this.fragmentContext = reportPostDialogFragment;
+        this.userName = userName;
         try {
             this.mAdapterCallback = reportPostDialogFragment;
         } catch (ClassCastException e) {
@@ -70,7 +72,15 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
         else
             holder.tickView.setVisibility(View.GONE);
 
-        holder.reportTitle.setText(report.getTitle());
+        String title = report.getTitle();
+        if(title.contains("####"))
+        {
+            title = title.substring(0, title.indexOf("#")-1) +" "+ userName;
+            holder.reportTitle.setText(title);
+        }
+        else
+            holder.reportTitle.setText(report.getTitle());
+
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +88,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
                     ReportPostDialogFragment.postReportOptionSelected = false;
                     lastSelectedRow = -1;
                     FragmentManager fm = fragmentContext.getFragmentManager();
-                    ReportPostSubtitleFragment reportPostSubTitleDialogFragment = ReportPostSubtitleFragment.newInstance(report);
+                    ReportPostSubtitleFragment reportPostSubTitleDialogFragment = ReportPostSubtitleFragment.newInstance(report, userName);
                     // SETS the target fragment for use later when sending results
                     reportPostSubTitleDialogFragment.setTargetFragment(fragmentContext, 300);
                     reportPostSubTitleDialogFragment.show(fm, "fragment_report_post");

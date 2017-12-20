@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
@@ -43,15 +40,13 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.user.PrivateProfile;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
@@ -66,8 +61,6 @@ import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class OthersProfileFragment extends BaseFragment {
 
@@ -169,7 +162,7 @@ public class OthersProfileFragment extends BaseFragment {
         if (getArguments() != null) {
             followerfollowingid = Integer.parseInt(getArguments().getString(ARG_ID));
             userType = getArguments().getString(ARG_IDENTIFIER);
-            username = getArguments().getString(ARG_USERNAME);
+//            username = getArguments().getString(ARG_USERNAME);
             setHasOptionsMenu(true);
         }
         previousTitle = getParentActivity().getToolbarTitle();
@@ -325,7 +318,7 @@ public class OthersProfileFragment extends BaseFragment {
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
 
-                            String username = publicProfile.getUserName();
+                            username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
                             details = publicProfile.getDescription();
@@ -416,7 +409,7 @@ public class OthersProfileFragment extends BaseFragment {
                             //Toast.makeText(context, "PrivateProfile", Toast.LENGTH_SHORT).show();
                             accountType = privateProfile.getAccountType();
                             userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
-                            String username = privateProfile.getUsername();
+                            username = privateProfile.getUsername();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
@@ -803,7 +796,7 @@ public class OthersProfileFragment extends BaseFragment {
 
     public void openReportUser(final int blockuserId) {
         FragmentManager fm = getFragmentManager();
-        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
+        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId, username);
         reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
         reportUserDialogFragment.show(fm, "fragment_report_post");
     }

@@ -327,4 +327,6 @@
     <string name="no_reactions_message">You haven\'t reacted on any post yet.</string>
     <string name="could_not_find_location">Couldn\'t find your location, try searching for it.</string>
     <string name="logo">logo</string>
+    <string name="teazer_universal_link">https://teazer.app.link/d/WKSOqISORI</string>
+    <string name="teazer_support_url">http://www.cnapplications.com</string>
 </resources>

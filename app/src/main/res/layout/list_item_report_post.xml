@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:visibility="visible"
-        android:src="@drawable/ic_tick_circle_large"
+        android:src="@drawable/ic_check_accent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="20dp" />
 </RelativeLayout>

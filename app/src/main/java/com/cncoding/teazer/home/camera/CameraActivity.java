@@ -16,6 +16,7 @@
 
 package com.cncoding.teazer.home.camera;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -76,6 +77,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -105,10 +108,12 @@ import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDE
 public class CameraActivity extends AppCompatActivity
         implements OnCameraFragmentInteractionListener, OnUploadFragmentInteractionListener,
         TagsAndCategoriesInteractionListener, OnNearbyPlacesListInteractionListener, Interests.OnInterestsInteractionListener,
-        NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse {
+        NearbyPlacesInteractionListener, OnConnectionFailedListener, CompressVideoAsyncTask.AsyncResponse,
+        EasyPermissions.PermissionCallbacks{
 
     private static final int REQUEST_CODE_STORAGE_PERMISSIONS = 101;
     private static final String TAG_UPLOAD_FRAGMENT = "uploadFragment";
+    private static final int RC_READ_EXTERNAL_STORAGE = 102;
 
     @BindView(R.id.sliding_layout) SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.video_gallery_container) RecyclerView recyclerView;
@@ -124,6 +129,7 @@ public class CameraActivity extends AppCompatActivity
     private PostDetails postDetails;
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
+    private String videoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,12 +255,37 @@ public class CameraActivity extends AppCompatActivity
         }
     }
 
+    @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
     public void onVideoGalleryAdapterInteraction(String videoPath) {
-        if (new File(videoPath).exists()) {
+
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            uploadOrTrimAction(videoPath);
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+                    RC_READ_EXTERNAL_STORAGE, perms);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        uploadOrTrimAction(videoPath);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
+
+    private void uploadOrTrimAction(String videoPath)
+    {
+        try {
+            if (new File(videoPath).exists()) {
                 if (getVideoDuration(videoPath) < 60) {
-//                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
-//                    compressVideoAsyncTask.delegate = this;
-//                    compressVideoAsyncTask.execute(videoPath);
+                    //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
+                    //                    compressVideoAsyncTask.delegate = this;
+                    //                    compressVideoAsyncTask.execute(videoPath);
                     uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
                     startVideoUploadFragment();
                 }
@@ -266,10 +297,12 @@ public class CameraActivity extends AppCompatActivity
                     intent.putExtras(bundle);
                     startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
                 }
-        } else
-            Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
     @Override
     public void processFinish(String output) {
 //        File trimmedFile = new File(output);
@@ -580,7 +613,7 @@ public class CameraActivity extends AppCompatActivity
         switch (requestCode) {
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
-                    String videoPath = data.getStringExtra("trimmed_path");
+                    videoPath = data.getStringExtra("trimmed_path");
                     uploadFragment = UploadFragment.newInstance(videoPath, false, true);
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
