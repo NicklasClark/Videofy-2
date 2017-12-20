@@ -595,6 +595,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         viewsView.setText(viewsText);
     }
 
+    public void decrementViews() {
+        String viewsText = PostDetailsActivity.SPACE + --views;
+        viewsView.setText(viewsText);
+    }
+
     public void setReaction1Pic(String reaction1PicUrl) {
         reaction1Pic.setVisibility(VISIBLE);
         Glide.with(this)
@@ -1186,20 +1191,26 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
+                                    incrementViews();
                                     ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(),
                                             PostDetailsActivity.this)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200 && response.body().getStatus()) {
-                                                        incrementViews();
-                                                        if (PostsListFragment.postDetails != null)
-                                                            PostsListFragment.postDetails.getMedias().get(0).views++;
+                                                    try {
+                                                        if (response.code() == 200 && response.body().getStatus()) {
+                                                            if (PostsListFragment.postDetails != null)
+                                                                PostsListFragment.postDetails.getMedias().get(0).views++;
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        decrementViews();
                                                     }
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    decrementViews();
                                                 }
                                             });
                                 }

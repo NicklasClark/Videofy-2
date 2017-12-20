@@ -75,6 +75,7 @@ import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
+import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
@@ -331,6 +332,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }
+
+//        Log.d("USERID", String.valueOf(SharedPrefs.getUserId(this)));//1
     }
 
     private void shareTwitter(String message) {
@@ -362,6 +365,7 @@ public class BaseBottomBarActivity extends BaseActivity
             startActivity(i);
             Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
         }
+
     }
 
     private String urlEncode(String s) {
@@ -390,14 +394,26 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onNewIntent(intent);
         setIntent(intent);
         Log.d("NOTIFYM", "onNewIntent called");
-        if (intent.getExtras() != null) {
-            Bundle bundle = intent.getExtras().getBundle("bundle");
-            if (bundle != null) {
-                Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
-                int notification_type = bundle.getInt(NOTIFICATION_TYPE);
-                int source_id = bundle.getInt(SOURCE_ID);
-                notificationAction(notification_type, source_id);
+        try {
+            if (intent.getExtras() != null) {
+                Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
+                Bundle notificationBundle = intent.getExtras().getBundle("bundle");
+                if (notificationBundle != null) {
+                    Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
+                    int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
+                    int source_id = notificationBundle.getInt(SOURCE_ID);
+                    notificationAction(notification_type, source_id);
+                }
+                else if (profileBundle != null) {
+                    int userId = profileBundle.getInt("userId");
+                    boolean isSelf = profileBundle.getBoolean("isSelf");
+                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+
+                } else switchTabDynamically();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -405,7 +421,7 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        initTab();
-//        Log.d("NOTIFYM", "onPostCreate called");
+        Log.d("NOTIFYM", "onPostCreate called");
 //        if (getIntent().getExtras() != null) {
 //            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
 //                if (bundle != null) {
@@ -430,18 +446,18 @@ public class BaseBottomBarActivity extends BaseActivity
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
 
-        Log.d("NOTIFYM", "onPostCreate called");
-        if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
-            if (bundle != null) {
-                int userId = bundle.getInt("userId");
-                boolean isSelf = bundle.getBoolean("isSelf");
-                pushFragment(isSelf ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-            } else switchTabDynamically();
-        } else {
-            switchTabDynamically();
-        }
+        Log.d("NOTIFYM", "onStart called");
+//        if (getIntent().getExtras() != null) {
+//            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
+//            if (bundle != null) {
+//                int userId = bundle.getInt("userId");
+//                boolean isSelf = bundle.getBoolean("isSelf");
+//                pushFragment(isSelf ? ProfileFragment.newInstance() :
+//                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+//            } else switchTabDynamically();
+//        } else {
+//            switchTabDynamically();
+//        }
 
         getBranchDynamicLinks();
     }
@@ -536,7 +552,11 @@ public class BaseBottomBarActivity extends BaseActivity
                                         });
                             } else if (referringParams.has("user_id")) {
                                 String userId = referringParams.getString("user_id");
-                                pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                if (SharedPrefs.getUserId(BaseBottomBarActivity.this) == Integer.parseInt(userId)) {
+                                    pushFragment(ProfileFragment.newInstance());
+                                } else {
+                                    pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                }
                             }
                         }
                     } catch (JSONException e) {

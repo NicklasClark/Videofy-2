@@ -15,6 +15,7 @@ public class SharedPrefs {
 
     public static final String TEAZER = "teazer_preferences";
     private static final String AUTH_TOKEN = "authToken";
+    private static final String USER_ID = "user_id";
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
@@ -132,5 +133,19 @@ public class SharedPrefs {
 
     public static int getRequestNotificationCount(Context context) {
         return getSharedPreferences(context).getInt(REQUEST_NOTIFICATION, 0);
+    }
+
+    public static void saveUserId(Context context, int userId) {
+        getSharedPreferences(context).edit().putInt(USER_ID, userId).apply();
+    }
+
+    public static int getUserId(Context context) {
+        try {
+            return getSharedPreferences(context)
+                    .getInt(USER_ID, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,19 +38,14 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentVerifyOTP;
 import com.hbb20.CountryCodePicker;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.vansuita.pickimage.bean.PickResult;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -70,9 +64,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
-import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 
 public class EditProfile extends AppCompatActivity implements IPickResult, EasyPermissions.PermissionCallbacks, ProgressRequestBody.UploadCallbacks {
@@ -180,8 +172,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         userProfileThumbnail = intent.getStringExtra("ProfileThumb");
         userProfileUrl = intent.getStringExtra("ProfileMedia");
 
-        if (mobileno == null) {
-        } else {
+        if (mobileno != null) {
             mobilenumber = Long.parseLong(mobileno);
         }
 
@@ -268,26 +259,15 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .start(EditProfile.this);
-
-
             }
         });
 
-
-
-
-        if (userProfileUrl == null) {
-
-        } else {
+        if (userProfileUrl != null) {
             Glide.with(context)
                     .load(Uri.parse(userProfileUrl))
                     .into(profile_image);
             profileBlur(userProfileUrl);
         }
-
-
-        //initProfileImage();
-
     }
 
     @Override
@@ -322,10 +302,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                     MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                     saveDataToDatabase(body);
-
-
-
-
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -334,7 +310,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-
             }
         }
     }
@@ -404,63 +379,65 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     /**
      * Rotates and shrinks as needed
      */
-    public static Bitmap getCorrectlyOrientedImage(Context context, Uri photoUri, int maxWidth)
-            throws IOException {
+    public static Bitmap getCorrectlyOrientedImage(Context context, Uri photoUri, int maxWidth){
 
-        InputStream is = context.getContentResolver().openInputStream(photoUri);
-        BitmapFactory.Options dbo = new BitmapFactory.Options();
-        dbo.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(is, null, dbo);
-        is.close();
+        Bitmap srcBitmap = null;
+        try {
+            InputStream is = context.getContentResolver().openInputStream(photoUri);
+            BitmapFactory.Options dbo = new BitmapFactory.Options();
+            dbo.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(is, null, dbo);
+            is.close();
 
 
-        int rotatedWidth, rotatedHeight;
-        int orientation = getOrientation(context, photoUri);
+            int rotatedWidth, rotatedHeight;
+            int orientation = getOrientation(context, photoUri);
 
-        if (orientation == 90 || orientation == 270) {
-            Log.d("ImageUtil", "Will be rotated");
-            rotatedWidth = dbo.outHeight;
-            rotatedHeight = dbo.outWidth;
-        } else {
-            rotatedWidth = dbo.outWidth;
-            rotatedHeight = dbo.outHeight;
-        }
+            if (orientation == 90 || orientation == 270) {
+                Log.d("ImageUtil", "Will be rotated");
+                rotatedWidth = dbo.outHeight;
+                rotatedHeight = dbo.outWidth;
+            } else {
+                rotatedWidth = dbo.outWidth;
+                rotatedHeight = dbo.outHeight;
+            }
 
-        Bitmap srcBitmap;
-        is = context.getContentResolver().openInputStream(photoUri);
-        Log.d("ImageUtil", String.format("rotatedWidth=%s, rotatedHeight=%s, maxWidth=%s",
-                rotatedWidth, rotatedHeight, maxWidth));
-        if (rotatedWidth > maxWidth || rotatedHeight > maxWidth) {
-            float widthRatio = ((float) rotatedWidth) / ((float) maxWidth);
-            float heightRatio = ((float) rotatedHeight) / ((float) maxWidth);
-            float maxRatio = Math.max(widthRatio, heightRatio);
-            Log.d("ImageUtil", String.format("Shrinking. maxRatio=%s",
-                    maxRatio));
+            is = context.getContentResolver().openInputStream(photoUri);
+            Log.d("ImageUtil", String.format("rotatedWidth=%s, rotatedHeight=%s, maxWidth=%s",
+                    rotatedWidth, rotatedHeight, maxWidth));
+            if (rotatedWidth > maxWidth || rotatedHeight > maxWidth) {
+                float widthRatio = ((float) rotatedWidth) / ((float) maxWidth);
+                float heightRatio = ((float) rotatedHeight) / ((float) maxWidth);
+                float maxRatio = Math.max(widthRatio, heightRatio);
+                Log.d("ImageUtil", String.format("Shrinking. maxRatio=%s",
+                        maxRatio));
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = (int) maxRatio;
-            srcBitmap = BitmapFactory.decodeStream(is, null, options);
-        } else {
-            Log.d("ImageUtil", String.format("No need for Shrinking. maxRatio=%s",
-                    1));
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = (int) maxRatio;
+                srcBitmap = BitmapFactory.decodeStream(is, null, options);
+            } else {
+                Log.d("ImageUtil", String.format("No need for Shrinking. maxRatio=%s",
+                        1));
 
-            srcBitmap = BitmapFactory.decodeStream(is);
-            Log.d("ImageUtil", String.format("Decoded bitmap successful"));
-        }
-        is.close();
+                srcBitmap = BitmapFactory.decodeStream(is);
+                Log.d("ImageUtil", String.format("Decoded bitmap successful"));
+            }
+            is.close();
 
         /*
          * if the orientation is not 0 (or -1, which means we don't know), we
          * have to do a rotation.
          */
-        if (orientation > 0) {
-            Matrix matrix = new Matrix();
-            matrix.postRotate(orientation);
+            if (orientation > 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
 
-            srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(),
-                    srcBitmap.getHeight(), matrix, true);
+                srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(),
+                        srcBitmap.getHeight(), matrix, true);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
         return srcBitmap;
     }
 
@@ -498,10 +475,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     RC_REQUEST_STORAGE, perm);
         } else {
 
-            if (userProfileUrl == null) {
-
-            } else {
-
+            if (userProfileUrl != null) {
                 Glide.with(context)
                         .load(Uri.parse(userProfileUrl))
                         .into(profile_image);
@@ -526,7 +500,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     @Override
     protected void onResume() {
         super.onResume();
-        final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
         layoutdetail.setVisibility(View.VISIBLE);
         simpleProgressBar.setVisibility(View.GONE);
 

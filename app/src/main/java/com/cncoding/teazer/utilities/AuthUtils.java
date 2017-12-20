@@ -345,6 +345,7 @@ public class AuthUtils {
                         if (response.code() == 200) {
                             if (response.body().getStatus()) {
                                 SharedPrefs.saveAuthToken(context, response.body().getAuthToken());
+                                SharedPrefs.saveUserId(context, response.body().getUser_id());//1
                                 countDownTimer.cancel();
                                 otpVerifiedTextView.setText(context.getString(R.string.verified));
                                 ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_check);

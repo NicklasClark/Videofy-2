@@ -15,13 +15,15 @@ public class ResultObject {
     @SerializedName("auth_token") @Expose private String auth_token;
     @SerializedName("status") @Expose private boolean status;
     @SerializedName("errorBody") @Expose private ErrorBody errorBody;
+    @SerializedName("user_id") @Expose private int user_id;
 
-    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody) {
+    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody, int user_id) {
         this.code = code;
         this.message = message;
         this.auth_token = auth_token;
         this.status = status;
         this.errorBody = errorBody;
+        this.user_id = user_id;
     }
 
     public int getCode() {
@@ -42,5 +44,13 @@ public class ResultObject {
     }
     public ErrorBody getErrorBody() {
         return errorBody;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 }

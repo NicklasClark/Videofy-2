@@ -58,12 +58,10 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.model.base.Authorize;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -74,7 +72,6 @@ import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -168,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.setLooping(true);
-                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
                     mediaPlayer.start();
                 }
             });
@@ -428,12 +425,17 @@ public class MainActivity extends AppCompatActivity
                                 case 201:
                                     if (response.body().getStatus()) {
                                         SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                        SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                         verificationSuccessful(true,
                                                 button, false);
+                                        //updating profile picture
+                                        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
+                                        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
                                     }
                                     break;
                                 case 200:
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                     if (response.body().getStatus()) {
                                         verificationSuccessful(true,
                                                 button, true);
@@ -473,9 +475,6 @@ public class MainActivity extends AppCompatActivity
                         });
                     }
                 });
-
-        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
-        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
     }
 
     private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button,
@@ -506,12 +505,17 @@ public class MainActivity extends AppCompatActivity
                             case 201:
                                 if (response.body().getStatus()) {
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
+                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                     verificationSuccessful(false,
                                             button, false);
+                                    //updating profile picture
+                                    GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
+                                    generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
                                 }
                                 break;
                             case 200:
                                 SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
+                                SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false,
                                             button, true);
@@ -546,8 +550,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
-        generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
     }
 
     private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button,

@@ -583,7 +583,7 @@ public class VideoTrimmerView extends FrameLayout {
     }
 
     private void setPlayPauseViewIcon(boolean isPlaying) {
-        mPlayView.setImageResource(isPlaying ? R.drawable.ic_play_big : R.drawable.ic_pause_big);
+        mPlayView.setImageResource(isPlaying ? R.drawable.ic_pause_big : R.drawable.ic_play_big);
     }
 
     private void setMuteUnMuteViewIcon(boolean isAudioEnabled) {

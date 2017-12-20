@@ -38,7 +38,6 @@ import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentHobbyDetails;
 
 import java.io.IOException;
 import java.net.URL;
@@ -200,12 +199,17 @@ public class ProfileFragment extends BaseFragment {
         btnshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String profileUrl = null;
+                try {
+                    profileUrl = userProfile.getProfileMedia() == null? null:userProfile.getProfileMedia().getMediaUrl();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(userProfile.getUserId()))
                         .setTitle(userProfile.getFirstName())
                         .setContentDescription("Hi, follow me on Teazer and share cool videos")
-                        .setContentImageUrl(userProfile.getProfileMedia() == null? null:userProfile.getProfileMedia().getMediaUrl());
+                        .setContentImageUrl(profileUrl);
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")

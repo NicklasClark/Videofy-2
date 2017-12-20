@@ -107,42 +107,47 @@ public class NavigationController {
      * @param transactionOptions Transaction options to be displayed
      * @throws IndexOutOfBoundsException Thrown if trying to switch to an index outside given range
      */
-    public void switchTab(@TabIndex int index, @Nullable NavigationTransactionOptions transactionOptions) throws IndexOutOfBoundsException {
-        //Check to make sure the tab is within range
-        if (index >= fragmentStacks.size()) {
-            throw new IndexOutOfBoundsException("Can't switch to a tab that hasn't been initialized, " +
-                    "Index : " + index + ", current stack size : " + fragmentStacks.size() +
-                    ". Make sure to create all of the tabs you need in the Constructor or provide a way for them to be created via RootFragmentListener.");
-        }
-        if (selectedTabIndex != index) {
-            selectedTabIndex = index;
+    public void switchTab(@TabIndex int index, @Nullable NavigationTransactionOptions transactionOptions) {
+        try {
+            //Check to make sure the tab is within range
+            if (index >= fragmentStacks.size()) {
+                throw new IndexOutOfBoundsException("Can't switch to a tab that hasn't been initialized, " +
+                        "Index : " + index + ", current stack size : " + fragmentStacks.size() +
+                        ". Make sure to create all of the tabs you need in the Constructor or provide a way for them to be created via RootFragmentListener.");
+            }
+            if (selectedTabIndex != index) {
+                selectedTabIndex = index;
 
-            FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
+                FragmentTransaction ft = createTransactionWithOptions(transactionOptions);
 
-            detachCurrentFragment(ft);
+                detachCurrentFragment(ft);
 
-            Fragment fragment = null;
-            if (index == NO_TAB) {
-                ft.commit();
-            } else {
-                //Attempt to reattach previous fragment
-                fragment = reattachPreviousFragment(ft);
-                if (fragment != null) {
+                Fragment fragment = null;
+                if (index == NO_TAB) {
                     ft.commit();
                 } else {
-                    fragment = getRootFragment(selectedTabIndex);
-                    ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
-                    ft.add(containerId, fragment, generateTag(fragment));
-                    ft.commit();
+                    //Attempt to reattach previous fragment
+                    fragment = reattachPreviousFragment(ft);
+                    if (fragment != null) {
+                        ft.commit();
+                    } else {
+                        fragment = getRootFragment(selectedTabIndex);
+                        ft.setCustomAnimations(fade_in, fade_out, fade_in, fade_out);
+                        ft.add(containerId, fragment, generateTag(fragment));
+                        ft.commit();
+                    }
+                }
+
+                executePendingTransactions();
+
+                currentFragment = fragment;
+                if (transactionListener != null) {
+                    transactionListener.onTabTransaction(currentFragment, selectedTabIndex);
                 }
             }
-
-            executePendingTransactions();
-
-            currentFragment = fragment;
-            if (transactionListener != null) {
-                transactionListener.onTabTransaction(currentFragment, selectedTabIndex);
-            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
 
