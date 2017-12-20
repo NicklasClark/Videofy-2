@@ -135,6 +135,7 @@ public class TagsAndCategoryFragment extends Fragment {
                 tagsAdapter = new TagsAdapter(getContext(), circles, this, selectedData);
                 recyclerView.setAdapter(tagsAdapter);
                 break;
+
             case ACTION_CATEGORIES_FRAGMENT:
                 headerTextView.setHint(R.string.select_up_to_5_categories);
                 categoriesAdapter = new CategoriesAdapter(categories, this, selectedData);

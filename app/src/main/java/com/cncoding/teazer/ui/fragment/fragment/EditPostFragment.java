@@ -40,6 +40,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
@@ -146,7 +147,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     @BindView(R.id.video_upload_check_btn)
     Button uploadBtn;
     @BindView(R.id.video_upload_title)
-    ProximaNovaRegularAutoCompleteTextView videoTitle;
+    ProximaNovaRegularTextInputEditText videoTitle;
     @BindView(R.id.video_upload_location)
     ProximaNovaBoldButton addLocationBtn;
     @BindView(R.id.video_upload_location_text)
@@ -191,6 +192,8 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     private String selectedTags;
     private String sTags;
     private String selectedTagIDToSend;
+    private  String categoriesResultName;
+    private  String categoriesResultId;
 
     public EditPostFragment() {
     }
@@ -279,7 +282,13 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         }
 
         selectedCategories = categoryName.toString();
-        uploadCategoriesText.setText(selectedCategories);
+        if(categoriesResultName==null) {
+            uploadCategoriesText.setText(selectedCategories);
+        }
+        else
+        {
+            uploadCategoriesText.setText(categoriesResultName);
+        }
         getTagFriends(postDetails.getPostId());
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -294,11 +303,12 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     longitude = selectedPlace.getLongitude();
                 }
 
-                if (selectedCategoriesToSend != null) {
-                    categories = selectedCategoriesToSend;
+                if (categoriesResultId != null) {
+                    categories = categoriesResultId;
                 } else {
                     categories = categoryId.toString();
                 }
+
                 if(selectedTagsToSend==null)
                 {
                     sTags=selectedTagIDToSend;
@@ -308,12 +318,23 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                     sTags=selectedTagsToSend;
 
                 }
+                boolean valid=true;
                 String title = videoTitle.getText().toString();
                 int postId = postDetails.getPostId();
-                //    Log.d("Selected Friend",selectedTagsToSend);
 
-                UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, sTags, categories);
-                updatePost(updatePostRequest);
+                if (title==null|| title.equals("")||title.isEmpty()) {
+                    videoTitle.setError("Enter Video Title ");
+                    videoTitle.requestFocus();
+                    valid = false;
+
+                } else {
+                    videoTitle.setError(null);
+                }
+
+                if(valid) {
+                    UpdatePostRequest updatePostRequest = new UpdatePostRequest(postId, location, title, latitude, longitude, sTags, categories);
+                    updatePost(updatePostRequest);
+                }
             }
         });
         return rootView;
@@ -333,7 +354,8 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                         e.printStackTrace();
                         Log.d("Exception", e.getMessage());
                     }
-                } else {
+                }
+                else {
 
                 }
             }
@@ -495,31 +517,42 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     @OnClick(R.id.video_upload_categories)
     public void getCategories() {
-        toggleInteraction(false);
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
-                if (response.code() == 200) {
-                    if (response.body() != null) {
-                        toggleUpBtnVisibility(VISIBLE);
-                        mListener.onUploadInteraction(false,
-                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedCategories),
-                                TAG_INTERESTS_FRAGMENT);
-                    } else
-                        Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
-                                Snackbar.LENGTH_SHORT).show();
-                } else
-                    Snackbar.make(uploadCategoriesBtn, response.code() + " : " + response.message(),
-                            Snackbar.LENGTH_SHORT).show();
-                toggleInteraction(true);
-            }
 
-            @Override
-            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
-                Log.e("getCategories", t.getMessage());
-                toggleInteraction(true);
-            }
-        });
+
+        mListener.updatecategories(postDetails);
+
+//        toggleInteraction(false);
+//        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+//                if (response.code() == 200) {
+//                    if (response.body() != null) {
+//                        toggleUpBtnVisibility(VISIBLE);
+//                        mListener.onUploadInteraction(false,
+//                                TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT, selectedCategories),
+//                                TAG_INTERESTS_FRAGMENT);
+//                    } else
+//                        Snackbar.make(uploadCategoriesBtn, "There was an error fetching categories, please try again.",
+//                                Snackbar.LENGTH_SHORT).show();
+//                } else
+//                    Snackbar.make(uploadCategoriesBtn, response.code() + " : " + response.message(),
+//                            Snackbar.LENGTH_SHORT).show();
+//                toggleInteraction(true);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
+//                Log.e("getCategories", t.getMessage());
+//                toggleInteraction(true);
+//            }
+//        });
+    }
+
+    public void getCategoriesResult(String categoriesResultId,String categoriesResultName)
+    {
+        this.categoriesResultName=categoriesResultName;
+        this.categoriesResultId=categoriesResultId;
+
     }
 
     @OnClick(R.id.video_upload_tag_friends)
@@ -561,6 +594,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         });
     }
 
+
     private String getSelectedTagsToShow(ArrayList<MiniProfile> sparseArray) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < sparseArray.size(); i++) {
@@ -585,8 +619,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     }
 
     public void getTagFriends(final int postId) {
-
-
         ApiCallingService.Posts.getPostDetails(postId, context).enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
@@ -1036,5 +1068,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
+        void updatecategories(PostDetails postDetails);
     }
 }

@@ -3,8 +3,10 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.ui.fragment.fragment.EditPostFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentEditPostUpdateCtaegories;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -32,14 +35,17 @@ import butterknife.ButterKnife;
 
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
+import static com.cncoding.teazer.R.anim.float_up;
+import static com.cncoding.teazer.R.anim.sink_down;
 
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
         TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
-        NearbyPlacesAdapter.NearbyPlacesInteractionListener, GoogleApiClient.OnConnectionFailedListener {
+        NearbyPlacesAdapter.NearbyPlacesInteractionListener, GoogleApiClient.OnConnectionFailedListener, FragmentEditPostUpdateCtaegories.UpdateCategoriesResponse{
     
     private Context context;
     EditPostFragment editPostFragment;
     private GoogleApiClient googleApiClient;
+    FragmentManager fragmentManager;
 
 
 
@@ -49,22 +55,20 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
         setContentView(R.layout.activity_edit_post);
         ButterKnife.bind(this);
         context = this;
-
+        fragmentManager=getSupportFragmentManager();
 
         Intent intent=getIntent();
         PostDetails postDetails=intent.getExtras().getParcelable("PostDetail");
         editPostFragment=EditPostFragment.newInstance(postDetails);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        ft.replace(R.id.container, editPostFragment);
-        ft.commit();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, editPostFragment, "editPostFragment")
+                .commit();
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, 0 /* clientId */, this)
                 .addApi(Places.GEO_DATA_API)
                 .build();
-
     }
 
     @Override
@@ -85,14 +89,25 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
                         .replace(R.id.helper_uploading_container, fragment, tag)
                         .addToBackStack(tag)
                         .commit();
-            } else {
+            }
+            else
+                {
                 getSupportFragmentManager().popBackStack();
             }
         } else {
-
             onBackPressed();
 
         }
+    }
+    @Override
+    public void updatecategories(PostDetails postDetails) {
+
+        FragmentEditPostUpdateCtaegories updateCtaegories=FragmentEditPostUpdateCtaegories.newInstance(postDetails);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.addToBackStack("updateCtaegories");
+        ft.replace(R.id.container, updateCtaegories);
+        ft.commit();
+
     }
 
     @Override
@@ -137,9 +152,6 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
             try {
                 final String placeId = String.valueOf(mResultList.get(position).placeId);
 
-                /*
-                  Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
-                */
                 PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                         .getPlaceById(googleApiClient, placeId);
                 placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -174,5 +186,14 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
 
     @Override
     public void onCameraInteraction(int action, UploadParams uploadParams) {
+    }
+
+    @Override
+    public void updatedCategoriesResponse(final String categ,final String categName) {
+
+        fragmentManager.popBackStack();
+        editPostFragment.getCategoriesResult(categ,categName);
+
+
     }
 }

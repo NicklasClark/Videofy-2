@@ -74,6 +74,7 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
 
     private void setCheck(AppCompatCheckedTextView textView, int position, Category category, boolean checked) {
         textView.setChecked(checked);
+
         if (textView.isChecked()) {
             textView.setTextColor(Color.parseColor("#26C6DA"));
             textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_accent, 0);

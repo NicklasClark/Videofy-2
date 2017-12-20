@@ -61,7 +61,7 @@
                 android:theme="@style/ProgressBarTheme"
                 android:visibility="invisible" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"

@@ -21,11 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * Created by farazhabib on 03/12/17.
+ * Created by farazhabib on 20/12/17.
  */
 
-public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategoriesAdapter.ViewHolder> {
+public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPostUpdateCategoriesAdapter.ViewHolder> {
 
     private final Context context;
     private ArrayList<Category> categories;
@@ -35,50 +34,58 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
     boolean flag=false;
     boolean[] selectedPositions;
     List<Integer> selectedcategories;
-    List<String> selectedCategoriesName;
+    List<String> selecteCategriesName;
+    boolean checkdataFirst;
 
-    public ChangeCategoriesAdapter(ArrayList<Category> categories, Context context,ArrayList<Category> usercategoryList) {
+
+    public EditPostUpdateCategoriesAdapter(ArrayList<Category> categories, Context context,ArrayList<Category>usercategoryList) {
         this.categories = categories;
+        this.userProfile = userProfile;
 
         selectedcategories=new ArrayList<>();
-        selectedCategoriesName=new ArrayList<>();
-
-        for (int i=0;i<usercategoryList.size();i++)
-        {
-            selectedcategories.add(usercategoryList.get(i).getCategoryId());
-            selectedCategoriesName.add(usercategoryList.get(i).getCategoryName());
-        }
+        selecteCategriesName=new ArrayList<>();
 
         this.context = context;
         this.usercategoryList=usercategoryList;
         selectedPositions = new boolean[categories.size()];
+
         for(int i = 0;i<categories.size();i++)
         {
             selectedPositions[i] = false;
         }
 
-    }
+        for (int i=0;i<usercategoryList.size();i++) {
 
+            selectedcategories.add(usercategoryList.get(i).getCategoryId());
+            selecteCategriesName.add(usercategoryList.get(i).getCategoryName());
+
+
+        }
+
+    }
     @Override
-    public ChangeCategoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EditPostUpdateCategoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories, parent, false);
-        return new ChangeCategoriesAdapter.ViewHolder(view);
+        return new EditPostUpdateCategoriesAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ChangeCategoriesAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final EditPostUpdateCategoriesAdapter.ViewHolder holder, final int position) {
         try {
 
-            final Category category = this.categories.get(position);
-           /// Log.d("Categories", String.valueOf(usercategoryList.size()));
+           // Toast.makeText(context,String.valueOf(usercategoryList.size()),Toast.LENGTH_SHORT).show();
 
-            for (int i = 0; i < selectedCategoriesName.size(); i++) {
-                if (selectedCategoriesName.get(i).equals(category.getCategoryName())) {
-                    setCheck(holder.nameView, true);
-                    selectedPositions[position] = true;
+            final Category category = this.categories.get(position);
+
+                for (int i = 0; i < selecteCategriesName.size(); i++) {
+                    if (selecteCategriesName.get(i).equals(category.getCategoryName())) {
+                        Log.d("Categories", String.valueOf(usercategoryList.get(i).getCategoryId()));
+                        setCheck(holder.nameView, true);
+                        selectedPositions[position] = true;
+
+                    }
                 }
-            }
-            holder.nameView.setText(category.getCategoryName());
+                holder.nameView.setText(category.getCategoryName());
 
             if (selectedPositions[position]) {
                 setCheck(holder.nameView, true);
@@ -87,29 +94,39 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
                 setCheck(holder.nameView, false);
 
             }
+
             holder.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     boolean ischecked = holder.nameView.isChecked();
+
                     if (ischecked) {
-                        if(selectedCategoriesName.size()>5) {
+
+                        if(selecteCategriesName.size()>1) {
                             selectedcategories.remove((Integer) category.getCategoryId());
-                            selectedCategoriesName.remove((category.getCategoryName()));
+                            selecteCategriesName.remove(category.getCategoryName());
                             setCheck(holder.nameView, false);
                             selectedPositions[position] = false;
                         }
                         else
                         {
-                            Toast.makeText(context,"Select atleast minimum 5 categories",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Select atleast 1 category", Toast.LENGTH_SHORT).show();
                         }
                     }
                     else {
-
-                        selectedCategoriesName.add((category.getCategoryName()));
-                        selectedcategories.add(category.getCategoryId());
+                        if(selecteCategriesName.size()<5) {
+                            selectedcategories.add(category.getCategoryId());
+                            selecteCategriesName.add(category.getCategoryName());
                             setCheck(holder.nameView, true);
                             selectedPositions[position] = true;
+                        }
+                        else
+                        {
+                            Toast.makeText(context, "you can select maximum 5 categories", Toast.LENGTH_SHORT).show();
+
+                        }
+
 
                     }
                 }
@@ -149,7 +166,13 @@ public class ChangeCategoriesAdapter extends RecyclerView.Adapter<ChangeCategori
             nameView = view.findViewById(R.id.chip);
         }
     }
-    public List<Integer> getSelectedCategories() {
+    public List<Integer> getSelectedCategories()
+    {
         return selectedcategories;
-   }
+    }
+    public List<String>getSelectedCategoriesName()
+
+    {
+        return selecteCategriesName;
+    }
 }
