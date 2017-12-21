@@ -3,7 +3,6 @@ package com.cncoding.teazer;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +34,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,7 +122,6 @@ import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOS
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
@@ -160,16 +159,32 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
-    @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) AppBarLayout appBar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
-    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view) BlurView blurView;
-    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
+    @BindArray(R.array.tab_name)
+    String[] TABS;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title)
+    ImageView toolbarCenterTitle;
+    @BindView(R.id.toolbar_plain_title)
+    ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container)
+    FrameLayout contentFrame;
+    @BindView(R.id.root_layout)
+    NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view)
+    BlurView blurView;
+    @BindView(R.id.bottom_tab_layout)
+    TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn)
+    ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText)
+    TextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -292,14 +307,13 @@ public class BaseBottomBarActivity extends BaseActivity
                                 ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
                                 shareDialog.show(content);
                                 ShareApi.share(content, null);
-                                UploadFragment.checkFacebookButtonPressed=false;
+                                UploadFragment.checkFacebookButtonPressed = false;
                             }
 
-                            if(UploadFragment.checkedTwitterButton)
-                            {
+                            if (UploadFragment.checkedTwitterButton) {
 
                                 shareTwitter(url);
-                                UploadFragment.checkFacebookButtonPressed=false;
+                                UploadFragment.checkFacebookButtonPressed = false;
                             }
 
 
@@ -321,7 +335,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                         int source_id = notificationBundle.getInt(SOURCE_ID);
                         notificationAction(notification_type, source_id);
-                    }} catch (NumberFormatException e) {
+                    }
+                } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
@@ -397,8 +412,7 @@ public class BaseBottomBarActivity extends BaseActivity
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     notificationAction(notification_type, source_id);
-                }
-                else if (profileBundle != null) {
+                } else if (profileBundle != null) {
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     pushFragment(isSelf ? ProfileFragment.newInstance() :
@@ -461,7 +475,7 @@ public class BaseBottomBarActivity extends BaseActivity
         View v = null;
         try {
             v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
-        TextView tv = v.findViewById(R.id.notification_badge);
+            TextView tv = v.findViewById(R.id.notification_badge);
             if (value != 0) {
                 tv.setText(String.valueOf(value));
             } else {
@@ -670,6 +684,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 toolbarPlainTitle.setVisibility(VISIBLE);
             if (toolbarCenterTitle.getVisibility() != GONE)
                 toolbarCenterTitle.setVisibility(GONE);
+            uploadingStatusLayout.setVisibility(GONE);
         }
     }
 
@@ -888,13 +903,13 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
-                .addAction(R.drawable.ic_clear_dark, "Cancel",
-                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
+//                .addAction(R.drawable.ic_clear_dark, "Cancel",
+//                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_DEFAULT);
+                    "Upload notification", NotificationManager.IMPORTANCE_HIGH);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");
@@ -911,45 +926,65 @@ public class BaseBottomBarActivity extends BaseActivity
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-                                notifyProgressInNotification();
+//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
+//                                notifyProgressInNotification();
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
+                                uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
-                                builder.setOngoing(false);
-                                builder.setContentText("Finished!")
-                                        .setProgress(100, 100, false);
-                                notifyProgressInNotification();
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Finished!")
+//                                        .setProgress(100, 100, false);
+//                                notifyProgressInNotification();
+                                uploadProgressText.setText("Finished!");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 finishVideoUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
-                                if(fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment)fragment).getHomePagePosts(1, true);
+                                if (fragment instanceof PostsListFragment) {
+                                    ((PostsListFragment) fragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:
-                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-                                builder.setOngoing(false);
-                                builder.setContentText("Upload failed!")
-                                        .setProgress(100, 0, false)
-                                        .setContentText("");
-                                notifyProgressInNotification();
-
+                                uploadProgressText.setText("Failed, try again");
+                                uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        notificationManager.cancel(0);
+                                        uploadingStatusLayout.setVisibility(GONE);
                                     }
-                                }, 4000);
+                                }, 2000);
+
+//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Upload failed!")
+//                                        .setProgress(100, 0, false)
+//                                        .setContentText("");
+//                                notifyProgressInNotification();
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 break;
                             case REQUEST_CANCEL_UPLOAD:

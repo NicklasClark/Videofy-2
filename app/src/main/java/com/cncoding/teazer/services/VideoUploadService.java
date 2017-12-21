@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
-import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
@@ -21,8 +19,6 @@ import java.io.File;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
@@ -83,37 +79,47 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
-                if (!videoUploadCall.isExecuted()) {
-                    Toast.makeText(this, R.string.video_upload_confirm_notification, Toast.LENGTH_SHORT).show();
-                    videoUploadCall.enqueue(new Callback<PostUploadResult>() {
-                        @Override
-                        public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
-                            try {
-                                if (response.code() == 201) {
-                                    int postId = response.body().getPostDetails().getPostId();
-                                    String postTitle = response.body().getPostDetails().getTitle();
-                                    String postTumbUrl = response.body().getPostDetails().getMedias().get(0).getThumbUrl();
-                                    String postOwner = response.body().getPostDetails().getPostOwner().getUserName();
-                                    onUploadFinish();
-                                    finishVideoUploadSession(getApplicationContext());
+                PostUploadResult postUploadResult = videoUploadCall.execute().body();
+                int postId = postUploadResult.getPostDetails().getPostId();
+                String postTitle = postUploadResult.getPostDetails().getTitle();
+                String postTumbUrl = postUploadResult.getPostDetails().getMedias().get(0).getThumbUrl();
+                String postOwner = postUploadResult.getPostDetails().getPostOwner().getUserName();
+                onUploadFinish();
+                finishVideoUploadSession(getApplicationContext());
 
-                                    sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
+                sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
 
-                                } else
-                                    onUploadError(new Throwable(response.code() + " : " + response.message()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                onUploadError(e);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostUploadResult> call, Throwable t) {
-                            t.printStackTrace();
-                            onUploadError(t);
-                        }
-                    });
-                }
+//                if (!videoUploadCall.isExecuted()) {
+//                    Toast.makeText(this, R.string.video_upload_confirm_notification, Toast.LENGTH_SHORT).show();
+//                    videoUploadCall.enqueue(new Callback<PostUploadResult>() {
+//                        @Override
+//                        public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
+//                            try {
+//                                if (response.code() == 201) {
+//                                    int postId = response.body().getPostDetails().getPostId();
+//                                    String postTitle = response.body().getPostDetails().getTitle();
+//                                    String postTumbUrl = response.body().getPostDetails().getMedias().get(0).getThumbUrl();
+//                                    String postOwner = response.body().getPostDetails().getPostOwner().getUserName();
+//                                    onUploadFinish();
+//                                    finishVideoUploadSession(getApplicationContext());
+//
+//                                    sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
+//
+//                                } else
+//                                    onUploadError(new Throwable(response.code() + " : " + response.message()));
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                onUploadError(e);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<PostUploadResult> call, Throwable t) {
+//                            t.printStackTrace();
+//                            onUploadError(t);
+//                        }
+//                    });
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

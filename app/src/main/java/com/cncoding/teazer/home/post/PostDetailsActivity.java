@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -126,7 +127,6 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
@@ -229,6 +229,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     CircularAppCompatImageView reaction3Pic;
     @BindView(R.id.loader)
     GifTextView loader;
+    @BindView(R.id.uploadProgressText)
+    TextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -960,8 +966,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     sendIntent.putExtra(Intent.EXTRA_TEXT, url);
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-                }
-                else
+                } else
                     loader.setVisibility(GONE);
             }
         });
@@ -1343,9 +1348,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-                                notifyProgressInNotification();
+//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
+//                                notifyProgressInNotification();
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
+                                uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
 
                                 if (reactBtn.isEnabled())
                                     disableView(reactBtn, true);
@@ -1353,9 +1361,18 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 break;
                             case UPLOAD_COMPLETE_CODE:
                                 builder.setOngoing(false);
-                                builder.setContentText("Finished!")
-                                        .setProgress(0, 0, false);
-                                notifyProgressInNotification();
+//                                builder.setContentText("Finished!")
+//                                        .setProgress(0, 0, false);
+//                                notifyProgressInNotification();
+
+                                uploadProgressText.setText("Finished!");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 disableView(reactBtn, true);
                                 if (PostsListFragment.postDetails != null)
@@ -1363,25 +1380,34 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
                                 finishReactionUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 getPostReactions(postDetails.getPostId(), 1);
 //                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
 //                                new ShowShareDialog().execute(s);
                                 break;
                             case UPLOAD_ERROR_CODE:
-                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Upload failed!")
+//                                        .setProgress(0, 0, false);
+//                                notifyProgressInNotification();
 
-                                builder.setOngoing(false);
-                                builder.setContentText("Upload failed!")
-                                        .setProgress(0, 0, false);
-                                notifyProgressInNotification();
+                                uploadProgressText.setText("Failed, try again");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 enableView(reactBtn);
                                 if (PostsListFragment.postDetails != null)
@@ -1389,12 +1415,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
                                 finishReactionUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
