@@ -71,6 +71,8 @@
 
                     <LinearLayout
                         android:id="@+id/top_layout"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -106,13 +108,14 @@
                         android:id="@+id/media_controller_eta"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="end|center_vertical"
-                        app:drawableStartCompat="@drawable/ic_volume"
+                        android:layout_marginTop="5dp"
+                        android:gravity="end"
+                        app:drawableStartCompat="@drawable/ic_volumeon"
                         android:paddingTop="@dimen/padding_half"
                         android:paddingBottom="@dimen/padding_half"
                         android:layout_marginEnd="14dp"
                         android:textColor="@android:color/white"
-                        android:layout_weight="0.28"
+                        android:layout_weight="0.38"
                         android:textSize="@dimen/text_size_14sp"/>
 
                 </LinearLayout>
@@ -142,9 +145,10 @@
                     android:orientation="horizontal"
                     android:layout_gravity="bottom"
                     android:gravity="center_vertical"
+                    android:layout_marginBottom="0dp"
                     android:background="@drawable/bg_vignette_bottom"
                     android:paddingTop="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_half">
+                    android:paddingBottom="12dp">
 
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
                         android:id="@+id/media_controller_dp"
@@ -152,7 +156,6 @@
                         android:layout_height="34dp"
                         android:scaleType="centerCrop"
                         android:layout_alignParentStart="true"
-
                         android:layout_marginStart="14dp"
                         android:layout_marginEnd="13dp"
                         android:layout_alignBottom="@+id/media_controller_likes"/>
@@ -303,10 +306,11 @@
                         android:layout_weight="10">
 
 
-                        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                        <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                             android:id="@+id/react_btn"
                             style="@style/AppTheme.ReactButton"
                             android:text="@string/react"
+                            android:drawablePadding="6dp"
                             app:drawableStartCompat="@drawable/ic_react"/>
 
                     </FrameLayout>
@@ -366,8 +370,8 @@
                             android:ellipsize="end"
                             android:textSize="@dimen/text_size_10sp"
                             android:background="@drawable/bg_circle_primary"
-                            android:layout_marginTop="6dp"
-                            android:layout_marginEnd="@dimen/padding_default"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginEnd="6dp"
                             android:layout_alignEnd="@+id/tags"/>
 
                     </RelativeLayout>

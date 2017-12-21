@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end|center_vertical"
-            app:drawableStartCompat="@drawable/ic_volume"
+            app:drawableStartCompat="@drawable/ic_volumeon"
             android:paddingTop="@dimen/padding_half"
             android:paddingBottom="@dimen/padding_half"
             android:paddingStart="0dp"

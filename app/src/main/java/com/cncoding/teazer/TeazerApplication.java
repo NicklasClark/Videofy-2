@@ -12,8 +12,6 @@ import android.util.Log;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.ios.IosEmojiProvider;
 
 import iknow.android.utils.BaseUtils;
 import io.branch.referral.Branch;
@@ -59,7 +57,7 @@ public class TeazerApplication extends Application {
                 });
         EmojiCompat.init(config);
 
-        EmojiManager.install(new IosEmojiProvider());
+//        EmojiManager.install(new IosEmojiProvider());
     }
 
 //    public static void initImageLoader(Context context) {

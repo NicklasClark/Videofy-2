@@ -270,9 +270,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 String postUrl = intent.getStringExtra("PostURL");
                 String postownerId = intent.getStringExtra("PostOwner");
 
-                 Toast.makeText(getApplicationContext(),"BroadCastReceived"+postTitle+postUrl,Toast.LENGTH_LONG).show();
-
-
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(postownerId)
                         .setTitle(postTitle)

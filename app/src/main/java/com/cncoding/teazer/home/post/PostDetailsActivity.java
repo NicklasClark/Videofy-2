@@ -51,10 +51,10 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.TagListAdapter.TaggedListInteractionListener;
 import com.cncoding.teazer.model.base.TaggedUser;
@@ -167,7 +167,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.react_btn)
-    ProximaNovaSemiboldButton reactBtn;
+    ProximaNovaBoldButton reactBtn;
     @BindView(R.id.like)
     ProximaNovaRegularCheckedTextView likeBtn;
     @BindView(R.id.no_tagged_users)
@@ -714,14 +714,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
             if (isAudioEnabled) {
                 volume = 0;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_mute);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeoff);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = maxVolume;
 //                volume = 100 * maxVolume + currentVolume;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeon);
                 isAudioEnabled = true;
             }
 

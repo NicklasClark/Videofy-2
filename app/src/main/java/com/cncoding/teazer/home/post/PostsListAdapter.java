@@ -3,7 +3,7 @@ package com.cncoding.teazer.home.post;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.text.emoji.widget.EmojiAppCompatTextView;
+import android.support.text.emoji.widget.EmojiTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -22,7 +22,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.ViewUtils;
@@ -217,7 +216,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.home_screen_post_caption) EmojiAppCompatTextView caption;
+        @BindView(R.id.home_screen_post_caption)
+        EmojiTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
