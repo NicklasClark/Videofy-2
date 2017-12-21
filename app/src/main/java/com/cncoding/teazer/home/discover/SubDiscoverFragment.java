@@ -262,24 +262,28 @@ public class SubDiscoverFragment extends BaseFragment {
             trendingVideosCall.enqueue(new Callback<PostList>() {
                 @Override
                 public void onResponse(Call<PostList> call, Response<PostList> response) {
-                    if (isAdded()) {
-                        if (response.code() == 200) {
-                            PostList postList = response.body();
-                            is_next_page = postList.isNextPage();
-                            if (!postList.getPosts().isEmpty()) {
-                                if (page == 1) postDetailsArrayList.clear();
-                                postDetailsArrayList.addAll(postList.getPosts());
-                                recyclerView.getAdapter().notifyDataSetChanged();
-                            } else if (page == 1) {
-                                String noVideosText = getString(R.string.no_videos_tagged) +
-                                        categories.get(0).getCategoryName() +
-                                        getString(R.string.yet_uploaded);
-                                noPosts.setText(noVideosText);
-                                noPosts.setVisibility(VISIBLE);
-                                noPosts2.setVisibility(VISIBLE);
-                            }
-                        } else
-                            Log.e("getTrendingVideos", response.code() + "_" + response.message());
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+                                PostList postList = response.body();
+                                is_next_page = postList.isNextPage();
+                                if (!postList.getPosts().isEmpty()) {
+                                    if (page == 1) postDetailsArrayList.clear();
+                                    postDetailsArrayList.addAll(postList.getPosts());
+                                    recyclerView.getAdapter().notifyDataSetChanged();
+                                } else if (page == 1) {
+                                    String noVideosText = getString(R.string.no_videos_tagged) +
+                                            categories.get(0).getCategoryName() +
+                                            getString(R.string.yet_uploaded);
+                                    noPosts.setText(noVideosText);
+                                    noPosts.setVisibility(VISIBLE);
+                                    noPosts2.setVisibility(VISIBLE);
+                                }
+                            } else
+                                Log.e("getTrendingVideos", response.code() + "_" + response.message());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -299,22 +303,26 @@ public class SubDiscoverFragment extends BaseFragment {
             mostPopularVideosCall.enqueue(new Callback<PostList>() {
                 @Override
                 public void onResponse(Call<PostList> call, Response<PostList> response) {
-                    if (isAdded()) {
-                        if (response.code() == 200) {
-                            PostList postList = response.body();
-                            if (postList != null) {
-                                if (page == 1) postDetailsArrayList.clear();
-                                is_next_page = postList.isNextPage();
-                                if (!postList.getPosts().isEmpty()) {
-                                    postDetailsArrayList.addAll(postList.getPosts());
-                                    recyclerView.getAdapter().notifyDataSetChanged();
-                                } else if (page == 1) {
-                                    noPosts.setVisibility(View.VISIBLE);
-                                    noPosts2.setVisibility(VISIBLE);
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+                                PostList postList = response.body();
+                                if (postList != null) {
+                                    if (page == 1) postDetailsArrayList.clear();
+                                    is_next_page = postList.isNextPage();
+                                    if (!postList.getPosts().isEmpty()) {
+                                        postDetailsArrayList.addAll(postList.getPosts());
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    } else if (page == 1) {
+                                        noPosts.setVisibility(View.VISIBLE);
+                                        noPosts2.setVisibility(VISIBLE);
+                                    }
                                 }
-                            }
-                        } else
-                            Log.e("getMostPopularVideos", response.code() + "_" + response.message());
+                            } else
+                                Log.e("getMostPopularVideos", response.code() + "_" + response.message());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 }

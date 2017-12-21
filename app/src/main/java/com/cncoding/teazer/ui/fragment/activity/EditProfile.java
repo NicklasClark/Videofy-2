@@ -518,8 +518,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         ApiCallingService.User.updateUserProfiles(profileUpdateRequest, getApplicationContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-
-
                 if (response.code() == 200) {
 
                     try {
@@ -752,21 +750,26 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.code() == 200) {
-                            if (response.body().getStatus()) {
+                        try {
+                            if (response.code() == 200) {
+                                if (response.body().getStatus()) {
 
-                                Toast.makeText(context,"OTP has sent to your number",Toast.LENGTH_LONG).show();
-                                android.support.v4.app.FragmentManager fragmentManager =getSupportFragmentManager();
-                                FragmentVerifyOTP reportPostDialogFragment = FragmentVerifyOTP.newInstance(mobilenumber, countrycode, firstname,lastname,username,emailId,details,gender);
-                                if (fragmentManager != null) {
-                                    reportPostDialogFragment.show(fragmentManager, "fragment_verify_otp");
-                                    //finish();
+                                    Toast.makeText(context,"OTP has sent to your number",Toast.LENGTH_LONG).show();
+                                    android.support.v4.app.FragmentManager fragmentManager =getSupportFragmentManager();
+                                    FragmentVerifyOTP reportPostDialogFragment = FragmentVerifyOTP.newInstance(mobilenumber, countrycode, firstname,lastname,username,emailId,details,gender);
+                                    if (fragmentManager != null) {
+                                        reportPostDialogFragment.show(fragmentManager, "fragment_verify_otp");
+                                        //finish();
+                                    }
+                                }
+                                else
+                                {
+                                    Toast.makeText(context,response.body().getMessage(),Toast.LENGTH_LONG).show();
                                 }
                             }
-                            else
-                            {
-                                Toast.makeText(context,response.body().getMessage(),Toast.LENGTH_LONG).show();
-                            }
+                        } catch (Exception e) {
+                            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
                         }
                     }
 

@@ -216,7 +216,11 @@ public class CameraActivity extends AppCompatActivity
         slidingUpPanelLayout.addPanelSlideListener(panelSlideListener);
 
 //        if (videosList != null && videosList.isEmpty())
+        try {
             new GetVideoGalleryData(this).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        else recyclerView.getAdapter().notifyDataSetChanged();
     }
 
