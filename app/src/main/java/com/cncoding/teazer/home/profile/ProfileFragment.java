@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -109,6 +110,8 @@ public class ProfileFragment extends BaseFragment {
     private String userProfileThumbnail;
     private String userProfileUrl;
     @BindView(R.id.loader)GifTextView loader;
+    @BindView(R.id.blur_bacground)
+    CoordinatorLayout blur_bacground;
 
     public ProfileFragment() {
     }
@@ -293,6 +296,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
         if (ProfileFragment.checkprofileupdated) {
             updateProfile();
             checkprofileupdated = false;
@@ -339,7 +343,7 @@ public class ProfileFragment extends BaseFragment {
 
     public void getProfileDetail() {
 
-        progressbar.setVisibility(View.GONE);
+        blur_bacground.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
 
 
@@ -380,7 +384,6 @@ public class ProfileFragment extends BaseFragment {
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                 //   coordinatorLayout.setVisibility(View.VISIBLE);
                     if (userProfileUrl != null) {
                         Glide.with(context)
                                 .load(userProfileUrl)
@@ -388,9 +391,11 @@ public class ProfileFragment extends BaseFragment {
 
                         profileBlur(userProfileUrl);
                     }
+
+                    blur_bacground.setVisibility(View.VISIBLE);
                     loader.setVisibility(View.GONE);
                 } catch (Exception e) {
-                    progressbar.setVisibility(View.GONE);
+                    blur_bacground.setVisibility(View.GONE);
                     loader.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
@@ -398,7 +403,7 @@ public class ProfileFragment extends BaseFragment {
 
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
-                progressbar.setVisibility(View.GONE);
+                blur_bacground.setVisibility(View.GONE);
                 loader.setVisibility(View.GONE);
                 t.printStackTrace();
             }
@@ -408,14 +413,12 @@ public class ProfileFragment extends BaseFragment {
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
     public void profileBlur(final String pic) {
-
         String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
         if (!EasyPermissions.hasPermissions(getContext(), perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
         } else {
-            progressbar.setVisibility(View.VISIBLE);
-         //   coordinatorLayout.setVisibility(View.GONE);
+
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(final Void... params) {
@@ -437,38 +440,21 @@ public class ProfileFragment extends BaseFragment {
 
                 @Override
                 protected void onPostExecute(final Bitmap result) {
-                    progressbar.setVisibility(View.VISIBLE);
-                   // coordinatorLayout.setVisibility(View.GONE);
-
                     try {
                         Bitmap userImage = scaleDown(result, 200, true);
-                        //   protectedfile_id.setRotation(0);
-//                       profile_id.setImageBitmap(userImage);
 
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
-
-
                         Blurry.with(getContext()).from(photobitmap).into(bgImage);
-                    } catch (Exception e) {
-                        progressbar.setVisibility(View.GONE);
+                    }
+                    catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    progressbar.setVisibility(View.GONE);
-
-                    // coordinatorLayout.setVisibility(View.VISIBLE);
                 }
             }.execute();
-
-
-            progressbar.setVisibility(View.GONE);
-            //coordinatorLayout.setVisibility(View.VISIBLE);
         }
-
     }
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -500,9 +486,9 @@ public class ProfileFragment extends BaseFragment {
         } else {
         }
     }
-
     public void updateProfile() {
         loader.setVisibility(View.VISIBLE);
+        blur_bacground.setVisibility(View.GONE);
 
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
@@ -547,15 +533,17 @@ public class ProfileFragment extends BaseFragment {
                         profileBlur(userProfileUrl);
                     }
                     loader.setVisibility(View.GONE);
+                    blur_bacground.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
+
                     loader.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
                 loader.setVisibility(View.GONE);
+
                 t.printStackTrace();
             }
         });
@@ -564,7 +552,6 @@ public class ProfileFragment extends BaseFragment {
 
     public interface FollowerListListener {
         void onFollowerListListener(String id, String identifier);
-
         void onFollowingListListener(String id, String identifier);
     }
 }

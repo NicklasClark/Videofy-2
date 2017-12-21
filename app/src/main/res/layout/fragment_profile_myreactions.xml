@@ -3,15 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
         android:layout_width="wrap_content"
-        android:visibility="gone"
+ android:visibility="gone"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="@string/no_reactions_message"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:text="Reactions are a new way to communicate!"
+        android:textColor="#505050"
+        android:textSize="14sp" />
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+
+        android:id="@+id/alert2"
+        android:layout_below="@+id/alert1"
+        android:layout_centerHorizontal="true"
+
+        android:layout_width="wrap_content"
+     android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Lets start by reacting on post you like."
         android:textColor="#505050"
         android:textSize="14sp" />
     <RelativeLayout

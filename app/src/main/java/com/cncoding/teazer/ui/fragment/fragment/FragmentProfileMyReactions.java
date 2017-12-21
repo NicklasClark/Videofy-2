@@ -17,6 +17,7 @@ import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.model.react.ReactionsList;
 
@@ -41,7 +42,8 @@ public class FragmentProfileMyReactions extends Fragment {
     Context context;
     List<Reactions>list;
     int page;
-    ProximaNovaRegularTextView alert1;
+    ProximaNovaSemiboldTextView alert1;
+    ProximaNovaRegularTextView alert2;
     public static FragmentProfileMyReactions newInstance(int page) {
         return new FragmentProfileMyReactions();
     }
@@ -55,6 +57,7 @@ public class FragmentProfileMyReactions extends Fragment {
         context=container.getContext();
         recyclerView=view.findViewById(R.id.recycler_view);
         alert1=view.findViewById(R.id.alert1);
+        alert2=view.findViewById(R.id.alert2);
 
         return view;
     }
@@ -72,13 +75,16 @@ public class FragmentProfileMyReactions extends Fragment {
             public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
                 if (response.code() == 200) {
                     try {
-//                        response.body().getReactions();
-                        if (response.body().getReactions() == null||response.body().getReactions().size()==0) {
+                        if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
 
                             alert1.setVisibility(View.VISIBLE);
+                            alert2.setVisibility(View.VISIBLE);
+                            alert2.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }
-                        else {
+                        else
+                        {
+
                             boolean next=response.body().isNextPage();
                             list.addAll(response.body().getReactions());
                             profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);

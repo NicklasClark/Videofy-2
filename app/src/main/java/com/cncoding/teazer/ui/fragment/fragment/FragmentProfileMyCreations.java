@@ -90,11 +90,7 @@ public class FragmentProfileMyCreations extends Fragment {
             @Override
             public void onLoadMore(int page1, int totalItemsCount, RecyclerView view) {
 
-                //loadNextDataFromApi(page);
-//                if (next) {
-//                    getProfileVideos(page1);
-//
-//                }
+
             }
         };
 
@@ -105,13 +101,12 @@ public class FragmentProfileMyCreations extends Fragment {
 
     public void getProfileVideos() {
 
-
         ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
 
                 if (response.code() == 200) {
-                    if (response.body().getPosts().size()==0) {
+                    if ((response.body().getPosts().size()==0)&& page==1) {
                         alert1.setVisibility(View.VISIBLE);
                        recyclerView.setVisibility(View.GONE);
                         progress_bar.setVisibility(View.GONE);

@@ -55,22 +55,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Notification notification = remoteMessage.getNotification();
+
 //        String imageUrl = remoteMessage.getData().get("image");
         if (notification != null) {
             Log.d(TAG, "From: " + remoteMessage.getFrom());
             Log.d(TAG, "Notification Message Body: " + notification.getBody());
             Log.d(TAG, "Notification Id: " + remoteMessage.getMessageId());
+
+
 //            sendNotification(notification.getBody(), getBitmapFromUrl(imageUrl));
             for (Map.Entry<String,String> entry : remoteMessage.getData().entrySet()) {
                 Log.d(TAG, "Notification Data: " + entry.getValue() + " at " + entry.getKey());
             }
             Log.d(TAG, "data: " + remoteMessage.getData());
-
             sendNotification(notification.getBody(), getBitmapFromUrl(remoteMessage.getData().get("thumb_url")), notification.getTitle(), remoteMessage.getData());
         }
     }
 
-    //This method is only generating push notification
     private void sendNotification(String messageBody, Bitmap bitmap, String title, Map<String, String> data) {
         Intent intent = new Intent();
         intent.setClass(this, BaseBottomBarActivity.class);
