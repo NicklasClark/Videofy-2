@@ -11,6 +11,10 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"/>
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/blur_bacground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -98,7 +102,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
 
-
                                         <com.cncoding.teazer.customViews.SignPainterTextView
                                             android:id="@+id/username_title"
                                             android:layout_width="match_parent"
@@ -170,16 +173,12 @@
                                             android:textColor="@color/colorIcons"
                                             android:textSize="12sp" />
 
-
-
-
                                     </RelativeLayout>
                                 </LinearLayout>
 
 
                             </LinearLayout>
                         </LinearLayout>
-
 
                     </LinearLayout>
 
@@ -394,20 +393,9 @@
                 android:textColor="#505050"
                 android:textSize="14sp"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
-                android:id="@+id/alert2"
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:padding="20dp"
-                android:layout_height="wrap_content"
-                android:text="@string/no_creations_message2"
-                android:textColor="#505050"
-                android:textSize="14sp" />
-
 
         </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/layoutDetail3"
                 android:layout_width="match_parent"
@@ -417,7 +405,6 @@
                 <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="60dp"
-
                     android:layout_width="wrap_content"
                     android:gravity="center"
                     android:padding="20dp"
@@ -461,7 +448,15 @@
                />
         </RelativeLayout>
         </RelativeLayout>
-<!--</android.support.design.widget.CoordinatorLayout>-->
 
+    </android.support.design.widget.CoordinatorLayout>
+    <pl.droidsonroids.gif.GifTextView
+        android:layout_width="100dp"
+        android:id="@+id/loader"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_height="100dp"
+        android:background="@drawable/loader2"
+        />
 
 </android.support.design.widget.CoordinatorLayout>
