@@ -28,6 +28,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:paddingTop="@dimen/padding_half"
+            android:paddingBottom="@dimen/padding_half"
             android:textSize="@dimen/text_size_13sp"
             app:font_name="sign_painter"
             android:textColor="@color/colorPrimary_text"

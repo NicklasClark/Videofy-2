@@ -2,10 +2,11 @@ package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseIntArray;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -17,6 +18,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import butterknife.ButterKnife;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
+import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
+import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
 /**
  *
@@ -37,13 +42,13 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
 
     private OnSubSearchInteractionListener mListener;
     private ArrayList<PostDetails> postDetailsArrayList;
-    private SparseIntArray dimensionSparseArray;
+    private SparseArray<Dimension> dimensionSparseArray;
     private Context context;
 
     public SubDiscoverAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
         this.postDetailsArrayList = postDetailsArrayList;
         this.context = context;
-        dimensionSparseArray = new SparseIntArray();
+        dimensionSparseArray = new SparseArray<>();
         if (context instanceof OnSubSearchInteractionListener) {
             mListener = (SubDiscoverAdapter.OnSubSearchInteractionListener) context;
         }
@@ -58,11 +63,18 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         try {
+            initializeShimmer(holder.shimmerLayout, holder.topLayout, holder.bottomLayout, holder.vignetteLayout);
+
             holder.postDetails = postDetailsArrayList.get(position);
 
-            if (dimensionSparseArray.get(position) != 0) {
-                holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
-                holder.layout.setVisibility(View.VISIBLE);
+            /*Adjust view size before loading anything*/
+            if (dimensionSparseArray.get(position) == null) {
+                adjustViewSize(context, holder.postDetails.getMedias().get(0).getDimension().getWidth(),
+                        holder.postDetails.getMedias().get(0).getDimension().getHeight(),
+                        holder.layout.getLayoutParams(), position, dimensionSparseArray, false);
+            } else {
+                holder.layout.getLayoutParams().width = dimensionSparseArray.get(position).getWidth();
+                holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
             }
 
             holder.title.setText(holder.postDetails.getTitle());
@@ -99,7 +111,6 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
                 .skipMemoryCache(false)
                 .listener(new RequestListener<String, GlideDrawable>() {
@@ -111,15 +122,8 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                        if (height < holder.layout.getWidth())
-                            height = holder.layout.getWidth();
-
-                        holder.layout.getLayoutParams().height = height;
-
-                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
-//                        holder.layout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fast_fade_in));
-                        holder.layout.setVisibility(View.VISIBLE);
+                        prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                                holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
                     }
                 })
@@ -157,6 +161,10 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
     protected class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
+        @BindView(R.id.top_layout) RelativeLayout topLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;

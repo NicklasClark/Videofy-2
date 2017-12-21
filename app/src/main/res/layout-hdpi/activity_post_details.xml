@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,14 +7,10 @@
     tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
     <android.support.v4.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cncoding.teazer.home.post.PostDetailsActivity"
-        android:id="@+id/root_layout"
-        android:background="@color/material_grey100"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/root_layout"
+        android:background="@color/material_grey100"
         android:animateLayoutChanges="true">
 
         <RelativeLayout
@@ -49,14 +46,15 @@
                 android:layout_alignBottom="@+id/relative_layout"
                 android:contentDescription="@string/video_preview_thumbnail" />
 
-            <FrameLayout
-                android:id="@+id/controls"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/relative_layout"
-                android:layout_alignBottom="@+id/relative_layout"
-                android:background="@android:color/transparent"
-                android:visibility="gone">
+        <FrameLayout
+            android:id="@+id/controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_alignTop="@+id/relative_layout"
+            android:layout_alignBottom="@+id/relative_layout"
+            android:background="@android:color/transparent"
+            android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/layout_top"
@@ -71,12 +69,10 @@
 
                     <LinearLayout
                         android:id="@+id/top_layout"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="5dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
                         android:orientation="vertical"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/action_bar_height"
                         android:layout_weight="1">
 
@@ -95,6 +91,7 @@
                             android:id="@+id/media_controller_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:ellipsize="end"
@@ -108,14 +105,13 @@
                         android:id="@+id/media_controller_eta"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:gravity="end"
-                        app:drawableStartCompat="@drawable/ic_volumeon"
+                        android:gravity="end|center_vertical"
+                        app:drawableStartCompat="@drawable/ic_volume"
                         android:paddingTop="@dimen/padding_half"
                         android:paddingBottom="@dimen/padding_half"
                         android:layout_marginEnd="14dp"
+                        android:layout_weight="0.28"
                         android:textColor="@android:color/white"
-                        android:layout_weight="0.38"
                         android:textSize="@dimen/text_size_14sp"/>
 
                 </LinearLayout>
@@ -145,10 +141,9 @@
                     android:orientation="horizontal"
                     android:layout_gravity="bottom"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="0dp"
                     android:background="@drawable/bg_vignette_bottom"
                     android:paddingTop="@dimen/padding_default"
-                    android:paddingBottom="12dp">
+                    android:paddingBottom="@dimen/padding_half">
 
                     <com.cncoding.teazer.customViews.CircularAppCompatImageView
                         android:id="@+id/media_controller_dp"
@@ -156,10 +151,7 @@
                         android:layout_height="34dp"
                         android:scaleType="centerCrop"
                         android:layout_alignParentStart="true"
-<<<<<<< HEAD
-=======
                         android:foreground="@drawable/bg_circle_white_outline_thin"
->>>>>>> prem_dev
                         android:layout_marginStart="14dp"
                         android:layout_marginEnd="13dp"
                         android:layout_alignBottom="@+id/media_controller_likes"/>
@@ -212,7 +204,7 @@
 
                     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                         android:id="@+id/media_controller_categories"
-                        android:layout_width="wrap_content"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_12sp"
@@ -245,11 +237,7 @@
                         android:layout_width="@dimen/height_24dp"
                         android:layout_height="@dimen/height_24dp"
                         android:scaleType="centerCrop"
-<<<<<<< HEAD
-
-=======
                         android:foreground="@drawable/bg_circle_white_outline_thin"
->>>>>>> prem_dev
                         android:layout_centerVertical="true"
                         android:layout_toStartOf="@+id/media_controller_reaction_count"
                         android:visibility="gone"/>
@@ -259,11 +247,7 @@
                         android:layout_width="@dimen/height_24dp"
                         android:layout_height="@dimen/height_24dp"
                         android:scaleType="centerCrop"
-<<<<<<< HEAD
-
-=======
                         android:foreground="@drawable/bg_circle_white_outline_thin"
->>>>>>> prem_dev
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_reaction_bubbles"
                         android:layout_toStartOf="@+id/media_controller_reaction_1"
@@ -274,10 +258,7 @@
                         android:layout_width="@dimen/height_24dp"
                         android:layout_height="@dimen/height_24dp"
                         android:scaleType="centerCrop"
-<<<<<<< HEAD
-=======
                         android:foreground="@drawable/bg_circle_white_outline_thin"
->>>>>>> prem_dev
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_reaction_bubbles"
                         android:layout_toStartOf="@+id/media_controller_reaction_2"
@@ -301,7 +282,6 @@
                 android:id="@+id/post_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:animateLayoutChanges="true"
                 android:layout_below="@+id/controls">
 
@@ -314,19 +294,16 @@
                     android:orientation="horizontal"
                     android:layout_alignParentTop="true">
 
-
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:minWidth="115dp"
                         android:layout_weight="10">
 
-
-                        <com.cncoding.teazer.customViews.ProximaNovaBoldButton
+                        <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
                             android:id="@+id/react_btn"
                             style="@style/AppTheme.ReactButton"
                             android:text="@string/react"
-                            android:drawablePadding="6dp"
                             app:drawableStartCompat="@drawable/ic_react"/>
 
                     </FrameLayout>
@@ -339,7 +316,7 @@
                         android:padding="@dimen/padding_thin"
                         android:gravity="center"
                         android:textAlignment="center"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorPrimary_text"
                         android:text="@string/like"
                         android:layout_marginStart="@dimen/padding_thin"
@@ -352,7 +329,7 @@
                         app:drawableTopCompat="@drawable/ic_share"
                         android:padding="@dimen/padding_thin"
                         android:gravity="center"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorPrimary_text"
                         android:text="@string/share"/>
 
@@ -370,7 +347,7 @@
                             android:layout_height="wrap_content"
                             app:drawableTopCompat="@drawable/ic_person_default"
                             android:gravity="center"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textColor="@color/colorPrimary_text"
                             android:text="@string/tagged"
                             android:layout_centerInParent="true"
@@ -386,8 +363,8 @@
                             android:ellipsize="end"
                             android:textSize="@dimen/text_size_10sp"
                             android:background="@drawable/bg_circle_primary"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginEnd="6dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="@dimen/padding_default"
                             android:layout_alignEnd="@+id/tags"/>
 
                     </RelativeLayout>
@@ -399,7 +376,7 @@
                         app:drawableTopCompat="@drawable/ic_menu"
                         android:foreground="@drawable/ripple_dark_no_rounded"
                         android:gravity="center"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorPrimary_text"
                         android:text="@string/more"
                         android:layout_marginEnd="10dp"
@@ -516,7 +493,9 @@
 
         </RelativeLayout>
 
+
     </android.support.v4.widget.NestedScrollView>
+
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/btnClose"
@@ -527,13 +506,5 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_arrow_back_off_white" />
-
-    <pl.droidsonroids.gif.GifTextView
-        android:layout_width="100dp"
-        android:id="@+id/loader"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:layout_height="100dp"
-        android:background="@drawable/ic_loader"/>
 
 </RelativeLayout>

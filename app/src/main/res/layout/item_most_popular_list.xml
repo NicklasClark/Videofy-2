@@ -1,23 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="278dp"
     android:layout_height="175dp"
     android:layout_marginEnd="14dp">
 
+    <RelativeLayout
+        android:id="@+id/shimmer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="14dp"
+        android:background="@color/material_grey200"
+        android:paddingEnd="@dimen/padding_half"
+        android:layout_gravity="bottom">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/shimmer_dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="6dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="12dp"
+            android:src="@color/colorShimmer"
+            android:layout_alignParentStart="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/shimmer_username"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:textSize="@dimen/text_size_12sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@android:color/white"
+            android:background="@color/colorShimmer"
+            android:layout_above="@+id/shimmer_likes"
+            android:layout_toEndOf="@+id/shimmer_dp"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/shimmer_likes"
+            android:layout_width="35dp"
+            android:layout_height="10dp"
+            android:textSize="@dimen/text_size_10sp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@color/colorShimmer"
+            android:layout_toEndOf="@+id/shimmer_dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="14dp"/>
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:contentDescription="@string/video_thumbnail" />
 
     <LinearLayout
-        android:id="@+id/layout_top"
+        android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:background="@drawable/bg_vignette_top"
         android:minHeight="42dp"
@@ -46,21 +93,12 @@
 
     </LinearLayout>
 
-<!--    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/media_controller_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_play"
-        android:alpha="0.8"
-        android:background="@android:color/transparent" />-->
-
     <RelativeLayout
-        android:id="@+id/layout_bottom"
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:orientation="horizontal"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
         android:background="@drawable/bg_vignette_bottom"
         android:paddingStart="14dp"
@@ -73,7 +111,7 @@
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:foreground="@drawable/bg_circle_white_outline"
+            android:foreground="@drawable/bg_circle_white_outline_thin"
             android:layout_marginEnd="6dp"/>
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
@@ -142,7 +180,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:scaleType="centerCrop"
-            android:foreground="@drawable/bg_circle_white_outline"
+            android:foreground="@drawable/bg_circle_white_outline_thin"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/padding_thin"
             android:layout_toStartOf="@+id/reaction_2"
@@ -153,11 +191,11 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:scaleType="centerCrop"
-            android:foreground="@drawable/bg_circle_white_outline"
+            android:foreground="@drawable/bg_circle_white_outline_thin"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/reaction_count"
             android:visibility="gone"/>
 
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

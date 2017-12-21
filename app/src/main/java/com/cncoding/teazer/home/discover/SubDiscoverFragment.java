@@ -2,7 +2,6 @@ package com.cncoding.teazer.home.discover;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,7 +38,6 @@ import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -67,6 +65,8 @@ public class SubDiscoverFragment extends BaseFragment {
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
     @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
+    private Call<PostList> trendingVideosCall;
+    private Call<PostList> mostPopularVideosCall;
     private ArrayList<Category> categories;
     private String previousTitle;
     private ArrayList<PostDetails> postDetailsArrayList;
@@ -147,7 +147,7 @@ public class SubDiscoverFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetMostPopularVideos(SubDiscoverFragment.this).execute(page);
+                    getMostPopularVideos(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -156,10 +156,11 @@ public class SubDiscoverFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetMostPopularVideos(SubDiscoverFragment.this).execute(1);
+                getMostPopularVideos(1);
             }
         });
-        new GetMostPopularVideos(SubDiscoverFragment.this).execute(1);
+
+        getMostPopularVideos(1);
     }
 
     private void prepareMyInterestsLayout() {
@@ -204,7 +205,7 @@ public class SubDiscoverFragment extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetTrendingVideos(SubDiscoverFragment.this).execute(page);
+                    getTrendingVideos(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -213,10 +214,11 @@ public class SubDiscoverFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetTrendingVideos(SubDiscoverFragment.this).execute(1);
+                getTrendingVideos(1);
             }
         });
-        new GetTrendingVideos(SubDiscoverFragment.this).execute(1);
+        
+        getTrendingVideos(1);
     }
 
     private void populateTabs() {
@@ -253,120 +255,76 @@ public class SubDiscoverFragment extends BaseFragment {
     private int getPixel() {
         return (int)((34 * getResources().getDisplayMetrics().density) + 0.5);
     }
-
-    private static class GetTrendingVideos extends AsyncTask<Integer, Void, Void> {
-
-        private WeakReference<SubDiscoverFragment> reference;
-
-        GetTrendingVideos(SubDiscoverFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(final Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().postDetailsArrayList.clear();
-
-            ApiCallingService.Discover.getTrendingVideos(integers[0],
-                    reference.get().categories.get(0).getCategoryId(), reference.get().getContext())
-                    .enqueue(new Callback<PostList>() {
-                        @Override
-                        public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (reference.get().isAdded()) {
-                                if (response.code() == 200) {
-                                    PostList postList = response.body();
-                                    reference.get().is_next_page = postList.isNextPage();
-                                    if (!postList.getPosts().isEmpty()) {
-                                        reference.get().postDetailsArrayList.addAll(postList.getPosts());
-                                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else if (integers[0] == 1) {
-                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged) +
-                                                reference.get().categories.get(0).getCategoryName() +
-                                                reference.get().getString(R.string.yet_uploaded);
-                                        reference.get().noPosts.setText(noVideosText);
-                                        reference.get().noPosts.setVisibility(VISIBLE);
-                                        reference.get().noPosts2.setVisibility(VISIBLE);
-                                    }
-                                } else
-                                    Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+    
+    private void getTrendingVideos(final int page) {
+        trendingVideosCall = ApiCallingService.Discover.getTrendingVideos(page, categories.get(0).getCategoryId(), getContext());
+        if (!trendingVideosCall.isExecuted()) {
+            trendingVideosCall.enqueue(new Callback<PostList>() {
+                @Override
+                public void onResponse(Call<PostList> call, Response<PostList> response) {
+                    if (isAdded()) {
+                        if (response.code() == 200) {
+                            PostList postList = response.body();
+                            is_next_page = postList.isNextPage();
+                            if (!postList.getPosts().isEmpty()) {
+                                if (page == 1) postDetailsArrayList.clear();
+                                postDetailsArrayList.addAll(postList.getPosts());
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                            } else if (page == 1) {
+                                String noVideosText = getString(R.string.no_videos_tagged) +
+                                        categories.get(0).getCategoryName() +
+                                        getString(R.string.yet_uploaded);
+                                noPosts.setText(noVideosText);
+                                noPosts.setVisibility(VISIBLE);
+                                noPosts2.setVisibility(VISIBLE);
                             }
-                        }
+                        } else
+                            Log.e("getTrendingVideos", response.code() + "_" + response.message());
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-                        @Override
-                        public void onFailure(Call<PostList> call, Throwable t) {
-                            if (reference.get().isAdded()) {
-                                Log.e("FAIL! GetTrendingVideos", t.getMessage() != null ? t.getMessage() : "FAILED!");
-                            }
-                        }
-                    });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            reference.get().swipeRefreshLayout.setRefreshing(false);
+                @Override
+                public void onFailure(Call<PostList> call, Throwable t) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    t.printStackTrace();
+                }
+            });
         }
     }
-
-    private static class GetMostPopularVideos extends AsyncTask<Integer, Void, Void> {
-
-        private WeakReference<SubDiscoverFragment> reference;
-
-        GetMostPopularVideos(SubDiscoverFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().postDetailsArrayList.clear();
-
-            ApiCallingService.Discover.getAllMostPopularVideos(integers[0], reference.get().getContext())
-                    .enqueue(new Callback<PostList>() {
-                        @Override
-                        public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (reference.get().isAdded()) {
-                                if (response.code() == 200) {
-                                    PostList postList = response.body();
-                                    if (postList != null) {
-                                        reference.get().is_next_page = postList.isNextPage();
-                                        if (!postList.getPosts().isEmpty()) {
-                                            reference.get().postDetailsArrayList.addAll(postList.getPosts());
-                                            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                        } else
-                                            reference.get().noPosts.setVisibility(View.VISIBLE);
-                                    }
-                                } else
-                                    Log.e("GetTrendingVideos", response.code() + "_" + response.message());
+    
+    private void getMostPopularVideos(final int page) {
+        mostPopularVideosCall = ApiCallingService.Discover.getAllMostPopularVideos(page, getContext());
+        if (!mostPopularVideosCall.isExecuted())
+            mostPopularVideosCall.enqueue(new Callback<PostList>() {
+                @Override
+                public void onResponse(Call<PostList> call, Response<PostList> response) {
+                    if (isAdded()) {
+                        if (response.code() == 200) {
+                            PostList postList = response.body();
+                            if (postList != null) {
+                                if (page == 1) postDetailsArrayList.clear();
+                                is_next_page = postList.isNextPage();
+                                if (!postList.getPosts().isEmpty()) {
+                                    postDetailsArrayList.addAll(postList.getPosts());
+                                    recyclerView.getAdapter().notifyDataSetChanged();
+                                } else if (page == 1) {
+                                    noPosts.setVisibility(View.VISIBLE);
+                                    noPosts2.setVisibility(VISIBLE);
+                                }
                             }
-                        }
+                        } else
+                            Log.e("getMostPopularVideos", response.code() + "_" + response.message());
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-                        @Override
-                        public void onFailure(Call<PostList> call, Throwable t) {
-                            if (reference.get().isAdded()) {
-                                Log.e("FAIL! GetTrendingVideos", t.getMessage() != null ? t.getMessage() : "FAILED!");
-                            }
-                        }
-                    });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            reference.get().swipeRefreshLayout.setRefreshing(false);
-        }
+                @Override
+                public void onFailure(Call<PostList> call, Throwable t) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    t.printStackTrace();
+                }
+            });
     }
 
     @Override
@@ -383,6 +341,15 @@ public class SubDiscoverFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mostPopularVideosCall != null && mostPopularVideosCall.isExecuted())
+            mostPopularVideosCall.cancel();
+        if (trendingVideosCall != null && trendingVideosCall.isExecuted())
+            trendingVideosCall.cancel();
     }
 
     @Override

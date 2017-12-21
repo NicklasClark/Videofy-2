@@ -194,8 +194,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-
-        Log.d("NOTIFYM", "onCreate called");
+        Log.d("NOTIFY", "onCreate called");
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -860,9 +859,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
+        if (isEditing)
+            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
     }
 
     @Override
@@ -871,7 +872,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null, null);
+        PostDetailsActivity.newInstance(this, postDetails, null,
+                false, false, null, null);
     }
     //</editor-fold>
 
@@ -892,7 +894,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_LOW);
+                    "Upload notification", NotificationManager.IMPORTANCE_DEFAULT);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");

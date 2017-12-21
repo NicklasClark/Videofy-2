@@ -111,8 +111,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         View.OnClickListener profileListener;
 
         switch (viewHolder.getItemViewType()) {
-
-
             case TYPE_FOLLOWING:
                 final FollowingViewHolder holder1 = (FollowingViewHolder) viewHolder;
                 holder1.notification = notificationsList.getNotifications().get(position);
@@ -137,7 +135,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             })
                             .into(holder1.dp);
                 else {
-
                     Glide.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
                             .crossFade()
@@ -213,8 +210,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 profileListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
                         mListener.onNotificationsInteraction(false, null,
                                 holder1.notification.getMetaData().getFromId(), "");
                     }
@@ -252,7 +247,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             holder2.action.setVisibility(View.VISIBLE);
                             setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                         }
-                        else if (holder2.notification.isRequest_sent()) {
+                        else if (holder2.notification.isRequestSent()) {
                             holder2.action.setVisibility(View.VISIBLE);
                             setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                         } else {
@@ -262,16 +257,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
 
                     else {
-
                         if (holder2.notification.getNotificationType() == 1) {
-
-                            if (holder2.notification.isFollowing())
-
-                            {
+                            if (holder2.notification.isFollowing()) {
                                 holder2.action.setVisibility(View.VISIBLE);
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             }
-                            else if (holder2.notification.isRequest_sent() == true) {
+                            else if (holder2.notification.isRequestSent()) {
                                 holder2.action.setVisibility(View.VISIBLE);
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                             } else {
@@ -361,7 +352,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                                             if (holder2.notification.isFollowing()) {
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                            } else if (holder2.notification.isRequest_sent()) {
+                                                            } else if (holder2.notification.isRequestSent()) {
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                                                             } else {
                                                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
@@ -674,38 +665,29 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
                     try {
-                        boolean b = response.body().getStatus();
                         if (response.body().getStatus()) {
-
                             if (holder2.notification.getAccountType() == ACCOUNT_TYPE_PUBLIC)
                                 setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
                             else
                                 setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
                             holder2.declineRequest.setVisibility(View.GONE);
                         } else {
-
-                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "You are already following", Toast.LENGTH_LONG).show();
                         }
-
                     } catch (Exception e) {
-
                         e.printStackTrace();
-
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -713,14 +695,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class FollowingViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_layout)
-        LinearLayout layout;
-        @BindView(R.id.dp)
-        CircularAppCompatImageView dp;
-        @BindView(R.id.name)
-        UniversalTextView content;
-        @BindView(R.id.notification_thumb)
-        ImageView thumbnail;
+        @BindView(R.id.root_layout) LinearLayout layout;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) UniversalTextView content;
+        @BindView(R.id.notification_thumb) ImageView thumbnail;
         Notification notification;
 
         FollowingViewHolder(View view) {
@@ -735,16 +713,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class RequestsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_layout)
-        LinearLayout layout;
-        @BindView(R.id.dp)
-        CircularAppCompatImageView dp;
-        @BindView(R.id.name)
-        UniversalTextView content;
-        @BindView(R.id.action)
-        ProximaNovaSemiboldTextView action;
-        @BindView(R.id.decline)
-        AppCompatImageView declineRequest;
+        @BindView(R.id.root_layout) LinearLayout layout;
+        @BindView(R.id.dp) CircularAppCompatImageView dp;
+        @BindView(R.id.name) UniversalTextView content;
+        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;
         int accountType;
