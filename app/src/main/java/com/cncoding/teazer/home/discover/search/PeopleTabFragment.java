@@ -112,41 +112,45 @@ public class PeopleTabFragment extends BaseFragment {
             usersListCall.enqueue(new Callback<UsersList>() {
                 @Override
                 public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-                    if (isAdded()) {
-                        if (response.code() == 200) {
-                            UsersList users = response.body();
-                            is_next_page = users.isNextPage();
-                            if (users.getUsers().size() > 0) {
-                                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                noPosts.setVisibility(View.GONE);
-                                noPosts2.setVisibility(View.GONE);
-                                usersList.addAll(users.getUsers());
-                                recyclerView.getRecycledViewPool().clear();
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                if (page == 1 && usersList.isEmpty()) {
-                                    swipeRefreshLayout.setVisibility(View.GONE);
-                                    noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
-                                    noPosts.setVisibility(View.VISIBLE);
-                                    noPosts2.setVisibility(View.INVISIBLE);
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+                                UsersList users = response.body();
+                                is_next_page = users.isNextPage();
+                                if (users.getUsers() != null && users.getUsers().size() > 0) {
+                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    noPosts.setVisibility(View.GONE);
+                                    noPosts2.setVisibility(View.GONE);
+                                    usersList.addAll(users.getUsers());
+                                    recyclerView.getRecycledViewPool().clear();
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    if (page == 1 && usersList.isEmpty()) {
+                                        swipeRefreshLayout.setVisibility(View.GONE);
+                                        noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+                                        noPosts.setVisibility(View.VISIBLE);
+                                        noPosts2.setVisibility(View.INVISIBLE);
+                                    }
                                 }
+                            } else {
+                                noPosts.setVisibility(View.VISIBLE);
+                                noPosts.setText(R.string.error_fetching_data);
+                                noPosts.setCompoundDrawablesWithIntrinsicBounds(
+                                        0, R.drawable.ic_no_data_placeholder, 0, 0);
+                                noPosts2.setVisibility(View.INVISIBLE);
+                                Log.e("getUsersListToFollow", response.code() + "_" + response.message());
                             }
-                        } else {
-                            noPosts.setVisibility(View.VISIBLE);
-                            noPosts.setText(R.string.error_fetching_data);
-                            noPosts.setCompoundDrawablesWithIntrinsicBounds(
-                                    0, R.drawable.ic_no_data_placeholder, 0, 0);
-                            noPosts2.setVisibility(View.INVISIBLE);
-                            Log.e("getUsersListToFollow", response.code() + "_" + response.message());
+                            swipeRefreshLayout.setRefreshing(false);
                         }
-                        swipeRefreshLayout.setRefreshing(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UsersList> call, Throwable t) {
                     if (isAdded()) {
-                        Log.e("getUsersListToFollow", t.getMessage() != null ? t.getMessage() : "FAILED!!!");
+                        t.printStackTrace();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
