@@ -97,14 +97,12 @@
                 android:id="@+id/uploadingStatusLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:text="Uploading.."
+                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:id="@+id/uploadProgressText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <ProgressBar
-                    android:progress="30"
                     android:layout_below="@+id/uploadProgressText"
                     android:id="@+id/uploadProgress"
                     android:layout_alignParentBottom="true"

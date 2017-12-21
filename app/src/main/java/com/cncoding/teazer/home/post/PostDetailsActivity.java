@@ -38,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -230,7 +229,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     @BindView(R.id.loader)
     GifTextView loader;
     @BindView(R.id.uploadProgressText)
-    TextView uploadProgressText;
+    ProximaNovaSemiboldTextView uploadProgressText;
     @BindView(R.id.uploadProgress)
     ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout)

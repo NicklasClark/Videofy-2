@@ -180,7 +180,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.camera_btn)
     ProximaNovaBoldTextView cameraButton;
     @BindView(R.id.uploadProgressText)
-    TextView uploadProgressText;
+    ProximaNovaSemiboldTextView uploadProgressText;
     @BindView(R.id.uploadProgress)
     ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout)
@@ -962,7 +962,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:
-                                uploadProgressText.setText("Failed, try again");
+                                uploadProgressText.setText("Failed, please try again");
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override

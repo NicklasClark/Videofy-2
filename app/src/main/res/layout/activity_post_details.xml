@@ -434,7 +434,7 @@
                 android:id="@+id/uploadingStatusLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:id="@+id/uploadProgressText"
                     android:layout_width="wrap_content"
