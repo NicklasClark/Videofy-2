@@ -28,6 +28,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.SharedPrefs.setFollowingNotificationCount;
+
 /**
  * A fragment representing a list of Items.
  */
@@ -149,8 +151,7 @@ public class FollowingNotificationsTabFragment extends BaseFragment {
                     try {
                         if (isAdded()) {
                             if (response.code() == 200) {
-
-                            } else {
+                                setFollowingNotificationCount(getContext() ,0);
                             }
                         }
                     } catch (Exception e) {

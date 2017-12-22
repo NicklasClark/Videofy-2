@@ -18,7 +18,7 @@ import okio.BufferedSink;
 
 public class ProgressRequestBody extends RequestBody {
 
-    private static final int DEFAULT_BUFFER_SIZE = 2048;
+    private static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private File file;
     private UploadCallbacks uploadCallbacks;
@@ -49,11 +49,12 @@ public class ProgressRequestBody extends RequestBody {
             int read;
             Handler handler = new Handler(Looper.getMainLooper());
             while ((read = inputStream.read(buffer)) != -1) {
+
                 uploaded += read;
                 sink.write(buffer, 0, read);
 
 //            UPDATE PROGRESS ON UI THREAD
-                handler.post(new ProgressUpdater(fileLength, uploaded));
+                handler.postDelayed(new ProgressUpdater(fileLength, uploaded), 2000);
 //                uploadCallbacks.onProgressUpdate((int) (100 * uploaded / fileLength));
             }
         } catch (Exception e) {

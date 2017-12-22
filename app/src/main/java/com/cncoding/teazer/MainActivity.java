@@ -58,23 +58,22 @@ import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
 import com.cncoding.teazer.model.base.Authorize;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
+import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -94,13 +93,13 @@ public class MainActivity extends AppCompatActivity
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
         OnForgotPasswordInteractionListener, OnResetForgotPasswordInteractionListener, OnInterestsInteractionListener {
 
-    //    public static final String USER_PROFILE = "profile";
+//    public static final String USER_PROFILE = "profile";
 //    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int ACCOUNT_TYPE_PRIVATE = 1;
     public static final int ACCOUNT_TYPE_PUBLIC = 2;
 
     public static final int DEVICE_TYPE_ANDROID = 2;
-    //    public static final int OPEN_CAMERA_ACTION = 98;
+//    public static final int OPEN_CAMERA_ACTION = 98;
     private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
     private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
@@ -112,35 +111,30 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     public static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
-    //    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
+//    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
-    //    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
+//    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
 //    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
     public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
     public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
-    //    public static final int SIGNUP_FAILED_ACTION = 23;
+//    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
-    //    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
+//    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
      static byte[] bte;
 
-    @BindView(R.id.container)
-    RelativeLayout rootView;
-    @BindView(R.id.welcome_video)
-    VideoView welcomeVideo;
-    @BindView(R.id.main_fragment_container)
-    FrameLayout mainFragmentContainer;
-    @BindView(R.id.up_btn)
-    ImageView upBtn;
+    @BindView(R.id.container) RelativeLayout rootView;
+    @BindView(R.id.welcome_video) VideoView welcomeVideo;
+    @BindView(R.id.main_fragment_container) FrameLayout mainFragmentContainer;
+    @BindView(R.id.up_btn) ImageView upBtn;
 
-   String imageUri;
-
+    String imageUri;
 //    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
-    //    private BlurView.ControllerSettings settings;
+//    private BlurView.ControllerSettings settings;
 //    private ValueAnimator animator;
     private TransitionDrawable transitionDrawable;
 
@@ -168,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.setLooping(true);
-                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
                     mediaPlayer.start();
                 }
             });
@@ -407,7 +401,6 @@ public class MainActivity extends AppCompatActivity
 
         username = username == null ? facebookProfile.getName() : username.replace(" ", "");
 
-
         ApiCallingService.Auth.socialSignUp(new Authorize(
                 getFcmToken(this),
                 getDeviceId(this),
@@ -429,12 +422,17 @@ public class MainActivity extends AppCompatActivity
                                 case 201:
                                     if (response.body().getStatus()) {
                                         SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                        SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                         verificationSuccessful(true,
                                                 button, false);
+                                        //updating profile picture
+                                        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
+                                        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
                                     }
                                     break;
                                 case 200:
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
+                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                     if (response.body().getStatus()) {
                                         verificationSuccessful(true,
                                                 button, true);
@@ -458,8 +456,6 @@ public class MainActivity extends AppCompatActivity
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
@@ -474,9 +470,6 @@ public class MainActivity extends AppCompatActivity
                         });
                     }
                 });
-
-        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
-        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
     }
 
     private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button,
@@ -507,12 +500,17 @@ public class MainActivity extends AppCompatActivity
                             case 201:
                                 if (response.body().getStatus()) {
                                     SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
+                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                     verificationSuccessful(false,
                                             button, false);
+                                    //updating profile picture
+                                    GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
+                                    generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
                                 }
                                 break;
                             case 200:
                                 SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
+                                SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false,
                                             button, true);
@@ -536,7 +534,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Log.d("handleGoogleSignIn()", t.getMessage());
+                        t.printStackTrace();
                         button.revertAnimation(new OnAnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
@@ -547,8 +545,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(this);
-        generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
     }
 
     private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button,
@@ -604,7 +600,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onForgotPasswordInteraction(String enteredText, int countryCode, boolean isEmail) {
-        setFragment(TAG_FORGOT_PASSWORD_RESET_FRAGMENT, true, new Object[]{enteredText, countryCode, isEmail});
+        setFragment(TAG_FORGOT_PASSWORD_RESET_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
     }
 
     @Override
@@ -620,22 +616,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFinalEmailSignupInteraction(final Authorize signUpDetails, String picturePath) {
-        setFragment(TAG_OTP_FRAGMENT, true, new Object[]{signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
+        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
         successfullyLoggedIn();
     }
 
     @Override
     public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
+
     public static byte[] bitmaptoByte(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        return data;
+        return baos.toByteArray();
     }
 
     private static class UpdateProfilePic extends AsyncTask<String, Void, MultipartBody.Part> {
@@ -644,38 +640,21 @@ public class MainActivity extends AppCompatActivity
 
         UpdateProfilePic(MainActivity context) {
             reference = new WeakReference<>(context);
-
         }
-
-
-       // 3790
-
-       // 6665
 
         @Override
         protected MultipartBody.Part doInBackground(String... strings) {
             try {
-
                 File profileImage = new File(strings[0]);
-
-//                if (profileImage.exists()) {
-
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), bte);
-                return MultipartBody.Part.createFormData("media", "profile_image.jpg", requestBody);
-
-
-                // }
-//=======
-//                if (profileImage.exists()) {
-//                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
-//                    return MultipartBody.Part.createFormData("media", profileImage.getName(), requestBody);
-//                }
-//>>>>>>> master_dev
+                if (profileImage.exists()) {
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), profileImage);
+                    return MultipartBody.Part.createFormData("media", profileImage.getName(), requestBody);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-           // return null;
+            return null;
         }
 
         @Override
@@ -685,10 +664,8 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                        // Log.d("IMAGE Url",picturePath)
-                        Toast.makeText(reference.get(), "Profile pic Updated", Toast.LENGTH_SHORT).show();
-
+//                        Toast.makeText(reference.get(), "Profile pic Updated", Toast.LENGTH_SHORT).show();
                     }
-
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();
@@ -866,8 +843,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.up_btn)
-    public void backPressed() {
+    @OnClick(R.id.up_btn) public void backPressed() {
         hideKeyboard(this, upBtn);
         onBackPressed();
     }
@@ -887,42 +863,4 @@ public class MainActivity extends AppCompatActivity
             }
         } else super.onBackPressed();
     }
-
-
-
-//    public void getBitmapFromUrl(String imageUrl)
-//    {
-//        if (imageUrl != null) {
-//            try {
-//                Bitmap bitmap = null;
-//    //            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(url));
-//                try {
-//                    URL url = new URL(imageUrl);
-//                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                } catch(IOException e) {
-//                    e.printStackTrace();
-//                }
-//    //            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
-//
-//
-//                byte[] bte = bitmaptoByte(bitmap);
-//    //            SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
-//    //            SharedPreferences.Editor editor = preferences.edit();
-//    //            editor.putString("MYIMAGES", url);
-//    //            editor.apply();
-//
-//                // File profileImage = new File(r.getPath());
-//                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
-//                MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
-//                saveDataToDatabase(body);
-//
-//            }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-
 }

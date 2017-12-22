@@ -80,6 +80,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bundle.putInt(TAB_INDEX, 3);
         bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
         bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
+        Log.d("FCMNOT", data.get("notification_type"));
         intent.putExtra("bundle", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -24,7 +24,6 @@ public class PostReaction implements Parcelable {
     private MiniProfile react_owner;
     private String reacted_at;
 
-
     protected PostReaction(Parcel in) {
         react_id = in.readInt();
         post_id = in.readInt();

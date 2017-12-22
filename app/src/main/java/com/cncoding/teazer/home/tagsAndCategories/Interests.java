@@ -244,8 +244,10 @@ public class Interests extends BaseFragment {
     }
 
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
-        selectedData = getSelectedInterestsToShow(interestsAdapter.getSelectedInterests());
-        resultToSend = getSelectedInterestsToSend(interestsAdapter.getSelectedInterests());
+        final SparseArray<Category> selectedInterests = interestsAdapter.getSelectedInterests();
+        final ArrayList<Category> categories = new ArrayList<>();
+        selectedData = getSelectedInterestsToShow(selectedInterests);
+        resultToSend = getSelectedInterestsToSend(selectedInterests);
         if (!isForVideo) {
             ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
                     .enqueue(new Callback<ResultObject>() {
@@ -257,7 +259,10 @@ public class Interests extends BaseFragment {
                                 } else {
                                     Log.d("Updating interests", response.code() + " : " + response.message());
                                 }
-                                mListener.onInterestsInteraction();
+                                for (int i = 0; i < selectedInterests.size(); i++) {
+                                    categories.add(selectedInterests.valueAt(i));
+                                }
+                                mListener.onInterestsInteraction(isEditing, categories);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -353,7 +358,7 @@ public class Interests extends BaseFragment {
     }
 
     public interface OnInterestsInteractionListener {
-        void onInterestsInteraction();
+        void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories);
         void onInterestsSelected(String resultToShow, String resultToSend, int count);
     }
 }

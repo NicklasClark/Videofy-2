@@ -29,11 +29,6 @@ public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoLis
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_trimmer);
-//        if (getActionBar() != null) {
-//            getActionBar().setDisplayShowTitleEnabled(true);
-//            getActionBar().setTitle("Trim Video");
-//            getActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
         Bundle bd = getIntent().getExtras();
         String path = "";
         if(bd != null) {

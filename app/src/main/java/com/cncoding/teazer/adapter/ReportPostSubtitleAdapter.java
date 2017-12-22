@@ -35,11 +35,13 @@ public class ReportPostSubtitleAdapter extends RecyclerView.Adapter<ReportPostSu
     private PostsListFragment postsListFragment;
     private SubTitleSelectedInterface mAdapterCallback;
     private int lastSelectedRow = -1;
+    private String userName;
 
-    public ReportPostSubtitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportPostSubtitleFragment reportPostSubtitleFragment) {
+    public ReportPostSubtitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportPostSubtitleFragment reportPostSubtitleFragment, String userName) {
         this.subReportsType = reportsType;
         this.context = context;
         this.fragmentContext = reportPostSubtitleFragment;
+        this.userName = userName;
         try {
             this.mAdapterCallback = reportPostSubtitleFragment;
         } catch (ClassCastException e) {
@@ -66,7 +68,14 @@ public class ReportPostSubtitleAdapter extends RecyclerView.Adapter<ReportPostSu
             holder.tickView.setVisibility(View.VISIBLE);
         else
             holder.tickView.setVisibility(View.GONE);
-        holder.reportTitle.setText(report.getTitle());
+        String title = report.getTitle();
+        if(title.contains("####"))
+        {
+            title = title.substring(0, title.indexOf("#")-1) +" "+ userName;
+            holder.reportTitle.setText(title);
+        }
+        else
+            holder.reportTitle.setText(report.getTitle());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

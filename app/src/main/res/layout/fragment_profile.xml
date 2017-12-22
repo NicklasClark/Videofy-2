@@ -362,9 +362,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:background="@drawable/loader2" />
-
+        android:background="@drawable/ic_loader" />
 
 </android.support.design.widget.CoordinatorLayout>
-
-

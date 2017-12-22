@@ -138,6 +138,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     @Override
     public void onResume() {
         super.onResume();
+        getHomePagePosts(1, false);
+
         if (postList != null && !isRefreshing) {
             if (postList.isEmpty()) {
                 getHomePagePosts(1, false);
@@ -164,8 +166,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
         }
-
-        getHomePagePosts(1, false);
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {

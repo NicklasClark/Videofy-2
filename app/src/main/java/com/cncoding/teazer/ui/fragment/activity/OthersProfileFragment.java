@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,15 +41,13 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.user.PrivateProfile;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
@@ -67,8 +63,6 @@ import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 public class OthersProfileFragment extends BaseFragment {
 
@@ -362,8 +356,8 @@ public class OthersProfileFragment extends BaseFragment {
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
 
-                            String username = publicProfile.getUserName();
-                            firstName = publicProfile.getFirstName();
+                            username = publicProfile.getUserName();
+                            String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
                             details = publicProfile.getDescription();
                             int gender = publicProfile.getGender();
@@ -465,8 +459,8 @@ public class OthersProfileFragment extends BaseFragment {
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
                             accountType = privateProfile.getAccountType();
                             userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
-                            String username = privateProfile.getUsername();
-                            firstName = privateProfile.getFirstName();
+                            username = privateProfile.getUsername();
+                            String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.hasProfileMedia();
@@ -848,7 +842,7 @@ public class OthersProfileFragment extends BaseFragment {
 
     public void openReportUser(final int blockuserId) {
         FragmentManager fm = getFragmentManager();
-        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId);
+        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId, username);
         reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
         reportUserDialogFragment.show(fm, "fragment_report_post");
     }

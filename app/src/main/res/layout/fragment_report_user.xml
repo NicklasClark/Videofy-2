@@ -25,4 +25,12 @@
         android:text="@string/report_btn_text"
         android:contentDescription="@string/check"
         android:layout_alignParentBottom="true"/>
+
+    <pl.droidsonroids.gif.GifTextView
+        android:layout_width="100dp"
+        android:id="@+id/loader"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_height="100dp"
+        android:background="@drawable/ic_loader"/>
 </RelativeLayout>

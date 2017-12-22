@@ -102,7 +102,7 @@ public class AddWaterMarkAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        delegate.waterMarkProcessFinish(result);
+//        delegate.waterMarkProcessFinish(result);
     }
 
 

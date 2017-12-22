@@ -31,15 +31,17 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
 
     private final List<ReportPostSubTitleResponse> reportsType;
     private final ReportUserDialogFragment fragmentContext;
+    private final String userName;
     private Context context;
     private PostsListFragment postsListFragment;
     private TitleSelectedInterface mAdapterCallback;
     private int lastSelectedRow = -1;
 
-    public ReportUserTitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportUserDialogFragment reportUserDialogFragment) {
+    public ReportUserTitleAdapter(List<ReportPostSubTitleResponse> reportsType, Context context, ReportUserDialogFragment reportUserDialogFragment, String userName) {
         this.reportsType = reportsType;
         this.context = context;
         this.fragmentContext = reportUserDialogFragment;
+        this.userName = userName;
         try {
             this.mAdapterCallback = reportUserDialogFragment;
         } catch (ClassCastException e) {
@@ -68,7 +70,15 @@ public class ReportUserTitleAdapter extends RecyclerView.Adapter<ReportUserTitle
         else
             holder.tickView.setVisibility(View.GONE);
 
-        holder.reportTitle.setText(report.getTitle());
+        String title = report.getTitle();
+        if(title.contains("####"))
+        {
+            title = title.substring(0, title.indexOf("#")-1) +" "+ userName;
+            holder.reportTitle.setText(title);
+        }
+        else
+            holder.reportTitle.setText(report.getTitle());
+
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

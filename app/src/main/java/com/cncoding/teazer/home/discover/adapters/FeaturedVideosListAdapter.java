@@ -1,14 +1,15 @@
 package com.cncoding.teazer.home.discover.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -21,7 +22,9 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
+import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,8 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
+import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
+import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
 /**
  *
@@ -41,7 +46,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVideosListAdapter.ViewHolder> {
 
     private SparseIntArray colorArray;
-    private SparseIntArray dimensionSparseArray;
+    private SparseArray<Dimension> dimensionSparseArray;
     private final ArrayList<PostDetails> featuredVideosArrayList;
     private final Context context;
     private OnDiscoverInteractionListener mListener;
@@ -50,7 +55,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         this.featuredVideosArrayList = featuredVideosArrayList;
         this.context = context;
         this.mListener = mListener;
-        dimensionSparseArray = new SparseIntArray();
+        dimensionSparseArray = new SparseArray<>();
         colorArray = new SparseIntArray();
     }
 
@@ -61,13 +66,21 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         return new FeaturedVideosListAdapter.ViewHolder(itemView);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressWarnings("SuspiciousNameCombination")
     @Override
     public void onBindViewHolder(final FeaturedVideosListAdapter.ViewHolder holder, int position) {
+        ViewUtils.initializeShimmer(holder.shimmerLayout, holder.topLayout, holder.bottomLayout, holder.vignetteLayout);
+
         holder.postDetails = featuredVideosArrayList.get(position);
 
-        if (dimensionSparseArray.get(position) != 0) {
-            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position);
+        /*Adjust view size before loading anything*/
+        if (dimensionSparseArray.get(position) == null) {
+            adjustViewSize(context, holder.postDetails.getMedias().get(0).getDimension().getWidth(),
+                    holder.postDetails.getMedias().get(0).getDimension().getHeight(),
+                    holder.layout.getLayoutParams(), position, dimensionSparseArray, false);
+        } else {
+            holder.layout.getLayoutParams().width = dimensionSparseArray.get(position).getWidth();
+            holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
         }
 
         /*Setting title*/
@@ -105,7 +118,6 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .placeholder(R.drawable.bg_placeholder)
                 .crossFade()
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
@@ -116,15 +128,8 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        int height = (holder.layout.getWidth() * resource.getIntrinsicHeight()) / resource.getIntrinsicWidth();
-                        if (height < holder.layout.getWidth())
-                            height = holder.layout.getWidth();
-
-                        holder.layout.getLayoutParams().height = height;
-
-                        dimensionSparseArray.put(holder.getAdapterPosition(), height);
-
-                        holder.layout.setVisibility(View.VISIBLE);
+                        prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                                holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
                     }
                 })
@@ -178,6 +183,10 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.title) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
+        @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
+        @BindView(R.id.top_layout) RelativeLayout topLayout;
+        @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
         @BindView(R.id.name) ProximaNovaSemiboldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;

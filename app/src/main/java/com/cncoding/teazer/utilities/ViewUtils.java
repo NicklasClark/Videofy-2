@@ -20,7 +20,9 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -34,6 +36,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.home.post.PostDetailsActivity;
+import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
@@ -276,7 +279,8 @@ public class ViewUtils {
     }
 
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
-//                                                   float startRadius, float endRadius, int duration, int color, final boolean isReversed){
+//                                                   float startRadius, float endRadius, int duration,
+// int color, final boolean isReversed){
 //        mRevealView.setBackgroundColor(color);
 //        Animator animator;
 //        if (!isReversed)
@@ -357,6 +361,54 @@ public class ViewUtils {
             }
         } else
             return null;
+    }
+
+    public static void initializeShimmer(ViewGroup shimmerLayout, ViewGroup topLayout,
+                                         ViewGroup bottomLayout, ViewGroup vignetteLayout) {
+        try {
+            shimmerLayout.setVisibility(View.VISIBLE);
+            topLayout.setVisibility(View.INVISIBLE);
+            bottomLayout.setVisibility(View.INVISIBLE);
+            vignetteLayout.setVisibility(View.INVISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public static void adjustViewSize(Context context, int postWidth, int postHeight, ViewGroup.LayoutParams layoutParams,
+                                      int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
+        try {
+            int width = isPostList ?
+    //                in case of home page post lists, decrease 0.5dp from half the screen width
+                    (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2 :
+    //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
+                    (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
+
+            layoutParams.width = width;
+            if (postHeight < postWidth) {
+                postHeight = width;
+                layoutParams.height = postHeight;
+            } else {
+                layoutParams.height = width * postHeight / postWidth;
+            }
+            dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void prepareLayout(ViewGroup layout, ViewGroup shimmerLayout, ViewGroup topLayout,
+                                     ViewGroup bottomLayout, ViewGroup vignetteLayout, int width, int height) {
+        try {
+            layout.setBackgroundResource(height < width ? R.color.black : R.color.material_grey200);
+            shimmerLayout.setVisibility(View.INVISIBLE);
+            topLayout.setVisibility(View.VISIBLE);
+            bottomLayout.setVisibility(View.VISIBLE);
+            vignetteLayout.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    /**

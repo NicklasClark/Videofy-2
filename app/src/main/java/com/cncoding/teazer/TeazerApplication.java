@@ -56,6 +56,8 @@ public class TeazerApplication extends Application {
                     }
                 });
         EmojiCompat.init(config);
+
+//        EmojiManager.install(new IosEmojiProvider());
     }
 
 //    public static void initImageLoader(Context context) {

@@ -51,10 +51,10 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.TagListAdapter.TaggedListInteractionListener;
 import com.cncoding.teazer.model.base.TaggedUser;
@@ -109,6 +109,7 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,7 +126,6 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
@@ -155,46 +155,85 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //<editor-fold desc="Main layout views">
     //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.react_btn) ProximaNovaSemiboldButton reactBtn;
-    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
+    @BindView(R.id.relative_layout)
+    RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container)
+    RelativeLayout tagsLayout;
+    @BindView(R.id.placeholder)
+    ImageView placeholder;
+    @BindView(R.id.loading)
+    ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.react_btn)
+    ProximaNovaBoldButton reactBtn;
+    @BindView(R.id.like)
+    ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users)
+    ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list)
+    RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent)
+    RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge)
+    ProximaNovaSemiboldTextView tagsCountBadge;
     //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
-    @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header)
+    ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle)
+    ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout)
+    LinearLayout postLoadErrorLayout;
     //    @BindView(R.id.share) ProximaNovaRegularTextView share;
-    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.video_view)
+    SimpleExoPlayerView playerView;
     //</editor-fold>
 
     //<editor-fold desc="Controller views">
-    @BindView(R.id.controls) FrameLayout controlsContainer;
+    @BindView(R.id.controls)
+    FrameLayout controlsContainer;
     //top layout
-    @BindView(R.id.media_controller_caption) ProximaNovaSemiboldTextView caption;
-    @BindView(R.id.media_controller_location) ProximaNovaRegularTextView locationView;
-    @BindView(R.id.media_controller_eta) ProximaNovaRegularTextView remainingTime;
+    @BindView(R.id.media_controller_caption)
+    ProximaNovaSemiboldTextView caption;
+    @BindView(R.id.media_controller_location)
+    ProximaNovaRegularTextView locationView;
+    @BindView(R.id.media_controller_eta)
+    ProximaNovaRegularTextView remainingTime;
     //center layout
-    @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
+    @BindView(R.id.media_controller_play_pause)
+    AppCompatImageButton playPauseButton;
 
     //bottom layout
-    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
-    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
-    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
-    @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
-    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiboldTextView reactionCountView;
-    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
-    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
-    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.media_controller_dp)
+    CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name)
+    ProximaNovaRegularTextView profileNameView;
+    @BindView(R.id.media_controller_likes)
+    ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views)
+    ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories)
+    ProximaNovaSemiboldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count)
+    ProximaNovaSemiboldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1)
+    CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2)
+    CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3)
+    CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.loader)
+    GifTextView loader;
+    @BindView(R.id.uploadProgressText)
+    ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -282,9 +321,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postDetails = getIntent().getParcelableExtra(ARG_POST_DETAILS);
             if (!isDeepLink) {
                 image = getIntent().getByteArrayExtra(ARG_THUMBNAIL);
-            }
-            else
-            {
+            } else {
                 thumbUrl = getIntent().getStringExtra(ARG_THUMBNAIL);
                 reactId = getIntent().getStringExtra(ARG_REACT_ID);
                 isReactionPlayed = false;
@@ -489,47 +526,46 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             postReactionsListCall.enqueue(new Callback<PostReactionsList>() {
                 @Override
                 public void onResponse(Call<PostReactionsList> call, Response<PostReactionsList> response) {
-                    try {switch (response.code()) {
-                        case 200:
-                            if (response.body().getReactions().size() > 0) {
-                                postLoadErrorLayout.setVisibility(GONE);
-                                is_next_page = response.body().isNextPage();
-                                if (pageNumber == 1) postReactions.clear();
+                    try {
+                        switch (response.code()) {
+                            case 200:
+                                if (response.body().getReactions().size() > 0) {
+                                    postLoadErrorLayout.setVisibility(GONE);
+                                    is_next_page = response.body().isNextPage();
+                                    if (pageNumber == 1) postReactions.clear();
 
-                                postReactions.addAll(response.body().getReactions());
+                                    postReactions.addAll(response.body().getReactions());
 //                                    recyclerView.setVisibility(View.VISIBLE);
-                                postReactionAdapter.notifyDataSetChanged();
-                                if (postReactions.size() > 0) {
-                                    if (postReactions.size() >= 1) {
-                                        setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                    postReactionAdapter.notifyDataSetChanged();
+                                    if (postReactions.size() > 0) {
+                                        if (postReactions.size() >= 1) {
+                                            setReaction1Pic(postReactions.get(0).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 2) {
+                                            setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
+                                        }
+                                        if (postReactions.size() >= 3) {
+                                            setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
+                                        }
                                     }
-                                    if (postReactions.size() >= 2) {
-                                        setReaction2Pic(postReactions.get(1).getMediaDetail().getThumbUrl());
-                                    }
-                                    if (postReactions.size() >= 3) {
-                                        setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
-                                    }
-                                }
 
-                                if(reactId != null && postReactions.size()>0 && !isReactionPlayed)
-                                {
-                                    if(postReactions.contains(new PostReaction(Integer.parseInt(reactId))))
-                                    {
-                                        int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
-                                        postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
+                                    if (reactId != null && postReactions.size() > 0 && !isReactionPlayed) {
+                                        if (postReactions.contains(new PostReaction(Integer.parseInt(reactId)))) {
+                                            int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
+                                            postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
+                                        } else
+                                            Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
+                                        isReactionPlayed = true;
                                     }
-                                    else
-                                        Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
-                                    isReactionPlayed = true;
+                                } else {
+                                    setNoReactions();
+                                    showNoReactionMessage();
                                 }
-                            } else {
-                                setNoReactions();
-                                showNoReactionMessage();
-                            }
-                            break;
-                        default:
-                            showErrorMessage("Error " + response.code() + ": " + response.message());
-                            break;}
+                                break;
+                            default:
+                                showErrorMessage("Error " + response.code() + ": " + response.message());
+                                break;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -558,13 +594,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-      //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
-        if(postDetails.canDelete())
-        {
+        //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
+        if (postDetails.canDelete()) {
             postLoadErrorSubtitle.setText("There is no reaction yet");
 
-        }
-        else {
+        } else {
             postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
 
         }
@@ -592,6 +626,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     public void incrementViews() {
         String viewsText = PostDetailsActivity.SPACE + ++views;
+        viewsView.setText(viewsText);
+    }
+
+    public void decrementViews() {
+        String viewsText = PostDetailsActivity.SPACE + --views;
         viewsView.setText(viewsText);
     }
 
@@ -665,12 +704,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         reactionCountView.setText("");
     }
 
-    @OnClick(R.id.btnClose) public void goBack() {
+    @OnClick(R.id.btnClose)
+    public void goBack() {
         customHandler.removeCallbacks(updateTimerThread);
         finish();
     }
 
-    @OnClick(R.id.media_controller_eta) public void toggleSound() {
+    @OnClick(R.id.media_controller_eta)
+    public void toggleSound() {
         if (audioManager != null) {
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
@@ -678,14 +719,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
             if (isAudioEnabled) {
                 volume = 0;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_mute);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeoff);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = maxVolume;
 //                volume = 100 * maxVolume + currentVolume;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeon);
                 isAudioEnabled = true;
             }
 
@@ -700,11 +741,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    @OnClick(R.id.react_btn) public void react() {
+    @OnClick(R.id.react_btn)
+    public void react() {
         launchReactionCamera(this, postDetails);
     }
 
-    @OnClick(R.id.like) public void likePost() {
+    @OnClick(R.id.like)
+    public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -731,7 +774,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         likeAction(likeBtn.isChecked(), true);
     }
 
-    @OnClick(R.id.tags) public void getTaggedList() {
+    @OnClick(R.id.tags)
+    public void getTaggedList() {
         if (horizontalListViewParent.getVisibility() == GONE) {
             horizontalListViewParent.setVisibility(VISIBLE);
         } else {
@@ -753,40 +797,39 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 if (page == 1)
                                     taggedUsersList.clear();
 
-                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                    getTaggedUsers(page + 1);
-                                    noTaggedUsers.setVisibility(GONE);
-                                }
-                                else if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                    taggedUsersList.clear();
-                                    noTaggedUsers.setVisibility(VISIBLE);
+                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                getTaggedUsers(page + 1);
+                                noTaggedUsers.setVisibility(GONE);
+                            } else if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                taggedUsersList.clear();
+                                noTaggedUsers.setVisibility(VISIBLE);
 //                                    new Handler().postDelayed(new Runnable() {
 //                                        @Override
 //                                        public void run() {
 //                                            horizontalListViewParent.setVisibility(GONE);
 //                                        }
 //                                    }, 2000);
-                                }
-                            } else {
-                                if(page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                    taggedUsersList.clear();
-                                    noTaggedUsers.setVisibility(VISIBLE);
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            horizontalListViewParent.setVisibility(GONE);
-//                                        }
-//                                    }, 2000);
-                                } else {
-                                    noTaggedUsers.setVisibility(GONE);
-                                    taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                    taggedUserListView.getAdapter().notifyDataSetChanged();
-                                }
                             }
                         } else {
-                            Log.d("PostDetailActivity", getString( R.string.error_getting_tagged_users));
+                            if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+                                taggedUsersList.clear();
+                                noTaggedUsers.setVisibility(VISIBLE);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            horizontalListViewParent.setVisibility(GONE);
+//                                        }
+//                                    }, 2000);
+                            } else {
+                                noTaggedUsers.setVisibility(GONE);
+                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+                                taggedUserListView.getAdapter().notifyDataSetChanged();
+                            }
                         }
-                    }catch (Exception e) {
+                    } else {
+                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -826,7 +869,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    @OnClick(R.id.menu) public void showMenu(View anchor) {
+    @OnClick(R.id.menu)
+    public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(this, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
@@ -836,7 +880,8 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         popupMenu.show();
     }
 
-    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.controls)
+    public void toggleMediaControllerVisibility() {
         try {
 //            if(player.getPlayWhenReady())
 //                startCountDownClass.pause();
@@ -893,7 +938,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
-    @OnClick(R.id.share) public void onViewClicked() {
+    @OnClick(R.id.share)
+    public void onViewClicked() {
+        loader.setVisibility(VISIBLE);
+
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                 .setCanonicalIdentifier(String.valueOf(postDetails.getPostOwner().getUserId()))
                 .setTitle(postDetails.getTitle())
@@ -904,20 +952,21 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setChannel("facebook")
                 .setFeature("sharing")
                 .addControlParameter("post_id", String.valueOf(postDetails.getPostId()))
-                .addControlParameter("$desktop_url", "https://teazer.in/")
-                .addControlParameter("$ios_url", "https://teazer.in/");
+                .addControlParameter("$desktop_url", "https://teazer.online/")
+                .addControlParameter("$ios_url", "https://teazer.online/");
 
         branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
             @Override
             public void onLinkCreate(String url, BranchError error) {
-                if (error == null)    {
-
+                if (error == null) {
+                    loader.setVisibility(GONE);
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, url);
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-                }
+                } else
+                    loader.setVisibility(GONE);
             }
         });
 //        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
@@ -1013,11 +1062,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             .setMessage("Are you sure you want to delete this video?")
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                public void onClick(DialogInterface dialog,int which) {
+                                public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
                                     PostsListFragment.postDetails = null;
                                     finish();
-                                }})
+                                }
+                            })
                             .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -1029,14 +1079,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     if (!postDetails.canDelete()) {
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
-                                newInstance(postDetails.getPostId(), postDetails.canReact());
+                                newInstance(postDetails.getPostId(), postDetails.canReact(), postDetails.getPostOwner().getUserName());
                         // SETS the target fragment for use later when sending results
 //                        reportPostDialogFragment.setTargetFragment(PostDetailsActivity.this, 301);
                         if (fragmentManager != null) {
                             reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(PostDetailsActivity.this, "You can not report your own video", Toast.LENGTH_SHORT).show();
                     }
                     return true;
@@ -1137,8 +1186,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
             playPauseButton.setVisibility(VISIBLE);
-        }
-        else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1187,20 +1235,26 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                             if (oneShotFlag) {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
+                                    incrementViews();
                                     ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(),
                                             PostDetailsActivity.this)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.code() == 200 && response.body().getStatus()) {
-                                                        incrementViews();
-                                                        if (PostsListFragment.postDetails != null)
-                                                            PostsListFragment.postDetails.getMedias().get(0).views++;
+                                                    try {
+                                                        if (response.code() == 200 && response.body().getStatus()) {
+                                                            if (PostsListFragment.postDetails != null)
+                                                                PostsListFragment.postDetails.getMedias().get(0).views++;
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        decrementViews();
                                                     }
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    decrementViews();
                                                 }
                                             });
                                 }
@@ -1217,18 +1271,23 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 @Override
                 public void onTimelineChanged(Timeline timeline, Object o) {
                 }
+
                 @Override
                 public void onTracksChanged(TrackGroupArray trackGroupArray, TrackSelectionArray trackSelectionArray) {
                 }
+
                 @Override
                 public void onLoadingChanged(boolean b) {
                 }
+
                 @Override
                 public void onPlayerError(ExoPlaybackException e) {
                 }
+
                 @Override
                 public void onPositionDiscontinuity() {
                 }
+
                 @Override
                 public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
                 }
@@ -1271,7 +1330,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_NONE);
+                    "Upload notification", NotificationManager.IMPORTANCE_DEFAULT);
 
             // Configure the notification channel.
             notificationChannel.setDescription("reactionUploadChanel");
@@ -1286,11 +1345,14 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
                     @Override
                     public void onReceiverResult(int resultCode, Bundle resultData) {
-                        switch(resultCode) {
+                        switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-                                notifyProgressInNotification();
+//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
+//                                notifyProgressInNotification();
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
+                                uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
 
                                 if (reactBtn.isEnabled())
                                     disableView(reactBtn, true);
@@ -1298,9 +1360,18 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                 break;
                             case UPLOAD_COMPLETE_CODE:
                                 builder.setOngoing(false);
-                                builder.setContentText("Finished!")
-                                        .setProgress(0, 0, false);
-                                notifyProgressInNotification();
+//                                builder.setContentText("Finished!")
+//                                        .setProgress(0, 0, false);
+//                                notifyProgressInNotification();
+
+                                uploadProgressText.setText("Finished!");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 disableView(reactBtn, true);
                                 if (PostsListFragment.postDetails != null)
@@ -1308,25 +1379,34 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
                                 finishReactionUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 getPostReactions(postDetails.getPostId(), 1);
 //                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
 //                                new ShowShareDialog().execute(s);
                                 break;
                             case UPLOAD_ERROR_CODE:
-                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Upload failed!")
+//                                        .setProgress(0, 0, false);
+//                                notifyProgressInNotification();
 
-                                builder.setOngoing(false);
-                                builder.setContentText("Upload failed!")
-                                        .setProgress(0, 0, false);
-                                notifyProgressInNotification();
+                                uploadProgressText.setText("Failed, try again");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 enableView(reactBtn);
                                 if (PostsListFragment.postDetails != null)
@@ -1334,12 +1414,12 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
                                 finishReactionUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 break;
                             case REQUEST_CANCEL_UPLOAD:

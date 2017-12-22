@@ -9,9 +9,9 @@ android {
     signingConfigs {
         releaseconfig {
             keyAlias 'teazerkey'
-            keyPassword 'Teazer@123'
+            keyPassword KEY_PASSWORD
             storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
-            storePassword 'Teazer@123'
+            storePassword KEYSTORE_PASSWORD
         }
     }
     compileSdkVersion 27
@@ -20,7 +20,7 @@ android {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 6
+        versionCode 8
         versionName "1.0"
         dataBinding.enabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,12 +29,11 @@ android {
         renderscriptTargetApi 27
         renderscriptSupportModeEnabled true
     }
-    dexOptions {
-        preDexLibraries = false
-    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             signingConfig signingConfigs.releaseconfig
@@ -44,6 +43,43 @@ android {
         exclude 'builddef.lst'
         exclude 'version.txt'
         exclude 'isoparser-default.properties'
+    }
+//    splits {
+//        abi {
+//
+//            // Enables building multiple APKs per ABI.
+//            enable true
+//
+//            // By default all ABIs are included, so use reset() and include to specify that we only
+//            // want APKs for x86, armeabi-v7a, and mips.
+//
+//            // Resets the list of ABIs that Gradle should create APKs for to none.
+//            reset()
+//
+//            // Specifies a list of ABIs that Gradle should create APKs for.
+//            include "armeabi-v7a", "x86", "arm64-v8a"
+//
+//            // Specifies that we do not want to also generate a universal APK that includes all ABIs.
+//            universalApk true
+//        }
+//    }
+
+}
+
+
+// Map for the version code that gives each ABI a value.
+ext.abiCodes = [ x86:1, 'armeabi-v7a':2,'arm64-v8a':3]
+
+import com.android.build.OutputFile
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+
+        def baseAbiVersionCode =
+                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+        if (baseAbiVersionCode != null) {
+            output.versionCodeOverride =
+                    baseAbiVersionCode + variant.versionCode
+        }
     }
 }
 
@@ -110,8 +146,7 @@ dependencies {
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'io.branch.sdk.android:library:2.14.1'
     implementation 'com.github.sharish:ShimmerRecyclerView:v1.1'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
-//    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
 }
 
 configurations.all {

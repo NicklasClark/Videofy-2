@@ -3,7 +3,6 @@ package com.cncoding.teazer;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +34,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +75,7 @@ import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
 import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
+import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
@@ -121,7 +122,6 @@ import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOS
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
@@ -159,16 +159,32 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
-    @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) AppBarLayout appBar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
-    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view) BlurView blurView;
-    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
+    @BindArray(R.array.tab_name)
+    String[] TABS;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title)
+    ImageView toolbarCenterTitle;
+    @BindView(R.id.toolbar_plain_title)
+    ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container)
+    FrameLayout contentFrame;
+    @BindView(R.id.root_layout)
+    NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view)
+    BlurView blurView;
+    @BindView(R.id.bottom_tab_layout)
+    TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn)
+    ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText)
+    ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -193,8 +209,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-
-        Log.d("NOTIFYM", "onCreate called");
+        Log.d("NOTIFY", "onCreate called");
 
         blurView.setupWith(rootLayout)
                 .windowBackground(getWindow().getDecorView().getBackground())
@@ -269,9 +284,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 String postUrl = intent.getStringExtra("PostURL");
                 String postownerId = intent.getStringExtra("PostOwner");
 
-                 Toast.makeText(getApplicationContext(),"BroadCastReceived"+postTitle+postUrl,Toast.LENGTH_LONG).show();
-
-
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(postownerId)
                         .setTitle(postTitle)
@@ -295,14 +307,13 @@ public class BaseBottomBarActivity extends BaseActivity
                                 ShareDialog shareDialog = new ShareDialog(BaseBottomBarActivity.this);
                                 shareDialog.show(content);
                                 ShareApi.share(content, null);
-                                UploadFragment.checkFacebookButtonPressed=false;
+                                UploadFragment.checkFacebookButtonPressed = false;
                             }
 
-                            if(UploadFragment.checkedTwitterButton)
-                            {
+                            if (UploadFragment.checkedTwitterButton) {
 
                                 shareTwitter(url);
-                                UploadFragment.checkFacebookButtonPressed=false;
+                                UploadFragment.checkFacebookButtonPressed = false;
                             }
 
 
@@ -316,21 +327,22 @@ public class BaseBottomBarActivity extends BaseActivity
         };
 
         if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-//                int index = bundle.getInt(TAB_INDEX);
-//                if (index != -1)
-//                    switchTab(index);
+            Bundle notificationBundle = getIntent().getExtras().getBundle("bundle");
+            if (notificationBundle != null) {
                 try {
-                    Log.d("NOTIFYM", bundle.toString());
-                    String notification_type = bundle.getString("notification_type");
-                    String source_id = bundle.getString("source_id");
-                    notificationAction(Integer.parseInt(notification_type), Integer.parseInt(source_id));
+                    if (notificationBundle != null) {
+                        Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
+                        int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
+                        int source_id = notificationBundle.getInt(SOURCE_ID);
+                        notificationAction(notification_type, source_id);
+                    }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
         }
+
+//        Log.d("USERID", String.valueOf(SharedPrefs.getUserId(this)));//1
     }
 
     private void shareTwitter(String message) {
@@ -362,6 +374,7 @@ public class BaseBottomBarActivity extends BaseActivity
             startActivity(i);
             Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
         }
+
     }
 
     private String urlEncode(String s) {
@@ -390,14 +403,25 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onNewIntent(intent);
         setIntent(intent);
         Log.d("NOTIFYM", "onNewIntent called");
-        if (intent.getExtras() != null) {
-            Bundle bundle = intent.getExtras().getBundle("bundle");
-            if (bundle != null) {
-                Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
-                int notification_type = bundle.getInt(NOTIFICATION_TYPE);
-                int source_id = bundle.getInt(SOURCE_ID);
-                notificationAction(notification_type, source_id);
+        try {
+            if (intent.getExtras() != null) {
+                Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
+                Bundle notificationBundle = intent.getExtras().getBundle("bundle");
+                if (notificationBundle != null) {
+                    Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
+                    int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
+                    int source_id = notificationBundle.getInt(SOURCE_ID);
+                    notificationAction(notification_type, source_id);
+                } else if (profileBundle != null) {
+                    int userId = profileBundle.getInt("userId");
+                    boolean isSelf = profileBundle.getBoolean("isSelf");
+                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+
+                } else switchTabDynamically();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -405,7 +429,7 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        initTab();
-//        Log.d("NOTIFYM", "onPostCreate called");
+        Log.d("NOTIFYM", "onPostCreate called");
 //        if (getIntent().getExtras() != null) {
 //            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
 //                if (bundle != null) {
@@ -430,18 +454,18 @@ public class BaseBottomBarActivity extends BaseActivity
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
 
-        Log.d("NOTIFYM", "onPostCreate called");
-        if (getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
-            if (bundle != null) {
-                int userId = bundle.getInt("userId");
-                boolean isSelf = bundle.getBoolean("isSelf");
-                pushFragment(isSelf ? ProfileFragment.newInstance() :
-                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-            } else switchTabDynamically();
-        } else {
-            switchTabDynamically();
-        }
+        Log.d("NOTIFYM", "onStart called");
+//        if (getIntent().getExtras() != null) {
+//            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
+//            if (bundle != null) {
+//                int userId = bundle.getInt("userId");
+//                boolean isSelf = bundle.getBoolean("isSelf");
+//                pushFragment(isSelf ? ProfileFragment.newInstance() :
+//                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+//            } else switchTabDynamically();
+//        } else {
+//            switchTabDynamically();
+//        }
 
         getBranchDynamicLinks();
     }
@@ -451,7 +475,7 @@ public class BaseBottomBarActivity extends BaseActivity
         View v = null;
         try {
             v = LayoutInflater.from(this).inflate(R.layout.notification_with_badge, null);
-        TextView tv = v.findViewById(R.id.notification_badge);
+            TextView tv = v.findViewById(R.id.notification_badge);
             if (value != 0) {
                 tv.setText(String.valueOf(value));
             } else {
@@ -537,7 +561,11 @@ public class BaseBottomBarActivity extends BaseActivity
                                         });
                             } else if (referringParams.has("user_id")) {
                                 String userId = referringParams.getString("user_id");
-                                pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                if (SharedPrefs.getUserId(BaseBottomBarActivity.this) == Integer.parseInt(userId)) {
+                                    pushFragment(ProfileFragment.newInstance());
+                                } else {
+                                    pushFragment(OthersProfileFragment.newInstance(userId, "", ""));
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -657,6 +685,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 toolbarPlainTitle.setVisibility(VISIBLE);
             if (toolbarCenterTitle.getVisibility() != GONE)
                 toolbarCenterTitle.setVisibility(GONE);
+            uploadingStatusLayout.setVisibility(GONE);
         }
     }
 
@@ -846,9 +875,11 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onInterestsInteraction() {
+    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
+        if (isEditing)
+            pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
     }
 
     @Override
@@ -857,7 +888,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null, false, false, null, null);
+        PostDetailsActivity.newInstance(this, postDetails, null,
+                false, false, null, null);
     }
     //</editor-fold>
 
@@ -872,13 +904,13 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .setSound(null)
                 .setDefaults(0)
                 .setOngoing(true)
-                .addAction(R.drawable.ic_clear_dark, "Cancel",
-                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
+//                .addAction(R.drawable.ic_clear_dark, "Cancel",
+//                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
                 .setProgress(0, 0, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_LOW);
+                    "Upload notification", NotificationManager.IMPORTANCE_HIGH);
 
             // Configure the notification channel.
             notificationChannel.setDescription("videoUploadChanel");
@@ -895,45 +927,65 @@ public class BaseBottomBarActivity extends BaseActivity
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-                                notifyProgressInNotification();
+//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
+//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
+//                                notifyProgressInNotification();
+                                uploadingStatusLayout.setVisibility(VISIBLE);
+                                uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
+                                uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
 //                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
-                                builder.setOngoing(false);
-                                builder.setContentText("Finished!")
-                                        .setProgress(100, 100, false);
-                                notifyProgressInNotification();
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Finished!")
+//                                        .setProgress(100, 100, false);
+//                                notifyProgressInNotification();
+                                uploadProgressText.setText("Finished!");
+                                uploadProgress.setVisibility(GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uploadingStatusLayout.setVisibility(GONE);
+                                    }
+                                }, 2000);
 
                                 finishVideoUploadSession(getApplicationContext());
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notificationManager.cancel(0);
-                                    }
-                                }, 4000);
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
-                                if(fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment)fragment).getHomePagePosts(1, true);
+                                if (fragment instanceof PostsListFragment) {
+                                    ((PostsListFragment) fragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:
-                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-                                builder.setOngoing(false);
-                                builder.setContentText("Upload failed!")
-                                        .setProgress(100, 0, false)
-                                        .setContentText("");
-                                notifyProgressInNotification();
-
+                                uploadProgressText.setText("Failed, please try again");
+                                uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        notificationManager.cancel(0);
+                                        uploadingStatusLayout.setVisibility(GONE);
                                     }
-                                }, 4000);
+                                }, 2000);
+
+//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
+//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
+//                                builder.setOngoing(false);
+//                                builder.setContentText("Upload failed!")
+//                                        .setProgress(100, 0, false)
+//                                        .setContentText("");
+//                                notifyProgressInNotification();
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        notificationManager.cancel(0);
+//                                    }
+//                                }, 4000);
 
                                 break;
                             case REQUEST_CANCEL_UPLOAD:

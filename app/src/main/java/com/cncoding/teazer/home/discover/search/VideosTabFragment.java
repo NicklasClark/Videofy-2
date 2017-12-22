@@ -130,31 +130,37 @@ public class VideosTabFragment extends BaseFragment {
             videosListCall.enqueue(new Callback<VideosList>() {
                 @Override
                 public void onResponse(Call<VideosList> call, Response<VideosList> response) {
-                    if (isAdded()) {
-                        if (response.code() == 200) {
-                            is_next_page = response.body().isNextPage();
-                            if (response.body().getVideos().size() > 0) {
-                                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                noPosts.setVisibility(View.GONE);
-                                videosList.clear();
-                                noPosts2.setVisibility(View.GONE);
-                                recyclerView.getRecycledViewPool().clear();
-                                videosList.addAll(response.body().getVideos());
-                                adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this, true, null, videosList);
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                if (page == 1 && videosList.isEmpty()) {
-                                    swipeRefreshLayout.setVisibility(View.GONE);
-                                    noPosts.setText(R.string.no_videos_match_your_search_criteria);
-                                    noPosts.setVisibility(View.VISIBLE);
-                                    noPosts2.setVisibility(View.INVISIBLE);
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+                                VideosList videos = response.body();
+                                is_next_page = videos.isNextPage();
+                                if (videos.getVideos() != null && videos.getVideos().size() > 0) {
+                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    noPosts.setVisibility(View.GONE);
+                                    videosList.clear();
+                                    noPosts2.setVisibility(View.GONE);
+                                    recyclerView.getRecycledViewPool().clear();
+                                    videosList.addAll(videos.getVideos());
+                                    adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this,
+                                            true, null, videosList);
+                                    recyclerView.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    if (page == 1 && videosList.isEmpty()) {
+                                        swipeRefreshLayout.setVisibility(View.GONE);
+                                        noPosts.setText(R.string.no_videos_match_your_search_criteria);
+                                        noPosts.setVisibility(View.VISIBLE);
+                                        noPosts2.setVisibility(View.INVISIBLE);
+                                    }
                                 }
+                            } else {
+                                Log.e("videosListCallback", response.code() + "_" + response.message());
                             }
-                        } else {
-                            Log.e("videosListCallback", response.code() + "_" + response.message());
+                            swipeRefreshLayout.setRefreshing(false);
                         }
-                        swipeRefreshLayout.setRefreshing(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
