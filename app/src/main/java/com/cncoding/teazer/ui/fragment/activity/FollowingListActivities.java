@@ -27,6 +27,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +47,7 @@ public class FollowingListActivities extends BaseFragment {
     RelativeLayout layout;
     @BindView(R.id.nousertext)
     TextView nousertext;
+    @BindView(R.id.loader)GifTextView loader;
     int otherfollowingpage;
     int userfollowingpage;
     String followerid;
@@ -74,7 +76,6 @@ public class FollowingListActivities extends BaseFragment {
 
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,11 +92,16 @@ public class FollowingListActivities extends BaseFragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if(next) {
                     if (identifier.equals("User")) {
-
+                        if(page>2) {
+                            loader.setVisibility(View.VISIBLE);
+                        }
                         getUserfollowinglist(page);
                     }
                     else
                     {
+                        if(page>2) {
+                            loader.setVisibility(View.VISIBLE);
+                        }
                         getOthersFollowingList(Integer.parseInt(followerid),page);
                     }
 
@@ -117,37 +123,36 @@ public class FollowingListActivities extends BaseFragment {
         if (identifier.equals("User")) {
 
             layout.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
             profileMyFollowingAdapter = new FollowingAdapter(context, list, 100);
             recyclerView.setAdapter(profileMyFollowingAdapter);
+            loader.setVisibility(View.VISIBLE);
             getUserfollowinglist(1);
-
         }
         else if (identifier.equals("Other"))
         {
             layout.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
             otherfollowingpage=1;
             profileMyFollowingAdapter = new FollowingAdapter(context, otherlist);
             recyclerView.setAdapter(profileMyFollowingAdapter);
+            loader.setVisibility(View.VISIBLE);
             getOthersFollowingList(Integer.parseInt(followerid),1);
         }
     }
     public void getUserfollowinglist(final int userfollowingpage) {
-
-       // Toast.makeText(context,String.valueOf(userfollowingpage),Toast.LENGTH_SHORT).show();
         ApiCallingService.Friends.getMyFollowing(userfollowingpage, context).enqueue(new Callback<FollowingsList>() {
             @Override
             public void onResponse(Call<FollowingsList> call, Response<FollowingsList> response) {
                 if (response.code() == 200) {
 
                     try {
-
                         list.addAll(response.body().getFollowings());
                         if ((list==null||list.size()==0) && userfollowingpage == 1) {
+
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
+
                         }
                         else {
                             progressBar.setVisibility(View.VISIBLE);
@@ -156,18 +161,24 @@ public class FollowingListActivities extends BaseFragment {
                             profileMyFollowingAdapter.notifyItemRangeInserted(profileMyFollowingAdapter.getItemCount(), list.size() - 1);
                             progressBar.setVisibility(View.GONE);
                             layout.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
+
                         }
                     }
                     catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
+                        loader.setVisibility(View.GONE);
+
                     }
                 } else {
                     Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                     layout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
+
+
                 }
             }
             @Override
@@ -182,35 +193,39 @@ public class FollowingListActivities extends BaseFragment {
 
 
     public void getOthersFollowingList(final int userId, final int pageId) {
-     //   Toast.makeText(context,String.valueOf(pageId),Toast.LENGTH_SHORT).show();
         ApiCallingService.Friends.getFriendsFollowings(pageId, userId, context).enqueue(new Callback<FollowingsList>() {
             @Override
             public void onResponse(Call<FollowingsList> call, Response<FollowingsList> response) {
                 if (response.code() == 200) {
                     try {
 
-
                         otherlist.addAll(response.body().getFollowings());
                         if ((otherlist==null||otherlist.size()==0) && pageId == 1) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
+
                         }
                         else {
                             next=response.body().getNextPage();
-
                             profileMyFollowingAdapter.notifyItemRangeInserted(profileMyFollowingAdapter.getItemCount(), otherlist.size() - 1);
-
+                            layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
 
                         }
-                        layout.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
+
+
 
                     } catch (Exception e) {
                         Toast.makeText(context, "Oops! Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
+                        loader.setVisibility(View.GONE);
+
+
                     }
                 }
                 else {
@@ -224,13 +239,11 @@ public class FollowingListActivities extends BaseFragment {
                 Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
+
             }
-
         });
-
-
     }
-
     @Override
     public void onResume() {
         super.onResume();

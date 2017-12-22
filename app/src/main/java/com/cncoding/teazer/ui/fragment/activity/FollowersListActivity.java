@@ -27,14 +27,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowersListActivity extends BaseFragment{
+public class FollowersListActivity extends BaseFragment {
 
     private static final String ARG_ID = "USERID";
-    private static final String ARG_IDENTIFIER ="IDENTIFIER" ;
+    private static final String ARG_IDENTIFIER = "IDENTIFIER";
     String identifier;
     String followerid;
     Context context;
@@ -49,18 +50,21 @@ public class FollowersListActivity extends BaseFragment{
     RelativeLayout layout;
     @BindView(R.id.nousertext)
     TextView nousertext;
-    int userfollowerpage=1;
-    int otherFollowerpage=1;
+    int userfollowerpage = 1;
+    int otherFollowerpage = 1;
     protected String previousTitle;
     boolean next;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
+    @BindView(R.id.loader)
+    GifTextView loader;
 
-    public static FollowersListActivity newInstance(String id,String identifier) {
+
+    public static FollowersListActivity newInstance(String id, String identifier) {
         FollowersListActivity followersListActivity = new FollowersListActivity();
 
-        Bundle bundle=new Bundle();
-        bundle.putString(ARG_ID,id);
-        bundle.putString(ARG_IDENTIFIER,identifier);
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_ID, id);
+        bundle.putString(ARG_IDENTIFIER, identifier);
         followersListActivity.setArguments(bundle);
         return followersListActivity;
 
@@ -71,35 +75,41 @@ public class FollowersListActivity extends BaseFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            followerid  = getArguments().getString(ARG_ID);
+            followerid = getArguments().getString(ARG_ID);
             identifier = getArguments().getString(ARG_IDENTIFIER);
 
         }
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_followers, container, false);
-        ButterKnife.bind(this,view);
-        context=container.getContext();
+        ButterKnife.bind(this, view);
+        context = container.getContext();
 
-        recyclerView=view.findViewById(R.id.recycler_view);
-        layoutManager=new LinearLayoutManager(getActivity());
+        recyclerView = view.findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         getParentActivity().updateToolbarTitle("Follower List");
 
-        endlessRecyclerViewScrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(next) {
+                if (next) {
 
-                    if(identifier.equals("Other"))
-                        getOthersFollowerDetails(Integer.parseInt(followerid),page);
-
-                    else
-                        getUserfollowerList(page);
+                    if (identifier.equals("Other"))
+                        if (page > 2) {
+                            loader.setVisibility(View.VISIBLE);
+                        }
+                    getOthersFollowerDetails(Integer.parseInt(followerid), page);
+                } else {
+                    if (page > 2) {
+                        loader.setVisibility(View.VISIBLE);
+                    }
+                    getUserfollowerList(page);
 
                 }
 
@@ -113,22 +123,21 @@ public class FollowersListActivity extends BaseFragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        list=new ArrayList<>();
-        userfollowerlist=new ArrayList<>();
+        list = new ArrayList<>();
+        userfollowerlist = new ArrayList<>();
 
-        if(identifier.equals("Other"))
-        {
+        if (identifier.equals("Other")) {
 
             profileMyFollowerAdapter = new FollowersAdapter(context, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
-            getOthersFollowerDetails(Integer.parseInt(followerid),1);
-        }
-        else if(identifier.equals("User"))
-        {
-
+            loader.setVisibility(View.VISIBLE);
+            getOthersFollowerDetails(Integer.parseInt(followerid), 1);
+        } else if (identifier.equals("User")) {
             profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, 100);
             recyclerView.setAdapter(profileMyFollowerAdapter);
+            loader.setVisibility(View.VISIBLE);
             getUserfollowerList(1);
+
         }
     }
 
@@ -137,106 +146,100 @@ public class FollowersListActivity extends BaseFragment{
         super.onResume();
 
     }
-
     public void getUserfollowerList(final int page)
-
     {
-
-        ApiCallingService.Friends.getMyFollowers(page,context).enqueue(new Callback<FollowersList>() {
+        ApiCallingService.Friends.getMyFollowers(page, context).enqueue(new Callback<FollowersList>() {
             @Override
             public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
-                if(response.code()==200)
-                {
+                if (response.code() == 200) {
                     try {
                         userfollowerlist.addAll(response.body().getUserInfos());
-                        if ((userfollowerlist==null||userfollowerlist.size()==0) && page == 1) {
+                        if ((userfollowerlist == null || userfollowerlist.size() == 0) && page == 1) {
+                            layout.setVisibility(View.VISIBLE);
+                            nousertext.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
+                        } else {
+                            next = response.body().getNextPage();
+                            profileMyFollowerAdapter.notifyDataSetChanged();
+                            profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
-                            nousertext.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
                         }
-                        else
-                            {
-                            next=response.body().getNextPage();
-                                profileMyFollowerAdapter.notifyDataSetChanged();
-
-                            profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
-                                layout.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
+                        loader.setVisibility(View.GONE);
                     }
-                }
-                else
-                {
+                } else {
                     layout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                 }
             }
             @Override
             public void onFailure(Call<FollowersList> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
 
             }
 
         });
 
     }
-    public void getOthersFollowerDetails(int followerid, int page)
-    {
-        ApiCallingService.Friends.getFriendsFollowers(page,followerid,context).enqueue(new Callback<FollowersList>() {
+
+    public void getOthersFollowerDetails(int followerid, int page) {
+        ApiCallingService.Friends.getFriendsFollowers(page, followerid, context).enqueue(new Callback<FollowersList>() {
             @Override
             public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
-                if(response.code()==200)
-                {
-                    try
-                    {
+                if (response.code() == 200) {
+                    try {
 
                         list.addAll(response.body().getUserInfos());
                         if (list == null || list.size() == 0) {
                             layout.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
                             nousertext.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
 
-                            next=response.body().getNextPage();
+                            next = response.body().getNextPage();
                             profileMyFollowerAdapter.notifyDataSetChanged();
                             profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                             layout.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
+                        loader.setVisibility(View.GONE);
+
                     }
-                }
-                else
-                {
+                } else {
                     layout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
+
 
                 }
             }
+
             @Override
             public void onFailure(Call<FollowersList> call, Throwable t) {
                 layout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
+
 
             }
 
         });
 
     }
-
-
-
 
 
 }
