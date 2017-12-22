@@ -227,10 +227,14 @@ public class Interests extends BaseFragment {
             ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
-                    if (response.code() == 200) {
-                        reference.get().interestList.clear();
-                        reference.get().interestList.addAll(response.body());
-                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                    try {
+                        if (response.code() == 200) {
+                            reference.get().interestList.clear();
+                            reference.get().interestList.addAll(response.body());
+                            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

@@ -379,7 +379,7 @@ public class ProfileFragment extends BaseFragment {
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
                     }
                     _detail.setText(detail);
-                    _name.setText(firstname);
+                    _name.setText(firstname + " " + lastname);
                     _username.setText(username);
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));

@@ -22,6 +22,7 @@ import com.cncoding.teazer.model.discover.Videos;
 import com.cncoding.teazer.model.discover.VideosList;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,7 @@ public class VideosTabFragment extends BaseFragment {
     @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
 
     private Call<VideosList> videosListCall;
-    private ArrayList<Videos> videosList;
+    private TreeSet<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
     private BaseBottomBarActivity parentContext;
@@ -61,7 +62,7 @@ public class VideosTabFragment extends BaseFragment {
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
         }
-        videosList = new ArrayList<>();
+        videosList = new TreeSet<>();
         parentContext = getParentActivity();
     }
 
@@ -138,12 +139,12 @@ public class VideosTabFragment extends BaseFragment {
                                 if (videos.getVideos() != null && videos.getVideos().size() > 0) {
                                     swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     noPosts.setVisibility(View.GONE);
-                                    videosList.clear();
+//                                    videosList.clear();
                                     noPosts2.setVisibility(View.GONE);
                                     recyclerView.getRecycledViewPool().clear();
                                     videosList.addAll(videos.getVideos());
                                     adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this,
-                                            true, null, videosList);
+                                            true, null, new ArrayList<Videos>(videosList));
                                     recyclerView.setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {

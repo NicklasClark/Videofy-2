@@ -769,8 +769,8 @@ public class ApiCallingService {
                 return chain.proceed(request);
             }
         })
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(50, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(logging).build();
     }
 
