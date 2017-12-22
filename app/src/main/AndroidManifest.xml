@@ -218,7 +218,7 @@
             android:name=".ui.fragment.activity.Settings"
             android:label="@string/settings"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MyCustomTextAppearance" />
         <activity
             android:name=".ui.fragment.activity.ProfileCreationVideos"
             android:screenOrientation="portrait"
@@ -289,7 +289,7 @@
         <activity
             android:name=".ui.fragment.activity.PasswordChange"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MyCustomTextAppearance" />
         <activity android:name=".ui.fragment.activity.OthersPostDetails" />
         <activity
             android:name=".ui.fragment.activity.Main2Activity"

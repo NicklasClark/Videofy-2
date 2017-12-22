@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.model.user.SetPasswordRequest;
 import com.cncoding.teazer.model.user.UpdatePasswordRequest;
 import com.cncoding.teazer.model.user.UserProfile;
@@ -32,11 +33,11 @@ import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
 public class PasswordChange extends AppCompatActivity {
 
     @BindView(R.id.currentPassword)
-    EditText currentPassword;
+    ProximaNovaRegularTextInputEditText currentPassword;
     @BindView(R.id.newPassword)
-    EditText newPassword;
+    ProximaNovaRegularTextInputEditText newPassword;
     @BindView(R.id.confirmPassword)
-    EditText confirmPassword;
+    ProximaNovaRegularTextInputEditText confirmPassword;
     @BindView(R.id.save)
     Button save;
     @BindView(R.id.currentPasswordLayout)

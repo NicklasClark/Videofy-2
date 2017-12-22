@@ -198,6 +198,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         if (navigationController != null) {
             navigationController.onSaveInstanceState(outState);
         }
@@ -232,6 +233,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //        appBar.addOnOffsetChangedListener(appBarOffsetChangeListener());
 
         fragmentHistory = new FragmentHistory();
+
         navigationController = NavigationController
                 .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_fragment_container)
                 .transactionListener(this)
@@ -316,7 +318,6 @@ public class BaseBottomBarActivity extends BaseActivity
                                 UploadFragment.checkFacebookButtonPressed = false;
                             }
 
-
                         }
                     }
                 });
@@ -334,7 +335,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                         int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                         int source_id = notificationBundle.getInt(SOURCE_ID);
-                        notificationAction(notification_type, source_id);
+                        int tabIndex = notificationBundle.getInt(TAB_INDEX);
+                        notificationAction(notification_type, source_id,tabIndex);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -342,7 +344,6 @@ public class BaseBottomBarActivity extends BaseActivity
             }
         }
 
-//        Log.d("USERID", String.valueOf(SharedPrefs.getUserId(this)));//1
     }
 
     private void shareTwitter(String message) {
@@ -390,12 +391,16 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
+        Toast.makeText(getApplicationContext(),"onResume",Toast.LENGTH_SHORT).show();
+
 
     }
 
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(BReceiver);
+
+
     }
 
     @Override
@@ -404,15 +409,20 @@ public class BaseBottomBarActivity extends BaseActivity
         setIntent(intent);
         Log.d("NOTIFYM", "onNewIntent called");
         try {
+
             if (intent.getExtras() != null) {
                 Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
+
                 if (notificationBundle != null) {
+                    Toast.makeText(getApplicationContext(),"notification not null",Toast.LENGTH_SHORT).show();
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
-                    notificationAction(notification_type, source_id);
+                    int tabindex = notificationBundle.getInt(TAB_INDEX);
+                    notificationAction(notification_type, source_id,tabindex);
                 } else if (profileBundle != null) {
+
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     pushFragment(isSelf ? ProfileFragment.newInstance() :
@@ -488,8 +498,10 @@ public class BaseBottomBarActivity extends BaseActivity
         return v;
     }
 
-    private void notificationAction(int notification_type, int source_id) {
+    private void notificationAction(int notification_type, int source_id, int tabindex) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
+
+            Toast.makeText(getApplicationContext(),"push noti",Toast.LENGTH_SHORT).show();
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id),String.valueOf(notification_type)));
         }
         else {
@@ -722,6 +734,8 @@ public class BaseBottomBarActivity extends BaseActivity
             navigationController.pushFragmentOnto(fragment);
         }
     }
+
+
 
     @Override
     public Fragment getRootFragment(int index) {

@@ -1,6 +1,7 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     private List<UserInfo> list;
     private List<UserInfo> userlist;
     private Context context;
+    private final int UNBLOCK_STATUS=2;
 //    List<Following> list2;
     private int counter;
 //    final static int PrivateAccount = 1;
@@ -102,7 +105,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
                 }
-//                final boolean folower = cont.getFollower();
+
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
                 followerId = cont.getUserId();
@@ -117,6 +120,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     } else {
 
                         if (requestsent) {
+
                             setActionButtonText(context, viewHolder.action, R.string.requested);
                             usertype = "Requested";
                         } else {
@@ -172,7 +176,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                     }
                 });
-            } else {
+            }
+            else {
                 final UserInfo cont = list.get(i);
                 final String usertype;
                 final int accounttype = cont.getAccountType();
@@ -185,6 +190,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 viewHolder.name.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
+                final boolean youBlocked=cont.getYouBlocked();
                 if(isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
@@ -200,6 +206,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             .networkPolicy(NetworkPolicy.NO_CACHE)
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
+
                 }
 
 
@@ -211,17 +218,23 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     usertype = "";
                 }
                 else {
-
-                    if (isblockedyou) {
+                    if(youBlocked)
+                    {
+                        viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+                        viewHolder.action.setVisibility(View.VISIBLE);
+                        setActionButtonText(context, viewHolder.action, R.string.unblock);
+                        usertype = "";
+                    }
+                    else if (isblockedyou) {
                         viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                         viewHolder.action.setVisibility(View.INVISIBLE);
                         usertype = "";
-
                     }
-                    else                    {
+                    else
+                        {
 
-                        viewHolder.action.setVisibility(View.VISIBLE);
-                        viewHolder.name.setTextColor( Color.parseColor("#333333"));
+                            viewHolder.action.setVisibility(View.VISIBLE);
+                            viewHolder.name.setTextColor( Color.parseColor("#333333"));
 
                         if (accounttype == 1) {
                             if (following) {
@@ -292,6 +305,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         if(viewHolder.action.getText().equals(context.getString(R.string.following)))
                         {
                             unFollowUser(followerId, context, viewHolder,accounttype);
+                        }
+
+                        if (viewHolder.action.getText().equals(context.getString(R.string.unblock))) {
+                            blockUnblockUsers(followerId, UNBLOCK_STATUS,followername,viewHolder);
+
                         }
                     }
                 });
@@ -427,6 +445,65 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         });
 
     }
+
+    public void blockUnblockUsers(final int userId, final int status,final String username,final FollowersAdapter.ViewHolder viewHolder) {
+        android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        dialogBuilder.setMessage("Are you sure you want to Unblock " +username + "?");
+        dialogBuilder.setPositiveButton("CONFIRM", null);
+        dialogBuilder.setNegativeButton("CANCEL", null);
+
+        final android.support.v7.app.AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        positiveButton.setTextColor(Color.parseColor("#666666"));
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                blockunBlock(userId,status, viewHolder);
+                alertDialog.dismiss();
+
+
+            }
+        });
+    }
+
+
+
+
+
+    public void blockunBlock(int userId, final int status,final FollowersAdapter.ViewHolder  holder) {
+        ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                try {
+                    boolean b = response.body().getStatus();
+                    if (b == true) {
+
+                        Toast.makeText(context, "You have Unblocked this user", Toast.LENGTH_SHORT).show();
+                        setActionButtonText(context, holder.action, R.string.follow);
+                    } else {
+                        Toast.makeText(context, "Already Unblocked this user", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
 
 
 

@@ -11,6 +11,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserInfo {
 
+
+
+
+
+
     @SerializedName("user_id")
     @Expose
     private Integer userId;
@@ -26,6 +31,9 @@ public class UserInfo {
     @SerializedName("is_blocked_you")
     @Expose
     private Boolean isBlockedYou;
+    @SerializedName("you_blocked")
+    @Expose
+    private Boolean youBlocked;
     @SerializedName("my_self")
     @Expose
     private Boolean mySelf;
@@ -44,9 +52,16 @@ public class UserInfo {
     @SerializedName("request_sent")
     @Expose
     private Boolean requestSent;
+    @SerializedName("request_id")
+    @Expose
+    private Integer requestId;
+    @SerializedName("request_recieved")
+    @Expose
+    private Boolean requestRecieved;
     @SerializedName("profile_media")
     @Expose
     private Medias profileMedia;
+
 
     public Integer getUserId() {
         return userId;
@@ -86,6 +101,14 @@ public class UserInfo {
 
     public void setIsBlockedYou(Boolean isBlockedYou) {
         this.isBlockedYou = isBlockedYou;
+    }
+
+    public Boolean getYouBlocked() {
+        return youBlocked;
+    }
+
+    public void setYouBlocked(Boolean youBlocked) {
+        this.youBlocked = youBlocked;
     }
 
     public Boolean getMySelf() {
@@ -134,6 +157,22 @@ public class UserInfo {
 
     public void setRequestSent(Boolean requestSent) {
         this.requestSent = requestSent;
+    }
+
+    public Integer getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
+    }
+
+    public Boolean getRequestRecieved() {
+        return requestRecieved;
+    }
+
+    public void setRequestRecieved(Boolean requestRecieved) {
+        this.requestRecieved = requestRecieved;
     }
 
     public Medias getProfileMedia() {

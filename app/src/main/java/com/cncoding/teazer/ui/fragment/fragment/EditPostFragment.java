@@ -518,7 +518,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     @OnClick(R.id.video_upload_categories)
     public void getCategories() {
 
-
         mListener.updatecategories(postDetails);
 
 //        toggleInteraction(false);

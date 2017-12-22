@@ -162,8 +162,8 @@
             <Switch
                 android:id="@+id/simpleSwitch"
                 android:layout_width="wrap_content"
-                android:thumbTint="#26C6DA"
                 android:padding="@dimen/padding_default"
+                android:checked="false"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
