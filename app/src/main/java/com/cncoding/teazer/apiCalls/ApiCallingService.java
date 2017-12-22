@@ -66,7 +66,8 @@ import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 
 public class ApiCallingService {
 
-    static final String BASE_URL = "http://dev.teazer.online/";
+//    static final String BASE_URL = "http://dev.teazer.online/";
+    static final String BASE_URL = "https://api.teazer.online/";
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
     //    public static final int BACK_PRESSED_ACTION = 6;
@@ -769,8 +770,8 @@ public class ApiCallingService {
             }
         })
                 .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS).build();
-//                .addInterceptor(logging).build();
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {

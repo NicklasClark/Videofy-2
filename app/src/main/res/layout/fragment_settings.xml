@@ -185,6 +185,7 @@
 
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/facebookLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -201,6 +202,7 @@
             android:background="@color/colorSecondary_text_light" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/instagramLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -217,6 +219,7 @@
             android:background="@color/colorSecondary_text_light" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/helpCenterLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -234,6 +237,7 @@
 
 
         <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            android:id="@+id/legalLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -245,6 +249,7 @@
             android:paddingEnd="14dp" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/privacyPolicyLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -261,6 +266,7 @@
             android:background="@color/colorSecondary_text_light" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/tncLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -277,6 +283,7 @@
             android:background="@color/colorSecondary_text_light" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/licenceLink"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"

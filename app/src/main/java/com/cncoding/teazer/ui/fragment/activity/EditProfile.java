@@ -265,6 +265,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
+                        .setFixAspectRatio(true)
                         .start(EditProfile.this);
             }
         });
@@ -779,13 +780,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     }
                 });
     }
-
-//8073083586
-
-
-
-
-
 }
 
 
