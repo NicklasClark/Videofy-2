@@ -155,7 +155,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
-    public static final String TAB_INDEX = "tabIndex";
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
@@ -413,7 +412,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
 
                 if (notificationBundle != null) {
-                    Toast.makeText(getApplicationContext(),"notification not null",Toast.LENGTH_SHORT).show();
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
@@ -490,7 +488,6 @@ public class BaseBottomBarActivity extends BaseActivity
     private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
 
-            Toast.makeText(getApplicationContext(),"push noti",Toast.LENGTH_SHORT).show();
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id),String.valueOf(notification_type)));
         }
         else {
