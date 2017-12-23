@@ -5,20 +5,28 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey100">
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
-        android:id="@+id/headerTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondary_text"
-        android:textSize="@dimen/text_size_h4"
-        android:padding="@dimen/padding_default"
-        android:gravity="center"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+
+    <RelativeLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/headerTextView"/>
+        android:layout_height="match_parent">
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/headerTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSecondary_text"
+            android:textSize="@dimen/text_size_h4"
+            android:padding="@dimen/padding_default"
+            android:gravity="center"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/headerTextView"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/tags_categories_save"
@@ -30,5 +38,14 @@
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/loader"
+        android:layout_width="100dp"
+        android:visibility="gone"
+        android:layout_height="100dp"
+       android:layout_centerInParent="true"
+        android:background="@drawable/ic_loader" />
 
 </RelativeLayout>

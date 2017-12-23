@@ -10,8 +10,9 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="20dp"
+        android:visibility="gone"
         android:layout_height="20dp"
-        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_marginBottom="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
@@ -39,7 +40,16 @@
 
             android:paddingBottom="?attr/actionBarSize" />
 
+
+
     </RelativeLayout>
+
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/loader"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_loader" />
 
 
 </RelativeLayout>

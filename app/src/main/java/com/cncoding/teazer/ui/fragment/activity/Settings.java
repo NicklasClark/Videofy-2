@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.View;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
@@ -60,7 +61,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
 //        userProfile = intent.getExtras().getParcelable("UserProfile");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, FragmentSettings.newInstance(String.valueOf(accountType)))
-//                .addToBackStack("FragmentSettings")
+
                 .commit();
     }
 
@@ -84,9 +85,11 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
 
     @Override
     public void onBackPressed() {
+
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else
             super.onBackPressed();
     }
+
 }

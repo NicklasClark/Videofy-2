@@ -273,6 +273,13 @@ public class ViewUtils {
                         context.getResources().getColor(R.color.colorPrimary_text),
                         context.getResources().getColor(R.color.colorPrimary_text), 2));
                 break;
+
+            case R.string.unblock:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorAccent),
+                        context.getResources().getColor(R.color.colorAccent), 2));
+                break;
             default:
                 break;
         }

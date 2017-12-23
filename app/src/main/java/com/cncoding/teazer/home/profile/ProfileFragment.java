@@ -154,6 +154,7 @@ public class ProfileFragment extends BaseFragment {
         context = getContext();
         ButterKnife.bind(this,view);
        // loader = view.findViewById(R.id.loader);
+
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
         _name = view.findViewById(R.id.username);
@@ -483,7 +484,8 @@ public class ProfileFragment extends BaseFragment {
                     collapsingToolbarLayout.setStatusBarScrimColor(R.color.colorPrimaryDark);
                 }
             });
-        } else {
+        }
+        else {
         }
     }
     public void updateProfile() {

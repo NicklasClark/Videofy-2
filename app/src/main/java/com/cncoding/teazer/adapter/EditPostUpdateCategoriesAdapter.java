@@ -72,15 +72,11 @@ public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPo
     @Override
     public void onBindViewHolder(final EditPostUpdateCategoriesAdapter.ViewHolder holder, final int position) {
         try {
-
-           // Toast.makeText(context,String.valueOf(usercategoryList.size()),Toast.LENGTH_SHORT).show();
-
             final Category category = this.categories.get(position);
+            for (int i = 0; i < selecteCategriesName.size(); i++) {
+                if (selecteCategriesName.get(i).equals(category.getCategoryName())) {
 
-                for (int i = 0; i < selecteCategriesName.size(); i++) {
-                    if (selecteCategriesName.get(i).equals(category.getCategoryName())) {
-                        Log.d("Categories", String.valueOf(usercategoryList.get(i).getCategoryId()));
-                        setCheck(holder.nameView, true);
+                    setCheck(holder.nameView, true);
                         selectedPositions[position] = true;
 
                     }
@@ -126,8 +122,6 @@ public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPo
                             Toast.makeText(context, "you can select maximum 5 categories", Toast.LENGTH_SHORT).show();
 
                         }
-
-
                     }
                 }
             });

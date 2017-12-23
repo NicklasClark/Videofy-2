@@ -306,17 +306,12 @@ public class OthersProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getProfileInformation(followerfollowingid);
-
-
-
     }
-
     @Override
     public void onResume() {
         super.onResume();
         getParentActivity().updateToolbarTitle("Profile");
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -324,12 +319,9 @@ public class OthersProfileFragment extends BaseFragment {
             followerListListener = (ProfileFragment.FollowerListListener) context;
         }
     }
-
     public void getProfileInformation(final int followersid) {
-
         blur_bacground.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
-
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
             @Override
             public void onResponse(Call<ProfileInfo> call, Response<ProfileInfo> response) {
@@ -355,6 +347,7 @@ public class OthersProfileFragment extends BaseFragment {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
+                          //  Toast.makeText(context,String.valueOf(publicProfile.getUserId()),Toast.LENGTH_SHORT).show();
 
                             username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
@@ -462,6 +455,8 @@ public class OthersProfileFragment extends BaseFragment {
                             username = privateProfile.getUsername();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
+                         //   Toast.makeText(context,String.valueOf(privateProfile.getUserId()),Toast.LENGTH_SHORT).show();
+
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.hasProfileMedia();
 
@@ -484,7 +479,6 @@ public class OthersProfileFragment extends BaseFragment {
                             if (youBlocked) {
 
                                 _btnfollow.setText("Unblock");
-
                                 layoutDetail2.setVisibility(View.VISIBLE);
                                 layoutDetail.setVisibility(View.INVISIBLE);
                                 progressBar.setVisibility(View.GONE);
@@ -494,12 +488,10 @@ public class OthersProfileFragment extends BaseFragment {
                                 if (isfollowing) {
 
                                     if (requestRecieved == true) {
-
-
                                         requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
-
-                                    } else {
+                                    }
+                                    else {
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }
                                 } else {
@@ -521,8 +513,7 @@ public class OthersProfileFragment extends BaseFragment {
                                             setActionButtonText(context, _btnfollow, R.string.follow);
                                         }
                                     }
-                                   // layout.setVisibility(View.VISIBLE);
-                                   // progressBar.setVisibility(View.GONE);
+
                                 }
                                 if (accountType == 2) {
                                     getProfileVideos(followersid);
@@ -643,10 +634,13 @@ public class OthersProfileFragment extends BaseFragment {
                         list.addAll(response.body().getPosts());
                         if ((list == null || list.size() == 0) && page == 1) {
 
+
                             layoutDetail3.setVisibility(View.VISIBLE);
                             layoutDetail.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.GONE);
-                        } else {
+                        }
+                        else
+                            {
                             followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
                             _recycler_view.setAdapter(followerCreationAdapter);
 
@@ -888,6 +882,7 @@ public class OthersProfileFragment extends BaseFragment {
     public void acceptUser(final int requestId) {
         loader.setVisibility(View.VISIBLE);
 
+
         ApiCallingService.Friends.acceptJoinRequest(requestId, context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override
@@ -977,5 +972,3 @@ public class OthersProfileFragment extends BaseFragment {
 }
 
 
-//  Reactions are a new way to communicate!
-//  Lets start by reacting on post you like.
