@@ -334,7 +334,7 @@ public class CameraFragment extends Fragment {
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -769,9 +769,9 @@ public class ApiCallingService {
                 return chain.proceed(request);
             }
         })
-                .readTimeout(50, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logging).build();
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS).build();
+//                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {
