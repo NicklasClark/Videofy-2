@@ -37,5 +37,13 @@
         android:textColor="#505050"
         android:textSize="14sp" />
 
+
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/loader"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_loader" />
 </RelativeLayout>
 
