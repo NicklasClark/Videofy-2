@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ *
  * Created by farazhabib on 16/12/17.
  */
 
@@ -22,7 +23,6 @@ public class ChangeMobileNumber {
 
     @Expose
     private Integer countryCode;
-
 
     public Long getPhoneNumber() {
         return phoneNumber;

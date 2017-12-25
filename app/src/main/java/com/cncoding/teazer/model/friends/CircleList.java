@@ -1,13 +1,13 @@
 package com.cncoding.teazer.model.friends;
 
+import com.cncoding.teazer.model.base.MiniProfile;
+
+import java.util.ArrayList;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
-
-import com.cncoding.teazer.model.base.MiniProfile;
-
-import java.util.ArrayList;
 
 public class CircleList {
     private boolean next_page;

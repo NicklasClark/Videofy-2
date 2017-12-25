@@ -131,7 +131,11 @@ public class Reactions implements Parcelable {
         return post_owner;
     }
 
-    public boolean isCanDelete() {
+    public boolean canDelete() {
         return can_delete;
+    }
+
+    public String getReactedAt() {
+        return reacted_at;
     }
 }
