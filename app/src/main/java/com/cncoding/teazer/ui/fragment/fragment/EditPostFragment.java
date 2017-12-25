@@ -39,7 +39,6 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
@@ -100,7 +99,6 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.makeSnackbarWithBottomMargin;
 
 /**
  * 
@@ -522,9 +520,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         mListener.updatecategories(postDetails);
 
 //        toggleInteraction(false);
-//        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+//        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<RealmCategory>>() {
 //            @Override
-//            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+//            public void onResponse(Call<ArrayList<RealmCategory>> call, Response<ArrayList<RealmCategory>> response) {
 //                if (response.code() == 200) {
 //                    if (response.body() != null) {
 //                        toggleUpBtnVisibility(VISIBLE);
@@ -541,7 +539,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 //            }
 //
 //            @Override
-//            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
+//            public void onFailure(Call<ArrayList<RealmCategory>> call, Throwable t) {
 //                Log.e("getCategories", t.getMessage());
 //                toggleInteraction(true);
 //            }
