@@ -129,6 +129,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CO
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
@@ -325,6 +326,10 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 thumbUrl = getIntent().getStringExtra(ARG_THUMBNAIL);
                 reactId = getIntent().getStringExtra(ARG_REACT_ID);
                 isReactionPlayed = false;
+
+                if (reactId != null && !isReactionPlayed) {
+                    fetchReactionDetails(this, Integer.parseInt(reactId));
+                }
             }
 //            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
             isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
@@ -549,14 +554,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                         }
                                     }
 
-                                    if (reactId != null && postReactions.size() > 0 && !isReactionPlayed) {
-                                        if (postReactions.contains(new PostReaction(Integer.parseInt(reactId)))) {
-                                            int itemIndex = postReactions.indexOf(new PostReaction(Integer.parseInt(reactId)));
-                                            postReactionAdapter.playFromDeepLink(postReactions.get(itemIndex));
-                                        } else
-                                            Toast.makeText(PostDetailsActivity.this, getString(R.string.reaction_not_found), Toast.LENGTH_SHORT).show();
-                                        isReactionPlayed = true;
-                                    }
                                 } else {
                                     setNoReactions();
                                     showNoReactionMessage();

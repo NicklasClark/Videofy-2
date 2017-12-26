@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class ReactionMediaDetail implements Parcelable {
+public class MediaDetail implements Parcelable {
     private int media_id;
     private String react_media_url;
     private String react_thumb_url;
@@ -16,7 +16,7 @@ public class ReactionMediaDetail implements Parcelable {
     private Dimension media_dimension;
     private boolean react_is_image;
 
-    public ReactionMediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension media_dimension, boolean react_is_image) {
+    public MediaDetail(int media_id, String react_media_url, String react_thumb_url, String react_duration, Dimension media_dimension, boolean react_is_image) {
         this.media_id = media_id;
         this.react_media_url = react_media_url;
         this.react_thumb_url = react_thumb_url;
@@ -64,7 +64,7 @@ public class ReactionMediaDetail implements Parcelable {
         parcel.writeByte((byte) (react_is_image ? 1 : 0));
     }
 
-    protected ReactionMediaDetail(Parcel in) {
+    protected MediaDetail(Parcel in) {
         media_id = in.readInt();
         react_media_url = in.readString();
         react_thumb_url = in.readString();
@@ -73,15 +73,15 @@ public class ReactionMediaDetail implements Parcelable {
         react_is_image = in.readByte() != 0;
     }
 
-    public static final Creator<ReactionMediaDetail> CREATOR = new Creator<ReactionMediaDetail>() {
+    public static final Creator<MediaDetail> CREATOR = new Creator<MediaDetail>() {
         @Override
-        public ReactionMediaDetail createFromParcel(Parcel in) {
-            return new ReactionMediaDetail(in);
+        public MediaDetail createFromParcel(Parcel in) {
+            return new MediaDetail(in);
         }
 
         @Override
-        public ReactionMediaDetail[] newArray(int size) {
-            return new ReactionMediaDetail[size];
+        public MediaDetail[] newArray(int size) {
+            return new MediaDetail[size];
         }
     };
 }

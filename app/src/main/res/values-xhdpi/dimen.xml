@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="padding_half">8dp</dimen>
-    <dimen name="padding_thin">4dp</dimen>
     <dimen name="padding_x_thin">2dp</dimen>
-    <dimen name="padding_default">16dp</dimen>
+    <dimen name="padding_thin">4dp</dimen>
+    <dimen name="padding_half">8dp</dimen>
+    <dimen name="padding_default">14dp</dimen>
     <dimen name="padding_double">36dp</dimen>
     <dimen name="padding_big">60dp</dimen>
 </resources>

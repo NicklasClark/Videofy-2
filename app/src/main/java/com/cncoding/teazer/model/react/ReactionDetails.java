@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.base.ReactionMediaDetail;
+import com.cncoding.teazer.model.base.MediaDetail;
 
 /**
  *
@@ -21,7 +21,7 @@ public class ReactionDetails implements Parcelable {
     private boolean can_like;
     private boolean my_self;
     private boolean can_delete;
-    private ReactionMediaDetail media_detail;
+    private MediaDetail media_detail;
     private MiniProfile react_owner;
     private String reacted_at;
 
@@ -35,13 +35,13 @@ public class ReactionDetails implements Parcelable {
         can_like = in.readByte() != 0;
         my_self = in.readByte() != 0;
         can_delete = in.readByte() != 0;
-        media_detail = in.readParcelable(ReactionMediaDetail.class.getClassLoader());
+        media_detail = in.readParcelable(MediaDetail.class.getClassLoader());
         react_owner = in.readParcelable(MiniProfile.class.getClassLoader());
         reacted_at = in.readString();
     }
 
     public ReactionDetails(int react_id, int post_id, int post_owner_id, String react_title, int likes, int views,
-                           boolean can_like, boolean my_self, boolean can_delete, ReactionMediaDetail media_detail,
+                           boolean can_like, boolean my_self, boolean can_delete, MediaDetail media_detail,
                            MiniProfile react_owner, String reacted_at) {
         this.react_id = react_id;
         this.post_id = post_id;
@@ -126,7 +126,7 @@ public class ReactionDetails implements Parcelable {
         return can_delete;
     }
 
-    public ReactionMediaDetail getMediaDetail() {
+    public MediaDetail getMediaDetail() {
         return media_detail;
     }
 

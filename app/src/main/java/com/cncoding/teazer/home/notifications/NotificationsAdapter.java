@@ -278,7 +278,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
                 else {
                     setActionButton(holder2.action, null, BUTTON_TYPE_NONE);
-                    holder2.action.setVisibility(View.INVISIBLE);
+                    holder2.action.setVisibility(View.GONE);
                 }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {

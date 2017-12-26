@@ -18,6 +18,7 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.BlockedUsersList;
 import com.cncoding.teazer.model.user.DeactivateAccountRequest;
@@ -540,6 +541,10 @@ public class ApiCallingService {
          */
         public static Call<ResultObject> likeDislikeReaction(int page, Context context) {
             return getReactService(context).getHiddenReactions(page);
+        }
+
+        public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
+            return getReactService(context).getReactionDetail(reactId);
         }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {

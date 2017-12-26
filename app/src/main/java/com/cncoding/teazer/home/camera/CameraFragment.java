@@ -310,10 +310,15 @@ public class CameraFragment extends Fragment {
 
     @OnClick(R.id.camera_flip) public void flipCamera() {
         closeCamera();
-        if (cameraId.equals(String.valueOf(CameraCharacteristics.LENS_FACING_FRONT))) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_FRONT);
-        } else
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_BACK);
+        try {
+            if (cameraId.equals(String.valueOf(CameraCharacteristics.LENS_FACING_FRONT))) {
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_FRONT);
+            } else
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_BACK);
+        } catch (Exception e) {
+            Toast.makeText(context, "Camera not configured correctly, please retry!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -676,45 +681,52 @@ public class CameraFragment extends Fragment {
         mTextureView.setTransform(matrix);
     }
 
-    private void setUpMediaRecorder() throws IOException {
+    private void setUpMediaRecorder(){
         if (activity == null) {
             return;
         }
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
-            mNextVideoAbsolutePath = getVideoFilePath(activity);
-        }
-        mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoFrameRate(30);
+        try {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
+                mNextVideoAbsolutePath = getVideoFilePath(activity);
+            }
+            mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
+            mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
+            mMediaRecorder.setVideoFrameRate(30);
 //        mMediaRecorder.setPreviewDisplay();
 //        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoEncodingBitRate(3000000);
-        mMediaRecorder.setMaxDuration(59999);
+            mMediaRecorder.setVideoEncodingBitRate(3000000);
+            mMediaRecorder.setMaxDuration(59999);
 //        mMediaRecorder.setAudioSamplingRate(16000);
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        switch (mSensorOrientation) {
-            case SENSOR_ORIENTATION_DEFAULT_DEGREES:
-                mMediaRecorder.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation));
-                break;
-            case SENSOR_ORIENTATION_INVERSE_DEGREES:
-                mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));
-                break;
-        }
-        mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
-            @Override
-            public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
-                if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
-                    stopRecordButtonAnimations();
-                    stopRecordingVideo();
-                }
+            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+            switch (mSensorOrientation) {
+                case SENSOR_ORIENTATION_DEFAULT_DEGREES:
+                    mMediaRecorder.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation));
+                    break;
+                case SENSOR_ORIENTATION_INVERSE_DEGREES:
+                    mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));
+                    break;
             }
-        });
-        mMediaRecorder.prepare();
+            mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+                @Override
+                public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+                    if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                        stopRecordButtonAnimations();
+                        stopRecordingVideo();
+                    }
+                }
+            });
+            mMediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private static class CreateVideoFolder extends AsyncTask<Void, Void, Boolean> {
@@ -811,7 +823,10 @@ public class CameraFragment extends Fragment {
                     Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }, mBackgroundHandler);
-        } catch (CameraAccessException | IOException e) {
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
 

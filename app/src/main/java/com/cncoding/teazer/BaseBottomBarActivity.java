@@ -66,7 +66,6 @@ import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteracti
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.user.Profile;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
@@ -346,6 +345,12 @@ public class BaseBottomBarActivity extends BaseActivity
         }
 
         getBranchDynamicLinks();
+
+        int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
+//        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
+        TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
+        tab.setCustomView(null);
+        tab.setCustomView(getTabView(unreadNotificationCount));
     }
 
     private void shareTwitter(String message) {
@@ -404,6 +409,8 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        getBranchDynamicLinks();
+
         Log.d("NOTIFYM", "onNewIntent called");
         try {
 
@@ -442,11 +449,7 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
 
-        int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
-//        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
-        TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
-        tab.setCustomView(null);
-        tab.setCustomView(getTabView(unreadNotificationCount));
+//        getBranchDynamicLinks();
 
         Log.d("NOTIFYM", "onStart called");
 
@@ -464,7 +467,6 @@ public class BaseBottomBarActivity extends BaseActivity
             e.printStackTrace();
         }
 
-//        getBranchDynamicLinks();
     }
 
 
@@ -497,7 +499,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 if (response.body() != null) {
-                                    PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, null, response.body().getMedias().get(0).getThumbUrl());
+                                    PostDetailsActivity.newInstance(BaseBottomBarActivity.this, response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null);
                                 } else {
                                     Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                 }

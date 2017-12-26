@@ -135,9 +135,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if (reactionTitle != null) {
                         reactionPostCaption.setText(reactionTitle);
                     }
+
+
                     postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(postDetails.getReactOwner().getFirstName());
 
+                    initView();
                     incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -174,7 +177,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         reactionPostCaption.setText(reactionTitle);
                     }
                     postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
-                    reactionPostName.setText(selfPostDetails.getPostOwner().getFirstName());
+                    reactionPostName.setText("Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post");
 
                     initView();
 //                    incrementView();

@@ -35,6 +35,15 @@ public class MiniProfile implements Parcelable {
         this.profile_media = profile_media;
     }
 
+    public MiniProfile(int user_id, String user_name, String first_name, String last_name, boolean has_profile_media, ProfileMedia profile_media) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.has_profile_media = has_profile_media;
+        this.profile_media = profile_media;
+    }
+
     protected MiniProfile(Parcel in) {
         user_id = in.readInt();
         user_name = in.readString();
