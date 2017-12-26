@@ -344,6 +344,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 Log.d("NOTIFYM", "BUNDLE not present in onCreate");
         }
 
+        getBranchDynamicLinks();
     }
 
     private void shareTwitter(String message) {
@@ -396,8 +397,6 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(BReceiver);
-
-
     }
 
     @Override
@@ -464,7 +463,7 @@ public class BaseBottomBarActivity extends BaseActivity
             e.printStackTrace();
         }
 
-        getBranchDynamicLinks();
+//        getBranchDynamicLinks();
     }
 
 
