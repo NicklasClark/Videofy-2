@@ -334,7 +334,7 @@ public class CameraFragment extends Fragment {
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -588,7 +588,7 @@ public class CameraFragment extends Fragment {
             HandlerThread thread = new HandlerThread("CameraPreview");
             thread.start();
             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

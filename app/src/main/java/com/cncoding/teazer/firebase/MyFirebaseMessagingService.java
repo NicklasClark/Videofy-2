@@ -25,9 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
-import static com.cncoding.teazer.BaseBottomBarActivity.TAB_INDEX;
+import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
 
 /**
  *
@@ -77,7 +76,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.setClass(this, BaseBottomBarActivity.class);
 //        if (messageBody.contains("follow"))
         Bundle bundle = new Bundle();
-        bundle.putInt(TAB_INDEX, 3);
         bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
         bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
         Log.d("FCMNOT", data.get("notification_type"));

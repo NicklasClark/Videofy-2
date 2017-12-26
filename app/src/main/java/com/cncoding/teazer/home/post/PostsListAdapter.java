@@ -3,7 +3,6 @@ package com.cncoding.teazer.home.post;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.text.emoji.widget.EmojiTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -13,16 +12,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -32,11 +30,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
@@ -129,7 +125,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 @Override
                 public void onClick(View view) {
                     PostsListFragment.positionToUpdate = holder.getAdapterPosition();
-                    fetchPostDetails(postDetails.getPostId());
+                    fetchPostDetails(context, postDetails.getPostId());
                 }
             };
             View.OnClickListener viewProfile = new View.OnClickListener() {
@@ -208,7 +204,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
         @BindView(R.id.home_screen_post_caption)
-        EmojiTextView caption;
+        ProximaNovaSemiboldTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
@@ -229,29 +225,29 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
     }
-
-    private void fetchPostDetails(int postId) {
-        ApiCallingService.Posts.getPostDetails(postId, context)
-                .enqueue(new Callback<PostDetails>() {
-                    @Override
-                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                PostDetailsActivity.newInstance(context, response.body(), null, true,
-                                        true, null, response.body().getMedias().get(0).getThumbUrl());
-                                PostsListFragment.postDetails = response.body();
-//                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
-                            } else {
-                                Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
-                            }
-                        } else
-                            Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostDetails> call, Throwable t) {
-                        Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//
+//    private void fetchPostDetails(int postId) {
+//        ApiCallingService.Posts.getPostDetails(postId, context)
+//                .enqueue(new Callback<PostDetails>() {
+//                    @Override
+//                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+//                        if (response.code() == 200) {
+//                            if (response.body() != null) {
+//                                PostDetailsActivity.newInstance(context, response.body(), null, true,
+//                                        true, null, response.body().getMedias().get(0).getThumbUrl());
+//                                PostsListFragment.postDetails = response.body();
+////                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+//                            } else {
+//                                Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } else
+//                            Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<PostDetails> call, Throwable t) {
+//                        Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }

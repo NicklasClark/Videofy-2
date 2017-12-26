@@ -127,6 +127,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadService;
+import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
 import static com.cncoding.teazer.utilities.NavigationController.TAB4;
@@ -155,8 +156,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
-    public static final String TAB_INDEX = "tabIndex";
-    public static final String SOURCE_ID = "from_id";
+    public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
@@ -329,20 +329,20 @@ public class BaseBottomBarActivity extends BaseActivity
         };
 
         if (getIntent().getExtras() != null) {
-            Bundle notificationBundle = getIntent().getExtras().getBundle("bundle");
-            if (notificationBundle != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
                 try {
-                    if (notificationBundle != null) {
-                        Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
-                        int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
-                        int source_id = notificationBundle.getInt(SOURCE_ID);
-                        int tabIndex = notificationBundle.getInt(TAB_INDEX);
-                        notificationAction(notification_type, source_id,tabIndex);
-                    }
+                    Log.d("NOTIFYM", "BUNDLE Exists in onCreate");
+                    Log.d("NOTIFYM", bundle.toString());
+                    String notification_type = bundle.getString("notification_type");
+                    String source_id = bundle.getString("source_id");
+                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
+            else
+                Log.d("NOTIFYM", "BUNDLE not present in onCreate");
         }
 
     }
@@ -413,12 +413,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
 
                 if (notificationBundle != null) {
-                    Toast.makeText(getApplicationContext(),"notification not null",Toast.LENGTH_SHORT).show();
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
-                    int tabindex = notificationBundle.getInt(TAB_INDEX);
-                    notificationAction(notification_type, source_id,tabindex);
+                    notificationAction(notification_type, source_id);
                 } else if (profileBundle != null) {
 
                     int userId = profileBundle.getInt("userId");
@@ -426,7 +424,9 @@ public class BaseBottomBarActivity extends BaseActivity
                     pushFragment(isSelf ? ProfileFragment.newInstance() :
                             OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
 
-                } else switchTabDynamically();
+                } else
+                    Log.d("NOTIFYM", "BUNDLE not present on new Intent");
+                    switchTabDynamically();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -437,24 +437,11 @@ public class BaseBottomBarActivity extends BaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        initTab();
-        Log.d("NOTIFYM", "onPostCreate called");
-//        if (getIntent().getExtras() != null) {
-//            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
-//                if (bundle != null) {
-//                    int userId = bundle.getInt("userId");
-//                    boolean isSelf = bundle.getBoolean("isSelf");
-//                    pushFragment(isSelf ? ProfileFragment.newInstance() :
-//                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-//                } else switchTabDynamically();
-//        } else {
-//            switchTabDynamically();
-//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
 
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
 //        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
@@ -463,17 +450,20 @@ public class BaseBottomBarActivity extends BaseActivity
         tab.setCustomView(getTabView(unreadNotificationCount));
 
         Log.d("NOTIFYM", "onStart called");
-//        if (getIntent().getExtras() != null) {
-//            Bundle bundle = getIntent().getExtras().getBundle("profileBundle");
-//            if (bundle != null) {
-//                int userId = bundle.getInt("userId");
-//                boolean isSelf = bundle.getBoolean("isSelf");
-//                pushFragment(isSelf ? ProfileFragment.newInstance() :
-//                        OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
-//            } else switchTabDynamically();
-//        } else {
-//            switchTabDynamically();
-//        }
+
+        try {
+            Bundle notificationBundle = getIntent().getExtras();
+            if (notificationBundle != null) {
+                Log.d("NOTIFYM", "BUNDLE Exists in onStart");
+                String notification_type = notificationBundle.getString("notification_type");
+                String source_id = notificationBundle.getString("source_id");
+                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
+            }
+            else
+                Log.d("NOTIFYM", "BUNDLE not present in onStart");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
         getBranchDynamicLinks();
     }
@@ -496,10 +486,9 @@ public class BaseBottomBarActivity extends BaseActivity
         return v;
     }
 
-    private void notificationAction(int notification_type, int source_id, int tabindex) {
+    private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
 
-            Toast.makeText(getApplicationContext(),"push noti",Toast.LENGTH_SHORT).show();
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id),String.valueOf(notification_type)));
         }
         else {
@@ -900,8 +889,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-        PostDetailsActivity.newInstance(this, postDetails, null,
-                false, false, null, null);
+        fetchPostDetails(this, postDetails.getPostId());
     }
 
 

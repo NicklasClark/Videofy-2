@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (addToBackStack)
             transaction.addToBackStack(tag);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {

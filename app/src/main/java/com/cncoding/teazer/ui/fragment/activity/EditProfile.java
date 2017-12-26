@@ -180,7 +180,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         countrycode = Integer.parseInt(intent.getStringExtra("CountryCode"));
         detail = intent.getStringExtra("Detail");
         _username.setText(username);
-        _firstname.setText(firstname);
+        _firstname.setText(firstname +" "+ lastname);
         _bio.setText(detail);
         _email.setText(emailId);
         if(mobilenumber!=0)
@@ -250,7 +250,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 ProfileFragment.checkprofileupdated = true;
 
 
-               // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
+                // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
 
 
 
@@ -286,7 +286,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-               // cropImageView.setImageUriAsync(resultUri);
+                // cropImageView.setImageUriAsync(resultUri);
 
 //                Picasso.with(EditProfile.this)
 //                        .load(resultUri)
@@ -306,7 +306,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     editor.putString("MYIMAGES", resultUri.toString());
                     editor.apply();
 
-                   // File profileImage = new File(r.getPath());
+                    // File profileImage = new File(r.getPath());
                     RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                     MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                     saveDataToDatabase(body);
@@ -656,8 +656,8 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     public void validate() {
         boolean valid = true;
         String usernames = _username.getText().toString();
-        String firstname = _firstname.getText().toString();
-        String lastnames = lastname;
+        String fullname = _firstname.getText().toString();
+
         Integer countrycodes = countryCodeView.getSelectedCountryCodeAsInt();
         String newmobilenumber = _mobileNumber.getText().toString();
         String emailid = _email.getText().toString();
@@ -670,7 +670,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         } else {
             _username.setError(null);
         }
-        if (firstname.isEmpty()|| firstname.trim().isEmpty()||firstname.trim().equals("")) {
+        if (fullname.isEmpty()|| fullname.trim().isEmpty()||fullname.trim().equals("")) {
             _firstname.setError("enter your name");
             _firstname.requestFocus();
             valid = false;
@@ -712,14 +712,14 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             gender_text.requestFocus();
 
         }
-       // 2052
+        // 2052
         //4141
 
 
         if (details.isEmpty()||details.trim().isEmpty()||details.trim().equals("")) {
-          //  _bio.setError("Bio is required");
-          //  _bio.requestFocus();
-          //  valid = false;
+            //  _bio.setError("Bio is required");
+            //  _bio.requestFocus();
+            //  valid = false;
             _bio.setText("");
 
         } else {
@@ -729,17 +729,28 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
         if (valid) {
 
-            if(Long.parseLong(newmobilenumber)==mobilenumber)
+            String[] names = fullname.split(" ");
+            String firstName;
+            String lastName = "";
+            if (names.length>1) {
+                for (int i = 1; i<names.length;i++)
+                    lastName = lastName + names[i] + " ";
+                firstName = names[0];
+            } else {
+                firstName = names[0];
+                lastName = null;
+            }
+            if(Long.parseLong(newmobilenumber) == mobilenumber)
             {
-                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstname, lastnames, usernames, details, emailid, gender);
+                ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(firstName, lastName, usernames, details, emailid, gender);
                 ProfileUpdate(profileUpdateRequest);
 
             }
             else
-                {
-                    sendOTP(Long.parseLong(newmobilenumber),countrycodes,firstname, lastnames, usernames, emailid, details, gender);
+            {
+                sendOTP(Long.parseLong(newmobilenumber),countrycodes,firstName, lastName, usernames, emailid, details, gender);
 
-                }
+            }
         }
     }
 

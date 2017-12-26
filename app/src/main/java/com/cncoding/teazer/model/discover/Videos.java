@@ -2,6 +2,7 @@ package com.cncoding.teazer.model.discover;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.model.base.Medias;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Videos implements Parcelable {
+public class Videos implements Parcelable, Comparable<Videos>{
     private int post_id;
     private int posted_by;
     private int likes;
@@ -104,5 +105,10 @@ public class Videos implements Parcelable {
 
     public ArrayList<Medias> getPostVideoInfo() {
         return medias;
+    }
+
+    @Override
+    public int compareTo(@NonNull Videos videos) {
+        return Integer.compare(this.post_id, videos.post_id);
     }
 }
