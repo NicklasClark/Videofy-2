@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -45,15 +46,24 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private ArrayList<PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
+    Fragment fragment;
+    OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
 
 
     final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
 
 
-    public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list) {
+    public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
         this.context = context;
         this.list = list;
+        this.fragment=fragment;
         listener = (myCreationListener) context;
+        if (fragment instanceof OnChildFragmentUpdateVideos) {
+            onChildFragmentUpdateVideosllistrener = (OnChildFragmentUpdateVideos) fragment;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnChildFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -150,10 +160,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
                                         public void onClick(DialogInterface dialog, int which) {
+                                            onChildFragmentUpdateVideosllistrener.updateVideosCreation(1);
                                             deleteVideos(videopostId);
                                             list.remove(i);
                                             notifyItemRemoved(i);
                                             notifyItemRangeChanged(i, list.size());
+
+
                                         }
                                     });
                                     alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -280,8 +293,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-
-
                                             break;
                                         case 1:
                                             Picasso.with(context)
@@ -391,6 +402,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             break;
 
                                         case 2:
+
                                             Picasso.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image3);
@@ -427,7 +439,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         case 2:
 
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
-                                           viewHolder.imagelayout2.setVisibility(View.VISIBLE);
+                                            viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
                                             Picasso.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
@@ -461,4 +473,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         public void myCreationVideos(int i, PostDetails postDetails);
     }
+
+    public interface OnChildFragmentUpdateVideos {
+        void updateVideosCreation(int count);
+    }
+
 }

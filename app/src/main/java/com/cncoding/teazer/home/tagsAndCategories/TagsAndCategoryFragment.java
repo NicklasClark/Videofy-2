@@ -280,7 +280,7 @@ public class TagsAndCategoryFragment extends Fragment {
         protected void onPostExecute(String[] strings) {
             try {
                 reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], Integer.parseInt(strings[2]));
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            } catch ( Exception e) {
                 e.printStackTrace();
                 if (e instanceof NumberFormatException)
                     Log.e("NumberFormatException", "Trying to parse" + strings[2]);

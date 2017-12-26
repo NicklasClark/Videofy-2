@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
@@ -59,7 +60,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int RC_REQUEST_STORAGE = 1001;
@@ -112,6 +113,7 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.loader)GifTextView loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
+    int increamentcounter=1;
 
     public ProfileFragment() {
     }
@@ -147,14 +149,12 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
         ButterKnife.bind(this,view);
        // loader = view.findViewById(R.id.loader);
-
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
         _name = view.findViewById(R.id.username);
@@ -419,7 +419,6 @@ public class ProfileFragment extends BaseFragment {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
         } else {
-
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(final Void... params) {
@@ -431,19 +430,15 @@ public class ProfileFragment extends BaseFragment {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     return bitmap;
                 }
-
                 @Override
                 protected void onPostExecute(final Bitmap result) {
                     try {
                         Bitmap userImage = scaleDown(result, 200, true);
-
                         Bitmap photobitmap = Bitmap.createScaledBitmap(result,
                                 300, 300, false);
                         Blurry.with(getContext()).from(photobitmap).into(bgImage);
@@ -451,7 +446,6 @@ public class ProfileFragment extends BaseFragment {
                     catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             }.execute();
         }
@@ -463,14 +457,12 @@ public class ProfileFragment extends BaseFragment {
             mListener = (FollowerListListener) context;
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
         getParentActivity().updateToolbarTitle(previousTitle);
     }
-
     private void dynamicToolbarColor() {
         if (!hasProfleMedia) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
@@ -491,11 +483,9 @@ public class ProfileFragment extends BaseFragment {
     public void updateProfile() {
         loader.setVisibility(View.VISIBLE);
         blur_bacground.setVisibility(View.GONE);
-
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-
                 try {
                     userProfile = response.body().getUserProfile();
                     firstname = userProfile.getFirstName();
@@ -550,8 +540,18 @@ public class ProfileFragment extends BaseFragment {
             }
         });
     }
+    public void updateUsercreations(int count)
+    {
 
 
+    }
+
+    @Override
+    public void updateVideosCreation(int count) {
+        int counter=totalvideos-count;
+        totalvideos=counter;
+        _creations.setText(String.valueOf(totalvideos) + " Creations");
+    }
     public interface FollowerListListener {
         void onFollowerListListener(String id, String identifier);
         void onFollowingListListener(String id, String identifier);

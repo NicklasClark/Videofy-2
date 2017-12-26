@@ -66,6 +66,7 @@ import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteracti
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.user.Profile;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
@@ -194,7 +195,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private Fragment fragment;
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
-
+    ProfileFragment profilefragment;
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -889,6 +890,8 @@ public class BaseBottomBarActivity extends BaseActivity
     public void myCreationVideos(int i, PostDetails postDetails) {
         fetchPostDetails(this, postDetails.getPostId());
     }
+
+
     //</editor-fold>
 
     //<editor-fold desc="Video upload handler">
@@ -1103,7 +1106,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewUserProfile() {
-        pushFragment(ProfileFragment.newInstance());
+        profilefragment=ProfileFragment.newInstance();
+        pushFragment(profilefragment);
     }
 
     @Override

@@ -122,7 +122,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 @Override
                 public void onClick(View view) {
-
                     listener.myCreationVideos(2, cont);
 
                 }
@@ -306,5 +305,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
     {
         public void myCreationVideos(int i, PostDetails postDetails);
+
+
     }
 }
