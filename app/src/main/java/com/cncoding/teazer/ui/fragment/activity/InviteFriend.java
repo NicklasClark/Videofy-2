@@ -78,7 +78,7 @@ public class InviteFriend extends AppCompatActivity {
                         .setContentUrl(Uri.parse(getString(R.string.teazer_universal_link)))
                         .setContentTitle("Teazer")
                         .setContentDescription(
-                                "Express better").build();
+                                "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going ").build();
                 ShareDialog shareDialog = new ShareDialog(InviteFriend.this);
                 shareDialog.show(content);
                 ShareApi.share(content, null);
@@ -95,7 +95,7 @@ public class InviteFriend extends AppCompatActivity {
                     Intent watsppIntent = new Intent(Intent.ACTION_SEND);
                     watsppIntent.setType("text/plain");
                     watsppIntent.setPackage("com.whatsapp");
-                    watsppIntent.putExtra(Intent.EXTRA_TEXT, teazerLink);
+                    watsppIntent.putExtra(Intent.EXTRA_TEXT, "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going " + teazerLink);
                     startActivity(watsppIntent);
                 } catch (PackageManager.NameNotFoundException e) {
                     Toast.makeText(InviteFriend.this, "Please install Whatsapp app", Toast.LENGTH_SHORT)
