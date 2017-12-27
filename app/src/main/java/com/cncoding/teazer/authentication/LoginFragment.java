@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -178,18 +179,26 @@ public class LoginFragment extends AuthFragment {
                     int trbPadding = (int) (14*scale + 0.5f);
                     int leftPadding = (int) (0*scale + 0.5f);
                     usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
-
+                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(15) });
                 }
             } else {
                 if (countryCodePicker.getVisibility() == VISIBLE) {
                     countryCodePicker.setVisibility(View.GONE);
                     usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
+                    float scale = getResources().getDisplayMetrics().density;
+                    int trbPadding = (int) (14*scale + 0.5f);
+                    usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
                 }
             }
         } else {
             if (countryCodePicker.getVisibility() == VISIBLE) {
                 countryCodePicker.setVisibility(View.GONE);
                 usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+                float scale = getResources().getDisplayMetrics().density;
+                int trbPadding = (int) (14*scale + 0.5f);
+                usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+                usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
             }
         }
     }
@@ -319,6 +328,7 @@ public class LoginFragment extends AuthFragment {
         int trbPadding = (int) (14*scale + 0.5f);
         int leftPadding = (int) (0*scale + 0.5f);
         usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+        usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(15) });
 
         usernameView.setHint(R.string.phone_number);
         usernameView.setText("");
@@ -346,6 +356,7 @@ public class LoginFragment extends AuthFragment {
         float scale = getResources().getDisplayMetrics().density;
         int trbPadding = (int) (14*scale + 0.5f);
         usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+        usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
 
         //noinspection deprecation
         usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));

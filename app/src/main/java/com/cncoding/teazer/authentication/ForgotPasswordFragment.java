@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,6 +124,7 @@ public class ForgotPasswordFragment extends AuthFragment {
                     int trbPadding = (int) (14*scale + 0.5f);
                     int leftPadding = (int) (0*scale + 0.5f);
                     forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+                    forgotPasswordEditText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(15) });
                 }
             } else {
                 if (countryCodePicker.getVisibility() == View.VISIBLE) {
@@ -133,6 +135,7 @@ public class ForgotPasswordFragment extends AuthFragment {
                     int trbPadding = (int) (14*scale + 0.5f);
                     int leftPadding = (int) (14*scale + 0.5f);
                     forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+                    forgotPasswordEditText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
                 }
             }
         } else {
@@ -144,6 +147,7 @@ public class ForgotPasswordFragment extends AuthFragment {
                 int trbPadding = (int) (14*scale + 0.5f);
                 int leftPadding = (int) (14*scale + 0.5f);
                 forgotPasswordEditText.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+                forgotPasswordEditText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
             }
         }
     }

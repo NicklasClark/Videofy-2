@@ -40,6 +40,9 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -133,6 +136,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                             .asBitmap()
                             .into(reactionPostDp);
                     if (reactionTitle != null) {
+                        try {
+                            reactionTitle = URLDecoder.decode(reactionTitle, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                         reactionPostCaption.setText(reactionTitle);
                     }
 

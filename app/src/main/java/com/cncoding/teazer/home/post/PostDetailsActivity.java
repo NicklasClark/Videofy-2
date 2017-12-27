@@ -92,8 +92,10 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -437,7 +439,13 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     private void prepareController() {
         if (postDetails != null) {
-            caption.setText(postDetails.getTitle());
+            String title = postDetails.getTitle();
+            try {
+                title = URLDecoder.decode(title, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            caption.setText(title);
             locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
             locationView.setText(locationView.getVisibility() == VISIBLE ?
                     (postDetails.hasCheckin() ? SPACE + postDetails.getCheckIn().getLocation() : "") : "");

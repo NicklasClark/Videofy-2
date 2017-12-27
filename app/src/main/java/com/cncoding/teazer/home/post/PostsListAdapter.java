@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
@@ -92,6 +93,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         }
 
         String title = postDetails.getTitle();
+        title = decodeUTFUrl(title);
         holder.caption.setText(title);
         holder.caption.setVisibility(View.VISIBLE);
 
@@ -203,8 +205,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.home_screen_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.home_screen_post_caption)
-        ProximaNovaSemiboldTextView caption;
+        @BindView(R.id.home_screen_post_caption) ProximaNovaSemiboldTextView caption;
         @BindView(R.id.home_screen_post_category) ProximaNovaRegularTextView category;
         @BindView(R.id.home_screen_post_dp) CircularAppCompatImageView profilePic;
         @BindView(R.id.home_screen_post_username) ProximaNovaRegularTextView name;
@@ -225,29 +226,4 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails, ImageView postThumbnail, RelativeLayout layout);
     }
-//
-//    private void fetchPostDetails(int postId) {
-//        ApiCallingService.Posts.getPostDetails(postId, context)
-//                .enqueue(new Callback<PostDetails>() {
-//                    @Override
-//                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-//                        if (response.code() == 200) {
-//                            if (response.body() != null) {
-//                                PostDetailsActivity.newInstance(context, response.body(), null, true,
-//                                        true, null, response.body().getMedias().get(0).getThumbUrl());
-//                                PostsListFragment.postDetails = response.body();
-////                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
-//                            } else {
-//                                Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } else
-//                            Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<PostDetails> call, Throwable t) {
-//                        Toast.makeText(context, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 }

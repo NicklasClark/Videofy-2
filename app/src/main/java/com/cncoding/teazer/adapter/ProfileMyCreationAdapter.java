@@ -36,6 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+
 /**
  * Created by farazhabib on 09/11/17.
  */
@@ -76,24 +78,21 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     public void onBindViewHolder(final ProfileMyCreationAdapter.ViewHolder viewHolder, final int i) {
 
         final PostDetails cont;
-        final String videotitle;
-        final int videopostId;
+        String videoTitle;
+        final int videoPostId;
         final String thumb_url;
         final String duration;
         final String views;
         final String likes;
         final int reactions;
-        final String location;
         final int postId;
-        boolean hasPrfileMedia;
-
 
         try {
             cont = list.get(i);
-            videotitle = cont.getTitle();
+            videoTitle = cont.getTitle();
             postId = cont.getPostId();
             final String videourl = cont.getMedias().get(0).getMediaUrl();
-            videopostId = cont.getPostId();
+            videoPostId = cont.getPostId();
             thumb_url = cont.getMedias().get(0).getThumbUrl();
             duration = cont.getMedias().get(0).getDuration();
             views = String.valueOf(cont.getMedias().get(0).getViews());
@@ -128,7 +127,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 viewHolder.reactions.setVisibility(View.GONE);
                 getPostReactionThree(viewHolder, postId, reactions);
             }
-            viewHolder.videoTitle.setText(videotitle);
+
+            viewHolder.videoTitle.setText(decodeUTFUrl(videoTitle));
             viewHolder.txtlikes.setText(likes);
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
@@ -161,7 +161,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                         public void onClick(DialogInterface dialog, int which) {
                                             onChildFragmentUpdateVideosllistrener.updateVideosCreation(1);
-                                            deleteVideos(videopostId);
+                                            deleteVideos(videoPostId);
                                             list.remove(i);
                                             notifyItemRemoved(i);
                                             notifyItemRangeChanged(i, list.size());

@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 /**
@@ -66,7 +67,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
             try {
         /*Setting title*/
-                holder.title.setText(holder.postDetails.getTitle());
+                holder.title.setText(decodeUTFUrl(holder.postDetails.getTitle()));
 
         /*Setting name*/
                 String name = holder.postDetails.getPostOwner().getFirstName() +

@@ -29,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
@@ -56,24 +57,24 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
         final Reactions cont = list.get(i);
         final int reactId = cont.getReactId();
-        final String videotitle = cont.getReactTitle();
+        String videoTitle = cont.getReactTitle();
         final int likes = cont.getLikes();
         final int views = cont.getViews();
-        final String reactduration = cont.getMediaDetail().getReactDuration();
-        final String videourl = cont.getMediaDetail().getMediaUrl();
+        final String reactDuration = cont.getMediaDetail().getReactDuration();
         final String thumb_url = cont.getMediaDetail().getThumbUrl();
-        final String postowner = cont.getPostOwner().getUserName();
+        final String postOwner = cont.getPostOwner().getUserName();
         final int reaction = cont.getReactedBy();
 
-        if (videotitle.equals("") || videotitle == null) {
+
+        if (videoTitle.equals("") || videoTitle == null) {
             viewHolder.videoTitle.setText("No Title");
         } else {
-            viewHolder.videoTitle.setText(videotitle);
+            viewHolder.videoTitle.setText(decodeUTFUrl(videoTitle));
         }
-        viewHolder.post_owner.setText(postowner);
+        viewHolder.post_owner.setText(postOwner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
-        viewHolder.duration.setText(reactduration + " secs");
+        viewHolder.duration.setText(reactDuration + " secs");
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         Glide.with(context).load(thumb_url)

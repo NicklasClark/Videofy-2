@@ -23,6 +23,8 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostReaction;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -89,7 +91,13 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 })
                 .into(holder.profilePic);
 
-        holder.caption.setText(postReaction.getReact_title());
+        String title = postReaction.getReact_title();
+        try {
+            title = URLDecoder.decode(title, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        holder.caption.setText(title);
         String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
         holder.name.setText(nameText);
         String likesText = "  " + postReaction.getLikes();

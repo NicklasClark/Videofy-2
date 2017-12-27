@@ -3,7 +3,6 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,8 +34,6 @@ import butterknife.ButterKnife;
 
 import static android.R.anim.fade_in;
 import static android.R.anim.fade_out;
-import static com.cncoding.teazer.R.anim.float_up;
-import static com.cncoding.teazer.R.anim.sink_down;
 
 public class EditPost extends AppCompatActivity implements CameraFragment.OnCameraFragmentInteractionListener, EditPostFragment.OnUploadFragmentInteractionListener,
         TagsAndCategoryFragment.TagsAndCategoriesInteractionListener, NearbyPlacesList.OnNearbyPlacesListInteractionListener,
@@ -100,7 +97,7 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
         }
     }
     @Override
-    public void updatecategories(PostDetails postDetails) {
+    public void updateCategories(PostDetails postDetails) {
 
         FragmentEditPostUpdateCtaegories updateCtaegories=FragmentEditPostUpdateCtaegories.newInstance(postDetails);
         FragmentTransaction ft = fragmentManager.beginTransaction();

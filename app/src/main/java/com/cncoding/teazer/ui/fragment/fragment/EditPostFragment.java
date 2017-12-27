@@ -39,7 +39,6 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
@@ -71,7 +70,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,8 +100,8 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEAR
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.makeSnackbarWithBottomMargin;
 
 /**
  * 
@@ -253,7 +254,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         createLocationCallback();
         createLocationRequest();
 
-        videoTitle.setText(postDetails.getTitle());
+        videoTitle.setText(decodeUTFUrl(postDetails.getTitle()));
         if (postDetails.getMedias().get(0).getThumbUrl() != null) {
             Glide.with(context)
                     .load(postDetails.getMedias().get(0).getThumbUrl())
@@ -320,6 +321,11 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 }
                 boolean valid=true;
                 String title = videoTitle.getText().toString();
+                try {
+                    title = URLEncoder.encode(title, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 int postId = postDetails.getPostId();
 
                 if (title==null|| title.equals("")||title.isEmpty()) {
@@ -518,7 +524,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     @OnClick(R.id.video_upload_categories)
     public void getCategories() {
 
-        mListener.updatecategories(postDetails);
+        mListener.updateCategories(postDetails);
 
 //        toggleInteraction(false);
 //        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
@@ -1067,6 +1073,6 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(boolean isBackToCamera, Fragment fragment, String tag);
-        void updatecategories(PostDetails postDetails);
+        void updateCategories(PostDetails postDetails);
     }
 }
