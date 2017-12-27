@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -27,13 +29,13 @@ import butterknife.ButterKnife;
  * Created by Prem $ on 11/12/2017.
  */
 
-public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.ViewHolder> {
+public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.ViewHolder> implements Filterable {
 
     private Typeface REGULAR;
     private Typeface SEMI_BOLD;
     private ArrayList<Category> interestsList;
+    private ArrayList<Category> interestsListFiltered;
     private Interests interests;
-//    private SparseIntArray sparseIntArray;
     private String selectedCategoriesString;
     private final boolean isForVideo;
     private SparseBooleanArray selectedInterestsArray;
@@ -42,10 +44,10 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     InterestsAdapter(ArrayList<Category> interestsList, final Interests interests, SparseBooleanArray categories,
                      String selectedCategoriesString, final boolean isForVideo) {
         this.interestsList = interestsList;
+        interestsListFiltered = interestsList;
         this.interests = interests;
         REGULAR = new TypeFactory(interests.getContext()).regular;
         SEMI_BOLD = new TypeFactory(interests.getContext()).semiBold;
-//        sparseIntArray = new SparseIntArray();
         selectedInterestsArray = categories != null ? categories : new SparseBooleanArray();
         this.selectedCategoriesString = selectedCategoriesString;
         this.isForVideo = isForVideo;
@@ -80,14 +82,18 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String categoryText = "+ " + interestsList.get(position).getCategoryName();
+        String categoryText = "+ " + interestsListFiltered.get(position).getCategoryName();
         holder.chip.setText(categoryText);
 
-        setCheck(holder.chip, position, false,
-                selectedCategoriesString != null &&
-                        selectedCategoriesString.contains(categoryText.replace("+ ", "")), false);
-        if (selectedCategoriesString == null || selectedCategoriesString.isEmpty())
-            setCheck(holder.chip, position, false, selectedInterestsArray.get(position), false);
+        if (selectedInterestsArray.size() == 0) {
+            setCheck(holder.chip, position, false,
+                    selectedCategoriesString != null &&
+                            selectedCategoriesString.contains(categoryText.replace("+ ", "")), false);
+        }
+        else {
+            setCheck(holder.chip, position, false,
+                    selectedInterestsArray.get(interestsListFiltered.get(holder.getAdapterPosition()).getCategoryId() - 1), false);
+        }
 
         checkButtonAccess();
 
@@ -95,11 +101,43 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 
             @Override
             public void onClick(View view) {
-                selectedInterestsArray.put(holder.getAdapterPosition(), !holder.chip.isChecked());
+                selectedInterestsArray.put(
+                        interestsListFiltered.get(holder.getAdapterPosition()).getCategoryId() - 1, !holder.chip.isChecked());
                 setCheck(holder.chip, holder.getAdapterPosition(), true, !holder.chip.isChecked(), true);
                 checkButtonAccess();
             }
         });
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    interestsListFiltered = interestsList;
+                } else {
+                    ArrayList<Category> filteredList = new ArrayList<>();
+                    for (Category category : interestsList) {
+                        if (category.getCategoryName().toLowerCase().contains(charString.toLowerCase())){
+                            filteredList.add(category);
+                        }
+                    }
+                    interestsListFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = interestsListFiltered;
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                interestsListFiltered = (ArrayList<Category>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     private void checkButtonAccess() {
@@ -135,7 +173,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
     private void checkAction(ProximaNovaRegularCheckedTextView view, int position, boolean checked) {
         view.setChecked(checked);
         if (view.isChecked()) {
-            selectedInterests.put(position, interestsList.get(position));
+            selectedInterests.put(interestsList.get(position).getCategoryId(), interestsList.get(position));
             view.setTypeface(SEMI_BOLD);
 //            if (!isForVideo) {
                 view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.parseColor("#26C6DA"),
@@ -145,7 +183,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 //                        Color.parseColor("#26C6DA"), Color.parseColor("#26C6DA"), 40));
 //            }
         } else {
-            selectedInterests.delete(position);
+            selectedInterests.delete(interestsList.get(position).getCategoryId());
             view.setTypeface(REGULAR);
             if (!isForVideo) {
                 view.setBackground(ViewUtils.getBackground(interests.getContext(), view, Color.TRANSPARENT,
@@ -160,7 +198,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.View
 
     @Override
     public int getItemCount() {
-        return interestsList.size();
+        return interestsListFiltered.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -65,7 +65,6 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.cncoding.teazer.utilities.StartCountDownClass;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -153,87 +152,51 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //</editor-fold>
 
     //<editor-fold desc="Main layout views">
-    //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
+//    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.relative_layout)
-    RelativeLayout relativeLayout;
-    @BindView(R.id.tags_container)
-    RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder)
-    ImageView placeholder;
-    @BindView(R.id.loading)
-    ProgressBar loadingProgressBar;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-    @BindView(R.id.react_btn)
-    ProximaNovaBoldButton reactBtn;
-    @BindView(R.id.like)
-    ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users)
-    ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list)
-    RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent)
-    RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge)
-    ProximaNovaSemiboldTextView tagsCountBadge;
-    //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
-    @BindView(R.id.list)
-    RecyclerView recyclerView;
-    @BindView(R.id.post_load_error)
-    ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header)
-    ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle)
-    ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout)
-    LinearLayout postLoadErrorLayout;
-    //    @BindView(R.id.share) ProximaNovaRegularTextView share;
-    @BindView(R.id.video_view)
-    SimpleExoPlayerView playerView;
+    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
+    @BindView(R.id.placeholder) ImageView placeholder;
+    @BindView(R.id.loading) ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
+    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
+//    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
+    @BindView(R.id.list) RecyclerView recyclerView;
+    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
+//    @BindView(R.id.share) ProximaNovaRegularTextView share;
+    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
     //</editor-fold>
 
     //<editor-fold desc="Controller views">
-    @BindView(R.id.controls)
-    FrameLayout controlsContainer;
+    @BindView(R.id.controls) FrameLayout controlsContainer;
     //top layout
-    @BindView(R.id.media_controller_caption)
-    ProximaNovaSemiboldTextView caption;
-    @BindView(R.id.media_controller_location)
-    ProximaNovaRegularTextView locationView;
-    @BindView(R.id.media_controller_eta)
-    ProximaNovaRegularTextView remainingTime;
+    @BindView(R.id.media_controller_caption) ProximaNovaSemiboldTextView caption;
+    @BindView(R.id.media_controller_location) ProximaNovaRegularTextView locationView;
+    @BindView(R.id.media_controller_eta) ProximaNovaRegularTextView remainingTime;
     //center layout
-    @BindView(R.id.media_controller_play_pause)
-    AppCompatImageButton playPauseButton;
-
+    @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
     //bottom layout
-    @BindView(R.id.media_controller_dp)
-    CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name)
-    ProximaNovaRegularTextView profileNameView;
-    @BindView(R.id.media_controller_likes)
-    ProximaNovaRegularTextView likesView;
-    @BindView(R.id.media_controller_views)
-    ProximaNovaRegularTextView viewsView;
-    @BindView(R.id.media_controller_categories)
-    ProximaNovaSemiboldTextView categoriesView;
-    @BindView(R.id.media_controller_reaction_count)
-    ProximaNovaSemiboldTextView reactionCountView;
-    @BindView(R.id.media_controller_reaction_1)
-    CircularAppCompatImageView reaction1Pic;
-    @BindView(R.id.media_controller_reaction_2)
-    CircularAppCompatImageView reaction2Pic;
-    @BindView(R.id.media_controller_reaction_3)
-    CircularAppCompatImageView reaction3Pic;
-    @BindView(R.id.loader)
-    GifTextView loader;
-    @BindView(R.id.uploadProgressText)
-    ProximaNovaSemiboldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress)
-    ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout)
-    RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
+    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiboldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.loader) GifTextView loader;
+    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -251,7 +214,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private long totalDuration;
     private boolean oneShotFlag;
 
-    StartCountDownClass startCountDownClass;
+//    StartCountDownClass startCountDownClass;
     private Handler customHandler = new Handler();
     //</editor-fold>
 
@@ -596,7 +559,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         postLoadErrorLayout.setVisibility(VISIBLE);
         //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
         if (postDetails.canDelete()) {
-            postLoadErrorSubtitle.setText("There is no reaction yet");
+            postLoadErrorSubtitle.setText(R.string.there_is_no_reaction_yet);
 
         } else {
             postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
@@ -1027,7 +990,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (response.body().getStatus() == true) {
+                                                    if (response.body().getStatus()) {
                                                         Toast.makeText(PostDetailsActivity.this,
                                                                 R.string.video_hide_successful,
                                                                 Toast.LENGTH_SHORT).show();
@@ -1364,7 +1327,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //                                        .setProgress(0, 0, false);
 //                                notifyProgressInNotification();
 
-                                uploadProgressText.setText("Finished!");
+                                uploadProgressText.setText(R.string.finished);
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -1399,7 +1362,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 //                                        .setProgress(0, 0, false);
 //                                notifyProgressInNotification();
 
-                                uploadProgressText.setText("Failed, try again");
+                                uploadProgressText.setText(R.string.failed);
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -1443,11 +1406,11 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
-    private void notifyProgressInNotification() {
-        if (notificationManager != null) {
-            notificationManager.notify(0, builder.build());
-        }
-    }
+//    private void notifyProgressInNotification() {
+//        if (notificationManager != null) {
+//            notificationManager.notify(0, builder.build());
+//        }
+//    }
 
 //    private void deleteFile(String path, boolean isGallery) {
 //        if (!isGallery) {

@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +60,8 @@ public class TagsAndCategoryFragment extends Fragment {
     private String action;
     private ArrayList<Category> categories;
     private CategoriesAdapter categoriesAdapter;
-
+    private Call<CircleList> circleListCall;
+    private Call<ArrayList<Category>> categoriesCall;
     private ArrayList<MiniProfile> circles;
     private TagsAdapter tagsAdapter;
     private TagsAndCategoriesInteractionListener listener;
@@ -92,8 +95,7 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_tags_and_categories, container, false);
         ButterKnife.bind(this, rootView);
@@ -158,7 +160,12 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     private void getCategories() {
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+        categoriesCall = ApiCallingService.Application.getCategories();
+
+        if (categoriesCall.isExecuted())
+            categoriesCall.cancel();
+
+        categoriesCall.enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
@@ -190,7 +197,12 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     private void getMyCircle(final int page) {
-        ApiCallingService.Friends.getMyCircle(page, getContext()).enqueue(new Callback<CircleList>() {
+        circleListCall = ApiCallingService.Friends.getMyCircle(page, getContext());
+
+        if (circleListCall.isExecuted())
+            circleListCall.cancel();
+
+        circleListCall.enqueue(new Callback<CircleList>() {
             @Override
             public void onResponse(Call<CircleList> call, Response<CircleList> response) {
                 if (response.code() == 200) {
@@ -219,6 +231,12 @@ public class TagsAndCategoryFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @OnTextChanged(R.id.headerTextView) public void searchTags(CharSequence charSequence) {
+        if (tagsAdapter != null) {
+            tagsAdapter.getFilter().filter(charSequence);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -259,37 +277,46 @@ public class TagsAndCategoryFragment extends Fragment {
             switch (action) {
                 case ACTION_TAGS_FRAGMENT:
                     SparseArray<MiniProfile> tagsSparseArray = (SparseArray<MiniProfile>) sparseArrays[0];
-                    return new String[] {
-                            reference.get().getSelectedTagsToShow(tagsSparseArray),
-                            reference.get().getSelectedTagsToSend(tagsSparseArray),
-                            String.valueOf(reference.get().getCount(tagsSparseArray))
-                    };
+                    SparseBooleanArray selectedTagsArray = new SparseBooleanArray();
+                    for (int i = 0; i < sparseArrays[0].size(); i++) {
+                        selectedTagsArray.put(sparseArrays[0].keyAt(i), true);
+                    }
+                    String selectedTagsToShow = reference.get().getSelectedTagsToShow(tagsSparseArray);
+                    String selectedTagsToSend = reference.get().getSelectedTagsToSend(tagsSparseArray);
+                    reference.get().listener.onTagsAndCategoriesInteraction(
+                            ACTION_TAGS_FRAGMENT,
+                            selectedTagsToShow,
+                            selectedTagsToSend,
+                            selectedTagsArray,
+                            tagsSparseArray.size()
+                    );
+                    break;
                 case ACTION_CATEGORIES_FRAGMENT:
                     SparseArray<Category> categorySparseArray = (SparseArray<Category>) sparseArrays[0];
-                    return new String[] {
+                    reference.get().listener.onTagsAndCategoriesInteraction(
+                            ACTION_TAGS_FRAGMENT,
                             reference.get().getSelectedCategoriesToShow(categorySparseArray),
                             reference.get().getSelectedCategoriesToSend(categorySparseArray),
-                            String.valueOf(reference.get().getCount(categorySparseArray))
-                    };
+                            null,
+                            categorySparseArray.size()
+                    );
+                    break;
                 default:
-                    return null;
+                    break;
             }
+            return null;
         }
 
         @Override
         protected void onPostExecute(String[] strings) {
             try {
-                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], Integer.parseInt(strings[2]));
+                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], null, Integer.parseInt(strings[2]));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
                 if (e instanceof NumberFormatException)
                     Log.e("NumberFormatException", "Trying to parse" + strings[2]);
             }
         }
-    }
-
-    private int getCount(SparseArray<? extends Parcelable> sparseArray) {
-        return sparseArray.size();
     }
 
     private String getSelectedTagsToShow(SparseArray<MiniProfile> sparseArray) {
@@ -357,13 +384,14 @@ public class TagsAndCategoryFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        if (getActivity() != null && getActivity() instanceof CameraActivity) {
-//            ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_previous);
-//        }
-//    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (circleListCall != null && circleListCall.isExecuted())
+            circleListCall.cancel();
+        if (categoriesCall != null && categoriesCall.isExecuted())
+            categoriesCall.cancel();
+    }
 
     @Override
     public void onDetach() {
@@ -373,6 +401,6 @@ public class TagsAndCategoryFragment extends Fragment {
 
 
     public interface TagsAndCategoriesInteractionListener {
-        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count);
+        void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, SparseBooleanArray selectedTagsArray, int count);
     }
 }

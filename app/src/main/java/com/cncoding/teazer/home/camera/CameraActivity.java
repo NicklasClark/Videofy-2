@@ -38,6 +38,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Toast;
 
@@ -412,12 +413,13 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend, final int count) {
+    public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend,
+                                               final SparseBooleanArray selectedTagsArray, final int count) {
         fragmentManager.popBackStack();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
+                uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
             }
         }, 100);
     }
@@ -432,7 +434,8 @@ public class CameraActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT, resultToShow, resultToSend, count);
+                uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                        resultToShow, resultToSend, null, count);
             }
         }, 100);
     }
@@ -442,15 +445,15 @@ public class CameraActivity extends AppCompatActivity
         if (tag != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (tag) {
+                case TAG_TAGS_FRAGMENT:
+                    fragmentTransaction.replace(R.id.uploading_container,
+                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData), tag);
+                    break;
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
                             Interests.newInstance(true, false, null, selectedData),
 //                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
                             tag);
-                    break;
-                case TAG_TAGS_FRAGMENT:
-                    fragmentTransaction.replace(R.id.uploading_container,
-                            TagsAndCategoryFragment.newInstance(ACTION_TAGS_FRAGMENT, selectedData), tag);
                     break;
                 case TAG_NEARBY_PLACES:
                     fragmentTransaction.replace(R.id.uploading_container,

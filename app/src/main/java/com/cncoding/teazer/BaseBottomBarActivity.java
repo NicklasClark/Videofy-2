@@ -163,6 +163,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
+//    @BindView(R.id.loader) ImageView loader;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
@@ -195,6 +196,11 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
+
+//        Glide.with(this)
+//                .load(R.drawable.ic_loader)
+//                .asGif()
+//                .into(loader);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -746,8 +752,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     //<editor-fold desc="Fragment listener implementations">
     @Override
-    public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail,
-                                  RelativeLayout layout) {
+    public void onPostInteraction(int action, final PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
                 PostDetailsActivity.newInstance(this, postDetails, null,

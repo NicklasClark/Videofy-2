@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,29 +48,26 @@ import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment
 public class Interests extends BaseFragment {
     private static final String ARG_IS_FOR_VIDEO = "isForVideo";
     private static final String ARG_IS_EDITING = "isEditing";
-    private static final String ARG_CATEGORIES = "categories";
-//    private static final String CATEGORIES_LIST = "categoriesList";
+    private static final String ARG_CATEGORIES = "userSelectedCategories";
 
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.save_interests_btn) ProximaNovaSemiboldTextView saveBtn;
 
-//    private String previousTitle;
-//    private ActionBar actionBar;
-    private ArrayList<Category> categories;
+    private ArrayList<Category> userSelectedCategories;
+    private ArrayList<Category> totalCategories;
     private boolean isEditing;
     private boolean isForVideo;
-    private String resultToSend;
     private String selectedData;
+    private SparseArray<Category> selectedInterests;
+    private Call<ArrayList<Category>> categoriesCall;
     private InterestsAdapter interestsAdapter;
     private OnInterestsInteractionListener mListener;
-    private ArrayList<Category> interestList;
 
     public Interests() {
         // Required empty public constructor
     }
 
-    public static Interests newInstance(boolean isForVideo, boolean isEditing, ArrayList<Category> categories,
-                                        String selectedData) {
+    public static Interests newInstance(boolean isForVideo, boolean isEditing, ArrayList<Category> categories, String selectedData) {
         Interests interests = new Interests();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_FOR_VIDEO, isForVideo);
@@ -88,11 +86,14 @@ public class Interests extends BaseFragment {
             isForVideo = getArguments().getBoolean(ARG_IS_FOR_VIDEO);
             isEditing = getArguments().getBoolean(ARG_IS_EDITING);
             if (isEditing) {
-                categories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
+                userSelectedCategories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
+                if (userSelectedCategories == null) userSelectedCategories = new ArrayList<>();
                 setHasOptionsMenu(true);
             }
             selectedData = getArguments().getString(SELECTED_DATA);
         }
+        selectedInterests = new SparseArray<>();
+        totalCategories = new ArrayList<>();
     }
 
     @Override
@@ -111,27 +112,24 @@ public class Interests extends BaseFragment {
         }
         ButterKnife.bind(this, rootView);
 
-        interestList = new ArrayList<>();
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
         flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
         flexboxLayoutManager.setJustifyContent(isForVideo ? JustifyContent.FLEX_START : JustifyContent.CENTER);
         recyclerView.setLayoutManager(flexboxLayoutManager);
         if (!isForVideo) {
             if (!isEditing) {
-                interestsAdapter = new InterestsAdapter(interestList, this, null,
+                interestsAdapter = new InterestsAdapter(totalCategories, this, null,
                         null, false);
                 recyclerView.setAdapter(interestsAdapter);
             } else {
                 enableSaveBtn();
                 //noinspection unchecked
-                new SetInterestsAdapter(this).execute(categories);
+                new SetInterestsAdapter(this).execute(userSelectedCategories);
             }
         } else {
             recyclerView.setHasFixedSize(true);
             getCategories();
-            if (categories == null) categories = new ArrayList<>();
-            interestsAdapter = new InterestsAdapter(categories, this, null,
-                    selectedData, true);
+            interestsAdapter = new InterestsAdapter(totalCategories, this, null, selectedData, true);
             recyclerView.setAdapter(interestsAdapter);
         }
 
@@ -152,18 +150,23 @@ public class Interests extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!isEditing && interestList != null && interestList.isEmpty())
-            new GetInterests(this).execute();
+        if (totalCategories != null && totalCategories.isEmpty())
+            getCategories();
     }
 
     private void getCategories() {
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+        categoriesCall = ApiCallingService.Application.getCategories();
+
+        if (categoriesCall.isExecuted()) categoriesCall.cancel();
+
+        categoriesCall.enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
                     ArrayList<Category> tempList = response.body();
                     if (!tempList.isEmpty()) {
-                        categories.addAll(tempList);
+                        totalCategories.clear();
+                        totalCategories.addAll(tempList);
                         recyclerView.getAdapter().notifyDataSetChanged();
                         changeDoneBtnVisibility(VISIBLE);
                     } else {
@@ -201,7 +204,7 @@ public class Interests extends BaseFragment {
             for (Category category : categories[0]) {
                 booleanArray.put(category.getCategoryId() - 1, true);
             }
-            return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray,
+            return new InterestsAdapter(reference.get().totalCategories, reference.get(), booleanArray,
                     null, false);
         }
 
@@ -209,45 +212,21 @@ public class Interests extends BaseFragment {
         protected void onPostExecute(InterestsAdapter interestsAdapter) {
             reference.get().interestsAdapter = interestsAdapter;
             reference.get().recyclerView.setAdapter(reference.get().interestsAdapter);
-            new GetInterests(reference.get()).execute();
+            reference.get().getCategories();
             super.onPostExecute(interestsAdapter);
         }
     }
 
-    private static class GetInterests extends AsyncTask<Void, Void, Void> {
-
-        private WeakReference<Interests> reference;
-
-        GetInterests(Interests context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
-                @Override
-                public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
-                    if (response.code() == 200) {
-                        reference.get().interestList.clear();
-                        reference.get().interestList.addAll(response.body());
-                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-            return null;
-        }
+    @OnTextChanged(R.id.interests_header) public void searchInterests(CharSequence charSequence) {
+        if (isForVideo)
+            interestsAdapter.getFilter().filter(charSequence);
     }
 
     @OnClick(R.id.save_interests_btn) public void saveInterests() {
-        final SparseArray<Category> selectedInterests = interestsAdapter.getSelectedInterests();
+        selectedInterests = interestsAdapter.getSelectedInterests();
         final ArrayList<Category> categories = new ArrayList<>();
         selectedData = getSelectedInterestsToShow(selectedInterests);
-        resultToSend = getSelectedInterestsToSend(selectedInterests);
+        String resultToSend = getSelectedInterestsToSend(selectedInterests);
         if (!isForVideo) {
             ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
                     .enqueue(new Callback<ResultObject>() {
@@ -255,9 +234,9 @@ public class Interests extends BaseFragment {
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
                                 if (response.code() == 200) {
-                                    Log.d("Updating interests", "Updated successfully");
+                                    Log.i("Updating interests", "Updated successfully");
                                 } else {
-                                    Log.d("Updating interests", response.code() + " : " + response.message());
+                                    Log.i("Updating interests", response.code() + " : " + response.message());
                                 }
                                 for (int i = 0; i < selectedInterests.size(); i++) {
                                     categories.add(selectedInterests.valueAt(i));
@@ -274,8 +253,13 @@ public class Interests extends BaseFragment {
                         }
                     });
         }
-        else
+        else {
+            SparseBooleanArray selectedCategoriesArray = new SparseBooleanArray();
+            for (int i = 0; i < selectedInterests.size(); i++) {
+                selectedCategoriesArray.put(selectedInterests.keyAt(i), true);
+            }
             mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
+        }
     }
 
     private String getSelectedInterestsToShow(SparseArray<Category> sparseArray) {
@@ -303,7 +287,7 @@ public class Interests extends BaseFragment {
     public void enableSaveBtn() {
         if (!isForVideo) {
             if (!isEditing) {
-                saveBtn.setText(R.string.save_with_leading_spaces);
+                saveBtn.setText(R.string.save);
                 saveBtn.setEnabled(true);
                 if (saveBtn.getCompoundDrawables()[2] == null)
                     saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
@@ -349,6 +333,12 @@ public class Interests extends BaseFragment {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnInterestsInteractionListener");
 //        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (categoriesCall != null && categoriesCall.isExecuted()) categoriesCall.cancel();
     }
 
     @Override

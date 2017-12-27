@@ -11,8 +11,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
             android:id="@+id/interests_header"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:visibility="gone"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/interests_header_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_content_big"
