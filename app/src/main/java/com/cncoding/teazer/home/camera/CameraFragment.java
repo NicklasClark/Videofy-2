@@ -333,6 +333,7 @@ public class CameraFragment extends Fragment {
                         isTorchOn = false;
                     } else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+//                        mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CaptureRequest.CONTROL_EFFECT_MODE_NEGATIVE);
                         mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         cameraFlashView.setImageResource(R.drawable.ic_flash_on);
                         isTorchOn = true;

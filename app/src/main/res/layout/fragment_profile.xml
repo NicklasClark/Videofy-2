@@ -103,7 +103,7 @@
                                                 android:maxLines="1"
                                                 android:paddingBottom="5dp"
                                                 android:textColor="@color/colorIcons"
-                                                android:textSize="27sp" />
+                                                android:textSize="26sp" />
 
                                             <LinearLayout
                                                 android:id="@+id/bulletslayout"

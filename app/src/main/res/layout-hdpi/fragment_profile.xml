@@ -107,7 +107,7 @@
                                         android:gravity="center_vertical"
                                         android:maxLines="1"
                                         android:textColor="@color/colorIcons"
-                                        android:textSize="28sp" />
+                                        android:textSize="26sp" />
                                     <LinearLayout
                                         android:id="@+id/bulletslayout"
                                         android:layout_width="match_parent"
