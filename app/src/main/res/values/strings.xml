@@ -323,4 +323,7 @@
     <string name="teazer_universal_link">https://teazer.app.link/kCJ5vr85CI</string>
     <string name="teazer_support_url">http://www.cnapplications.com</string>
     <string name="video_upload_confirm_notification">Video will be uploaded, you can check progress in notifications panel</string>
+    <string name="loader">Loader</string>
+    <string name="failed">Failed, try again</string>
+    <string name="there_is_no_reaction_yet">There is no reaction yet</string>
 </resources>

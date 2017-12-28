@@ -11,7 +11,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
 import com.cncoding.teazer.videoTrim.view.VideoTrimmerView;
 
-import java.io.File;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,32 +21,25 @@ import static com.cncoding.teazer.videoTrim.utils.TrimVideoUtil.VIDEO_MAX_DURATI
 
 public class TrimmerActivity extends AppCompatActivity implements OnTrimVideoListener {
 
-    private static final String TAG = "jason";
-    private static final String STATE_IS_PAUSED = "isPaused";
+//    private static final String TAG = "jason";
+//    private static final String STATE_IS_PAUSED = "isPaused";
     public static final int VIDEO_TRIM_REQUEST_CODE = 101;
     @BindView(R.id.trimmer_view)
     VideoTrimmerView trimmerView;
-    private File tempFile;
-    private int maxDuration;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
         setContentView(R.layout.activity_trimmer);
         ButterKnife.bind(this);
-
         Bundle bd = getIntent().getExtras();
         String path = "";
         if (bd != null) {
             path = bd.getString("path");
         }
-
-        if (trimmerView != null) {
-            trimmerView.setMaxDuration(VIDEO_MAX_DURATION);
-            trimmerView.setOnTrimVideoListener(this);
-            trimmerView.setVideoURI(Uri.parse(path));
-        }
+        trimmerView.setMaxDuration(VIDEO_MAX_DURATION);
+        trimmerView.setOnTrimVideoListener(this);
+        trimmerView.setVideoURI(Uri.parse(path));
     }
 
     @Override

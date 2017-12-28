@@ -11,6 +11,8 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -30,9 +32,10 @@ import butterknife.ButterKnife;
  * Created by Prem $ on 10/20/2017.
  */
 
-class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
+class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implements Filterable {
 
     private ArrayList<MiniProfile> circles;
+    private ArrayList<MiniProfile> circlesFiltered;
     private Fragment fragment;
     private String selectedTagsString;
     private SparseBooleanArray selectedTagsArray;
@@ -42,6 +45,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     TagsAdapter(Context context, ArrayList<MiniProfile> circles, Fragment fragment, String selectedTagsString) {
         this.circles = circles;
+        circlesFiltered = circles;
         this.fragment = fragment;
         this.selectedTagsString = selectedTagsString;
         selectedTagsArray = new SparseBooleanArray();
@@ -60,7 +64,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onBindViewHolder(final TagsAdapter.ViewHolder holder, int position) {
-        final MiniProfile circle = circles.get(position);
+        final MiniProfile circle = circlesFiltered.get(position);
         String name = circle.getFirstName() + " " + circle.getLastName();
 
         holder.nameView.setText(name);
@@ -71,11 +75,11 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                 .crossFade()
                 .into(holder.image);
 
-        setCheck(holder.nameView, position, circle,
-                selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
-
-        if (selectedTagsString == null || selectedTagsString.isEmpty())
-            setCheck(holder.nameView, position, circle, selectedTagsArray.get(position));
+        if (selectedTagsArray.size() == 0) {
+            setCheck(holder.nameView, position, circle,
+                    selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
+        } else
+            setCheck(holder.nameView, position, circle, selectedTagsArray.get(circle.getUserId()));
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +103,45 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             tagsSparseArray.delete(position);
         }
+        selectedTagsArray.put(circle.getUserId(), textView.isChecked());
     }
 
     @Override
     public int getItemCount() {
-        return circles.size();
+        return circlesFiltered.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    circlesFiltered = circles;
+                } else {
+                    ArrayList<MiniProfile> filteredList = new ArrayList<>();
+                    for (MiniProfile profile : circles) {
+                        if (profile.getFirstName().toLowerCase().contains(charString.toLowerCase()) ||
+                                profile.getLastName().toLowerCase().contains(charString.toLowerCase()) ||
+                                profile.getUserName().toLowerCase().contains(charString.toLowerCase())){
+                            filteredList.add(profile);
+                        }
+                    }
+                    circlesFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = circlesFiltered;
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                circlesFiltered = (ArrayList<MiniProfile>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

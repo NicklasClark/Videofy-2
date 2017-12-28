@@ -527,9 +527,9 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         mListener.updateCategories(postDetails);
 
 //        toggleInteraction(false);
-//        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+//        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<RealmCategory>>() {
 //            @Override
-//            public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
+//            public void onResponse(Call<ArrayList<RealmCategory>> call, Response<ArrayList<RealmCategory>> response) {
 //                if (response.code() == 200) {
 //                    if (response.body() != null) {
 //                        toggleUpBtnVisibility(VISIBLE);
@@ -546,7 +546,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 //            }
 //
 //            @Override
-//            public void onFailure(Call<ArrayList<Category>> call, Throwable t) {
+//            public void onFailure(Call<ArrayList<RealmCategory>> call, Throwable t) {
 //                Log.e("getCategories", t.getMessage());
 //                toggleInteraction(true);
 //            }

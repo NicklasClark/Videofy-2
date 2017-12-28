@@ -143,11 +143,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         if (postList != null && !isRefreshing) {
             if (postList.isEmpty()) {
                 getHomePagePosts(1, false);
-                return;
             } else {
                 recyclerView.getAdapter().notifyDataSetChanged();
 //                dismissProgressBar();
-                return;
             }
         }
         else {
@@ -161,7 +159,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 }
             } else {
                 postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
-                return;
             }
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
@@ -184,14 +181,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                 PostList tempPostList = response.body();
                                 if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
                                     is_next_page = tempPostList.isNextPage();
-                                    if (page == 1) postList.clear();
-                                    postList.addAll(tempPostList.getPosts());
-                                    if (page == 1)
-                                        postListAdapter.notifyDataSetChanged();
-                                    else
-                                        postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
-                                    recyclerView.setVisibility(View.VISIBLE);
-//                                    dismissProgressBar();
+                                    updatePosts(page, tempPostList);
                                 } else {
                                     if (page == 1 && postList.isEmpty())
                                         showErrorMessage(getString(R.string.no_posts_available));
@@ -201,12 +191,22 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                 showErrorMessage("Error " + response.code() + " : " + response.message());
                                 break;
                         }
-                        dismissRefreshView();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    } finally {
                         dismissRefreshView();
                     }
-//                    dismissProgressBar();
+                }
+
+                private void updatePosts(int page, PostList tempPostList) {
+                    if (page == 1) {
+                        postList.clear();
+                        postList.addAll(tempPostList.getPosts());
+                        postListAdapter.notifyDataSetChanged();
+                    } else {
+                        postList.addAll(tempPostList.getPosts());
+                        postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                    }
                 }
 
                 private void showErrorMessage(String message) {
@@ -229,10 +229,26 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
+                    t.printStackTrace();
                     dismissRefreshView();
                 }
             });
     }
+
+//    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
+//        if (postList.size() >= newPostDetailsList.size()) {
+//            List<RealmPostDetails> oldPostDetailsList = postList.subList(0, newPostDetailsList.size() - 1);
+//            PostListDiffCallback diffCallback = new PostListDiffCallback(oldPostDetailsList, newPostDetailsList);
+//            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback, true);
+//            postList.clear();
+//            postList.addAll(newPostDetailsList);
+//            diffResult.dispatchUpdatesTo(postListAdapter);
+//        } else {
+//            postList.clear();
+//            postList.addAll(newPostDetailsList);
+//            postListAdapter.notifyDataSetChanged();
+//        }
+//    }
 
 //    public void dismissProgressBar() {
 //        if (progressBar.getVisibility() == View.VISIBLE) {

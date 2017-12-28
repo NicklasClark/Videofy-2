@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -131,7 +132,7 @@ public class EditPost extends AppCompatActivity implements CameraFragment.OnCame
     }
 
     @Override
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, int count) {
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, SparseBooleanArray selectedTagsArray, int count) {
         editPostFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend);
         getSupportFragmentManager().popBackStack();
     }

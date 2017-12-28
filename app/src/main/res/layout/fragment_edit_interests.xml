@@ -7,8 +7,14 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
         android:id="@+id/interests_header"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:visibility="gone"/>
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        android:id="@+id/interests_header_1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingStart="14dp"
@@ -25,7 +31,7 @@
         android:layout_height="match_parent"
         android:paddingTop="@dimen/padding_thin"
         android:paddingBottom="@dimen/padding_half"
-        android:layout_below="@+id/interests_header"
+        android:layout_below="@+id/interests_header_1"
         android:clipToPadding="false"/>
 
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
@@ -38,7 +44,7 @@
         app:drawableTopCompat="@drawable/ic_check"
         android:background="@color/colorPrimary"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/interests_header"
+        android:layout_alignBottom="@+id/interests_header_1"
         android:foreground="@drawable/ripple_light_rounded_2dp"
         android:elevation="6dp"/>
     <!--

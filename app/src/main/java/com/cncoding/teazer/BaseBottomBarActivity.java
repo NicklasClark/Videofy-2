@@ -57,6 +57,7 @@ import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter.TrendingLi
 import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscoverSearchInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
+import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
@@ -148,10 +149,9 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Discover page listeners
         OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
-        OnNotificationsInteractionListener,
+        OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
-        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
-        NotificationsFragment.OnNotificationsFragmentInteractionListener {
+        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -159,32 +159,20 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
 
-    @BindArray(R.array.tab_name)
-    String[] TABS;
-    @BindView(R.id.app_bar)
-    AppBarLayout appBar;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title)
-    ImageView toolbarCenterTitle;
-    @BindView(R.id.toolbar_plain_title)
-    ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container)
-    FrameLayout contentFrame;
-    @BindView(R.id.root_layout)
-    NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view)
-    BlurView blurView;
-    @BindView(R.id.bottom_tab_layout)
-    TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn)
-    ProximaNovaBoldTextView cameraButton;
-    @BindView(R.id.uploadProgressText)
-    ProximaNovaSemiboldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress)
-    ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout)
-    RelativeLayout uploadingStatusLayout;
+    @BindArray(R.array.tab_name) String[] TABS;
+    @BindView(R.id.app_bar) AppBarLayout appBar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
+//    @BindView(R.id.loader) ImageView loader;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view) BlurView blurView;
+    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -209,6 +197,11 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
+
+//        Glide.with(this)
+//                .load(R.drawable.ic_loader)
+//                .asGif()
+//                .into(loader);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -761,8 +754,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     //<editor-fold desc="Fragment listener implementations">
     @Override
-    public void onPostInteraction(int action, final PostDetails postDetails, ImageView postThumbnail,
-                                  RelativeLayout layout) {
+    public void onPostInteraction(int action, final PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
                 PostDetailsActivity.newInstance(this, postDetails, null,

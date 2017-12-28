@@ -27,6 +27,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +50,8 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.MiniProfile;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -152,6 +156,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private SelectedPlace selectedPlace;
     private Context context;
     private Activity activity;
+    private SparseArray<Category> selectedCategories;
+    private SparseArray<MiniProfile> selectedTags;
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
@@ -562,7 +568,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //            motionEvent.setAction(MotionEvent.ACTION_DOWN);
             return true;
         }
-
         return false;
     }
 
@@ -659,7 +664,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, final int count) {
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend,
+                                               SparseBooleanArray selectedItemsArray, final int count) {
         final String finalResultToShow = SPACE + resultToShow;
         switch (action) {
             case ACTION_TAGS_FRAGMENT:

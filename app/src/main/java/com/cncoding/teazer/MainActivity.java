@@ -69,6 +69,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 //    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
-     static byte[] bte;
+    static byte[] bte;
 
     @BindView(R.id.container) RelativeLayout rootView;
     @BindView(R.id.welcome_video) VideoView welcomeVideo;
@@ -187,24 +188,17 @@ public class MainActivity extends AppCompatActivity
         if (fragmentManager.getBackStackEntryCount() == 0 && !isFragmentActive(TAG_WELCOME_FRAGMENT))
             setFragment(TAG_WELCOME_FRAGMENT, false, null);
 
-
-
-
         SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
         imageUri = prfs.getString("USER_DP_IMAGES", "");
 
-        if(imageUri!=null)
-        {
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
-                bte = bitmaptoByte(scaledBitmap);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        Bitmap bitmap;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+            bte = bitmaptoByte(scaledBitmap);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -222,8 +216,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_LOGIN_FRAGMENT:
                 if (args != null) {
-                    String name = fragmentManager.getBackStackEntryAt(0).getName();
-                    fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    popAllBackStack();
                     transaction.replace(R.id.main_fragment_container,
                             LoginFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
                             TAG_LOGIN_FRAGMENT);
@@ -258,8 +251,7 @@ public class MainActivity extends AppCompatActivity
             case TAG_SELECT_INTERESTS:
                 toggleUpBtnVisibility(View.VISIBLE);
                 try {
-                    String name = fragmentManager.getBackStackEntryAt(0).getName();
-                    fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    popAllBackStack();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -275,9 +267,15 @@ public class MainActivity extends AppCompatActivity
         transaction.commitAllowingStateLoss();
     }
 
+    private void popAllBackStack() {
+        String name = fragmentManager.getBackStackEntryAt(0).getName();
+        fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
         hideKeyboard(this, upBtn);
         if (!reverse) {
+            if (Objects.equals(tag, TAG_SELECT_INTERESTS)) popAllBackStack();
             setFragment(tag, addToBackStack, null);
             transitionDrawable.startTransition(400);
 //            new Blur(this).execute();

@@ -125,6 +125,9 @@ public class VideosTabFragment extends BaseFragment {
             videosList.clear();
         }
 
+        if (videosListCall != null && videosListCall.isExecuted())
+            videosListCall.cancel();
+
         videosListCall = ApiCallingService.Discover.getVideosWithSearchTerm(page, searchTerm, getContext());
         
         if (!videosListCall.isExecuted())

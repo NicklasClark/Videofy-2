@@ -105,6 +105,9 @@ public class PeopleTabFragment extends BaseFragment {
         if (page == 1)
             usersList.clear();
 
+        if (usersListCall != null && usersListCall.isExecuted())
+            usersListCall.cancel();
+
         usersListCall = !isSearchTerm ? ApiCallingService.Discover.getUsersListToFollow(page, getContext()) :
                 ApiCallingService.Discover.getUsersListToFollowWithSearchTerm(page, searchTerm, getContext());
 
@@ -127,7 +130,8 @@ public class PeopleTabFragment extends BaseFragment {
                                 } else {
                                     if (page == 1 && usersList.isEmpty()) {
                                         swipeRefreshLayout.setVisibility(View.GONE);
-                                        noPosts.setText(isSearchTerm ? R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
+                                        noPosts.setText(isSearchTerm ?
+                                                R.string.no_one_matches_your_search_criteria : R.string.search_for_people);
                                         noPosts.setVisibility(View.VISIBLE);
                                         noPosts2.setVisibility(View.INVISIBLE);
                                     }
@@ -147,14 +151,14 @@ public class PeopleTabFragment extends BaseFragment {
                     }
                 }
 
-                @Override
-                public void onFailure(Call<UsersList> call, Throwable t) {
-                    if (isAdded()) {
-                        t.printStackTrace();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+            @Override
+            public void onFailure(Call<UsersList> call, Throwable t) {
+                if (isAdded()) {
+                    t.printStackTrace();
+                    swipeRefreshLayout.setRefreshing(false);
                 }
-            });
+            }
+        });
     }
 
     @Override

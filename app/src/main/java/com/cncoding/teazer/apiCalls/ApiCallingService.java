@@ -6,10 +6,15 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.model.application.DeactivateTypes;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.discover.VideosList;
 import com.cncoding.teazer.model.friends.CircleList;
+import com.cncoding.teazer.model.friends.FollowersList;
+import com.cncoding.teazer.model.friends.FollowingsList;
+import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -18,6 +23,7 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+<<<<<<< HEAD
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.BlockedUsersList;
@@ -28,15 +34,21 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+=======
+>>>>>>> prem_dev
 import com.cncoding.teazer.model.post.UpdatePostRequest;
-import com.cncoding.teazer.model.user.SetPasswordRequest;
-import com.cncoding.teazer.model.user.UpdatePasswordRequest;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;
+import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
+import com.cncoding.teazer.model.user.BlockedUsersList;
+import com.cncoding.teazer.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.model.user.NotificationsList;
+import com.cncoding.teazer.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.model.user.ReportUser;
+import com.cncoding.teazer.model.user.SetPasswordRequest;
 import com.cncoding.teazer.model.user.UpdateCategories;
+import com.cncoding.teazer.model.user.UpdatePasswordRequest;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.UpdateMobileNumber;
 import com.cncoding.teazer.utilities.SharedPrefs;
