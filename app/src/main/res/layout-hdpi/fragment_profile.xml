@@ -97,7 +97,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                    <com.cncoding.teazer.customViews.SignPainterTextView
+                                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                                         android:id="@+id/username_title"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                                         android:gravity="center_vertical"
                                         android:maxLines="1"
                                         android:textColor="@color/colorIcons"
-                                        android:textSize="32sp" />
+                                        android:textSize="28sp" />
                                     <LinearLayout
                                         android:id="@+id/bulletslayout"
                                         android:layout_width="match_parent"

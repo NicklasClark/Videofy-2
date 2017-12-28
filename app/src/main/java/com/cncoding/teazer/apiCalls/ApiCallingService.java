@@ -23,20 +23,8 @@ import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
-<<<<<<< HEAD
-import com.cncoding.teazer.model.react.ReactionResponse;
-import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
-import com.cncoding.teazer.model.user.BlockedUsersList;
-import com.cncoding.teazer.model.user.DeactivateAccountRequest;
-import com.cncoding.teazer.model.application.DeactivateTypes;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.FollowingsList;
-import com.cncoding.teazer.model.user.ProfileUpdateRequest;
-import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
-=======
->>>>>>> prem_dev
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.model.react.ReportReaction;

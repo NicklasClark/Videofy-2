@@ -200,16 +200,9 @@ public class Interests extends BaseFragment {
 
         @Override
         protected InterestsAdapter doInBackground(ArrayList<Category>[] categories) {
-            try {
-                SparseBooleanArray booleanArray = new SparseBooleanArray();
-                for (Category category : categories[0]) {
-                    booleanArray.put(category.getCategoryId() - 1, true);
-                }
-                return new InterestsAdapter(reference.get().interestList, reference.get(), booleanArray,
-                        null, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+            SparseBooleanArray booleanArray = new SparseBooleanArray();
+            for (Category category : categories[0]) {
+                booleanArray.put(category.getCategoryId() - 1, true);
             }
             return new InterestsAdapter(reference.get().totalCategories, reference.get(), booleanArray,
                     null, false);

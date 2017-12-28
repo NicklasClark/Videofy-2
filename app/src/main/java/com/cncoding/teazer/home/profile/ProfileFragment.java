@@ -34,7 +34,7 @@ import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.SignPainterTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.user.UserProfile;
@@ -74,7 +74,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     Context context;
     AppBarLayout appBarLayout;
     ProximaNovaRegularCheckedTextView _name;
-    SignPainterTextView _username;
+    ProximaNovaSemiboldTextView _username;
     TextView _creations;
     TextView _followers;
     TextView _following;
