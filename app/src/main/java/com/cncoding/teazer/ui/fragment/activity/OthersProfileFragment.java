@@ -397,7 +397,8 @@ public class OthersProfileFragment extends BaseFragment {
                                     if (requestRecieved == true) {
                                         requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
-                                    } else {
+                                    }
+                                    else {
 
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }

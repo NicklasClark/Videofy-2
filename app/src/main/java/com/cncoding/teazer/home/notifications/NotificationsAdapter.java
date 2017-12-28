@@ -52,7 +52,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int TYPE_FOLLOWING = 50;
     private static final int TYPE_REQUESTS = 51;
-    private static final int BUTTON_TYPE_ACCEPT = 10;
+    public static final int BUTTON_TYPE_UNBLOCK = 9;
+    public static final int BUTTON_TYPE_ACCEPT = 10;
     public static final int BUTTON_TYPE_FOLLOW = 11;
     public static final int BUTTON_TYPE_FOLLOWING = 12;
     public static final int BUTTON_TYPE_REQUESTED = 13;

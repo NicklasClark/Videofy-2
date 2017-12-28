@@ -255,6 +255,13 @@ public class ViewUtils {
     public static void setActionButtonText(Context context, TextView textView, int resId) {
         textView.setText(resId);
         switch (resId) {
+
+            case R.string.accept:
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,
+                        context.getResources().getColor(R.color.colorAccent),
+                        context.getResources().getColor(R.color.colorAccent), 2));
+                break;
             case R.string.follow:
                 textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 textView.setBackground(getBackground(context, textView, Color.TRANSPARENT,

@@ -74,6 +74,7 @@ public class PeopleTabFragment extends BaseFragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
