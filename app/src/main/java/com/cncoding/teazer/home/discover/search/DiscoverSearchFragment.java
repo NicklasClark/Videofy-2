@@ -57,6 +57,7 @@ public class DiscoverSearchFragment extends BaseFragment {
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), searchTerm);
         viewPager.setAdapter(sectionsPagerAdapter);
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout){
             @Override
             public void onPageSelected(int position) {
@@ -110,6 +111,7 @@ public class DiscoverSearchFragment extends BaseFragment {
             handler = new Handler();
         }
         handler.postDelayed(runnable, 200);
+
     }
 
     @OnEditorAction(R.id.discover_search) public boolean searchByKeyboard(int actionId) {

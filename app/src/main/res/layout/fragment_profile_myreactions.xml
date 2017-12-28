@@ -21,9 +21,8 @@
         android:id="@+id/alert2"
         android:layout_below="@+id/alert1"
         android:layout_centerHorizontal="true"
-
         android:layout_width="wrap_content"
-     android:visibility="gone"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -40,4 +39,12 @@
         android:paddingBottom="?attr/actionBarSize"
         android:id="@+id/recycler_view"/>
     </RelativeLayout>
+
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/loader"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_loader" />
 </RelativeLayout>

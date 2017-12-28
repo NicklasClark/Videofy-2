@@ -1,5 +1,6 @@
 package com.cncoding.teazer.apiCalls;
 
+import com.cncoding.teazer.model.friends.FollowInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,16 +17,26 @@ public class ResultObject {
     @SerializedName("status") @Expose private boolean status;
     @SerializedName("errorBody") @Expose private ErrorBody errorBody;
     @SerializedName("user_id") @Expose private int user_id;
+    @SerializedName("follow_info")
+    @Expose
+    private FollowInfo followInfo;
 
-    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody, int user_id) {
+    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody, int user_id, FollowInfo followInfo) {
         this.code = code;
         this.message = message;
         this.auth_token = auth_token;
         this.status = status;
         this.errorBody = errorBody;
         this.user_id = user_id;
+        this.followInfo = followInfo;
     }
 
+    public FollowInfo getFollowInfo() {
+        return followInfo;
+    }
+    public void setFollowInfo(FollowInfo followInfo) {
+        this.followInfo = followInfo;
+    }
     public int getCode() {
         return code;
     }

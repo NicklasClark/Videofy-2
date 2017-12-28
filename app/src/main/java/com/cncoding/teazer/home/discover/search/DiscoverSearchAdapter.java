@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -33,10 +34,12 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PRIVATE;
 import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
+import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_ACCEPT;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOW;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOWING;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_REQUESTED;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_UNBLOCK;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
@@ -122,6 +125,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 String name = holder2.user.getFirstName() + BLANK_SPACE + holder2.user.getLastName();
                 holder2.name.setText(name);
 
+
                 Glide.with(baseFragment.getContext())
                         .load(holder2.user.getProfileMedia() != null ? holder2.user.getProfileMedia().getThumbUrl() :
                                 R.drawable.ic_user_male_dp_small)
@@ -130,23 +134,72 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         .into(holder2.dp);
 
                 if (actionArray.get(position) == 0) {
+
                     switch (holder2.user.getAccountType()) {
+
                         case ACCOUNT_TYPE_PRIVATE:
-                            if (holder2.user.isFollowing())
-                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
-                            else if (holder2.user.isRequestSent())
-                                setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, position, true);
-                            else
-                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                            if(holder2.user.getYouBlocked())
+                            {
+
+                                setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
+
+                            }
+                            else {
+
+                                if (holder2.user.isFollowing()) {
+                                    if (holder2.user.getRequestRecieved()) {
+
+                                        setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
+                                    }
+                                    else
+                                    {
+                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
+                                    }
+                                }
+                                else
+                                {
+                                    if (holder2.user.isRequestSent()) {
+
+                                        if (holder2.user.getRequestRecieved()) {
+                                            setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
+                                        } else {
+                                            setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, position, true);
+                                        }
+                                    } else {
+                                        if (holder2.user.getRequestRecieved()) {
+
+                                            setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
+                                        } else {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                                        }
+                                    }
+                                }
+                            }
                             break;
-                        case ACCOUNT_TYPE_PUBLIC:
-                            if (holder2.user.isFollowing())
-                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
-                            else
-                                setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
-                            break;
-                        default:
-                            break;
+
+                            case ACCOUNT_TYPE_PUBLIC:
+
+                                if(holder2.user.getYouBlocked())
+                                {
+                                    setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
+
+                                }
+                                else
+                                    {
+                                    if (holder2.user.isFollowing())
+
+                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
+                                    else
+                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                                }
+                                break;
+
+                                default:
+                                    break;
+
                     }
                 } else setActionButton(holder2.action, actionArray.get(position), position, false);
 
@@ -192,6 +245,52 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                 }
                                             });
                                 }
+
+
+                                else if (holder2.action.getText().equals(context.getString(R.string.accept))) {
+
+                                    ApiCallingService.Friends.acceptJoinRequest(holder2.user.getRequestId(), context)
+                                            .enqueue(new Callback<ResultObject>() {
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    try {
+
+                                                        if (response.code() == 200) {
+                                                            if (response.body().getStatus()) {
+
+                                                                Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();
+                                                                if (holder2.user.isFollowing()) {
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
+                                                                            holder2.getAdapterPosition(), true);
+
+                                                                } else if (holder2.user.isRequestSent()) {
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_REQUESTED,
+                                                                            holder2.getAdapterPosition(), true);
+                                                                } else {
+
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                            holder2.getAdapterPosition(), true);
+                                                                }
+                                                            }
+                                                            else {
+                                                                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        }
+                                                    }
+                                                    catch (Exception e) {
+                                                        Toast.makeText(context, "Something went wrong, Please try again..", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    t.printStackTrace();
+
+                                                }
+                                            });
+
+                                }
+
                                 else if (holder2.action.getText().equals(context.getString(R.string.following))) {
                                     new AlertDialog.Builder(baseFragment.getParentActivity())
                                             .setMessage(context.getString(R.string.unfollow_confirmation) +
@@ -269,6 +368,100 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             })
                                             .show();
                                 }
+                                else if (holder2.action.getText().equals(context.getString(R.string.following))) {
+                                    new AlertDialog.Builder(baseFragment.getParentActivity())
+                                            .setMessage(context.getString(R.string.unfollow_confirmation) +
+                                                    holder2.user.getUserName() + "?")
+                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    ApiCallingService.Friends.unfollowUser(holder2.user.getUserId(), baseFragment.getContext())
+                                                            .enqueue(new Callback<ResultObject>() {
+                                                                @Override
+                                                                public void onResponse(Call<ResultObject> call,
+                                                                                       Response<ResultObject> response) {
+                                                                    if (baseFragment.isAdded()) {
+                                                                        if (response.code() == 200) {
+                                                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                                    holder2.getAdapterPosition(), true);
+                                                                        } else
+                                                                            Log.e("unfollowUser",
+                                                                                    response.code() + "_" + response.message());
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                                    if (baseFragment.isAdded()) {
+                                                                        if (t.getMessage() != null)
+                                                                            Log.e("sendJoinRequest", t.getMessage());
+                                                                    }
+                                                                }
+                                                            });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+
+
+                                else if (holder2.action.getText().equals(context.getString(R.string.unblock))) {
+                                    new AlertDialog.Builder(baseFragment.getParentActivity())
+                                            .setMessage(context.getString(R.string.unblock_confirmation) +
+                                                    holder2.user.getUserName() + "?")
+                                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                    ApiCallingService.Friends.blockUnblockUser(holder2.user.getUserId(), 2, context).enqueue(new Callback<ResultObject>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                            try {
+                                                                boolean b = response.body().getStatus();
+                                                                if (b == true) {
+
+                                                                        Toast.makeText(context, "You have Unblocked this user", Toast.LENGTH_SHORT).show();
+                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                            holder2.getAdapterPosition(), true);
+
+
+                                                                } else {
+
+                                                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                    }
+
+                                                            } catch (Exception e) {
+
+                                                                e.printStackTrace();
+                                                                Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+
+                                                            Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
+
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+
+
+                                }
                         }
                     }
                 };
@@ -285,6 +478,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (savePosition)
             actionArray.put(position, type);
         switch (type) {
+
             case BUTTON_TYPE_FOLLOW:
                 setActionButtonText(context, button, R.string.follow);
                 break;
@@ -293,6 +487,12 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case BUTTON_TYPE_REQUESTED:
                 setActionButtonText(context, button, R.string.requested);
+                break;
+            case BUTTON_TYPE_ACCEPT:
+                setActionButtonText(context, button, R.string.accept);
+                break;
+            case BUTTON_TYPE_UNBLOCK :
+                setActionButtonText(context, button, R.string.unblock);
                 break;
             default:
                 break;

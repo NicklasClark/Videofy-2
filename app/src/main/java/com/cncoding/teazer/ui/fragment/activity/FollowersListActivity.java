@@ -54,6 +54,7 @@ public class FollowersListActivity extends BaseFragment {
     int otherFollowerpage = 1;
     protected String previousTitle;
     boolean next;
+    public static final int USERS_FOLLOWER=100;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
     @BindView(R.id.loader)
     GifTextView loader;
@@ -77,9 +78,7 @@ public class FollowersListActivity extends BaseFragment {
         if (getArguments() != null) {
             followerid = getArguments().getString(ARG_ID);
             identifier = getArguments().getString(ARG_IDENTIFIER);
-
         }
-
     }
 
     @Override
@@ -133,7 +132,7 @@ public class FollowersListActivity extends BaseFragment {
             loader.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(Integer.parseInt(followerid), 1);
         } else if (identifier.equals("User")) {
-            profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, 100);
+            profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, USERS_FOLLOWER);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);
             getUserfollowerList(1);

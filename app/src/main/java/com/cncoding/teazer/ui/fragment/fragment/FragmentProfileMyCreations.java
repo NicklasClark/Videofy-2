@@ -77,7 +77,6 @@ public class FragmentProfileMyCreations extends Fragment {
         alert1 = view.findViewById(R.id.alert1);
         return view;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -89,11 +88,11 @@ public class FragmentProfileMyCreations extends Fragment {
         recyclerView.setAdapter(profileMyCreationAdapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
-
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
                 if(next) {
+
                     if(page>2)
                     {
                         loader.setVisibility(View.VISIBLE);
@@ -126,6 +125,7 @@ public class FragmentProfileMyCreations extends Fragment {
                             next = response.body().isNextPage();
                             list.addAll(response.body().getPosts());
                             recyclerView.getAdapter().notifyDataSetChanged();
+
                             profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
                             progress_bar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
