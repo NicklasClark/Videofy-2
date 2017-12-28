@@ -783,6 +783,7 @@ public class OthersProfileFragment extends BaseFragment {
 
                             }
                             else {
+
 //                                if (isrequestSent)
 //
 //                                    if (accountType == 1) {

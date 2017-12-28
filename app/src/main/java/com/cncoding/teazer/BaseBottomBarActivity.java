@@ -429,7 +429,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
-                    Identifier = profileBundle.getString("Identifier");
                     postDetails = profileBundle.getParcelable("PostDetails");
                     if (isSelf)
 

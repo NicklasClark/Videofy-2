@@ -316,9 +316,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         ButterKnife.bind(this);
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         setupServiceReceiver();
-
         categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
         taggedUsersList = new ArrayList<>();
@@ -337,7 +335,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 
-
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -346,7 +343,6 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
                 Bundle bundle=new Bundle();
                 bundle.putInt("userId",postDetails.getPostOwner().getUserId());
                 bundle.putBoolean("isSelf",postDetails.canDelete());
-                bundle.putString("Identifier","PostDetailActivity");
                 bundle.putParcelable("PostDetails",postDetails);
                 intent.putExtra("profileBundle",bundle);
                 startActivity(intent);
@@ -1023,15 +1019,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
+
         isComingFromHomePage = false;
+        isPostDetailActivity=true;
         Intent intent = new Intent(this, BaseBottomBarActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("userId", userId);
         bundle.putBoolean("isSelf", isSelf);
+        bundle.putParcelable("PostDetails",postDetails);
         intent.putExtra("profileBundle", bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
