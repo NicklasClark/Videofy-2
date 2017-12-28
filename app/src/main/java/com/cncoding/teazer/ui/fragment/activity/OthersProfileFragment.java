@@ -215,6 +215,7 @@ public class OthersProfileFragment extends BaseFragment {
                 if (_btnfollow.getText().equals(context.getString(R.string.following))) {
 
                     _btnfollow.setText("Follow");
+
                     unFollowUser(followerfollowingid, context);
 
                 }
@@ -394,7 +395,6 @@ public class OthersProfileFragment extends BaseFragment {
                                 if (isfollowing) {
 
                                     if (requestRecieved == true) {
-
                                         requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
                                     } else {
@@ -455,7 +455,6 @@ public class OthersProfileFragment extends BaseFragment {
                             username = privateProfile.getUsername();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
-                         //   Toast.makeText(context,String.valueOf(privateProfile.getUserId()),Toast.LENGTH_SHORT).show();
 
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.hasProfileMedia();
@@ -619,7 +618,7 @@ public class OthersProfileFragment extends BaseFragment {
 
     }
     public void getProfileVideos(final int followerId) {
-        FragmentManager f = getActivity().getSupportFragmentManager();
+     //   FragmentManager f = getActivity().getSupportFragmentManager();
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
         Log.d("getProfileVideos", "hello");
@@ -688,7 +687,9 @@ public class OthersProfileFragment extends BaseFragment {
                             Toast.makeText(context, "Your Request has been cancelled", Toast.LENGTH_LONG).show();
                             setActionButtonText(context, _btnfollow, R.string.follow);
 
-                        } else {
+                        }
+                        else
+                        {
                             loader.setVisibility(View.GONE);
                             setActionButtonText(context, _btnfollow, R.string.follow);
                             Toast.makeText(context, "Your Request has already been cancelled", Toast.LENGTH_LONG).show();
@@ -718,13 +719,12 @@ public class OthersProfileFragment extends BaseFragment {
                 if (response.code() == 200) {
                     try {
                         boolean b = response.body().getStatus();
+
                         if (b == true) {
                             loader.setVisibility(View.GONE);
-
                             Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_SHORT).show();
                             setActionButtonText(context, _btnfollow, R.string.follow);
                         } else {
-
                             loader.setVisibility(View.GONE);
                             setActionButtonText(context, _btnfollow, R.string.follow);
                             Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_SHORT).show();
@@ -752,21 +752,61 @@ public class OthersProfileFragment extends BaseFragment {
                 if (response.code() == 200) {
                     try {
                         boolean b = response.body().getStatus();
-                        if (b == true) {
+
+//                        boolean isfollowing=response.body().getFollowInfo().getFollowing();
+//                        boolean isfollower=response.body().getFollowInfo().getFollower();
+//                        boolean isrequestSent=response.body().getFollowInfo().getRequestSent();
+//                        boolean isRequestreceived=response.body().getFollowInfo().getRequestReceived();
+//                        boolean youBlocked=response.body().getFollowInfo().getYouBlocked();
+//                        boolean isBlockedyou=response.body().getFollowInfo().getIsBlockedYou();
+                        if (b == true)
+                        {
+
 
                             if (accountType == 1) {
                                 setActionButtonText(context, _btnfollow, R.string.requested);
                                 Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
-                                loader.setVisibility(View.GONE);
 
                             } else {
 
                                 setActionButtonText(context, _btnfollow, R.string.following);
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_SHORT).show();
-                                loader.setVisibility(View.GONE);
                             }
-                        } else {
-                            Toast.makeText(context, "You are aleady following", Toast.LENGTH_SHORT).show();
+                            loader.setVisibility(View.INVISIBLE);
+                        }
+                        else {
+                            if(isfollowing)
+                            {
+
+                                    setActionButtonText(context, _btnfollow, R.string.following);
+
+
+                            }
+                            else {
+//                                if (isrequestSent)
+//
+//                                    if (accountType == 1) {
+//                                        setActionButtonText(context, _btnfollow, R.string.requested);
+//                                        Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
+//
+//                                    } else {
+//
+//                                        setActionButtonText(context, _btnfollow, R.string.following);
+//                                        Toast.makeText(context, "You have started following", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                else {
+//
+//                                    if (isRequestreceived) {
+//                                        setActionButtonText(context, _btnfollow, R.string.requested);
+//                                        Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
+                                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+
                             loader.setVisibility(View.GONE);
                         }
 

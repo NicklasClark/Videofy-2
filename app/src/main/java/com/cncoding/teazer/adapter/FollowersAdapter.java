@@ -22,6 +22,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.friends.UserInfo;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -47,16 +48,13 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     private List<UserInfo> userlist;
     private Context context;
     private final int UNBLOCK_STATUS=2;
-//    List<Following> list2;
-    private int counter;
-//    final static int PrivateAccount = 1;
-//    final static int PublicAccount = 2;
+    private int userfollowerstatus;
     private OtherProfileListener otherProfileListener;
 
-    public FollowersAdapter(Context context, List<UserInfo> userlist, int counter) {
+    public FollowersAdapter(Context context, List<UserInfo> userlist, int userfollowerstatus) {
         this.context = context;
         this.userlist = userlist;
-        this.counter = counter;
+        this.userfollowerstatus = userfollowerstatus;
         if (context instanceof ProfileFragment.FollowerListListener) {
             otherProfileListener = (OtherProfileListener) context;
         }
@@ -81,11 +79,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         try {
 
             final int followerId;
-            if (counter == 100) {
+            if (userfollowerstatus == FollowersListActivity.USERS_FOLLOWER) {
 
                 final String usertype;
                 final UserInfo cont = userlist.get(i);
-                final String followername = cont.getFirstName();
+                final String followername = cont.getUserName();
                 final boolean isfollowersDp=cont.getHasProfileMedia();
 
                 if(isfollowersDp) {
@@ -150,6 +148,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         otherProfileListener.viewOthersProfile(String.valueOf(followerId),usertype,followername);
+
                     }
                 });
 
@@ -185,7 +184,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 //                final boolean folower = cont.getFollower();
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
-                final String followername = cont.getFirstName();
+                final String followername = cont.getUserName();
                 followerId = cont.getUserId();
                 viewHolder.name.setText(followername);
                 final boolean isblockedyou = cont.getIsBlockedYou();
@@ -206,7 +205,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             .networkPolicy(NetworkPolicy.NO_CACHE)
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
-
                 }
 
 
@@ -272,23 +270,18 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         if (myself) {
-                            Intent intent = new Intent(context, BaseBottomBarActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            context.startActivity(intent);
-                        } else
-
-                        {
+                            otherProfileListener.viewUserProfile();
+                        }else
+                            {
                             if (isblockedyou) {
 
                                 Toast.makeText(context, "you can not view this user profile", Toast.LENGTH_LONG).show();
                             } else {
                                 otherProfileListener.viewOthersProfile(String.valueOf(followerId),usertype,followername);
                             }
-                        }
+                            }
                     }
                 });
-
-
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -306,22 +299,16 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         {
                             unFollowUser(followerId, context, viewHolder,accounttype);
                         }
-
                         if (viewHolder.action.getText().equals(context.getString(R.string.unblock))) {
                             blockUnblockUsers(followerId, UNBLOCK_STATUS,followername,viewHolder);
-
                         }
                     }
                 });
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
     private void followUser(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype) {
 
         ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
@@ -499,19 +486,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             }
         });
     }
-
-
-
-
-
-
-
-
     @Override
     public int getItemCount() {
-        if (counter == 100) {
+        if (userfollowerstatus == FollowersListActivity.USERS_FOLLOWER) {
             return userlist.size();
-        } else {
+        }else {
             return list.size();
         }
     }
@@ -531,5 +510,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
   public  interface OtherProfileListener {
         void viewOthersProfile(String id, String username, String type);
+        void viewUserProfile();
     }
 }

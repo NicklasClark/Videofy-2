@@ -196,6 +196,9 @@ public class BaseBottomBarActivity extends BaseActivity
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
     ProfileFragment profilefragment;
+    String Identifier;
+    PostDetails postDetails;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -328,7 +331,10 @@ public class BaseBottomBarActivity extends BaseActivity
 
         };
 
+
         if (getIntent().getExtras() != null) {
+//            Toast.makeText(getApplicationContext(), "on Create", Toast.LENGTH_SHORT);
+
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 try {
@@ -336,14 +342,16 @@ public class BaseBottomBarActivity extends BaseActivity
                     Log.d("NOTIFYM", bundle.toString());
                     String notification_type = bundle.getString("notification_type");
                     String source_id = bundle.getString("source_id");
+
                     notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-            }
-            else
+            } else {
                 Log.d("NOTIFYM", "BUNDLE not present in onCreate");
+            }
         }
+
 
     }
 
@@ -376,7 +384,6 @@ public class BaseBottomBarActivity extends BaseActivity
             startActivity(i);
             Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
         }
-
     }
 
     private String urlEncode(String s) {
@@ -391,14 +398,15 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
+
+
     }
 
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(BReceiver);
-
-
     }
 
     @Override
@@ -421,12 +429,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
-                    pushFragment(isSelf ? ProfileFragment.newInstance() :
-                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+                    Identifier = profileBundle.getString("Identifier");
+                    postDetails = profileBundle.getParcelable("PostDetails");
+                    if (isSelf)
 
-                } else
+                    {
+                        pushFragment(ProfileFragment.newInstance());
+
+
+                    } else
+
+                    {
+
+                        pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+                    }
+//                    pushFragment(isSelf ? ProfileFragment.newInstance() :
+//                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
+//
+                } else {
                     Log.d("NOTIFYM", "BUNDLE not present on new Intent");
                     switchTabDynamically();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -442,6 +465,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
+        // Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT);
 
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
 //        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
@@ -458,8 +482,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 String notification_type = notificationBundle.getString("notification_type");
                 String source_id = notificationBundle.getString("source_id");
                 notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
-            }
-            else
+            } else
                 Log.d("NOTIFYM", "BUNDLE not present in onStart");
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -489,9 +512,8 @@ public class BaseBottomBarActivity extends BaseActivity
     private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
 
-            pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id),String.valueOf(notification_type)));
-        }
-        else {
+            pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
+        } else {
             ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)
                     .enqueue(new Callback<PostDetails>() {
                         @Override
@@ -603,6 +625,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    }
 
     //<editor-fold desc="Fragment navigation methods">
+
     private void switchTabDynamically() {
         if (navigationController.getCurrentFragment() instanceof PostsListFragment)
             switchTab(0);
@@ -650,7 +673,7 @@ public class BaseBottomBarActivity extends BaseActivity
             actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
-        toggleBottomBar(navigationController.isRootFragment());
+        // toggleBottomBar(navigationController.isRootFragment());
     }
 
     public void toggleBottomBar(boolean isVisible) {
@@ -721,7 +744,6 @@ public class BaseBottomBarActivity extends BaseActivity
             navigationController.pushFragmentOnto(fragment);
         }
     }
-
 
 
     @Override
@@ -1082,23 +1104,41 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (!navigationController.isRootFragment()) {
-            navigationController.popFragment();
+
+        if (PostDetailsActivity.isPostDetailActivity == true) {
+            PostDetailsActivity.isPostDetailActivity = false;
+            PostDetailsActivity.newInstance(this, postDetails, null,
+                    true, false, null, null);
+            switchTab(0);
+            updateTabSelection(0);
+            if (!navigationController.isRootFragment())
+                navigationController.popFragment();
         } else {
-            if (fragmentHistory.isEmpty()) {
-                super.onBackPressed();
-            } else {
-                if (fragmentHistory.getStackSize() > 1) {
-                    int position = fragmentHistory.popPrevious();
-                    switchTab(position);
-                    updateTabSelection(position);
+            if (!navigationController.isRootFragment()) {
+                navigationController.popFragment();
+            } else
+            {
+                if (fragmentHistory.isEmpty()) {
+                    super.onBackPressed();
                 } else {
-                    if (navigationController.getCurrentStackIndex() != TAB1) {
-                        switchTab(0);
-                        updateTabSelection(0);
-                        fragmentHistory.emptyStack();
+
+                    if (fragmentHistory.getStackSize() > 1) {
+                        int position = fragmentHistory.popPrevious();
+                        switchTab(position);
+                        updateTabSelection(position);
+
+
                     } else {
-                        super.onBackPressed();
+                        if (navigationController.getCurrentStackIndex() != TAB1) {
+                            switchTab(0);
+                            updateTabSelection(0);
+                            fragmentHistory.emptyStack();
+
+                        } else {
+                            super.onBackPressed();
+
+
+                        }
                     }
                 }
             }
@@ -1107,7 +1147,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewUserProfile() {
-        profilefragment=ProfileFragment.newInstance();
+        profilefragment = ProfileFragment.newInstance();
         pushFragment(profilefragment);
     }
 

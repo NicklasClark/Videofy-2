@@ -22,7 +22,9 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
+import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.UserInfo;
+import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -38,7 +40,6 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 /**
- *
  * Created by farazhabib on 10/11/17.
  */
 
@@ -47,9 +48,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
     private List<UserInfo> list;
     private List<UserInfo> otherlist;
     private Context context;
-    private int counter=0;
+    private int userfollowingstatus = 0;
     private OtherProfileListenerFollowing otherProfileListenerFollowing;
-    private final int UNBLOCK_STATUS=2;
+    private final int UNBLOCK_STATUS = 2;
 
     public FollowingAdapter(Context context, List<UserInfo> otherlist) {
         this.context = context;
@@ -59,10 +60,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
     }
-    public FollowingAdapter(Context context, List<UserInfo> list, int counter) {
+    public FollowingAdapter(Context context, List<UserInfo> list, int userfollowingstatus) {
         this.context = context;
         this.list = list;
-        this.counter = counter;
+        this.userfollowingstatus = userfollowingstatus;
         if (context instanceof ProfileFragment.FollowerListListener) {
             otherProfileListenerFollowing = (OtherProfileListenerFollowing) context;
         }
@@ -74,33 +75,31 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 false);
         return new FollowingAdapter.ViewHolder(view);
     }
+
     @Override
-    public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder,final  int i) {
+    public void onBindViewHolder(final FollowingAdapter.ViewHolder viewHolder, final int i) {
         try {
 
             final int followerId;
-            if (counter == 100) {
+            if (userfollowingstatus == FollowersListActivity.USERS_FOLLOWER) {
 
                 final UserInfo cont = list.get(i);
-                final String followingname = cont.getFirstName();
+                final String followingname = cont.getUserName();
                 final int accounttype = cont.getAccountType();
                 final String userType;
                 followerId = cont.getUserId();
-                userType=context.getString(R.string.follow);
-                final boolean isfollowersDp=cont.getHasProfileMedia();
-               // viewHolder.action.setText(context.getString(R.string.following));
+                userType = context.getString(R.string.follow);
+                final boolean isfollowersDp = cont.getHasProfileMedia();
+                // viewHolder.action.setText(context.getString(R.string.following));
                 setActionButtonText(context, viewHolder.action, R.string.following);
 
-                if(isfollowersDp) {
+                if (isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
-                }
-
-                else
-                {
+                } else {
                     Picasso.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
                             .fit().centerInside()
@@ -110,20 +109,18 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 }
 
 
-
                 viewHolder.name.setText(followingname);
 
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        if(viewHolder.action.getText().equals(context.getString(R.string.follow)))
-                        {
+                        if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
 
-                            followUser(followerId, context, viewHolder,accounttype);
+                            followUser(followerId, context, viewHolder, accounttype);
                         }
 
-                        if(viewHolder.action.getText().equals(context.getString(R.string.following)))
+                        if (viewHolder.action.getText().equals(context.getString(R.string.following)))
 
                         {
 
@@ -163,10 +160,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             });
 
 
-
-
                         }
-
 
 
                     }
@@ -175,36 +169,33 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     @Override
                     public void onClick(View view) {
 
-                        otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId),userType,followingname);
+                        otherProfileListenerFollowing.viewOthersProfileFollowing(String.valueOf(followerId), userType, followingname);
 
                     }
                 });
-            }
-            else {
+            } else {
                 final UserInfo cont = otherlist.get(i);
                 final String usertype;
                 final boolean myself = cont.getMySelf();
-                final String followername = cont.getFirstName();
+                final String followername = cont.getUserName();
                 final int accounttype = cont.getAccountType();
-                final boolean isfollowersDp=cont.getHasProfileMedia();
-                final boolean youblocked=cont.getYouBlocked();
+                final boolean isfollowersDp = cont.getHasProfileMedia();
+                final boolean youblocked = cont.getYouBlocked();
                 followerId = cont.getUserId();
                 final boolean isblockedyou = cont.getIsBlockedYou();
                 final boolean isfollower = cont.getFollower();
                 final boolean isfollowing = cont.getFollowing();
-                final boolean isrequestsent=cont.getRequestSent();
+                final boolean isrequestsent = cont.getRequestSent();
                 viewHolder.name.setText(followername);
 
-                if(isfollowersDp) {
+                if (isfollowersDp) {
                     String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
                             .placeholder(R.drawable.ic_user_male_dp_small)
                             .skipMemoryCache(false)
                             .into(viewHolder.dp);
-                }
-                else
-                {
+                } else {
                     Picasso.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
                             .fit().centerInside()
@@ -212,27 +203,21 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(viewHolder.dp);
                 }
-
-
-
                 if (myself) {
-                    usertype="";
-                    viewHolder.name.setTextColor( Color.parseColor("#333333"));
+                    usertype = "";
+                    viewHolder.name.setTextColor(Color.parseColor("#333333"));
                     viewHolder.action.setVisibility(View.INVISIBLE);
-                }
-               else {
+                } else {
                     if (isblockedyou) {
                         viewHolder.name.setTextColor(Color.GRAY);
                         viewHolder.action.setVisibility(View.INVISIBLE);
                         usertype = "";
-                    } else if(youblocked)
-                    {
+                    } else if (youblocked) {
                         viewHolder.name.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                         viewHolder.action.setVisibility(View.VISIBLE);
                         setActionButtonText(context, viewHolder.action, R.string.unblock);
                         usertype = "";
-                    }
-                    else{
+                    } else {
                         viewHolder.name.setTextColor(Color.parseColor("#333333"));
                         viewHolder.action.setVisibility(View.VISIBLE);
                         if (isfollowing) {
@@ -253,17 +238,16 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     @Override
                     public void onClick(View view) {
                         if (viewHolder.action.getText().equals(context.getString(R.string.unblock))) {
-                            blockUnblockUsers(followerId, UNBLOCK_STATUS,followername,viewHolder);
+                            blockUnblockUsers(followerId, UNBLOCK_STATUS, followername, viewHolder);
                         }
-                        if(viewHolder.action.getText().equals(context.getString(R.string.follow))) {
-                            followUser(followerId, context, viewHolder,accounttype);
+                        if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
+                            followUser(followerId, context, viewHolder, accounttype);
                         }
-                        if(viewHolder.action.getText().equals(context.getString(R.string.requested)))
-                        {
-                            cancelRequest(followerId, context, viewHolder,accounttype);
+                        if (viewHolder.action.getText().equals(context.getString(R.string.requested))) {
+                            cancelRequest(followerId, context, viewHolder, accounttype);
 
                         }
-                        if(viewHolder.action.getText().equals(context.getString(R.string.following))) {
+                        if (viewHolder.action.getText().equals(context.getString(R.string.following))) {
 
                             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
                             dialogBuilder.setMessage("Are you sure you want to Unfollow " + followername + "?");
@@ -302,7 +286,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                     }
                 });
-
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -316,16 +299,14 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             } else {
 
                                 otherProfileListenerFollowing.viewOthersProfileFollowing(
-                                        String.valueOf(followerId),usertype,followername);
+                                        String.valueOf(followerId), usertype, followername);
                             }
                         }
                     }
                 });
 
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -373,6 +354,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             }
         });
     }
+
     private void cancelRequest(final int userId, final Context context, final FollowingAdapter.ViewHolder viewHolder, final int accounttype) {
 
         ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
@@ -385,9 +367,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                             setActionButtonText(context, viewHolder.action, R.string.follow);
                             Toast.makeText(context, "Your request has been cancelled", Toast.LENGTH_LONG).show();
-                        }
-
-                        else {
+                        } else {
                             setActionButtonText(context, viewHolder.action, R.string.follow);
                             Toast.makeText(context, "Your request has alread been cancelled", Toast.LENGTH_LONG).show();
                         }
@@ -407,10 +387,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         });
     }
 
-    public void unFollowUser(int userId,final Context context,final FollowingAdapter.ViewHolder viewHolder, final  int accountType)
+    public void unFollowUser(int userId, final Context context, final FollowingAdapter.ViewHolder viewHolder, final int accountType)
 
     {
-
         ApiCallingService.Friends.unfollowUser(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -428,8 +407,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             setActionButtonText(context, viewHolder.action, R.string.follow);
                             Toast.makeText(context, "You have already unfollowed", Toast.LENGTH_LONG).show();
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
 
                         e.printStackTrace();
 
@@ -439,6 +417,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 }
 
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
@@ -448,9 +427,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     }
 
-    public void blockUnblockUsers(final int userId, final int status,final String username,final FollowingAdapter.ViewHolder viewHolder) {
+    public void blockUnblockUsers(final int userId, final int status, final String username, final FollowingAdapter.ViewHolder viewHolder) {
         android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-        dialogBuilder.setMessage("Are you sure you want to Unblock " +username + "?");
+        dialogBuilder.setMessage("Are you sure you want to Unblock " + username + "?");
         dialogBuilder.setPositiveButton("CONFIRM", null);
         dialogBuilder.setNegativeButton("CANCEL", null);
 
@@ -463,15 +442,13 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
             @Override
             public void onClick(View v) {
 
-                blockunBlock(userId,status, viewHolder);
+                blockunBlock(userId, status, viewHolder);
                 alertDialog.dismiss();
-
-
             }
         });
     }
 
-    public void blockunBlock(int userId, final int status,final FollowingAdapter.ViewHolder  holder) {
+    public void blockunBlock(int userId, final int status, final FollowingAdapter.ViewHolder holder) {
         ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -490,6 +467,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                     Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
@@ -500,34 +478,37 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     @Override
     public int getItemCount() {
-        if(counter==100)
-        {
+        if (userfollowingstatus == FollowersListActivity.USERS_FOLLOWER) {
             return list.size();
-    }
-    else{
+        } else {
             return otherlist.size();
         }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.root_layout) LinearLayout layout;
-        @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
-        @BindView(R.id.decline) AppCompatImageView declineBtn;
+        @BindView(R.id.root_layout)
+        LinearLayout layout;
+        @BindView(R.id.dp)
+        CircularAppCompatImageView dp;
+        @BindView(R.id.name)
+        ProximaNovaSemiboldTextView name;
+        @BindView(R.id.action)
+        ProximaNovaSemiboldTextView action;
+        @BindView(R.id.decline)
+        AppCompatImageView declineBtn;
+
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
 
-    public  interface OtherProfileListenerFollowing
-    {
+    public interface OtherProfileListenerFollowing {
         public void viewOthersProfileFollowing(String id, String username, String type);
+
         public void viewUserProfile();
     }
-
 
 
 }

@@ -45,6 +45,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.BaseBottomBarActivity;
+import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -64,6 +65,7 @@ import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
+import com.cncoding.teazer.ui.fragment.activity.Main2Activity;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.cncoding.teazer.utilities.StartCountDownClass;
 import com.facebook.share.model.SharePhoto;
@@ -155,6 +157,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //<editor-fold desc="Main layout views">
     //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
+
     @BindView(R.id.relative_layout)
     RelativeLayout relativeLayout;
     @BindView(R.id.tags_container)
@@ -234,6 +237,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout)
     RelativeLayout uploadingStatusLayout;
+    public static final String USER_PROFILE= "userprofile";
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -250,6 +254,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private int views;
     private long totalDuration;
     private boolean oneShotFlag;
+    public static boolean isPostDetailActivity=false;
 
     StartCountDownClass startCountDownClass;
     private Handler customHandler = new Handler();
@@ -330,6 +335,23 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+
+
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isPostDetailActivity=true;
+                Intent intent=new Intent(getApplicationContext(),BaseBottomBarActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("userId",postDetails.getPostOwner().getUserId());
+                bundle.putBoolean("isSelf",postDetails.canDelete());
+                bundle.putString("Identifier","PostDetailActivity");
+                bundle.putParcelable("PostDetails",postDetails);
+                intent.putExtra("profileBundle",bundle);
+                startActivity(intent);
+            }
+        });
 
     }
 
