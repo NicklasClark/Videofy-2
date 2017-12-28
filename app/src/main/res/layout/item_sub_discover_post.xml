@@ -152,7 +152,7 @@
             android:ellipsize="end"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_like_smaller"
-            android:gravity="end|bottom"
+            android:gravity="start|center_vertical"
             android:layout_below="@+id/name"
             android:layout_toEndOf="@+id/dp" />
 
@@ -163,7 +163,7 @@
             android:textSize="@dimen/text_size_10sp"
             android:textColor="@android:color/white"
             app:drawableStartCompat="@drawable/ic_view_outline_smaller"
-            android:gravity="start|bottom"
+            android:gravity="start|center_vertical"
             android:maxLines="1"
             android:singleLine="true"
             android:layout_marginStart="@dimen/padding_10dp"

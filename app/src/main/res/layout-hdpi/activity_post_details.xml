@@ -307,7 +307,7 @@
                             android:id="@+id/react_btn"
                             style="@style/AppTheme.ReactButton"
                             android:text="@string/react"
-                            android:drawablePadding="6dp"
+                            android:drawablePadding="4dp"
                             app:drawableStartCompat="@drawable/ic_react"/>
 
                     </FrameLayout>

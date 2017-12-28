@@ -157,7 +157,7 @@
     <string name="invitefriends">Invite Friends</string>
     <string name="personasettings">Personal Settings</string>
     <string name="changecategories">Change Categories</string>
-    <string name="react">&#160;React</string>
+    <string name="react">React</string>
     <string name="already_exists">Username, Email or Phone Number already exists!\nPlease login instead.</string>
     <string name="take_photo">Take photo</string>
     <string name="intro_message">This sample demonstrates how to record video using Camera2 API.</string>
