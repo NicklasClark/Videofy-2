@@ -30,6 +30,8 @@ android {
         multiDexEnabled true
         renderscriptTargetApi 27
         renderscriptSupportModeEnabled true
+        resValue "string", "app_name", "Teazer"
+        manifestPlaceholders = [facebookId:"163105567761892"]
     }
     buildTypes {
         release {
@@ -39,6 +41,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             signingConfig signingConfigs.releaseconfig
+            resValue "string", "app_name", "Teazer"
+            manifestPlaceholders = [facebookId:"163105567761892"]
+        }
+        dev {
+            applicationIdSuffix = ".debug"
+            resValue "string", "app_name", "Teazer-Dev"
+            debuggable true
+            signingConfig signingConfigs.releaseconfig
+            manifestPlaceholders = [facebookId:"1807707069304467"]
         }
     }
     packagingOptions {

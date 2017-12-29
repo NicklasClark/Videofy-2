@@ -1,0 +1,79 @@
+{
+  "project_info": {
+    "project_number": "441699527747",
+    "firebase_url": "https://teazer-prod.firebaseio.com",
+    "project_id": "teazer-prod",
+    "storage_bucket": "teazer-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441699527747:android:3e03763685676bbf",
+        "android_client_info": {
+          "package_name": "com.cncoding.teazer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441699527747-djhl0qo7m23e83m0isa9aqqlj3jqae6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cncoding.teazer",
+            "certificate_hash": "ea65ae5fa9b829570b863d97b2cb89d5cd8827a0"
+          }
+        },
+        {
+          "client_id": "441699527747-ft6lujf3vum0pv6vsn079f2hvsqb4kkb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cncoding.teazer",
+            "certificate_hash": "1541ff6e67e8c0ebfa6176d1dd3c754e6ab86d7a"
+          }
+        },
+        {
+          "client_id": "441699527747-rhpssd0e564egnf46d3bf3psl5lmm2b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cncoding.teazer",
+            "certificate_hash": "6068171f51151a8ca5bfd90e3e18cc8d4b24cf96"
+          }
+        },
+        {
+          "client_id": "441699527747-sh3631k1ed2q4m948j0bhqk2ppffvtvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG09n0gx90WV-1CHOfpoJGMFKGe_OZ4Js"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441699527747-pkuojdmf308nuka4m2ruj88n80gsv896.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cnapplications.teazerapp",
+                "app_store_id": "1234556662"
+              }
+            },
+            {
+              "client_id": "441699527747-sh3631k1ed2q4m948j0bhqk2ppffvtvs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
