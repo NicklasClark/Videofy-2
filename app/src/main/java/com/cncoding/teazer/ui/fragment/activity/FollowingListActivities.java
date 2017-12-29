@@ -53,6 +53,7 @@ public class FollowingListActivities extends BaseFragment {
     String followerid;
     String identifier;
     boolean next;
+    public static final int USER_FOLLOWEING=100;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     public static FollowingListActivities newInstance(String id,String identifier) {
@@ -123,7 +124,7 @@ public class FollowingListActivities extends BaseFragment {
         if (identifier.equals("User")) {
 
             layout.setVisibility(View.GONE);
-            profileMyFollowingAdapter = new FollowingAdapter(context, list, 100);
+            profileMyFollowingAdapter = new FollowingAdapter(context, list, USER_FOLLOWEING);
             recyclerView.setAdapter(profileMyFollowingAdapter);
             loader.setVisibility(View.VISIBLE);
             getUserfollowinglist(1);
@@ -170,7 +171,6 @@ public class FollowingListActivities extends BaseFragment {
                         layout.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                         loader.setVisibility(View.GONE);
-
                     }
                 } else {
                     Toast.makeText(context, "Something went wrong,Please try again", Toast.LENGTH_LONG).show();

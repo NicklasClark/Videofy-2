@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -171,6 +172,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         progressbar = view.findViewById(R.id.progress_bar);
         profile_id = view.findViewById(R.id.profile_id);
         bgImage = view.findViewById(R.id.background_profile);
+
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -278,6 +280,9 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             @Override
             public void onClick(View view) {
 
+               // getActivity().onBackPressed();
+              //  Toast.makeText(context,"hello",Toast.LENGTH_SHORT).show();
+
 
 
 //                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -368,6 +373,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
                     Long mobilno = userProfile.getPhoneNumber();
+
                     if (mobilno == null) {
                         mobilenumber = 0L;
                     } else {
@@ -540,11 +546,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             }
         });
     }
-    public void updateUsercreations(int count)
-    {
 
-
-    }
 
     @Override
     public void updateVideosCreation(int count) {
@@ -553,6 +555,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         _creations.setText(String.valueOf(totalvideos) + " Creations");
     }
     public interface FollowerListListener {
+
         void onFollowerListListener(String id, String identifier);
         void onFollowingListListener(String id, String identifier);
     }

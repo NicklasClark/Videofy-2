@@ -42,7 +42,7 @@
         android:theme="@style/AppTheme">
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider163105567761892"
+            android:authorities="com.facebook.app.FacebookContentProvider${facebookId}"
             android:exported="false" />
         <provider
             android:name="android.support.v4.content.FileProvider"

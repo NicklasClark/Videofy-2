@@ -45,6 +45,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.BaseBottomBarActivity;
+import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -64,6 +65,7 @@ import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
+import com.cncoding.teazer.ui.fragment.activity.Main2Activity;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -157,25 +159,43 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //<editor-fold desc="Main layout views">
 //    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
 //    @BindView(R.id.video_container) RelativeLayout videoContainer;
-    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
-    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge) ProximaNovaSemiboldTextView tagsCountBadge;
-//    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
-    @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-//    @BindView(R.id.share) ProximaNovaRegularTextView share;
-    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+
+    @BindView(R.id.relative_layout)
+    RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container)
+    RelativeLayout tagsLayout;
+    @BindView(R.id.placeholder)
+    ImageView placeholder;
+    @BindView(R.id.loading)
+    ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.react_btn)
+    ProximaNovaBoldButton reactBtn;
+    @BindView(R.id.like)
+    ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users)
+    ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list)
+    RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent)
+    RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge)
+    ProximaNovaSemiboldTextView tagsCountBadge;
+    //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header)
+    ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle)
+    ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout)
+    LinearLayout postLoadErrorLayout;
+    //    @BindView(R.id.share) ProximaNovaRegularTextView share;
+    @BindView(R.id.video_view)
+    SimpleExoPlayerView playerView;
     //</editor-fold>
 
     //<editor-fold desc="Controller views">
@@ -187,19 +207,33 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     //center layout
     @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
     //bottom layout
-    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
-    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
-    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
-    @BindView(R.id.media_controller_categories) ProximaNovaSemiboldTextView categoriesView;
-    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiboldTextView reactionCountView;
-    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
-    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
-    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
-    @BindView(R.id.loader) GifTextView loader;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.media_controller_dp)
+    CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name)
+    ProximaNovaRegularTextView profileNameView;
+    @BindView(R.id.media_controller_likes)
+    ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views)
+    ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories)
+    ProximaNovaSemiboldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count)
+    ProximaNovaSemiboldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1)
+    CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2)
+    CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3)
+    CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.loader)
+    GifTextView loader;
+    @BindView(R.id.uploadProgressText)
+    ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
+    public static final String USER_PROFILE= "userprofile";
     //</editor-fold>
 
     //<editor-fold desc="primitive members">
@@ -216,6 +250,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
     private int views;
     private long totalDuration;
     private boolean oneShotFlag;
+    public static boolean isPostDetailActivity=false;
 
 //    StartCountDownClass startCountDownClass;
     private Handler customHandler = new Handler();
@@ -277,9 +312,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         ButterKnife.bind(this);
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         setupServiceReceiver();
-
         categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
         taggedUsersList = new ArrayList<>();
@@ -300,6 +333,21 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
             isComingFromHomePage = getIntent().getBooleanExtra(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isPostDetailActivity=true;
+                Intent intent=new Intent(getApplicationContext(),BaseBottomBarActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("userId",postDetails.getPostOwner().getUserId());
+                bundle.putBoolean("isSelf",postDetails.canDelete());
+                bundle.putParcelable("PostDetails",postDetails);
+                intent.putExtra("profileBundle",bundle);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -969,15 +1017,16 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
+
         isComingFromHomePage = false;
+        isPostDetailActivity=true;
         Intent intent = new Intent(this, BaseBottomBarActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("userId", userId);
         bundle.putBoolean("isSelf", isSelf);
+        bundle.putParcelable("PostDetails",postDetails);
         intent.putExtra("profileBundle", bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
     }
 
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {

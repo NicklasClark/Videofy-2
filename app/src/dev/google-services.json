@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "83958920608",
+    "firebase_url": "https://teazer-dev-2be74.firebaseio.com",
+    "project_id": "teazer-dev-2be74",
+    "storage_bucket": "teazer-dev-2be74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83958920608:android:30420fd68ac2054e",
+        "android_client_info": {
+          "package_name": "com.cncoding.teazer.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83958920608-na9b7kh6jrnd0946e86da39siueo673l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cncoding.teazer.debug",
+            "certificate_hash": "6068171f51151a8ca5bfd90e3e18cc8d4b24cf96"
+          }
+        },
+        {
+          "client_id": "83958920608-qh5dvoddj2jtmq3aeo9nnfrv5fajipgh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGZSfc9MgLwmdqw0h3-NpWrNyNWNaHZug"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83958920608-qh5dvoddj2jtmq3aeo9nnfrv5fajipgh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

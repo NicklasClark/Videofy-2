@@ -20,10 +20,12 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.model.react.ReactionsList;
+import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +46,11 @@ public class FragmentProfileMyReactions extends Fragment {
     int page;
     ProximaNovaSemiboldTextView alert1;
     ProximaNovaRegularTextView alert2;
+    GifTextView loader;
+
+    private EndlessRecyclerViewScrollListener scrollListener;
+    boolean next;
+
     public static FragmentProfileMyReactions newInstance(int page) {
         return new FragmentProfileMyReactions();
     }
@@ -58,18 +65,40 @@ public class FragmentProfileMyReactions extends Fragment {
         recyclerView=view.findViewById(R.id.recycler_view);
         alert1=view.findViewById(R.id.alert1);
         alert2=view.findViewById(R.id.alert2);
-
+        loader=view.findViewById(R.id.loader);
         return view;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        list=new ArrayList<>();
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        list=new ArrayList<>();
-        page=1;
-        getReactions();
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
+        recyclerView.setAdapter(profileMyReactionAdapter);
+        getReactions(1);
+
+        scrollListener= new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
+                if(next)
+                {
+                    if(page>2)
+                    {
+                        loader.setVisibility(View.VISIBLE);
+                    }
+                    getReactions(page);
+
+                }
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+
+
+
     }
-    public void getReactions() {
+
+    public void getReactions(final int page) {
         ApiCallingService.React.getMyReactions(page,context).enqueue(new Callback<ReactionsList>() {
             @Override
             public void onResponse(Call<ReactionsList> call, Response<ReactionsList> response) {
@@ -79,31 +108,29 @@ public class FragmentProfileMyReactions extends Fragment {
 
                             alert1.setVisibility(View.VISIBLE);
                             alert2.setVisibility(View.VISIBLE);
-                            alert2.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
+                            loader.setVisibility(View.GONE);
                         }
                         else
                         {
-
-                            boolean next=response.body().isNextPage();
+                            next=response.body().isNextPage();
                             list.addAll(response.body().getReactions());
-                            profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
-                            recyclerView.setAdapter(profileMyReactionAdapter);
-                            if(next)
-                            {
-                                page++;
-                                getReactions();
-                            }
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), list.size() - 1);
+                            loader.setVisibility(View.GONE);
                         }
                     }
                     catch(Exception e)
                     {
                         Toast.makeText(context, "Oops Something went wrong", Toast.LENGTH_LONG).show();
+                        loader.setVisibility(View.GONE);
                     }
                 }
                 else
                 {
-                    Toast.makeText(context, "Oops Something went wrong, Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Oops Something went wrong", Toast.LENGTH_LONG).show();
+
+                    loader.setVisibility(View.GONE);
                 }
             }
             @Override

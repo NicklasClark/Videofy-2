@@ -137,9 +137,7 @@ public class NavigationController {
                         ft.commit();
                     }
                 }
-
                 executePendingTransactions();
-
                 currentFragment = fragment;
                 if (transactionListener != null) {
                     transactionListener.onTabTransaction(currentFragment, selectedTabIndex);
