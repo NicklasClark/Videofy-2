@@ -153,7 +153,8 @@ public class FragmentSettings extends Fragment {
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
     }
 
@@ -237,6 +238,7 @@ public class FragmentSettings extends Fragment {
                 break;
         }
     }
+
 
     public interface ChangeCategoriesListener {
         void changeCategoriesListener();
