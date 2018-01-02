@@ -65,6 +65,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.utilities.OnSwipeTouchListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,6 +122,18 @@ public class CameraFragment extends Fragment {
         INVERSE_ORIENTATIONS.append(Surface.ROTATION_180, 90);
         INVERSE_ORIENTATIONS.append(Surface.ROTATION_270, 0);
     }
+
+    private final static int[] CAMERA_FILTER_MODES = {CaptureRequest.CONTROL_EFFECT_MODE_OFF,
+    CaptureRequest.CONTROL_EFFECT_MODE_MONO,
+    CaptureRequest.CONTROL_EFFECT_MODE_NEGATIVE,
+    CaptureRequest.CONTROL_EFFECT_MODE_SOLARIZE,
+    CaptureRequest.CONTROL_EFFECT_MODE_SEPIA,
+    CaptureRequest.CONTROL_EFFECT_MODE_POSTERIZE,
+    CaptureRequest.CONTROL_EFFECT_MODE_WHITEBOARD,
+    CaptureRequest.CONTROL_EFFECT_MODE_BLACKBOARD,
+    CaptureRequest.CONTROL_EFFECT_MODE_AQUA};
+
+    private int selected_filter_mode_index = 0;
 
     @BindView(R.id.camera_preview) AutoFitTextureView mTextureView;
     @BindView(R.id.camera_record) AppCompatImageView recordBtn;
@@ -268,6 +281,31 @@ public class CameraFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
         new CreateVideoFolder(this).execute();
+
+        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            public void onSwipeTop() {
+//                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                if (selected_filter_mode_index > 0) {
+                    selected_filter_mode_index--;
+                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+                    updatePreview();
+                }
+            }
+            public void onSwipeLeft() {
+                if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
+                    selected_filter_mode_index++;
+                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+                    updatePreview();
+                }
+            }
+            public void onSwipeBottom() {
+//                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
         return rootView;
     }
 
@@ -333,7 +371,6 @@ public class CameraFragment extends Fragment {
                         isTorchOn = false;
                     } else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-//                        mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CaptureRequest.CONTROL_EFFECT_MODE_NEGATIVE);
                         mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         cameraFlashView.setImageResource(R.drawable.ic_flash_on);
                         isTorchOn = true;
@@ -562,6 +599,7 @@ public class CameraFragment extends Fragment {
 
             Surface previewSurface = new Surface(texture);
             mPreviewBuilder.addTarget(previewSurface);
+            mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
 
             mCameraDevice.createCaptureSession(Collections.singletonList(previewSurface), new CameraCaptureSession.StateCallback() {
 
@@ -590,10 +628,22 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
-            setUpCaptureRequestBuilder(mPreviewBuilder);
-            HandlerThread thread = new HandlerThread("CameraPreview");
-            thread.start();
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setFlashStatus();
+                    setUpCaptureRequestBuilder(mPreviewBuilder);
+                    HandlerThread thread = new HandlerThread("CameraPreview");
+                    thread.start();
+                    try {
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -650,6 +700,7 @@ public class CameraFragment extends Fragment {
 
     private void setUpCaptureRequestBuilder(CaptureRequest.Builder builder) {
         builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        builder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
     }
 
     /**
@@ -776,7 +827,7 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
-            checkFlashStatus();
+//            checkFlashStatus();
             closePreviewSession();
             setUpMediaRecorder();
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
@@ -842,6 +893,35 @@ public class CameraFragment extends Fragment {
                         mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         cameraFlashView.setImageResource(R.drawable.ic_flash_off);
                         isTorchOn = false;
+                    }
+                    else {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+                        isTorchOn = true;
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFlashStatus() {
+        try {
+            if (cameraId.equals(String.valueOf(CAMERA_BACK))) {
+                if (isFlashSupported) {
+                    if (isTorchOn) {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_on);
+//                        isTorchOn = false;
+                    }
+                    else {
+                        mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+//                        isTorchOn = true;
                     }
                 }
             }

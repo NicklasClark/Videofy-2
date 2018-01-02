@@ -13,11 +13,13 @@
     <dimen name="padding_big">60dp</dimen>
     <dimen name="border_thick">5dp</dimen>
     <dimen name="padding_including_action_bar">122dp</dimen>
+    <dimen name="padding_error_message">50dp</dimen>
     <dimen name="text_size_h1">82sp</dimen>
     <dimen name="text_size_h2">42sp</dimen>
     <dimen name="text_size_h3">32sp</dimen>
     <dimen name="text_size_h4">22sp</dimen>
     <dimen name="text_size_h5">18sp</dimen>
+    <dimen name="text_size_h6">14sp</dimen>
     <dimen name="text_size_content">16sp</dimen>
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="text_size_content2">12sp</dimen>
@@ -62,5 +64,6 @@
     <dimen name="overlay_toolbar_height">80dp</dimen>
     <dimen name="textsize14">80dp</dimen>
     <dimen name="frames_video_height">60dip</dimen>
+    <dimen name="padding_4dp">4dp</dimen>
 
 </resources>

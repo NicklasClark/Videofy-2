@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
@@ -61,7 +62,8 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
     @BindView(R.id.no_trending) ProximaNovaBoldTextView noTrending;
     @BindView(R.id.no_featured_videos) ProximaNovaBoldTextView noFeaturedVideos;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean updateMyInterests = false;
@@ -110,6 +112,8 @@ public class DiscoverFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         loadPosts();
+        nestedScrollView.scrollTo(0,0);
+        nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 
     private void initMembersIfEmpty() {
@@ -369,7 +373,7 @@ public class DiscoverFragment extends BaseFragment {
         else
             featuredPostsContainer.setVisibility(GONE);
         postLoadErrorLayout.setVisibility(VISIBLE);
-        String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
+        String errorString = message;
         postLoadErrorTextView.setText(errorString);
     }
 

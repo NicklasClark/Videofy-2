@@ -245,29 +245,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="@dimen/padding_including_action_bar"
+                android:layout_centerInParent="true"
+                android:paddingTop="150dp"
                 android:paddingBottom="@dimen/padding_including_action_bar"
                 android:foreground="@drawable/ripple_dark_no_rounded"
-                android:layout_below="@+id/featured_posts_container"
-                android:visibility="gone">
+                android:visibility="visible">
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
                     android:id="@+id/post_load_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textAllCaps="true"
-                    app:drawableTopCompat="@drawable/ic_no_data_placeholder"
-                    android:textSize="@dimen/text_size_h5"
+                    android:textColor="@color/colorPrimary_text3"
+                    android:textSize="@dimen/text_size_h6"
                     android:text="@string/could_not_load_posts"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
                     android:id="@+id/tap_to_retry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_content_big"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_content3"
                     android:text="@string/tap_to_retry"/>
 
             </LinearLayout>

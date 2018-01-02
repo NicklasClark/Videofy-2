@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
@@ -38,7 +38,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean isRefreshing;
@@ -209,14 +210,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                     }
                 }
 
-                private void showErrorMessage(String message) {
-//                    dismissProgressBar();
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    postLoadErrorLayout.setVisibility(View.VISIBLE);
-                    String errorString = getString(R.string.could_not_load_posts) + "\n" + message;
-                    postLoadErrorTextView.setText(errorString);
-                }
-
                 private void dismissRefreshView() {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -230,11 +223,20 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
                     t.printStackTrace();
+                    showErrorMessage(getString(R.string.something_went_wrong));
                     dismissRefreshView();
                 }
             });
     }
 
+
+    private void showErrorMessage(String message) {
+//                    dismissProgressBar();
+        recyclerView.setVisibility(View.INVISIBLE);
+        postLoadErrorLayout.setVisibility(View.VISIBLE);
+        String errorString = message;
+        postLoadErrorTextView.setText(errorString);
+    }
 //    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
 //        if (postList.size() >= newPostDetailsList.size()) {
 //            List<RealmPostDetails> oldPostDetailsList = postList.subList(0, newPostDetailsList.size() - 1);

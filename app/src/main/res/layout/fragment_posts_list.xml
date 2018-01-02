@@ -19,22 +19,23 @@
         android:layout_centerInParent="true"
         android:visibility="gone">
 
-        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/post_load_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textAllCaps="true"
-            app:drawableTopCompat="@drawable/ic_no_data_placeholder"
-            android:textSize="@dimen/text_size_h5"
+            android:textColor="@color/colorPrimary_text3"
+            android:textSize="@dimen/text_size_h6"
             android:text="@string/could_not_load_posts"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/swipe_down_to_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center"
-            android:textSize="@dimen/text_size_content_big"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_h6"
             android:text="@string/swipe_down_to_retry"/>
 
     </LinearLayout>
