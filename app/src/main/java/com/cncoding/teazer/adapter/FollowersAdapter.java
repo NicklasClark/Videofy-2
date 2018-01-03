@@ -54,6 +54,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         this.context = context;
         this.userlist = userlist;
         this.userfollowerstatus = userfollowerstatus;
+
         if (context instanceof ProfileFragment.FollowerListListener) {
             otherProfileListener = (OtherProfileListener) context;
         }
@@ -108,6 +109,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
                 viewHolder.name.setText(followername);
+              //  Toast.makeText(context,followername,Toast.LENGTH_SHORT).show();
 
 
                 if (accounttype == 1) {

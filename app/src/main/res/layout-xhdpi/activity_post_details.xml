@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
+
+
+
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,6 +17,7 @@
         android:background="@color/material_grey100"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="?attr/actionBarSize"
         android:animateLayoutChanges="true">
 
         <RelativeLayout
@@ -529,6 +533,12 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_arrow_back_off_white" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/liked_user_layout"/>
 
     <pl.droidsonroids.gif.GifTextView
         android:layout_width="100dp"

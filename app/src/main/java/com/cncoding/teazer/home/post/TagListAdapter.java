@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +31,13 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
     private Context context;
     private ArrayList<TaggedUser> taggedUserList;
     private TaggedListInteractionListener mListener;
+    Fragment fragment;
 
-    TagListAdapter(Context context, ArrayList<TaggedUser> taggedUserList) {
+    TagListAdapter(Context context, ArrayList<TaggedUser> taggedUserList, Fragment fragment) {
         this.context = context;
         this.taggedUserList = taggedUserList;
+        this.fragment=fragment;
+
         if (context instanceof TaggedListInteractionListener)
             mListener = (TaggedListInteractionListener) context;
     }
@@ -71,8 +75,11 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
         holder.dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onTaggedUserInteraction(userId, isSelf);
+
+
+                ((FragmentPostDetails)fragment).callUserProfile(userId,isSelf);
+//                if (mListener != null)
+//                    mListener.onTaggedUserInteraction(userId, isSelf);
             }
         });
     }

@@ -605,7 +605,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     public interface OtherProfileListenerFollowing {
         public void viewOthersProfileFollowing(String id, String username, String type);
-
         public void viewUserProfile();
     }
 

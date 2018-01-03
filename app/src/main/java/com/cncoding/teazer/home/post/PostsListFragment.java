@@ -93,6 +93,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             }
         });
 
+
         return rootView;
     }
 
