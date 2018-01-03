@@ -84,7 +84,7 @@ public class SharedPrefs {
         getSharedPreferences(context).edit().putString(FCM_TOKEN, fcmToken).apply();
     }
 
-    static String getFcmToken(Context context) {
+    public static String getFcmToken(Context context) {
         return getSharedPreferences(context).getString(FCM_TOKEN, null);
     }
 

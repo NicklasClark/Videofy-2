@@ -336,7 +336,7 @@ public class CameraFragment extends Fragment {
 
     @OnClick(R.id.camera_record) public void toggleRecording() {
         if (mIsRecordingVideo) {
-            if (updatedTime > 3000) {
+            if (updatedTime > 5000) {
                 stopRecordButtonAnimations();
                 stopRecordingVideo();
             }

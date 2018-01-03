@@ -268,8 +268,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void popAllBackStack() {
-        String name = fragmentManager.getBackStackEntryAt(0).getName();
-        fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        try {
+            if(fragmentManager != null) {
+                String name = fragmentManager.getBackStackEntryAt(0).getName();
+                fragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void startFragmentTransition(boolean reverse, final String tag, final boolean addToBackStack) {
@@ -399,13 +405,13 @@ public class MainActivity extends AppCompatActivity
 
         username = username == null ? facebookProfile.getName() : username.replace(" ", "");
 
-        ApiCallingService.Auth.socialSignUp(new Authorize(
+        ApiCallingService.Auth.socialSignUp(this, new Authorize(
                 getFcmToken(this),
                 getDeviceId(this),
                 DEVICE_TYPE_ANDROID,
                 facebookProfile.getId(),                                            //social ID
                 SOCIAL_LOGIN_TYPE_FACEBOOK,
-                facebookData.getString("email"),                               //email
+                facebookData.getString("email") == null || facebookData.getString("email").equals("") ? null:facebookData.getString("email"),                               //email
                 username,                                                           //Username
                 facebookProfile.getFirstName(),
                 facebookProfile.getLastName(),
@@ -419,8 +425,8 @@ public class MainActivity extends AppCompatActivity
                             switch (response.code()) {
                                 case 201:
                                     if (response.body().getStatus()) {
-                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                        SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
+                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());
+                                        SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());
                                         verificationSuccessful(true,
                                                 button, false);
                                         //updating profile picture
@@ -429,8 +435,8 @@ public class MainActivity extends AppCompatActivity
                                     }
                                     break;
                                 case 200:
-                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
+                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());
+                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());
                                     if (response.body().getStatus()) {
                                         verificationSuccessful(true,
                                                 button, true);
@@ -483,13 +489,13 @@ public class MainActivity extends AppCompatActivity
                 DEVICE_TYPE_ANDROID,
                 googleAccount.getId(),              //Social ID
                 SOCIAL_LOGIN_TYPE_GOOGLE,
-                googleAccount.getEmail(),
+                googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail(),
                 username,                           //Username
                 googleAccount.getGivenName(),       //First name
                 googleAccount.getFamilyName(),      //Last name
                 googleAccount.getPhotoUrl() != null ? googleAccount.getPhotoUrl().toString() : null);
 
-        ApiCallingService.Auth.socialSignUp(authorize)
+        ApiCallingService.Auth.socialSignUp(this, authorize)
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override

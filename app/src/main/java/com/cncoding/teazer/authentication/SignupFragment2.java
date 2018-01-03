@@ -27,7 +27,7 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COU
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
-import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignup;
+import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignUp;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
@@ -125,7 +125,7 @@ public class SignupFragment2 extends AuthFragment {
         if (!isFocused) {
             String email = emailView.getText().toString();
             if (!email.isEmpty() && isValidEmailAddress(emailView.getText().toString())) {
-                ApiCallingService.Auth.checkEmail(emailView, true);
+                ApiCallingService.Auth.checkEmail(getContext(), emailView, true);
             } else {
                 setEditTextDrawableEnd(emailView, R.drawable.ic_error);
             }
@@ -135,7 +135,7 @@ public class SignupFragment2 extends AuthFragment {
     @OnFocusChange(R.id.signup_phone_number) public void onPhoneNumberFocusChanged(boolean isFocused) {
         if (!isFocused) {
             if (isValidPhoneNumber(phoneNumberView.getText().toString()))
-                ApiCallingService.Auth.checkPhoneNumber(countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
+                ApiCallingService.Auth.checkPhoneNumber(getContext(), countryCodeView.getDefaultCountryCodeAsInt(), phoneNumberView, true);
             else
                 setEditTextDrawableEnd(phoneNumberView, R.drawable.ic_error);
         }
@@ -158,7 +158,7 @@ public class SignupFragment2 extends AuthFragment {
                                 countryCodeView.getSelectedCountryCodeAsInt()
                         );
                         signupBtn.setEnabled(false);
-                        performInitialSignup(mListener, authorize, signupBtn, picturePath);
+                        performInitialSignUp(getContext(), mListener, authorize, signupBtn, picturePath);
                     } else Snackbar.make(signupBtn, "Please provide a valid email address.", Snackbar.LENGTH_SHORT).show();
                 } else Snackbar.make(signupBtn, "Please provide both first and last names, separated by blank space", Snackbar.LENGTH_SHORT).show();
             } else

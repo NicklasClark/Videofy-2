@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -126,7 +125,7 @@ public class FragmentChangeCategories extends Fragment{
 
 
 
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+        ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
              try {

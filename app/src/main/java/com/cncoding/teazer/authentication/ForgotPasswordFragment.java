@@ -158,7 +158,7 @@ public class ForgotPasswordFragment extends AuthFragment {
             if (TextUtils.isDigitsOnly(enteredText)) {
 //                Phone number is entered
                 if (isConnected) {
-                    ApiCallingService.Auth.requestResetPasswordByPhone(Long.parseLong(enteredText), countryCode)
+                    ApiCallingService.Auth.requestResetPasswordByPhone(context, Long.parseLong(enteredText), countryCode)
                             .enqueue(new Callback<ResultObject>() {
                                 @Override
                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -183,7 +183,7 @@ public class ForgotPasswordFragment extends AuthFragment {
 //                Email is entered
                 if (AuthUtils.isValidEmailAddress(enteredText)) {
                     if (isConnected) {
-                        ApiCallingService.Auth.requestResetPasswordByEmail(enteredText)
+                        ApiCallingService.Auth.requestResetPasswordByEmail(context, enteredText)
                                 .enqueue(new Callback<ResultObject>() {
                                     @Override
                                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {

@@ -1,8 +1,11 @@
 package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +48,7 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
     private ArrayList<PostDetails> postDetailsArrayList;
     private SparseArray<Dimension> dimensionSparseArray;
     private Context context;
+    private SparseIntArray colorArray;
 
     public SubDiscoverAdapter(ArrayList<PostDetails> postDetailsArrayList, Context context) {
         this.postDetailsArrayList = postDetailsArrayList;
@@ -53,6 +57,7 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         if (context instanceof OnSubSearchInteractionListener) {
             mListener = (SubDiscoverAdapter.OnSubSearchInteractionListener) context;
         }
+        colorArray = new SparseIntArray();
     }
 
     @Override
@@ -84,6 +89,8 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
                     View.VISIBLE : View.GONE);
             if (holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0)
                 holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
+            holder.category.setBackground(
+                    getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
 
             String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
             holder.name.setText(name);
@@ -183,5 +190,17 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
 
     public interface OnSubSearchInteractionListener {
         void onSubSearchInteraction(int action, PostDetails postDetails);
+    }
+
+    private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        if (colorArray.get(position) == 0) {
+            colorArray.put(position, color);
+        }
+        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setStroke(1, colorArray.get(position));
+        title.setTextColor(colorArray.get(position));
+        return gradientDrawable;
     }
 }

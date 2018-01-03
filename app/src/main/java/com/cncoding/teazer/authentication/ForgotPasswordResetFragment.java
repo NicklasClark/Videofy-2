@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -25,7 +24,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
-import butterknife.OnTouch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -143,7 +141,7 @@ public class ForgotPasswordResetFragment extends AuthFragment {
                             Integer.parseInt(resetOtpView.getText().toString()));
                 }
                 if (isConnected) {
-                    ApiCallingService.Auth.changePassword(authorize).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.Auth.changePassword(context, authorize).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {

@@ -115,7 +115,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public static final String TAG_TAGS_FRAGMENT = "tagsFragment";
     //    private static final int REQUEST_PLACE_PICKER = 212;
     private static final int REQUEST_LOCATION_PERMISSIONS = 211;
-//    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 210;
+    //    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 210;
     private static final int REQUEST_CODE_CHECK_SETTINGS = 312;
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
@@ -202,6 +202,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getContext());
 //        addWaterMarkAsyncTask.delegate = this;
 //        addWaterMarkAsyncTask.execute(videoPath);
+
+        checkFacebookButtonPressed = false;
+        checkedTwitterButton = false;
     }
 
     @Override
@@ -339,6 +342,33 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         super.onResume();
         if (isRequestingLocationUpdates)
             startLocationUpdates();
+
+        if (!checkFacebookButtonPressed) {
+            checkAction("facebook", facebookShareBtn);
+            checkFacebookButtonPressed = true;
+            facebookShareBtn.setChecked(true);
+            facebookShareBtn.setBackgroundTintList(null);
+        } else {
+            checkAction("facebook", facebookShareBtn);
+            checkFacebookButtonPressed = false;
+            facebookShareBtn.setChecked(false);
+            facebookShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
+        }
+
+
+        if (!checkedTwitterButton) {
+            checkAction("twitter", twitterShareBtn);
+            checkedTwitterButton = true;
+            twitterShareBtn.setChecked(true);
+            twitterShareBtn.setBackgroundTintList(null);
+        }
+        else
+        {
+            checkAction("twitter", twitterShareBtn);
+            checkedTwitterButton = false;
+            twitterShareBtn.setChecked(false);
+            twitterShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
+        }
     }
 
     private void getLastLocation(final boolean firstTime) {
@@ -495,12 +525,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnClick(R.id.share_on_facebook) public void shareOnFacebookAction() {
-        checkAction("facebook", facebookShareBtn);
+
         if (!checkFacebookButtonPressed) {
+            checkAction("facebook", facebookShareBtn);
             checkFacebookButtonPressed = true;
             facebookShareBtn.setChecked(true);
             facebookShareBtn.setBackgroundTintList(null);
         } else {
+            checkAction("facebook", facebookShareBtn);
             checkFacebookButtonPressed = false;
             facebookShareBtn.setChecked(false);
             facebookShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
@@ -508,16 +540,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @OnClick(R.id.share_on_twitter) public void shareOnTwitterAction() {
-        checkAction("twitter", twitterShareBtn);
 
         if (!checkedTwitterButton) {
-
+            checkAction("twitter", twitterShareBtn);
             checkedTwitterButton = true;
             twitterShareBtn.setChecked(true);
             twitterShareBtn.setBackgroundTintList(null);
         }
         else
-            {
+        {
+            checkAction("twitter", twitterShareBtn);
             checkedTwitterButton = false;
             twitterShareBtn.setChecked(false);
             twitterShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
@@ -713,7 +745,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             if (count <= 9)
                 countText = "0" + countText;
             if(check==TaggedFriends)
-            view.setText(countText+" Tagged Friends");
+                view.setText(countText+" Tagged Friends");
             else
                 view.setText(countText+" Tagged Categories");
 
@@ -939,6 +971,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(-1);
         }
+        checkFacebookButtonPressed = false;
+        checkedTwitterButton = false;
     }
 
     @Override

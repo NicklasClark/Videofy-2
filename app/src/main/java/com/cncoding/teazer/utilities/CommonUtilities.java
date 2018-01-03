@@ -43,7 +43,10 @@ public class CommonUtilities {
     public static String encodeUTFUrl(String input)
     {
         try {
-            return URLEncoder.encode(input, "UTF-8");
+            if(input != null)
+                return URLEncoder.encode(input, "UTF-8");
+            else
+                return null;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;

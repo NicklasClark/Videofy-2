@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -160,7 +159,7 @@ public class TagsAndCategoryFragment extends Fragment {
     }
 
     private void getCategories() {
-        categoriesCall = ApiCallingService.Application.getCategories();
+        categoriesCall = ApiCallingService.Application.getCategories(getContext());
 
         if (categoriesCall.isExecuted())
             categoriesCall.cancel();
@@ -309,13 +308,13 @@ public class TagsAndCategoryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] strings) {
-            try {
-                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], null, Integer.parseInt(strings[2]));
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
-                if (e instanceof NumberFormatException)
-                    Log.e("NumberFormatException", "Trying to parse" + strings[2]);
-            }
+//            try {
+//                reference.get().listener.onTagsAndCategoriesInteraction(action, strings[0], strings[1], null, Integer.parseInt(strings[2]));
+//            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+//                e.printStackTrace();
+//                if (e instanceof NumberFormatException)
+//                    Log.e("NumberFormatException", "Trying to parse" + strings[2]);
+//            }
         }
     }
 

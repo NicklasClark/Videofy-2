@@ -75,11 +75,12 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implement
                 .crossFade()
                 .into(holder.image);
 
-        if (selectedTagsArray.size() == 0) {
+//        if (selectedTagsArray.size() == 0) {
             setCheck(holder.nameView, position, circle,
                     selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
-        } else
-            setCheck(holder.nameView, position, circle, selectedTagsArray.get(circle.getUserId()));
+//        } else
+        if (selectedTagsString == null || selectedTagsString.isEmpty())
+            setCheck(holder.nameView, position, circle, selectedTagsArray.get(position));
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override

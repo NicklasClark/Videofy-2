@@ -156,7 +156,7 @@
             android:padding="1dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:layout_marginTop="@dimen/padding_x_thin"
+            android:layout_marginTop="@dimen/padding_4dp"
             android:layout_below="@+id/name"
             android:layout_toEndOf="@+id/dp" />
 

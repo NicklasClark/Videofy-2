@@ -122,7 +122,7 @@ public class LoginFragment extends AuthFragment {
         if(isAlreadyOTP)
         {
             isAlreadyOTP=false;
-            onLoginthroughOTP();
+            onLoginThroughOTP();
         }
     }
 
@@ -316,10 +316,10 @@ public class LoginFragment extends AuthFragment {
     public void onLoginThroughOtpClicked() {
 //            Toggle login through OTP
 
-        onLoginthroughOTP();
+        onLoginThroughOTP();
 
     }
-    public void onLoginthroughOTP()
+    public void onLoginThroughOTP()
     {
         usernameView.setInputType(InputType.TYPE_CLASS_NUMBER);
 
@@ -392,7 +392,7 @@ public class LoginFragment extends AuthFragment {
                     username,
                     passwordView.getText().toString());
             if (isConnected) {
-                ApiCallingService.Auth.loginWithPassword(authorize)
+                ApiCallingService.Auth.loginWithPassword(context, authorize)
                         .enqueue(new Callback<ResultObject>() {
                             @SuppressWarnings("ConstantConditions")
                             @Override

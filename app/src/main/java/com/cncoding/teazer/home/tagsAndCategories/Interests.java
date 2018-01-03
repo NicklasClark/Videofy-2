@@ -155,7 +155,7 @@ public class Interests extends BaseFragment {
     }
 
     private void getCategories() {
-        categoriesCall = ApiCallingService.Application.getCategories();
+        categoriesCall = ApiCallingService.Application.getCategories(getContext());
 
         if (categoriesCall.isExecuted()) categoriesCall.cancel();
 

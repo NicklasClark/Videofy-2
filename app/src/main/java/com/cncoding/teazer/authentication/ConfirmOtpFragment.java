@@ -141,7 +141,7 @@ public class ConfirmOtpFragment extends AuthFragment {
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 if (isConnected) {
-                    ApiCallingService.Auth.performSignUp(userSignUpDetails).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.Auth.performSignUp(getContext(), userSignUpDetails).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {

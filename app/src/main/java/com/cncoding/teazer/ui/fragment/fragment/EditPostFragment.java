@@ -761,20 +761,25 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         addLocationText.setText(selectedPlace.getPlaceName());
     }
 
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend) {
+    public void onTagsAndCategoriesInteraction(String action, final String resultToShow, final String resultToSend) {
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
-                tagFriendsText.setText(resultToShow);
-                selectedTags = resultToShow;
-                if(resultToSend==null)
-                {
-                    selectedTagsToSend="";
-                }
-                else
-                {
-                    selectedTagsToSend = resultToSend;
-                }
-                tagFriendsText.setText(selectedTags);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tagFriendsText.setText(resultToShow);
+                        selectedTags = resultToShow;
+                        if(resultToSend==null)
+                        {
+                            selectedTagsToSend="";
+                        }
+                        else
+                        {
+                            selectedTagsToSend = resultToSend;
+                        }
+                        tagFriendsText.setText(selectedTags);
+                    }
+                });
                 break;
 
             case ACTION_CATEGORIES_FRAGMENT:

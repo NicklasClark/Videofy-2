@@ -11,20 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ChangeCategoriesAdapter;
 import com.cncoding.teazer.adapter.EditPostUpdateCategoriesAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.user.UpdateCategories;
-import com.cncoding.teazer.model.user.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +123,7 @@ public class FragmentEditPostUpdateCtaegories extends Fragment {
         super.onResume();
     }
     public void getCategories() {
-        ApiCallingService.Application.getCategories().enqueue(new Callback<ArrayList<Category>>() {
+        ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {

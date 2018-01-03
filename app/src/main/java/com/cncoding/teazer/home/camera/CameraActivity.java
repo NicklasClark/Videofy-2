@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -416,7 +417,7 @@ public class CameraActivity extends AppCompatActivity
     public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend,
                                                final SparseBooleanArray selectedTagsArray, final int count) {
         fragmentManager.popBackStack();
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
@@ -431,13 +432,13 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onInterestsSelected(final String resultToShow, final String resultToSend, final int count) {
         fragmentManager.popBackStack();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                        resultToShow, resultToSend, null, count);
-            }
-        }, 100);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                            resultToShow, resultToSend, null, count);
+                }
+            }, 100);
     }
 
     @Override

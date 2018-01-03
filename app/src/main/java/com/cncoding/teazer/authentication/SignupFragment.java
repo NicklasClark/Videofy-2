@@ -1,12 +1,10 @@
 package com.cncoding.teazer.authentication;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -16,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -26,13 +23,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Authorize;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
-import com.cncoding.teazer.utilities.GalleryUtil;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 
@@ -42,21 +35,14 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
-import butterknife.OnTouch;
-import jp.wasabeef.blurry.Blurry;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
 import static com.cncoding.teazer.utilities.AuthUtils.togglePasswordVisibility;
-import static com.cncoding.teazer.utilities.ViewUtils.GALLERY_ACTIVITY_CODE;
 import static com.cncoding.teazer.utilities.ViewUtils.RESULT_CROP;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SignupFragment extends AuthFragment {
 
@@ -122,7 +108,7 @@ public class SignupFragment extends AuthFragment {
         if (!isFocused) {
             String username = usernameView.getText().toString();
             if (!username.isEmpty()) {
-                ApiCallingService.Auth.checkUsername(usernameView, true);
+                ApiCallingService.Auth.checkUsername(getContext(), usernameView, true);
             } else {
                 setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
             }

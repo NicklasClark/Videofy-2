@@ -173,18 +173,18 @@ public class AuthUtils {
 //                        countryCodePicker.launchCountrySelectionDialog();
 //                    else
                     if (isValidPhoneNumber(usernameView.getText().toString()))
-                        ApiCallingService.Auth.checkPhoneNumber(getCountryCode(null, activity), usernameView, false);
+                        ApiCallingService.Auth.checkPhoneNumber(activity, getCountryCode(null, activity), usernameView, false);
                     else
                         ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                     break;
                 case EMAIL_FORMAT:
                     if (AuthUtils.isValidEmailAddress(usernameView.getText().toString()))
-                        ApiCallingService.Auth.checkEmail(usernameView, false);
+                        ApiCallingService.Auth.checkEmail(activity, usernameView, false);
                     else
                         ViewUtils.setEditTextDrawableEnd(usernameView, R.drawable.ic_error);
                     break;
                 case USERNAME_FORMAT:
-                    ApiCallingService.Auth.checkUsername(usernameView, false);
+                    ApiCallingService.Auth.checkUsername(activity, usernameView, false);
                     break;
                 default:
                     break;
@@ -198,10 +198,10 @@ public class AuthUtils {
         return view.getText().toString().length() >= 5;
     }
 
-    public static void performInitialSignup(final SignupFragment2.OnFinalSignupInteractionListener mListener,
+    public static void performInitialSignUp(Context context, final SignupFragment2.OnFinalSignupInteractionListener mListener,
                                             final Authorize authorize, final ProximaNovaSemiboldButton signupBtn,
                                             final String picturePath) {
-        ApiCallingService.Auth.performSignUp(authorize).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Auth.performSignUp(context, authorize).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
@@ -228,7 +228,7 @@ public class AuthUtils {
                                           final ProximaNovaRegularTextView otpVerifiedTextView,
                                           final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn,
                                           final String picturePath) {
-        ApiCallingService.Auth.verifySignUp(verify)
+        ApiCallingService.Auth.verifySignUp(context, verify)
 
                 .enqueue(new Callback<ResultObject>() {
                     @Override
@@ -292,7 +292,7 @@ public class AuthUtils {
                                     final ProgressBar progressBar, final ProximaNovaRegularTextView otpVerifiedTextView,
                                     final CountDownTimer[] countDownTimer, final boolean isResendAction) {
         final Authorize authorize = new Authorize(Long.parseLong(username), countryCode);
-        ApiCallingService.Auth.loginWithOtp(authorize).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Auth.loginWithOtp(context, authorize).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
@@ -330,7 +330,7 @@ public class AuthUtils {
     public static void verifyOtpLogin(final Context context, Authorize userSignUpDetails, int otp, final CountDownTimer countDownTimer,
                                       final ProximaNovaRegularTextView otpVerifiedTextView,
                                       final OnOtpInteractionListener mListener, final ProximaNovaSemiboldButton otpResendBtn) {
-        ApiCallingService.Auth.verifyLoginWithOtp(
+        ApiCallingService.Auth.verifyLoginWithOtp(context,
                 new Authorize(
                         getFcmToken(context),
                         getDeviceId(context),
