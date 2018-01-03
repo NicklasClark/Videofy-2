@@ -345,7 +345,7 @@ public class SubDiscoverFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 //        return super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_edit) {
-            getParentActivity().pushFragmentOnto(Interests.newInstance(false, true, categories, null));
+            getParentActivity().pushFragment(Interests.newInstance(false, true, categories, null));
             return true;
         }
         return false;

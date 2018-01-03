@@ -12,6 +12,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -168,7 +169,8 @@ public class Interests extends BaseFragment {
                         totalCategories.clear();
                         totalCategories.addAll(tempList);
                         recyclerView.getAdapter().notifyDataSetChanged();
-                        changeDoneBtnVisibility(VISIBLE);
+                        if(!isEditing)
+                            changeDoneBtnVisibility(VISIBLE);
                     } else {
                         changeDoneBtnVisibility(View.GONE);
                     }
@@ -319,11 +321,6 @@ public class Interests extends BaseFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnInterestsInteractionListener) {
@@ -350,5 +347,60 @@ public class Interests extends BaseFragment {
     public interface OnInterestsInteractionListener {
         void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories);
         void onInterestsSelected(String resultToShow, String resultToSend, int count);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+        if (isEditing) {
+            inflater.inflate(R.menu.menu_edit_interests, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_edit_interests) {
+            selectedInterests = interestsAdapter.getSelectedInterests();
+            final ArrayList<Category> categories = new ArrayList<>();
+            selectedData = getSelectedInterestsToShow(selectedInterests);
+            String resultToSend = getSelectedInterestsToSend(selectedInterests);
+            if (!isForVideo) {
+                ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
+                        .enqueue(new Callback<ResultObject>() {
+                            @Override
+                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                try {
+                                    if (response.code() == 200) {
+                                        Log.i("Updating interests", "Updated successfully");
+                                    } else {
+                                        Log.i("Updating interests", response.code() + " : " + response.message());
+                                    }
+                                    for (int i = 0; i < selectedInterests.size(); i++) {
+                                        categories.add(selectedInterests.valueAt(i));
+                                    }
+                                    mListener.onInterestsInteraction(isEditing, categories);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResultObject> call, Throwable t) {
+                                t.printStackTrace();
+                            }
+                        });
+            }
+            else {
+                SparseBooleanArray selectedCategoriesArray = new SparseBooleanArray();
+                for (int i = 0; i < selectedInterests.size(); i++) {
+                    selectedCategoriesArray.put(selectedInterests.keyAt(i), true);
+                }
+                mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
+            }
+            return true;
+        }
+        return false;
     }
 }

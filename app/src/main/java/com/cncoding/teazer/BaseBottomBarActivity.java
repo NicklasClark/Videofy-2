@@ -352,6 +352,7 @@ public class BaseBottomBarActivity extends BaseActivity
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
+        switchTab(0);
     }
 
     private void shareTwitter(String message) {
@@ -707,7 +708,15 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     public String getToolbarTitle() {
-        return toolbarPlainTitle.getText().toString();
+        try {
+            if(toolbarPlainTitle != null)
+                return toolbarPlainTitle.getText().toString();
+            else
+                return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override

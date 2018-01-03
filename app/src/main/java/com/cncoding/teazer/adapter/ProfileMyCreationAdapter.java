@@ -52,9 +52,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
 
 
-    final String pic = "https://aff.bstatic.com/images/hotel/840x460/304/30427979.jpg";
-
-
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
         this.context = context;
         this.list = list;
@@ -250,7 +247,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                         Toast.makeText(context, "Video has been deleted", Toast.LENGTH_SHORT).show();
 
                     } else {
-                        Toast.makeText(context, "Some issue hass been occured please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Some issue has been occurred please try again", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -351,7 +348,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                             }
                         }
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
 
 

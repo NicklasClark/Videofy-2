@@ -34,8 +34,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.home.post.PostsListFragment.postDetails;
-
 /**
  * 
  * Created by farazhabib on 11/11/17.
@@ -45,7 +43,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
     private List<PostDetails> _list;
     Context context;
-    private ArrayList<PostReaction> reactiolist;
+    private ArrayList<PostReaction> reactionList;
     FollowerCreationListener listener;
     Activity othersProfileFragment;
 
@@ -69,14 +67,14 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
         try {
 
-            final PostDetails cont = _list.get(i);
-            final String videotitle = cont.getTitle();
-            final int postId = cont.getPostId();
-            final String videourl = cont.getMedias().get(0).getMediaUrl();
-            String postUser=cont.getPostOwner().getUserName();
-            boolean hasProfilemedia=cont.getPostOwner().hasProfileMedia();
-            if(hasProfilemedia) {
-                String userDp = cont.getPostOwner().getProfileMedia().getMediaUrl();
+            final PostDetails postDetails = _list.get(i);
+            final String videoTitle = postDetails.getTitle();
+            final int postId = postDetails.getPostId();
+            final String videoUrl = postDetails.getMedias().get(0).getMediaUrl();
+            String postUser = postDetails.getPostOwner().getUserName();
+            boolean hasProfileMedia = postDetails.getPostOwner().hasProfileMedia();
+            if(hasProfileMedia) {
+                String userDp = postDetails.getPostOwner().getProfileMedia().getMediaUrl();
                 if (userDp!=null)
                 {
                     Glide.with(context).load(userDp)
@@ -89,18 +87,15 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                         .into(viewHolder.userReactionImage);
             }
 
-
-
-            final int videopostId = cont.getPostId();
-            final String thumb_url = cont.getMedias().get(0).getThumbUrl();
-            Log.d("Video UrL",videourl);
-            final String duration = cont.getMedias().get(0).getDuration();
-            final Integer  txtview = cont.getMedias().get(0).getViews();
-            final boolean hasCheckIn = cont.hasCheckin();
-            final Integer likes = cont.getLikes();
+            final String thumb_url = postDetails.getMedias().get(0).getThumbUrl();
+            Log.d("Video UrL",videoUrl);
+            final String duration = postDetails.getMedias().get(0).getDuration();
+            final Integer  txtview = postDetails.getMedias().get(0).getViews();
+            final boolean hasCheckIn = postDetails.hasCheckin();
+            final Integer likes = postDetails.getLikes();
             if(hasCheckIn)
             {
-                final String location=cont.getCheckIn().getLocation();
+                final String location=postDetails.getCheckIn().getLocation();
                 viewHolder.location.setText(location);
             }
             else
@@ -112,7 +107,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     .into(viewHolder.thumbimage);
 
             viewHolder.location.setText(postUser);
-            viewHolder.videoTitle.setText(videotitle);
+            viewHolder.videoTitle.setText(videoTitle);
             viewHolder.duration.setText(duration);
             viewHolder.totalLikes.setText(String.valueOf(likes));
             viewHolder.txtview.setText(String.valueOf(txtview));
@@ -122,7 +117,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
                 @Override
                 public void onClick(View view) {
-                    listener.myCreationVideos(2, cont);
+                    listener.myCreationVideos(2, postDetails);
 
                 }
             });
@@ -140,7 +135,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                 case R.id.action_delete:
                                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
                                     ReportPostDialogFragment reportPostDialogFragment = ReportPostDialogFragment.
-                                            newInstance(cont.getPostId(), cont.canReact(), postDetails.getPostOwner().getUserName());
+                                            newInstance(postDetails.getPostId(), postDetails.canReact(), postDetails.getPostOwner().getUserName());
                                     if (fm != null) {
                                         reportPostDialogFragment.show(fm, "fragment_report_post");
                                     }
@@ -211,16 +206,16 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 if (response.code() == 200) {
 
                     try {
-                        reactiolist = response.body().getReactions();
-                        for(int i=0;i<reactiolist.size();i++) {
-                         Integer totalviews = reactiolist.get(i).getViews();
+                        reactionList = response.body().getReactions();
+                        for(int i = 0; i< reactionList.size(); i++) {
+                         Integer totalviews = reactionList.get(i).getViews();
                          viewHolder.txtview.setText(String.valueOf(totalviews));
                      }
-                        if (reactiolist.size() > 1) {
+                        if (reactionList.size() > 1) {
                             // int counter=reactions-3;
                             //  viewHolder.reactions.setText("+" + String.valueOf(counter) + " R");
                             for (int i = 0; i < 1; i++) {
-                                MiniProfile miniProfile = reactiolist.get(i).getReactOwner();
+                                MiniProfile miniProfile = reactionList.get(i).getReactOwner();
                                 if (miniProfile.hasProfileMedia()) {
                                     String profileurl = miniProfile.getProfileMedia().getThumbUrl();
                                     switch (i) {

@@ -536,7 +536,7 @@ public class OthersProfileFragment extends BaseFragment {
                         e.printStackTrace();
                         blur_bacground.setVisibility(View.GONE);
                         loader.setVisibility(View.GONE);
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -545,7 +545,7 @@ public class OthersProfileFragment extends BaseFragment {
             public void onFailure(Call<ProfileInfo> call, Throwable t) {
                 blur_bacground.setVisibility(View.GONE);
                 loader.setVisibility(View.GONE);
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -622,7 +622,6 @@ public class OthersProfileFragment extends BaseFragment {
      //   FragmentManager f = getActivity().getSupportFragmentManager();
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
-        Log.d("getProfileVideos", "hello");
 
         ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<PostList>() {
             @Override
@@ -654,7 +653,7 @@ public class OthersProfileFragment extends BaseFragment {
                         loader.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
                         blur_bacground.setVisibility(View.GONE);
                         loader.setVisibility(View.GONE);
                     }
@@ -699,14 +698,14 @@ public class OthersProfileFragment extends BaseFragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                         loader.setVisibility(View.GONE);
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
             }
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 loader.setVisibility(View.GONE);
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -734,14 +733,14 @@ public class OthersProfileFragment extends BaseFragment {
                     } catch (Exception e) {
                         loader.setVisibility(View.GONE);
                         e.printStackTrace();
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 loader.setVisibility(View.GONE);
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -816,21 +815,21 @@ public class OthersProfileFragment extends BaseFragment {
                         loader.setVisibility(View.GONE);
 
                         e.printStackTrace();
-                        Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
                 loader.setVisibility(View.GONE);
             }
         });
     }
 
 
-    public void openBlockUser(final int blockuserId) {
+    public void openBlockUser(final int blockUserId) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("Confirm Block...");
         alertDialog.setMessage("Are you sure you want to block this user");
@@ -839,7 +838,7 @@ public class OthersProfileFragment extends BaseFragment {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                blockunBlock(blockuserId, BLOCK_STATUS);
+                blockunBlock(blockUserId, BLOCK_STATUS);
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -876,9 +875,9 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
 
-    public void openReportUser(final int blockuserId) {
+    public void openReportUser(final int blockUserId) {
         FragmentManager fm = getFragmentManager();
-        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockuserId, username);
+        ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockUserId, username);
         reportUserDialogFragment.setTargetFragment(OthersProfileFragment.this, 301);
         reportUserDialogFragment.show(fm, "fragment_report_post");
     }

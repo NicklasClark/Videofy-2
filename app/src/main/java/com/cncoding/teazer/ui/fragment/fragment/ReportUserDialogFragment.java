@@ -162,7 +162,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
 
     private void showReportUserAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getContext().getString(R.string.repot_post_dialog_title));
+        builder.setTitle(getContext().getString(R.string.report_user_dialog_title));
         builder.setMessage(getContext().getString(R.string.report_post_dialog_message));
 
         String positiveText = getContext().getString(android.R.string.ok);

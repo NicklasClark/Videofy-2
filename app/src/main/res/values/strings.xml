@@ -224,7 +224,7 @@
     <string name="requested">&#160;Requested</string>
     <string name="no_users_tagged_yet">No users tagged yet</string>
     <string name="no_posts_available">No posts available</string>
-    <string name="all_caught_up">All caught up!</string>
+    <string name="all_caught_up">No notification to show!</string>
     <string name="location_rationale">Teazer need to access your location</string>
     <string name="most_popular">Most Popular</string>
     <string name="my_interests">My Interests</string>
@@ -308,7 +308,7 @@
     <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
     <string name="send_to">Share</string>
     <string name="report_extra_remark_hint">Remarks(optional)</string>
-    <string name="repot_post_dialog_title">Report User</string>
+    <string name="report_post_dialog_title">Report Post</string>
     <string name="report_post_dialog_message">Are you sure you want to report this video</string>
     <string name="report_btn_text">Report</string>
     <string name="reaction_not_found">Reaction might be deleted by user</string>
@@ -327,4 +327,5 @@
     <string name="loader">Loader</string>
     <string name="failed">Failed, try again</string>
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
+    <string name="report_user_dialog_title">Report User</string>
 </resources>

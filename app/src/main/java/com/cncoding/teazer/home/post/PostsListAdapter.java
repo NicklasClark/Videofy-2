@@ -167,6 +167,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
             Glide.with(context)
                     .load(postDetails.getMedias().get(0).getThumbUrl())
+                    .fitCenter()
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

@@ -153,7 +153,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void reportPostServiceCall(String reportRemark) {
 
-        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId, reportRemark), getContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId, reportRemark.equals("")? null:reportRemark), getContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
@@ -161,6 +161,8 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
                     postReportOptionSelected = false;
                     ReportPostDialogFragment.this.dismiss();
                 }
+                else
+                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -174,7 +176,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void showReportPostAlertDialog(final String reportRemark) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getContext().getString(R.string.repot_post_dialog_title));
+        builder.setTitle(getContext().getString(R.string.report_post_dialog_title));
         builder.setMessage(getContext().getString(R.string.report_post_dialog_message));
         String positiveText = getContext().getString(android.R.string.ok);
         builder.setPositiveButton(positiveText,

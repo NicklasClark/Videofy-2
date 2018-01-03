@@ -435,8 +435,12 @@ public class CameraActivity extends AppCompatActivity
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                            resultToShow, resultToSend, null, count);
+                    try {
+                        uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
+                                resultToShow, resultToSend, null, count);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }, 100);
     }

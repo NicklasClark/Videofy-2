@@ -343,31 +343,20 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (isRequestingLocationUpdates)
             startLocationUpdates();
 
-        if (!checkFacebookButtonPressed) {
-            checkAction("facebook", facebookShareBtn);
-            checkFacebookButtonPressed = true;
+        if (checkFacebookButtonPressed) {
+//            checkAction("facebook", facebookShareBtn);
+            facebookShareBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook,
+                    0, R.drawable.btn_checked, 0);
             facebookShareBtn.setChecked(true);
             facebookShareBtn.setBackgroundTintList(null);
-        } else {
-            checkAction("facebook", facebookShareBtn);
-            checkFacebookButtonPressed = false;
-            facebookShareBtn.setChecked(false);
-            facebookShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
         }
 
 
-        if (!checkedTwitterButton) {
-            checkAction("twitter", twitterShareBtn);
-            checkedTwitterButton = true;
+        if (checkedTwitterButton) {
+            twitterShareBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_twitter,
+                    0, R.drawable.btn_checked, 0);
             twitterShareBtn.setChecked(true);
             twitterShareBtn.setBackgroundTintList(null);
-        }
-        else
-        {
-            checkAction("twitter", twitterShareBtn);
-            checkedTwitterButton = false;
-            twitterShareBtn.setChecked(false);
-            twitterShareBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDisabled)));
         }
     }
 

@@ -15,6 +15,7 @@
 
     <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/interests_header_1"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingStart="14dp"
@@ -36,6 +37,7 @@
 
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
         android:id="@+id/save_interests_btn"
+        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="50dp"
         android:padding="@dimen/padding_default"

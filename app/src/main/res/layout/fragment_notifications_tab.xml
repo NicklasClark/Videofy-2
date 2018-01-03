@@ -12,17 +12,30 @@
         android:visibility="gone"
         android:layout_centerInParent="true"/>
 
-    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+    <!--<com.cncoding.teazer.customViews.ProximaNovaBoldTextView-->
+        <!--android:id="@+id/no_notifications"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:textAllCaps="true"-->
+        <!--app:drawableTopCompat="@drawable/ic_happy"-->
+        <!--android:textSize="@dimen/text_size_h5"-->
+        <!--android:text="@string/all_caught_up"-->
+        <!--android:visibility="invisible"/>-->
+
+
+    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
         android:id="@+id/no_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginBottom="@dimen/action_bar_height"
         android:layout_centerInParent="true"
-        android:textAllCaps="true"
-        app:drawableTopCompat="@drawable/ic_happy"
-        android:textSize="@dimen/text_size_h5"
-        android:text="@string/all_caught_up"
-        android:visibility="invisible"/>
+        android:textColor="@color/colorPrimary_text3"
+        android:textSize="@dimen/text_size_h6"
+        android:visibility="invisible"
+        android:text="@string/all_caught_up"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
