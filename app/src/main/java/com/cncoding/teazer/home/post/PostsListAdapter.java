@@ -279,6 +279,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails);
+        void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink,String getTumbUrl,String reactId);
     }
 
     private void fetchPostDetails(int postId, final int adapterPosition) {
@@ -290,9 +291,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                             if (response.body() != null) {
                                 PostsListFragment.positionToUpdate = adapterPosition;
                                 PostsListFragment.postDetails = response.body();
-                                PostDetailsActivity.newInstance(context, response.body(), null, true,
-                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
+//                                 PostDetailsActivity.newInstance(context, response.body(), null, true,
+//                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
 //                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+
+                                listener.postDetails(response.body(), null, true,
+                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }

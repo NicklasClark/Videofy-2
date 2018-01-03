@@ -13,6 +13,7 @@ import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LandingPosts;
+import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.post.PostReactionsList;
@@ -409,6 +410,11 @@ import retrofit2.http.Query;
          */
         @GET("/api/v1/friend/application/users")
         Call<UsersList> getUsersListToFollowWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+        @GET("/api/v1/post/liked/users/{post_id}/{page}")
+        Call<LikedUserPost>getLikedUsers(@Path("post_id") int postId, @Path("page") int page);
+
+
     }
 
     /**

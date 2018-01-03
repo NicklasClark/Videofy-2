@@ -93,9 +93,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             case TYPE_FOLLOWING:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_following, parent, false);
                 return new FollowingViewHolder(view);
+
             case TYPE_REQUESTS:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifications_request, parent, false);
                 return new RequestsViewHolder(view);
+
             default:
                 return null;
         }
@@ -181,6 +183,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
                                     holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
                                     holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
+
                                 ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                         .enqueue(new Callback<PostDetails>() {
 

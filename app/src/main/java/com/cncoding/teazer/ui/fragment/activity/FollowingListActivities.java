@@ -92,6 +92,7 @@ public class FollowingListActivities extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if(next) {
+
                     if (identifier.equals("User")) {
                         if(page>2) {
                             loader.setVisibility(View.VISIBLE);
@@ -132,7 +133,6 @@ public class FollowingListActivities extends BaseFragment {
         else if (identifier.equals("Other"))
         {
             layout.setVisibility(View.GONE);
-            otherfollowingpage=1;
             profileMyFollowingAdapter = new FollowingAdapter(context, otherlist);
             recyclerView.setAdapter(profileMyFollowingAdapter);
             loader.setVisibility(View.VISIBLE);
@@ -147,6 +147,7 @@ public class FollowingListActivities extends BaseFragment {
 
                     try {
                         list.addAll(response.body().getFollowings());
+
                         if ((list==null||list.size()==0) && userfollowingpage == 1) {
 
                             layout.setVisibility(View.VISIBLE);

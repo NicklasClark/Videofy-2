@@ -1,9 +1,13 @@
 package com.cncoding.teazer.utilities;
 
 import android.content.Context;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.post.FragmentPostDetails;
 import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
@@ -84,10 +88,12 @@ public class CommonWebServicesUtil {
                     public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                         if (response.code() == 200) {
                             if (response.body() != null) {
-                                PostDetailsActivity.newInstance(context, response.body(), null, true,
-                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
+                                ((BaseBottomBarActivity)context).pushFragment(
+                                FragmentPostDetails.newInstance(response.body(), null, true,
+                                        true, response.body().getMedias().get(0).getThumbUrl(), null));
+
                                 PostsListFragment.postDetails = response.body();
-//                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+ //                               listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }

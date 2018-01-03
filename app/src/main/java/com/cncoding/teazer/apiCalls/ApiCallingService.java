@@ -17,6 +17,8 @@ import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
 import com.cncoding.teazer.model.post.LandingPosts;
+import com.cncoding.teazer.model.post.LikedUser;
+import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.model.post.PostReactionsList;
@@ -69,7 +71,7 @@ public class ApiCallingService {
 
 
     static final String BASE_URL = "http://dev.teazer.online/";
-//    static final String BASE_URL = "https://api.teazer.online/";
+    //static final String BASE_URL = "https://api.teazer.online/";
 
     public static final int SUCCESS_OK_TRUE = 1;
     public static final int SUCCESS_OK_FALSE = 2;
@@ -396,6 +398,10 @@ public class ApiCallingService {
          */
         public static Call<ResultObject> blockUnblockUser(int userId, int status, Context context){
             return getFriendsService(context).blockUnblockUser(userId, status);
+
+        }
+        public static Call<LikedUserPost> getLikedUsers(int postId, int page, Context context){
+            return getFriendsService(context).getLikedUsers(postId, page);
         }
 
         /**

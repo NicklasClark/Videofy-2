@@ -98,18 +98,18 @@ public class FollowersListActivity extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (next) {
-
-                    if (identifier.equals("Other"))
+                    if (identifier.equals("Other")) {
                         if (page > 2) {
                             loader.setVisibility(View.VISIBLE);
                         }
-                    getOthersFollowerDetails(Integer.parseInt(followerid), page);
-                } else {
-                    if (page > 2) {
-                        loader.setVisibility(View.VISIBLE);
-                    }
-                    getUserfollowerList(page);
+                        getOthersFollowerDetails(Integer.parseInt(followerid), page);
+                    } else {
+                        if (page > 2) {
+                            loader.setVisibility(View.VISIBLE);
+                        }
+                        getUserfollowerList(page);
 
+                    }
                 }
 
             }
@@ -124,14 +124,13 @@ public class FollowersListActivity extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
         userfollowerlist = new ArrayList<>();
-
         if (identifier.equals("Other")) {
-
             profileMyFollowerAdapter = new FollowersAdapter(context, list);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);
             getOthersFollowerDetails(Integer.parseInt(followerid), 1);
-        } else if (identifier.equals("User")) {
+        }
+        else if (identifier.equals("User")) {
             profileMyFollowerAdapter = new FollowersAdapter(context, userfollowerlist, USERS_FOLLOWER);
             recyclerView.setAdapter(profileMyFollowerAdapter);
             loader.setVisibility(View.VISIBLE);
@@ -152,7 +151,9 @@ public class FollowersListActivity extends BaseFragment {
             public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
                 if (response.code() == 200) {
                     try {
+
                         userfollowerlist.addAll(response.body().getUserInfos());
+
                         if ((userfollowerlist == null || userfollowerlist.size() == 0) && page == 1) {
                             layout.setVisibility(View.VISIBLE);
                             nousertext.setVisibility(View.VISIBLE);
@@ -190,6 +191,8 @@ public class FollowersListActivity extends BaseFragment {
     }
 
     public void getOthersFollowerDetails(int followerid, int page) {
+
+
         ApiCallingService.Friends.getFriendsFollowers(page, followerid, context).enqueue(new Callback<FollowersList>() {
             @Override
             public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
@@ -205,6 +208,7 @@ public class FollowersListActivity extends BaseFragment {
                         } else {
 
                             next = response.body().getNextPage();
+                           // Toast.makeText(context,requestPermissions();,Toast.LENGTH_SHORT).show();
                             profileMyFollowerAdapter.notifyDataSetChanged();
                             profileMyFollowerAdapter.notifyItemRangeInserted(profileMyFollowerAdapter.getItemCount(), userfollowerlist.size() - 1);
                             layout.setVisibility(View.VISIBLE);

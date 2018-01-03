@@ -103,8 +103,6 @@ public class FragmentProfileMyCreations extends Fragment {
         };
 
         recyclerView.addOnScrollListener(scrollListener);
-
-
     }
 
     public void getProfileVideos(final int page) {
