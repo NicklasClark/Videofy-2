@@ -87,10 +87,11 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
 
             holder.category.setVisibility(holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0 ?
                     View.VISIBLE : View.GONE);
-            if (holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0)
+            if (holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0) {
                 holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
-            holder.category.setBackground(
-                    getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
+                holder.category.setBackground(
+                        getBackground(holder.category, position, Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
+            }
 
             String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
             holder.name.setText(name);
