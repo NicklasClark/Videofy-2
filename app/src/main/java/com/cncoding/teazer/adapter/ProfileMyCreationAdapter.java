@@ -36,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
  * Created by farazhabib on 09/11/17.
@@ -125,7 +125,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 getPostReactionThree(viewHolder, postId, reactions);
             }
 
-            viewHolder.videoTitle.setText(decodeUTFUrl(videoTitle));
+            viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
             viewHolder.txtlikes.setText(likes);
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
@@ -216,7 +216,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         public ViewHolder(View view) {
             super(view);
-            videoTitle = view.findViewById(R.id.videodetails);
+            videoTitle = view.findViewById(R.id.video_details);
             duration = view.findViewById(R.id.duration);
             txtlikes = view.findViewById(R.id.txtlikes);
             txtview = view.findViewById(R.id.txtview);

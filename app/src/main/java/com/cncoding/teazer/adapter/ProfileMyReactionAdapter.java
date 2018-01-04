@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
@@ -69,7 +69,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         if (videoTitle.equals("") || videoTitle == null) {
             viewHolder.videoTitle.setText("No Title");
         } else {
-            viewHolder.videoTitle.setText(decodeUTFUrl(videoTitle));
+            viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
         }
         viewHolder.post_owner.setText(postOwner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
@@ -173,7 +173,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         public ViewHolder(View view) {
             super(view);
 
-            videoTitle = view.findViewById(R.id.videodetails);
+            videoTitle = view.findViewById(R.id.video_details);
             videoviewContainer = view.findViewById(R.id.flContainer);
             thumbimage = view.findViewById(R.id.demoimage);
             playvideo = view.findViewById(R.id.playvideo);

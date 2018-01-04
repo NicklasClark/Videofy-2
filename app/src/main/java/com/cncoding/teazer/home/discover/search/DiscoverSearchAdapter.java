@@ -38,7 +38,7 @@ import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOW;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOWING;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_REQUESTED;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_UNBLOCK;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
@@ -100,7 +100,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case TYPE_VIDEOS:
                 final VideosViewHolder holder1 = (VideosViewHolder) viewHolder;
                 holder1.video = videosList.get(position);
-                holder1.content.setText(decodeUTFUrl(holder1.video.getTitle()));
+                holder1.content.setText(decodeUnicodeString(holder1.video.getTitle()));
 
                 Glide.with(baseFragment.getContext())
                         .load(holder1.video.getPostVideoInfo() != null ? holder1.video.getPostVideoInfo().get(0).getThumbUrl() :
@@ -121,7 +121,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final PeopleViewHolder holder2 = (PeopleViewHolder) viewHolder;
                 holder2.user = usersList.get(position);
 
-                holder2.username.setText(decodeUTFUrl(holder2.user.getUserName()));
+                holder2.username.setText(decodeUnicodeString(holder2.user.getUserName()));
                 String name = holder2.user.getFirstName() + BLANK_SPACE + holder2.user.getLastName();
                 holder2.name.setText(name);
 

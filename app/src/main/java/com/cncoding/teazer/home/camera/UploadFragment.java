@@ -96,7 +96,7 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN
 import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.utilities.CommonUtilities.encodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.encodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_GALLERY;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
@@ -596,7 +596,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (validateFields()) {
             toggleInteraction(false);
             String title = videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString();
-            title = encodeUTFUrl(title);
+            title = encodeUnicodeString(title);
             String location = null;
             double latitude = 0;
             double longitude = 0;

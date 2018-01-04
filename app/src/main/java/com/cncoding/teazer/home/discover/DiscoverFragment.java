@@ -112,8 +112,8 @@ public class DiscoverFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         loadPosts();
-        nestedScrollView.scrollTo(0,0);
-        nestedScrollView.fullScroll(View.FOCUS_UP);
+        featuredVideosList.setFocusable(false);
+        nestedScrollView.requestFocus();
     }
 
     private void initMembersIfEmpty() {
@@ -178,8 +178,8 @@ public class DiscoverFragment extends BaseFragment {
         if (!isLandingPostListsNull())
             getDiscoverLandingPosts();
 
-        if (featuredPostsList != null && is_next_page)
-            getFeaturedPosts(page);
+//        if (featuredPostsList != null && is_next_page)
+//            getFeaturedPosts(page);
     }
 
     private boolean isLandingPostListsNull() {

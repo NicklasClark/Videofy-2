@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_edit_interests"
-        android:title=""
-        android:icon="@drawable/ic_check_dark"
+        android:title="Done"
         app:showAsAction="always"/>
 </menu>

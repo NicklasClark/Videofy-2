@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
@@ -83,7 +83,7 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
                 holder.layout.getLayoutParams().height = dimensionSparseArray.get(position).getHeight();
             }
 
-            holder.title.setText(decodeUTFUrl(holder.postDetails.getTitle()));
+            holder.title.setText(decodeUnicodeString(holder.postDetails.getTitle()));
 
             holder.category.setVisibility(holder.postDetails.getCategories() != null && holder.postDetails.getCategories().size() > 0 ?
                     View.VISIBLE : View.GONE);

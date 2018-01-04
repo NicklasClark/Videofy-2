@@ -41,9 +41,9 @@
         android:layout_weight="1">
 
         <RelativeLayout
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:animateLayoutChanges="true">
 
             <LinearLayout
@@ -108,6 +108,7 @@
                         android:visibility="gone"/>
 
                     <android.support.v7.widget.RecyclerView
+                        android:nestedScrollingEnabled="false"
                         android:id="@+id/most_popular_list"
                         android:layout_below="@+id/most_popular_layout"
                         android:layout_marginBottom="20dp"
@@ -186,6 +187,7 @@
                         android:visibility="gone"/>
 
                     <android.support.v7.widget.RecyclerView
+                        android:nestedScrollingEnabled="false"
                         android:id="@+id/trending_list"
                         android:layout_below="@+id/trending"
                         android:layout_marginBottom="0dp"

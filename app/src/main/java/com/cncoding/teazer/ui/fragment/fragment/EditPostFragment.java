@@ -70,9 +70,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +98,8 @@ import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.NEAR
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.CommonUtilities.encodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 /**
@@ -254,7 +253,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
         createLocationCallback();
         createLocationRequest();
 
-        videoTitle.setText(decodeUTFUrl(postDetails.getTitle()));
+        videoTitle.setText(decodeUnicodeString(postDetails.getTitle()));
         if (postDetails.getMedias().get(0).getThumbUrl() != null) {
             Glide.with(context)
                     .load(postDetails.getMedias().get(0).getThumbUrl())
@@ -321,11 +320,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                 }
                 boolean valid=true;
                 String title = videoTitle.getText().toString();
-                try {
-                    title = URLEncoder.encode(title, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                title = encodeUnicodeString(title);
                 int postId = postDetails.getPostId();
 
                 if (title==null|| title.equals("")||title.isEmpty()) {

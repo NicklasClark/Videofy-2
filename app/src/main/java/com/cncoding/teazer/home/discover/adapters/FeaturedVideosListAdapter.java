@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
@@ -85,7 +85,7 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         }
 
         /*Setting title*/
-        holder.title.setText(decodeUTFUrl(holder.postDetails.getTitle()));
+        holder.title.setText(decodeUnicodeString(holder.postDetails.getTitle()));
 
         /*Setting category*/
         if (holder.postDetails.getCategories() != null) {

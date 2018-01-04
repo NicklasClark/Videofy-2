@@ -68,7 +68,7 @@
                 android:id="@+id/video_upload_title"
                 android:hint="@string/react_title"
                 android:background="@drawable/bg_search"
-                android:maxLength="30"
+                android:maxLength="100"
                 android:maxLines="1"
                 android:lines="1"
                 android:singleLine="true"

@@ -82,6 +82,22 @@
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
     </style>
+    <style name="BaseActivityThemeFullScreen" parent="AppTheme.FullScreen">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryStatus</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@color/colorPrimary_text</item>
+        <item name="android:actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
+        <item name="android:actionMenuTextAppearance">@style/AppTheme.Widget.ActionButton</item>
+        <!--<item name="android:textColor">@color/colorPrimary_text</item>-->
+        <!--<item name="android:textColorPrimary">@color/colorPrimary_text</item>-->
+        <item name="android:textColorSecondary">@color/colorSecondary_text</item>
+        <item name="android:textColorHint">@color/colorSecondary_text</item>
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--<item name="android:navigationBarColor">@color/colorPrimary</item>-->
+    </style>
 
     <style name="BaseActivityTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
@@ -593,6 +609,7 @@
               Android versions.-->
         <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:paddingEnd">8dp</item>
         <!-- android:textColorSecondary is the color of the menu
              overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>

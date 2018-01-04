@@ -3,13 +3,12 @@ package com.cncoding.teazer.utilities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * Created by amit on 22/11/17.
@@ -31,23 +30,23 @@ public class CommonUtilities {
         }
     }
 
-    public static String decodeUTFUrl(String input)
+    public static String decodeUnicodeString(String input)
     {
         try {
-            return URLDecoder.decode(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+            return StringEscapeUtils.unescapeJava(input);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public static String encodeUTFUrl(String input)
+    public static String encodeUnicodeString(String input)
     {
         try {
             if(input != null)
-                return URLEncoder.encode(input, "UTF-8");
+                return StringEscapeUtils.escapeJava(input);
             else
                 return null;
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

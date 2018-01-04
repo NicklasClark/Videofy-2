@@ -1,9 +1,5 @@
 package com.cncoding.teazer.home.post;
 
-import android.support.v4.app.Fragment;
-
-import butterknife.BindView;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,8 +30,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +46,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.LikedUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
@@ -100,10 +92,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -143,6 +133,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CO
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
@@ -328,7 +319,7 @@ public class FragmentPostDetails extends BaseFragment {
 
         logTheDensity();
 
-        //        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+//                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
 //                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
 //                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
@@ -424,6 +415,8 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         Bundle bundle = getArguments();
         context = getContext();
 
@@ -497,12 +490,7 @@ public class FragmentPostDetails extends BaseFragment {
     private void prepareController() {
         if (postDetails != null) {
             String title = postDetails.getTitle();
-            try {
-                title = URLDecoder.decode(title, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            caption.setText(title);
+            caption.setText(decodeUnicodeString(title));
             locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
             locationView.setText(locationView.getVisibility() == VISIBLE ?
                     (postDetails.hasCheckin() ? SPACE + postDetails.getCheckIn().getLocation() : "") : "");

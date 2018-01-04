@@ -37,7 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUTFUrl;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.initializeShimmer;
@@ -97,7 +97,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             }
 
             String title = postDetails.getTitle();
-            holder.caption.setText(decodeUTFUrl(title));
+            holder.caption.setText(decodeUnicodeString(title));
             holder.caption.setVisibility(View.VISIBLE);
 
             if (postDetails.getCategories() != null) {
@@ -167,7 +167,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
             Glide.with(context)
                     .load(postDetails.getMedias().get(0).getThumbUrl())
-                    .fitCenter()
+                    .centerCrop()
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

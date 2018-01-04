@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
-                app:counterMaxLength="180"
+                app:counterMaxLength="100"
                 android:textColor="#999999"
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="14dp"
@@ -86,7 +86,7 @@
                     style="@style/AppTheme.FullScreen.EditText"
                     android:id="@+id/video_upload_title"
                     android:hint="@string/react_title"
-                    android:maxLength="180"
+                    android:maxLength="100"
                     android:inputType="textCapSentences"
                     android:backgroundTint="#dddddd"
                     android:imeOptions="actionDone"/>

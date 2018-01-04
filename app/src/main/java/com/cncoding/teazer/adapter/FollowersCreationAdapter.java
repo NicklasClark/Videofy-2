@@ -34,6 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+
 /**
  * 
  * Created by farazhabib on 11/11/17.
@@ -107,7 +109,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     .into(viewHolder.thumbimage);
 
             viewHolder.location.setText(postUser);
-            viewHolder.videoTitle.setText(videoTitle);
+            viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
             viewHolder.duration.setText(duration);
             viewHolder.totalLikes.setText(String.valueOf(likes));
             viewHolder.txtview.setText(String.valueOf(txtview));
@@ -179,8 +181,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         CircularAppCompatImageView menu;
         public ViewHolder(View view) {
             super(view);
-            videoTitle = view.findViewById(R.id.videodetails);
-            address = view.findViewById(R.id.videodetails);
+            videoTitle = view.findViewById(R.id.video_details);
+            address = view.findViewById(R.id.video_details);
             videoviewContainer = view.findViewById(R.id.flContainer);
             thumbimage = view.findViewById(R.id.demoimage);
             duration = view.findViewById(R.id.duration);

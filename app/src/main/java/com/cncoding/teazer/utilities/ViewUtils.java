@@ -415,7 +415,7 @@ public class ViewUtils {
     public static void prepareLayout(ViewGroup layout, ViewGroup shimmerLayout, ViewGroup topLayout,
                                      ViewGroup bottomLayout, ViewGroup vignetteLayout, int width, int height) {
         try {
-            layout.setBackgroundResource(height < width ? R.color.black : R.color.material_grey200);
+            layout.setBackgroundResource(height < width ? R.color.material_grey200 : R.color.material_grey200);
             shimmerLayout.setVisibility(View.INVISIBLE);
             topLayout.setVisibility(View.VISIBLE);
             bottomLayout.setVisibility(View.VISIBLE);
