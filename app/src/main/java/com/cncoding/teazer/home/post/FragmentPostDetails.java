@@ -286,6 +286,9 @@ public class FragmentPostDetails extends BaseFragment {
     private String thumbUrl;
     private String reactId;
     private static boolean isReactionPlayed = false;
+    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
+
+    TaggedUsersList taggedList;
 
 
     public FragmentPostDetails() {
@@ -301,7 +304,6 @@ public class FragmentPostDetails extends BaseFragment {
         if (!isDeepLink) {
             bundle.putByteArray(ARG_THUMBNAIL, image);
         } else {
-
             FragmentPostDetails.isDeepLink = true;
             bundle.putString(ARG_THUMBNAIL, thumbUrl);
             bundle.putString(ARG_REACT_ID, react_id);
@@ -309,23 +311,21 @@ public class FragmentPostDetails extends BaseFragment {
         bundle.putBoolean(ARG_IS_COMING_FROM_HOME_PAGE, isComingFromHomePage);
         fragmentPostDetails.setArguments(bundle);
         return fragmentPostDetails;
-
-
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        logTheDensity();
+       logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+//                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
 //                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
+//                       // View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
 //                        View.SYSTEM_UI_FLAG_FULLSCREEN |                                            // hide status bar
-//                        View.SYSTEM_UI_FLAG_IMMERSIVE);
+//                       View.SYSTEM_UI_FLAG_IMMERSIVE
+//                );
 
         //   getActivity().setContentView(R.layout.activity_post_details);
         //   ButterKnife.bind(getActivity());
@@ -339,6 +339,7 @@ public class FragmentPostDetails extends BaseFragment {
         categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
         taggedUsersList = new ArrayList<>();
+        previousTitle = getParentActivity().getToolbarTitle();
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -364,13 +365,38 @@ public class FragmentPostDetails extends BaseFragment {
                 }
             }
         });
+
+
+//        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                if (next) {
+//                    if (identifier.equals("Other")) {
+//                        if (page > 2) {
+//                            loader.setVisibility(View.VISIBLE);
+//                        }
+//                        taggedUserListView(Integer.parseInt(followerid), page);
+//                    } else {
+//                        if (page > 2) {
+//                            loader.setVisibility(View.VISIBLE);
+//                        }
+//                        getUserfollowerList(page);
+//
+//                    }
+//                }
+//
+//            }
+//        };
+        recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         oneShotFlag = true;
+
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
 
@@ -420,6 +446,8 @@ public class FragmentPostDetails extends BaseFragment {
         Bundle bundle = getArguments();
         context = getContext();
 
+
+
         if (bundle != null) {
             postDetails = bundle.getParcelable(ARG_POST_DETAILS);
             if (!isDeepLink) {
@@ -438,7 +466,8 @@ public class FragmentPostDetails extends BaseFragment {
             isComingFromHomePage = bundle.getBoolean(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        previousTitle = getParentActivity().getToolbarTitle();
+
+
 
 
     }
@@ -470,13 +499,12 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getParentActivity().removetoolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
             getPostReactions(postDetails.getPostId(), 1);
         }
-        getParentActivity().removetoolbar();
-
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -517,7 +545,9 @@ public class FragmentPostDetails extends BaseFragment {
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = sdf.parse("1970-01-01 " + duration);
                 totalDuration = date.getTime();
-            } catch (ParseException e) {
+            }
+            catch (ParseException e) {
+
                 e.printStackTrace();
             }
 
@@ -835,54 +865,95 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     private void getTaggedUsers(final int page) {
-        taggedUsersListCall = ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), 1, context);
+        taggedUsersListCall = ApiCallingService.Posts.getTaggedUsers(postDetails.getPostId(), page, context);
         taggedUsersListCall.enqueue(new Callback<TaggedUsersList>() {
 
             @Override
             public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
-                try {
-                    if (response.code() == 200) {
-                        TaggedUsersList taggedList = response.body();
-                        if (taggedList.isNextPage()) {
-                            if (!taggedList.getTaggedUsers().isEmpty()) {
-                                if (page == 1)
-                                    taggedUsersList.clear();
 
-                                taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                getTaggedUsers(page + 1);
-                                noTaggedUsers.setVisibility(GONE);
-                            } else if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                taggedUsersList.clear();
-                                noTaggedUsers.setVisibility(VISIBLE);
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            horizontalListViewParent.setVisibility(GONE);
-//                                        }
-//                                    }, 2000);
-                            }
-                        } else {
-                            if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
-                                taggedUsersList.clear();
-                                noTaggedUsers.setVisibility(VISIBLE);
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            horizontalListViewParent.setVisibility(GONE);
-//                                        }
-//                                    }, 2000);
-                            } else {
-                                noTaggedUsers.setVisibility(GONE);
-                                taggedUsersList.addAll(taggedList.getTaggedUsers());
-                                taggedUserListView.getAdapter().notifyDataSetChanged();
-                            }
+                try
+                {
+                    if(response.code()==200)
+                    {
+                        TaggedUsersList taggedList = response.body();
+                        boolean next= taggedList.isNextPage();
+
+                        taggedUsersList.addAll(taggedList.getTaggedUsers());
+
+                        if ((taggedUsersList == null || taggedUsersList.size() == 0) && page == 1) {
+
+
                         }
-                    } else {
-                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+                        else
+                        {
+                            if(next)
+                            {
+                                int pages=page+1;
+                                getTaggedUsers(pages) ;
+                            }
+
+                            taggedUserListView.getAdapter().notifyDataSetChanged();
+                            taggedUserListView.getAdapter().notifyItemRangeInserted( taggedUserListView.getAdapter().getItemCount(), taggedUsersList.size() - 1);
+
+
+
+                        }
+
+
                     }
-                } catch (Exception e) {
+                    else
+                    {
+
+                       // Toast.makeText(context,response.message(),Toast.LENGTH_SHORT).show();
+                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+
+                    }
+
+
+                }
+                catch(Exception e)
+                {
                     e.printStackTrace();
                 }
+
+
+
+
+
+
+//                try {
+//                    if (response.code() == 200) {
+//                        TaggedUsersList taggedList = response.body();
+//                        if (taggedList.isNextPage()) {
+//                            if (!taggedList.getTaggedUsers().isEmpty()) {
+//                                if (page == 1)
+//                                    taggedUsersList.clear();
+//
+//                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+//                                getTaggedUsers(page + 1);
+//                                noTaggedUsers.setVisibility(GONE);
+//                            } else if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+//                                taggedUsersList.clear();
+//                                noTaggedUsers.setVisibility(VISIBLE);
+//
+//                            }
+//                        } else {
+//                            if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+//                                taggedUsersList.clear();
+//                                noTaggedUsers.setVisibility(VISIBLE);
+//
+//                            } else {
+//                                noTaggedUsers.setVisibility(GONE);
+//                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+//                                taggedUserListView.getAdapter().notifyDataSetChanged();
+//                            }
+//                        }
+//                    } else {
+//                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
 
             @Override
@@ -934,16 +1005,21 @@ public class FragmentPostDetails extends BaseFragment {
     @OnClick(R.id.controls)
     public void toggleMediaControllerVisibility() {
         try {
+
 //            if(player.getPlayWhenReady())
 //                startCountDownClass.pause();
 //            else
 //                startCountDownClass.resume();
 
             player.setPlayWhenReady(!player.getPlayWhenReady());
-            playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
-                    : R.drawable.ic_pause_big);
+
+
+          //  playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
+          //          : R.drawable.ic_pause_big);
             togglePlayPauseBtnVisibility(!player.getPlayWhenReady());
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1232,7 +1308,7 @@ public class FragmentPostDetails extends BaseFragment {
                     .setDuration(200)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
-            playPauseButton.setVisibility(VISIBLE);
+          //  playPauseButton.setVisibility(VISIBLE);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1243,7 +1319,7 @@ public class FragmentPostDetails extends BaseFragment {
                             .setDuration(200)
                             .setInterpolator(new DecelerateInterpolator())
                             .start();
-                    playPauseButton.setVisibility(INVISIBLE);
+          //          playPauseButton.setVisibility(INVISIBLE);
                 }
             }, 500);
         }
@@ -1260,7 +1336,7 @@ public class FragmentPostDetails extends BaseFragment {
                 public void onPlayerStateChanged(boolean b, int i) {
                     switch (i) {
                         case STATE_IDLE:
-                            playPauseButton.setImageResource(R.drawable.ic_play_big);
+                           // playPauseButton.setImageResource(R.drawable.ic_play_big);
                             togglePlayPauseBtnVisibility(true);
                             break;
                         case STATE_BUFFERING:
@@ -1269,7 +1345,7 @@ public class FragmentPostDetails extends BaseFragment {
                             break;
                         case STATE_READY:
                             if (player.getPlayWhenReady()) {
-                                playPauseButton.setImageResource(R.drawable.ic_pause_big);
+                              //  playPauseButton.setImageResource(R.drawable.ic_pause_big);
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
@@ -1557,6 +1633,8 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        getParentActivity().removetoolbar();
+
         if (context instanceof CallProfileFromPostDetails) {
             callProfileFromPostDetails = (CallProfileFromPostDetails) context;
 

@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class LikedUser {
 
+
     @SerializedName("user_id")
     @Expose
     private Integer userId;
@@ -35,6 +36,9 @@ public class LikedUser {
     @SerializedName("you_blocked")
     @Expose
     private Boolean youBlocked;
+    @SerializedName("account_type")
+    @Expose
+    private Integer accountType;
     @SerializedName("follow_info")
     @Expose
     private FollowInfo followInfo;
@@ -106,6 +110,14 @@ public class LikedUser {
         this.youBlocked = youBlocked;
     }
 
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
+
     public FollowInfo getFollowInfo() {
         return followInfo;
     }
@@ -121,6 +133,5 @@ public class LikedUser {
     public void setProfileMedia(ProfileMedia profileMedia) {
         this.profileMedia = profileMedia;
     }
-
 
 }

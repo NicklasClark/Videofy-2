@@ -126,6 +126,7 @@
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/media_controller_play_pause"
                     android:layout_width="40dp"
+                    android:visibility="gone"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"

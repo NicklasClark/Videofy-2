@@ -131,6 +131,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_play_big"
+                    android:visibility="gone"
                     android:background="@android:color/transparent" />
 
                 <ProgressBar

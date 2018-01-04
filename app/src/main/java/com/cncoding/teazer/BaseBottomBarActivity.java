@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -672,16 +673,22 @@ public class BaseBottomBarActivity extends BaseActivity
         // toggleBottomBar(navigationController.isRootFragment());
     }
     public void removetoolbar() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
            actionBar.hide();
 
+
+
+
         }
     }
     public void showtoolbar() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
+
         }
     }
     public void toggleBottomBar(boolean isVisible) {
@@ -816,7 +823,9 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink, String getTumbUrl, String reactId) {
       //  pushFragment(postDetails);
-      pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
+      //  removetoolbar();
+
+        pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
                                         true, postDetails.getMedias().get(0).getThumbUrl(), null));
 
     }

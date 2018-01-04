@@ -48,12 +48,12 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     private Call<PostList> postListCall;
     private ArrayList<PostDetails> postList;
     private PostsListAdapter postListAdapter;
-//    private int[] savedPosition;
 
     public PostsListFragment() {
     }
     
     public static PostsListFragment newInstance() {
+
         return new PostsListFragment();
     }
 

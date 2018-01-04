@@ -115,7 +115,7 @@ public class OthersProfileFragment extends BaseFragment {
     public static final boolean FRIENDS = true;
     public static final boolean NOTFRIEND = false;
     CircularAppCompatImageView menu;
-    List<PostDetails> list = new ArrayList<>();
+    List<PostDetails> list;
     FollowersCreationAdapter followerCreationAdapter;
     RecyclerView.LayoutManager layoutManager;
     @BindView(R.id.userCreationTitle)
@@ -244,12 +244,10 @@ public class OthersProfileFragment extends BaseFragment {
                         if (requestRecieved == true) {
 
                             followerListListener.onFollowingListListener(String.valueOf(followerfollowingid), "Other");
-                        } else
-                        {
+                        } else {
                             Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                    else
+                    } else
                         Toast.makeText(context, "You can not view following List now", Toast.LENGTH_SHORT).show();
                 } else {
 
@@ -289,12 +287,14 @@ public class OthersProfileFragment extends BaseFragment {
         hobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//
+//    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
 //                if (fragmentManager != null) {
 //                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
 //
 //                }
+
             }
         });
 
@@ -305,21 +305,30 @@ public class OthersProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        list = new ArrayList<>();
         getProfileInformation(followerfollowingid);
+
+
     }
+
     @Override
     public void onResume() {
         super.onResume();
         getParentActivity().updateToolbarTitle("Profile");
+
+
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ProfileFragment.FollowerListListener) {
             followerListListener = (ProfileFragment.FollowerListListener) context;
+
         }
     }
+
+
     public void getProfileInformation(final int followersid) {
         blur_bacground.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
@@ -348,7 +357,6 @@ public class OthersProfileFragment extends BaseFragment {
 
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
-                          //  Toast.makeText(context,String.valueOf(publicProfile.getUserId()),Toast.LENGTH_SHORT).show();
 
                             username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
@@ -397,8 +405,7 @@ public class OthersProfileFragment extends BaseFragment {
                                     if (requestRecieved == true) {
                                         requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
-                                    }
-                                    else {
+                                    } else {
 
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }
@@ -447,9 +454,7 @@ public class OthersProfileFragment extends BaseFragment {
                                 }
                             }
 
-                        }
-
-                        else if (response.body().getPublicProfile() == null) {
+                        } else if (response.body().getPublicProfile() == null) {
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
                             accountType = privateProfile.getAccountType();
                             userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
@@ -490,8 +495,7 @@ public class OthersProfileFragment extends BaseFragment {
                                     if (requestRecieved == true) {
                                         requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
-                                    }
-                                    else {
+                                    } else {
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }
                                 } else {
@@ -551,8 +555,6 @@ public class OthersProfileFragment extends BaseFragment {
         });
 
 
-
-
     }
 
 
@@ -589,10 +591,12 @@ public class OthersProfileFragment extends BaseFragment {
         }.execute();
 
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_other_profile, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -602,7 +606,7 @@ public class OthersProfileFragment extends BaseFragment {
                 break;
             case R.id.action_profile_block:
                 //openBlockUser(followerfollowingid);
-                blockUnblockUsers(followerfollowingid,BLOCK_STATUS);
+                blockUnblockUsers(followerfollowingid, BLOCK_STATUS);
                 break;
             case android.R.id.home:
                 FragmentManager fm = getChildFragmentManager();
@@ -618,8 +622,9 @@ public class OthersProfileFragment extends BaseFragment {
         return true;
 
     }
+
     public void getProfileVideos(final int followerId) {
-     //   FragmentManager f = getActivity().getSupportFragmentManager();
+        //   FragmentManager f = getActivity().getSupportFragmentManager();
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
 
@@ -637,9 +642,7 @@ public class OthersProfileFragment extends BaseFragment {
                             layoutDetail3.setVisibility(View.VISIBLE);
                             layoutDetail.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.GONE);
-                        }
-                        else
-                            {
+                        } else {
                             followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
                             _recycler_view.setAdapter(followerCreationAdapter);
 
@@ -673,7 +676,7 @@ public class OthersProfileFragment extends BaseFragment {
     public void cancelRequest(int userId, final Context context)
 
     {
-       loader.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.VISIBLE);
         _btnfollow.setText("Follow");
 
         ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
@@ -687,9 +690,7 @@ public class OthersProfileFragment extends BaseFragment {
                             Toast.makeText(context, "Your Request has been cancelled", Toast.LENGTH_LONG).show();
                             setActionButtonText(context, _btnfollow, R.string.follow);
 
-                        }
-                        else
-                        {
+                        } else {
                             loader.setVisibility(View.GONE);
                             setActionButtonText(context, _btnfollow, R.string.follow);
                             Toast.makeText(context, "Your Request has already been cancelled", Toast.LENGTH_LONG).show();
@@ -702,6 +703,7 @@ public class OthersProfileFragment extends BaseFragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 loader.setVisibility(View.GONE);
@@ -709,8 +711,8 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
     }
-    public void unFollowUser(int userId, final Context context)
-    {
+
+    public void unFollowUser(int userId, final Context context) {
 
         loader.setVisibility(View.VISIBLE);
         ApiCallingService.Friends.unfollowUser(userId, context).enqueue(new Callback<ResultObject>() {
@@ -737,6 +739,7 @@ public class OthersProfileFragment extends BaseFragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 loader.setVisibility(View.GONE);
@@ -744,7 +747,8 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
     }
-    public void  followUser(int userId, final Context context) {
+
+    public void followUser(int userId, final Context context) {
         loader.setVisibility(View.VISIBLE);
         ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -759,8 +763,7 @@ public class OthersProfileFragment extends BaseFragment {
 //                        boolean isRequestreceived=response.body().getFollowInfo().getRequestReceived();
 //                        boolean youBlocked=response.body().getFollowInfo().getYouBlocked();
 //                        boolean isBlockedyou=response.body().getFollowInfo().getIsBlockedYou();
-                        if (b == true)
-                        {
+                        if (b == true) {
 
 
                             if (accountType == 1) {
@@ -773,16 +776,13 @@ public class OthersProfileFragment extends BaseFragment {
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_SHORT).show();
                             }
                             loader.setVisibility(View.INVISIBLE);
-                        }
-                        else {
-                            if(isfollowing)
-                            {
+                        } else {
+                            if (isfollowing) {
 
-                                    setActionButtonText(context, _btnfollow, R.string.following);
+                                setActionButtonText(context, _btnfollow, R.string.following);
 
 
-                            }
-                            else {
+                            } else {
 
 //                                if (isrequestSent)
 //
@@ -807,7 +807,6 @@ public class OthersProfileFragment extends BaseFragment {
                             }
 
 
-
                             loader.setVisibility(View.GONE);
                         }
 
@@ -819,6 +818,7 @@ public class OthersProfileFragment extends BaseFragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
@@ -853,7 +853,7 @@ public class OthersProfileFragment extends BaseFragment {
 
     public void blockUnblockUsers(final int userId, final int status) {
         android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-        dialogBuilder.setMessage("Are you sure you want to Unblock " +firstName + "?");
+        dialogBuilder.setMessage("Are you sure you want to Unblock " + firstName + "?");
         dialogBuilder.setPositiveButton("CONFIRM", null);
         dialogBuilder.setNegativeButton("CANCEL", null);
 
@@ -866,7 +866,7 @@ public class OthersProfileFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 
-                blockunBlock(userId,status);
+                blockunBlock(userId, status);
                 alertDialog.dismiss();
 
 
@@ -898,25 +898,29 @@ public class OthersProfileFragment extends BaseFragment {
                         } else {
                             Toast.makeText(context, "You have blocked this user", Toast.LENGTH_SHORT).show();
                             _btnfollow.setText("Unblock");
-                            loader.setVisibility(View.GONE);                        }
+                            loader.setVisibility(View.GONE);
+                        }
                     } else {
 
                         Toast.makeText(context, "Already blocked this user", Toast.LENGTH_SHORT).show();
-                        loader.setVisibility(View.GONE);                    }
+                        loader.setVisibility(View.GONE);
+                    }
 
                 } catch (Exception e) {
 
                     e.printStackTrace();
 
                     Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_SHORT).show();
-                    loader.setVisibility(View.GONE);                }
+                    loader.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_SHORT).show();
-                loader.setVisibility(View.GONE);            }
+                loader.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -948,11 +952,11 @@ public class OthersProfileFragment extends BaseFragment {
                                     loader.setVisibility(View.GONE);
                                 }
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Toast.makeText(context, "Something went wrong, Please try again..", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();

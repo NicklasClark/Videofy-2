@@ -91,7 +91,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 PopupMenu popup = new PopupMenu(context, viewHolder.menu);
                 popup.inflate(R.menu.menu_profile_reaction);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
