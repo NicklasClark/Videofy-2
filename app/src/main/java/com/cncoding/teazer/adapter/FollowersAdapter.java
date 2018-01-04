@@ -175,7 +175,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final UserInfo cont = list.get(i);
                 final String usertype;
                 final int requestId;
-
                 final int accounttype = cont.getAccountType();
                 final boolean myself = cont.getMySelf();
                 final boolean folower = cont.getFollower();

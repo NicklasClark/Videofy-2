@@ -106,18 +106,23 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             Glide.with(context).load(thumb_url)
                     .into(viewHolder.thumbimage);
 
+
             viewHolder.location.setText(postUser);
             viewHolder.videoTitle.setText(videoTitle);
             viewHolder.duration.setText(duration);
             viewHolder.totalLikes.setText(String.valueOf(likes));
             viewHolder.txtview.setText(String.valueOf(txtview));
 
-            getPostReaction(viewHolder, postId);
+            //getPostReaction(viewHolder, postId);
+
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
                     listener.myCreationVideos(2, postDetails);
+                    viewHolder.txtview.setText(String.valueOf(txtview+1));
+
+
 
                 }
             });
@@ -208,8 +213,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                     try {
                         reactionList = response.body().getReactions();
                         for(int i = 0; i< reactionList.size(); i++) {
-                         Integer totalviews = reactionList.get(i).getViews();
-                         viewHolder.txtview.setText(String.valueOf(totalviews));
+                       //  Integer totalviews = reactionList.get(i).getViews();
+                        // viewHolder.txtview.setText(String.valueOf(totalviews));
                      }
                         if (reactionList.size() > 1) {
                             // int counter=reactions-3;

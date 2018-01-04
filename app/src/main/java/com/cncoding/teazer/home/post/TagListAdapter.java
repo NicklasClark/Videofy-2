@@ -14,6 +14,9 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,25 +53,58 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
 
     @Override
     public void onBindViewHolder(final TaggedViewHolder holder, int i) {
-        Glide.with(context)
-                .load(taggedUserList.get(i).hasProfileMedia() ? taggedUserList.get(i).getProfileMedia().getThumbUrl() :
-                        R.drawable.ic_user_male_dp)
-                .placeholder(R.drawable.ic_user_male_dp)
-                .crossFade()
-                .listener(new RequestListener<Serializable, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.dp.setImageDrawable(resource);
-                        return false;
-                    }
-                })
-                .into(holder.dp);
+        boolean imageURL=taggedUserList.get(i).hasProfileMedia();
+
+        if(imageURL)
+        {
+            String image=taggedUserList.get(i).getProfileMedia().getThumbUrl();
+            if(image!=null) {
+                Picasso.with(context)
+                        .load(image)
+                        .fit().centerInside()
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(holder.dp);
+            }  else
+                Picasso.with(context)
+                        .load(R.drawable.ic_user_male_dp_small)
+                        .fit().centerInside()
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(holder.dp);
+       }
+       else
+       {
+           Picasso.with(context)
+                   .load(R.drawable.ic_user_male_dp_small)
+                   .fit().centerInside()
+                   .networkPolicy(NetworkPolicy.NO_CACHE)
+                   .memoryPolicy(MemoryPolicy.NO_CACHE)
+                   .into(holder.dp);
+       }
+
+
+//        Glide.with(context)
+//                .load(taggedUserList.get(i).hasProfileMedia() ? taggedUserList.get(i).getProfileMedia().getThumbUrl() :
+//                        R.drawable.ic_user_male_dp)
+//                .placeholder(R.drawable.ic_user_male_dp)
+//                .crossFade()
+//                .listener(new RequestListener<Serializable, GlideDrawable>() {
+//                    @Override
+//
+//                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
+//                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+//                        holder.dp.setImageDrawable(resource);
+//                        return false;
+//                    }
+//                })
+//                .into(holder.dp);
 
         final int userId = taggedUserList.get(i).getUserId();
         final boolean isSelf = taggedUserList.get(i).isMySelf();

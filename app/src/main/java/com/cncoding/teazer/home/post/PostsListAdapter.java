@@ -297,7 +297,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 //                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
 
                                 listener.postDetails(response.body(), null, true,
-                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
+                                        false, response.body().getMedias().get(0).getThumbUrl(), null);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }

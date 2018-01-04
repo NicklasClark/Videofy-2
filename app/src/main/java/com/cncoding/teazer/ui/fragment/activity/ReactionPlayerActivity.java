@@ -144,7 +144,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         reactionPostCaption.setText(reactionTitle);
                     }
 
-
                     postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(postDetails.getReactOwner().getFirstName());
 
@@ -154,6 +153,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
+
             }
             case SELF_REACTION: {
                 try {
@@ -243,10 +243,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             player.prepare(loopingMediaSource);
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             player.setPlayWhenReady(playWhenReady);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @OnClick({R.id.btnClose, R.id.btnLike})
     public void onViewClicked(View view) {
