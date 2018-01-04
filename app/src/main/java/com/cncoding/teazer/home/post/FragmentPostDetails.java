@@ -295,7 +295,6 @@ public class FragmentPostDetails extends BaseFragment {
     private String thumbUrl;
     private String reactId;
     private static boolean isReactionPlayed = false;
-    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     TaggedUsersList taggedList;
 
@@ -399,7 +398,8 @@ public class FragmentPostDetails extends BaseFragment {
 //
 //            }
 //        };
-        recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
+ //       recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
+
         return view;
     }
 
