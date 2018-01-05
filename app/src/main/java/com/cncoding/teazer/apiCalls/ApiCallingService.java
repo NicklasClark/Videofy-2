@@ -96,7 +96,6 @@ public class ApiCallingService {
         public static Call<List<DeactivateTypes>> getDeactivationTypesList(Context context) {
             return getApplicationService(context).getDeactivationTypesList();
         }
-
         private static TeazerApiCall.ApplicationCalls getApplicationService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

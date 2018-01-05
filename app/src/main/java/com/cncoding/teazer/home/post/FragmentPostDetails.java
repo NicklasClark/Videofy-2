@@ -1143,11 +1143,8 @@ public class FragmentPostDetails extends BaseFragment {
 //                    public void onChannelSelected(String channelName) {
 //                    }
 //                });
+
     }
-
-
-
-
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -1173,13 +1170,10 @@ public class FragmentPostDetails extends BaseFragment {
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
-
                                                 @Override
                                                 public void onFailure(Call<ResultObject> call, Throwable t) {
                                                     t.printStackTrace();
-                                                    Toast.makeText(context,
-                                                            R.string.something_went_wrong,
-                                                            Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
@@ -1679,10 +1673,11 @@ public class FragmentPostDetails extends BaseFragment {
         public void run() {
             try {
                 long timeInMilliseconds = totalDuration - player.getCurrentPosition();
+
 //                int secs = (int) ((totalDuration - player.getCurrentPosition()) / 1000) + 1;
 //                int minutes = secs / 60;
 //                secs = secs % 60;
-//            int milliseconds = (int) (updatedTime % 1000);
+//                int milliseconds = (int) (updatedTime % 1000);
 //                String duration = BLANK_SPACE + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
                 String duration = BLANK_SPACE + String.format(Locale.getDefault(), "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds),
@@ -1701,7 +1696,7 @@ public class FragmentPostDetails extends BaseFragment {
     public void callUserProfile(int userId, boolean ismyself)
     {
 
-        callProfileFromPostDetails.callProfileListener(postDetails.getPostOwner().getUserId(), postDetails.canDelete());
+        callProfileFromPostDetails.callProfileListener(userId,ismyself);
 
     }
     public interface CallProfileFromPostDetails

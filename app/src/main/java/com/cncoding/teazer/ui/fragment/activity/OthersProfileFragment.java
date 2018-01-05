@@ -39,6 +39,7 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
@@ -136,7 +137,6 @@ public class OthersProfileFragment extends BaseFragment {
     private String userProfileThumbnail;
     private String userProfileUrl;
     private int requestId;
-    int page = 1;
     String details;
     ProfileFragment.FollowerListListener followerListListener;
 
@@ -144,6 +144,9 @@ public class OthersProfileFragment extends BaseFragment {
     int followerfollowingid;
     String userType;
     String getNotificationType;
+    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
+    boolean next;
+
 
 
     public static OthersProfileFragment newInstance(String id, String identifier, String username) {
@@ -200,6 +203,8 @@ public class OthersProfileFragment extends BaseFragment {
         getParentActivity().updateToolbarTitle("Profile");
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         menu = view.findViewById(R.id.menu);
+        layoutManager = new LinearLayoutManager(context);
+        _recycler_view.setLayoutManager(layoutManager);
 
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,16 +292,39 @@ public class OthersProfileFragment extends BaseFragment {
         hobby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//
-//    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                //    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
 //                if (fragmentManager != null) {
 //                    reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
 //
 //                }
 
+
             }
         });
+
+
+
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
+                if (next) {
+
+                        if (page > 2) {
+                            loader.setVisibility(View.VISIBLE);
+                        }
+                    getProfileVideos(followerfollowingid, page);
+
+
+                }
+
+            }
+        };
+
+        _recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener);
+
 
 
         return view;
@@ -306,8 +334,8 @@ public class OthersProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
-        getProfileInformation(followerfollowingid);
 
+        getProfileInformation(followerfollowingid);
 
     }
 
@@ -441,10 +469,12 @@ public class OthersProfileFragment extends BaseFragment {
                                 }
 
                                 if (accountType == 2) {
-                                    getProfileVideos(followersid);
+
+                                    getProfileVideos(followersid,1);
                                 } else {
                                     if (isfollowing) {
-                                        getProfileVideos(followersid);
+
+                                        getProfileVideos(followersid,1);
 
                                     } else {
                                         layoutDetail2.setVisibility(View.VISIBLE);
@@ -520,10 +550,10 @@ public class OthersProfileFragment extends BaseFragment {
 
                                 }
                                 if (accountType == 2) {
-                                    getProfileVideos(followersid);
+                                    getProfileVideos(followersid,1);
                                 } else {
                                     if (isfollowing) {
-                                        getProfileVideos(followersid);
+                                        getProfileVideos(followersid,1);
 
                                     } else {
                                         layoutDetail2.setVisibility(View.VISIBLE);
@@ -623,10 +653,8 @@ public class OthersProfileFragment extends BaseFragment {
 
     }
 
-    public void getProfileVideos(final int followerId) {
-        //   FragmentManager f = getActivity().getSupportFragmentManager();
-        layoutManager = new LinearLayoutManager(context);
-        _recycler_view.setLayoutManager(layoutManager);
+    public void getProfileVideos(final int followerId , final int page) {
+
 
         ApiCallingService.Posts.getVideosPostedByFriend(page, followerId, context).enqueue(new Callback<PostList>() {
             @Override
@@ -634,22 +662,19 @@ public class OthersProfileFragment extends BaseFragment {
                 Log.d("getProfileVideos", String.valueOf(response));
                 if (response.code() == 200) {
                     try {
-                        boolean next = response.body().isNextPage();
                         list.addAll(response.body().getPosts());
                         if ((list == null || list.size() == 0) && page == 1) {
-
-
                             layoutDetail3.setVisibility(View.VISIBLE);
                             layoutDetail.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.GONE);
                         } else {
+
+                            next = response.body().isNextPage();
+
                             followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
                             _recycler_view.setAdapter(followerCreationAdapter);
 
-                            if (next) {
-                                page++;
-                                getProfileVideos(followerId);
-                            }
+
                         }
 
                         blur_bacground.setVisibility(View.VISIBLE);

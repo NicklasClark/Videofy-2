@@ -111,8 +111,6 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
         holder.dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 ((FragmentPostDetails)fragment).callUserProfile(userId,isSelf);
 //                if (mListener != null)
 //                    mListener.onTaggedUserInteraction(userId, isSelf);
