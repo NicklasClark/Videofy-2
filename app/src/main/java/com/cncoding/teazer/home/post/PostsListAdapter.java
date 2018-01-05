@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.CropSquareTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -165,24 +166,46 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     })
                     .into(holder.profilePic);
 
-            Glide.with(context)
-                    .load(postDetails.getMedias().get(0).getThumbUrl())
-                    .centerCrop()
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+            int width = postDetails.getMedias().get(0).getDimension().getWidth();
+            int height = postDetails.getMedias().get(0).getDimension().getHeight();
+            if (width > height) {
+                Glide.with(context)
+                        .load(postDetails.getMedias().get(0).getThumbUrl())
+                        .bitmapTransform(new CropSquareTransformation(context))
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
-                                    holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
-                            return false;
-                        }
-                    })
-                    .into(holder.postThumbnail);
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                           boolean isFromMemoryCache, boolean isFirstResource) {
+                                prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                                        holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                                return false;
+                            }
+                        })
+                        .into(holder.postThumbnail);
+            } else {
+                Glide.with(context)
+                        .load(postDetails.getMedias().get(0).getThumbUrl())
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                           boolean isFromMemoryCache, boolean isFirstResource) {
+                                prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                                        holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                                return false;
+                            }
+                        })
+                        .into(holder.postThumbnail);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

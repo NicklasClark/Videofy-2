@@ -3,22 +3,16 @@ package com.cncoding.teazer.home.post;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.base.TaggedUser;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -30,6 +24,7 @@ import butterknife.ButterKnife;
  */
 
 public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedViewHolder> {
+
 
     private Context context;
     private ArrayList<TaggedUser> taggedUserList;
@@ -54,33 +49,40 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
     @Override
     public void onBindViewHolder(final TaggedViewHolder holder, int i) {
 
-        boolean imageURL=taggedUserList.get(i).hasProfileMedia();
+        boolean imageURL = taggedUserList.get(i).hasProfileMedia();
 
+        Log.d("TagListAdapter", "onBindViewHolder: imageurl"+imageURL);
+        Log.d("TagListAdapter", "onBindViewHolder: profile media"+taggedUserList.get(i).toString());
         if(imageURL)
         {
-            String image=taggedUserList.get(i).getProfileMedia().getThumbUrl();
-            if(image!=null) {
+            Log.d("TagListAdapter", "onBindViewHolder: image url found");
+            String image = taggedUserList.get(i).getProfileMedia().getThumbUrl();
+            if(image != null) {
+                Log.d("TagListAdapter", "onBindViewHolder: image not null");
                 Picasso.with(context)
                         .load(image)
                         .fit().centerInside()
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                        .networkPolicy(NetworkPolicy.NO_CACHE)
+//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(holder.dp);
-            }  else
+            }  else {
+                Log.d("TagListAdapter", "onBindViewHolder: image null");
                 Picasso.with(context)
                         .load(R.drawable.ic_user_male_dp_small)
                         .fit().centerInside()
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                        .networkPolicy(NetworkPolicy.NO_CACHE)
+//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(holder.dp);
+            }
        }
        else
        {
+           Log.d("TagListAdapter", "onBindViewHolder: image url not found");
            Picasso.with(context)
                    .load(R.drawable.ic_user_male_dp_small)
                    .fit().centerInside()
-                   .networkPolicy(NetworkPolicy.NO_CACHE)
-                   .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                   .networkPolicy(NetworkPolicy.NO_CACHE)
+//                   .memoryPolicy(MemoryPolicy.NO_CACHE)
                    .into(holder.dp);
        }
 

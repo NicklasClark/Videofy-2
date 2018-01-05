@@ -32,6 +32,7 @@ import static com.cncoding.teazer.home.discover.search.DiscoverSearchFragment.SE
 
 public class PeopleTabFragment extends BaseFragment {
 
+    private static final String TAG = "PeopleTagFragment";
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
@@ -57,6 +58,7 @@ public class PeopleTabFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        usersList = new ArrayList<>();
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
             isSearchTerm = searchTerm != null && !searchTerm.equals("");
@@ -68,11 +70,18 @@ public class PeopleTabFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         ButterKnife.bind(this, rootView);
-        usersList = new ArrayList<>();
 
-        adapter = new DiscoverSearchAdapter(getParentActivity(), this, false, usersList, null);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new DiscoverSearchAdapter(getParentActivity(), this, false, usersList, null);
         recyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -92,13 +101,12 @@ public class PeopleTabFragment extends BaseFragment {
             }
         });
 
-        return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (usersList != null && usersList.isEmpty())
+//        if (usersList != null && usersList.isEmpty())
             getUsersList(1);
     }
 
@@ -117,11 +125,30 @@ public class PeopleTabFragment extends BaseFragment {
                 @Override
                 public void onResponse(Call<UsersList> call, Response<UsersList> response) {
                     try {
+                        Log.d(TAG, "onResponse try block");
                         if (isAdded()) {
                             if (response.code() == 200) {
+                                Log.d(TAG, "onResponse 200");
                                 UsersList users = response.body();
                                 is_next_page = users.isNextPage();
+                                if(users.getUsers() != null)
+                                {
+                                    Log.d(TAG, "onResponse user not null");
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "onResponse user null");
+                                }
+                                if (users.getUsers().size() > 0)
+                                {
+                                    Log.d(TAG, "onResponse user size greater than zero");
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "onResponse user size less than zero");
+                                }
                                 if (users.getUsers() != null && users.getUsers().size() > 0) {
+                                    Log.d(TAG, "onResponse user list found");
                                     swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     noPosts.setVisibility(View.GONE);
                                     noPosts2.setVisibility(View.GONE);
@@ -129,6 +156,7 @@ public class PeopleTabFragment extends BaseFragment {
                                     recyclerView.getRecycledViewPool().clear();
                                     adapter.notifyDataSetChanged();
                                 } else {
+                                    Log.d(TAG, "onResponse No match");
                                     if (page == 1 && usersList.isEmpty()) {
                                         swipeRefreshLayout.setVisibility(View.GONE);
                                         noPosts.setText(isSearchTerm ?

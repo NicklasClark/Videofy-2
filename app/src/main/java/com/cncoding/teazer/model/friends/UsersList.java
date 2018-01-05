@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 
 public class UsersList {
-    boolean next_page;
-    ArrayList<MiniProfile> users;
+    private boolean next_page;
+    private ArrayList<MiniProfile> users;
 
     public UsersList(boolean next_page, ArrayList<MiniProfile> users) {
         this.next_page = next_page;

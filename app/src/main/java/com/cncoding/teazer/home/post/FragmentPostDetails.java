@@ -316,7 +316,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-       logTheDensity();
+        logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -442,11 +442,8 @@ public class FragmentPostDetails extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Bundle bundle = getArguments();
         context = getContext();
-
-
 
         if (bundle != null) {
             postDetails = bundle.getParcelable(ARG_POST_DETAILS);
@@ -466,10 +463,6 @@ public class FragmentPostDetails extends BaseFragment {
             isComingFromHomePage = bundle.getBoolean(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-
-
-
-
     }
 
     private void logTheDensity() {
@@ -891,22 +884,16 @@ public class FragmentPostDetails extends BaseFragment {
                                 int pages=page+1;
                                 getTaggedUsers(pages) ;
                             }
-
                             taggedUserListView.getAdapter().notifyDataSetChanged();
                             taggedUserListView.getAdapter().notifyItemRangeInserted( taggedUserListView.getAdapter().getItemCount(), taggedUsersList.size() - 1);
-
-
-
                         }
 
 
                     }
                     else
                     {
-
-                       // Toast.makeText(context,response.message(),Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context,response.message(),Toast.LENGTH_SHORT).show();
                         Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
-
                     }
 
 
@@ -915,11 +902,6 @@ public class FragmentPostDetails extends BaseFragment {
                 {
                     e.printStackTrace();
                 }
-
-
-
-
-
 
 //                try {
 //                    if (response.code() == 200) {
@@ -1014,8 +996,8 @@ public class FragmentPostDetails extends BaseFragment {
             player.setPlayWhenReady(!player.getPlayWhenReady());
 
 
-          //  playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
-          //          : R.drawable.ic_pause_big);
+            //  playPauseButton.setImageResource(!player.getPlayWhenReady() ? R.drawable.ic_play_big
+            //          : R.drawable.ic_pause_big);
             togglePlayPauseBtnVisibility(!player.getPlayWhenReady());
         }
 
@@ -1308,7 +1290,7 @@ public class FragmentPostDetails extends BaseFragment {
                     .setDuration(200)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
-          //  playPauseButton.setVisibility(VISIBLE);
+            //  playPauseButton.setVisibility(VISIBLE);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1319,7 +1301,7 @@ public class FragmentPostDetails extends BaseFragment {
                             .setDuration(200)
                             .setInterpolator(new DecelerateInterpolator())
                             .start();
-          //          playPauseButton.setVisibility(INVISIBLE);
+                    //          playPauseButton.setVisibility(INVISIBLE);
                 }
             }, 500);
         }
@@ -1336,7 +1318,7 @@ public class FragmentPostDetails extends BaseFragment {
                 public void onPlayerStateChanged(boolean b, int i) {
                     switch (i) {
                         case STATE_IDLE:
-                           // playPauseButton.setImageResource(R.drawable.ic_play_big);
+                            // playPauseButton.setImageResource(R.drawable.ic_play_big);
                             togglePlayPauseBtnVisibility(true);
                             break;
                         case STATE_BUFFERING:
@@ -1345,7 +1327,7 @@ public class FragmentPostDetails extends BaseFragment {
                             break;
                         case STATE_READY:
                             if (player.getPlayWhenReady()) {
-                              //  playPauseButton.setImageResource(R.drawable.ic_pause_big);
+                                //  playPauseButton.setImageResource(R.drawable.ic_pause_big);
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
@@ -1655,7 +1637,7 @@ public class FragmentPostDetails extends BaseFragment {
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);
-      //  onBackPressed();
+        //  onBackPressed();
     }
 
     //thread to update recording time
@@ -1682,13 +1664,11 @@ public class FragmentPostDetails extends BaseFragment {
 
     };
 
-
     public void callUserProfile(int userId, boolean ismyself)
     {
-
         callProfileFromPostDetails.callProfileListener(postDetails.getPostOwner().getUserId(), postDetails.canDelete());
-
     }
+
     public interface CallProfileFromPostDetails
     {
         public void callProfileListener(int userid, boolean ismyself);

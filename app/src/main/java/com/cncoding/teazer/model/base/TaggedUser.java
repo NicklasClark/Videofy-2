@@ -16,8 +16,8 @@ public class TaggedUser implements Parcelable {
     private String last_name;
     private boolean my_self;
     private boolean is_blocked_you;
-    boolean has_profile_media;
-    ProfileMedia profile_media;
+    private boolean has_profile_media;
+    private ProfileMedia profile_media;
 
     public TaggedUser(int tag_id, int user_id, String user_name, String first_name, String last_name,
                       boolean my_self, boolean is_blocked_you, boolean has_profile_media, ProfileMedia profile_media) {
@@ -32,7 +32,7 @@ public class TaggedUser implements Parcelable {
         this.profile_media = profile_media;
     }
 
-    protected TaggedUser(Parcel in) {
+    private TaggedUser(Parcel in) {
         tag_id = in.readInt();
         user_id = in.readInt();
         user_name = in.readString();
