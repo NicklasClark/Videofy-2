@@ -22,7 +22,7 @@ android {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 12
+        versionCode 13
         versionName "1.0"
         dataBinding.enabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,7 +39,7 @@ android {
             shrinkResources true
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
+            debuggable false
             signingConfig signingConfigs.releaseconfig
             resValue "string", "app_name", "Teazer"
             manifestPlaceholders = [facebookId: "163105567761892"]
@@ -81,20 +81,20 @@ android {
 
 
 // Map for the version code that gives each ABI a value.
-ext.abiCodes = [ x86:1, 'armeabi-v7a':2,'arm64-v8a':3]
-
-import com.android.build.OutputFile
-android.applicationVariants.all { variant ->
-    variant.outputs.each { output ->
-
-        def baseAbiVersionCode =
-                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-        if (baseAbiVersionCode != null) {
-            output.versionCodeOverride =
-                    baseAbiVersionCode + variant.versionCode
-        }
-    }
-}
+//ext.abiCodes = [ x86:1, 'armeabi-v7a':2,'arm64-v8a':3]
+//
+//import com.android.build.OutputFile
+//android.applicationVariants.all { variant ->
+//    variant.outputs.each { output ->
+//
+//        def baseAbiVersionCode =
+//                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+//        if (baseAbiVersionCode != null) {
+//            output.versionCodeOverride =
+//                    baseAbiVersionCode + variant.versionCode
+//        }
+//    }
+//}
 
 dependencies {
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
@@ -158,10 +158,6 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
-
-    //    implementation 'com.github.bumptech.glide:glide:4.4.0'
-
-    //    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.2'
 }
 

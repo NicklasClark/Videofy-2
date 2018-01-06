@@ -43,7 +43,6 @@ import android.widget.Toast;
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
-import com.cncoding.teazer.adapter.LikedUserAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
@@ -292,10 +291,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 int postId = Integer.parseInt(intent.getStringExtra("PostID"));
                 String postTitle = intent.getStringExtra("PostTitle");
                 String postUrl = intent.getStringExtra("PostURL");
-                String postownerId = intent.getStringExtra("PostOwner");
+                String postOwnerId = intent.getStringExtra("PostOwner");
 
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
-                        .setCanonicalIdentifier(postownerId)
+                        .setCanonicalIdentifier(postOwnerId)
                         .setTitle(postTitle)
                         .setContentDescription("Watch " + postTitle + "awesome video on Teazer app")
                         .setContentImageUrl(postUrl);

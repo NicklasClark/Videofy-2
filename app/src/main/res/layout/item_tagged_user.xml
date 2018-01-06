@@ -2,8 +2,8 @@
 <com.cncoding.teazer.customViews.CircularAppCompatImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tagged_user_dp"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
     android:padding="1dp"
     android:background="@drawable/bg_circle_dark_outlined"
     android:layout_marginEnd="@dimen/padding_half"

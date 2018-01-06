@@ -181,7 +181,8 @@
                         android:layout_height="wrap_content"
                         android:minHeight="60dp"
                         android:gravity="center"
-                        android:textSize="@dimen/text_size_content_big"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/text_size_content3"
                         android:text="@string/no_posts_available"
                         android:layout_below="@+id/trending"
                         android:visibility="gone"/>

@@ -127,7 +127,7 @@
     <string name="select_a_location">Select a location</string>
     <string name="select_your_interests">Select your interests</string>
     <string name="select_at_least_5_interests">Select at least 5 interests</string>
-    <string name="reactions">Reactions</string>
+    <string name="reactions">Reactions on Video</string>
     <string name="description">Media player control</string>
     <string name="share">Share</string>
     <string name="hide">Hide</string>
@@ -226,7 +226,7 @@
     <string name="requested">&#160;Requested</string>
     <string name="no_users_tagged_yet">No users tagged yet</string>
     <string name="no_posts_available">No posts available</string>
-    <string name="all_caught_up">No notification to show!</string>
+    <string name="no_notification_message">Currently there are no Notifications to show.</string>
     <string name="location_rationale">Teazer need to access your location</string>
     <string name="most_popular">Most Popular</string>
     <string name="my_interests">My Interests</string>

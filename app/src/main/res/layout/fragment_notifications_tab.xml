@@ -21,7 +21,7 @@
         <!--android:textAllCaps="true"-->
         <!--app:drawableTopCompat="@drawable/ic_happy"-->
         <!--android:textSize="@dimen/text_size_h5"-->
-        <!--android:text="@string/all_caught_up"-->
+        <!--android:text="@strno_notification_messaget_up"-->
         <!--android:visibility="invisible"/>-->
 
 
@@ -35,7 +35,7 @@
         android:textColor="@color/colorPrimary_text3"
         android:textSize="@dimen/text_size_h6"
         android:visibility="invisible"
-        android:text="@string/all_caught_up"/>
+        android:text="@string/no_notification_message"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

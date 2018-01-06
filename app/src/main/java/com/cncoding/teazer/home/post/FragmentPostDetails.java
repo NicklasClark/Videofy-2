@@ -315,7 +315,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        logTheDensity();
+//        logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -544,7 +544,11 @@ public class FragmentPostDetails extends BaseFragment {
                 e.printStackTrace();
             }
 
-            reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()));
+            if (postDetails.getTotalReactions() <= 3) {
+                reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()) + " R");
+            } else {
+                reactionCountView.setText("+" + String.valueOf(postDetails.getTotalReactions()-3) + " R");
+            }
             tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
 
             Glide.with(this)
@@ -1667,6 +1671,5 @@ public class FragmentPostDetails extends BaseFragment {
     public interface CallProfileFromPostDetails
     {
         public void callProfileListener(int userid, boolean ismyself);
-
     }
 }

@@ -462,17 +462,17 @@
                 android:background="@color/colorDivider"
                 android:layout_below="@+id/post_actions"/>
 
+
             <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
                 android:id="@+id/reactions_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/reactions"
-                android:textSize="@dimen/text_size_h4"
-                android:textColor="@color/colorSecondary_text"
+                android:textSize="@dimen/text_size_h6"
+                android:textColor="@color/colorPrimary_text3"
                 android:gravity="start"
                 android:paddingTop="@dimen/padding_half"
                 android:paddingEnd="@dimen/padding_half"
-                android:paddingBottom="@dimen/padding_half"
                 android:paddingStart="14dp"
                 android:layout_below="@+id/separator"/>
 
@@ -510,7 +510,7 @@
                 android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="14dp"
+                android:paddingTop="10dp"
                 android:paddingBottom="14dp"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"

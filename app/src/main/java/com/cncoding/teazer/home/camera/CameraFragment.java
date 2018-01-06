@@ -65,7 +65,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.utilities.OnSwipeTouchListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -282,29 +281,29 @@ public class CameraFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         new CreateVideoFolder(this).execute();
 
-        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeTop() {
-//                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeRight() {
-                if (selected_filter_mode_index > 0) {
-                    selected_filter_mode_index--;
-                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    updatePreview();
-                }
-            }
-            public void onSwipeLeft() {
-                if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
-                    selected_filter_mode_index++;
-                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    updatePreview();
-                }
-            }
-            public void onSwipeBottom() {
-//                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
-            }
-
-        });
+//        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+//            public void onSwipeTop() {
+////                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
+//            }
+//            public void onSwipeRight() {
+//                if (selected_filter_mode_index > 0) {
+//                    selected_filter_mode_index--;
+//                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+//                    updatePreview();
+//                }
+//            }
+//            public void onSwipeLeft() {
+//                if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
+//                    selected_filter_mode_index++;
+//                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+//                    updatePreview();
+//                }
+//            }
+//            public void onSwipeBottom() {
+////                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        });
 
         return rootView;
     }

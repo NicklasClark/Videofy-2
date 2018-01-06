@@ -61,6 +61,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
                 Log.d("TagListAdapter", "onBindViewHolder: image not null");
                 Picasso.with(context)
                         .load(image)
+                        .placeholder(R.drawable.ic_user_male_dp_small)
                         .fit().centerInside()
 //                        .networkPolicy(NetworkPolicy.NO_CACHE)
 //                        .memoryPolicy(MemoryPolicy.NO_CACHE)
