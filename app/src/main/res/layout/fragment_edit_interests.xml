@@ -31,8 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/padding_thin"
-        android:paddingBottom="@dimen/padding_half"
+        android:paddingBottom="?attr/actionBarSize"
         android:layout_below="@+id/interests_header_1"
+
         android:clipToPadding="false"/>
 
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView

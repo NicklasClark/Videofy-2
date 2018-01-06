@@ -77,14 +77,6 @@
                 android:inputType="textPassword"
                 android:imeOptions="actionGo" />
 
-<!--            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
-                android:id="@+id/signup_confirm_password"
-                style="@style/AppTheme.RoundedEditText"
-                android:hint="@string/confirm_password"
-                android:maxLength="32"
-                android:digits="@string/validPassword"
-                android:inputType="textPassword"
-                android:imeOptions="actionGo" />-->
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/signup__proceed_btn"

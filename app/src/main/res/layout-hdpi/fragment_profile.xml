@@ -350,6 +350,7 @@
         android:visibility="gone"
         android:layout_gravity="center" />
 
+
     <pl.droidsonroids.gif.GifTextView
         android:id="@+id/loader"
         android:layout_width="72dp"

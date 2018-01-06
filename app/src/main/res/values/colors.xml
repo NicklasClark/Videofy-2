@@ -18,7 +18,7 @@
     <color name="colorBg">#eeeeee</color>
     <color name="colorTranslucentBg">#91212121</color>
     <color name="colorTranslucentBgMainActivity">#dc000000</color>
-    <color name="bgInterests">#c8000000</color>
+    <color name="bgInterests">#d0000000</color>
     <color name="colorTranslucentButton">#50000000</color>
     <color name="colorPrimary_text">#333333</color>
     <color name="colorPrimary_text2">#9e9e9e</color>
@@ -41,7 +41,7 @@
     <color name="colorlines">#D8D8D8</color>
     <color name="colorReactBtn">#26C6DA</color>
     <color name="statusbar">#0fcfe7</color>
-    <color name="blur">#70121212</color>
+    <color name="blur">#861b1b1b</color>
     <color name="colorTranslucentWhite">#88000000</color>
 
     <!--    <color name="space_background_color">#757575</color>

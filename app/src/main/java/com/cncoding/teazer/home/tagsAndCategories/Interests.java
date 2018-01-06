@@ -80,6 +80,7 @@ public class Interests extends BaseFragment {
         return interests;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +97,7 @@ public class Interests extends BaseFragment {
         selectedInterests = new SparseArray<>();
         totalCategories = new ArrayList<>();
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -291,8 +293,9 @@ public class Interests extends BaseFragment {
             if (!isEditing) {
                 saveBtn.setText(R.string.save);
                 saveBtn.setEnabled(true);
-                if (saveBtn.getCompoundDrawables()[2] == null)
-                    saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
+                if (saveBtn.getCompoundDrawables()[2] == null) {
+                    //   saveBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick_circle_outline, 0);
+                }
             } else {
                 saveBtn.setEnabled(true);
                 saveBtn.setAlpha(1);
@@ -353,6 +356,7 @@ public class Interests extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater);
+          menu.clear();
         if (isEditing) {
             inflater.inflate(R.menu.menu_edit_interests, menu);
         }

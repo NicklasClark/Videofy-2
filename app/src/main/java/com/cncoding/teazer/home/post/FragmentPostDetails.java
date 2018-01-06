@@ -1076,6 +1076,7 @@ public class FragmentPostDetails extends BaseFragment {
 //        textureView.setLayoutParams(params);
 //        textureView.animate().alpha(1).setDuration(280).start();
 //        textureView.setVisibility(GONE);
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerView.setLayoutParams(params);
@@ -1113,6 +1114,7 @@ public class FragmentPostDetails extends BaseFragment {
                     loader.setVisibility(GONE);
             }
         });
+
 
 
 //        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
