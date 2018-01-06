@@ -2,4 +2,5 @@
 <resources>
     <string name="facebook_app_id">1807707069304467</string>
     <string name="fb_login_protocol_scheme">fb1807707069304467</string>
+    <string name="base_url">http://dev.teazer.online/</string>
 </resources>

@@ -69,7 +69,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
 public class ApiCallingService {
 
 
-    static final String BASE_URL = "http://dev.teazer.online/";
+//    static final String BASE_URL = "http://dev.teazer.online/";
 //    static final String BASE_URL = "https://api.teazer.online/";
 
     public static final int SUCCESS_OK_TRUE = 1;
@@ -99,7 +99,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.ApplicationCalls getApplicationService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -172,7 +172,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.AuthenticationCalls getAuthenticationService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -242,7 +242,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.DiscoverCalls getDiscoverService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -423,7 +423,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.FriendsCalls getFriendsService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -556,7 +556,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -642,7 +642,7 @@ public class ApiCallingService {
 
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -726,7 +726,7 @@ public class ApiCallingService {
         private static TeazerApiCall.UserCalls getUserService(Context context) {
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(context.getString(R.string.base_url))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
