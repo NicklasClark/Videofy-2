@@ -114,6 +114,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     @BindView(R.id.loader)GifTextView loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
+    
     int increamentcounter=1;
 
     public ProfileFragment() {
@@ -256,6 +257,8 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                             loader.setVisibility(View.GONE);
                     }
                 });
+
+
 //                branchUniversalObject.showShareSheet(getActivity(),
 //                        linkProperties,
 //                        shareSheetStyle,

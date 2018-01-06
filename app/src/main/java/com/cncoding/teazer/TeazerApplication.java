@@ -21,7 +21,7 @@ import io.branch.referral.Branch;
  * Created by amit on 30/11/17.
  */
 
-public class TeazerApplication extends Application {
+public class TeazerApplication extends Application  {
 
     private static final String TAG = "Application";
 

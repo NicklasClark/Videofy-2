@@ -138,6 +138,7 @@ public class SubDiscoverFragment extends BaseFragment {
     }
 
     private void prepareMostPopularLayout() {
+
         listLayout.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(new SubDiscoverAdapter(postDetailsArrayList, getContext()));
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -146,6 +147,7 @@ public class SubDiscoverFragment extends BaseFragment {
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
                 if (is_next_page)
                     getMostPopularVideos(page);
             }
@@ -345,7 +347,7 @@ public class SubDiscoverFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 //        return super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_edit) {
-            getParentActivity().pushFragment(Interests.newInstance(false, true, categories, null));
+            getParentActivity().pushFragmentOnto(Interests.newInstance(false, true, categories, null));
             return true;
         }
         return false;

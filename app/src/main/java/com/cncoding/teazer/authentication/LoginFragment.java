@@ -209,7 +209,8 @@ public class LoginFragment extends AuthFragment {
         }
     }
 
-    @OnTextChanged(R.id.login_password) public void passwordTextChanged(CharSequence charSequence) {
+    @OnTextChanged(R.id.login_password)
+    public void passwordTextChanged(CharSequence charSequence) {
         if (!charSequence.toString().equals("")) {
             if (passwordView.getCompoundDrawables()[2] == null)
                 passwordView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
@@ -218,7 +219,8 @@ public class LoginFragment extends AuthFragment {
         }
     }
 
-    @OnTouch(R.id.login_password) public boolean onPasswordShow(MotionEvent event) {
+    @OnTouch(R.id.login_password)
+    public boolean onPasswordShow(MotionEvent event) {
         if (passwordView.getCompoundDrawables()[2] != null) {
             if (event.getAction() == MotionEvent.ACTION_UP &&
                     event.getRawX() >= passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
@@ -245,6 +247,9 @@ public class LoginFragment extends AuthFragment {
         }
         return false;
     }
+
+
+
 //    @OnTouchClick(R.id.login_password) public void onPasswordShow() {
 //        if(isPasswodShown) {
 //

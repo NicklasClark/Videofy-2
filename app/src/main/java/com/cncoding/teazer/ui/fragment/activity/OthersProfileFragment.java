@@ -608,7 +608,6 @@ public class OthersProfileFragment extends BaseFragment {
 
                 return bitmap;
             }
-
             @Override
             protected void onPostExecute(final Bitmap result) {
 

@@ -13,7 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -23,6 +25,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.model.base.Authorize;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -35,6 +38,7 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
+import butterknife.OnTouch;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cncoding.teazer.MainActivity.EMAIL_SIGNUP_PROCEED_ACTION;
@@ -207,6 +211,33 @@ public class SignupFragment extends AuthFragment {
                     .load(Uri.parse(imageUri))
                     .into(dp);
         }
+    }
+
+    @OnTouch(R.id.signup_password)
+    public boolean onPasswordShow(MotionEvent event) {
+        if (passwordView.getCompoundDrawables()[2] != null) {
+            if (event.getAction() == MotionEvent.ACTION_UP &&
+                    event.getRawX() >= passwordView.getRight() - passwordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+                if(isPasswodShown) {
+                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
+                    passwordView.setSelection(passwordView.getText().length());
+                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    passwordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=false;
+                }
+                else
+                {
+                    passwordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                    passwordView.setSelection(passwordView.getText().length());
+                    passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    passwordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=true;
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     @Override
