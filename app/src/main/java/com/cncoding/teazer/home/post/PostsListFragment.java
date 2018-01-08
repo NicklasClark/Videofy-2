@@ -186,7 +186,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                     updatePosts(page, tempPostList);
                                 } else {
                                     if (page == 1 && postList.isEmpty())
-                                        showErrorMessage(getString(R.string.no_posts_available));
+                                        showErrorMessage(getContext().getString(R.string.no_posts_available));
                                 }
                                 break;
                             default:
@@ -224,7 +224,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
                     t.printStackTrace();
-                    showErrorMessage(getString(R.string.something_went_wrong));
+                    showErrorMessage(getContext().getString(R.string.something_went_wrong));
                     dismissRefreshView();
                 }
             });
@@ -235,8 +235,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //                    dismissProgressBar();
         recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.setVisibility(View.VISIBLE);
-        String errorString = message;
-        postLoadErrorTextView.setText(errorString);
+        postLoadErrorTextView.setText(message);
     }
 //    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
 //        if (postList.size() >= newPostDetailsList.size()) {
