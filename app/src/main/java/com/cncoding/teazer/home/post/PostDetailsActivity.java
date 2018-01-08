@@ -454,6 +454,7 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         }
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -1191,6 +1192,9 @@ public class PostDetailsActivity extends AppCompatActivity implements TaggedList
         if (Util.SDK_INT > 23) {
             initializePlayer();
         }
+
+
+
     }
 
 //    @Override

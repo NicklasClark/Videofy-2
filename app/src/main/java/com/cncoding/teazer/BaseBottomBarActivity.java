@@ -211,6 +211,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
+
 //        Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
@@ -348,6 +349,20 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             } else {
                 Log.d("NOTIFYM", "BUNDLE not present in onCreate");
+
+
+//                Intent intent=getIntent();
+//                Uri data = intent.getData();
+//                if(data!=null) {
+//
+//                    // Figure out what to do based on the intent type
+//                    if (intent.getType().indexOf("image/") != -1) {
+//                        // Handle intents with image data ...
+//                    } else if (intent.getType().equals("text/plain")) {
+//                        // Handle intents with text ...
+//
+//                    }
+//                }
             }
         }
 
@@ -424,21 +439,28 @@ public class BaseBottomBarActivity extends BaseActivity
         Log.d("NOTIFYM", "onNewIntent called");
         try {
 
+
             if (intent.getExtras() != null) {
                 Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
                 Bundle likedUserProfile = intent.getExtras().getBundle("LikedUserprofileBundle");
 
                 if (notificationBundle != null) {
+
+                    Toast.makeText(getApplicationContext(),"Noti",Toast.LENGTH_SHORT).show();
+
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     notificationAction(notification_type, source_id);
                 }
 
-                 else if (profileBundle != null) {
 
-                    int userId = profileBundle.getInt("userId");
+                else if (profileBundle != null)
+                 {
+                     Toast.makeText(getApplicationContext(),"prof",Toast.LENGTH_SHORT).show();
+
+                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
                     if (isSelf)
@@ -448,14 +470,29 @@ public class BaseBottomBarActivity extends BaseActivity
                     {
                         pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
                     }
+
 //                    pushFragment(isSelf ? ProfileFragment.newInstance() :
 //                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
 //
-                } else {
+                }
+
+
+
+                else {
+
+
                     Log.d("NOTIFYM", "BUNDLE not present on new Intent");
                     switchTabDynamically();
                 }
+
+
+
             }
+
+
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,14 +513,22 @@ public class BaseBottomBarActivity extends BaseActivity
         Log.d("NOTIFYM", "onStart called");
 
         try {
+
+
+
             Bundle notificationBundle = getIntent().getExtras();
             if (notificationBundle != null) {
                 Log.d("NOTIFYM", "BUNDLE Exists in onStart");
                 String notification_type = notificationBundle.getString("notification_type");
                 String source_id = notificationBundle.getString("source_id");
                 notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
-            } else
+
+            }
+            else {
                 Log.d("NOTIFYM", "BUNDLE not present in onStart");
+
+
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -501,7 +546,7 @@ public class BaseBottomBarActivity extends BaseActivity
             } else {
                 tv.setVisibility(GONE);
             }
-            ImageView img = (ImageView) v.findViewById(R.id.notification);
+            ImageView img = v.findViewById(R.id.notification);
         } catch (Exception e) {
             e.printStackTrace();
         }
