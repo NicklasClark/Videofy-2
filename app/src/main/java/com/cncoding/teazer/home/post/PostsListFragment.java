@@ -201,13 +201,18 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 }
 
                 private void updatePosts(int page, PostList tempPostList) {
-                    if (page == 1) {
-                        postList.clear();
-                        postList.addAll(tempPostList.getPosts());
-                        postListAdapter.notifyDataSetChanged();
-                    } else {
-                        postList.addAll(tempPostList.getPosts());
-                        postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                    try {
+                        postListAdapter.clearDimensions();
+                        if (page == 1) {
+                            postList.clear();
+                            postList.addAll(tempPostList.getPosts());
+                            postListAdapter.notifyDataSetChanged();
+                        } else {
+                            postList.addAll(tempPostList.getPosts());
+                            postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -235,8 +240,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //                    dismissProgressBar();
         recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.setVisibility(View.VISIBLE);
-        String errorString = message;
-        postLoadErrorTextView.setText(errorString);
+        postLoadErrorTextView.setText(message);
     }
 //    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
 //        if (postList.size() >= newPostDetailsList.size()) {

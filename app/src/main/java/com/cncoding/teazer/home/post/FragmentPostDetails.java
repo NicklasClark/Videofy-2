@@ -159,7 +159,6 @@ public class FragmentPostDetails extends BaseFragment {
     public static final String ARG_REACT_ID = "react_id";
     //    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
     public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
-    //</editor-fold>
     CallProfileFromPostDetails callProfileFromPostDetails;
 
     //<editor-fold desc="Main layout views">
@@ -286,8 +285,9 @@ public class FragmentPostDetails extends BaseFragment {
     private String thumbUrl;
     private String reactId;
     private static boolean isReactionPlayed = false;
-
     TaggedUsersList taggedList;
+    //</editor-fold>
+
 
 
     public FragmentPostDetails() {
@@ -313,7 +313,7 @@ public class FragmentPostDetails extends BaseFragment {
     }
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 //        logTheDensity();
 
@@ -353,8 +353,7 @@ public class FragmentPostDetails extends BaseFragment {
 
             @Override
             public void onClick(View view) {
-                if(likes>0)
-                {
+                if(likes>0) {
                     ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(abc_slide_in_bottom, abc_slide_out_top, abc_slide_in_top, abc_slide_out_bottom)
                             .add(R.id.liked_user_layout, FragmentLikedUser.newInstance(postDetails))
@@ -364,7 +363,6 @@ public class FragmentPostDetails extends BaseFragment {
                 }
             }
         });
-
 
 //        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
 //            @Override
@@ -392,7 +390,7 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         oneShotFlag = true;
@@ -438,6 +436,7 @@ public class FragmentPostDetails extends BaseFragment {
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList,this));
         getTaggedUsers(1);
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -455,7 +454,7 @@ public class FragmentPostDetails extends BaseFragment {
                 reactId = bundle.getString(ARG_REACT_ID);
                 isReactionPlayed = false;
 
-                if (reactId != null && !isReactionPlayed) {
+                if (reactId != null) {
                     fetchReactionDetails(context, Integer.parseInt(reactId));
                 }
             }
@@ -1168,7 +1167,8 @@ public class FragmentPostDetails extends BaseFragment {
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
                                     PostsListFragment.postDetails = null;
-                                    getActivity().finish();
+                                    getParentActivity().popFragment();
+//                                    getActivity().finish();
                                 }
                             })
                             .setNegativeButton("NO", new DialogInterface.OnClickListener() {

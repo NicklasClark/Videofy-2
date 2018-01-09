@@ -101,7 +101,7 @@ public class ApiCallingService {
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
         }
@@ -174,7 +174,8 @@ public class ApiCallingService {
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
+//                    .client(getOkHttpClientWithAuthToken(context))
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
@@ -780,17 +781,12 @@ public class ApiCallingService {
             }
         })
                 .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS).build();
-//                .addInterceptor(logging).build();
+                .connectTimeout(20, TimeUnit.SECONDS)
+//                .build();
+                .addInterceptor(logging).build();
     }
 
-//    private static OkHttpClient getOkHttpClient() {
-//        return new OkHttpClient.Builder().build();
-//                .addInterceptor(logging).build();
-//    }
-
-//    private static HttpStack getOkHttpClientForUpload(Context context) {
-//        HTTP_STACK = new OkHttpStack(getOkHttpClientWithAuthToken(context));
-//        return HTTP_STACK;
-//    }
+    private static OkHttpClient getOkHttpClient() {
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
+    }
 }

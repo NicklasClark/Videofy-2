@@ -11,9 +11,9 @@ android {
     signingConfigs {
         releaseconfig {
             keyAlias 'teazerkey'
-            keyPassword KEY_PASSWORD
-            storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
-            storePassword KEYSTORE_PASSWORD
+            keyPassword 'Teazer@123'
+            storeFile file('D:/AndroidStudio/KeyStores/Teazer/Teazer.jks')
+            storePassword 'Teazer@123'
         }
     }
     compileSdkVersion 27
@@ -132,7 +132,6 @@ dependencies {
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'br.com.simplepass:loading-button-android:1.8.3'
     implementation 'jp.wasabeef:blurry:2.1.1'
-
     //noinspection GradleDependency
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     androidTestImplementation 'junit:junit:4.12'
