@@ -12,12 +12,13 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
+import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE;
@@ -26,6 +27,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
@@ -73,36 +75,36 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                 ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
                 part = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
 
+
+
+
                 if (reactionUploadCall == null) {
                     reactionUploadCall = ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
                             getApplicationContext(), uploadParams.getTitle());
                 }
 
-                if (!reactionUploadCall.isExecuted()) {
-                    reactionUploadCall.enqueue(new Callback<ReactionUploadResult>() {
-                        @Override
-                        public void onResponse(Call<ReactionUploadResult> call, Response<ReactionUploadResult> response) {
-    //                                resultCode = response.code();
-                            try {
-                                if (response.code() == 201) {
-                                    onUploadFinish();
-                                    finishReactionUploadSession(getApplicationContext());
-                                } else onUploadError(new Throwable(response.code() + " : " +response.message()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                onUploadError(e);
-                            }
-                        }
+                try {
+                    Response<ReactionUploadResult> response = reactionUploadCall.execute();
 
-                        @Override
-                        public void onFailure(Call<ReactionUploadResult> call, Throwable t) {
-                            t.printStackTrace();
-                            onUploadError(t);
+                    if (response.isSuccessful()) {
+                        try {
+                                onUploadFinish(uploadParams.getVideoPath(), uploadParams.isGallery());
+                                finishReactionUploadSession(getApplicationContext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            onUploadError(e.getMessage());
                         }
-                    });
+                    }
+                    else {
+                        onUploadError(response.body().getMessage());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    onUploadError(null);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                onUploadError(null);
             }
         }
     }
@@ -115,14 +117,17 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
     }
 
     @Override
-    public void onUploadError(Throwable throwable) {
+    public void onUploadError(String errorMessage) {
         bundle.clear();
-        bundle.putString(UPLOAD_ERROR, throwable.getMessage() != null ? throwable.getMessage() : "Something went wrong");
+        bundle.putString(UPLOAD_ERROR, errorMessage != null ? errorMessage:"Something went wrong");
         receiver.send(UPLOAD_ERROR_CODE, bundle);
     }
 
     @Override
-    public void onUploadFinish() {
+    public void onUploadFinish(String videoPath, boolean gallery) {
+        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
+            deleteFilePermanently(videoPath);
+        }
         bundle.clear();
         bundle.putString(UPLOAD_COMPLETE, "Video successfully uploaded");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);

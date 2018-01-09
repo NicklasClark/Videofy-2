@@ -64,8 +64,8 @@ public class ProgressRequestBody extends RequestBody {
 
     public interface UploadCallbacks {
         void onProgressUpdate(int percentage);
-        void onUploadError(Throwable throwable);
-        void onUploadFinish();
+        void onUploadError(String throwable);
+        void onUploadFinish(String videoPath, boolean gallery);
     }
 
     private class ProgressUpdater implements Runnable {

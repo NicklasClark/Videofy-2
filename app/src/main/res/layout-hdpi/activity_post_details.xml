@@ -343,7 +343,7 @@
                     <RelativeLayout
                         android:id="@+id/tags_container"
                         android:layout_width="60dp"
-                        android:layout_height="76dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.1"
                         android:paddingStart="@dimen/padding_thin"
                         android:paddingEnd="@dimen/padding_thin">

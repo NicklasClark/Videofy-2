@@ -14,12 +14,16 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
+import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
@@ -79,47 +83,27 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
                             part, uploadParams.getTitle(), uploadParams.getLocation(), uploadParams.getLatitude(),
                             uploadParams.getLongitude(), uploadParams.getTags(), uploadParams.getCategories(), getApplicationContext());
 
-                PostUploadResult postUploadResult = videoUploadCall.execute().body();
-                int postId = postUploadResult.getPostDetails().getPostId();
-                String postTitle = postUploadResult.getPostDetails().getTitle();
-                String postTumbUrl = postUploadResult.getPostDetails().getMedias().get(0).getThumbUrl();
-                String postOwner = postUploadResult.getPostDetails().getPostOwner().getUserName();
-                onUploadFinish();
-                finishVideoUploadSession(getApplicationContext());
+                try {
+                    Response<PostUploadResult> response = videoUploadCall.execute();
 
-                sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
+                    if (response.isSuccessful()) {
+                        PostUploadResult postUploadResult = response.body();
+                        int postId = postUploadResult.getPostDetails().getPostId();
+                        String postTitle = postUploadResult.getPostDetails().getTitle();
+                        String postThumbUrl = postUploadResult.getPostDetails().getMedias().get(0).getThumbUrl();
+                        String postOwner = postUploadResult.getPostDetails().getPostOwner().getUserName();
+                        onUploadFinish(uploadParams.getVideoPath(), uploadParams.isGallery());
+                        finishVideoUploadSession(getApplicationContext());
 
-//                if (!videoUploadCall.isExecuted()) {
-//                    Toast.makeText(this, R.string.video_upload_confirm_notification, Toast.LENGTH_SHORT).show();
-//                    videoUploadCall.enqueue(new Callback<PostUploadResult>() {
-//                        @Override
-//                        public void onResponse(Call<PostUploadResult> call, Response<PostUploadResult> response) {
-//                            try {
-//                                if (response.code() == 201) {
-//                                    int postId = response.body().getPostDetails().getPostId();
-//                                    String postTitle = response.body().getPostDetails().getTitle();
-//                                    String postTumbUrl = response.body().getPostDetails().getMedias().get(0).getThumbUrl();
-//                                    String postOwner = response.body().getPostDetails().getPostOwner().getUserName();
-//                                    onUploadFinish();
-//                                    finishVideoUploadSession(getApplicationContext());
-//
-//                                    sendBroadcast(postId, postTitle, postTumbUrl, postOwner);
-//
-//                                } else
-//                                    onUploadError(new Throwable(response.code() + " : " + response.message()));
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                                onUploadError(e);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<PostUploadResult> call, Throwable t) {
-//                            t.printStackTrace();
-//                            onUploadError(t);
-//                        }
-//                    });
-//                }
+                        sendBroadcast(postId, postTitle, postThumbUrl, postOwner);
+                    }
+                    else {
+                        onUploadError(response.body().getMessage());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    onUploadError(null);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,16 +126,20 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
     }
 
     @Override
-    public void onUploadError(Throwable throwable) {
+    public void onUploadError(String errorMessage) {
         bundle.clear();
-        bundle.putString(UPLOAD_ERROR, throwable.getMessage() != null ? throwable.getMessage() : "Something went wrong");
+        bundle.putString(UPLOAD_ERROR, errorMessage != null ? errorMessage:"Something went wrong");
         receiver.send(UPLOAD_ERROR_CODE, bundle);
     }
 
     @Override
-    public void onUploadFinish() {
+    public void onUploadFinish(String videoPath, boolean gallery) {
+        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
+            deleteFilePermanently(videoPath);
+        }
         bundle.clear();
         bundle.putString(UPLOAD_COMPLETE, "Video successfully uploaded");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);
     }
+
 }

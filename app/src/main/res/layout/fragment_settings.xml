@@ -213,7 +213,7 @@
             </LinearLayout>
 
             <Switch
-                android:id="@+id/simpleSwitchvideos"
+                android:id="@+id/saveVideosSwitch"
                 android:layout_width="wrap_content"
                 android:padding="@dimen/padding_default"
                 android:checked="false"

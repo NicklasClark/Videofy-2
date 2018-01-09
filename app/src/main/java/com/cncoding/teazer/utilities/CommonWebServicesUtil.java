@@ -1,14 +1,11 @@
 package com.cncoding.teazer.utilities;
 
 import android.content.Context;
-import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.post.FragmentPostDetails;
-import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;

@@ -1,7 +1,6 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -61,7 +59,6 @@ import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.home.post.FragmentPostDetails;
-import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.post.TagListAdapter;
@@ -671,7 +668,7 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         // toggleBottomBar(navigationController.isRootFragment());
     }
-    public void removetoolbar() {
+    public void removeToolbar() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -682,12 +679,11 @@ public class BaseBottomBarActivity extends BaseActivity
 
         }
     }
-    public void showtoolbar() {
+    public void showToolbar() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
-
         }
     }
     public void toggleBottomBar(boolean isVisible) {
@@ -807,8 +803,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onPostInteraction(int action, final PostDetails postDetails) {
         switch (action) {
             case ACTION_VIEW_POST:
-                PostDetailsActivity.newInstance(this, postDetails, null,
-                        true, false, null, null);
+                pushFragment(FragmentPostDetails.newInstance(postDetails, null, true, true, postDetails.getMedias().get(0).getThumbUrl(), null));
                 break;
             case ACTION_VIEW_PROFILE:
                 int postOwnerId = postDetails.getPostOwner().getUserId();
@@ -822,7 +817,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink, String getTumbUrl, String reactId) {
       //  pushFragment(postDetails);
-      //  removetoolbar();
+      //  removeToolbar();
 
         pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
                                         true, postDetails.getMedias().get(0).getThumbUrl(), null));
@@ -946,30 +941,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void myCreationVideos(int i, PostDetails postDetails) {
 
         fetchPostDetails(this, postDetails.getPostId());
-
-//        ApiCallingService.Posts.getPostDetails(postDetails.getPostId(), getApplicationContext())
-//                .enqueue(new Callback<PostDetails>() {
-//                    @Override
-//                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-//
-//                        if (response.code() == 200) {
-//                            if (response.body() != null) {
-//                              pushFragment(  FragmentPostDetails.newInstance( response.body(), null, false,
-//                                        false, response.body().getMedias().get(0).getThumbUrl(), null));
-//                                PostsListFragment.postDetails = response.body();
-//                            } else {
-//                                Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } else
-//                            Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<PostDetails> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
     }
 
 
@@ -977,31 +948,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
-        builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-                .setContentTitle("Teazer video upload")
-//                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.ic_file_upload)
-                .setAutoCancel(false)
-//                .setSound(null)
-                .setDefaults(0)
-                .setOngoing(true)
-//                .addAction(R.drawable.ic_clear_dark, "Cancel",
-//                        PendingIntent.getActivity(BaseBottomBarActivity.this, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
-                .setProgress(0, 0, true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_HIGH);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("videoUploadChanel");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.CYAN);
-//            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-//            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
 
         videoUploadReceiver = new VideoUploadReceiver(new Handler())
                 .setReceiver(new VideoUploadReceiver.Receiver() {
@@ -1009,19 +955,11 @@ public class BaseBottomBarActivity extends BaseActivity
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-//                                notifyProgressInNotification();
                                 uploadingStatusLayout.setVisibility(VISIBLE);
                                 uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
                                 uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
-//                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
-//                                builder.setOngoing(false);
-//                                builder.setContentText("Finished!")
-//                                        .setProgress(100, 100, false);
-//                                notifyProgressInNotification();
                                 uploadProgressText.setText("Finished!");
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
@@ -1032,13 +970,6 @@ public class BaseBottomBarActivity extends BaseActivity
                                 }, 2000);
 
                                 finishVideoUploadSession(getApplicationContext());
-
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        notificationManager.cancel(0);
-//                                    }
-//                                }, 4000);
 
                                 if (fragment instanceof PostsListFragment) {
                                     ((PostsListFragment) fragment).getHomePagePosts(1, true);
@@ -1053,22 +984,6 @@ public class BaseBottomBarActivity extends BaseActivity
                                         uploadingStatusLayout.setVisibility(GONE);
                                     }
                                 }, 2000);
-
-//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-//                                builder.setOngoing(false);
-//                                builder.setContentText("Upload failed!")
-//                                        .setProgress(100, 0, false)
-//                                        .setContentText("");
-//                                notifyProgressInNotification();
-//
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        notificationManager.cancel(0);
-//                                    }
-//                                }, 4000);
-
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
                                 builder.setOngoing(false);
@@ -1190,63 +1105,31 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onBackPressed() {
 
-
-
-        if (PostDetailsActivity.isPostDetailActivity == true) {
-
-//            PostDetailsActivity.isPostDetailActivity = false;
-//            PostDetailsActivity.newInstance(this, postDetails, null,
-//                    true, false, null, null);
-//            switchTab(0);
-//            updateTabSelection(0);
-//            if (!navigationController.isRootFragment())
-//                navigationController.popFragment();
-
-            }
-
-
-        else
-            {
-
             if (!navigationController.isRootFragment()) {
                 navigationController.popFragment();
-              //  Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_SHORT).show();
             }
             else
             {
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();
-                   // Toast.makeText(getApplicationContext(),"2",Toast.LENGTH_SHORT).show();
-
                 } else {
 
                     if (fragmentHistory.getStackSize() > 1) {
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);
                         updateTabSelection(position);
-                      //  Toast.makeText(getApplicationContext(),"3",Toast.LENGTH_SHORT).show();
-
-
-
                     } else {
                         if (navigationController.getCurrentStackIndex() != TAB1) {
                             switchTab(0);
                             updateTabSelection(0);
                             fragmentHistory.emptyStack();
-                         //   Toast.makeText(getApplicationContext(),"4",Toast.LENGTH_SHORT).show();
-
-
                         } else {
                             super.onBackPressed();
-                          //  Toast.makeText(getApplicationContext(),"5",Toast.LENGTH_SHORT).show();
-
-
-
                         }
                     }
                 }
             }
-        }
+//        }
     }
 
     @Override

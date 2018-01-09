@@ -18,6 +18,7 @@ package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -64,7 +65,9 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.utilities.OnSwipeTouchListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,14 +126,26 @@ public class CameraFragment extends Fragment {
     }
 
     private final static int[] CAMERA_FILTER_MODES = {CaptureRequest.CONTROL_EFFECT_MODE_OFF,
-    CaptureRequest.CONTROL_EFFECT_MODE_MONO,
-    CaptureRequest.CONTROL_EFFECT_MODE_NEGATIVE,
-    CaptureRequest.CONTROL_EFFECT_MODE_SOLARIZE,
-    CaptureRequest.CONTROL_EFFECT_MODE_SEPIA,
-    CaptureRequest.CONTROL_EFFECT_MODE_POSTERIZE,
-    CaptureRequest.CONTROL_EFFECT_MODE_WHITEBOARD,
-    CaptureRequest.CONTROL_EFFECT_MODE_BLACKBOARD,
-    CaptureRequest.CONTROL_EFFECT_MODE_AQUA};
+            CaptureRequest.CONTROL_EFFECT_MODE_MONO,
+            CaptureRequest.CONTROL_EFFECT_MODE_NEGATIVE,
+            CaptureRequest.CONTROL_EFFECT_MODE_SOLARIZE,
+            CaptureRequest.CONTROL_EFFECT_MODE_SEPIA,
+            CaptureRequest.CONTROL_EFFECT_MODE_POSTERIZE,
+            CaptureRequest.CONTROL_EFFECT_MODE_WHITEBOARD,
+            CaptureRequest.CONTROL_EFFECT_MODE_BLACKBOARD,
+            CaptureRequest.CONTROL_EFFECT_MODE_AQUA};
+
+    private final static String[] CAMERA_FILTER_MODE_NAMES = {
+            "None",
+            "Mono",
+            "Negative",
+            "Solarize",
+            "Sepia",
+            "Posterize",
+            "Whiteborad",
+            "Blackborad",
+            "Aqua"
+    };
 
     private int selected_filter_mode_index = 0;
 
@@ -140,6 +155,8 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.camera_flip) AppCompatImageView cameraFlipView;
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
+    @BindView(R.id.swipeCameraTip)
+    ProximaNovaSemiboldTextView swipeForFilterTip;
 //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;
@@ -227,7 +244,10 @@ public class CameraFragment extends Fragment {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            activity.finish();
+            Activity activity = getActivity();
+            if (null != activity) {
+                activity.finish();
+            }
         }
 
         @Override
@@ -281,31 +301,51 @@ public class CameraFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         new CreateVideoFolder(this).execute();
 
-//        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-//            public void onSwipeTop() {
-////                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
-//            }
-//            public void onSwipeRight() {
-//                if (selected_filter_mode_index > 0) {
-//                    selected_filter_mode_index--;
-//                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-//                    updatePreview();
-//                }
-//            }
-//            public void onSwipeLeft() {
-//                if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
-//                    selected_filter_mode_index++;
-//                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-//                    updatePreview();
-//                }
-//            }
-//            public void onSwipeBottom() {
-////                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        });
-
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            public void onSwipeTop() {
+//                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                if (selected_filter_mode_index > 0) {
+                    selected_filter_mode_index--;
+                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    updatePreview();
+                }
+            }
+            public void onSwipeLeft() {
+                if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
+                    selected_filter_mode_index++;
+                    mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    updatePreview();
+                }
+            }
+            public void onSwipeBottom() {
+//                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        showFilterTip(getContext().getString(R.string.swipe_for_filter_text));
+    }
+
+    private void showFilterTip(String text) {
+        swipeForFilterTip.setVisibility(View.VISIBLE);
+        swipeForFilterTip.setText(text);
+        swipeForFilterTip.postDelayed(new Runnable() {
+            public void run() {
+                swipeForFilterTip.setVisibility(View.GONE);
+            }
+        }, 3000);
     }
 
     @Override
@@ -627,7 +667,6 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
-
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -698,8 +737,8 @@ public class CameraFragment extends Fragment {
     }
 
     private void setUpCaptureRequestBuilder(CaptureRequest.Builder builder) {
-        builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         builder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
+        builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
     }
 
     /**
@@ -772,9 +811,8 @@ public class CameraFragment extends Fragment {
                 }
             });
             mMediaRecorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -857,7 +895,6 @@ public class CameraFragment extends Fragment {
                         @Override
                         public void run() {
                             mIsRecordingVideo = true;
-
                             // Start recording
                             mMediaRecorder.start();
 
@@ -871,11 +908,11 @@ public class CameraFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                    if (null != activity) {
+                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }, mBackgroundHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
         } catch (Exception e)
         {
             e.printStackTrace();

@@ -594,13 +594,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     }
 
     @Override
-    public void onUploadError(Throwable throwable) {
+    public void onUploadError(String throwable) {
 
 
     }
 
     @Override
-    public void onUploadFinish() {
+    public void onUploadFinish(String videoPath, boolean gallery) {
         finishVideoUploadSession(this);
 
     }
