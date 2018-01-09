@@ -772,10 +772,7 @@ public class CameraFragment extends Fragment {
                 }
             });
             mMediaRecorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
