@@ -269,6 +269,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         return gradientDrawable;
     }
 
+    public void clearDimensions() {
+        dimensionSparseArray.clear();
+    }
+
     @Override
     public int getItemCount() {
         return posts.size();

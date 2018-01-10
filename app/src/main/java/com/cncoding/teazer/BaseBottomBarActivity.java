@@ -487,7 +487,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     }
 
-
     public View getTabView(int value) {
         View v = null;
         try {
@@ -532,7 +531,6 @@ public class BaseBottomBarActivity extends BaseActivity
                     });
         }
     }
-
 
     private void getBranchDynamicLinks() {
 
@@ -1031,6 +1029,9 @@ public class BaseBottomBarActivity extends BaseActivity
 
     }
 
+    public void popFragment() {
+        navigationController.popFragment();
+    }
 
 //
 //    @Override

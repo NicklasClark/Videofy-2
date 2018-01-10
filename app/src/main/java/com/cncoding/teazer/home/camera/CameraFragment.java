@@ -680,6 +680,7 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
+            //noinspection ConstantConditions
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -694,7 +695,6 @@ public class CameraFragment extends Fragment {
                     }
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -709,7 +709,7 @@ public class CameraFragment extends Fragment {
      */
     private static Size chooseVideoSize(Size[] choices) {
         for (Size size : choices) {
-            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1280) {
+            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1080) {
                 return size;
             }
         }
@@ -1075,7 +1075,6 @@ public class CameraFragment extends Fragment {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());
         }
-
     }
 
     public static class ErrorDialog extends DialogFragment {

@@ -78,7 +78,7 @@
                 android:padding="@dimen/padding_double"
                 android:layout_marginStart="@dimen/padding_half"
                 android:contentDescription="@string/show_videos_on_device"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_video_files" />
 
             <android.support.v7.widget.AppCompatImageView
@@ -90,7 +90,7 @@
                 android:padding="@dimen/padding_double"
                 android:layout_marginEnd="@dimen/padding_half"
                 android:contentDescription="@string/flip_camera"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_rotate" />
 
             <android.support.v7.widget.AppCompatImageView
@@ -131,7 +131,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/padding_half"
                 android:contentDescription="@string/flip_camera"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 android:padding="@dimen/padding_default"
                 app:srcCompat="@drawable/ic_gif" />-->
 
@@ -142,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_flash_off"
-            android:foreground="@drawable/ripple_light_circle"
+            android:foreground="@drawable/ripple_dark_circle"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="6dp"
