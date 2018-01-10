@@ -357,7 +357,7 @@ public class CameraFragment extends Fragment {
                 public void run() {
                     swipeForFilterTip.setVisibility(View.GONE);
                 }
-            }, 5000);
+            }, 4000);
         }
     }
 
