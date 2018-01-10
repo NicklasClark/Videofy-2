@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -659,6 +660,7 @@ public class ApiCallingService {
             return getUserService(context).resetFcmToken(header, token);
         }
 
+
         public static Call<ResultObject> setAccountVisibility(int accountType, Context context) {
             return getUserService(context).setAccountVisibility(accountType);
         }
@@ -721,6 +723,9 @@ public class ApiCallingService {
             return getUserService(context).resetUnreadNotification(type);
         }
 
+
+
+
         private static TeazerApiCall.UserCalls getUserService(Context context) {
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -732,6 +737,10 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
+
+
+
+
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,
@@ -780,8 +789,8 @@ public class ApiCallingService {
             }
         })
                 .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS).build();
-//                .addInterceptor(logging).build();
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(logging).build();
     }
 
 //    private static OkHttpClient getOkHttpClient() {

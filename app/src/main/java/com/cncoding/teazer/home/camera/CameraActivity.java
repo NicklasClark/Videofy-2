@@ -136,7 +136,7 @@ public class CameraActivity extends AppCompatActivity
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
     private String videoPath;
-    boolean checkFromGallery;
+    boolean checkFromGallery=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,11 +154,10 @@ public class CameraActivity extends AppCompatActivity
 
 
 
-      //  Toast.makeText(getApplicationContext(),"onCreate",Toast.LENGTH_SHORT).show();
 
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
-        checkFromGallery=true;
+        //checkFromGallery=true;
         fragmentManager = getSupportFragmentManager();
         videosList = new ArrayList<>();
 
@@ -184,71 +183,14 @@ public class CameraActivity extends AppCompatActivity
                 .enableAutoManage(this, 0 /* clientId */, this)
                 .addApi(Places.GEO_DATA_API)
                 .build();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        try {
-            //Toast.makeText(getApplicationContext(),"onStart",Toast.LENGTH_SHORT).show();
-            if (checkFromGallery) {
-             //   Toast.makeText(getApplicationContext(),"onStart 2",Toast.LENGTH_SHORT).show();
-
-                checkFromGallery = false;
-                Intent intent = getIntent();
-                if (getIntent() != null) {
-                    String action = intent.getAction();
-                    String type = intent.getType();
-
-                    if (Intent.ACTION_SEND.equals(action) && type != null) {
-
-                        if ("text/plain".equals(type)) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
-
-                        } else if (type.startsWith("image/")) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
-
-                        } else if (type.startsWith("video/")) {
-                            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-
-                            MediaPlayer mp = MediaPlayer.create(this, uri);
-                            int duration = mp.getDuration();
-                            mp.release();
-
-                            if (duration >= 5000)
-                                uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
-
-                            else {
-                                Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
-                            }
 
 
 
-                            //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
-                        }
-                    } else if
-                            (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-                        if (type.startsWith("image/")) {
-                            Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
-                        }
-                        if (type.startsWith("video/")) {
-                            Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }
-
-            }
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -270,6 +212,62 @@ public class CameraActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+        try {
+        if (checkFromGallery) {
+            checkFromGallery = false;
+            Intent intent = getIntent();
+            if (getIntent() != null) {
+                String action = intent.getAction();
+                String type = intent.getType();
+
+                if (Intent.ACTION_SEND.equals(action) && type != null) {
+
+                    if ("text/plain".equals(type)) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+
+                    } else if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+
+                    } else if (type.startsWith("video/")) {
+                        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+                        MediaPlayer mp = MediaPlayer.create(this, uri);
+                        int duration = mp.getDuration();
+                        mp.release();
+
+                        if (duration >= 5000)
+                            uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
+
+                        else {
+                            Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
+                        //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
+                    }
+                } else if
+                        (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                    if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                    if (type.startsWith("video/")) {
+                        Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
+
+
+                }
+            }
+
+        }
+
+    }
+        catch(Exception e)
+    {
+        e.printStackTrace();
+    }
 
 
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -691,7 +689,11 @@ public class CameraActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         if (googleApiClient != null && googleApiClient.isConnected())
-            googleApiClient.disconnect();
+        {    googleApiClient.disconnect();}
+
+       // checkFromGallery=true;
+      //  Toast.makeText(getApplicationContext(),"onStop",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

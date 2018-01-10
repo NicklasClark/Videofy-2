@@ -447,7 +447,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
                 if (notificationBundle != null) {
 
-                    Toast.makeText(getApplicationContext(),"Noti",Toast.LENGTH_SHORT).show();
 
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
@@ -458,7 +457,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
                 else if (profileBundle != null)
                  {
-                     Toast.makeText(getApplicationContext(),"prof",Toast.LENGTH_SHORT).show();
 
                      int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
@@ -534,6 +532,8 @@ public class BaseBottomBarActivity extends BaseActivity
         }
 
     }
+
+
 
 
     public View getTabView(int value) {
@@ -1255,13 +1255,11 @@ public class BaseBottomBarActivity extends BaseActivity
 
             if (!navigationController.isRootFragment()) {
                 navigationController.popFragment();
-              //  Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_SHORT).show();
             }
             else
             {
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();
-                   // Toast.makeText(getApplicationContext(),"2",Toast.LENGTH_SHORT).show();
 
                 } else {
 
@@ -1269,7 +1267,6 @@ public class BaseBottomBarActivity extends BaseActivity
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);
                         updateTabSelection(position);
-                      //  Toast.makeText(getApplicationContext(),"3",Toast.LENGTH_SHORT).show();
 
 
 
@@ -1278,12 +1275,10 @@ public class BaseBottomBarActivity extends BaseActivity
                             switchTab(0);
                             updateTabSelection(0);
                             fragmentHistory.emptyStack();
-                         //   Toast.makeText(getApplicationContext(),"4",Toast.LENGTH_SHORT).show();
 
 
                         } else {
                             super.onBackPressed();
-                          //  Toast.makeText(getApplicationContext(),"5",Toast.LENGTH_SHORT).show();
 
 
 

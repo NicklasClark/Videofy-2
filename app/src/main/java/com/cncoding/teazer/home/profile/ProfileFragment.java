@@ -41,6 +41,7 @@ import com.cncoding.teazer.model.friends.PublicProfile;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
+import com.cncoding.teazer.ui.fragment.activity.ShareActivityApp;
 
 import java.io.IOException;
 import java.net.URL;
@@ -258,7 +259,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     }
                 });
 
-
 //                branchUniversalObject.showShareSheet(getActivity(),
 //                        linkProperties,
 //                        shareSheetStyle,
@@ -282,11 +282,13 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             }
         });
         _detail.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
+
                // getActivity().onBackPressed();
-              //  Toast.makeText(context,"hello",Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(context,"hello",Toast.LENGTH_SHORT).show();
 
 
 
@@ -297,7 +299,11 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
 //                    if (fragmentManager != null) {
 //                        reportPostDialogFragment.show(fragmentManager, "fragment_report_post");
 //
+//
 //                }
+
+
+
            }
         });
 
