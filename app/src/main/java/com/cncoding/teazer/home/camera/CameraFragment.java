@@ -157,6 +157,8 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
     @BindView(R.id.swipeCameraTip)
     ProximaNovaSemiboldTextView swipeForFilterTip;
+    @BindView(R.id.swipeCameraFilterTip)
+    ProximaNovaSemiboldTextView swipeForFilterNameTip;
 //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;
@@ -317,7 +319,7 @@ public class CameraFragment extends Fragment {
                 if (selected_filter_mode_index > 0) {
                     selected_filter_mode_index--;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index], true);
                     updatePreview();
                 }
             }
@@ -325,7 +327,7 @@ public class CameraFragment extends Fragment {
                 if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
                     selected_filter_mode_index++;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index], true);
                     updatePreview();
                 }
             }
@@ -335,17 +337,28 @@ public class CameraFragment extends Fragment {
 
         });
 
-        showFilterTip(getContext().getString(R.string.swipe_for_filter_text));
+        showFilterTip(getContext().getString(R.string.swipe_for_filter_text), false);
     }
 
-    private void showFilterTip(String text) {
-        swipeForFilterTip.setVisibility(View.VISIBLE);
-        swipeForFilterTip.setText(text);
-        swipeForFilterTip.postDelayed(new Runnable() {
-            public void run() {
-                swipeForFilterTip.setVisibility(View.GONE);
-            }
-        }, 3000);
+    private void showFilterTip(String text, boolean isFilterName) {
+        if(isFilterName) {
+            swipeForFilterNameTip.setVisibility(View.VISIBLE);
+            swipeForFilterNameTip.setText(text);
+            swipeForFilterNameTip.postDelayed(new Runnable() {
+                public void run() {
+                    swipeForFilterNameTip.setVisibility(View.GONE);
+                }
+            }, 3000);
+        }
+        else {
+            swipeForFilterTip.setVisibility(View.VISIBLE);
+            swipeForFilterTip.setText(text);
+            swipeForFilterTip.postDelayed(new Runnable() {
+                public void run() {
+                    swipeForFilterTip.setVisibility(View.GONE);
+                }
+            }, 5000);
+        }
     }
 
     @Override

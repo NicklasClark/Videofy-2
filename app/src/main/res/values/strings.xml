@@ -331,5 +331,6 @@
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
     <string name="base_url">https://api.teazer.online/</string>
-    <string name="swipe_for_filter_text">\u2014 &#60; \u2014\nSwipe right to change Filter effects</string>
+    <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
+    <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
 </resources>
