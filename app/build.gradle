@@ -22,7 +22,7 @@ android {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 13
+        versionCode 12
         versionName "1.0"
         dataBinding.enabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,7 +31,7 @@ android {
         renderscriptTargetApi 27
         renderscriptSupportModeEnabled true
         resValue "string", "app_name", "Teazer"
-        manifestPlaceholders = [facebookId:"163105567761892"]
+        manifestPlaceholders = [facebookId: "163105567761892"]
     }
     buildTypes {
         release {
@@ -79,22 +79,22 @@ android {
 
 }
 
-
 // Map for the version code that gives each ABI a value.
-//ext.abiCodes = [ x86:1, 'armeabi-v7a':2,'arm64-v8a':3]
-//
-//import com.android.build.OutputFile
-//android.applicationVariants.all { variant ->
-//    variant.outputs.each { output ->
-//
-//        def baseAbiVersionCode =
-//                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-//        if (baseAbiVersionCode != null) {
-//            output.versionCodeOverride =
-//                    baseAbiVersionCode + variant.versionCode
-//        }
-//    }
-//}
+ext.abiCodes = [x86: 1, 'armeabi-v7a': 2, 'arm64-v8a': 3]
+
+import com.android.build.OutputFile
+
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+
+        def baseAbiVersionCode =
+                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+        if (baseAbiVersionCode != null) {
+            output.versionCodeOverride =
+                    baseAbiVersionCode + variant.versionCode
+        }
+    }
+}
 
 dependencies {
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
@@ -140,6 +140,7 @@ dependencies {
     implementation 'pub.devrel:easypermissions:0.3.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'jp.wasabeef:blurry:2.1.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation 'pub.devrel:easypermissions:0.3.1'
     implementation 'com.eightbitlab:blurview:1.3.3'
