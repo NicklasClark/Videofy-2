@@ -179,6 +179,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
         fragment.setArguments(args);
+        //CameraActivity.checkFromGallery=false;
         return fragment;
     }
 
@@ -321,13 +322,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             ShareDialog shareDialog;
 //            FacebookSdk.sdkInitialize(getContext());
             shareDialog = new ShareDialog(getActivity());
-            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
 
 
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(videoTitle.getText().toString())
                     .setContentDescription(
-                            "Hello")
+                            "")
                     .setContentUrl(Uri.parse(videoPath))
                     .build();
 

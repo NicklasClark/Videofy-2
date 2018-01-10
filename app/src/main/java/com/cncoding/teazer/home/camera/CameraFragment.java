@@ -283,6 +283,7 @@ public class CameraFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = getActivity();
         context = getContext();
+
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
         }
@@ -378,6 +379,11 @@ public class CameraFragment extends Fragment {
             if (updatedTime > 5000) {
                 stopRecordButtonAnimations();
                 stopRecordingVideo();
+            }
+            else
+            {
+                Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+
             }
         } else {
             animateRecordButton(activity);
@@ -675,7 +681,10 @@ public class CameraFragment extends Fragment {
                     HandlerThread thread = new HandlerThread("CameraPreview");
                     thread.start();
                     try {
-                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+                        if(mPreviewSession!=null) {
+                            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+
+                        }
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
@@ -949,14 +958,17 @@ public class CameraFragment extends Fragment {
                 if (isFlashSupported) {
                     if (isTorchOn) {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        if(mPreviewSession!=null) {
+                            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        }
                         cameraFlashView.setImageResource(R.drawable.ic_flash_on);
 //                        isTorchOn = false;
                     }
                     else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
+                        if(mPreviewSession!=null) {
+                            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        }                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
 //                        isTorchOn = true;
                     }
                 }
