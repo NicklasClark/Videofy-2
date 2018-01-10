@@ -263,6 +263,7 @@ public class CameraFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = getActivity();
         context = getContext();
+
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
         }
@@ -338,6 +339,11 @@ public class CameraFragment extends Fragment {
             if (updatedTime > 5000) {
                 stopRecordButtonAnimations();
                 stopRecordingVideo();
+            }
+            else
+            {
+                Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+
             }
         } else {
             animateRecordButton(activity);

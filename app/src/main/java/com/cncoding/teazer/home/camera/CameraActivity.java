@@ -196,7 +196,8 @@ public class CameraActivity extends AppCompatActivity
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {
+                    MediaStore.Images.Media.DATA };
             cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
@@ -241,13 +242,9 @@ public class CameraActivity extends AppCompatActivity
                         else {
                             Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
                         }
-
-
-
                         //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
                     }
-                } else if
-                        (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
                     if (type.startsWith("image/")) {
                         Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
                     }
@@ -369,6 +366,8 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         uploadOrTrimAction(videoPath);
+
+
     }
 
     @Override
@@ -379,27 +378,52 @@ public class CameraActivity extends AppCompatActivity
     private void uploadOrTrimAction(String videoPath)
     {
         try {
+
             if (new File(videoPath).exists()) {
-                if (getVideoDuration(videoPath) < 60) {
-                    //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
-                    //                    compressVideoAsyncTask.delegate = this;
-                    //                    compressVideoAsyncTask.execute(videoPath);
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
-                    startVideoUploadFragment();
+
+
+
+                String videoFormat=new File(videoPath).getName();
+                String filenameArray[] = videoFormat.split("\\.");
+                String extension = filenameArray[filenameArray.length-1];
+                if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
+                    long  videoduration= getVideoDuration(videoPath);
+                    if (videoduration < 60) {
+
+                        if (videoduration >= 5) {
+                            uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
+                            startVideoUploadFragment();
+                        } else {
+                            Toast.makeText(this, "Select atleast 5 seconds video", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("path", videoPath);
+                        bundle.putInt("MAX_DURATION", (int) getVideoDuration(videoPath));
+                        Intent intent = new Intent(this, TrimmerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, VIDEO_TRIM_REQUEST_CODE);
+                    }
                 }
-                else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("path", videoPath);
-                    bundle.putInt("MAX_DURATION", (int)getVideoDuration(videoPath));
-                    Intent intent = new Intent(this,TrimmerActivity.class);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
+                else
+                {
+                    Toast.makeText(this, "This video format is not supported", Toast.LENGTH_SHORT).show();
+
                 }
             } else
                 Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getVideoFormat(String filename)
+    {
+        String filenameArray[] = filename.split("\\.");
+        String extension = filenameArray[filenameArray.length-1];
+        Toast.makeText(this, extension, Toast.LENGTH_SHORT).show();
+        return extension;
     }
     @Override
     public void processFinish(String output) {

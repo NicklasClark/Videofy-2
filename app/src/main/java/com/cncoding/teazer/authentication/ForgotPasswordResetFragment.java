@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +19,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.model.base.Authorize;
 
 import butterknife.BindView;
@@ -24,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
+import butterknife.OnTouch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,6 +77,59 @@ public class ForgotPasswordResetFragment extends AuthFragment {
             countryCode = getArguments().getInt(COUNTRY_CODE);
             isEmail = getArguments().getBoolean(IS_EMAIL);
         }
+    }
+    @OnTouch(R.id.forgot_pwd_reset_confirm_password)
+    public boolean onPasswordShow(MotionEvent event) {
+        if (resetConfirmPasswordView.getCompoundDrawables()[2] != null) {
+            if (event.getAction() == MotionEvent.ACTION_UP &&
+                    event.getRawX() >= resetConfirmPasswordView.getRight() - resetConfirmPasswordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+                if(isPasswodShown) {
+                    resetConfirmPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
+                    resetConfirmPasswordView.setSelection(resetConfirmPasswordView.getText().length());
+                    resetConfirmPasswordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    resetConfirmPasswordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=false;
+                }
+                else
+                {
+                    resetConfirmPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                    resetConfirmPasswordView.setSelection(resetConfirmPasswordView.getText().length());
+                    resetConfirmPasswordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    resetConfirmPasswordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=true;
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @OnTouch(R.id.forgot_pwd_reset_new_password)
+    public boolean onPasswordShowConfirm(MotionEvent event) {
+        if (resetNewPasswordView.getCompoundDrawables()[2] != null) {
+            if (event.getAction() == MotionEvent.ACTION_UP &&
+                    event.getRawX() >= resetNewPasswordView.getRight() - resetNewPasswordView.getCompoundDrawables()[2].getBounds().width() * 1.5) {
+                if(isPasswodShown) {
+                    resetNewPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled_cross, 0);
+                    resetNewPasswordView.setSelection(resetNewPasswordView.getText().length());
+                    resetNewPasswordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    resetNewPasswordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=false;
+                }
+                else
+                {
+                    resetNewPasswordView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_filled, 0);
+                    resetNewPasswordView.setSelection(resetNewPasswordView.getText().length());
+                    resetNewPasswordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    resetNewPasswordView.setTypeface(new TypeFactory(context).regular);
+                    isPasswodShown=true;
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     @Override
