@@ -30,7 +30,22 @@
             tools:ignore="RelativeOverlap" />
 
         <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/swipeCameraFilterTip"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFFFF"
+            android:textSize="36sp"
+            />
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
             android:id="@+id/swipeCameraTip"
+            app:drawableTopCompat="@drawable/ic_filter_arrow"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="34dp"
@@ -42,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@string/swipe_for_filter_text"
             android:textColor="#FFFFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
 
         <RelativeLayout
@@ -63,7 +78,7 @@
                 android:padding="@dimen/padding_double"
                 android:layout_marginStart="@dimen/padding_half"
                 android:contentDescription="@string/show_videos_on_device"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_video_files" />
 
             <android.support.v7.widget.AppCompatImageView
@@ -75,7 +90,7 @@
                 android:padding="@dimen/padding_double"
                 android:layout_marginEnd="@dimen/padding_half"
                 android:contentDescription="@string/flip_camera"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_rotate" />
 
             <android.support.v7.widget.AppCompatImageView
@@ -116,7 +131,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/padding_half"
                 android:contentDescription="@string/flip_camera"
-                android:foreground="@drawable/ripple_light_circle"
+                android:foreground="@drawable/ripple_dark_circle"
                 android:padding="@dimen/padding_default"
                 app:srcCompat="@drawable/ic_gif" />-->
 
@@ -127,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_flash_off"
-            android:foreground="@drawable/ripple_light_circle"
+            android:foreground="@drawable/ripple_dark_circle"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="6dp"

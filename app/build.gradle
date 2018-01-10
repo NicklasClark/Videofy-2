@@ -105,7 +105,6 @@ dependencies {
     })
     implementation files('libs/javax.mail-1.6.0.jar')
     implementation "com.facebook.android:facebook-login:$fblibVersion"
-    implementation "com.facebook.android:facebook-login:$fblibVersion"
     implementation "com.facebook.android:facebook-share:$fblibVersion"
     implementation "com.facebook.android:facebook-applinks:$fblibVersion"
     implementation "com.android.support:design:$supportLibVersion"

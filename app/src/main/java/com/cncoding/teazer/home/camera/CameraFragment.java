@@ -157,6 +157,8 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
     @BindView(R.id.swipeCameraTip)
     ProximaNovaSemiboldTextView swipeForFilterTip;
+    @BindView(R.id.swipeCameraFilterTip)
+    ProximaNovaSemiboldTextView swipeForFilterNameTip;
 //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;
@@ -318,7 +320,7 @@ public class CameraFragment extends Fragment {
                 if (selected_filter_mode_index > 0) {
                     selected_filter_mode_index--;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index], true);
                     updatePreview();
                 }
             }
@@ -326,7 +328,7 @@ public class CameraFragment extends Fragment {
                 if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
                     selected_filter_mode_index++;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
-                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index]);
+                    showFilterTip(CAMERA_FILTER_MODE_NAMES[selected_filter_mode_index], true);
                     updatePreview();
                 }
             }
@@ -336,17 +338,28 @@ public class CameraFragment extends Fragment {
 
         });
 
-        showFilterTip(getContext().getString(R.string.swipe_for_filter_text));
+        showFilterTip(getContext().getString(R.string.swipe_for_filter_text), false);
     }
 
-    private void showFilterTip(String text) {
-        swipeForFilterTip.setVisibility(View.VISIBLE);
-        swipeForFilterTip.setText(text);
-        swipeForFilterTip.postDelayed(new Runnable() {
-            public void run() {
-                swipeForFilterTip.setVisibility(View.GONE);
-            }
-        }, 3000);
+    private void showFilterTip(String text, boolean isFilterName) {
+        if(isFilterName) {
+            swipeForFilterNameTip.setVisibility(View.VISIBLE);
+            swipeForFilterNameTip.setText(text);
+            swipeForFilterNameTip.postDelayed(new Runnable() {
+                public void run() {
+                    swipeForFilterNameTip.setVisibility(View.GONE);
+                }
+            }, 3000);
+        }
+        else {
+            swipeForFilterTip.setVisibility(View.VISIBLE);
+            swipeForFilterTip.setText(text);
+            swipeForFilterTip.postDelayed(new Runnable() {
+                public void run() {
+                    swipeForFilterTip.setVisibility(View.GONE);
+                }
+            }, 4000);
+        }
     }
 
     @Override
@@ -673,6 +686,7 @@ public class CameraFragment extends Fragment {
             return;
         }
         try {
+            //noinspection ConstantConditions
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -690,7 +704,6 @@ public class CameraFragment extends Fragment {
                     }
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -705,7 +718,7 @@ public class CameraFragment extends Fragment {
      */
     private static Size chooseVideoSize(Size[] choices) {
         for (Size size : choices) {
-            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1280) {
+            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1080) {
                 return size;
             }
         }
@@ -1074,7 +1087,6 @@ public class CameraFragment extends Fragment {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());
         }
-
     }
 
     public static class ErrorDialog extends DialogFragment {

@@ -13,8 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.cncoding.teazer.home.post.FragmentPostDetails;
-
 import org.json.JSONArray;
 
 import java.lang.annotation.Retention;
@@ -174,7 +172,7 @@ public class NavigationController {
             detachCurrentFragment(ft);
             ft.setCustomAnimations(float_up, sink_down, float_up, sink_down);
             ft.add(containerId, fragment, generateTag(fragment));
-            ft.commit();
+            ft.commitAllowingStateLoss();
 
             executePendingTransactions();
 
@@ -184,7 +182,6 @@ public class NavigationController {
             if (transactionListener != null) {
                 transactionListener.onFragmentTransaction(currentFragment, TransactionType.PUSH);
             }
-
         }
     }
 
