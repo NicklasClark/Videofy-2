@@ -12,7 +12,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -189,7 +188,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private VideoUploadReceiver videoUploadReceiver;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private Fragment fragment;
+    private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
     ProfileFragment profilefragment;
@@ -264,15 +263,19 @@ public class BaseBottomBarActivity extends BaseActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Drawable icon = tab.getIcon();
-                if (icon != null)
-                    icon.setTint(Color.BLACK);
+//                Drawable icon = tab.getIcon();
+//                if (icon != null)
+//                    icon.setTint(Color.BLACK);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
+                if(tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
+                    ((PostsListFragment) currentFragment).scrollToTop();
+                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
+                }
             }
         });
         LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
@@ -669,24 +672,20 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         // toggleBottomBar(navigationController.isRootFragment());
     }
-    public void removetoolbar() {
+    public void hideToolbar() {
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().hide();
+//        }
+        toolbar.setVisibility(GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-           actionBar.hide();
-
-
-
-
-        }
     }
-    public void showtoolbar() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.show();
 
-        }
+    public void showToolbar() {
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().show();
+//        }
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        toolbar.setVisibility(VISIBLE);
     }
     public void toggleBottomBar(boolean isVisible) {
         if (isVisible) {
@@ -745,7 +744,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onFragmentTransaction(Fragment fragment, NavigationController.TransactionType transactionType) {
-        //Do fragment stuff. Maybe change title.
+        //Do currentFragment stuff. Maybe change title.
         // If we have a backStack, show the back button
         if (getSupportActionBar() != null && navigationController != null) {
             updateToolbar();
@@ -753,8 +752,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void pushFragment(Fragment fragment) {
+    public void pushFragment(final Fragment fragment) {
         if (navigationController != null) {
+//            currentFragment = fragment;
+            if (fragment instanceof FragmentPostDetails) {
+                hideToolbar();
+            }
             navigationController.pushFragment(fragment);
         }
     }
@@ -768,27 +771,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public Fragment getRootFragment(int index) {
-        fragment = null;
+        currentFragment = null;
         switch (index) {
             case TAB1:
-                fragment = PostsListFragment.newInstance();
+                currentFragment = PostsListFragment.newInstance();
                 break;
             case TAB2:
-                fragment = DiscoverFragment.newInstance();
+                currentFragment = DiscoverFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return null;
                 break;
             case TAB4:
-                fragment = NotificationsFragment.newInstance();
+                currentFragment = NotificationsFragment.newInstance();
                 break;
             case TAB5:
-                fragment = ProfileFragment.newInstance();
+                currentFragment = ProfileFragment.newInstance();
                 break;
             default:
-                fragment = PostsListFragment.newInstance();
+                currentFragment = PostsListFragment.newInstance();
                 break;
         }
-        return fragment;
+        return currentFragment;
     }
     //</editor-fold>
 
@@ -820,7 +823,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink, String getTumbUrl, String reactId) {
       //  pushFragment(postDetails);
-      //  removetoolbar();
+      //  hideToolbar();
 
         pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
                                         true, postDetails.getMedias().get(0).getThumbUrl(), null));
@@ -929,11 +932,17 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
-        if (isEditing)
+        if (!isFromDiscover)
             pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
+        else {
+            if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
+                ((DiscoverFragment) currentFragment).loadPosts();
+                ((DiscoverFragment) currentFragment).getFeaturedPosts(1);
+            }
+        }
     }
 
     @Override
@@ -1038,8 +1047,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //                                    }
 //                                }, 4000);
 
-                                if (fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment) fragment).getHomePagePosts(1, true);
+                                if (currentFragment instanceof PostsListFragment) {
+                                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:
@@ -1098,32 +1107,18 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void callProfileListener(int id, boolean myself) {
                 pushFragment(myself? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(id),
-                        "", ""));
-
+                OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
     }
 
     @Override
-    public void onTaggedUserInteraction(int userId, boolean isSelf)
-    {
+    public void onTaggedUserInteraction(int userId, boolean isSelf) {
        pushFragment (isSelf? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(userId),
-                        "", ""));
-
-
-
+                OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
     public void popFragment() {
         navigationController.popFragment();
     }
-
-//
-//    @Override
-//    public void openprofile(int userId, boolean ismyself) {
-
-//
-//    }
 
     @SuppressWarnings("unused")
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {

@@ -491,7 +491,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().removetoolbar();
+//        getParentActivity().hideToolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
@@ -1224,7 +1224,7 @@ public class FragmentPostDetails extends BaseFragment {
     public void onPause() {
         super.onPause();
         player.setPlayWhenReady(!player.getPlayWhenReady());
-        getParentActivity().showtoolbar();
+//        getParentActivity().showToolbar();
 
         if (Util.SDK_INT <= 23) {
             customHandler.removeCallbacks(updateTimerThread);
@@ -1615,7 +1615,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getParentActivity().removetoolbar();
+//        getParentActivity().hideToolbar();
 
         if (context instanceof CallProfileFromPostDetails) {
             callProfileFromPostDetails = (CallProfileFromPostDetails) context;
@@ -1630,7 +1630,7 @@ public class FragmentPostDetails extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         getParentActivity().updateToolbarTitle(previousTitle);
-        getParentActivity().showtoolbar();
+        getParentActivity().showToolbar();
     }
 
 

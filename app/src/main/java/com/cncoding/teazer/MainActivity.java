@@ -249,14 +249,14 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
                 break;
             case TAG_SELECT_INTERESTS:
-                toggleUpBtnVisibility(View.VISIBLE);
+                toggleUpBtnVisibility(View.GONE);
                 try {
                     popAllBackStack();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
-                        false, false, null, null),
+                        false, false, null, null, false),
                         TAG_SELECT_INTERESTS);
                 break;
             default:
@@ -624,7 +624,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
         successfullyLoggedIn();
     }
 

@@ -235,6 +235,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             });
     }
 
+    public void scrollToTop() {
+        recyclerView.smoothScrollToPosition(0);
+    }
 
     private void showErrorMessage(String message) {
 //                    dismissProgressBar();

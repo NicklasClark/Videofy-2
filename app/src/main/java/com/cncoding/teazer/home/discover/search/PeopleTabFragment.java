@@ -81,7 +81,8 @@ public class PeopleTabFragment extends BaseFragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
-        adapter = new DiscoverSearchAdapter(getParentActivity(), this, false, usersList, null);
+        adapter = new DiscoverSearchAdapter(getParentActivity(), this,
+                false, usersList, null, isSearchTerm);
         recyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -131,22 +132,6 @@ public class PeopleTabFragment extends BaseFragment {
                                 Log.d(TAG, "onResponse 200");
                                 UsersList users = response.body();
                                 is_next_page = users.isNextPage();
-                                if(users.getUsers() != null)
-                                {
-                                    Log.d(TAG, "onResponse user not null");
-                                }
-                                else
-                                {
-                                    Log.d(TAG, "onResponse user null");
-                                }
-                                if (users.getUsers().size() > 0)
-                                {
-                                    Log.d(TAG, "onResponse user size greater than zero");
-                                }
-                                else
-                                {
-                                    Log.d(TAG, "onResponse user size less than zero");
-                                }
                                 if (users.getUsers() != null && users.getUsers().size() > 0) {
                                     Log.d(TAG, "onResponse user list found");
                                     swipeRefreshLayout.setVisibility(View.VISIBLE);

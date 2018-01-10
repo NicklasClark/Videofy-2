@@ -609,7 +609,7 @@
               Android versions.-->
         <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:paddingEnd">8dp</item>
+        <!--<item name="android:paddingEnd">8dp</item>-->
         <!-- android:textColorSecondary is the color of the menu
              overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>

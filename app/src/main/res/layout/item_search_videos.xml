@@ -34,7 +34,6 @@
             android:ellipsize="end"
             android:paddingStart="0dp"
             android:paddingEnd="14dp"
-            app:drawableEndCompat="@drawable/ic_trending_up"
             android:textAppearance="?attr/textAppearanceListItem" />
 
     </LinearLayout>

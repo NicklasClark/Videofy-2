@@ -426,7 +426,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
     }
 
     @Override
@@ -456,7 +456,7 @@ public class CameraActivity extends AppCompatActivity
                     break;
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
-                            Interests.newInstance(true, false, null, selectedData),
+                            Interests.newInstance(true, false, null, selectedData, false),
 //                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
                             tag);
                     break;
