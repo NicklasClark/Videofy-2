@@ -697,6 +697,7 @@ public class FragmentPostDetails extends BaseFragment {
 
     public void decrementLikes() {
         String likesText = PostDetailsActivity.SPACE + --likes;
+        if (likes < 0) likes = 0;
         likesView.setText(likesText);
     }
 
@@ -968,6 +969,7 @@ public class FragmentPostDetails extends BaseFragment {
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes -= 1;
+                    if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));

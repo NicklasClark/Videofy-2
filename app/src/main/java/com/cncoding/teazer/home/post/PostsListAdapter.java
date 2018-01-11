@@ -269,7 +269,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         return gradientDrawable;
     }
 
-    public void clearDimensions() {
+    void clearDimensions() {
         dimensionSparseArray.clear();
     }
 
@@ -307,7 +307,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails);
-        void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink,String getTumbUrl,String reactId);
+        void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId);
     }
 
     private void fetchPostDetails(int postId, final int adapterPosition) {
