@@ -156,7 +156,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'jp.wasabeef:glide-transformations:2.0.2'
+    implementation 'jp.wasabeef:glide-transformations:3.0.1'
 }
 
 configurations.all {
@@ -169,5 +169,6 @@ configurations.all {
         }
     }
 }
+
 apply plugin: 'com.google.gms.google-services'
 //apply plugin: 'realm-android'
