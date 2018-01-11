@@ -17,12 +17,14 @@
 package com.cncoding.teazer.home.camera;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,6 +78,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -133,10 +136,12 @@ public class CameraActivity extends AppCompatActivity
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
     private String videoPath;
+    boolean checkFromGallery=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()
 //                .permitDiskWrites()
@@ -146,8 +151,13 @@ public class CameraActivity extends AppCompatActivity
 //        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
 ////                .penaltyLog()
 //                .build());
+
+
+
+
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
+        //checkFromGallery=true;
         fragmentManager = getSupportFragmentManager();
         videosList = new ArrayList<>();
 
@@ -159,11 +169,10 @@ public class CameraActivity extends AppCompatActivity
             isReaction = bundle.getBoolean(IS_REACTION);
             postDetails = bundle.getParcelable(POST_DETAILS);
         }
-
         slidingUpPanelLayout.setOverlayed(true);
         slidingUpPanelLayout.setScrollableView(recyclerView);
-
         cameraFragment = CameraFragment.newInstance(isReaction);
+
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, cameraFragment)
@@ -177,8 +186,87 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {
+                    MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+
+        try {
+        if (checkFromGallery) {
+            checkFromGallery = false;
+            Intent intent = getIntent();
+            if (getIntent() != null) {
+                String action = intent.getAction();
+                String type = intent.getType();
+
+                if (Intent.ACTION_SEND.equals(action) && type != null) {
+
+                    if ("text/plain".equals(type)) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+
+                    } else if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+
+                    } else if (type.startsWith("video/")) {
+                        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+                        MediaPlayer mp = MediaPlayer.create(this, uri);
+                        int duration = mp.getDuration();
+                        mp.release();
+
+                        if (duration >= 5000)
+                            uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
+
+                        else {
+                            Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
+                        }
+                        //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
+                    }
+                } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                    if (type.startsWith("image/")) {
+                        Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                    if (type.startsWith("video/")) {
+                        Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
+
+
+                }
+            }
+
+        }
+
+    }
+        catch(Exception e)
+    {
+        e.printStackTrace();
+    }
+
+
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -278,6 +366,8 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         uploadOrTrimAction(videoPath);
+
+
     }
 
     @Override
@@ -288,27 +378,52 @@ public class CameraActivity extends AppCompatActivity
     private void uploadOrTrimAction(String videoPath)
     {
         try {
+
             if (new File(videoPath).exists()) {
-                if (getVideoDuration(videoPath) < 60) {
-                    //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
-                    //                    compressVideoAsyncTask.delegate = this;
-                    //                    compressVideoAsyncTask.execute(videoPath);
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
-                    startVideoUploadFragment();
+
+
+
+                String videoFormat=new File(videoPath).getName();
+                String filenameArray[] = videoFormat.split("\\.");
+                String extension = filenameArray[filenameArray.length-1];
+                if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
+                    long  videoduration= getVideoDuration(videoPath);
+                    if (videoduration < 60) {
+
+                        if (videoduration >= 5) {
+                            uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
+                            startVideoUploadFragment();
+                        } else {
+                            Toast.makeText(this, "Select atleast 5 seconds video", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("path", videoPath);
+                        bundle.putInt("MAX_DURATION", (int) getVideoDuration(videoPath));
+                        Intent intent = new Intent(this, TrimmerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, VIDEO_TRIM_REQUEST_CODE);
+                    }
                 }
-                else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("path", videoPath);
-                    bundle.putInt("MAX_DURATION", (int)getVideoDuration(videoPath));
-                    Intent intent = new Intent(this,TrimmerActivity.class);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
+                else
+                {
+                    Toast.makeText(this, "This video format is not supported", Toast.LENGTH_SHORT).show();
+
                 }
             } else
                 Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getVideoFormat(String filename)
+    {
+        String filenameArray[] = filename.split("\\.");
+        String extension = filenameArray[filenameArray.length-1];
+        Toast.makeText(this, extension, Toast.LENGTH_SHORT).show();
+        return extension;
     }
     @Override
     public void processFinish(String output) {
@@ -598,7 +713,11 @@ public class CameraActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         if (googleApiClient != null && googleApiClient.isConnected())
-            googleApiClient.disconnect();
+        {    googleApiClient.disconnect();}
+
+       // checkFromGallery=true;
+      //  Toast.makeText(getApplicationContext(),"onStop",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

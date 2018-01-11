@@ -2,6 +2,7 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
+
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -200,6 +201,9 @@ import retrofit2.http.Query;
          * */
         @POST("/api/v1/authentication/password/reset")
         Call<ResultObject> resetPasswordByOtp(@Body Authorize resetPasswordDetails);
+
+
+
     }
 
     /**
@@ -684,6 +688,10 @@ import retrofit2.http.Query;
      * User actions
      */
     interface UserCalls {
+
+
+//        @GET("/api/DepartmentCRUD/FindAllDepartment")
+//        Call<List<Test1>>  getUserDertail();
 
         /**
          * To update a user profile media

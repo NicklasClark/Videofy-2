@@ -93,7 +93,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
-import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
+import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.CommonUtilities.encodeUnicodeString;
@@ -179,6 +179,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
         fragment.setArguments(args);
+        //CameraActivity.checkFromGallery=false;
         return fragment;
     }
 
@@ -321,13 +322,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             ShareDialog shareDialog;
 //            FacebookSdk.sdkInitialize(getContext());
             shareDialog = new ShareDialog(getActivity());
-            Toast.makeText(getContext(), "check2", Toast.LENGTH_SHORT).show();
 
 
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(videoTitle.getText().toString())
                     .setContentDescription(
-                            "Hello")
+                            "")
                     .setContentUrl(Uri.parse(videoPath))
                     .build();
 

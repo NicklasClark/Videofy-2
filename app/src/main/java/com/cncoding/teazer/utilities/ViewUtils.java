@@ -35,7 +35,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -234,7 +233,7 @@ public class ViewUtils {
 
     public static void performReactionUpload(Context packageContext, UploadParams uploadParams) {
         SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
-        Intent intent = new Intent(packageContext, PostDetailsActivity.class);
+        Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
 //        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);

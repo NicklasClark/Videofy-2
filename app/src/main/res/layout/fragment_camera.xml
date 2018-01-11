@@ -29,7 +29,24 @@
             android:layout_alignParentTop="true"
             tools:ignore="RelativeOverlap" />
 
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/swipeCameraTip"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="34dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/cameraControlsLayout"
+            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/swipe_for_filter_text"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20sp"
+            />
+
         <RelativeLayout
+            android:id="@+id/cameraControlsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

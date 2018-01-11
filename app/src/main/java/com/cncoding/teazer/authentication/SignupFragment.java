@@ -119,6 +119,13 @@ public class SignupFragment extends AuthFragment {
         }
     }
 
+    @OnTextChanged(R.id.signup_username) public void signupUsernametextChanged(CharSequence charSequence) {
+        if (charSequence.toString().equals(""))
+            clearDrawables(usernameView);
+                  setEditTextDrawableEnd(passwordView, R.drawable.ic_view_filled);
+    }
+
+
     @OnClick(R.id.dp_edit_btn) public void launchSelector() {
         launchImageSelector();
     }

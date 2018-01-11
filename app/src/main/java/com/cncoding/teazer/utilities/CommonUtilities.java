@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -52,4 +53,8 @@ public class CommonUtilities {
         }
     }
 
+    public static boolean deleteFilePermanently(String path) {
+        File fdelete = new File(path);
+        return fdelete.exists() && fdelete.delete();
+    }
 }

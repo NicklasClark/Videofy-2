@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
-import static com.cncoding.teazer.home.post.PostDetailsActivity.SPACE;
+import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;

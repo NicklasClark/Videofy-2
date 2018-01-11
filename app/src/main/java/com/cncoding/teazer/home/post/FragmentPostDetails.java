@@ -1,20 +1,16 @@
 package com.cncoding.teazer.home.post;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -148,6 +144,7 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 
 /**
+ *
  * Created by farazhabib on 02/01/18.
  */
 
@@ -315,7 +312,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-//        logTheDensity();
+        logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -691,22 +688,22 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     public void incrementLikes() {
-        String likesText = PostDetailsActivity.SPACE + ++likes;
+        String likesText = FragmentPostDetails.SPACE + ++likes;
         likesView.setText(likesText);
     }
 
     public void decrementLikes() {
-        String likesText = PostDetailsActivity.SPACE + --likes;
+        String likesText = FragmentPostDetails.SPACE + --likes;
         likesView.setText(likesText);
     }
 
     public void incrementViews() {
-        String viewsText = PostDetailsActivity.SPACE + ++views;
+        String viewsText = FragmentPostDetails.SPACE + ++views;
         viewsView.setText(viewsText);
     }
 
     public void decrementViews() {
-        String viewsText = PostDetailsActivity.SPACE + --views;
+        String viewsText = FragmentPostDetails.SPACE + --views;
         viewsView.setText(viewsText);
     }
 
@@ -1419,32 +1416,6 @@ public class FragmentPostDetails extends BaseFragment {
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
-        builder = new NotificationCompat.Builder(context, getString(R.string.default_notification_channel_id))
-                .setContentTitle("Teazer reaction upload")
-                .setContentText("Uploading")
-//                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.ic_file_upload)
-                .setAutoCancel(false)
-                .setSound(null)
-                .setOngoing(true)
-                .setDefaults(0)
-                .addAction(R.drawable.ic_clear_dark, "Cancel",
-                        PendingIntent.getActivity(context, REQUEST_CANCEL_UPLOAD, new Intent(), 0))
-                .setProgress(0, 0, true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.default_notification_channel_id),
-                    "Upload notification", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("reactionUploadChanel");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.CYAN);
-//            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-//            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
 
         reactionUploadReceiver = new ReactionUploadReceiver(new Handler())
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
@@ -1452,23 +1423,14 @@ public class FragmentPostDetails extends BaseFragment {
                     public void onReceiverResult(int resultCode, Bundle resultData) {
                         switch (resultCode) {
                             case UPLOAD_IN_PROGRESS_CODE:
-//                                builder.setProgress(100, resultData.getInt(UPLOAD_PROGRESS), false)
-//                                        .setContentText(String.valueOf(resultData.getInt(UPLOAD_PROGRESS) + "%"));
-//                                notifyProgressInNotification();
                                 uploadingStatusLayout.setVisibility(VISIBLE);
                                 uploadProgressText.setText(String.valueOf("Uploading... " + resultData.getInt(UPLOAD_PROGRESS) + "%"));
                                 uploadProgress.setProgress(resultData.getInt(UPLOAD_PROGRESS));
 
                                 if (reactBtn.isEnabled())
                                     disableView(reactBtn, true);
-//                                Log.d(UPLOAD_PROGRESS, String.valueOf(resultData.getInt(UPLOAD_PROGRESS)));
                                 break;
                             case UPLOAD_COMPLETE_CODE:
-                                builder.setOngoing(false);
-//                                builder.setContentText("Finished!")
-//                                        .setProgress(0, 0, false);
-//                                notifyProgressInNotification();
-
                                 uploadProgressText.setText(R.string.finished);
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
@@ -1483,27 +1445,9 @@ public class FragmentPostDetails extends BaseFragment {
                                     PostsListFragment.postDetails.can_react = false;
 
                                 finishReactionUploadSession(context);
-
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        notificationManager.cancel(0);
-//                                    }
-//                                }, 4000);
-
                                 getPostReactions(postDetails.getPostId(), 1);
-//                                final String s="https://s3.ap-south-1.amazonaws.com/teazer-medias/Teazer/post/2/4/1511202104939_thumb.png";
-//                                new ShowShareDialog().execute(s);
                                 break;
                             case UPLOAD_ERROR_CODE:
-//                                String failedMessage = String.valueOf(resultData.getString(UPLOAD_ERROR));
-//                                Log.e(UPLOAD_ERROR, failedMessage != null ? failedMessage : "FAILED!!!");
-//
-//                                builder.setOngoing(false);
-//                                builder.setContentText("Upload failed!")
-//                                        .setProgress(0, 0, false);
-//                                notifyProgressInNotification();
-
                                 uploadProgressText.setText(R.string.failed);
                                 uploadProgress.setVisibility(GONE);
                                 new Handler().postDelayed(new Runnable() {
@@ -1518,14 +1462,6 @@ public class FragmentPostDetails extends BaseFragment {
                                     PostsListFragment.postDetails.can_react = true;
 
                                 finishReactionUploadSession(context);
-
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        notificationManager.cancel(0);
-//                                    }
-//                                }, 4000);
-
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
                                 Toast.makeText(context, "cancelled", Toast.LENGTH_SHORT).show();
@@ -1548,31 +1484,13 @@ public class FragmentPostDetails extends BaseFragment {
         }
     }
 
-//    private void notifyProgressInNotification() {
-//        if (notificationManager != null) {
-//            notificationManager.notify(0, builder.build());
-//        }
-//    }
-
-//    private void deleteFile(String path, boolean isGallery) {
-//        if (!isGallery) {
-//            deleteFileFromMediaStoreDatabase(getApplicationContext(), path);
-//            //noinspection ResultOfMethodCallIgnored
-//            new File(path).delete();
-//        }
-//    }
-
-//    if (uploadParams.isReaction() && isResuming) {
-//        uploadParams.getPostDetails().can_react = false;
-//        PostDetailsActivity.newInstance(reference.get(), uploadParams.getPostDetails(), null, false);
-//    }
 
     @SuppressWarnings("unused")
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
 
-        private WeakReference<PostDetailsActivity> reference;
+        private WeakReference<FragmentPostDetails> reference;
 
-        ShowShareDialog(PostDetailsActivity context) {
+        ShowShareDialog(FragmentPostDetails context) {
             reference = new WeakReference<>(context);
         }
 
@@ -1646,12 +1564,6 @@ public class FragmentPostDetails extends BaseFragment {
         public void run() {
             try {
                 long timeInMilliseconds = totalDuration - player.getCurrentPosition();
-
-//                int secs = (int) ((totalDuration - player.getCurrentPosition()) / 1000) + 1;
-//                int minutes = secs / 60;
-//                secs = secs % 60;
-//                int milliseconds = (int) (updatedTime % 1000);
-//                String duration = BLANK_SPACE + minutes + ":" + String.format(Locale.getDefault(), "%02d", secs);
                 String duration = BLANK_SPACE + String.format(Locale.getDefault(), "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds),
                         TimeUnit.MILLISECONDS.toSeconds(timeInMilliseconds) -
