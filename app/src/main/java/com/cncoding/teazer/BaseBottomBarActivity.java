@@ -818,7 +818,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink, String getTumbUrl, String reactId) {
+    public void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId) {
       //  pushFragment(postDetails);
       //  hideToolbar();
 

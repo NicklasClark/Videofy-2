@@ -312,7 +312,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        logTheDensity();
+//        logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -693,7 +693,9 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     public void decrementLikes() {
-        String likesText = FragmentPostDetails.SPACE + --likes;
+        likes -= likes;
+        if (likes < 0) likes = 0;
+        String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
     }
 
@@ -965,6 +967,7 @@ public class FragmentPostDetails extends BaseFragment {
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes -= 1;
+                    if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));

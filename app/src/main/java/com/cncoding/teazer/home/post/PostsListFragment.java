@@ -38,8 +38,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.post_load_error)
-    ProximaNovaRegularTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean isRefreshing;
