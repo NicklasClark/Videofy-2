@@ -1156,10 +1156,6 @@ public class BaseBottomBarActivity extends BaseActivity
             {
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();
-<<<<<<< HEAD
-=======
-
->>>>>>> arif_dev
                 } else {
 
                     if (fragmentHistory.getStackSize() > 1) {
