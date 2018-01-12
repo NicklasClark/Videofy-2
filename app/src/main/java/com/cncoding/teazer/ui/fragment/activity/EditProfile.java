@@ -196,12 +196,23 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
             }
         }
+
         if (gender == 1) {
+
+            if (userProfileUrl == null) {
+                Glide.with(context)
+                        .load(R.drawable.ic_user_male_dp)
+                        .into(profile_image);            }
             male.setBackgroundResource(R.drawable.ic_male_sel);
             female.setBackgroundResource(R.drawable.ic_female_white);
             maletext.setTextColor(Color.parseColor("#2196F3"));
             femaletxt.setTextColor(Color.parseColor("#333333"));
-        } else if(gender==2) {
+        }
+        else if(gender==2) {
+            if (userProfileUrl == null) {
+                Glide.with(context)
+                        .load(R.drawable.ic_user_female_dp)
+                        .into(profile_image);            }
             female.setBackgroundResource(R.drawable.ic_female_sel);
             male.setBackgroundResource(R.drawable.ic_male_white);
             femaletxt.setTextColor(Color.parseColor("#F48fb1"));
@@ -219,10 +230,16 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         male.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 male.setBackgroundResource(R.drawable.ic_male_sel);
                 female.setBackgroundResource(R.drawable.ic_female_white);
                 maletext.setTextColor(Color.parseColor("#2196F3"));
                 femaletxt.setTextColor(Color.parseColor("#333333"));
+                Glide.with(context)
+                        .load(R.drawable.ic_user_male_dp)
+                        .into(profile_image);
+
+
                 gender = 1;
             }
         });
@@ -233,6 +250,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 male.setBackgroundResource(R.drawable.ic_male_white);
                 femaletxt.setTextColor(Color.parseColor("#F48fb1"));
                 maletext.setTextColor(Color.parseColor("#333333"));
+                Glide.with(context)
+                        .load(R.drawable.ic_user_female_dp)
+                        .into(profile_image);
                 gender = 2;
             }
         });
@@ -792,11 +812,5 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 });
     }
 }
-
-
-
-
-
-
 
 
