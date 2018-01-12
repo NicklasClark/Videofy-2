@@ -274,9 +274,7 @@ public class SubDiscoverFragment extends BaseFragment {
                                     postDetailsArrayList.addAll(postList.getPosts());
                                     recyclerView.getAdapter().notifyDataSetChanged();
                                 } else if (page == 1) {
-                                    String noVideosText = getString(R.string.no_videos_tagged) +
-                                            categories.get(0).getCategoryName() +
-                                            getString(R.string.yet_uploaded);
+                                    String noVideosText = getString(R.string.no_videos_tagged);
                                     noPosts.setText(noVideosText);
                                     noPosts.setVisibility(VISIBLE);
                                     noPosts2.setVisibility(VISIBLE);

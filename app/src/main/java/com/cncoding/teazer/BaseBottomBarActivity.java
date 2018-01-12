@@ -1,7 +1,6 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -155,7 +154,7 @@ public class BaseBottomBarActivity extends BaseActivity
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
         FragmentLikedUser.CallProfileListener,
-//    profileListener fromPostdetails
+//    profileListener from Postdetails
         FragmentPostDetails.CallProfileFromPostDetails,
 
         TagListAdapter.TaggedListInteractionListener
@@ -685,6 +684,7 @@ public class BaseBottomBarActivity extends BaseActivity
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         toolbar.setVisibility(VISIBLE);
     }
+
     public void toggleBottomBar(boolean isVisible) {
         if (isVisible) {
             if (blurView.getVisibility() != VISIBLE && cameraButton.getVisibility() != VISIBLE) {
@@ -824,9 +824,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
         pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
                                         true, postDetails.getMedias().get(0).getThumbUrl(), null));
-
     }
-
 
     @Override
     public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,

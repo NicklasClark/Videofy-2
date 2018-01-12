@@ -208,7 +208,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                             postListAdapter.notifyDataSetChanged();
                         } else {
                             postList.addAll(tempPostList.getPosts());
-                            postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                            postListAdapter.notifyItemRangeInserted((page - 1) * 30, tempPostList.getPosts().size());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
