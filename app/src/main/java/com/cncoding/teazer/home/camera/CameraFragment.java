@@ -758,6 +758,7 @@ public class CameraFragment extends Fragment {
     private void setUpCaptureRequestBuilder(CaptureRequest.Builder builder) {
         builder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
         builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_CAPTURE_INTENT_ZERO_SHUTTER_LAG);
     }
 
     /**
