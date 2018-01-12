@@ -74,7 +74,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.post_owner.setText(postOwner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
-        viewHolder.duration.setText(reactDuration + " secs");
+        viewHolder.duration.setText(reactDuration);
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         Glide.with(context).load(thumb_url)

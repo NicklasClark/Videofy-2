@@ -79,6 +79,8 @@ import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
+import com.expletus.mobiruck.MobiruckEvent;
+import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
@@ -214,6 +216,13 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .load(R.drawable.ic_loader)
 //                .asGif()
 //                .into(loader);
+
+        //logging mobiruck event
+        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+
+        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+
+        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 

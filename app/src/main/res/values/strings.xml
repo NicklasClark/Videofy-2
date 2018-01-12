@@ -333,4 +333,5 @@
     <string name="base_url">https://api.teazer.online/</string>
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
+    <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>
 </resources>

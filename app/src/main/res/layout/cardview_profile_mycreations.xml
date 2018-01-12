@@ -33,11 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="280dp">
         <ImageView
-
             android:layout_width="match_parent"
             android:background="@drawable/bg_vignette"
             android:layout_height="280dp" />
-
 
     </RelativeLayout>
 
@@ -74,10 +72,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="16dp"
                 android:padding="5dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="14dp"
                 android:layout_marginEnd="@dimen/padding_default" />
             <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
                 android:id="@+id/duration"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="5dp"
@@ -106,6 +105,7 @@
 
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/playvideo"
             android:layout_width="36dp"
             android:layout_height="36dp"

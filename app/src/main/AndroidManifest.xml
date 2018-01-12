@@ -360,13 +360,28 @@
             android:screenOrientation="portrait"
             android:theme="@style/DetailAppTheme" />
         <activity android:name=".ui.fragment.activity.ShareActivityApp">
-
-
-
-
-
-
         </activity>
+
+        <!--  //mobiruck starts//-->
+
+        <receiver
+
+            android:name="com.expletus.mobiruck.MobiruckReferrerReceiver"
+
+            android:exported="true">
+
+            <intent-filter>
+
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+
+            </intent-filter>
+
+        </receiver>
+
+        <service android:name="com.expletus.mobiruck.service.MobiruckInstallServices" />
+
+        <service android:name="com.expletus.mobiruck.service.MobiruckUpdateServices" />
+
     </application>
 
 </manifest>

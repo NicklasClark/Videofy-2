@@ -73,6 +73,7 @@
             <include layout="@layout/progress_bar_horizontal"/>
 
             <Switch
+                android:visibility="gone"
                 android:id="@+id/gifSwitch"
                 android:layout_marginTop="4dp"
                 android:layout_gravity="center_horizontal"

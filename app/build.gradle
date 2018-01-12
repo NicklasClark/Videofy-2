@@ -158,6 +158,12 @@ dependencies {
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'jp.wasabeef:glide-transformations:2.0.2'
+    compile(group: 'com.expletus.mobiruck', name: 'mobiruck', version:'2.1.27', ext: 'aar', changing: true) {
+        //exclude group: if needed
+        exclude  group: 'com.android.support', module: 'appcompat-v7'
+        transitive = true
+    }
+    implementation 'com.android.installreferrer:installreferrer:1.0'
 }
 
 configurations.all {
