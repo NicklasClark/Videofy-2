@@ -147,8 +147,6 @@ public class OthersProfileFragment extends BaseFragment {
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
     boolean next;
 
-
-
     public static OthersProfileFragment newInstance(String id, String identifier, String username) {
         OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 

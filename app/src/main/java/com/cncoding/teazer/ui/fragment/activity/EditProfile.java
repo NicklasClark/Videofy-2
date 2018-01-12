@@ -104,8 +104,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProximaNovaRegularCheckedTextView maletext;
     @BindView(R.id.femaletxt)
     ProximaNovaRegularCheckedTextView femaletxt;
-//    @BindView(R.id.cropImageView)
-//    CropImageView cropImageView;
+
 
     Button fab;
     ProgressBar simpleProgressBar;
@@ -208,6 +207,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             maletext.setTextColor(Color.parseColor("#2196F3"));
             femaletxt.setTextColor(Color.parseColor("#333333"));
         }
+
         else if(gender==2) {
             if (userProfileUrl == null) {
                 Glide.with(context)
