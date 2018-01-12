@@ -9,6 +9,7 @@ import android.support.text.emoji.FontRequestEmojiCompatConfig;
 import android.support.v4.provider.FontRequest;
 import android.util.Log;
 
+import com.expletus.mobiruck.MobiruckSdk;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
@@ -54,6 +55,13 @@ public class TeazerApplication extends Application  {
                     }
                 });
         EmojiCompat.init(config);
+
+        //Mobiruck initialization
+        MobiruckSdk.getInstance().init(getApplicationContext(), getApplicationContext().getString(R.string.mobiruck_api_key), true);
+
+        MobiruckSdk.getInstance().enableLog(true);  // this controls log prints in sdk
+
+        MobiruckSdk.getInstance().startTracking();  // this starts the tracking system.
 
     }
 

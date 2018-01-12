@@ -5,9 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
-
-
-
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,6 +13,7 @@
         android:id="@+id/root_layout"
         android:background="@color/material_grey100"
         android:paddingBottom="?attr/actionBarSize"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
@@ -346,7 +344,7 @@
                     <RelativeLayout
                         android:id="@+id/tags_container"
                         android:layout_width="60dp"
-                        android:layout_height="76dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.1"
                         android:paddingStart="@dimen/padding_thin"
                         android:paddingEnd="@dimen/padding_thin">

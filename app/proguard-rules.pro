@@ -30,3 +30,4 @@
 -keep class * {
     public private *;
 }
+-dontwarn com.android.installreferrer

@@ -168,42 +168,30 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
             int width = postDetails.getMedias().get(0).getDimension().getWidth();
             int height = postDetails.getMedias().get(0).getDimension().getHeight();
+            RequestListener<String, GlideDrawable> requestListener = new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                               boolean isFromMemoryCache, boolean isFirstResource) {
+                    prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
+                            holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                    return false;
+                }
+            };
             if (width > height) {
                 Glide.with(context)
                         .load(postDetails.getMedias().get(0).getThumbUrl())
                         .bitmapTransform(new CropSquareTransformation(context))
-                        .listener(new RequestListener<String, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
-                                        holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
-                                return false;
-                            }
-                        })
+                        .listener(requestListener)
                         .into(holder.postThumbnail);
             } else {
                 Glide.with(context)
                         .load(postDetails.getMedias().get(0).getThumbUrl())
-                        .listener(new RequestListener<String, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
-                                        holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
-                                return false;
-                            }
-                        })
+                        .listener(requestListener)
                         .into(holder.postThumbnail);
             }
         } catch (Exception e) {
@@ -269,6 +257,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         return gradientDrawable;
     }
 
+    void clearDimensions() {
+        dimensionSparseArray.clear();
+    }
+
     @Override
     public int getItemCount() {
         return posts.size();
@@ -303,7 +295,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails);
-        void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink,String getTumbUrl,String reactId);
+        void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId);
     }
 
     private void fetchPostDetails(int postId, final int adapterPosition) {

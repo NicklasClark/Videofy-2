@@ -129,8 +129,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
                                         reference.get().recyclerView.getAdapter().notifyDataSetChanged();
                                     } else if (integers[0] == 1){
                                         reference.get().recyclerView.setVisibility(View.GONE);
-                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged) +
-                                                reference.get().categoryName + reference.get().getString(R.string.yet_uploaded);
+                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged);
                                         reference.get().noPosts.setText(noVideosText);
                                         reference.get().noPosts.setVisibility(View.VISIBLE);
                                         reference.get().noPosts2.setVisibility(View.INVISIBLE);

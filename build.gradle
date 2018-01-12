@@ -29,6 +29,12 @@ allprojects {
         maven { url 'https://maven.google.com' }
         maven { url 'https://maven.fabric.io/public' }
 //        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
+        maven {
+            url 'https://maven.google.com'
+        }
+        maven {
+            url "https://mymavenrepo.com/repo/dT2TdROtzilvjRTJOVps/"//mobiruck
+        }
     }
 }
 

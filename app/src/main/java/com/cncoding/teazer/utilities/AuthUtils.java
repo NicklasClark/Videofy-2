@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -102,12 +103,35 @@ public class AuthUtils {
             if (countryCode != -1)
                 countryCodePicker.setCountryForPhoneCode(countryCode);
             else {
-                countryCodePicker.setCountryForNameCode(Locale.getDefault().getCountry());
+                countryCodePicker.setCountryForNameCode(getUserCountry(fragmentActivity));
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
                 setCountryCode(fragmentActivity.getApplicationContext(), countryCode);
             }
         }
         return countryCode;
+    }
+
+    @NonNull
+    private static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry;
+            if (tm != null) {
+                simCountry = tm.getSimCountryIso();
+                if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                    return simCountry.toLowerCase(Locale.US);
+                } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                    String networkCountry = tm.getNetworkCountryIso();
+                    if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                        return networkCountry.toLowerCase(Locale.US);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "US";
     }
 
     @NonNull

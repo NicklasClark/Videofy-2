@@ -24,7 +24,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.home.post.PostDetailsActivity;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
@@ -33,6 +32,7 @@ import java.util.Locale;
 
 import static com.cncoding.teazer.customViews.ViewAnimator.Listeners;
 import static com.cncoding.teazer.customViews.ViewAnimator.putOn;
+import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
 
 /**
  *
@@ -279,23 +279,23 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
     private void refreshControllerView() {
         caption.setText(videoTitle);
-        String locationText = PostDetailsActivity.SPACE + location;
+        String locationText = SPACE + location;
         locationView.setText(locationText);
         profileNameView.setText(profileName);
-        String likesText = PostDetailsActivity.SPACE + likes;
+        String likesText = SPACE + likes;
         likesView.setText(likesText);
-        String viewsText = PostDetailsActivity.SPACE + views;
+        String viewsText = SPACE + views;
         viewsView.setText(viewsText);
         categoriesView.setText(categories);
 
         if (reactionCount > 4) {
-            String reactionText = PostDetailsActivity.SPACE + "+" + (reactionCount - 3) + " R";
+            String reactionText = SPACE + "+" + (reactionCount - 3) + " R";
             reactionCountView.setText(reactionText);
         } else if (reactionCount == 0){
 //            setNoReactions();
         }
         else {
-            String reactionText = PostDetailsActivity.SPACE + reactionCount + " R";
+            String reactionText = SPACE + reactionCount + " R";
             reactionCountView.setText(reactionText);
         }
         Glide.with(getContext())
@@ -492,9 +492,9 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         int duration = convert(mediaPlayerControlListener.getDuration() + ".");
 
         String remainingTimeText;
-        remainingTimeText = PostDetailsActivity.SPACE + stringToTime(duration - position);
+        remainingTimeText = SPACE + stringToTime(duration - position);
         if(mediaPlayerControlListener.isComplete()){
-            remainingTimeText = PostDetailsActivity.SPACE + stringToTime(duration);
+            remainingTimeText = SPACE + stringToTime(duration);
         }
         remainingTime.setText(remainingTimeText);
         return position;

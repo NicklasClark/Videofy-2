@@ -23,6 +23,7 @@ public class SharedPrefs {
     private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
     private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
+    private static final String SAVE_VIDEO_IN_GALLERY = "saveIntoGallery";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -148,4 +149,13 @@ public class SharedPrefs {
             return -1;
         }
     }
+
+    public static void setSaveVideoFlag(Context context, boolean value) {
+        getSharedPreferences(context).edit().putBoolean(SAVE_VIDEO_IN_GALLERY, value).apply();
+    }
+
+    public static boolean getSaveVideoFlag(Context context) {
+        return getSharedPreferences(context).getBoolean(SAVE_VIDEO_IN_GALLERY, false);
+    }
+
 }

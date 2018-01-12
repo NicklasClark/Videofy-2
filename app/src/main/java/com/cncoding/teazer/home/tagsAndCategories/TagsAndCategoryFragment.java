@@ -212,8 +212,10 @@ public class TagsAndCategoryFragment extends Fragment {
                         recyclerView.getAdapter().notifyDataSetChanged();
                         changeDoneBtnVisibility(VISIBLE);
                     } else {
-                        changeDoneBtnVisibility(View.GONE);
-                        noFriendsTextView.setVisibility(VISIBLE);
+                        if (page == 1) {
+                            changeDoneBtnVisibility(View.GONE);
+                            noFriendsTextView.setVisibility(VISIBLE);
+                        }
                     }
                 } else {
                     changeDoneBtnVisibility(View.GONE);

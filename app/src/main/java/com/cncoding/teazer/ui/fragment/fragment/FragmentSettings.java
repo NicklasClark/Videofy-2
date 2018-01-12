@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -21,10 +20,10 @@ import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
+import com.cncoding.teazer.utilities.SharedPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import io.branch.referral.Branch;
 import retrofit2.Call;
@@ -40,8 +39,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FragmentSettings extends Fragment {
 
-
-
 //    @BindView(R.id.text_block_layout) ProximaNovaRegularTextView text_block;
 //    @BindView(R.id.recentlyDeleted) ProximaNovaRegularTextView recentlyDeleted;
 //    @BindView(R.id.logoutLayout) ProximaNovaRegularTextView logout;
@@ -53,11 +50,13 @@ public class FragmentSettings extends Fragment {
     Context context;
     private static final int PRIVATE_STATUS = 1;
     private static final int PUBLIC_STATUS = 2;
-    boolean flag =false;
+    boolean flag = false;
     public static final String ACCOUNT_TYPE = "accountType";
     int accountType;
     ChangeCategoriesListener mListener;
     Switch simpleSwitch;
+    @BindView(R.id.saveVideosSwitch)
+    Switch saveVideosSwitch;
 
     public static FragmentSettings newInstance(String accountType) {
         FragmentSettings fragment = new FragmentSettings();
@@ -67,6 +66,7 @@ public class FragmentSettings extends Fragment {
         return fragment;
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,43 +75,57 @@ public class FragmentSettings extends Fragment {
             accountType = Integer.parseInt(bundle.getString(ACCOUNT_TYPE));
         }
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        simpleSwitch=view.findViewById(R.id.simpleSwitch);
+        simpleSwitch = view.findViewById(R.id.simpleSwitch);
         context = container.getContext();
         ButterKnife.bind(this, view);
 
         simpleSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(simpleSwitch.isChecked())
-                {
+                if (simpleSwitch.isChecked()) {
                     publicprivateProfile(PRIVATE_STATUS);
-
-                }
-                else
-                {
+                } else {
                     publicprivateProfile(PUBLIC_STATUS);
-
                 }
 
             }
         });
+
+        //save video to gallery switch button
+        saveVideosSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()) {
+                    SharedPrefs.setSaveVideoFlag(getContext(), true);
+                } else if(!saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()){
+                    SharedPrefs.setSaveVideoFlag(getContext(), false);
+                }
+            }
+        });
+
+        if(SharedPrefs.getSaveVideoFlag(getContext()))
+        {
+            saveVideosSwitch.setChecked(true);
+        }
+        else
+            saveVideosSwitch.setChecked(false);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if(accountType==1)
-        {
+        if (accountType == 1) {
             simpleSwitch.setChecked(true);
-        }
-        else
-        {
+        } else {
             simpleSwitch.setChecked(false);
         }
     }
+
     @OnClick(R.id.text_block_layout)
     public void blockListClicked() {
         startActivity(new Intent(context, BlockUserList.class));
@@ -153,13 +167,11 @@ public class FragmentSettings extends Fragment {
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
     }
 
-    public void publicprivateProfile(final int status)
-    {
+    public void publicprivateProfile(final int status) {
         ApiCallingService.User.setAccountVisibility(status, context).enqueue(new Callback<ResultObject>() {
 
             @Override
@@ -177,20 +189,19 @@ public class FragmentSettings extends Fragment {
                             ProfileFragment.checkprofileupdated = true;
                             Toast.makeText(context, "Your account has become public", Toast.LENGTH_SHORT).show();
                         }
-                    }else
-                    {
+                    } else {
 
                         Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
                     }
 
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
 
                     e.printStackTrace();
                     Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
                 }
 
             }
+
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();

@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
+import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -223,11 +224,25 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
             @Override
             public void onCancel() {
+                signupWithFbBtn.revertAnimation(new OnAnimationEndListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        signupWithFbBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                0, 0, 0);
+                    }
+                });
                 enableViews();
             }
 
             @Override
             public void onError(FacebookException error) {
+                signupWithFbBtn.revertAnimation(new OnAnimationEndListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        signupWithFbBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
+                                0, 0, 0);
+                    }
+                });
                 enableViews();
                // Log.v("registerFbCallback()", error.getCause().toString());
             }
@@ -235,7 +250,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     }
 
     private Bundle getFacebookData(JSONObject object) {
-
         try {
             Bundle bundle = new Bundle();
             String id = object.getString("id");
@@ -307,6 +321,13 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                             null, null, account, signupWithGoogleBtn);
                 else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
             } else {
+                signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
+                                0, 0, 0);
+                    }
+                });
                 enableViews();
                 Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
             }

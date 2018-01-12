@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -102,7 +101,7 @@ public class ApiCallingService {
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.ApplicationCalls.class);
         }
@@ -175,7 +174,8 @@ public class ApiCallingService {
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(getOkHttpClientWithAuthToken(context))
+//                    .client(getOkHttpClientWithAuthToken(context))
+                    .client(getOkHttpClient())
                     .build();
             return retrofit.create(TeazerApiCall.AuthenticationCalls.class);
         }
@@ -660,7 +660,6 @@ public class ApiCallingService {
             return getUserService(context).resetFcmToken(header, token);
         }
 
-
         public static Call<ResultObject> setAccountVisibility(int accountType, Context context) {
             return getUserService(context).setAccountVisibility(accountType);
         }
@@ -723,9 +722,6 @@ public class ApiCallingService {
             return getUserService(context).resetUnreadNotification(type);
         }
 
-
-
-
         private static TeazerApiCall.UserCalls getUserService(Context context) {
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -737,10 +733,6 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
-
-
-
-
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,
@@ -790,16 +782,11 @@ public class ApiCallingService {
         })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
+//                .build();
                 .addInterceptor(logging).build();
     }
 
-//    private static OkHttpClient getOkHttpClient() {
-//        return new OkHttpClient.Builder().build();
-//                .addInterceptor(logging).build();
-//    }
-
-//    private static HttpStack getOkHttpClientForUpload(Context context) {
-//        HTTP_STACK = new OkHttpStack(getOkHttpClientWithAuthToken(context));
-//        return HTTP_STACK;
-//    }
+    private static OkHttpClient getOkHttpClient() {
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
+    }
 }

@@ -38,8 +38,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.post_load_error)
-    ProximaNovaRegularTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean isRefreshing;
@@ -186,7 +185,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                     updatePosts(page, tempPostList);
                                 } else {
                                     if (page == 1 && postList.isEmpty())
-                                        showErrorMessage(getString(R.string.no_posts_available));
+                                        showErrorMessage(getContext().getString(R.string.no_posts_available));
                                 }
                                 break;
                             default:
@@ -201,13 +200,18 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 }
 
                 private void updatePosts(int page, PostList tempPostList) {
-                    if (page == 1) {
-                        postList.clear();
-                        postList.addAll(tempPostList.getPosts());
-                        postListAdapter.notifyDataSetChanged();
-                    } else {
-                        postList.addAll(tempPostList.getPosts());
-                        postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                    try {
+                        postListAdapter.clearDimensions();
+                        if (page == 1) {
+                            postList.clear();
+                            postList.addAll(tempPostList.getPosts());
+                            postListAdapter.notifyDataSetChanged();
+                        } else {
+                            postList.addAll(tempPostList.getPosts());
+                            postListAdapter.notifyItemRangeInserted((page - 1) * 30, tempPostList.getPosts().size());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -224,19 +228,21 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
                     t.printStackTrace();
-                    showErrorMessage(getString(R.string.something_went_wrong));
+                    showErrorMessage(getContext().getString(R.string.something_went_wrong));
                     dismissRefreshView();
                 }
             });
     }
 
+    public void scrollToTop() {
+        recyclerView.smoothScrollToPosition(0);
+    }
 
     private void showErrorMessage(String message) {
 //                    dismissProgressBar();
         recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.setVisibility(View.VISIBLE);
-        String errorString = message;
-        postLoadErrorTextView.setText(errorString);
+        postLoadErrorTextView.setText(message);
     }
 //    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
 //        if (postList.size() >= newPostDetailsList.size()) {
