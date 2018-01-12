@@ -830,13 +830,9 @@ public class CameraFragment extends Fragment {
                 }
             });
             mMediaRecorder.prepare();
-<<<<<<< HEAD
         }
         catch (Exception e)
         {
-=======
-        }  catch (Exception e) {
->>>>>>> prem_dev
             e.printStackTrace();
         }
     }
@@ -936,12 +932,8 @@ public class CameraFragment extends Fragment {
                     }
                 }
             }, mBackgroundHandler);
-<<<<<<< HEAD
         } catch (Exception e)
         {
-=======
-        } catch (Exception e) {
->>>>>>> prem_dev
             e.printStackTrace();
         }
 
