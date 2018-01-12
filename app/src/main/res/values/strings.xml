@@ -304,8 +304,8 @@
     <string name="select_video_categories">Select Video categories</string>
     <string name="blockedUserEmptyText">We are happy that no one is in your block list</string>
     <string name="selection_limit_message">Only 5 selections are allowed</string>
-    <string name="be_the_first_one_to_upload_one">Be the first one to upload one!</string>
-    <string name="no_videos_tagged">No videos tagged&#160;</string>
+    <string name="be_the_first_one_to_upload_one">Be the first one to upload!</string>
+    <string name="no_videos_tagged">No videos tagged in this category yet</string>
     <string name="yet_uploaded">&#160;yet uploaded</string>
     <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
     <string name="send_to">Share</string>
@@ -315,6 +315,7 @@
     <string name="report_btn_text">Report</string>
     <string name="reaction_not_found">Reaction might be deleted by user</string>
     <string name="top_logo">Top logo</string>
+    <string name="no_interests_selected_placeholder">You have not selected any interests yet\nClick here to select at least 5 interests</string>
     <string name="no_interests_selected_message">You have not selected any interests yet, please select at least 5 interests</string>
     <string name="recently_deleted">Recently Deleted</string>
     <string name="privacy_settings">Privacy Settings</string>

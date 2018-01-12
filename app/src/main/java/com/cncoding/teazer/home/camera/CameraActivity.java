@@ -78,7 +78,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -531,17 +530,21 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend,
                                                final SparseBooleanArray selectedTagsArray, final int count) {
-        fragmentManager.popBackStack();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
-            }
-        }, 100);
+        try {
+            fragmentManager.popBackStack();
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
+                }
+            }, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
     }
 
     @Override
@@ -571,7 +574,7 @@ public class CameraActivity extends AppCompatActivity
                     break;
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
-                            Interests.newInstance(true, false, null, selectedData),
+                            Interests.newInstance(true, false, null, selectedData, false),
 //                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
                             tag);
                     break;

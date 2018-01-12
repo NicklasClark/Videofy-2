@@ -11,7 +11,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -157,7 +156,7 @@ public class BaseBottomBarActivity extends BaseActivity
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
         FragmentLikedUser.CallProfileListener,
-//    profileListener fromPostdetails
+//    profileListener from Postdetails
         FragmentPostDetails.CallProfileFromPostDetails,
 
         TagListAdapter.TaggedListInteractionListener
@@ -188,7 +187,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private VideoUploadReceiver videoUploadReceiver;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
-    private Fragment fragment;
+    private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
     ProfileFragment profilefragment;
@@ -209,7 +208,6 @@ public class BaseBottomBarActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
-
 
 //        Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
@@ -271,15 +269,19 @@ public class BaseBottomBarActivity extends BaseActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Drawable icon = tab.getIcon();
-                if (icon != null)
-                    icon.setTint(Color.BLACK);
+//                Drawable icon = tab.getIcon();
+//                if (icon != null)
+//                    icon.setTint(Color.BLACK);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
+                if(tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
+                    ((PostsListFragment) currentFragment).scrollToTop();
+                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
+                }
             }
         });
         LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
@@ -355,20 +357,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             } else {
                 Log.d("NOTIFYM", "BUNDLE not present in onCreate");
-
-
-//                Intent intent=getIntent();
-//                Uri data = intent.getData();
-//                if(data!=null) {
-//
-//                    // Figure out what to do based on the intent type
-//                    if (intent.getType().indexOf("image/") != -1) {
-//                        // Handle intents with image data ...
-//                    } else if (intent.getType().equals("text/plain")) {
-//                        // Handle intents with text ...
-//
-//                    }
-//                }
             }
         }
 
@@ -445,26 +433,21 @@ public class BaseBottomBarActivity extends BaseActivity
         Log.d("NOTIFYM", "onNewIntent called");
         try {
 
-
             if (intent.getExtras() != null) {
                 Bundle profileBundle = getIntent().getExtras().getBundle("profileBundle");
                 Bundle notificationBundle = intent.getExtras().getBundle("bundle");
                 Bundle likedUserProfile = intent.getExtras().getBundle("LikedUserprofileBundle");
 
                 if (notificationBundle != null) {
-
-
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     notificationAction(notification_type, source_id);
                 }
 
+                 else if (profileBundle != null) {
 
-                else if (profileBundle != null)
-                 {
-
-                     int userId = profileBundle.getInt("userId");
+                    int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
                     if (isSelf)
@@ -474,29 +457,14 @@ public class BaseBottomBarActivity extends BaseActivity
                     {
                         pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
                     }
-
 //                    pushFragment(isSelf ? ProfileFragment.newInstance() :
 //                            OthersProfileFragment.newInstance(String.valueOf(userId), "identifier", "username"));
 //
-                }
-
-
-
-                else {
-
-
+                } else {
                     Log.d("NOTIFYM", "BUNDLE not present on new Intent");
                     switchTabDynamically();
                 }
-
-
-
             }
-
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -517,22 +485,14 @@ public class BaseBottomBarActivity extends BaseActivity
         Log.d("NOTIFYM", "onStart called");
 
         try {
-
-
-
             Bundle notificationBundle = getIntent().getExtras();
             if (notificationBundle != null) {
                 Log.d("NOTIFYM", "BUNDLE Exists in onStart");
                 String notification_type = notificationBundle.getString("notification_type");
                 String source_id = notificationBundle.getString("source_id");
                 notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
-
-            }
-            else {
+            } else
                 Log.d("NOTIFYM", "BUNDLE not present in onStart");
-
-
-            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -718,24 +678,22 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         // toggleBottomBar(navigationController.isRootFragment());
     }
-    public void removeToolbar() {
+    public void hideToolbar() {
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().hide();
+//        }
+        toolbar.setVisibility(GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-           actionBar.hide();
-
-
-
-
-        }
     }
+
     public void showToolbar() {
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().show();
+//        }
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.show();
-        }
+        toolbar.setVisibility(VISIBLE);
     }
+
     public void toggleBottomBar(boolean isVisible) {
         if (isVisible) {
             if (blurView.getVisibility() != VISIBLE && cameraButton.getVisibility() != VISIBLE) {
@@ -801,8 +759,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void pushFragment(Fragment fragment) {
+    public void pushFragment(final Fragment fragment) {
         if (navigationController != null) {
+//            currentFragment = fragment;
+            if (fragment instanceof FragmentPostDetails) {
+                hideToolbar();
+            }
             navigationController.pushFragment(fragment);
         }
     }
@@ -816,27 +778,27 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public Fragment getRootFragment(int index) {
-        fragment = null;
+        currentFragment = null;
         switch (index) {
             case TAB1:
-                fragment = PostsListFragment.newInstance();
+                currentFragment = PostsListFragment.newInstance();
                 break;
             case TAB2:
-                fragment = DiscoverFragment.newInstance();
+                currentFragment = DiscoverFragment.newInstance();
 //            case NavigationController.TAB3:
 //                return null;
                 break;
             case TAB4:
-                fragment = NotificationsFragment.newInstance();
+                currentFragment = NotificationsFragment.newInstance();
                 break;
             case TAB5:
-                fragment = ProfileFragment.newInstance();
+                currentFragment = ProfileFragment.newInstance();
                 break;
             default:
-                fragment = PostsListFragment.newInstance();
+                currentFragment = PostsListFragment.newInstance();
                 break;
         }
-        return fragment;
+        return currentFragment;
     }
     //</editor-fold>
 
@@ -865,15 +827,13 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void postDetails(PostDetails postDetails, byte[] image, boolean iscommingfromhomepage, boolean isDeepLink, String getTumbUrl, String reactId) {
+    public void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId) {
       //  pushFragment(postDetails);
-      //  removeToolbar();
+      //  hideToolbar();
 
         pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
                                         true, postDetails.getMedias().get(0).getThumbUrl(), null));
-
     }
-
 
     @Override
     public void onDiscoverInteraction(int action, ArrayList<Category> categories, ArrayList<PostDetails> postDetailsArrayList,
@@ -976,11 +936,17 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
         DiscoverFragment.updateMyInterests = true;
         navigationController.popFragments(2);
-        if (isEditing)
+        if (!isFromDiscover)
             pushFragment(SubDiscoverFragment.newInstance(ACTION_VIEW_MY_INTERESTS, categories, null));
+        else {
+            if (currentFragment instanceof DiscoverFragment && navigationController.isRootFragment()) {
+                ((DiscoverFragment) currentFragment).loadPosts();
+                ((DiscoverFragment) currentFragment).getFeaturedPosts(1);
+            }
+        }
     }
 
     @Override
@@ -989,7 +955,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
-
         fetchPostDetails(this, postDetails.getPostId());
     }
 
@@ -998,7 +963,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
-
         videoUploadReceiver = new VideoUploadReceiver(new Handler())
                 .setReceiver(new VideoUploadReceiver.Receiver() {
                     @Override
@@ -1021,8 +985,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
                                 finishVideoUploadSession(getApplicationContext());
 
-                                if (fragment instanceof PostsListFragment) {
-                                    ((PostsListFragment) fragment).getHomePagePosts(1, true);
+                                if (currentFragment instanceof PostsListFragment) {
+                                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:
@@ -1065,32 +1029,18 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void callProfileListener(int id, boolean myself) {
                 pushFragment(myself? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(id),
-                        "", ""));
-
+                OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
     }
 
     @Override
-    public void onTaggedUserInteraction(int userId, boolean isSelf)
-    {
+    public void onTaggedUserInteraction(int userId, boolean isSelf) {
        pushFragment (isSelf? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(userId),
-                        "", ""));
-
-
-
+                OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
     public void popFragment() {
         navigationController.popFragment();
     }
-
-//
-//    @Override
-//    public void openprofile(int userId, boolean ismyself) {
-
-//
-//    }
 
     @SuppressWarnings("unused")
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
@@ -1157,32 +1107,29 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
+        if (!navigationController.isRootFragment()) {
+            navigationController.popFragment();
+        }
+        else {
+            if (fragmentHistory.isEmpty()) {
+                super.onBackPressed();
+            } else {
 
-            if (!navigationController.isRootFragment()) {
-                navigationController.popFragment();
-            }
-            else
-            {
-                if (fragmentHistory.isEmpty()) {
-                    super.onBackPressed();
+                if (fragmentHistory.getStackSize() > 1) {
+                    int position = fragmentHistory.popPrevious();
+                    switchTab(position);
+                    updateTabSelection(position);
                 } else {
-
-                    if (fragmentHistory.getStackSize() > 1) {
-                        int position = fragmentHistory.popPrevious();
-                        switchTab(position);
-                        updateTabSelection(position);
+                    if (navigationController.getCurrentStackIndex() != TAB1) {
+                        switchTab(0);
+                        updateTabSelection(0);
+                        fragmentHistory.emptyStack();
                     } else {
-                        if (navigationController.getCurrentStackIndex() != TAB1) {
-                            switchTab(0);
-                            updateTabSelection(0);
-                            fragmentHistory.emptyStack();
-                        } else {
-                            super.onBackPressed();
-                        }
+                        super.onBackPressed();
                     }
                 }
             }
-//        }
+        }
     }
 
     @Override
@@ -1199,6 +1146,5 @@ public class BaseBottomBarActivity extends BaseActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        tab.setCustomView(getTabView(0));
     }
 }

@@ -144,6 +144,7 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 
 /**
+ *
  * Created by farazhabib on 02/01/18.
  */
 
@@ -311,7 +312,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        logTheDensity();
+//        logTheDensity();
 
 //                getActivity().getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -487,7 +488,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getParentActivity().removeToolbar();
+//        getParentActivity().hideToolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
@@ -692,7 +693,9 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     public void decrementLikes() {
-        String likesText = FragmentPostDetails.SPACE + --likes;
+        likes -= likes;
+        if (likes < 0) likes = 0;
+        String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
     }
 
@@ -964,6 +967,7 @@ public class FragmentPostDetails extends BaseFragment {
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes -= 1;
+                    if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
@@ -1220,7 +1224,7 @@ public class FragmentPostDetails extends BaseFragment {
     public void onPause() {
         super.onPause();
         player.setPlayWhenReady(!player.getPlayWhenReady());
-        getParentActivity().showToolbar();
+//        getParentActivity().showToolbar();
 
         if (Util.SDK_INT <= 23) {
             customHandler.removeCallbacks(updateTimerThread);
@@ -1532,7 +1536,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getParentActivity().removeToolbar();
+//        getParentActivity().hideToolbar();
 
         if (context instanceof CallProfileFromPostDetails) {
             callProfileFromPostDetails = (CallProfileFromPostDetails) context;

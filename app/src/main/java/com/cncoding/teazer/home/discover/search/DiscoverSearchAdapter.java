@@ -54,16 +54,18 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
     private BaseFragment baseFragment;
     private boolean isVideosTab;
+    private boolean isSearchTerm;
     private ArrayList<Videos> videosList;
     private ArrayList<MiniProfile> usersList;
     private SparseIntArray actionArray;
     private OnDiscoverSearchInteractionListener mListener;
 
     DiscoverSearchAdapter(Context context, BaseFragment baseFragment, boolean isVideosTab, ArrayList<MiniProfile> usersList,
-                          ArrayList<Videos> videosList) {
+                          ArrayList<Videos> videosList, boolean isSearchTerm) {
         this.context = context;
         this.baseFragment = baseFragment;
         this.isVideosTab = isVideosTab;
+        this.isSearchTerm = isSearchTerm;
         actionArray = new SparseIntArray();
         if (isVideosTab)
             this.videosList = videosList;
@@ -102,6 +104,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder1.video = videosList.get(position);
                 holder1.content.setText(decodeUnicodeString(holder1.video.getTitle()));
 
+                holder1.content.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                        !isSearchTerm ? R.drawable.ic_trending_up : 0, 0);
+
                 Glide.with(baseFragment.getContext())
                         .load(holder1.video.getPostVideoInfo() != null ? holder1.video.getPostVideoInfo().get(0).getThumbUrl() :
                                 R.drawable.bg_placeholder)
@@ -134,31 +139,22 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         .into(holder2.dp);
 
                 if (actionArray.get(position) == 0) {
-
                     switch (holder2.user.getAccountType()) {
-
                         case ACCOUNT_TYPE_PRIVATE:
-
-                            if(holder2.user.getYouBlocked())
-                            {
-
+                            if(holder2.user.getYouBlocked()) {
                                 setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
-
                             }
                             else {
-
                                 if (holder2.user.isFollowing()) {
                                     if (holder2.user.getRequestRecieved()) {
 
                                         setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
                                     }
-                                    else
-                                    {
+                                    else {
                                         setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
                                     }
                                 }
-                                else
-                                {
+                                else {
                                     if (holder2.user.isRequestSent()) {
 
                                         if (holder2.user.getRequestRecieved()) {
@@ -179,27 +175,19 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             }
                             break;
 
-                            case ACCOUNT_TYPE_PUBLIC:
-
-                                if(holder2.user.getYouBlocked())
-                                {
-                                    setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
-
-                                }
+                        case ACCOUNT_TYPE_PUBLIC:
+                            if(holder2.user.getYouBlocked()) {
+                                setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
+                            }
+                            else {
+                                if (holder2.user.isFollowing())
+                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
                                 else
-                                    {
-                                    if (holder2.user.isFollowing())
-
-                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
-                                    else
-                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
-
-                                }
-                                break;
-
-                                default:
-                                    break;
-
+                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 } else setActionButton(holder2.action, actionArray.get(position), position, false);
 
@@ -288,7 +276,6 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                                                 }
                                             });
-
                                 }
 
                                 else if (holder2.action.getText().equals(context.getString(R.string.following))) {
@@ -423,18 +410,14 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                             try {
                                                                 boolean b = response.body().getStatus();
-                                                                if (b == true) {
-
-                                                                        Toast.makeText(context, "You have Unblocked this user", Toast.LENGTH_SHORT).show();
+                                                                if (b) {
+                                                                    Toast.makeText(context, "You have Unblocked this user", Toast.LENGTH_SHORT).show();
                                                                     setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
                                                                             holder2.getAdapterPosition(), true);
-
-
                                                                 } else {
 
                                                                     Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                    }
-
+                                                                }
                                                             } catch (Exception e) {
 
                                                                 e.printStackTrace();
@@ -478,7 +461,6 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (savePosition)
             actionArray.put(position, type);
         switch (type) {
-
             case BUTTON_TYPE_FOLLOW:
                 setActionButtonText(context, button, R.string.follow);
                 break;

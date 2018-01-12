@@ -393,10 +393,8 @@ public class CameraFragment extends Fragment {
                 stopRecordButtonAnimations();
                 stopRecordingVideo();
             }
-            else
-            {
+            else {
                 Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
-
             }
         } else {
             animateRecordButton(activity);
@@ -697,7 +695,6 @@ public class CameraFragment extends Fragment {
                     try {
                         if(mPreviewSession!=null) {
                             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
-
                         }
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
@@ -833,9 +830,13 @@ public class CameraFragment extends Fragment {
                 }
             });
             mMediaRecorder.prepare();
+<<<<<<< HEAD
         }
         catch (Exception e)
         {
+=======
+        }  catch (Exception e) {
+>>>>>>> prem_dev
             e.printStackTrace();
         }
     }
@@ -930,13 +931,17 @@ public class CameraFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    if (null != activity) {
+                    if (activity != null) {
                         Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, mBackgroundHandler);
+<<<<<<< HEAD
         } catch (Exception e)
         {
+=======
+        } catch (Exception e) {
+>>>>>>> prem_dev
             e.printStackTrace();
         }
 

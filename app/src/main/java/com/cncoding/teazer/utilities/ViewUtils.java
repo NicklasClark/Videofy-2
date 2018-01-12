@@ -291,6 +291,9 @@ public class ViewUtils {
         }
     }
 
+    public static int getPixels(Context context, int dp) {
+        return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
+    }
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
 //                                                   float startRadius, float endRadius, int duration,
 // int color, final boolean isReversed){

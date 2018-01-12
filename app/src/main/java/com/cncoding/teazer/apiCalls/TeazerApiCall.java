@@ -60,8 +60,7 @@ import retrofit2.http.Query;
  * Created by Prem $ on 10/3/2017.
  */
 
- class TeazerApiCall
-{
+ class TeazerApiCall {
 
     static final int RESPONSE_CODE_200 = 200;
     static final int RESPONSE_CODE_201 = 201;
@@ -259,6 +258,9 @@ import retrofit2.http.Query;
          */
         @GET("/api/v1/discover/videos")
         Call<VideosList> getVideosWithSearchTerm(@Query("page") int page, @Query("searchTerm") String searchTerm);
+
+//        @GET("/api/v1/discover/userinterests/and/trendingcategories")
+//        Call
     }
 
     /**
