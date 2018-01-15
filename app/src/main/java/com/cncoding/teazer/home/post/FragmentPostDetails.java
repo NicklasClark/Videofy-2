@@ -109,6 +109,7 @@ import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.util.DisplayMetrics.DENSITY_HIGH;
@@ -136,6 +137,7 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
@@ -432,6 +434,22 @@ public class FragmentPostDetails extends BaseFragment {
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList,this));
         getTaggedUsers(1);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+//                        .singleUse("postDetails")
+                        .renderOverNavigationBar()
+                        .setTitleText("React")
+                        .setContentText("React on Videos via videos of your own or record a video instantly.")
+                        .setDismissText("OKAY, GOT IT")
+                        .setTarget(reactBtn);
+                MaterialShowcaseView materialShowcaseView = builder.build();
+                materialShowcaseView.setConfig(getShowcaseConfig(getContext(), true));
+                materialShowcaseView.show(getParentActivity());
+            }
+        }, 1000);
     }
 
     @Override

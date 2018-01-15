@@ -3,6 +3,7 @@ package com.cncoding.teazer.home.discover;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -19,6 +20,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
@@ -42,10 +44,13 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
 
 public class DiscoverFragment extends BaseFragment {
 
@@ -60,6 +65,7 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.my_interests_header_layout) LinearLayout myInterestsHeaderLayout;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
+    @BindView(R.id.my_interests_view_all) ProximaNovaSemiboldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
@@ -109,6 +115,24 @@ public class DiscoverFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getFeaturedPosts(1);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ShowcaseConfig config = getShowcaseConfig(getContext(), true);
+                config.setShapePadding(76);
+                MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+//                        .singleUse("discover")
+                        .renderOverNavigationBar()
+                        .setTitleText("My Interests")
+                        .setContentText("Discover the videos based on the interests you have selected.")
+                        .setDismissText("DONE")
+                        .setTarget(myInterestsViewAll);
+                MaterialShowcaseView materialShowcaseView = builder.build();
+                materialShowcaseView.setConfig(config);
+                materialShowcaseView.show(getParentActivity());
+            }
+        }, 1000);
     }
 
     @Override

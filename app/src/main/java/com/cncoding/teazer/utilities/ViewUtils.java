@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -15,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
@@ -27,6 +30,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
@@ -46,6 +50,9 @@ import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
+
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+import uk.co.deanwild.materialshowcaseview.shape.CircleShape;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -293,6 +300,37 @@ public class ViewUtils {
 
     public static int getPixels(Context context, int dp) {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
+    }
+
+    public static View getTabChild(TabLayout tabLayout, int tabIndex) {
+        try {
+            return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ShowcaseConfig getShowcaseConfig(final Context context, final boolean isPostDetails) {
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setMaskColor(Color.parseColor("#CC000000"));
+        config.setContentTextColor(Color.WHITE);
+        config.setRenderOverNavigationBar(true);
+        config.setShapePadding(isPostDetails ? 10 : 0);
+        CircleShape circleShape = new CircleShape(getPixels(context, 50)) {
+            @Override
+            public void draw(Canvas canvas, Paint paint, int x, int y, int padding) {
+                super.draw(canvas, paint, x, y, padding);
+                Paint paint1 = new Paint();
+                paint1.setStyle(Paint.Style.STROKE);
+                paint1.setColor(Color.WHITE);
+                paint1.setAntiAlias(true);
+                paint1.setStrokeWidth(getPixels(context, 1));
+                canvas.drawCircle(x, y, isPostDetails ? getPixels(context, 50) : getPixels(context, 36) + padding, paint1);
+            }
+        };
+        config.setShape(circleShape);
+        return config;
     }
 //    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
 //                                                   float startRadius, float endRadius, int duration,

@@ -13,8 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.cncoding.teazer.home.post.FragmentPostDetails;
-
 import org.json.JSONArray;
 
 import java.lang.annotation.Retention;
@@ -44,7 +42,7 @@ public class NavigationController {
     static final int NO_TAB = -1;
     public static final int TAB1 = 0;
     public static final int TAB2 = 1;
-//    public static final int TAB3 = 2;
+    public static final int TAB3 = 2;
     public static final int TAB4 = 3;
     public static final int TAB5 = 4;
 

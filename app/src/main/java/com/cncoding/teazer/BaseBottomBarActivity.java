@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -108,6 +107,7 @@ import io.branch.referral.util.LinkProperties;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -130,6 +130,7 @@ import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadS
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
+import static com.cncoding.teazer.utilities.NavigationController.TAB3;
 import static com.cncoding.teazer.utilities.NavigationController.TAB4;
 import static com.cncoding.teazer.utilities.NavigationController.TAB5;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
@@ -138,6 +139,8 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getFollowingNotification
 import static com.cncoding.teazer.utilities.SharedPrefs.getRequestNotificationCount;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
+import static com.cncoding.teazer.utilities.ViewUtils.getTabChild;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
 
@@ -275,14 +278,17 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         });
-        LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
-        tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
+
+        View thirdTab = getTabChild(bottomTabLayout, TAB3);
+        if (thirdTab != null) {
+            thirdTab.setOnTouchListener(new View.OnTouchListener() {
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+        }
 
         BReceiver = new BroadcastReceiver() {
             @Override
@@ -359,6 +365,28 @@ public class BaseBottomBarActivity extends BaseActivity
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
         switchTab(0);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
+                        BaseBottomBarActivity.this, "14");
+                sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, false));
+                sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
+                        "Welcome to Teazer",
+                        "Browse Videos and start exploring Videos with different mentioned categories, Enjoy!",
+                        "OKAY, GOT IT")
+                        .addSequenceItem(getTabChild(bottomTabLayout, TAB2),
+                                "Discover the app",
+                                "Discover the most popular videos and refined videos based on the interests you have selected",
+                                "OKAY, GOT IT")
+                        .addSequenceItem(getTabChild(bottomTabLayout, TAB5),
+                                "My Profile",
+                                "Have a track of your profile, creations and reactions.",
+                                "OKAY, GOT IT");
+                sequence.start();
+            }
+        }, 1000);
     }
 
     private void shareTwitter(String message) {

@@ -157,9 +157,11 @@ dependencies {
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'jp.wasabeef:glide-transformations:2.0.2'
-    implementation "android.arch.lifecycle:runtime:1.0.3"
-    implementation "android.arch.lifecycle:extensions:1.0.0"
+    implementation 'android.arch.lifecycle:runtime:1.0.3'
+    implementation 'android.arch.lifecycle:extensions:1.0.0'
     annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
+    //    implementation 'com.github.deano2390:MaterialShowcaseView:1.2.0'
+    implementation project(':MaterialShowcaseView')
 }
 
 configurations.all {
