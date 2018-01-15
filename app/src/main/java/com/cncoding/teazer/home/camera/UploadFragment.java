@@ -630,7 +630,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             double latitude = 0;
             double longitude = 0;
             if (selectedPlace != null) {
-                location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                if (selectedPlace.getPlaceName() != null) {
+                    location = selectedPlace.getPlaceName().equals("") ? null : selectedPlace.getPlaceName();
+                }
                 latitude = selectedPlace.getLatitude();
                 longitude = selectedPlace.getLongitude();
             }

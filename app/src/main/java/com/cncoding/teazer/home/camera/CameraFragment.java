@@ -969,7 +969,7 @@ public class CameraFragment extends Fragment {
                 if (isFlashSupported) {
                     if (isTorchOn) {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-                        if(mPreviewSession!=null) {
+                        if(mPreviewSession != null) {
                             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         }
                         cameraFlashView.setImageResource(R.drawable.ic_flash_on);
@@ -977,14 +977,16 @@ public class CameraFragment extends Fragment {
                     }
                     else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-                        if(mPreviewSession!=null) {
+                        if(mPreviewSession != null) {
                             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         }                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
 //                        isTorchOn = true;
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
