@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -159,7 +160,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //    profileListener from Postdetails
         FragmentPostDetails.CallProfileFromPostDetails,
 
-        TagListAdapter.TaggedListInteractionListener
+        TagListAdapter.TaggedListInteractionListener,
+        AudioManager.OnAudioFocusChangeListener
 {
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -1145,6 +1147,23 @@ public class BaseBottomBarActivity extends BaseActivity
             tab.setCustomView(null);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        if(focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
+        {
+            // Pause
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_GAIN)
+        {
+            // Resume
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_LOSS)
+        {
+            // Stop or pause depending on your need
         }
     }
 }
