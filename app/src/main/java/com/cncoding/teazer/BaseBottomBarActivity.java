@@ -370,7 +370,7 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void run() {
                 MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
-                        BaseBottomBarActivity.this, "14");
+                        BaseBottomBarActivity.this, "15");
                 sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, false));
                 sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
                         "Welcome to Teazer",

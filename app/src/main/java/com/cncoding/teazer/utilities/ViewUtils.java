@@ -326,7 +326,7 @@ public class ViewUtils {
                 paint1.setColor(Color.WHITE);
                 paint1.setAntiAlias(true);
                 paint1.setStrokeWidth(getPixels(context, 1));
-                canvas.drawCircle(x, y, isPostDetails ? getPixels(context, 50) : getPixels(context, 36) + padding, paint1);
+                canvas.drawCircle(x, y, isPostDetails ? getPixels(context, 54) : getPixels(context, 36) + padding, paint1);
             }
         };
         config.setShape(circleShape);
