@@ -118,6 +118,17 @@
             android:textSize="16sp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp" />
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/text_hide_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/my_hide_vides"
+            android:foreground="@drawable/ripple_semi_dark_no_rounded"
+            android:textColor="@color/colorPrimary_text"
+            android:textSize="@dimen/text_size_content"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
 
         <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
             android:id="@+id/text_block_layout"

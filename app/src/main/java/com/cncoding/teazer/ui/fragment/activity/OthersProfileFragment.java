@@ -147,8 +147,6 @@ public class OthersProfileFragment extends BaseFragment {
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
     boolean next;
 
-
-
     public static OthersProfileFragment newInstance(String id, String identifier, String username) {
         OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 
@@ -312,9 +310,9 @@ public class OthersProfileFragment extends BaseFragment {
 
                 if (next) {
 
-                        if (page > 2) {
-                            loader.setVisibility(View.VISIBLE);
-                        }
+                    if (page > 2) {
+                        loader.setVisibility(View.VISIBLE);
+                    }
                     getProfileVideos(followerfollowingid, page);
 
 
@@ -389,11 +387,13 @@ public class OthersProfileFragment extends BaseFragment {
                             username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();
+                            String firstnamelastname=firstName+" "+lastName;
                             details = publicProfile.getDescription();
                             int gender = publicProfile.getGender();
+
                             accountType = publicProfile.getAccountType();
                             _usernameTitle.setText(username);
-                            _name.setText(firstName);
+                            _name.setText(firstnamelastname);
                             if (details == null || details.equals("")) {
                                 hobby.setText("");
                             } else {
@@ -415,11 +415,24 @@ public class OthersProfileFragment extends BaseFragment {
                                     }
                                 });
                             }
+
                             if (userProfileUrl != null) {
                                 Glide.with(context)
                                         .load(Uri.parse(userProfileUrl))
                                         .into(profile_id);
                                 profileBlur(userProfileUrl);
+                            }
+                            else
+                            {
+                                if(gender==1) { Glide.with(context)
+                                        .load(R.drawable.ic_user_male_dp)
+                                        .into(profile_id);
+                                    profileBlur(userProfileUrl);}
+                                else{
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(profile_id);
+                                    profileBlur(userProfileUrl);}
                             }
                             if (youBlocked) {
                                 _btnfollow.setText("Unblock");
@@ -491,6 +504,7 @@ public class OthersProfileFragment extends BaseFragment {
                             username = privateProfile.getUsername();
                             String firstName = privateProfile.getFirstName();
                             String lastName = privateProfile.getLastName();
+                            String firstnamelastname=firstName+" "+lastName;
 
                             int gender = privateProfile.getGender();
                             Boolean hasProfileMedia = privateProfile.hasProfileMedia();
@@ -505,9 +519,21 @@ public class OthersProfileFragment extends BaseFragment {
                                         .into(profile_id);
                                 profileBlur(userProfileUrl);
                             }
+                            else
+                            {
+                                if(gender==1) { Glide.with(context)
+                                        .load(R.drawable.ic_user_male_dp)
+                                        .into(profile_id);
+                                    profileBlur(userProfileUrl);}
+                                else{
+                                    Glide.with(context)
+                                            .load(R.drawable.ic_user_female_dp)
+                                            .into(profile_id);
+                                    profileBlur(userProfileUrl);}
 
+                            }
                             _usernameTitle.setText(username);
-                            _name.setText(firstName);
+                            _name.setText(firstnamelastname);
                             hobby.setText("");
 
 
@@ -1039,5 +1065,4 @@ public class OthersProfileFragment extends BaseFragment {
     }
 
 }
-
 

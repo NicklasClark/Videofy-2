@@ -109,7 +109,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
                 viewHolder.name.setText(followername);
-              //  Toast.makeText(context,followername,Toast.LENGTH_SHORT).show();
 
 
                 if (accounttype == 1) {
@@ -142,6 +141,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         }
                     }
                 }
+
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -151,10 +151,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     }
                 });
 
+
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
 
                         if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
                             followUser(followerId, context, viewHolder, accounttype);

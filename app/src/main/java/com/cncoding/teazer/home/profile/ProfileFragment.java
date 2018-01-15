@@ -406,8 +406,32 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
-
                         profileBlur(userProfileUrl);
+                    }
+                    else
+                    {
+                       if(gender==1)
+                       {
+                           Glide.with(context)
+                                   .load(R.drawable.ic_user_male_dp)
+                                   .into(profile_id);
+
+                       }
+                       else if(gender==2)
+                       {
+                           Glide.with(context)
+                                   .load(R.drawable.ic_user_female_dp)
+                                   .into(profile_id);
+
+                       }
+                       else
+                       {
+                           Glide.with(context)
+                                   .load(R.drawable.ic_user_male_dp)
+                                   .into(profile_id);
+
+                       }
+
                     }
 
                     blur_bacground.setVisibility(View.VISIBLE);

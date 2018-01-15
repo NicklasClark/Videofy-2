@@ -488,7 +488,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        getParentActivity().hideToolbar();
+        getParentActivity().hideToolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
@@ -1224,7 +1224,6 @@ public class FragmentPostDetails extends BaseFragment {
     public void onPause() {
         super.onPause();
         player.setPlayWhenReady(!player.getPlayWhenReady());
-//        getParentActivity().showToolbar();
 
         if (Util.SDK_INT <= 23) {
             customHandler.removeCallbacks(updateTimerThread);
@@ -1269,6 +1268,8 @@ public class FragmentPostDetails extends BaseFragment {
         if (Util.SDK_INT > 23) {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
+            getParentActivity().showToolbar();
+
         }
     }
 

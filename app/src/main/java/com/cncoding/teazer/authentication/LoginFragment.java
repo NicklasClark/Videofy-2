@@ -173,7 +173,7 @@ public class LoginFragment extends AuthFragment {
         if (charSequence.length() > 0) {
             if (TextUtils.isDigitsOnly(charSequence)) {
                 if (countryCodePicker.getVisibility() != VISIBLE) {
-                    countryCodePicker.setVisibility(VISIBLE);
+                    countryCodePicker.setVisibility(View.GONE);
                     usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
                     float scale = getResources().getDisplayMetrics().density;
                     int trbPadding = (int) (14*scale + 0.5f);
