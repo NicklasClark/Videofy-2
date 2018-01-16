@@ -54,6 +54,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -109,7 +110,6 @@ import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.util.DisplayMetrics.DENSITY_HIGH;
@@ -125,6 +125,7 @@ import static com.cncoding.teazer.R.anim.abc_slide_in_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_in_top;
 import static com.cncoding.teazer.R.anim.abc_slide_out_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_out_top;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
@@ -138,6 +139,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
+import static com.cncoding.teazer.utilities.ViewUtils.isYInScreen;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
@@ -438,16 +440,19 @@ public class FragmentPostDetails extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-//                        .singleUse("postDetails")
-                        .renderOverNavigationBar()
-                        .setTitleText("React")
-                        .setContentText("React on Videos via videos of your own or record a video instantly.")
-                        .setDismissText("OKAY, GOT IT")
-                        .setTarget(reactBtn);
-                MaterialShowcaseView materialShowcaseView = builder.build();
-                materialShowcaseView.setConfig(getShowcaseConfig(getContext(), true));
-                materialShowcaseView.show(getParentActivity());
+                if (isYInScreen(getContext(), reactBtn)) {
+                    MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+                            .singleUse("postDetails")
+                            .renderOverNavigationBar()
+                            .setTitleText(R.string.react)
+                            .setContentText(R.string.coach_mark_post_details_body)
+                            .setDismissText(R.string.okay_got_it)
+                            .setDismissOnTouch(true)
+                            .setTarget(reactBtn);
+                    MaterialShowcaseView materialShowcaseView = builder.build();
+                    materialShowcaseView.setConfig(getShowcaseConfig(getContext(), TYPE_POST_DETAILS));
+                    materialShowcaseView.show(getParentActivity());
+                }
             }
         }, 1000);
     }

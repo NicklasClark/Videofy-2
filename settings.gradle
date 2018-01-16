@@ -1,1 +1,1 @@
-include ':app', ':MaterialShowcaseView'
+include ':app'

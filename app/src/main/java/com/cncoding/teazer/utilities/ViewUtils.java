@@ -51,11 +51,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
-import uk.co.deanwild.materialshowcaseview.shape.CircleShape;
+import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
+import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 
 /**
  *
@@ -175,6 +177,15 @@ public class ViewUtils {
             wm.getDefaultDisplay().getMetrics(mDisplayMetrics);
         }
         return mDisplayMetrics.heightPixels;
+    }
+
+    public static boolean isYInScreen(Context context, View view) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        float screenBound = getDeviceHeight(context) -
+                context.getResources().getDimension(R.dimen.navigation_bar_height) -
+                context.getResources().getDimension(R.dimen.action_bar_height);
+        return location[1] < screenBound;
     }
 
     public static void setTextViewDrawableEnd(AppCompatTextView view, @DrawableRes int drawableResId) {
@@ -311,22 +322,23 @@ public class ViewUtils {
         }
     }
 
-    public static ShowcaseConfig getShowcaseConfig(final Context context, final boolean isPostDetails) {
+    public static ShowcaseConfig getShowcaseConfig(final Context context, int layoutType) {
         ShowcaseConfig config = new ShowcaseConfig();
-        config.setMaskColor(Color.parseColor("#CC000000"));
-        config.setContentTextColor(Color.WHITE);
+//        config.setMaskColor(Color.parseColor("#CC000000"));
         config.setRenderOverNavigationBar(true);
-        config.setShapePadding(isPostDetails ? 10 : 0);
+        config.setShapePadding(layoutType == TYPE_POST_DETAILS || layoutType == TYPE_DISCOVER ? 10 : 0);
         CircleShape circleShape = new CircleShape(getPixels(context, 50)) {
             @Override
             public void draw(Canvas canvas, Paint paint, int x, int y, int padding) {
                 super.draw(canvas, paint, x, y, padding);
-                Paint paint1 = new Paint();
-                paint1.setStyle(Paint.Style.STROKE);
-                paint1.setColor(Color.WHITE);
-                paint1.setAntiAlias(true);
-                paint1.setStrokeWidth(getPixels(context, 1));
-                canvas.drawCircle(x, y, isPostDetails ? getPixels(context, 54) : getPixels(context, 36) + padding, paint1);
+                if (this.radius > 0) {
+                    Paint paint1 = new Paint();
+                    paint1.setStyle(Paint.Style.STROKE);
+                    paint1.setColor(Color.WHITE);
+                    paint1.setAntiAlias(true);
+                    paint1.setStrokeWidth(getPixels(context, 1));
+                    canvas.drawCircle(x, y, this.radius + padding, paint1);
+                }
             }
         };
         config.setShape(circleShape);

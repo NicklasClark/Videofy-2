@@ -28,6 +28,8 @@ import com.cncoding.teazer.home.discover.adapters.MyInterestsListAdapter;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchFragment;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -44,13 +46,13 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
+import static com.cncoding.teazer.utilities.ViewUtils.isYInScreen;
 
 public class DiscoverFragment extends BaseFragment {
 
@@ -119,18 +121,21 @@ public class DiscoverFragment extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ShowcaseConfig config = getShowcaseConfig(getContext(), true);
-                config.setShapePadding(76);
-                MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-//                        .singleUse("discover")
-                        .renderOverNavigationBar()
-                        .setTitleText("My Interests")
-                        .setContentText("Discover the videos based on the interests you have selected.")
-                        .setDismissText("DONE")
-                        .setTarget(myInterestsViewAll);
-                MaterialShowcaseView materialShowcaseView = builder.build();
-                materialShowcaseView.setConfig(config);
-                materialShowcaseView.show(getParentActivity());
+                if (isYInScreen(getContext(), myInterestsViewAll)) {
+                    ShowcaseConfig config = getShowcaseConfig(getContext(), TYPE_DISCOVER);
+                    config.setShapePadding(76);
+                    MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+                            .singleUse("discover")
+                            .renderOverNavigationBar()
+                            .setTitleText(R.string.my_interests)
+                            .setContentText(R.string.coach_mark_my_interests_body)
+                            .setDismissText(R.string.done)
+                            .setDismissOnTouch(true)
+                            .setTarget(myInterestsViewAll);
+                    MaterialShowcaseView materialShowcaseView = builder.build();
+                    materialShowcaseView.setConfig(config);
+                    materialShowcaseView.show(getParentActivity());
+                }
             }
         }, 1000);
     }

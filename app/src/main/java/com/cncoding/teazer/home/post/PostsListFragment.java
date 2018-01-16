@@ -228,8 +228,14 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 @Override
                 public void onFailure(Call<PostList> call, Throwable t) {
                     t.printStackTrace();
-                    showErrorMessage(getContext().getString(R.string.something_went_wrong));
-                    dismissRefreshView();
+                    try {
+                        if (isAdded()) {
+                            showErrorMessage(getParentActivity().getString(R.string.something_went_wrong));
+                            dismissRefreshView();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
     }

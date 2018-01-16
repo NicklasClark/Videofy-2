@@ -63,6 +63,8 @@ import com.cncoding.teazer.home.post.TagListAdapter;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -107,7 +109,6 @@ import io.branch.referral.util.LinkProperties;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -122,6 +123,7 @@ import static com.cncoding.teazer.R.anim.slide_out_right;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
@@ -191,6 +193,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
+    public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
     String Identifier;
     PostDetails postDetails;
@@ -370,20 +373,20 @@ public class BaseBottomBarActivity extends BaseActivity
             @Override
             public void run() {
                 MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
-                        BaseBottomBarActivity.this, "15");
-                sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, false));
+                        BaseBottomBarActivity.this, "homePage");
+                sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_NORMAL));
                 sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
-                        "Welcome to Teazer",
-                        "Browse Videos and start exploring Videos with different mentioned categories, Enjoy!",
-                        "OKAY, GOT IT")
+                        getString(R.string.welcome_to_teazer),
+                        getString(R.string.coach_mark_post_list_body),
+                        getString(R.string.okay_got_it))
                         .addSequenceItem(getTabChild(bottomTabLayout, TAB2),
-                                "Discover the app",
-                                "Discover the most popular videos and refined videos based on the interests you have selected",
-                                "OKAY, GOT IT")
+                                getString(R.string.discover_the_app),
+                                getString(R.string.coach_mark_discover_body),
+                                getString(R.string.okay_got_it))
                         .addSequenceItem(getTabChild(bottomTabLayout, TAB5),
-                                "My Profile",
-                                "Have a track of your profile, creations and reactions.",
-                                "OKAY, GOT IT");
+                                getString(R.string.my_profile),
+                                getString(R.string.coach_mark_profile_body),
+                                getString(R.string.okay_got_it));
                 sequence.start();
             }
         }, 1000);
@@ -528,7 +531,6 @@ public class BaseBottomBarActivity extends BaseActivity
             } else {
                 tv.setVisibility(GONE);
             }
-            ImageView img = v.findViewById(R.id.notification);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1126,25 +1128,30 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (!navigationController.isRootFragment()) {
-            navigationController.popFragment();
-        }
-        else {
-            if (fragmentHistory.isEmpty()) {
-                super.onBackPressed();
-            } else {
-
-                if (fragmentHistory.getStackSize() > 1) {
-                    int position = fragmentHistory.popPrevious();
-                    switchTab(position);
-                    updateTabSelection(position);
+        if (materialShowcaseView != null) {
+            materialShowcaseView.hide();
+            materialShowcaseView = null;
+        } else {
+            if (!navigationController.isRootFragment()) {
+                navigationController.popFragment();
+            }
+            else {
+                if (fragmentHistory.isEmpty()) {
+                    super.onBackPressed();
                 } else {
-                    if (navigationController.getCurrentStackIndex() != TAB1) {
-                        switchTab(0);
-                        updateTabSelection(0);
-                        fragmentHistory.emptyStack();
+
+                    if (fragmentHistory.getStackSize() > 1) {
+                        int position = fragmentHistory.popPrevious();
+                        switchTab(position);
+                        updateTabSelection(position);
                     } else {
-                        super.onBackPressed();
+                        if (navigationController.getCurrentStackIndex() != TAB1) {
+                            switchTab(0);
+                            updateTabSelection(0);
+                            fragmentHistory.emptyStack();
+                        } else {
+                            super.onBackPressed();
+                        }
                     }
                 }
             }
