@@ -25,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -42,9 +44,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
+import com.cncoding.teazer.asynctasks.GifConvertAsyncTask;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
@@ -107,7 +112,10 @@ import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse, AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks,
+        CompressVideoAsyncTask.AsyncResponse,
+        AddWaterMarkAsyncTask.WatermarkAsyncResponse,
+        GifConvertAsyncTask.GifConvertAsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -159,6 +167,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public static boolean checkedTwitterButton = false;
     public String videoPath;
     public boolean isReaction;
+    @BindView(R.id.playBtn)
+    AppCompatImageView playBtn;
     private int tagCount;
     private int categoryCount;
     String selectedCategoriesToSend = null;
@@ -183,6 +193,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static FragmentActivity mActivity;
     static final int TaggedCategories = 2;
     static final int TaggedFriends = 1;
+    private boolean convertToGif = false;
+    private boolean convertingToGif = false;
+    private String gifPath;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -244,6 +257,24 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         isCompressing = false;
     }
 
+
+    @Override
+    public void gifConvertProcessFinish(String output) {
+        Log.d("GifConvert", output);
+        thumbnailProgressBar.setVisibility(View.GONE);
+        convertingToGif = false;
+        gifPath = output;
+
+        Glide.with(context)
+                .load(gifPath)
+//                .asGif()
+//                .error(R.drawable.full_cake)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(thumbnailView);
+
+        enableView(uploadBtn);
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, isRequestingLocationUpdates);
@@ -263,7 +294,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -290,6 +321,41 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         createLocationCallback();
         createLocationRequest();
 
+        gifSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                convertToGif = isChecked;
+
+                if (convertToGif) {
+                    thumbnailView.setClickable(false);
+                    thumbnailProgressBar.setVisibility(VISIBLE);
+                    playBtn.setVisibility(View.GONE);
+                    disableView(uploadBtn, true);
+                    convertingToGif = true;
+
+                    if(null == gifPath) {
+                        GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getContext());
+                        gifConvertAsyncTask.delegate = UploadFragment.this;
+                        gifConvertAsyncTask.execute(videoPath);
+                    }
+                    else
+                    {
+                        Glide.with(context)
+                                .load(gifPath)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .into(thumbnailView);
+                    }
+                }
+                else {
+                    thumbnailView.setClickable(true);
+                    playBtn.setVisibility(View.VISIBLE);
+
+                    Glide.with(context)
+                            .load(Uri.fromFile(new File(videoPath)))
+                            .into(thumbnailView);
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -299,6 +365,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (addingWatermark) {
 //            disableView(uploadBtn, true);
 //        }
+        if (convertingToGif) {
+            disableView(uploadBtn, true);
+        }
 
         new GetThumbnail(this).execute();
 
@@ -466,7 +535,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        null.unbind();
     }
 
     private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
