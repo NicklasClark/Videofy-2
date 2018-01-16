@@ -57,6 +57,7 @@ import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.stopCircularReveal;
 import static com.cncoding.teazer.utilities.AuthUtils.validateUsername;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
 import static com.cncoding.teazer.utilities.SharedPrefs.setCurrentPassword;
 import static com.cncoding.teazer.utilities.ViewUtils.clearDrawables;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
@@ -408,6 +409,10 @@ public class LoginFragment extends AuthFragment {
                                             SharedPrefs.saveAuthToken(getActivity().getApplicationContext(), response.body().getAuthToken());
                                             SharedPrefs.saveUserId(getActivity().getApplicationContext(), response.body().getUser_id());//1
                                             setCurrentPassword(context ,passwordView.getText().toString());
+
+                                            //fabric event
+                                            logLoginEvent("Email", true, username);
+
                                             mListener.onLoginFragmentInteraction(LOGIN_WITH_PASSWORD_ACTION, authorize);
                                         } else {
                                             ViewUtils.showSnackBar(loginBtn, response.body().getMessage());
@@ -419,6 +424,9 @@ public class LoginFragment extends AuthFragment {
                                     loginBtn.setEnabled(true);
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    //fabric event
+                                    logLoginEvent("Email", false, username);
+
                                 }
                             }
 
@@ -427,6 +435,9 @@ public class LoginFragment extends AuthFragment {
                                 stopCircularReveal(progressBar);
                                 loginBtn.setEnabled(true);
                                 t.printStackTrace();
+
+                                //fabric event
+                                logLoginEvent("Email", false, username);
                             }
                         });
             } else {

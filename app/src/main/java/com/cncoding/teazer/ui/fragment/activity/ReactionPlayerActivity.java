@@ -59,6 +59,7 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
@@ -486,6 +487,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
+                            //fabric event
+                            logVideoShareEvent("Branch", postDetails.getReact_title(), "Reaction", String.valueOf(postDetails.getReactId()));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

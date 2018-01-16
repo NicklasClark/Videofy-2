@@ -253,7 +253,7 @@ public class SignupFragment extends AuthFragment {
         SharedPreferences preferences = getActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     @Override
@@ -282,7 +282,7 @@ public class SignupFragment extends AuthFragment {
 
                 //    Blurry.with(getActivity()).from(scaledBitmap).into(bgImage);
                   //   dp.setImageBitmap(scaledBitmap);
-                    //  byte[] bte = bitmaptoByte(scaledBitmap);
+                    //  byte[] bte = bitmapToByte(scaledBitmap);
                     // File profileImage = new File(r.getPath());
                   //  RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                   //  MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
@@ -300,32 +300,6 @@ public class SignupFragment extends AuthFragment {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
 
-//=======
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == Activity.RESULT_OK) {
-//            switch (requestCode) {
-//                case GALLERY_ACTIVITY_CODE:
-//                    picturePath = data.getStringExtra("picturePath");
-//                    //perform Crop on the Image Selected from Gallery
-//                    performCrop(picturePath);
-//                    break;
-//                case RESULT_CROP:
-//                    if (data != null) {
-//                        Bundle extras = data.getExtras();
-//                        selectedBitmap = null;
-//                        if (extras != null) {
-//                            selectedBitmap = extras.getParcelable("data");
-//                        }
-//                        if (selectedBitmap == null && data.getData() != null)
-//                            selectedBitmap = BitmapFactory.decodeFile(data.getData().getEncodedPath());
-//                        // Set The Bitmap Data To ImageView
-//                        dp.setImageBitmap(selectedBitmap);
-//                        dpEditBtn.setImageResource(R.drawable.ic_create_back_black);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//>>>>>>> master_dev
             }
         }
     }

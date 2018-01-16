@@ -1063,7 +1063,8 @@ public class CameraFragment extends Fragment {
                 try {
                     mMediaRecorder.stop();
                 } catch (RuntimeException e) {
-                    Log.e("MediaRecorder stop()", e.getMessage());
+                    if(e != null)
+                        e.printStackTrace();
                 }
                 mMediaRecorder.reset();
 

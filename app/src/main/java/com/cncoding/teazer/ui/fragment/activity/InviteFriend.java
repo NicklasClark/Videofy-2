@@ -24,6 +24,8 @@ import com.facebook.share.widget.ShareDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logInviteEvent;
+
 public class InviteFriend extends AppCompatActivity {
 
     Context context;
@@ -74,6 +76,9 @@ public class InviteFriend extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //fabric event
+                logInviteEvent("Facebook");
+
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse(getString(R.string.teazer_universal_link)))
                         .setContentTitle("Teazer")
@@ -91,6 +96,9 @@ public class InviteFriend extends AppCompatActivity {
             public void onClick(View view) {
                 PackageManager pm = getPackageManager();
                 try {
+                    //fabric event
+                    logInviteEvent("WhatsApp");
+
                     PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
                     Intent watsppIntent = new Intent(Intent.ACTION_SEND);
                     watsppIntent.setType("text/plain");
@@ -107,6 +115,9 @@ public class InviteFriend extends AppCompatActivity {
         gmailShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //fabric event
+                logInviteEvent("Gmail");
 
                 Intent intent = new Intent (Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
@@ -126,17 +137,20 @@ public class InviteFriend extends AppCompatActivity {
             public void onClick(View view) {
                 try {
 
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.putExtra("sms_body", "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going " + teazerLink);
-                        intent.setData(Uri.parse("sms:"));
-                        startActivity(intent);
+                    //fabric event
+                    logInviteEvent("SMS");
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.putExtra("sms_body", "Hey, checkout this cool app-Teazer. Let's do something crazy, an all new way to interact socially. Join the fun and let's keep it going " + teazerLink);
+                    intent.setData(Uri.parse("sms:"));
+                    startActivity(intent);
 
                 } catch (android.content.ActivityNotFoundException anfe) {
                     Toast.makeText(getApplicationContext(),
-                            "SMS faild, please try again later!",
+                            "SMS failed, please try again later!",
                             Toast.LENGTH_LONG).show();
-                        Log.d("Error" , "Error");
-                    }
+                    Log.d("Error" , "Error");
+                }
             }
         });
 

@@ -133,6 +133,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
@@ -1106,6 +1107,9 @@ public class FragmentPostDetails extends BaseFragment implements
             @Override
             public void onLinkCreate(String url, BranchError error) {
                 if (error == null) {
+                    //fabric event
+                    logVideoShareEvent("Branch", postDetails.getTitle(), "Post", String.valueOf(postDetails.getPostId()));
+
                     loader.setVisibility(GONE);
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);

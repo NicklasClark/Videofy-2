@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 
 import io.fabric.sdk.android.Fabric;
@@ -24,7 +25,7 @@ public class SplashScreen extends AppCompatActivity {
 //        Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build());
+                .build(), new Answers());
 
         if (isUserLoggedIn(getApplicationContext())) {
 //            if(getIntent().getExtras() != null)

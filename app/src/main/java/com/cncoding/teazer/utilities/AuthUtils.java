@@ -49,6 +49,7 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COU
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
@@ -323,7 +324,11 @@ public class AuthUtils {
                     if (response.body().getStatus()) {
                         if (!isResendAction) {
                             if (mListener != null)
-                                mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, authorize);
+
+                                //fabric event
+                                logLoginEvent("OTP", true, username);
+
+                            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, authorize);
                         } else {
                             countDownTimer[0] = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, loginBtn);
                             countDownTimer[0].start();
@@ -344,6 +349,10 @@ public class AuthUtils {
                 loginBtn.setEnabled(true);
                 if (!isResendAction)
                     stopCircularReveal(progressBar);
+
+                //fabric event
+                logLoginEvent("OTP", false, username);
+
             }
         });
     }
