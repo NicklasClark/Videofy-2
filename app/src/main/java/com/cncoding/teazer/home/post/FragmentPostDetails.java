@@ -440,18 +440,22 @@ public class FragmentPostDetails extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isYInScreen(getContext(), reactBtn)) {
-                    MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-                            .singleUse("postDetails")
-                            .renderOverNavigationBar()
-                            .setTitleText(R.string.react)
-                            .setContentText(R.string.coach_mark_post_details_body)
-                            .setDismissText(R.string.okay_got_it)
-                            .setDismissOnTouch(true)
-                            .setTarget(reactBtn);
-                    MaterialShowcaseView materialShowcaseView = builder.build();
-                    materialShowcaseView.setConfig(getShowcaseConfig(getContext(), TYPE_POST_DETAILS));
-                    materialShowcaseView.show(getParentActivity());
+                try {
+                    if (isAdded() && isYInScreen(getContext(), reactBtn)) {
+                        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+                                .singleUse("postDetails")
+                                .renderOverNavigationBar()
+                                .setTitleText(R.string.react)
+                                .setContentText(R.string.coach_mark_post_details_body)
+                                .setDismissText(R.string.okay_got_it)
+                                .setDismissOnTouch(true)
+                                .setTarget(reactBtn);
+                        MaterialShowcaseView materialShowcaseView = builder.build();
+                        materialShowcaseView.setConfig(getShowcaseConfig(getContext(), TYPE_POST_DETAILS));
+                        materialShowcaseView.show(getParentActivity());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, 1000);

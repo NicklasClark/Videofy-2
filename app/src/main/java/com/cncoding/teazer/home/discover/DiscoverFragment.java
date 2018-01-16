@@ -121,20 +121,24 @@ public class DiscoverFragment extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isYInScreen(getContext(), myInterestsViewAll)) {
-                    ShowcaseConfig config = getShowcaseConfig(getContext(), TYPE_DISCOVER);
-                    config.setShapePadding(76);
-                    MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-                            .singleUse("discover")
-                            .renderOverNavigationBar()
-                            .setTitleText(R.string.my_interests)
-                            .setContentText(R.string.coach_mark_my_interests_body)
-                            .setDismissText(R.string.done)
-                            .setDismissOnTouch(true)
-                            .setTarget(myInterestsViewAll);
-                    MaterialShowcaseView materialShowcaseView = builder.build();
-                    materialShowcaseView.setConfig(config);
-                    materialShowcaseView.show(getParentActivity());
+                try {
+                    if (isAdded() && isYInScreen(getContext(), myInterestsViewAll)) {
+                        ShowcaseConfig config = getShowcaseConfig(getContext(), TYPE_DISCOVER);
+                        config.setShapePadding(76);
+                        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
+                                .singleUse("discover")
+                                .renderOverNavigationBar()
+                                .setTitleText(R.string.my_interests)
+                                .setContentText(R.string.coach_mark_my_interests_body)
+                                .setDismissText(R.string.done)
+                                .setDismissOnTouch(true)
+                                .setTarget(myInterestsViewAll);
+                        MaterialShowcaseView materialShowcaseView = builder.build();
+                        materialShowcaseView.setConfig(config);
+                        materialShowcaseView.show(getParentActivity());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, 1000);

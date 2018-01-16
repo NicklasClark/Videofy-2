@@ -372,22 +372,26 @@ public class BaseBottomBarActivity extends BaseActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
-                        BaseBottomBarActivity.this, "homePage");
-                sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_NORMAL));
-                sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
-                        getString(R.string.welcome_to_teazer),
-                        getString(R.string.coach_mark_post_list_body),
-                        getString(R.string.okay_got_it))
-                        .addSequenceItem(getTabChild(bottomTabLayout, TAB2),
-                                getString(R.string.discover_the_app),
-                                getString(R.string.coach_mark_discover_body),
-                                getString(R.string.okay_got_it))
-                        .addSequenceItem(getTabChild(bottomTabLayout, TAB5),
-                                getString(R.string.my_profile),
-                                getString(R.string.coach_mark_profile_body),
-                                getString(R.string.okay_got_it));
-                sequence.start();
+                try {
+                    MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
+                            BaseBottomBarActivity.this, "homePage");
+                    sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_NORMAL));
+                    sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
+                            getString(R.string.welcome_to_teazer),
+                            getString(R.string.coach_mark_post_list_body),
+                            getString(R.string.okay_got_it))
+                            .addSequenceItem(getTabChild(bottomTabLayout, TAB2),
+                                    getString(R.string.discover_the_app),
+                                    getString(R.string.coach_mark_discover_body),
+                                    getString(R.string.okay_got_it))
+                            .addSequenceItem(getTabChild(bottomTabLayout, TAB5),
+                                    getString(R.string.my_profile),
+                                    getString(R.string.coach_mark_profile_body),
+                                    getString(R.string.okay_got_it));
+                    sequence.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 1000);
     }
