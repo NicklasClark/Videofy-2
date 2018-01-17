@@ -10,7 +10,7 @@ import com.cncoding.teazer.customViews.coachMark.shape.Shape;
 public class ShowcaseConfig {
 
     static final String DEFAULT_MASK_COLOUR = "#BB000000";
-    static final long DEFAULT_FADE_TIME = 300;
+    static final long DEFAULT_FADE_TIME = 200;
     static final long DEFAULT_DELAY = 0;
     private static final Shape DEFAULT_SHAPE = new CircleShape();
     static final int DEFAULT_SHAPE_PADDING = 10;

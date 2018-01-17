@@ -18,6 +18,7 @@
 
         <TextView
             android:id="@+id/tv_title"
+            android:alpha="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -27,6 +28,7 @@
 
         <TextView
             android:id="@+id/tv_content"
+            android:alpha="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -36,6 +38,7 @@
 
     <TextView
         android:id="@+id/tv_dismiss"
+        android:alpha="1"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

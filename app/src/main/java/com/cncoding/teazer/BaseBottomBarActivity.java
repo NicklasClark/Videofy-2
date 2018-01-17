@@ -44,6 +44,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -63,8 +65,6 @@ import com.cncoding.teazer.home.post.TagListAdapter;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
-import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -120,10 +120,11 @@ import static com.cncoding.teazer.R.anim.slide_in_left;
 import static com.cncoding.teazer.R.anim.slide_in_right;
 import static com.cncoding.teazer.R.anim.slide_out_left;
 import static com.cncoding.teazer.R.anim.slide_out_right;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
-import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
@@ -141,10 +142,11 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getFollowingNotification
 import static com.cncoding.teazer.utilities.SharedPrefs.getRequestNotificationCount;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
-import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.ViewUtils.getTabChild;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
+import static com.cncoding.teazer.utilities.ViewUtils.showCoachMark;
 
 public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
@@ -169,6 +171,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
+    public static final int COACH_MARK_DELAY = 1000;
 
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
@@ -367,33 +370,8 @@ public class BaseBottomBarActivity extends BaseActivity
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
+        switchTab(TAB1);
         switchTab(0);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
-                            BaseBottomBarActivity.this, "homePage");
-                    sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_NORMAL));
-                    sequence.addSequenceItem(getTabChild(bottomTabLayout, TAB1),
-                            getString(R.string.welcome_to_teazer),
-                            getString(R.string.coach_mark_post_list_body),
-                            getString(R.string.okay_got_it))
-                            .addSequenceItem(getTabChild(bottomTabLayout, TAB2),
-                                    getString(R.string.discover_the_app),
-                                    getString(R.string.coach_mark_discover_body),
-                                    getString(R.string.okay_got_it))
-                            .addSequenceItem(getTabChild(bottomTabLayout, TAB5),
-                                    getString(R.string.my_profile),
-                                    getString(R.string.coach_mark_profile_body),
-                                    getString(R.string.okay_got_it));
-                    sequence.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1000);
     }
 
     private void shareTwitter(String message) {
@@ -439,10 +417,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
-
-
     }
 
     protected void onPause() {
@@ -656,13 +631,13 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private void switchTabDynamically() {
         if (navigationController.getCurrentFragment() instanceof PostsListFragment)
-            switchTab(0);
+            switchTab(TAB1);
         else if (navigationController.getCurrentFragment() instanceof DiscoverFragment)
-            switchTab(1);
+            switchTab(TAB2);
         else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
-            switchTab(3);
+            switchTab(TAB4);
         else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
-            switchTab(4);
+            switchTab(TAB5);
     }
 
     private void switchTab(final int position) {
@@ -672,6 +647,68 @@ public class BaseBottomBarActivity extends BaseActivity
             setAppBarElevation(0);
         else
             setAppBarElevation(1);
+
+        switch (position) {
+            case TAB1:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentFragment instanceof PostsListFragment && currentFragment.isAdded())
+                            getCoachMark(BaseBottomBarActivity.this, currentFragment,
+                                    getTabChild(bottomTabLayout, TAB1), "homePage", R.string.welcome_to_teazer,
+                                    R.string.coach_mark_post_list_body, R.string.okay_got_it, TYPE_NORMAL);
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            case TAB2:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (currentFragment instanceof DiscoverFragment && currentFragment.isAdded()) {
+                                MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
+                                        BaseBottomBarActivity.this, "discoverLanding");
+//                                    sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_DISCOVER));
+                                sequence.addSequenceItem(
+                                        showCoachMark(
+                                                BaseBottomBarActivity.this,
+                                                getTabChild(bottomTabLayout, TAB2),
+                                                "discover",
+                                                R.string.discover_the_app,
+                                                R.string.coach_mark_discover_body,
+                                                R.string.okay_got_it,
+                                                TYPE_DISCOVER)
+                                ).addSequenceItem(
+                                        showCoachMark(
+                                                BaseBottomBarActivity.this,
+                                                ((DiscoverFragment) currentFragment).myInterestsViewAll,
+                                                "myInterests",
+                                                R.string.my_interests,
+                                                R.string.coach_mark_my_interests_body,
+                                                R.string.done,
+                                                TYPE_DISCOVER));
+                                sequence.start();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            case TAB5:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentFragment instanceof ProfileFragment && currentFragment.isAdded())
+                            getCoachMark(BaseBottomBarActivity.this, currentFragment,
+                                    getTabChild(bottomTabLayout, TAB5), "profilePage", R.string.my_profile,
+                                    R.string.coach_mark_profile_body, R.string.okay_got_it, TYPE_NORMAL);
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            default:
+                break;
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -1150,7 +1187,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         updateTabSelection(position);
                     } else {
                         if (navigationController.getCurrentStackIndex() != TAB1) {
-                            switchTab(0);
+                            switchTab(TAB1);
                             updateTabSelection(0);
                             fragmentHistory.emptyStack();
                         } else {

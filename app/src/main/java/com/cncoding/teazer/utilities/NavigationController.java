@@ -657,10 +657,14 @@ public class NavigationController {
      * This check is here to prevent recursive entries into executePendingTransactions
      */
     private void executePendingTransactions() {
-        if (!executingTransaction) {
-            executingTransaction = true;
-            fragmentManager.executePendingTransactions();
-            executingTransaction = false;
+        try {
+            if (!executingTransaction) {
+                executingTransaction = true;
+                fragmentManager.executePendingTransactions();
+                executingTransaction = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

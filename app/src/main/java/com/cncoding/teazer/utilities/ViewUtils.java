@@ -18,6 +18,7 @@ import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
@@ -38,6 +39,9 @@ import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
+import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
@@ -51,13 +55,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
-import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
-import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
-
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
-import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
-import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 
 /**
  *
@@ -309,78 +311,6 @@ public class ViewUtils {
         }
     }
 
-    public static int getPixels(Context context, int dp) {
-        return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
-    }
-
-    public static View getTabChild(TabLayout tabLayout, int tabIndex) {
-        try {
-            return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ShowcaseConfig getShowcaseConfig(final Context context, int layoutType) {
-        ShowcaseConfig config = new ShowcaseConfig();
-//        config.setMaskColor(Color.parseColor("#CC000000"));
-        config.setRenderOverNavigationBar(true);
-        config.setShapePadding(layoutType == TYPE_POST_DETAILS || layoutType == TYPE_DISCOVER ? 10 : 0);
-        CircleShape circleShape = new CircleShape(getPixels(context, 50)) {
-            @Override
-            public void draw(Canvas canvas, Paint paint, int x, int y, int padding) {
-                super.draw(canvas, paint, x, y, padding);
-                if (this.radius > 0) {
-                    Paint paint1 = new Paint();
-                    paint1.setStyle(Paint.Style.STROKE);
-                    paint1.setColor(Color.WHITE);
-                    paint1.setAntiAlias(true);
-                    paint1.setStrokeWidth(getPixels(context, 1));
-                    canvas.drawCircle(x, y, this.radius + padding, paint1);
-                }
-            }
-        };
-        config.setShape(circleShape);
-        return config;
-    }
-//    public static void showCircularRevealAnimation(final View mRevealView, int centerX, int centerY,
-//                                                   float startRadius, float endRadius, int duration,
-// int color, final boolean isReversed){
-//        mRevealView.setBackgroundColor(color);
-//        Animator animator;
-//        if (!isReversed)
-//            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, startRadius, endRadius);
-//        else
-//            animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, endRadius, startRadius);
-//        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-//        animator.setDuration(duration);
-//        animator.start();
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                if (isReversed) {
-//                    mRevealView.setVisibility(View.INVISIBLE);
-//                    mRevealView.setBackgroundResource(android.R.color.transparent);
-//                }
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//            }
-//        });
-//        if (!isReversed)
-//            mRevealView.setVisibility(View.VISIBLE);
-//    }
-
     public static void hideKeyboard(Activity activity, View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -477,80 +407,75 @@ public class ViewUtils {
         }
     }
 
-//    /**
-//     * Color is #4469AF for Facebook and #DC4E41 for Google.
-//     * */
-//    private void startCircularReveal(final View revealLayout, final String colorString) {
-//        Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-//                revealLayout.getWidth() / 2, revealLayout.getBottom() - 50, 0,
-//                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()));
-//        animator.setDuration(500);
-//        animator.setInterpolator(new DecelerateInterpolator());
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//                revealLayout.setVisibility(View.VISIBLE);
-//                revealLayout.setBackgroundColor(Color.parseColor(colorString));
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-////                revealLayout.setVisibility(View.INVISIBLE);
-////                revealLayout.setBackgroundColor(Color.TRANSPARENT);
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//            }
-//        });
-//        animator.start();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressBar.animate().scaleX(1).scaleY(1).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-//                progressBar.setVisibility(View.VISIBLE);
-//            }
-//        }, 680);
-//    }
-//
-//    private void stopCircularReveal(final View revealLayout) {
-//        final Animator animator = ViewAnimationUtils.createCircularReveal(revealLayout,
-//                revealLayout.getWidth() / 2, revealLayout.getBottom() - 50,
-//                (float) Math.hypot(revealLayout.getWidth(), revealLayout.getHeight()), 0);
-//        animator.setDuration(500);
-//        animator.setInterpolator(new DecelerateInterpolator());
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                revealLayout.setVisibility(View.INVISIBLE);
-//                revealLayout.setBackgroundColor(Color.TRANSPARENT);
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//            }
-//        });
-//        progressBar.animate().scaleX(0).scaleY(0).setDuration(250).setInterpolator(new DecelerateInterpolator()).start();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressBar.setVisibility(View.VISIBLE);
-//                animator.start();
-//            }
-//        }, 250);
-//    }
+    public static int getPixels(Context context, int dp) {
+        return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
+    }
+
+    public static View getTabChild(TabLayout tabLayout, int tabIndex) {
+        try {
+            return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ShowcaseConfig getShowcaseConfig(final Context context, int layoutType) {
+        ShowcaseConfig config = new ShowcaseConfig();
+//        config.setMaskColor(Color.parseColor("#CC000000"));
+        config.setRenderOverNavigationBar(true);
+        config.setShapePadding(layoutType == TYPE_POST_DETAILS || layoutType == TYPE_DISCOVER ? getPixels(context, 10) : 0);
+        CircleShape circleShape = new CircleShape(getPixels(context, 50)) {
+            @Override
+            public void draw(Canvas canvas, Paint paint, int x, int y, int padding) {
+                super.draw(canvas, paint, x, y, padding);
+                if (this.radius > 0) {
+                    Paint paint1 = new Paint();
+                    paint1.setStyle(Paint.Style.STROKE);
+                    paint1.setColor(Color.WHITE);
+                    paint1.setAntiAlias(true);
+                    paint1.setStrokeWidth(getPixels(context, 1));
+                    canvas.drawCircle(x, y, this.radius + padding, paint1);
+                }
+            }
+        };
+        config.setShape(circleShape);
+        return config;
+    }
+
+    public static void getCoachMark(final BaseBottomBarActivity activity, final Fragment fragment,
+                                    final View targetView, final String uniqueId, final int titleResId,
+                                    final int contentResId, final int dismissResId, final int type) {
+        try {
+            if (fragment.isAdded()) {
+                if (type == TYPE_NORMAL) {
+                    showCoachMark(activity, targetView, uniqueId, titleResId, contentResId, dismissResId, type).show(activity);
+                } else {
+                    if (isYInScreen(activity, targetView)) {
+                        showCoachMark(activity, targetView, uniqueId, titleResId, contentResId, dismissResId, type).show(activity);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static MaterialShowcaseView showCoachMark(final BaseBottomBarActivity activity,
+                                     final View targetView, final String uniqueId, final int titleResId,
+                                     final int contentResId, final int dismissResId, final int type) {
+        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(activity)
+                .singleUse(uniqueId)
+                .renderOverNavigationBar()
+                .setTitleText(titleResId)
+                .setContentText(contentResId)
+                .setDismissText(dismissResId)
+                .setDismissOnTouch(true)
+                .setTarget(targetView);
+        MaterialShowcaseView materialShowcaseView = builder.build();
+        materialShowcaseView.setConfig(getShowcaseConfig(activity, type));
+        return materialShowcaseView;
+    }
 
 //    public static void unbindDrawables(View view) {
 //        if (view != null) {

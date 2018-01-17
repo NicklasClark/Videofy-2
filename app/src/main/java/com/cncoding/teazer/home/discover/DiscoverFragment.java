@@ -3,9 +3,7 @@ package com.cncoding.teazer.home.discover;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,8 +26,6 @@ import com.cncoding.teazer.home.discover.adapters.MyInterestsListAdapter;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchFragment;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
-import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
-import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -50,9 +46,6 @@ import retrofit2.Response;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
-import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
-import static com.cncoding.teazer.utilities.ViewUtils.isYInScreen;
 
 public class DiscoverFragment extends BaseFragment {
 
@@ -67,7 +60,7 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.my_interests_header_layout) LinearLayout myInterestsHeaderLayout;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
-    @BindView(R.id.my_interests_view_all) ProximaNovaSemiboldTextView myInterestsViewAll;
+    @BindView(R.id.my_interests_view_all) public ProximaNovaSemiboldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
@@ -111,37 +104,6 @@ public class DiscoverFragment extends BaseFragment {
         initRecyclerViews();
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getFeaturedPosts(1);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (isAdded() && isYInScreen(getContext(), myInterestsViewAll)) {
-                        ShowcaseConfig config = getShowcaseConfig(getContext(), TYPE_DISCOVER);
-                        config.setShapePadding(76);
-                        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-                                .singleUse("discover")
-                                .renderOverNavigationBar()
-                                .setTitleText(R.string.my_interests)
-                                .setContentText(R.string.coach_mark_my_interests_body)
-                                .setDismissText(R.string.done)
-                                .setDismissOnTouch(true)
-                                .setTarget(myInterestsViewAll);
-                        MaterialShowcaseView materialShowcaseView = builder.build();
-                        materialShowcaseView.setConfig(config);
-                        materialShowcaseView.show(getParentActivity());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1000);
     }
 
     @Override

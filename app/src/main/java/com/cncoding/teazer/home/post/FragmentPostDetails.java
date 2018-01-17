@@ -54,7 +54,6 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -120,6 +119,7 @@ import static android.util.DisplayMetrics.DENSITY_XXXHIGH;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.R.anim.abc_slide_in_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_in_top;
@@ -138,10 +138,9 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
-import static com.cncoding.teazer.utilities.ViewUtils.getShowcaseConfig;
-import static com.cncoding.teazer.utilities.ViewUtils.isYInScreen;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
@@ -440,25 +439,12 @@ public class FragmentPostDetails extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (isAdded() && isYInScreen(getContext(), reactBtn)) {
-                        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(getParentActivity())
-                                .singleUse("postDetails")
-                                .renderOverNavigationBar()
-                                .setTitleText(R.string.react)
-                                .setContentText(R.string.coach_mark_post_details_body)
-                                .setDismissText(R.string.okay_got_it)
-                                .setDismissOnTouch(true)
-                                .setTarget(reactBtn);
-                        MaterialShowcaseView materialShowcaseView = builder.build();
-                        materialShowcaseView.setConfig(getShowcaseConfig(getContext(), TYPE_POST_DETAILS));
-                        materialShowcaseView.show(getParentActivity());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (isAdded()) {
+                    getCoachMark(getParentActivity(), FragmentPostDetails.this, reactBtn, "postDetails",
+                            R.string.react, R.string.coach_mark_post_details_body, R.string.okay_got_it, TYPE_POST_DETAILS);
                 }
             }
-        }, 1000);
+        }, COACH_MARK_DELAY);
     }
 
     @Override
