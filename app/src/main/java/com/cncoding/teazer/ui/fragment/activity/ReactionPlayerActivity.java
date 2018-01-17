@@ -111,7 +111,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private long reactionPlayerCurrentPosition = 0;
+    private static long reactionPlayerCurrentPosition = 0;
     private Handler mHandler;
 
 
