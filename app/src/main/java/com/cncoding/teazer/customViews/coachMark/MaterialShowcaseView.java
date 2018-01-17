@@ -23,7 +23,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +42,7 @@ import java.util.List;
 /**
  * Helper class to show a sequence of showcase views.
  */
+@SuppressWarnings("SameParameterValue")
 public class MaterialShowcaseView extends FrameLayout implements View.OnTouchListener, View.OnClickListener {
 
     public static final int TYPE_NORMAL = 0;
@@ -315,15 +315,6 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         applyLayoutParams();
     }
 
-    public int getDeviceHeight() {
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
-        if (wm != null) {
-            wm.getDefaultDisplay().getMetrics(mDisplayMetrics);
-        }
-        return mDisplayMetrics.heightPixels;
-    }
-
     private void applyLayoutParams() {
         if (mContentBoxBody != null && mContentBoxBody.getLayoutParams() != null) {
             LinearLayout.LayoutParams contentLP = (LinearLayout.LayoutParams) mContentBoxBody.getLayoutParams();
@@ -456,7 +447,6 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
     }
 
     public void removeShowcaseListener(MaterialShowcaseSequence showcaseListener) {
-
         if ((mListeners != null) && mListeners.contains(showcaseListener)) {
             mListeners.remove(showcaseListener);
         }
@@ -828,28 +818,36 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
     }
 
     public void animateIn() {
-        setVisibility(INVISIBLE);
+        try {
+            setVisibility(INVISIBLE);
 
-        mAnimationFactory.animateInView(this, mTarget.getPoint(), mFadeDurationInMillis,
-                new IAnimationFactory.AnimationStartListener() {
-                    @Override
-                    public void onAnimationStart() {
-                        setVisibility(View.VISIBLE);
-                        notifyOnDisplayed();
+            mAnimationFactory.animateInView(this, mTarget.getPoint(), mFadeDurationInMillis,
+                    new IAnimationFactory.AnimationStartListener() {
+                        @Override
+                        public void onAnimationStart() {
+                            setVisibility(View.VISIBLE);
+                            notifyOnDisplayed();
+                        }
                     }
-                }
-        );
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void animateOut() {
-
-        mAnimationFactory.animateOutView(this, mTarget.getPoint(), mFadeDurationInMillis, new IAnimationFactory.AnimationEndListener() {
-            @Override
-            public void onAnimationEnd() {
-                setVisibility(INVISIBLE);
-                removeFromWindow();
-            }
-        });
+        try {
+            mAnimationFactory.animateOutView(this, mTarget.getPoint(),
+                    mFadeDurationInMillis, new IAnimationFactory.AnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    setVisibility(INVISIBLE);
+                    removeFromWindow();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void resetSingleUse() {
@@ -858,9 +856,6 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     /**
      * Static helper method for resetting single use flag
-     *
-     * @param context
-     * @param showcaseID
      */
     public static void resetSingleUse(Context context, String showcaseID) {
         PrefsManager.resetShowcase(context, showcaseID);
@@ -868,8 +863,6 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     /**
      * Static helper method for resetting all single use flags
-     *
-     * @param context
      */
     public static void resetAll(Context context) {
         PrefsManager.resetAll(context);
@@ -877,18 +870,15 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     public static int getSoftButtonsBarSizePort(Activity activity) {
         // getRealMetrics is only available with API 17 and +
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            int usableHeight = metrics.heightPixels;
-            activity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-            int realHeight = metrics.heightPixels;
-            if (realHeight > usableHeight)
-                return realHeight - usableHeight;
-            else
-                return 0;
-        }
-        return 0;
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int usableHeight = metrics.heightPixels;
+        activity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+        int realHeight = metrics.heightPixels;
+        if (realHeight > usableHeight)
+            return realHeight - usableHeight;
+        else
+            return 0;
     }
 
     private void setRenderOverNavigationBar(boolean mRenderOverNav) {

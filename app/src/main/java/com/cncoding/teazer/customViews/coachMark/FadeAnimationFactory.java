@@ -23,60 +23,72 @@ public class FadeAnimationFactory implements IAnimationFactory{
 
     @Override
     public void animateInView(View target, Point point, long duration, final AnimationStartListener listener) {
-        ObjectAnimator oa = ObjectAnimator.ofFloat(target, ALPHA, INVISIBLE, VISIBLE);
-        oa.setDuration(duration).addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                listener.onAnimationStart();
-            }
+        try {
+            ObjectAnimator oa = ObjectAnimator.ofFloat(target, ALPHA, INVISIBLE, VISIBLE);
+            oa.setDuration(duration).addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                    listener.onAnimationStart();
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-            }
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                }
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        oa.start();
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+                }
+            });
+            oa.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void animateOutView(View target, Point point, long duration, final AnimationEndListener listener) {
-        ObjectAnimator oa = ObjectAnimator.ofFloat(target, ALPHA, INVISIBLE);
-        oa.setDuration(duration).addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
+        try {
+            ObjectAnimator oa = ObjectAnimator.ofFloat(target, ALPHA, INVISIBLE);
+            oa.setDuration(duration).addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                listener.onAnimationEnd();
-            }
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    listener.onAnimationEnd();
+                }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                }
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        oa.start();
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+                }
+            });
+            oa.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ObjectAnimatorBinding")
     @Override
     public void animateTargetToPoint(MaterialShowcaseView showcaseView, Point point) {
-        AnimatorSet set = new AnimatorSet();
-        ObjectAnimator xAnimator = ObjectAnimator.ofInt(showcaseView, "showcaseX", point.x);
-        ObjectAnimator yAnimator = ObjectAnimator.ofInt(showcaseView, "showcaseY", point.y);
-        set.playTogether(xAnimator, yAnimator);
-        set.setInterpolator(interpolator);
-        set.start();
+        try {
+            AnimatorSet set = new AnimatorSet();
+            ObjectAnimator xAnimator = ObjectAnimator.ofInt(showcaseView, "showcaseX", point.x);
+            ObjectAnimator yAnimator = ObjectAnimator.ofInt(showcaseView, "showcaseY", point.y);
+            set.playTogether(xAnimator, yAnimator);
+            set.setInterpolator(interpolator);
+            set.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
