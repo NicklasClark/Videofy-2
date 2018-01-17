@@ -686,8 +686,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                                 "discover",
                                                 R.string.discover_the_app,
                                                 R.string.coach_mark_discover_body,
-                                                R.string.okay_got_it,
-                                                TYPE_DISCOVER)
+                                                R.string.next,
+                                                TYPE_NORMAL)
                                 ).addSequenceItem(
                                         showCoachMark(
                                                 BaseBottomBarActivity.this,
