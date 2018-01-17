@@ -111,7 +111,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private static long playerCurrentPosition = 0;
+    private long reactionPlayerCurrentPosition = 0;
     private Handler mHandler;
 
 
@@ -125,24 +125,26 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         audioFocusChangeListener =
                 new AudioManager.OnAudioFocusChangeListener() {
                     public void onAudioFocusChange(int focusChange) {
-                        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                            // Permanent loss of audio focus
-                            // Pause playback immediately
-                            player.setPlayWhenReady(false);
-                            // Wait 30 seconds before stopping playback
-                            mHandler.postDelayed(mDelayedStopRunnable,
-                                    TimeUnit.SECONDS.toMillis(30));
-                        }
-                        else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
-                            // Pause playback
-                            player.setPlayWhenReady(false);
-                        } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                            // Lower the volume, keep playing
-                        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                            // Your app has been granted audio focus again
-                            // Raise volume to normal, restart playback if necessary
-                            player.setPlayWhenReady(true);
-                            player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
+                        if (player != null) {
+                            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                                // Permanent loss of audio focus
+                                // Pause playback immediately
+                                player.setPlayWhenReady(false);
+                                // Wait 30 seconds before stopping playback
+                                mHandler.postDelayed(mDelayedStopRunnable,
+                                        TimeUnit.SECONDS.toMillis(30));
+                            }
+                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                                // Pause playback
+                                player.setPlayWhenReady(false);
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                                // Lower the volume, keep playing
+                            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                                // Your app has been granted audio focus again
+                                // Raise volume to normal, restart playback if necessary
+                                player.setPlayWhenReady(true);
+                                player.seekTo(reactionPlayerCurrentPosition);
+                            }
                         }
                     }
                 };
@@ -295,7 +297,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             if (audioAccessGranted) {
                 player.setPlayWhenReady(true);
-                player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
+                player.seekTo(reactionPlayerCurrentPosition);
             }
         }
         catch (Exception e) {
@@ -308,6 +310,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
+                reactionPlayerCurrentPosition = 0;
                 onBackPressed();
                 break;
             case R.id.btnLike:
@@ -442,7 +445,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             releasePlayer();
         }
         try {
-            playerCurrentPosition = player.getCurrentPosition();
+            reactionPlayerCurrentPosition = player.getCurrentPosition();
         } catch (Exception e) {
             e.printStackTrace();
         }

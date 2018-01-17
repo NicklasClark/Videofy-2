@@ -19,6 +19,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
@@ -60,6 +61,7 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.my_interests_header_layout) LinearLayout myInterestsHeaderLayout;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
+    @BindView(R.id.my_interests_view_all) public ProximaNovaSemiboldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
@@ -104,14 +106,13 @@ public class DiscoverFragment extends BaseFragment {
 
         return rootView;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getFeaturedPosts(1);
     }
 
-    @Override
+        @Override
     public void onResume() {
         super.onResume();
         loadPosts();

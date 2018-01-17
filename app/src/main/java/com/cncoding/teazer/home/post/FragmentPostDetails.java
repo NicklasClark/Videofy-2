@@ -121,11 +121,13 @@ import static android.util.DisplayMetrics.DENSITY_XXXHIGH;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.R.anim.abc_slide_in_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_in_top;
 import static com.cncoding.teazer.R.anim.abc_slide_out_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_out_top;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
@@ -143,6 +145,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
@@ -448,27 +451,38 @@ public class FragmentPostDetails extends BaseFragment implements
         audioFocusChangeListener =
                 new AudioManager.OnAudioFocusChangeListener() {
                     public void onAudioFocusChange(int focusChange) {
-                        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                            // Permanent loss of audio focus
-                            // Pause playback immediately
-                            player.setPlayWhenReady(false);
-                            // Wait 30 seconds before stopping playback
-                            mHandler.postDelayed(mDelayedStopRunnable,
-                                    TimeUnit.SECONDS.toMillis(30));
-                        }
-                        else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
-                            // Pause playback
-                            player.setPlayWhenReady(false);
-                        } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                            // Lower the volume, keep playing
-                        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                            // Your app has been granted audio focus again
-                            // Raise volume to normal, restart playback if necessary
-                            player.setPlayWhenReady(true);
-                            player.seekTo(playerCurrentPosition);
+                        if (player != null) {
+                            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                                // Permanent loss of audio focus
+                                // Pause playback immediately
+                                player.setPlayWhenReady(false);
+                                // Wait 30 seconds before stopping playback
+                                mHandler.postDelayed(mDelayedStopRunnable,
+                                        TimeUnit.SECONDS.toMillis(30));
+                            }
+                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                                // Pause playback
+                                player.setPlayWhenReady(false);
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                                // Lower the volume, keep playing
+                            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                                // Your app has been granted audio focus again
+                                // Raise volume to normal, restart playback if necessary
+                                player.setPlayWhenReady(true);
+                                player.seekTo(playerCurrentPosition);
+                            }
                         }
                     }
                 };
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    getCoachMark(getParentActivity(), FragmentPostDetails.this, reactBtn, "postDetails",
+                            R.string.react, R.string.coach_mark_post_details_body, R.string.okay_got_it, TYPE_POST_DETAILS);
+                }
+            }
+        }, COACH_MARK_DELAY);
     }
 
     @Override
@@ -1413,7 +1427,7 @@ public class FragmentPostDetails extends BaseFragment implements
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
             }
-            player.getPlaybackState();
+//            player.getPlaybackState();
             dismissProgressBar();
         } catch (Exception e) {
             e.printStackTrace();
