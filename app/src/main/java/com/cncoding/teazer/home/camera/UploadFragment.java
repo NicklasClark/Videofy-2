@@ -183,6 +183,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static FragmentActivity mActivity;
     static final int TaggedCategories = 2;
     static final int TaggedFriends = 1;
+    private long initialSize;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -212,9 +213,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
 
-//        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
-//        compressVideoAsyncTask.delegate = this;
-//        compressVideoAsyncTask.execute(videoPath);
+        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+        compressVideoAsyncTask.delegate = this;
+        compressVideoAsyncTask.execute(videoPath);
+        isCompressing = true;
+        initialSize = new File(videoPath).length();
 
 //        AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getContext());
 //        addWaterMarkAsyncTask.delegate = this;
@@ -233,15 +236,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
-    public void processFinish(String output) {
+    public void compressionProcessFinish(String output) {
         videoPath = output;
         try {
             uploadBtn.setEnabled(true);
-            uploadBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         } catch (Exception e) {
             e.printStackTrace();
         }
         isCompressing = false;
+        long compressedSize = new File(videoPath).length();
+        Log.d("SIZE", "Before: "+initialSize/1024+" After:"+compressedSize/1024);
     }
 
     @Override
@@ -299,6 +303,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (addingWatermark) {
 //            disableView(uploadBtn, true);
 //        }
+        if(isCompressing)
+        {
+            disableView(uploadBtn, true);
+        }
 
         new GetThumbnail(this).execute();
 

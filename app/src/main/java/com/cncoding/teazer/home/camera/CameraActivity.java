@@ -424,7 +424,7 @@ public class CameraActivity extends AppCompatActivity
         return extension;
     }
     @Override
-    public void processFinish(String output) {
+    public void compressionProcessFinish(String output) {
 //        File trimmedFile = new File(output);
         Log.d("CompressedLength", String.valueOf(new File(output).length()));
         startVideoUploadFragment();

@@ -2,9 +2,13 @@ package com.cncoding.teazer.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import VideoHandle.EpEditor;
 import VideoHandle.OnEditorListener;
@@ -14,7 +18,7 @@ import VideoHandle.OnEditorListener;
  * Created by amit on 6/12/17.
  */
 
-public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
+public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
 
     private final Context context;
     public AsyncResponse delegate = null;
@@ -25,24 +29,22 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... sourceVideoPath) {
+    protected Void doInBackground(String... sourceVideoPath) {
         File sourceFile = new File(sourceVideoPath[0]);
-        File destFile = new File("/storage/emulated/0/comp.mp4");
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-//        String destinationDir = context.getApplicationInfo().dataDir + "/trimmedVideo_" + timeStamp + ".mp4";
-////        String destinationDir = sourceFile.getParent() + "/trimmedVideo";
-//        try {
-//            filePath = SiliCompressor.with(context).compressVideo(sourceVideoPath[0], "/storage/emulated/0/");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return filePath;
-        String[] command = {"-y", "-i", sourceFile.getAbsolutePath(), "-s", "160x120", "-r", "25", "-vcodec", "mp4", "-b:v", "150k", "-b:a", "48000", "-ac", "2", "-ar", "22050", destFile.getAbsolutePath()};
-        String cmd =  "-y "+"-i "+sourceFile.getAbsolutePath()+" -s "+"160x120 "+"-r "+"25 "+"-vcodec "+"mpeg4 "+"-b:v "+"150k "+"-b:a "+"48000 "+"-ac "+"2 "+"-ar "+"22050 " +"-pix_fmt yuv420p "+ destFile.getAbsolutePath();
+
+        String dirPath = context.getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + File.separator + "teazerTemp";
+        File projDir = new File(dirPath);
+        if (!projDir.exists())
+            projDir.mkdirs();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        final String destinationDir = dirPath + "/teazer_" + timeStamp + ".mp4";
+
+//        String[] command = {"-y", "-i", sourceFile.getAbsolutePath(), "-s", "160x120", "-r", "25", "-vcodec", "mp4", "-b:v", "150k", "-b:a", "48000", "-ac", "2", "-ar", "22050", destFile.getAbsolutePath()};
+//        String cmd =  "-y "+"-i "+sourceFile.getAbsolutePath()+" -s "+"160x120 "+"-r "+"25 "+"-vcodec "+"mpeg4 "+"-b:v "+"150k "+"-b:a "+"48000 "+"-ac "+"2 "+"-ar "+"22050 " +"-pix_fmt yuv420p "+ destFile.getAbsolutePath();
 //        String cmd =  "-i "+ sourceFile.getAbsolutePath()+ " -vcodec h264 -acodec mp2" + destFile.getAbsolutePath();
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath()+" -c:v libx264 -preset ultrafast -tune fastdecode "+destFile.getAbsolutePath();;
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -strict experimental -vcodec libx264 -preset ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 320x240 -aspect 4:3 "+ destFile.getAbsolutePath();
-//        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -vcodec libx264 -movflags +faststart "+ destFile.getAbsolutePath();
+        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -vcodec h264 -acodec aac -movflags +faststart "+ destinationDir;
 //
 //
         EpEditor epEditor =  new EpEditor(context);
@@ -50,6 +52,7 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             public void onSuccess(){
                 Log.d("Compress", "Success");
+                delegate.compressionProcessFinish(destinationDir);
             }
 
             @Override
@@ -62,17 +65,17 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, String> {
                 Log.d("Compress", "Running");
             }
         });
-        return destFile.getAbsolutePath();
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        delegate.processFinish(result);
+    protected void onPostExecute(Void result) {
+//        delegate.compressionProcessFinish(result);
     }
 
 
     public interface AsyncResponse {
-        void processFinish(String output);
+        void compressionProcessFinish(String output);
     }
 
 }
