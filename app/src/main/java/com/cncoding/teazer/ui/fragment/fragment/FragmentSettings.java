@@ -224,7 +224,7 @@ public class FragmentSettings extends Fragment {
                 startActivity(fbBrowserIntent);
                 break;
             case R.id.instagramLink:
-                Intent instaBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/teaZer.social.media.application/"));
+                Intent instaBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/cnapplications/"));
                 startActivity(instaBrowserIntent);
                 break;
             case R.id.helpCenterLink:

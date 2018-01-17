@@ -482,9 +482,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
     public static byte[] bitmaptoByte(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        return data;
+        if (bitmap != null) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        }
+        return baos.toByteArray();
     }
 
     @Override

@@ -658,8 +658,12 @@ public class NavigationController {
     private void executePendingTransactions() {
         if (!executingTransaction) {
             executingTransaction = true;
-            fragmentManager.executePendingTransactions();
-            executingTransaction = false;
+            try {
+                fragmentManager.executePendingTransactions();
+                executingTransaction = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

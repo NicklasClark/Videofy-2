@@ -164,7 +164,12 @@ public class ExoPlayerActivity extends AppCompatActivity{
         if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
-        playerCurrentPosition = player.getCurrentPosition();
+
+        try {
+            playerCurrentPosition = player.getCurrentPosition();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         releaseAudioLock(this, audioFocusChangeListener);
     }
 

@@ -170,7 +170,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
 //        progressBar.setVisibility(View.VISIBLE);
 
-        postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
+        postListCall = ApiCallingService.Posts.getHomePagePosts(page, getActivity());
 
         if (!postListCall.isExecuted())
             postListCall.enqueue(new Callback<PostList>() {

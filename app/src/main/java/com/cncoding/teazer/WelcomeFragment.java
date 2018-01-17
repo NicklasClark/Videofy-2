@@ -287,8 +287,12 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     }
 
     private void handleFacebookAccessToken(Bundle facebookData) {
-        mListener.onWelcomeInteraction(SIGNUP_WITH_FACEBOOK_ACTION, facebookProfile,
-                facebookData, null, signupWithFbBtn);
+        try {
+            mListener.onWelcomeInteraction(SIGNUP_WITH_FACEBOOK_ACTION, facebookProfile,
+                    facebookData, null, signupWithFbBtn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void disableViews(View viewToExclude) {

@@ -442,12 +442,8 @@ public class FragmentPostDetails extends BaseFragment implements
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList,this));
         getTaggedUsers(1);
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        //audio state change listener
         mHandler = new Handler();
         audioFocusChangeListener =
                 new AudioManager.OnAudioFocusChangeListener() {
@@ -473,6 +469,11 @@ public class FragmentPostDetails extends BaseFragment implements
                         }
                     }
                 };
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
         context = getContext();

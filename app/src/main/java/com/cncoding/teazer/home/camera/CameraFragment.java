@@ -286,6 +286,8 @@ public class CameraFragment extends Fragment {
         activity = getActivity();
         context = getContext();
 
+        new CreateVideoFolder(this).execute();
+
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
         }
@@ -302,7 +304,6 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
-        new CreateVideoFolder(this).execute();
 
         return rootView;
     }
@@ -848,7 +849,7 @@ public class CameraFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (reference.get().isAdded()) {
+            if (reference != null && reference.get().isAdded()) {
                 Boolean isCreated = false;
                 reference.get().videoFolder = new File(
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
@@ -916,7 +917,11 @@ public class CameraFragment extends Fragment {
                         public void run() {
                             mIsRecordingVideo = true;
                             // Start recording
-                            mMediaRecorder.start();
+                            if (mMediaRecorder != null) {
+                                mMediaRecorder.start();
+                            } else {
+                                Toast.makeText(activity, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
 
                             //starting video duration counter
                             videoDuration.setVisibility(View.VISIBLE);
