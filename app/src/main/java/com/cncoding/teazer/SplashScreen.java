@@ -21,31 +21,13 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.;
 //        Fabric.with(this, new Crashlytics());
+
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build(), new Answers());
+                .build(), new Answers(), new Crashlytics());
 
         if (isUserLoggedIn(getApplicationContext())) {
-//            if(getIntent().getExtras() != null)
-//            {
-//                Bundle bundle = getIntent().getExtras().getBundle("bundle");
-//                if (bundle != null) {
-////                int index = bundle.getInt(TAB_INDEX);
-////                if (index != -1)
-////                    switchTab(index);
-//                    Log.d("NOTIFYM", "BUNDLE Exists on splash");
-//                    Log.d("NOTIFYM", String.valueOf(bundle.getInt(NOTIFICATION_TYPE)));
-////                    int notification_type = bundle.getInt(NOTIFICATION_TYPE);
-////                    int source_id = bundle.getInt(SOURCE_ID);
-////                    notificationAction(notification_type, source_id);
-//                }
-//                else
-//                    Log.d("NOTIFYM", "BUNDLE does not Exists on Splash");
-//            }
-//            else
-//                Log.d("NOTIFYM", "Intent is null");
             getFollowingNotificationsUnreadCount(this, 1);
             getRequestNotificationsUnreadCount(this, 1);
 
@@ -53,7 +35,6 @@ public class SplashScreen extends AppCompatActivity {
         } else {
             startActivity(new Intent(SplashScreen.this, MainActivity.class));
         }
-
         finish();
     }
 
