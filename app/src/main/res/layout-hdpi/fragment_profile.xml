@@ -79,7 +79,7 @@
                                         android:layout_width="84dp"
                                         android:layout_height="84dp"
                                         android:layout_gravity="center_vertical"
-
+                                        android:transitionName="profile"
                                         android:fitsSystemWindows="true"
                                         android:scaleType="centerCrop"
                                         android:src="@drawable/ic_user_male_dp"

@@ -211,6 +211,7 @@ public class ApiCallingService {
             return getDiscoverService(context).getTrendingVideos(page, categoryId);
         }
 
+
         /**
          * Call this service to get discover page landing posts.
          */
@@ -638,7 +639,13 @@ public class ApiCallingService {
             return getPostalService(context).getPostedVideos(page);
 
         }
+        public static Call<PostList> getHiddenVideosList(int page, Context context){
+            return getPostalService(context).getHiddenVideosList(page);
+        }
 
+        public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context){
+            return getPostalService(context).getAllHiddenVideosList(userID);
+        }
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
@@ -720,6 +727,9 @@ public class ApiCallingService {
 
         public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
             return getUserService(context).resetUnreadNotification(type);
+        }
+        public static Call<ResultObject> removeProfilepic(Context context) {
+            return getUserService(context).removeProfilePic();
         }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {

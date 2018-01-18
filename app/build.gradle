@@ -12,7 +12,7 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
+            storeFile file('/Users/farazhabib/Documents/Android Keystores/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }
@@ -31,7 +31,7 @@ android {
         renderscriptTargetApi 27
         renderscriptSupportModeEnabled true
         resValue "string", "app_name", "Teazer"
-        manifestPlaceholders = [facebookId:"163105567761892"]
+        manifestPlaceholders = [facebookId: "163105567761892"]
     }
     buildTypes {
         release {
@@ -157,9 +157,9 @@ dependencies {
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'jp.wasabeef:glide-transformations:2.0.2'
-    compile(group: 'com.expletus.mobiruck', name: 'mobiruck', version:'2.1.27', ext: 'aar', changing: true) {
+    compile('com.expletus.mobiruck:mobiruck:2.1.27@aar') {
         //exclude group: if needed
-        exclude  group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
         transitive = true
     }
     implementation 'com.android.installreferrer:installreferrer:1.0'

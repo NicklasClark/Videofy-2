@@ -81,7 +81,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                 .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
-        viewHolder.playvideo.setOnClickListener(new View.OnClickListener() {
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

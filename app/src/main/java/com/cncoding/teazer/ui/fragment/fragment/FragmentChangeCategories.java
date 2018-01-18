@@ -208,5 +208,15 @@ public class FragmentChangeCategories extends Fragment{
             }
         });
     }
+//    public void changeUpdateMessage(int i)
+//    {
+//      if(i>5)
+//        headerTextView.setVisibility(View.GONE);
+//      else {
+//          headerTextView.setVisibility(View.VISIBLE);
+//          headerTextView.setHint(R.string.select_minimum_categories);
+//      }
+//
+//      }
 
 }

@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.profile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,9 +13,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,8 +41,10 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
+import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.ui.fragment.activity.ShareActivityApp;
 
@@ -68,6 +73,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     private static final int RC_REQUEST_STORAGE = 1001;
     public static boolean checkprofileupdated = false;
     public static boolean checkpostupdated = false;
+    public static boolean checkpicUpdated = false;
     ImageView profile_image;
     ImageView bgImage;
     ImageView settings;
@@ -112,6 +118,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     private String imageUri;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    private boolean ismySelf;
     @BindView(R.id.loader)GifTextView loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
@@ -281,6 +288,22 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
 //                        });
             }
         });
+
+        profile_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+                intent.putExtra("Image", userProfileUrl);
+                intent.putExtra("candelete",true);
+                intent.putExtra("gender",gender);
+
+                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
+                Pair<View, String> p2 = Pair.create((View)_username, "text");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+                startActivity(intent, options.toBundle());
+            }
+        });
         _detail.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -304,6 +327,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
 
 
 
+
            }
         });
 
@@ -321,6 +345,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
 
         if(ProfileFragment.checkpostupdated)
         {
+
             viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
             tabLayout.setupWithViewPager(viewPager);
             checkpostupdated=false;
@@ -357,20 +382,15 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         }
         return true;
     }
-
     public void getProfileDetail() {
-
         blur_bacground.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
-
-
-       // coordinatorLayout.setVisibility(View.GONE);
-
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-
                 try {
+
+
                     userProfile = response.body().getUserProfile();
                     firstname = userProfile.getFirstName();
                     lastname = userProfile.getLastName();
@@ -383,6 +403,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     totalvideos = response.body().getTotalVideos();
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
+
                     Long mobilno = userProfile.getPhoneNumber();
 
                     if (mobilno == null) {
@@ -392,17 +413,12 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
+
+
                     if (userProfile.getHasProfileMedia()) {
                         userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
-                    }
-                    _detail.setText(detail);
-                    _name.setText(firstname + " " + lastname);
-                    _username.setText(username);
-                    _followers.setText(String.valueOf(totalfollowers) + " Followers");
-                    _following.setText(String.valueOf(totalfollowing + " Following"));
-                    _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    if (userProfileUrl != null) {
+
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
@@ -410,29 +426,40 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     }
                     else
                     {
-                       if(gender==1)
-                       {
-                           Glide.with(context)
-                                   .load(R.drawable.ic_user_male_dp)
-                                   .into(profile_id);
 
-                       }
-                       else if(gender==2)
-                       {
-                           Glide.with(context)
-                                   .load(R.drawable.ic_user_female_dp)
-                                   .into(profile_id);
+                        Glide.with(context)
+                                .load(R.drawable.ic_default_bg)
+                                .into(bgImage);
+                        if(gender==1)
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_male_dp)
+                                    .into(profile_id);
 
-                       }
-                       else
-                       {
-                           Glide.with(context)
-                                   .load(R.drawable.ic_user_male_dp)
-                                   .into(profile_id);
+                        }
+                        else if(gender==2)
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_female_dp)
+                                    .into(profile_id);
 
-                       }
+                        }
+                        else
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_male_dp)
+                                    .into(profile_id);
 
+                        }
                     }
+                    _detail.setText(detail);
+                    _name.setText(firstname + " " + lastname);
+                    _username.setText(username);
+                    _followers.setText(String.valueOf(totalfollowers) + " Followers");
+                    _following.setText(String.valueOf(totalfollowing + " Following"));
+                    _creations.setText(String.valueOf(totalvideos + " Creations"));
+
+
 
                     blur_bacground.setVisibility(View.VISIBLE);
                     loader.setVisibility(View.GONE);
@@ -528,6 +555,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 try {
+
                     userProfile = response.body().getUserProfile();
                     firstname = userProfile.getFirstName();
                     lastname = userProfile.getLastName();
@@ -540,6 +568,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     totalvideos = response.body().getTotalVideos();
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
+
                     Long mobilno = userProfile.getPhoneNumber();
                     if (mobilno == null) {
                         mobilenumber = 0L;
@@ -548,9 +577,48 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     }
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
+
+                    if(checkpicUpdated){
+                        checkpicUpdated=false;
+                        userProfileUrl=null;
+                    }
+
                     if (userProfile.getHasProfileMedia()) {
                         userProfileThumbnail = userProfile.getProfileMedia().getThumbUrl();
                         userProfileUrl = userProfile.getProfileMedia().getMediaUrl();
+
+                        Glide.with(context)
+                                .load(userProfileUrl)
+                                .into(profile_id);
+                        profileBlur(userProfileUrl);
+                    }
+                    else
+                    {
+                        Glide.with(context)
+                                .load(R.drawable.ic_default_bg)
+                                .into(bgImage);
+
+                        if(gender==1)
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_male_dp)
+                                    .into(profile_id);
+
+                        }
+                        else if(gender==2)
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_female_dp)
+                                    .into(profile_id);
+
+                        }
+                        else
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.ic_user_male_dp)
+                                    .into(profile_id);
+
+                        }
                     }
                     _detail.setText(detail);
                     _name.setText(firstname);
@@ -558,25 +626,21 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));
                     _creations.setText(String.valueOf(totalvideos + " Creations"));
-                    if (userProfileThumbnail == null) {
-                    } else {
-                        Glide.with(context)
-                                .load(userProfileUrl)
-                                .into(profile_id);
-                        profileBlur(userProfileUrl);
-                    }
+
+
                     loader.setVisibility(View.GONE);
                     blur_bacground.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
 
                     loader.setVisibility(View.GONE);
                     e.printStackTrace();
+
                 }
             }
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
                 loader.setVisibility(View.GONE);
-
                 t.printStackTrace();
             }
         });

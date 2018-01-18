@@ -275,9 +275,16 @@
     <string name="error_getting_tagged_users">Error fetching tagged users, please try again</string>
     <string name="resetting_password_failed">Resetting password failed or wrong OTP entered</string>
     <string name="hiding_post">Hiding post</string>
-    <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, you will NOT be able to see this post.</string>
+    <string name="unhiding_post">Unhiding post</string>
+    <string name="unhiding_videos">Unhiding Videos</string>
+    <string name="hide_post_confirm">Are you sure you want to hide this post?  If you do so, you will no longer be able to see this post.</string>
+    <string name="unhide_post_confirm">Are you sure you want to unhide this post?</string>
+    <string name="unhide_video_confirm">Are you sure you want to unhide this user\'s posts?</string>
     <string name="yes_hide">Yes, hide</string>
+    <string name="yes_unhide">Yes, Unhide </string>
+    <string name="yes_unhide_ALl">Yes, Unhide All </string>˚
     <string name="video_hide_successful">The video was hidden successfully</string>
+    <string name="video_shown_successful">The video was shown successfully</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_crop_action_support_message">This device doesn\'t support the crop action</string>
     <string name="no_app_found_for_intent">Cannot fond any app to handle this task</string>
@@ -321,6 +328,7 @@
     <string name="recently_deleted">Recently Deleted</string>
     <string name="privacy_settings">Privacy Settings</string>
     <string name="no_creations_message">Your profile is still empty. Create your first video to start your journey on Teazer</string>
+    <string name="no_hideList_message">Your hidden list is empty.</string>
     <string name="no_creations_message2">This Profile does not have any video</string>
     <string name="no_reactions_message">You haven\'t reacted on any post yet.</string>
     <string name="could_not_find_location">Couldn\'t find your location, try searching for it.</string>
@@ -336,4 +344,5 @@
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
     <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>
+    <string name="no_categories_available">No Categories available</string>
 </resources>

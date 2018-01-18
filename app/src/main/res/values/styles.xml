@@ -77,6 +77,8 @@
         <!--<item name="android:textColorPrimary">@color/colorPrimary_text</item>-->
         <item name="android:textColorSecondary">@color/colorSecondary_text</item>
         <item name="android:textColorHint">@color/colorSecondary_text</item>
+        <item name="android:windowContentTransitions">true</item>
+
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -620,6 +622,9 @@
         <!--<item name="android:capitalize">words</item>-->
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="customActionBar" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Menu">
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
@@ -629,4 +634,5 @@
     </style>
 
     <dimen name="text_size_15sp">15sp</dimen>
+
 </resources>

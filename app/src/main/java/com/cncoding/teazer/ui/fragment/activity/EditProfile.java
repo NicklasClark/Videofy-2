@@ -235,6 +235,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 female.setBackgroundResource(R.drawable.ic_female_white);
                 maletext.setTextColor(Color.parseColor("#2196F3"));
                 femaletxt.setTextColor(Color.parseColor("#333333"));
+
                 Glide.with(context)
                         .load(R.drawable.ic_user_male_dp)
                         .into(profile_image);

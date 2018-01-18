@@ -100,6 +100,7 @@ public class FragmentEditPostUpdateCtaegories extends Fragment {
 
                 for (int i = 0; i < selectedCategoriesList.size(); i++) {
                     Log.d("getID", String.valueOf(selectedCategoriesList.get(i)));
+
                     categoryId.append(selectedCategoriesList.get(i));
                     categoryName.append(selectedCategoriesListName.get(i));
                     if (i == selectedCategoriesList.size() - 1) {

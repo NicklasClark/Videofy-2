@@ -1125,7 +1125,8 @@ public class FragmentPostDetails extends BaseFragment {
                     new AlertDialog.Builder(context)
                             .setTitle(R.string.hiding_post)
                             .setMessage(R.string.hide_post_confirm)
-                            .setPositiveButton(getString(R.string.yes_hide), new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.yes_hide), new DialogInterface.OnClickListener()
+                            {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, context)
@@ -1136,6 +1137,8 @@ public class FragmentPostDetails extends BaseFragment {
                                                         Toast.makeText(context,
                                                                 R.string.video_hide_successful,
                                                                 Toast.LENGTH_SHORT).show();
+                                                        getParentActivity().popFragment();
+
                                                     } else {
                                                         Toast.makeText(context,
                                                                 R.string.something_went_wrong,
@@ -1166,8 +1169,9 @@ public class FragmentPostDetails extends BaseFragment {
 
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
-                                    PostsListFragment.postDetails = null;
+   //                                 PostsListFragment.postDetails = null;
                                     getParentActivity().popFragment();
+
 //                                    getActivity().finish();
                                 }
                             })
