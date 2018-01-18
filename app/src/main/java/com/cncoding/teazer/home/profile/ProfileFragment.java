@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
@@ -46,7 +45,6 @@ import com.cncoding.teazer.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
-import com.cncoding.teazer.ui.fragment.activity.ShareActivityApp;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,6 +64,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logProfileShareEvent;
 
 public class ProfileFragment extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos {
     private static final String ARG_PARAM1 = "param1";
@@ -254,6 +254,9 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
+                            //fabric event
+                            logProfileShareEvent("Branch", userProfile.getEmail(), "Profile", String.valueOf(userProfile.getUserId()));
+
                             loader.setVisibility(View.GONE);
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

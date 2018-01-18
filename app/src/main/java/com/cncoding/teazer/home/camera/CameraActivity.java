@@ -678,11 +678,15 @@ public class CameraActivity extends AppCompatActivity
                 thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
                 while (cursor.moveToNext()) {
-                    reference.get().videosList.add(new Videos(
-                            cursor.getString(columnIndexData),              //Video path
-//                            cursor.getString(thumbnailData),                //Thumbnail
-                            cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
-                    ));
+                    try {
+                        reference.get().videosList.add(new Videos(
+                                cursor.getString(columnIndexData),              //Video path
+    //                            cursor.getString(thumbnailData),                //Thumbnail
+                                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
+                        ));
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    }
                 }
                 cursor.close();
             }

@@ -286,6 +286,8 @@ public class CameraFragment extends Fragment {
         activity = getActivity();
         context = getContext();
 
+        new CreateVideoFolder(this).execute();
+
         if (getArguments() != null) {
             isReaction = getArguments().getBoolean(IS_REACTION);
         }
@@ -302,7 +304,6 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
-        new CreateVideoFolder(this).execute();
 
         return rootView;
     }
@@ -758,6 +759,7 @@ public class CameraFragment extends Fragment {
     private void setUpCaptureRequestBuilder(CaptureRequest.Builder builder) {
         builder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
         builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        builder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_CAPTURE_INTENT_ZERO_SHUTTER_LAG);
     }
 
     /**
@@ -847,7 +849,7 @@ public class CameraFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (reference.get().isAdded()) {
+            if (reference != null && reference.get().isAdded()) {
                 Boolean isCreated = false;
                 reference.get().videoFolder = new File(
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
@@ -915,7 +917,11 @@ public class CameraFragment extends Fragment {
                         public void run() {
                             mIsRecordingVideo = true;
                             // Start recording
-                            mMediaRecorder.start();
+                            if (mMediaRecorder != null) {
+                                mMediaRecorder.start();
+                            } else {
+                                Toast.makeText(activity, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
 
                             //starting video duration counter
                             videoDuration.setVisibility(View.VISIBLE);
@@ -968,7 +974,7 @@ public class CameraFragment extends Fragment {
                 if (isFlashSupported) {
                     if (isTorchOn) {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-                        if(mPreviewSession!=null) {
+                        if(mPreviewSession != null) {
                             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         }
                         cameraFlashView.setImageResource(R.drawable.ic_flash_on);
@@ -976,14 +982,16 @@ public class CameraFragment extends Fragment {
                     }
                     else {
                         mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-                        if(mPreviewSession!=null) {
+                        if(mPreviewSession != null) {
                             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                         }                        cameraFlashView.setImageResource(R.drawable.ic_flash_off);
 //                        isTorchOn = true;
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -1060,7 +1068,8 @@ public class CameraFragment extends Fragment {
                 try {
                     mMediaRecorder.stop();
                 } catch (RuntimeException e) {
-                    Log.e("MediaRecorder stop()", e.getMessage());
+                    if(e != null)
+                        e.printStackTrace();
                 }
                 mMediaRecorder.reset();
 

@@ -203,7 +203,9 @@ public class NearbyPlacesList extends Fragment {
 
     private void performNearbySearch(CharSequence charSequence) {
         Log.d("performNearbySearch", "called on " + charSequence);
-        ((NearbyPlacesAdapter) recyclerView.getAdapter()).getFilter().filter(charSequence);
+        if (recyclerView.getAdapter() != null) {
+            ((NearbyPlacesAdapter) recyclerView.getAdapter()).getFilter().filter(charSequence);
+        }
         recyclerView.getAdapter().notifyDataSetChanged();
 //        placeAutoCompleteAdapter.getFilter().filter(charSequence);
 //        placeAutoCompleteAdapter.notifyDataSetChanged();

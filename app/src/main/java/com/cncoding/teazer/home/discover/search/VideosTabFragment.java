@@ -142,11 +142,11 @@ public class VideosTabFragment extends BaseFragment {
                                     noPosts.setVisibility(View.GONE);
 //                                    videosList.clear();
                                     noPosts2.setVisibility(View.GONE);
+                                    videosList.addAll(videos.getVideos());
                                     adapter = new DiscoverSearchAdapter(getParentActivity(), VideosTabFragment.this,
                                             true, null, new ArrayList<>(videosList), isSearchTerm);
                                     recyclerView.setAdapter(adapter);
 //                                    recyclerView.getRecycledViewPool().clear();
-                                    videosList.addAll(videos.getVideos());
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     if (page == 1 && videosList.isEmpty()) {

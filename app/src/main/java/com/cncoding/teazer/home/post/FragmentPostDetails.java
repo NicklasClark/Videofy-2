@@ -110,6 +110,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.util.DisplayMetrics.DENSITY_HIGH;
 import static android.util.DisplayMetrics.DENSITY_MEDIUM;
@@ -119,11 +121,13 @@ import static android.util.DisplayMetrics.DENSITY_XXXHIGH;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.R.anim.abc_slide_in_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_in_top;
 import static com.cncoding.teazer.R.anim.abc_slide_out_bottom;
 import static com.cncoding.teazer.R.anim.abc_slide_out_top;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
@@ -131,6 +135,9 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
+import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
+import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
@@ -138,6 +145,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
@@ -148,7 +156,8 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class FragmentPostDetails extends BaseFragment {
+public class FragmentPostDetails extends BaseFragment implements
+        AudioManager.OnAudioFocusChangeListener {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
@@ -285,6 +294,10 @@ public class FragmentPostDetails extends BaseFragment {
     TaggedUsersList taggedList;
     //</editor-fold>
 
+    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
+    private boolean audioAccessGranted = false;
+    private static long playerCurrentPosition = 0;
+    private Handler mHandler;
 
 
     public FragmentPostDetails() {
@@ -432,6 +445,44 @@ public class FragmentPostDetails extends BaseFragment {
         taggedUserListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         taggedUserListView.setAdapter(new TagListAdapter(context, taggedUsersList,this));
         getTaggedUsers(1);
+
+        //audio state change listener
+        mHandler = new Handler();
+        audioFocusChangeListener =
+                new AudioManager.OnAudioFocusChangeListener() {
+                    public void onAudioFocusChange(int focusChange) {
+                        if (player != null) {
+                            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                                // Permanent loss of audio focus
+                                // Pause playback immediately
+                                player.setPlayWhenReady(false);
+                                // Wait 30 seconds before stopping playback
+                                mHandler.postDelayed(mDelayedStopRunnable,
+                                        TimeUnit.SECONDS.toMillis(30));
+                            }
+                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                                // Pause playback
+                                player.setPlayWhenReady(false);
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                                // Lower the volume, keep playing
+                            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                                // Your app has been granted audio focus again
+                                // Raise volume to normal, restart playback if necessary
+                                player.setPlayWhenReady(true);
+                                player.seekTo(playerCurrentPosition);
+                            }
+                        }
+                    }
+                };
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    getCoachMark(getParentActivity(), FragmentPostDetails.this, reactBtn, "postDetails",
+                            R.string.react, R.string.coach_mark_post_details_body, R.string.okay_got_it, TYPE_POST_DETAILS);
+                }
+            }
+        }, COACH_MARK_DELAY);
     }
 
     @Override
@@ -458,8 +509,16 @@ public class FragmentPostDetails extends BaseFragment {
 //            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
             isComingFromHomePage = bundle.getBoolean(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
+
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
     }
+
+    private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            player.setPlayWhenReady(false);
+        }
+    };
 
     private void logTheDensity() {
         switch (getResources().getDisplayMetrics().densityDpi) {
@@ -488,6 +547,10 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        //acquire audio play access(transient)
+        audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
+
         getParentActivity().hideToolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
@@ -567,21 +630,6 @@ public class FragmentPostDetails extends BaseFragment {
                     })
                     .into(profilePic);
             controlsContainer.setVisibility(VISIBLE);
-//            reaction1Url = builder.reaction1Url;
-//            reaction2Url = builder.reaction2Url;
-//            reaction3Url = builder.reaction3Url;
-//            controller = new MediaControllerView.Builder(this, PostDetailsActivity.this)
-//                    .withVideoTitle(postDetails.getReactTitle())
-////                    .withVideoSurfaceView(textureView)
-//                    .withLocation(location)
-//                    .withProfileName(postDetails.getPostOwner().getFirstName() + " " + postDetails.getPostOwner().getLastName())
-//                    .withProfilePicUrl(profilePicUrl)
-//                    .withLikes(postDetails.getLikes())
-//                    .withViews(postDetails.getMedias().get(0).getViews())
-//                    .withCategories(getUserCategories())
-//                    .withDuration(postDetails.getMedias().get(0).getDuration())
-//                    .withReactionCount(postDetails.getTotalReactions())
-//                    .build(controlsContainer);
         }
     }
 
@@ -782,6 +830,7 @@ public class FragmentPostDetails extends BaseFragment {
     @OnClick(R.id.btnClose)
     public void goBack() {
         customHandler.removeCallbacks(updateTimerThread);
+        mHandler.removeCallbacks(mDelayedStopRunnable);
         getParentActivity().onBackPressed();
 
     }
@@ -889,7 +938,6 @@ public class FragmentPostDetails extends BaseFragment {
                             taggedUserListView.getAdapter().notifyDataSetChanged();
                             taggedUserListView.getAdapter().notifyItemRangeInserted( taggedUserListView.getAdapter().getItemCount(), taggedUsersList.size() - 1);
                         }
-
 
                     }
                     else
@@ -1074,6 +1122,9 @@ public class FragmentPostDetails extends BaseFragment {
             @Override
             public void onLinkCreate(String url, BranchError error) {
                 if (error == null) {
+                    //fabric event
+                    logVideoShareEvent("Branch", postDetails.getTitle(), "Post", String.valueOf(postDetails.getPostId()));
+
                     loader.setVisibility(GONE);
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
@@ -1084,38 +1135,6 @@ public class FragmentPostDetails extends BaseFragment {
                     loader.setVisibility(GONE);
             }
         });
-
-
-
-//        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(this,
-//                "Check this out!", "This video is awesome: ")
-//                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send),
-//                        "Copy", "Added to clipboard")
-//                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "Show more")
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.INSTAGRAM)
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
-//                .setAsFullWidthStyle(true)
-//                .setSharingTitle("Share With");
-//
-//        branchUniversalObject.showShareSheet(this,
-//                linkProperties,
-//                shareSheetStyle,
-//                new Branch.BranchLinkShareListener() {
-//                    @Override
-//                    public void onShareLinkDialogLaunched() {
-//                    }
-//                    @Override
-//                    public void onShareLinkDialogDismissed() {
-//                    }
-//                    @Override
-//                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-//                    }
-//                    @Override
-//                    public void onChannelSelected(String channelName) {
-//                    }
-//                });
-
     }
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
@@ -1227,6 +1246,7 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+        playerCurrentPosition = player.getCurrentPosition();
         player.setPlayWhenReady(!player.getPlayWhenReady());
 
         if (Util.SDK_INT <= 23) {
@@ -1253,18 +1273,11 @@ public class FragmentPostDetails extends BaseFragment {
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23) {
+            //acquire audio play access(transient)
+            audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
             initializePlayer();
         }
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        hideSystemUi();
-//        if ((Util.SDK_INT <= 23 || player == null)) {
-//            initializePlayer();
-//        }
-//    }
 
     @Override
     public void onStop() {
@@ -1273,8 +1286,8 @@ public class FragmentPostDetails extends BaseFragment {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
             getParentActivity().showToolbar();
-
         }
+        releaseAudioLock(getContext(), audioFocusChangeListener);
     }
 
     private void releasePlayer() {
@@ -1414,8 +1427,11 @@ public class FragmentPostDetails extends BaseFragment {
             playerView.setPlayer(player);
             player.prepare(loopingMediaSource);
 //            player.setVideoSurface(surface);
-            player.setPlayWhenReady(playWhenReady);
-            player.getPlaybackState();
+            if (audioAccessGranted) {
+                player.setPlayWhenReady(true);
+                player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
+            }
+//            player.getPlaybackState();
             dismissProgressBar();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1557,13 +1573,17 @@ public class FragmentPostDetails extends BaseFragment {
         super.onDetach();
         getParentActivity().updateToolbarTitle(previousTitle);
         getParentActivity().showToolbar();
+        releaseAudioLock(getContext(), audioFocusChangeListener);
+        mHandler.removeCallbacks(mDelayedStopRunnable);
     }
 
 
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);
+        releaseAudioLock(getContext(), audioFocusChangeListener);
         //  onBackPressed();
+        mHandler.removeCallbacks(mDelayedStopRunnable);
     }
 
     //thread to update recording time
@@ -1593,5 +1613,22 @@ public class FragmentPostDetails extends BaseFragment {
     public interface CallProfileFromPostDetails
     {
         public void callProfileListener(int userid, boolean ismyself);
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        if(focusChange == AUDIOFOCUS_LOSS_TRANSIENT)
+        {
+            // Pause
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_GAIN)
+        {
+            // Resume
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_LOSS)
+        {
+            // Stop or pause depending on your need
+        }
     }
 }

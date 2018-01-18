@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +32,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +45,8 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
+import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -121,6 +123,8 @@ import static com.cncoding.teazer.R.anim.slide_in_left;
 import static com.cncoding.teazer.R.anim.slide_in_right;
 import static com.cncoding.teazer.R.anim.slide_out_left;
 import static com.cncoding.teazer.R.anim.slide_out_right;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
+import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
@@ -132,6 +136,7 @@ import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadS
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
+import static com.cncoding.teazer.utilities.NavigationController.TAB3;
 import static com.cncoding.teazer.utilities.NavigationController.TAB4;
 import static com.cncoding.teazer.utilities.NavigationController.TAB5;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishVideoUploadSession;
@@ -140,8 +145,11 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getFollowingNotification
 import static com.cncoding.teazer.utilities.SharedPrefs.getRequestNotificationCount;
 import static com.cncoding.teazer.utilities.SharedPrefs.getVideoUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
+import static com.cncoding.teazer.utilities.ViewUtils.getTabChild;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.launchVideoUploadCamera;
+import static com.cncoding.teazer.utilities.ViewUtils.showCoachMark;
 
 public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
@@ -159,13 +167,15 @@ public class BaseBottomBarActivity extends BaseActivity
 //    profileListener from Postdetails
         FragmentPostDetails.CallProfileFromPostDetails,
 
-        TagListAdapter.TaggedListInteractionListener
+        TagListAdapter.TaggedListInteractionListener,
+        AudioManager.OnAudioFocusChangeListener
 {
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
+    public static final int COACH_MARK_DELAY = 1000;
 
     @BindArray(R.array.tab_name) String[] TABS;
     @BindView(R.id.app_bar) AppBarLayout appBar;
@@ -190,6 +200,7 @@ public class BaseBottomBarActivity extends BaseActivity
     private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
     private NavigationTransactionOptions transactionOptions;
+    public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
     String Identifier;
     PostDetails postDetails;
@@ -284,14 +295,17 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         });
-        LinearLayout tabStrip = ((LinearLayout) bottomTabLayout.getChildAt(0));
-        tabStrip.getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
+
+        View thirdTab = getTabChild(bottomTabLayout, TAB3);
+        if (thirdTab != null) {
+            thirdTab.setOnTouchListener(new View.OnTouchListener() {
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+        }
 
         BReceiver = new BroadcastReceiver() {
             @Override
@@ -367,6 +381,7 @@ public class BaseBottomBarActivity extends BaseActivity
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
         tab.setCustomView(null);
         tab.setCustomView(getTabView(unreadNotificationCount));
+        switchTab(TAB1);
         switchTab(0);
     }
 
@@ -413,10 +428,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("message"));
-
-
     }
 
     protected void onPause() {
@@ -509,7 +521,6 @@ public class BaseBottomBarActivity extends BaseActivity
             } else {
                 tv.setVisibility(GONE);
             }
-            ImageView img = v.findViewById(R.id.notification);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -518,7 +529,6 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
-
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         }
         else {
@@ -631,13 +641,13 @@ public class BaseBottomBarActivity extends BaseActivity
 
     private void switchTabDynamically() {
         if (navigationController.getCurrentFragment() instanceof PostsListFragment)
-            switchTab(0);
+            switchTab(TAB1);
         else if (navigationController.getCurrentFragment() instanceof DiscoverFragment)
-            switchTab(1);
+            switchTab(TAB2);
         else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
-            switchTab(3);
+            switchTab(TAB4);
         else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
-            switchTab(4);
+            switchTab(TAB5);
     }
 
     private void switchTab(final int position) {
@@ -647,6 +657,68 @@ public class BaseBottomBarActivity extends BaseActivity
             setAppBarElevation(0);
         else
             setAppBarElevation(1);
+
+        switch (position) {
+            case TAB1:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentFragment instanceof PostsListFragment && currentFragment.isAdded())
+                            getCoachMark(BaseBottomBarActivity.this, currentFragment,
+                                    getTabChild(bottomTabLayout, TAB1), "homePage", R.string.welcome_to_teazer,
+                                    R.string.coach_mark_post_list_body, R.string.okay_got_it, TYPE_NORMAL);
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            case TAB2:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (currentFragment instanceof DiscoverFragment && currentFragment.isAdded()) {
+                                MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(
+                                        BaseBottomBarActivity.this, "discoverLanding");
+//                                    sequence.setConfig(getShowcaseConfig(BaseBottomBarActivity.this, TYPE_DISCOVER));
+                                sequence.addSequenceItem(
+                                        showCoachMark(
+                                                BaseBottomBarActivity.this,
+                                                getTabChild(bottomTabLayout, TAB2),
+                                                "discover",
+                                                R.string.discover_the_app,
+                                                R.string.coach_mark_discover_body,
+                                                R.string.okay_got_it,
+                                                TYPE_DISCOVER)
+                                ).addSequenceItem(
+                                        showCoachMark(
+                                                BaseBottomBarActivity.this,
+                                                ((DiscoverFragment) currentFragment).myInterestsViewAll,
+                                                "myInterests",
+                                                R.string.my_interests,
+                                                R.string.coach_mark_my_interests_body,
+                                                R.string.done,
+                                                TYPE_DISCOVER));
+                                sequence.start();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            case TAB5:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentFragment instanceof ProfileFragment && currentFragment.isAdded())
+                            getCoachMark(BaseBottomBarActivity.this, currentFragment,
+                                    getTabChild(bottomTabLayout, TAB5), "profilePage", R.string.my_profile,
+                                    R.string.coach_mark_profile_body, R.string.okay_got_it, TYPE_NORMAL);
+                    }
+                }, COACH_MARK_DELAY);
+                break;
+            default:
+                break;
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -1107,25 +1179,30 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (!navigationController.isRootFragment()) {
-            navigationController.popFragment();
-        }
-        else {
-            if (fragmentHistory.isEmpty()) {
-                super.onBackPressed();
-            } else {
-
-                if (fragmentHistory.getStackSize() > 1) {
-                    int position = fragmentHistory.popPrevious();
-                    switchTab(position);
-                    updateTabSelection(position);
+        if (materialShowcaseView != null) {
+            materialShowcaseView.hide();
+            materialShowcaseView = null;
+        } else {
+            if (!navigationController.isRootFragment()) {
+                navigationController.popFragment();
+            }
+            else {
+                if (fragmentHistory.isEmpty()) {
+                    super.onBackPressed();
                 } else {
-                    if (navigationController.getCurrentStackIndex() != TAB1) {
-                        switchTab(0);
-                        updateTabSelection(0);
-                        fragmentHistory.emptyStack();
+
+                    if (fragmentHistory.getStackSize() > 1) {
+                        int position = fragmentHistory.popPrevious();
+                        switchTab(position);
+                        updateTabSelection(position);
                     } else {
-                        super.onBackPressed();
+                        if (navigationController.getCurrentStackIndex() != TAB1) {
+                            switchTab(TAB1);
+                            updateTabSelection(0);
+                            fragmentHistory.emptyStack();
+                        } else {
+                            super.onBackPressed();
+                        }
                     }
                 }
             }
@@ -1145,6 +1222,23 @@ public class BaseBottomBarActivity extends BaseActivity
             tab.setCustomView(null);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        if(focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
+        {
+            // Pause
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_GAIN)
+        {
+            // Resume
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_LOSS)
+        {
+            // Stop or pause depending on your need
         }
     }
 }
