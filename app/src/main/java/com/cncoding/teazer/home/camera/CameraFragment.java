@@ -849,16 +849,18 @@ public class CameraFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (reference != null && reference.get().isAdded()) {
-                Boolean isCreated = false;
-                reference.get().videoFolder = new File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
-                        reference.get().getString(R.string.app_name));
+            if (reference != null && reference.get() != null) {
+                if (reference.get().isAdded()) {
+                    Boolean isCreated = false;
+                    reference.get().videoFolder = new File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+                            reference.get().getString(R.string.app_name));
 
-                if (!reference.get().videoFolder.exists()) {
-                    isCreated = reference.get().videoFolder.mkdirs();
+                    if (!reference.get().videoFolder.exists()) {
+                        isCreated = reference.get().videoFolder.mkdirs();
+                    }
+                    return isCreated;
                 }
-                return isCreated;
             }
             return null;
         }

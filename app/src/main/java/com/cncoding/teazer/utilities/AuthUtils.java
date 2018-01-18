@@ -448,7 +448,7 @@ public class AuthUtils {
             try {
                 ErrorBody errorBody = new Gson().fromJson(responseBody.string(), ErrorBody.class);
                 return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again" : errorBody.getReason().get(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "Something went wrong, Please try again";
             }

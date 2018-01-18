@@ -318,7 +318,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
          * */
         if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
+            if (result != null && result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 if (account != null)
                     mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
