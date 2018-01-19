@@ -26,7 +26,9 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
@@ -63,11 +65,11 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
     private boolean mWasDismissed = false;
     private int mShapePadding = ShowcaseConfig.DEFAULT_SHAPE_PADDING;
 
-//    private LinearLayout mContentBox;
     private LinearLayout mContentBoxBody;
     private TextView mTitleTextView;
     private TextView mContentTextView;
     private TextView mDismissButton;
+    private ImageView pointView;
     private int mGravity;
     private int mContentBottomMargin;
     private int mContentTopMargin;
@@ -132,12 +134,17 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     private void initViews() {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.showcase_content, this, true);
-//        mContentBox = contentView.findViewById(R.id.content_box);
+        RelativeLayout mContentBox = contentView.findViewById(R.id.content_box);
         mContentBoxBody = contentView.findViewById(R.id.content_box_body);
         mTitleTextView = contentView.findViewById(R.id.tv_title);
         mContentTextView = contentView.findViewById(R.id.tv_content);
         mDismissButton = contentView.findViewById(R.id.tv_dismiss);
         mDismissButton.setOnClickListener(this);
+
+        pointView = new ImageView(getContext());
+        pointView.setImageResource(R.drawable.coach_mark_point);
+        pointView.setVisibility(INVISIBLE);
+        mContentBox.addView(pointView);
     }
 
     /**
@@ -299,6 +306,12 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
             if (mShape != null) {
                 mShape.updateTarget(mTarget);
                 radius = mShape.getHeight() / 2;
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(radius, radius);
+                params.setMargins(targetPoint.x - (radius / 2),
+                        targetPoint.y - (radius / 2),
+                        0, 0);
+                pointView.setLayoutParams(params);
+                pointView.setVisibility(INVISIBLE);
             }
 
             if (yPos > midPoint) {
@@ -319,7 +332,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     private void applyLayoutParams() {
         if (mContentBoxBody != null && mContentBoxBody.getLayoutParams() != null) {
-            LinearLayout.LayoutParams contentLP = (LinearLayout.LayoutParams) mContentBoxBody.getLayoutParams();
+            RelativeLayout.LayoutParams contentLP = (RelativeLayout.LayoutParams) mContentBoxBody.getLayoutParams();
 
             boolean layoutParamsChanged = false;
 
@@ -333,10 +346,21 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
                 layoutParamsChanged = true;
             }
 
-            if (contentLP.gravity != mGravity) {
-                contentLP.gravity = mGravity;
+            if (mGravity == Gravity.TOP) {
+                contentLP.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                contentLP.topMargin = mContentTopMargin;
                 layoutParamsChanged = true;
             }
+            else if (mGravity == Gravity.BOTTOM) {
+                contentLP.addRule(RelativeLayout.ABOVE, R.id.tv_dismiss);
+                contentLP.bottomMargin = mContentBottomMargin;
+                layoutParamsChanged = true;
+            }
+
+//            if (contentLP.gravity != mGravity) {
+//                contentLP.gravity = mGravity;
+//                layoutParamsChanged = true;
+//            }
 
             /*
              * Only apply the layout params if we've actually changed them, otherwise we'll get stuck in a layout loop
@@ -821,7 +845,6 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
     public void animateIn() {
         try {
             setVisibility(INVISIBLE);
-
             mAnimationFactory.animateInView(this, mTarget.getPoint(), mFadeDurationInMillis,
                     new IAnimationFactory.AnimationStartListener() {
                         @Override
@@ -834,6 +857,8 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    pointView.setVisibility(VISIBLE);
+                    pointView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.coach_mark_pulse));
                     Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.coach_mark_animation);
                     mTitleTextView.startAnimation(animation);
                     mContentTextView.startAnimation(animation);
@@ -846,6 +871,8 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     public void animateOut() {
         try {
+            pointView.setVisibility(GONE);
+            pointView.clearAnimation();
             mTitleTextView.clearAnimation();
             mContentTextView.clearAnimation();
             mAnimationFactory.animateOutView(this, mTarget.getPoint(),
