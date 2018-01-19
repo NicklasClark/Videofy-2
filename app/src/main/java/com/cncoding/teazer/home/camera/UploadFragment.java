@@ -239,7 +239,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void compressionProcessFinish(String output) {
         videoPath = output;
         try {
-            uploadBtn.setEnabled(true);
+            enableView(uploadBtn);
         } catch (Exception e) {
             e.printStackTrace();
         }
