@@ -37,7 +37,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -280,7 +279,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
             return bundle;
         }
-        catch(JSONException e) {
+        catch(Exception e) {
             Log.d("getFacebookData()","Error parsing JSON");
         }
         return null;
@@ -313,36 +312,41 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        try {
         /*
          * Google login action
          * */
-        if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                if (account != null)
-                    mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
-                            null, null, account, signupWithGoogleBtn);
-                else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
-            } else {
-                signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
-                    @Override
-                    public void onAnimationEnd() {
-                        signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
-                                0, 0, 0);
-                    }
-                });
-                enableViews();
-                Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
+            if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()) {
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    if (account != null)
+                        mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
+                                null, null, account, signupWithGoogleBtn);
+                    else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
+                } else {
+                    signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
+                        @Override
+                        public void onAnimationEnd() {
+                            signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
+                                    0, 0, 0);
+                        }
+                    });
+                    enableViews();
+                    Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-        /*
-         * Facebook login action
-         * */
-        else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+            /*
+             * Facebook login action
+             * */
+            else {
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+            }
 //        enableViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Override
