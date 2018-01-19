@@ -42,6 +42,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
@@ -300,7 +301,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //            disableView(uploadBtn, true);
 //        }
 
-        new GetThumbnail(this).execute();
+//        new GetThumbnail(this).execute();
+        Glide.with(context)
+                .load(Uri.fromFile(new File(videoPath)))
+                .into(thumbnailView);
 
         new SetVideoDuration(this).execute();
 
@@ -892,7 +896,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     }
                 } else
                     return "";
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "";
             }

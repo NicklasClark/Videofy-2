@@ -668,27 +668,31 @@ public class CameraActivity extends AppCompatActivity
 //            cursor = reference.get().getContentResolver().query(uri, projection,
 //                    MediaStore.Video.Media.DURATION + ">=3000", null,
 //                    orderByDateTaken + " DESC");
-            cursor = reference.get().getContentResolver().query(uri, projection,
-                    null, null,
-                    orderByDateTaken + " DESC");
-            if (cursor != null) {
-                columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-//                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
+            try {
+                cursor = reference.get().getContentResolver().query(uri, projection,
+                        null, null,
+                        orderByDateTaken + " DESC");
+                if (cursor != null) {
+                    columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                    duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
-                while (cursor.moveToNext()) {
-                    try {
-                        reference.get().videosList.add(new Videos(
-                                cursor.getString(columnIndexData),              //Video path
-    //                            cursor.getString(thumbnailData),                //Thumbnail
-                                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
-                        ));
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
+                    while (cursor.moveToNext()) {
+                        try {
+                            reference.get().videosList.add(new Videos(
+                                    cursor.getString(columnIndexData),              //Video path
+        //                            cursor.getString(thumbnailData),                //Thumbnail
+                                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
+                            ));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    cursor.close();
                 }
-                cursor.close();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
             return null;
         }

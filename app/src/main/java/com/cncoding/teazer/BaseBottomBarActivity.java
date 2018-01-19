@@ -686,8 +686,8 @@ public class BaseBottomBarActivity extends BaseActivity
                                                 "discover",
                                                 R.string.discover_the_app,
                                                 R.string.coach_mark_discover_body,
-                                                R.string.okay_got_it,
-                                                TYPE_DISCOVER)
+                                                R.string.next,
+                                                TYPE_NORMAL)
                                 ).addSequenceItem(
                                         showCoachMark(
                                                 BaseBottomBarActivity.this,
@@ -1178,38 +1178,6 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (materialShowcaseView != null) {
-            materialShowcaseView.hide();
-            materialShowcaseView = null;
-        } else {
-            if (!navigationController.isRootFragment()) {
-                navigationController.popFragment();
-            }
-            else {
-                if (fragmentHistory.isEmpty()) {
-                    super.onBackPressed();
-                } else {
-
-                    if (fragmentHistory.getStackSize() > 1) {
-                        int position = fragmentHistory.popPrevious();
-                        switchTab(position);
-                        updateTabSelection(position);
-                    } else {
-                        if (navigationController.getCurrentStackIndex() != TAB1) {
-                            switchTab(TAB1);
-                            updateTabSelection(0);
-                            fragmentHistory.emptyStack();
-                        } else {
-                            super.onBackPressed();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void viewUserProfile() {
         profilefragment = ProfileFragment.newInstance();
         pushFragment(profilefragment);
@@ -1240,5 +1208,38 @@ public class BaseBottomBarActivity extends BaseActivity
         {
             // Stop or pause depending on your need
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (materialShowcaseView != null) {
+            materialShowcaseView.hide();
+            materialShowcaseView = null;
+        } else {
+            if (!navigationController.isRootFragment()) {
+                navigationController.popFragment();
+            }
+            else {
+                if (fragmentHistory.isEmpty()) {
+                    super.onBackPressed();
+                } else {
+
+                    if (fragmentHistory.getStackSize() > 1) {
+                        int position = fragmentHistory.popPrevious();
+                        switchTab(position);
+                        updateTabSelection(position);
+                    } else {
+                        if (navigationController.getCurrentStackIndex() != TAB1) {
+                            switchTab(TAB1);
+                            updateTabSelection(0);
+                            fragmentHistory.emptyStack();
+                        } else {
+                            super.onBackPressed();
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

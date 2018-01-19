@@ -296,7 +296,7 @@ public class FragmentPostDetails extends BaseFragment implements
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private static long playerCurrentPosition = 0;
+    public long playerCurrentPosition = 0;
     private Handler mHandler;
 
 
@@ -339,7 +339,7 @@ public class FragmentPostDetails extends BaseFragment implements
         //   getActivity().setContentView(R.layout.activity_post_details);
         //   ButterKnife.bind(getActivity());
 
-        View view = inflater.inflate(R.layout.activity_post_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_details, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -516,7 +516,9 @@ public class FragmentPostDetails extends BaseFragment implements
     private Runnable mDelayedStopRunnable = new Runnable() {
         @Override
         public void run() {
-            player.setPlayWhenReady(false);
+            if (player != null) {
+                player.setPlayWhenReady(false);
+            }
         }
     };
 
@@ -831,6 +833,7 @@ public class FragmentPostDetails extends BaseFragment implements
     public void goBack() {
         customHandler.removeCallbacks(updateTimerThread);
         mHandler.removeCallbacks(mDelayedStopRunnable);
+        playerCurrentPosition = 0;
         getParentActivity().onBackPressed();
 
     }
@@ -1583,6 +1586,7 @@ public class FragmentPostDetails extends BaseFragment implements
         customHandler.removeCallbacks(updateTimerThread);
         releaseAudioLock(getContext(), audioFocusChangeListener);
         //  onBackPressed();
+        playerCurrentPosition = 0;
         mHandler.removeCallbacks(mDelayedStopRunnable);
     }
 

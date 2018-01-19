@@ -1,5 +1,6 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -110,7 +111,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProgressBar simpleProgressBar;
     RelativeLayout layoutdetail;
 
-    private static final int RC_REQUEST_STORAGE = 1001;
+    private static final int RC_REQUEST_STORAGE = 1003;
     private static final int LIMIT = 1;
     private static final int READ_STORAGE_PERMISSION = 4000;
     private static final String TAG = "Edit Profile";
@@ -295,7 +296,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Glide.with(context)
                     .load(Uri.parse(userProfileUrl))
                     .into(profile_image);
-            profileBlur(userProfileUrl);
+            profileBlur();
         }
     }
 
@@ -495,22 +496,22 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @AfterPermissionGranted(RC_REQUEST_STORAGE)
-    public void initProfileImage() {
-        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (!EasyPermissions.hasPermissions(this, perm)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
-                    RC_REQUEST_STORAGE, perm);
-        } else {
-
-            if (userProfileUrl != null) {
-                Glide.with(context)
-                        .load(Uri.parse(userProfileUrl))
-                        .into(profile_image);
-                profileBlur(userProfileUrl);
-            }
-        }
-    }
+//    @AfterPermissionGranted(RC_REQUEST_STORAGE)
+//    public void initProfileImage() {
+//        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+//        if (!EasyPermissions.hasPermissions(this, perm)) {
+//            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
+//                    RC_REQUEST_STORAGE, perm);
+//        } else {
+//
+//            if (userProfileUrl != null) {
+//                Glide.with(context)
+//                        .load(Uri.parse(userProfileUrl))
+//                        .into(profile_image);
+//                profileBlur(userProfileUrl);
+//            }
+//        }
+//    }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
@@ -629,9 +630,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
 
     @AfterPermissionGranted(RC_REQUEST_STORAGE)
-    public void profileBlur(final String pic) {
+    public void profileBlur() {
 
-        String perm = android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        String[] perm = {Manifest.permission.READ_EXTERNAL_STORAGE};
         if (!EasyPermissions.hasPermissions(this, perm)) {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
                     RC_REQUEST_STORAGE, perm);
@@ -643,7 +644,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 protected Bitmap doInBackground(final Void... params) {
                     Bitmap bitmap = null;
                     try {
-                        final URL url = new URL(pic);
+                        final URL url = new URL(userProfileUrl);
                         try {
                             bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                         } catch (IOException e) {
