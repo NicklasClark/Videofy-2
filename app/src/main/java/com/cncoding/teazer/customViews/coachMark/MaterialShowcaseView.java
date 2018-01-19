@@ -23,6 +23,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -829,6 +831,14 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
                         }
                     }
             );
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.coach_mark_animation);
+                    mTitleTextView.startAnimation(animation);
+                    mContentTextView.startAnimation(animation);
+                }
+            }, ShowcaseConfig.DEFAULT_FADE_TIME);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -836,6 +846,8 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     public void animateOut() {
         try {
+            mTitleTextView.clearAnimation();
+            mContentTextView.clearAnimation();
             mAnimationFactory.animateOutView(this, mTarget.getPoint(),
                     mFadeDurationInMillis, new IAnimationFactory.AnimationEndListener() {
                 @Override
