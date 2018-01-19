@@ -146,6 +146,7 @@ public class ConfirmOtpFragment extends AuthFragment {
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
+
                                     showSnackBar(otpResendBtn, "New otp sent to " + userSignUpDetails.getPhoneNumber());
                                     otpResendBtn.setEnabled(false);
                                     otpResendBtn.setAlpha(0.5f);
@@ -169,6 +170,12 @@ public class ConfirmOtpFragment extends AuthFragment {
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 if (isConnected) {
+                    otp1EditText.getText().clear();
+                    otp2EditText.getText().clear();
+                    otp3EditText.getText().clear();
+                    otp4EditText.getText().clear();
+                    otp1EditText.requestFocus();
+
                     loginWithOtp(context, String.valueOf(userSignUpDetails.getPhoneNumber()), userSignUpDetails.getCountryCode(),
                             null, otpResendBtn, null, otpVerifiedTextView, new CountDownTimer[]{countDownTimer},
                             true);

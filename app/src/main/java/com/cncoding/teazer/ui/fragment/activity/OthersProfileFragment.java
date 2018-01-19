@@ -3,6 +3,7 @@ package com.cncoding.teazer.ui.fragment.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -14,18 +15,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -92,6 +96,8 @@ public class OthersProfileFragment extends BaseFragment {
     RecyclerView _recycler_view;
     @BindView(R.id.btnfollow)
     Button _btnfollow;
+    @BindView(R.id.unHideAll)
+    Button _unHideAll;
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout layout;
     @BindView(R.id.progress_bar)
@@ -133,6 +139,8 @@ public class OthersProfileFragment extends BaseFragment {
     boolean isfollower;
     boolean isfollowing;
     boolean youBlocked;
+    boolean isHideAllPost;
+
     String firstName;
     private String userProfileThumbnail;
     private String userProfileUrl;
@@ -147,6 +155,7 @@ public class OthersProfileFragment extends BaseFragment {
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
     boolean next;
 
+
     public static OthersProfileFragment newInstance(String id, String identifier, String username) {
         OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 
@@ -158,6 +167,7 @@ public class OthersProfileFragment extends BaseFragment {
         return othersProfileFragment;
 
     }
+
 
     public static OthersProfileFragment newInstance3(String id, String notificationId) {
         OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
@@ -192,10 +202,11 @@ public class OthersProfileFragment extends BaseFragment {
         }
         previousTitle = getParentActivity().getToolbarTitle();
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_others_profile, container, false);
+
+
         ButterKnife.bind(this, view);
         context = container.getContext();
         getParentActivity().updateToolbarTitle("Profile");
@@ -203,7 +214,6 @@ public class OthersProfileFragment extends BaseFragment {
         menu = view.findViewById(R.id.menu);
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
-
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -259,7 +269,6 @@ public class OthersProfileFragment extends BaseFragment {
             }
 
         });
-
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,6 +300,7 @@ public class OthersProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
+
                 //    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //                FragmentHobbyDetails reportPostDialogFragment = FragmentHobbyDetails.newInstance(details,userProfileUrl);
 //                if (fragmentManager != null) {
@@ -299,6 +309,20 @@ public class OthersProfileFragment extends BaseFragment {
 //                }
 
 
+            }
+        });
+
+        profile_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, OpenProfilePicActivity.class);
+                intent.putExtra("Image", userProfileUrl);
+                intent.putExtra("candelete",false);
+
+                Pair<View, String> p1 = Pair.create((View)profile_id, "profile");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), profile_id, "profile");
+                startActivity(intent, options.toBundle());
             }
         });
 
@@ -323,10 +347,37 @@ public class OthersProfileFragment extends BaseFragment {
 
         _recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener);
 
+        _unHideAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new android.support.v7.app.AlertDialog.Builder(context)
+                        .setTitle(R.string.unhiding_videos)
+                        .setMessage(R.string.unhide_video_confirm)
+                        .setPositiveButton(context.getString(R.string.yes_unhide_ALl), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int j) {
+
+                                unHideAllVideos(followerfollowingid);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+
+            }
+        });
+
 
 
         return view;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -353,11 +404,41 @@ public class OthersProfileFragment extends BaseFragment {
 
         }
     }
+    private void unHideAllVideos(final int userId) {
 
+        ApiCallingService.Posts.getAllHiddenVideosList(userId, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200) {
+                    try {
+
+                        if(response.body().getStatus())
+                        {
+                            Toast.makeText(context,"Now you can see the videos those previously hidden",Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+                blur_bacground.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
+            }
+        });
+    }
 
     public void getProfileInformation(final int followersid) {
         blur_bacground.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
+
         ApiCallingService.Friends.getOthersProfileInfo(followersid, context).enqueue(new Callback<ProfileInfo>() {
             @Override
             public void onResponse(Call<ProfileInfo> call, Response<ProfileInfo> response) {
@@ -374,6 +455,12 @@ public class OthersProfileFragment extends BaseFragment {
                         isfollower = profileInfo.getFollowInfo().getFollower();
                         isfollowing = profileInfo.getFollowInfo().getFollowing();
                         youBlocked = profileInfo.getFollowInfo().getYouBlocked();
+                        isHideAllPost=profileInfo.getIsHidedAllPosts();
+                        if(isHideAllPost)
+                        {
+                            _unHideAll.setVisibility(View.VISIBLE);
+
+                        }
 
                         _followers.setText(follower + " Followers");
                         _following.setText(following + " Following");
@@ -381,9 +468,9 @@ public class OthersProfileFragment extends BaseFragment {
 
                         if (response.body().getPrivateProfile() == null) {
 
+
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
-
                             username = publicProfile.getUserName();
                             String firstName = publicProfile.getFirstName();
                             String lastName = publicProfile.getLastName();

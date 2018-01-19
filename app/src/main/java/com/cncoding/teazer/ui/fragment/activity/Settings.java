@@ -4,15 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
+import android.widget.Toast;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentChangeCategories;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentHideVideos;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
 
 import butterknife.ButterKnife;
@@ -84,6 +88,15 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
     }
 
     @Override
+    public void hideVideoList() {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(slide_in_right, slide_out_left, slide_in_left, slide_out_right)
+                .replace(R.id.container, FragmentHideVideos.newInstance(1))
+                .addToBackStack("FragmentHideVideos")
+                .commit();
+    }
+
+    @Override
     public void onBackPressed() {
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
@@ -91,5 +104,7 @@ public class Settings extends AppCompatActivity implements FragmentSettings.Chan
         } else
             super.onBackPressed();
     }
+
+
 
 }

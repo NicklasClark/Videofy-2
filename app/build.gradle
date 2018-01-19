@@ -26,7 +26,7 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
+            storeFile file('/Users/farazhabib/Documents/Android Keystores/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }
@@ -45,7 +45,7 @@ android {
         renderscriptTargetApi 27
         renderscriptSupportModeEnabled true
         resValue "string", "app_name", "Teazer"
-        manifestPlaceholders = [facebookId:"163105567761892"]
+        manifestPlaceholders = [facebookId: "163105567761892"]
     }
     buildTypes {
         release {

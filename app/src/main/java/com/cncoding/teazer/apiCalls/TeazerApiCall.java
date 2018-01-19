@@ -682,6 +682,17 @@ import retrofit2.http.Query;
          * */
         @GET("/api/v1/post/video/reactions/{post_id}/{page}")
         Call<PostReactionsList> getReactionsOfPost(@Path("post_id") int postId, @Path("page") int page);
+
+
+        @GET("/api/v1/post/my/hided/videos/{page}")
+        Call<PostList>getHiddenVideosList(@Path("page") int page);
+
+        @POST("/api/v1/post/unhide/all/posts/{user_id}")
+        Call<ResultObject> getAllHiddenVideosList(@Path("user_id") int postId);
+
+
+
+
     }
 
     /**
@@ -779,6 +790,9 @@ import retrofit2.http.Query;
          * */
         @DELETE("/api/v1/user/logout")
         Call<ResultObject> logout(@Header("Authorization") String header);
+
+        @DELETE("/api/v1/user/remove/profile/media")
+        Call<ResultObject> removeProfilePic();
 
         @POST("/api/v1/user/report")
         Call<ResultObject> reportUser(@Body ReportUser reportuser);

@@ -146,6 +146,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 holder.name.setOnClickListener(viewProfile);
             }
 
+
             Glide.with(context)
                     .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getMediaUrl() :
                             R.drawable.ic_user_male_dp_small)
@@ -165,6 +166,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                         }
                     })
                     .into(holder.profilePic);
+
 
             int width = postDetails.getMedias().get(0).getDimension().getWidth();
             int height = postDetails.getMedias().get(0).getDimension().getHeight();

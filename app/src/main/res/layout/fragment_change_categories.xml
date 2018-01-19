@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSecondary_text"
-            android:textSize="@dimen/text_size_h4"
+            android:textSize="@dimen/text_size_h5"
             android:padding="@dimen/padding_default"
             android:gravity="center"/>
 
