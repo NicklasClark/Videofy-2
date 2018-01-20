@@ -306,9 +306,11 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
             if (mShape != null) {
                 mShape.updateTarget(mTarget);
                 radius = mShape.getHeight() / 2;
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(radius, radius);
-                params.setMargins(targetPoint.x - (radius / 2),
-                        targetPoint.y - (radius / 2),
+                int size = mShape.getHeight() + mShapePadding * 2;
+                int margin = (radius) + mShapePadding;
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size, size);
+                params.setMargins(targetPoint.x - margin,
+                        targetPoint.y - margin,
                         0, 0);
                 pointView.setLayoutParams(params);
                 pointView.setVisibility(INVISIBLE);
