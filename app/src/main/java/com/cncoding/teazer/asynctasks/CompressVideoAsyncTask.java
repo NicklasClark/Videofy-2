@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.github.tcking.giraffecompressor.GiraffeCompressor;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +32,8 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... sourceVideoPath) {
+        GiraffeCompressor.init(context);
+
         File sourceFile = new File(sourceVideoPath[0]);
 
         String dirPath = context.getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + File.separator + "teazerTemp";
@@ -44,7 +48,8 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
 //        String cmd =  "-i "+ sourceFile.getAbsolutePath()+ " -vcodec h264 -acodec mp2" + destFile.getAbsolutePath();
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath()+" -c:v libx264 -preset ultrafast -tune fastdecode "+destFile.getAbsolutePath();;
 //        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -strict experimental -vcodec libx264 -preset ultrafast -crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 320x240 -aspect 4:3 "+ destFile.getAbsolutePath();
-        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -vcodec h264 -acodec aac -movflags +faststart "+ destinationDir;
+//        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -profile:v baseline -vcodec h264 -acodec aac -movflags +faststart -c:v libx264 -crf 28 -preset ultrafast -strict -2 -b:a 128k "+ destinationDir;
+        String cmd =  "-y -i "+sourceFile.getAbsolutePath() +" -profile:v baseline -vcodec h264 -movflags +faststart -r 15 -crf 27 -preset ultrafast -strict -2 -b:a 128k -c:a copy "+ destinationDir;
 //
 //
         EpEditor epEditor =  new EpEditor(context);
