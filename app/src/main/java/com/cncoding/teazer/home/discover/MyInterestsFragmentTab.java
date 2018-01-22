@@ -113,39 +113,43 @@ public class MyInterestsFragmentTab extends BaseFragment {
 
         @Override
         protected Void doInBackground(final Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().postDetailsArrayList.clear();
+            try {
+                if (integers[0] == 1)
+                    reference.get().postDetailsArrayList.clear();
 
-            ApiCallingService.Discover.getAllInterestedCategoriesVideos(
-                    integers[0], reference.get().categoryId, reference.get().getContext())
-                    .enqueue(new Callback<PostList>() {
-                        @Override
-                        public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (reference != null && reference.get().isAdded()) {
-                                if (response.code() == 200) {
-                                    reference.get().is_next_page = response.body().isNextPage();
-                                    if (!response.body().getPosts().isEmpty()) {
-                                        reference.get().postDetailsArrayList.addAll(response.body().getPosts());
-                                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else if (integers[0] == 1){
-                                        reference.get().recyclerView.setVisibility(View.GONE);
-                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged);
-                                        reference.get().noPosts.setText(noVideosText);
-                                        reference.get().noPosts.setVisibility(View.VISIBLE);
-                                        reference.get().noPosts2.setVisibility(View.INVISIBLE);
-                                    }
-                                } else
-                                    Log.e("GetPosts", response.code() + "_" + response.message());
+                ApiCallingService.Discover.getAllInterestedCategoriesVideos(
+                        integers[0], reference.get().categoryId, reference.get().getContext())
+                        .enqueue(new Callback<PostList>() {
+                            @Override
+                            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                                if (reference != null && reference.get().isAdded()) {
+                                    if (response.code() == 200) {
+                                        reference.get().is_next_page = response.body().isNextPage();
+                                        if (!response.body().getPosts().isEmpty()) {
+                                            reference.get().postDetailsArrayList.addAll(response.body().getPosts());
+                                            reference.get().recyclerView.getAdapter().notifyDataSetChanged();
+                                        } else if (integers[0] == 1){
+                                            reference.get().recyclerView.setVisibility(View.GONE);
+                                            String noVideosText = reference.get().getString(R.string.no_videos_tagged);
+                                            reference.get().noPosts.setText(noVideosText);
+                                            reference.get().noPosts.setVisibility(View.VISIBLE);
+                                            reference.get().noPosts2.setVisibility(View.INVISIBLE);
+                                        }
+                                    } else
+                                        Log.e("GetPosts", response.code() + "_" + response.message());
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<PostList> call, Throwable t) {
-                            if (reference != null && reference.get().isAdded()) {
-                                Log.e("FAILED_GetPosts", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                            @Override
+                            public void onFailure(Call<PostList> call, Throwable t) {
+                                if (reference != null && reference.get().isAdded()) {
+                                    Log.e("FAILED_GetPosts", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                                }
                             }
-                        }
-                    });
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

@@ -187,9 +187,6 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -520,9 +517,9 @@ public class CameraActivity extends AppCompatActivity
 
 //            Log.v("IGA", "Address" + add);
             return obj.getSubLocality();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not get address, please try again later", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
