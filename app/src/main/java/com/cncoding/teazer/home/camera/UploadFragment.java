@@ -863,7 +863,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
 //            reference.get().toggleInteraction(true);
-            reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
+            if (reference != null) {
+                reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
+            }
         }
     }
 

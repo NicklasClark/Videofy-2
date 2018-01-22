@@ -1574,10 +1574,14 @@ public class FragmentPostDetails extends BaseFragment implements
     @Override
     public void onDetach() {
         super.onDetach();
-        getParentActivity().updateToolbarTitle(previousTitle);
-        getParentActivity().showToolbar();
-        releaseAudioLock(getContext(), audioFocusChangeListener);
-        mHandler.removeCallbacks(mDelayedStopRunnable);
+        try {
+            getParentActivity().updateToolbarTitle(previousTitle);
+            getParentActivity().showToolbar();
+            releaseAudioLock(getContext(), audioFocusChangeListener);
+            mHandler.removeCallbacks(mDelayedStopRunnable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

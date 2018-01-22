@@ -43,6 +43,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
     private List<Reactions> list;
     private Context context;
+    private boolean isPostClicked = false;
 
 
     public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
@@ -85,7 +86,10 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                if (!isPostClicked) {
+                    isPostClicked = true;
+                    playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                }
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {

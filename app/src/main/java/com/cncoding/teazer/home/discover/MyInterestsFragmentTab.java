@@ -121,7 +121,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
                     .enqueue(new Callback<PostList>() {
                         @Override
                         public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (reference.get().isAdded()) {
+                            if (reference != null && reference.get().isAdded()) {
                                 if (response.code() == 200) {
                                     reference.get().is_next_page = response.body().isNextPage();
                                     if (!response.body().getPosts().isEmpty()) {
@@ -141,7 +141,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
 
                         @Override
                         public void onFailure(Call<PostList> call, Throwable t) {
-                            if (reference.get().isAdded()) {
+                            if (reference != null && reference.get().isAdded()) {
                                 Log.e("FAILED_GetPosts", t.getMessage() != null ? t.getMessage() : "FAILED!");
                             }
                         }
