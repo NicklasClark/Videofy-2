@@ -6,19 +6,50 @@
     android:layout_marginBottom="@dimen/action_bar_height"
     android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:id="@+id/layoutclose"
+        android:layout_width="match_parent"
+        android:background="#ffffff"
+        android:layout_height="@dimen/action_bar_height">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/btnClose"
+            android:layout_width="@dimen/action_bar_height"
+            android:layout_height="@dimen/action_bar_height"
+            android:scaleType="center"
+            android:src="@drawable/ic_arrow_back" />
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:textColor="@color/colorPrimary_text"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btnClose"
+            android:text="@string/title_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/layoutclose"
         android:id="@+id/reportTitlesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <EditText
-        android:hint="@string/report_extra_remark_hint"
+    <android.support.design.widget.TextInputLayout
         android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_below="@+id/reportTitlesRecyclerView"
-        android:id="@+id/report_remark"
-        android:maxLines="8"
-        android:lines="3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/report_remark"
+            android:textSize="@dimen/text_size_16sp"
+            android:maxLines="8"
+            android:lines="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/DialogBoxCancel"
+            android:hint="@string/report_extra_remark_hint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
 
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
         android:id="@+id/submitReport"

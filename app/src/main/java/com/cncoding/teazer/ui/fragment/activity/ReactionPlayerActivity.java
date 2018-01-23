@@ -306,12 +306,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
     }
 
-
     @OnClick({R.id.btnClose, R.id.btnLike})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
                 reactionPlayerCurrentPosition = 0;
+                releasePlayer();
                 onBackPressed();
                 break;
             case R.id.btnLike:

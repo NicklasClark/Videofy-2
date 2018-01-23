@@ -29,7 +29,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -392,8 +391,6 @@ public class OthersProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getParentActivity().updateToolbarTitle("Profile");
-
-
     }
 
     @Override
@@ -401,7 +398,6 @@ public class OthersProfileFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof ProfileFragment.FollowerListListener) {
             followerListListener = (ProfileFragment.FollowerListListener) context;
-
         }
     }
     private void unHideAllVideos(final int userId) {
@@ -416,12 +412,9 @@ public class OthersProfileFragment extends BaseFragment {
                         {
                             Toast.makeText(context,"Now you can see the videos those previously hidden",Toast.LENGTH_SHORT).show();
                         }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-
                     }
                 }
             }
@@ -552,35 +545,25 @@ public class OthersProfileFragment extends BaseFragment {
                                     } else {
 
                                         if (requestRecieved == true) {
-
                                             requestId = profileInfo.getFollowInfo().getRequestId();
                                             setActionButtonText(context, _btnfollow, R.string.accept);
-
                                         } else {
-
                                             setActionButtonText(context, _btnfollow, R.string.follow);
-
                                         }
-
                                     }
 
                                     layout.setVisibility(View.VISIBLE);
                                     progressBar.setVisibility(View.GONE);
                                 }
-
                                 if (accountType == 2) {
-
                                     getProfileVideos(followersid,1);
                                 } else {
                                     if (isfollowing) {
-
                                         getProfileVideos(followersid,1);
-
                                     } else {
                                         layoutDetail2.setVisibility(View.VISIBLE);
                                         layoutDetail.setVisibility(View.GONE);
                                     }
-
                                 }
                             }
 
