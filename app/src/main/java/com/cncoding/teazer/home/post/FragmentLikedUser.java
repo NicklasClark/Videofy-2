@@ -5,11 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +64,7 @@ public class FragmentLikedUser extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             postId = Integer.parseInt(bundle.getString("PostId"));
@@ -78,6 +77,9 @@ public class FragmentLikedUser extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_liked_user, container, false);
         context = getContext();
         ButterKnife.bind(this, view);
+
+        getParentActivity().hideToolbar();
+
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         likedUsersList = new ArrayList<>();
@@ -99,7 +101,8 @@ public class FragmentLikedUser extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                ((AppCompatActivity) context).getSupportFragmentManager().popBackStackImmediate();
+//                ((AppCompatActivity) context).getSupportFragmentManager().popBackStackImmediate();
+                getParentActivity().onBackPressed();
             }
         });
         return view;

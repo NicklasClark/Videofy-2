@@ -168,8 +168,8 @@ public class BaseBottomBarActivity extends BaseActivity
         FragmentPostDetails.CallProfileFromPostDetails,
 
         TagListAdapter.TaggedListInteractionListener,
-        AudioManager.OnAudioFocusChangeListener
-{
+        AudioManager.OnAudioFocusChangeListener,
+        FragmentPostDetails.onPostOptionsClickListener {
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
@@ -177,20 +177,35 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int REQUEST_CANCEL_UPLOAD = 45;
     public static final int COACH_MARK_DELAY = 1000;
 
-    @BindArray(R.array.tab_name) String[] TABS;
-    @BindView(R.id.app_bar) AppBarLayout appBar;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
-//    @BindView(R.id.loader) ImageView loader;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
-    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view) BlurView blurView;
-    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
+    @BindArray(R.array.tab_name)
+    String[] TABS;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title)
+    ImageView toolbarCenterTitle;
+    //    @BindView(R.id.loader) ImageView loader;
+    @BindView(R.id.toolbar_plain_title)
+    ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container)
+    FrameLayout contentFrame;
+    @BindView(R.id.root_layout)
+    NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view)
+    BlurView blurView;
+    @BindView(R.id.bottom_tab_layout)
+    TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn)
+    ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText)
+    ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.btnToolbarBack)
+    ImageView btnToolbarBack;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -217,6 +232,7 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
@@ -289,7 +305,7 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
-                if(tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
+                if (tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
                     ((PostsListFragment) currentFragment).scrollToTop();
                     ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
                 }
@@ -455,18 +471,14 @@ public class BaseBottomBarActivity extends BaseActivity
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     notificationAction(notification_type, source_id);
-                }
-
-                 else if (profileBundle != null) {
+                } else if (profileBundle != null) {
 
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
-                    if (isSelf)
-                    {
+                    if (isSelf) {
                         pushFragment(ProfileFragment.newInstance());
-                    } else
-                    {
+                    } else {
                         pushFragment(OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
                     }
 //                    pushFragment(isSelf ? ProfileFragment.newInstance() :
@@ -530,15 +542,14 @@ public class BaseBottomBarActivity extends BaseActivity
     private void notificationAction(int notification_type, int source_id) {
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
-        }
-        else {
+        } else {
             ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)
                     .enqueue(new Callback<PostDetails>() {
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
                                 if (response.body() != null) {
-                                   pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                    pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
                                 } else {
                                     Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                 }
@@ -574,12 +585,12 @@ public class BaseBottomBarActivity extends BaseActivity
                                                     if (response.body() != null) {
                                                         if (referringParams.has("react_id")) {
                                                             try {
-                                                               pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id")));
+                                                                pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), referringParams.getString("react_id")));
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
                                                         } else {
-                                                           pushFragment( FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
+                                                            pushFragment(FragmentPostDetails.newInstance(response.body(), null, true, true, response.body().getMedias().get(0).getThumbUrl(), null));
                                                         }
                                                     } else {
                                                         Toast.makeText(BaseBottomBarActivity.this, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
@@ -744,18 +755,20 @@ public class BaseBottomBarActivity extends BaseActivity
     public void updateToolbar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
-            actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            if (!navigationController.isRootFragment()) {
+                btnToolbarBack.setVisibility(VISIBLE);
+            } else
+                btnToolbarBack.setVisibility(GONE);
         }
         // toggleBottomBar(navigationController.isRootFragment());
     }
+
     public void hideToolbar() {
 //        if (getSupportActionBar() != null) {
 //            getSupportActionBar().hide();
 //        }
-        toolbar.setVisibility(GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        toolbar.setVisibility(GONE);
     }
 
     public void showToolbar() {
@@ -787,23 +800,31 @@ public class BaseBottomBarActivity extends BaseActivity
      */
     public void updateToolbarTitle(String title) {
         if (title == null || title.equals("")) {
-            if (toolbarPlainTitle.getVisibility() != GONE)
+            if (toolbarPlainTitle.getVisibility() != GONE) {
                 toolbarPlainTitle.setVisibility(GONE);
-            if (toolbarCenterTitle.getVisibility() != VISIBLE)
+                btnToolbarBack.setVisibility(GONE);
+            }
+            if (toolbarCenterTitle.getVisibility() != VISIBLE) {
                 toolbarCenterTitle.setVisibility(VISIBLE);
+                btnToolbarBack.setVisibility(VISIBLE);
+            }
         } else {
             toolbarPlainTitle.setText(title);
-            if (toolbarPlainTitle.getVisibility() != VISIBLE)
+            if (toolbarPlainTitle.getVisibility() != VISIBLE) {
                 toolbarPlainTitle.setVisibility(VISIBLE);
-            if (toolbarCenterTitle.getVisibility() != GONE)
+                btnToolbarBack.setVisibility(VISIBLE);
+            }
+            if (toolbarCenterTitle.getVisibility() != GONE) {
                 toolbarCenterTitle.setVisibility(GONE);
+                btnToolbarBack.setVisibility(GONE);
+            }
             uploadingStatusLayout.setVisibility(GONE);
         }
     }
 
     public String getToolbarTitle() {
         try {
-            if(toolbarPlainTitle != null)
+            if (toolbarPlainTitle != null)
                 return toolbarPlainTitle.getText().toString();
             else
                 return "";
@@ -900,11 +921,11 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId) {
-      //  pushFragment(postDetails);
-      //  hideToolbar();
+        //  pushFragment(postDetails);
+        //  hideToolbar();
 
         pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
-                                        true, postDetails.getMedias().get(0).getThumbUrl(), null));
+                true, postDetails.getMedias().get(0).getThumbUrl(), null));
     }
 
     @Override
@@ -918,7 +939,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 pushFragment(SubDiscoverFragment.newInstance(action, categories, null));
                 break;
             case ACTION_VIEW_POST:
-               pushFragment(FragmentPostDetails.newInstance(postDetails,
+                pushFragment(FragmentPostDetails.newInstance(postDetails,
                         null, false, false, null, null));
                 break;
             case ACTION_VIEW_PROFILE:
@@ -953,7 +974,7 @@ public class BaseBottomBarActivity extends BaseActivity
                         @Override
                         public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                             if (response.code() == 200) {
-                               pushFragment(FragmentPostDetails.newInstance(response.body(),
+                                pushFragment(FragmentPostDetails.newInstance(response.body(),
                                         null, false, false, null, null));
                             } else
                                 Log.e("Fetching post details", response.code() + "_" + response.message());
@@ -980,7 +1001,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onNotificationsInteraction(boolean isFollowingTab, PostDetails postDetails,
                                            int profileId, String userType) {
         if (isFollowingTab) {
-            pushFragment(FragmentPostDetails.newInstance( postDetails, null, false, false, null, null));
+            pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
         } else {
 
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
@@ -1103,18 +1124,28 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void callProfileListener(int id, boolean myself) {
-                pushFragment(myself? ProfileFragment.newInstance() :
+        pushFragment(myself ? ProfileFragment.newInstance() :
                 OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
     }
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
-       pushFragment (isSelf? ProfileFragment.newInstance() :
+        pushFragment(isSelf ? ProfileFragment.newInstance() :
                 OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
     public void popFragment() {
         navigationController.popFragment();
+    }
+
+    @Override
+    public void onPostLikedClicked(PostDetails postDetails) {
+        pushFragment(FragmentLikedUser.newInstance(postDetails));
+    }
+
+    @OnClick(R.id.btnToolbarBack)
+    public void onViewClicked() {
+        onBackPressed();
     }
 
     @SuppressWarnings("unused")
@@ -1197,18 +1228,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onAudioFocusChange(int focusChange)
-    {
-        if(focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
-        {
+    public void onAudioFocusChange(int focusChange) {
+        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
             // Pause
-        }
-        else if(focusChange == AudioManager.AUDIOFOCUS_GAIN)
-        {
+        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
             // Resume
-        }
-        else if(focusChange == AudioManager.AUDIOFOCUS_LOSS)
-        {
+        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
             // Stop or pause depending on your need
         }
     }
@@ -1221,8 +1246,7 @@ public class BaseBottomBarActivity extends BaseActivity
         } else {
             if (!navigationController.isRootFragment()) {
                 navigationController.popFragment();
-            }
-            else {
+            } else {
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();
                 } else {
