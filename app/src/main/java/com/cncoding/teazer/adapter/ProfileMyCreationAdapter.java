@@ -49,6 +49,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     myCreationListener listener;
     Fragment fragment;
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
+    private boolean isPostClicked = false;
 
 
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
@@ -136,7 +137,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.myCreationVideos(2, cont);
+                    if (!isPostClicked) {
+                        isPostClicked = true;
+                        listener.myCreationVideos(2, cont);
+                    }
                 }
             });
 
@@ -466,7 +470,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public interface myCreationListener {
 
-        public void myCreationVideos(int i, PostDetails postDetails);
+        void myCreationVideos(int i, PostDetails postDetails);
     }
 
     public interface OnChildFragmentUpdateVideos {

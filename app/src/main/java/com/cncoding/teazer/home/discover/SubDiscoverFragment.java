@@ -127,9 +127,8 @@ public class SubDiscoverFragment extends BaseFragment {
                 prepareMyInterestsLayout();
                 break;
             case ACTION_VIEW_TRENDING:
-                getParentActivity().updateToolbarTitle(getString(R.string.trending) +
-                        (categories != null && !categories.isEmpty() ?
-                                (" " + categories.get(0).getCategoryName()) + " " : " ") + getString(R.string.videos));
+                getParentActivity().updateToolbarTitle((categories != null && !categories.isEmpty()) ?
+                                (categories.get(0).getCategoryName()):"Trending");
                 prepareTrendingLayout();
                 break;
             default:

@@ -50,7 +50,7 @@ public class ExoPlayerActivity extends AppCompatActivity{
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private static long playerCurrentPosition = 0;
+    private long playerCurrentPosition = 0;
     private Handler mHandler;
 
     @Override

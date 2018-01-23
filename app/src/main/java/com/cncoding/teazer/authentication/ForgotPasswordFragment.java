@@ -153,43 +153,19 @@ public class ForgotPasswordFragment extends AuthFragment {
     }
 
     @OnClick(R.id.reset_pwd_btn) public void resetPassword() {
-        final String enteredText = forgotPasswordEditText.getText().toString();
-        if (!enteredText.isEmpty()) {
-            if (TextUtils.isDigitsOnly(enteredText)) {
-//                Phone number is entered
-                if (isConnected) {
-                    ApiCallingService.Auth.requestResetPasswordByPhone(context, Long.parseLong(enteredText), countryCode)
-                            .enqueue(new Callback<ResultObject>() {
-                                @Override
-                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                    if (response.code() == 200) {
-                                        if (response.body().getStatus()) {
-                                            mListener.onForgotPasswordInteraction(enteredText, countryCode, false);
-                                        } else {
-                                            showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                    t.printStackTrace();
-                                }
-                            });
-                } else {
-                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-//                Email is entered
-                if (AuthUtils.isValidEmailAddress(enteredText)) {
+        try {
+            final String enteredText = forgotPasswordEditText.getText().toString();
+            if (!enteredText.isEmpty()) {
+                if (TextUtils.isDigitsOnly(enteredText)) {
+    //                Phone number is entered
                     if (isConnected) {
-                        ApiCallingService.Auth.requestResetPasswordByEmail(context, enteredText)
+                        ApiCallingService.Auth.requestResetPasswordByPhone(context, Long.parseLong(enteredText), countryCode)
                                 .enqueue(new Callback<ResultObject>() {
                                     @Override
                                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                         if (response.code() == 200) {
                                             if (response.body().getStatus()) {
-                                                mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
+                                                mListener.onForgotPasswordInteraction(enteredText, countryCode, false);
                                             } else {
                                                 showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
                                             }
@@ -202,14 +178,42 @@ public class ForgotPasswordFragment extends AuthFragment {
                                     }
                                 });
                     } else {
-                        Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
+    //                Email is entered
+                    if (AuthUtils.isValidEmailAddress(enteredText)) {
+                        if (isConnected) {
+                            ApiCallingService.Auth.requestResetPasswordByEmail(context, enteredText)
+                                    .enqueue(new Callback<ResultObject>() {
+                                        @Override
+                                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                            if (response.code() == 200) {
+                                                if (response.body().getStatus()) {
+                                                    mListener.onForgotPasswordInteraction(enteredText, countryCode, true);
+                                                } else {
+                                                    showSnackBar(forgotPasswordEditText, getErrorMessage(response.errorBody()));
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                                            t.printStackTrace();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        showSnackBar(forgotPasswordEditText, getString(R.string.error_invalid_email));
+                    }
                 }
+            } else {
+                showSnackBar(forgotPasswordEditText, getString(R.string.enter_email_or_mobile_number_first));
             }
-        } else {
-            showSnackBar(forgotPasswordEditText, getString(R.string.enter_email_or_mobile_number_first));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

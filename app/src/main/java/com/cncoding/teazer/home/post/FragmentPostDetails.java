@@ -123,10 +123,6 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
-import static com.cncoding.teazer.R.anim.abc_slide_in_bottom;
-import static com.cncoding.teazer.R.anim.abc_slide_in_top;
-import static com.cncoding.teazer.R.anim.abc_slide_out_bottom;
-import static com.cncoding.teazer.R.anim.abc_slide_out_top;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
@@ -143,9 +139,9 @@ import static com.cncoding.teazer.utilities.SharedPrefs.getReactionUploadSession
 import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
-import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
@@ -298,7 +294,7 @@ public class FragmentPostDetails extends BaseFragment implements
     private boolean audioAccessGranted = false;
     public long playerCurrentPosition = 0;
     private Handler mHandler;
-
+    private onPostOptionsClickListener mListener;
 
     public FragmentPostDetails() {
 
@@ -364,12 +360,13 @@ public class FragmentPostDetails extends BaseFragment implements
             @Override
             public void onClick(View view) {
                 if(likes>0) {
-                    ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(abc_slide_in_bottom, abc_slide_out_top, abc_slide_in_top, abc_slide_out_bottom)
-                            .add(R.id.liked_user_layout, FragmentLikedUser.newInstance(postDetails))
-                            .addToBackStack("FragmentLikedUserPost")
-                            .commit();
+//                    ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(abc_slide_in_bottom, abc_slide_out_top, abc_slide_in_top, abc_slide_out_bottom)
+//                            .add(R.id.liked_user_layout, FragmentLikedUser.newInstance(postDetails))
+//                            .addToBackStack("FragmentLikedUserPost")
+//                            .commit();
 
+                    mListener.onPostLikedClicked(postDetails);
                 }
             }
         });
@@ -550,10 +547,10 @@ public class FragmentPostDetails extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
+        getParentActivity().hideToolbar();
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
 
-        getParentActivity().hideToolbar();
         checkIfAnyReactionIsUploading();
         if (postDetails != null) {
             postReactions.clear();
@@ -1564,20 +1561,23 @@ public class FragmentPostDetails extends BaseFragment implements
 
         if (context instanceof CallProfileFromPostDetails) {
             callProfileFromPostDetails = (CallProfileFromPostDetails) context;
+            mListener = (onPostOptionsClickListener) context;
 
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement CallProfileFromPostDetails");
         }
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
-        getParentActivity().updateToolbarTitle(previousTitle);
-        getParentActivity().showToolbar();
-        releaseAudioLock(getContext(), audioFocusChangeListener);
-        mHandler.removeCallbacks(mDelayedStopRunnable);
+        try {
+            getParentActivity().updateToolbarTitle(previousTitle);
+            getParentActivity().showToolbar();
+            releaseAudioLock(getContext(), audioFocusChangeListener);
+            mHandler.removeCallbacks(mDelayedStopRunnable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1634,5 +1634,9 @@ public class FragmentPostDetails extends BaseFragment implements
         {
             // Stop or pause depending on your need
         }
+    }
+
+    public interface onPostOptionsClickListener {
+        void onPostLikedClicked(PostDetails postDetails);
     }
 }

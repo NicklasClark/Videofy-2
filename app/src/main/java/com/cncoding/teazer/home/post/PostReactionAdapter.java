@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
@@ -97,7 +98,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        holder.caption.setText(title);
+        holder.caption.setText(decodeUnicodeString(title));
         String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
         holder.name.setText(nameText);
         String likesText = "  " + postReaction.getLikes();

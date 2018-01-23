@@ -59,6 +59,7 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
@@ -111,7 +112,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private static long reactionPlayerCurrentPosition = 0;
+    private long reactionPlayerCurrentPosition = 0;
     private Handler mHandler;
 
 
@@ -175,7 +176,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     isLiked = !postDetails.canLike();
                     likesCount = postDetails.getLikes();
                     viewsCount = postDetails.getViews();
-                    reactionTitle = postDetails.getReact_title();
+                    reactionTitle = decodeUnicodeString(postDetails.getReact_title());
 
                     Glide.with(this)
                             .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
@@ -305,12 +306,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
     }
 
-
     @OnClick({R.id.btnClose, R.id.btnLike})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
                 reactionPlayerCurrentPosition = 0;
+                releasePlayer();
                 onBackPressed();
                 break;
             case R.id.btnLike:

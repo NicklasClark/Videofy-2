@@ -172,15 +172,19 @@ public class Interests extends BaseFragment {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
-                    ArrayList<Category> tempList = response.body();
-                    if (!tempList.isEmpty()) {
-                        totalCategories.clear();
-                        totalCategories.addAll(tempList);
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        if(!isEditing)
-                            changeDoneBtnVisibility(VISIBLE);
-                    } else {
-                        changeDoneBtnVisibility(View.GONE);
+                    try {
+                        ArrayList<Category> tempList = response.body();
+                        if (!tempList.isEmpty()) {
+                            totalCategories.clear();
+                            totalCategories.addAll(tempList);
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            if(!isEditing)
+                                changeDoneBtnVisibility(VISIBLE);
+                        } else {
+                            changeDoneBtnVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 } else {
                     changeDoneBtnVisibility(View.GONE);

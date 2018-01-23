@@ -1,9 +1,13 @@
 package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -48,7 +53,7 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
     RecyclerView reportTitlesRecyclerView;
     ReportPostTitleAdapter reportPostTitleAdapter = null;
     @BindView(R.id.report_remark)
-    EditText reportRemark;
+    TextInputEditText reportRemark;
     @BindView(R.id.submitReport)
     ProximaNovaSemiboldButton submitReport;
     @BindView(R.id.loader)
@@ -76,8 +81,27 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
     }
 
     @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         postId = getArguments().getInt("postId");
         canReact = getArguments().getBoolean("canReact");
         userName = getArguments().getString("userName");
@@ -153,15 +177,14 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
 
     private void reportPostServiceCall(String reportRemark) {
 
-        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId, reportRemark.equals("")? null:reportRemark), getContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.Posts.reportPost(new ReportPost(postId, selectedReportId, reportRemark.equals("") ? null : reportRemark), getContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
                     Toast.makeText(getContext(), "Post reported", Toast.LENGTH_SHORT).show();
                     postReportOptionSelected = false;
                     ReportPostDialogFragment.this.dismiss();
-                }
-                else
+                } else
                     Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
 
@@ -205,15 +228,22 @@ public class ReportPostDialogFragment extends DialogFragment implements ReportPo
         dialog.show();
     }
 
-    @OnClick(R.id.submitReport)
-    public void onViewClicked() {
-        showReportPostAlertDialog(reportRemark.getText().toString());
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         if (!postReportOptionSelected)
             disableView(submitReport, true);
+    }
+
+    @OnClick({R.id.btnClose, R.id.submitReport})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnClose:
+                this.dismiss();
+                break;
+            case R.id.submitReport:
+                showReportPostAlertDialog(reportRemark.getText().toString());
+                break;
+        }
     }
 }
