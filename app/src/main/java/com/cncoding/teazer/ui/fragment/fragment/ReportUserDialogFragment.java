@@ -211,6 +211,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private void showReportUserSuccessDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getContext().getString(R.string.report_user_success_dialog_title));
@@ -229,8 +230,15 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         dialog.show();
     }
 
-    @OnClick(R.id.submitReport)
-    public void onViewClicked() {
-        showReportUserAlertDialog();
+    @OnClick({R.id.btnClose, R.id.submitReport})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnClose:
+                this.dismiss();
+                break;
+            case R.id.submitReport:
+                showReportUserAlertDialog();
+                break;
+        }
     }
 }
