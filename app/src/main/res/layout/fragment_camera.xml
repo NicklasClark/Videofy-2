@@ -42,23 +42,6 @@
             android:textColor="#FFFFFFFF"
             android:textSize="36sp"
             />
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-            android:id="@+id/swipeCameraTip"
-            app:drawableTopCompat="@drawable/ic_filter_arrow"
-            android:drawablePadding="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="34dp"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/cameraControlsLayout"
-            android:layout_width="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="@string/swipe_for_filter_text"
-            android:textColor="#FFFFFFFF"
-            android:textSize="18sp"
-            />
 
         <RelativeLayout
             android:id="@+id/cameraControlsLayout"
@@ -136,6 +119,24 @@
                 app:srcCompat="@drawable/ic_gif" />-->
 
         </RelativeLayout>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/swipeCameraTip"
+            app:drawableTopCompat="@drawable/ic_filter_arrow"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="14dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/camera_preview"
+            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/swipe_for_filter_text"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/camera_flash"

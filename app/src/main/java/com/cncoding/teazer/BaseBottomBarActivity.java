@@ -1070,6 +1070,9 @@ public class BaseBottomBarActivity extends BaseActivity
                                         uploadingStatusLayout.setVisibility(GONE);
                                     }
                                 }, 2000);
+
+                                //finish failed upload session
+                                finishVideoUploadSession(getApplicationContext());
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
                                 builder.setOngoing(false);

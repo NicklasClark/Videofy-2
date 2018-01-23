@@ -138,7 +138,7 @@ public class VideoUploadService extends IntentService implements UploadCallbacks
             deleteFilePermanently(videoPath);
         }
         bundle.clear();
-        bundle.putString(UPLOAD_COMPLETE, "Video successfully uploaded");
+        bundle.putString(UPLOAD_COMPLETE, "Video uploaded successfully");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);
     }
 

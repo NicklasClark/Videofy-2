@@ -2,12 +2,9 @@ package com.cncoding.teazer.home.post;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,16 +18,10 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.LikedUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
-import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
-import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentSettings;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
@@ -38,14 +29,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.branch.referral.Branch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.cncoding.teazer.utilities.AuthUtils.logout;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by farazhabib on 29/12/17.
@@ -104,7 +90,6 @@ public class FragmentLikedUser extends BaseFragment {
                 if (next) {
                     getLikedUser(postId, page);
                 }
-
             }
         };
 
@@ -122,15 +107,12 @@ public class FragmentLikedUser extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         getLikedUser(postId, 1);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     public void getLikedUser(final int postId, final int pageId) {
@@ -142,7 +124,6 @@ public class FragmentLikedUser extends BaseFragment {
 
                 try {
 
-                    Log.d("response", response.message());
                     likedUsersList.addAll(response.body().getLikedUsers());
 
                     if ((likedUsersList == null || likedUsersList.size() == 0) && pageId == 1) {
@@ -154,14 +135,14 @@ public class FragmentLikedUser extends BaseFragment {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
 
                 }
             }
 
             @Override
             public void onFailure(Call<LikedUserPost> call, Throwable t) {
-                Toast.makeText(context, "Ooops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Oops! Something went wrong, please try again..", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -170,11 +151,12 @@ public class FragmentLikedUser extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CallProfileListener) {
-            callProfileListener = (CallProfileListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement CallProfileListener");
+        try {
+            if (context instanceof CallProfileListener) {
+                callProfileListener = (CallProfileListener) context;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -191,4 +173,5 @@ public class FragmentLikedUser extends BaseFragment {
     public interface CallProfileListener {
         public void callProfileListener(int id, boolean myself);
     }
+
 }
