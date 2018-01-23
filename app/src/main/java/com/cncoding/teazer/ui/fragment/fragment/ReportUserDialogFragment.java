@@ -73,6 +73,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         Bundle args = new Bundle();
         args.putInt("userId", userId);
         args.putString("userName", username);
+        args.putString("blah1", username);
         frag.setArguments(args);
         return frag;
     }
