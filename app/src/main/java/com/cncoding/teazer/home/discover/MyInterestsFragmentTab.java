@@ -101,7 +101,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
 
         return rootView;
     }
-    
+
     private void getPosts(final int page) {
         try {
             postListCall = ApiCallingService.Discover.getAllInterestedCategoriesVideos(page, categoryId, getContext());

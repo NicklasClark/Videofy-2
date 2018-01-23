@@ -38,10 +38,14 @@ public class BaseFragment extends Fragment {
 
     @NonNull
     public BaseBottomBarActivity getParentActivity() {
-        if (getActivity() != null && getActivity() instanceof BaseBottomBarActivity) {
-            return (BaseBottomBarActivity) getActivity();
+        try {
+            if (getActivity() != null && getActivity() instanceof BaseBottomBarActivity) {
+                return (BaseBottomBarActivity) getActivity();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
+        return null;
     }
 
     @Override

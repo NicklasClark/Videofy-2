@@ -202,10 +202,14 @@ public class CameraFragment extends Fragment {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            if (isReaction)
-                openCamera(width, height, CAMERA_FRONT);
-            else
-                openCamera(width, height, CAMERA_BACK);
+            try {
+                if (isReaction)
+                    openCamera(width, height, CAMERA_FRONT);
+                else
+                    openCamera(width, height, CAMERA_BACK);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override

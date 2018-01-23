@@ -97,7 +97,11 @@ public class RangeSeekBarView extends View {
     public void initThumbForRangeSeekBar(int duration, long pixelRangeMax) {
         mDuration = duration;
         mPixelRangeMax = pixelRangeMax;
-        onCreate(this, currentThumb, getThumbValue(currentThumb));
+        try {
+            onCreate(this, currentThumb, getThumbValue(currentThumb));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initMaxWidth() {

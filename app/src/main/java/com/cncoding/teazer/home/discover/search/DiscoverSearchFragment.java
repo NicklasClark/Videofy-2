@@ -102,7 +102,9 @@ public class DiscoverSearchFragment extends BaseFragment {
             @Override
             public void run() {
                 if (!searchTerm.isEmpty() && searchTerm != null) {
-                    logSearchEvent(searchTerm);
+                    if (searchTerm.length() > 1) {
+                        logSearchEvent(searchTerm);
+                    }
                 }
                 sectionsPagerAdapter.setTextQueryChanged(searchTerm);
             }

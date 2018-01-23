@@ -55,6 +55,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     private OnPostAdapterInteractionListener listener;
     private ArrayList<PostDetails> posts;
     private Context context;
+    private boolean isPostClicked = false;
 
     PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
@@ -131,7 +132,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                     @Override
                     public void onClick(View view) {
 //                        listener.onPostInteraction(ACTION_VIEW_POST, postDetails);
-                        fetchPostDetails(postDetails.getPostId(), holder.getAdapterPosition());
+                        if (!isPostClicked) {
+                            isPostClicked = true;
+                            fetchPostDetails(postDetails.getPostId(), holder.getAdapterPosition());
+                        }
                     }
                 };
                 View.OnClickListener viewProfile = new View.OnClickListener() {

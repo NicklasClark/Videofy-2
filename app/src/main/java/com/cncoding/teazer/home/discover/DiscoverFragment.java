@@ -315,11 +315,13 @@ public class DiscoverFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(LandingPosts... landingPosts) {
-            reference.get().clearLandingPostData();
-            reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
-            reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
-            reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
-            reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            if (reference != null) {
+                reference.get().clearLandingPostData();
+                reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
+                reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
+                reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
+                reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            }
             return null;
         }
 
