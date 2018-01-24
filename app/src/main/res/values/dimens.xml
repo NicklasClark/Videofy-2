@@ -65,5 +65,6 @@
     <dimen name="textsize14">80dp</dimen>
     <dimen name="frames_video_height">60dip</dimen>
     <dimen name="padding_4dp">4dp</dimen>
+    <dimen name="text_size_11_sp">11sp</dimen>
 
 </resources>

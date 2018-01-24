@@ -26,7 +26,7 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('/home/amit/Projects/TeazerKey/Teazer.jks')
+            storeFile file('D:/AndroidStudio/KeyStores/Teazer/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }

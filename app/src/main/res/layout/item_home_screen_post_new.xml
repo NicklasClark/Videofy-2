@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_card_no_margin_white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/title"
+            android:layout_width="222dp"
+            android:layout_height="14dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_toStartOf="@+id/category"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorDisabled"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/location"
+            android:layout_width="112dp"
+            android:layout_height="11dp"
+            android:textSize="13sp"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/title"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="#dddddd"
+            android:drawablePadding="4dp"
+            android:background="@color/colorDisabled"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:minWidth="52dp"
+            android:maxWidth="68dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="16dp"
+            android:textSize="@dimen/text_size_9sp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@color/colorDisabled"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/category_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:gravity="center_vertical|end"
+            android:textSize="@dimen/text_size_11_sp"
+            android:layout_below="@+id/category"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:paddingStart="@dimen/padding_half"
+        android:paddingEnd="@dimen/padding_half"
+        android:background="@color/colorDisabled">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/shimmer_dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="12dp"
+            android:src="@color/colorShimmer"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/shimmer_username"
+            android:layout_width="87dp"
+            android:layout_height="15dp"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@android:color/white"
+            android:background="@color/colorShimmer"
+            android:layout_toEndOf="@+id/shimmer_dp"
+            android:layout_alignTop="@+id/shimmer_dp"/>
+
+        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            android:id="@+id/shimmer_likes"
+            android:layout_width="122dp"
+            android:layout_height="12dp"
+            android:textSize="@dimen/text_size_10sp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorShimmer"
+            android:layout_toEndOf="@+id/shimmer_dp"
+            android:layout_below="@+id/shimmer_username"/>
+
+        <LinearLayout
+            android:id="@+id/popularity_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:orientation="horizontal"
+            android:layout_alignStart="@+id/shimmer_likes"
+            android:layout_alignTop="@+id/shimmer_likes"
+            android:layout_alignBottom="@+id/shimmer_likes">
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginEnd="10dp"
+                app:drawableStartCompat="@drawable/ic_like_smaller"
+                android:drawablePadding="5dp"
+                android:textSize="@dimen/text_size_10sp"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginEnd="10dp"
+                app:drawableStartCompat="@drawable/ic_view_outline_smaller"
+                android:drawablePadding="5dp"
+                android:textSize="@dimen/text_size_10sp"/>
+
+            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                app:drawableStartCompat="@drawable/ic_reaction_home"
+                android:drawablePadding="5dp"
+                android:textSize="@dimen/text_size_10sp"/>
+
+        </LinearLayout>
+
+        <com.cncoding.teazer.customViews.ProximaNovaBoldButton
+            android:id="@+id/react_btn"
+            style="@style/AppTheme.ReactButtonNew"
+            android:text="@string/react"
+            android:drawablePadding="6dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            app:drawableStartCompat="@drawable/ic_react"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:name="HomeScreenPostList"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>
