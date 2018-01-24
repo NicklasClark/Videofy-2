@@ -30,6 +30,10 @@ public class ProfileInfo {
     @Expose
     private FollowInfo followInfo;
 
+    @SerializedName("is_hided_all_posts")
+    @Expose
+    private Boolean isHidedAllPosts;
+
     public Integer getTotalVideos() {
         return totalVideos;
     }
@@ -77,5 +81,14 @@ public class ProfileInfo {
     public void setFollowInfo(FollowInfo followInfo) {
         this.followInfo = followInfo;
     }
+
+    public Boolean getIsHidedAllPosts() {
+        return isHidedAllPosts;
+    }
+
+    public void setIsHidedAllPosts(Boolean isHidedAllPosts) {
+        this.isHidedAllPosts = isHidedAllPosts;
+    }
+
 
 }

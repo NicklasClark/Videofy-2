@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b000"
+    tools:context="com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity">
+
+    <com.cncoding.teazer.customViews.CircularAppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/ic_clear_white_24dp"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:id="@+id/userimage_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.cncoding.teazer.customViews.CircularAppCompatImageView
+            android:id="@+id/media_controller_dp"
+            android:transitionName="profile"
+            android:background="@drawable/bg_circle_white_outline"
+            android:padding="2dp"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="50dp">
+
+
+        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            android:id="@+id/remove_image_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="Remove"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:textSize="@dimen/text_size_content_big"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@color/colorAccent"
+            android:foreground="@drawable/ripple_light_rounded_2dp"/>
+
+
+    </RelativeLayout>
+</RelativeLayout>

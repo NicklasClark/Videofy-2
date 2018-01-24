@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -48,6 +49,7 @@ import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment
 
 public class Interests extends BaseFragment {
     private static final String ARG_IS_FOR_VIDEO = "isForVideo";
+    private static final String ARG_IS_FROM_DISCOVER = "isFromDiscover";
     private static final String ARG_IS_EDITING = "isEditing";
     private static final String ARG_CATEGORIES = "userSelectedCategories";
 
@@ -58,6 +60,7 @@ public class Interests extends BaseFragment {
     private ArrayList<Category> totalCategories;
     private boolean isEditing;
     private boolean isForVideo;
+    private boolean isFromDiscover;
     private String selectedData;
     private SparseArray<Category> selectedInterests;
     private Call<ArrayList<Category>> categoriesCall;
@@ -68,10 +71,12 @@ public class Interests extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static Interests newInstance(boolean isForVideo, boolean isEditing, ArrayList<Category> categories, String selectedData) {
+    public static Interests newInstance(boolean isForVideo, boolean isEditing, ArrayList<Category> categories,
+                                        String selectedData, boolean isFromDiscover) {
         Interests interests = new Interests();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_FOR_VIDEO, isForVideo);
+        args.putBoolean(ARG_IS_FROM_DISCOVER, isFromDiscover);
         args.putBoolean(ARG_IS_EDITING, isEditing);
         args.putString(SELECTED_DATA, selectedData);
         if (isEditing)
@@ -86,6 +91,7 @@ public class Interests extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             isForVideo = getArguments().getBoolean(ARG_IS_FOR_VIDEO);
+            isFromDiscover = getArguments().getBoolean(ARG_IS_FROM_DISCOVER);
             isEditing = getArguments().getBoolean(ARG_IS_EDITING);
             if (isEditing) {
                 userSelectedCategories = getArguments().getParcelableArrayList(ARG_CATEGORIES);
@@ -166,15 +172,19 @@ public class Interests extends BaseFragment {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
-                    ArrayList<Category> tempList = response.body();
-                    if (!tempList.isEmpty()) {
-                        totalCategories.clear();
-                        totalCategories.addAll(tempList);
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        if(!isEditing)
-                            changeDoneBtnVisibility(VISIBLE);
-                    } else {
-                        changeDoneBtnVisibility(View.GONE);
+                    try {
+                        ArrayList<Category> tempList = response.body();
+                        if (!tempList.isEmpty()) {
+                            totalCategories.clear();
+                            totalCategories.addAll(tempList);
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            if(!isEditing)
+                                changeDoneBtnVisibility(VISIBLE);
+                        } else {
+                            changeDoneBtnVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 } else {
                     changeDoneBtnVisibility(View.GONE);
@@ -245,7 +255,7 @@ public class Interests extends BaseFragment {
                                 for (int i = 0; i < selectedInterests.size(); i++) {
                                     categories.add(selectedInterests.valueAt(i));
                                 }
-                                mListener.onInterestsInteraction(isEditing, categories);
+                                mListener.onInterestsInteraction(isFromDiscover, categories);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -324,6 +334,65 @@ public class Interests extends BaseFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        if (isEditing) {
+            inflater.inflate(R.menu.menu_edit_interests, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_edit_interests) {
+            selectedInterests = interestsAdapter.getSelectedInterests();
+            if (selectedInterests.size() >= 5) {
+                final ArrayList<Category> categories = new ArrayList<>();
+                selectedData = getSelectedInterestsToShow(selectedInterests);
+                String resultToSend = getSelectedInterestsToSend(selectedInterests);
+                if (!isForVideo) {
+                    ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
+                            .enqueue(new Callback<ResultObject>() {
+                                @Override
+                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                    try {
+                                        if (response.code() == 200) {
+                                            Log.i("Updating interests", "Updated successfully");
+                                        } else {
+                                            Log.i("Updating interests", response.code() + " : " + response.message());
+                                        }
+                                        for (int i = 0; i < selectedInterests.size(); i++) {
+                                            categories.add(selectedInterests.valueAt(i));
+                                        }
+                                        mListener.onInterestsInteraction(isFromDiscover, categories);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            });
+                }
+                else {
+                    SparseBooleanArray selectedCategoriesArray = new SparseBooleanArray();
+                    for (int i = 0; i < selectedInterests.size(); i++) {
+                        selectedCategoriesArray.put(selectedInterests.keyAt(i), true);
+                    }
+                    mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
+                }
+            } else {
+                Toast.makeText(getContext(), "Please select at least five interests.", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnInterestsInteractionListener) {
@@ -348,63 +417,7 @@ public class Interests extends BaseFragment {
     }
 
     public interface OnInterestsInteractionListener {
-        void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories);
+        void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories);
         void onInterestsSelected(String resultToShow, String resultToSend, int count);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-          menu.clear();
-        if (isEditing) {
-            inflater.inflate(R.menu.menu_edit_interests, menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.action_edit_interests) {
-            selectedInterests = interestsAdapter.getSelectedInterests();
-            final ArrayList<Category> categories = new ArrayList<>();
-            selectedData = getSelectedInterestsToShow(selectedInterests);
-            String resultToSend = getSelectedInterestsToSend(selectedInterests);
-            if (!isForVideo) {
-                ApiCallingService.User.updateCategories(new UpdateCategories(resultToSend), getContext())
-                        .enqueue(new Callback<ResultObject>() {
-                            @Override
-                            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                try {
-                                    if (response.code() == 200) {
-                                        Log.i("Updating interests", "Updated successfully");
-                                    } else {
-                                        Log.i("Updating interests", response.code() + " : " + response.message());
-                                    }
-                                    for (int i = 0; i < selectedInterests.size(); i++) {
-                                        categories.add(selectedInterests.valueAt(i));
-                                    }
-                                    mListener.onInterestsInteraction(isEditing, categories);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResultObject> call, Throwable t) {
-                                t.printStackTrace();
-                            }
-                        });
-            }
-            else {
-                SparseBooleanArray selectedCategoriesArray = new SparseBooleanArray();
-                for (int i = 0; i < selectedInterests.size(); i++) {
-                    selectedCategoriesArray.put(selectedInterests.keyAt(i), true);
-                }
-                mListener.onInterestsSelected(selectedData, resultToSend, interestsAdapter.getSelectedInterests().size());
-            }
-            return true;
-        }
-        return false;
     }
 }

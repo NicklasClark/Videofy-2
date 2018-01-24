@@ -34,6 +34,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -74,43 +75,43 @@
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/colorPrimary_text"
                     android:layout_marginStart="14dp"
+                    android:layout_toRightOf="@+id/btnToolbarBack"
                     android:layout_marginBottom="@dimen/padding_half"
                     android:layout_centerVertical="true"
                     android:visibility="invisible"/>
-
-                <!--<com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                    android:id="@+id/up_btn_with_title"
+                <ImageView
+                    android:layout_marginStart="14dp"
+                    android:visibility="invisible"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_arrow_back"
+                    android:id="@+id/btnToolbarBack"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/action_bar_height"
-                    app:drawableStartCompat="@drawable/ic_previous"
-                    android:scaleType="center"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_content_big"
-                    android:foreground="@drawable/ripple_dark_circle"
-                    android:contentDescription="@string/up"
-                    android:visibility="gone"
-                    tools:ignore="RelativeOverlap" />-->
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:visibility="gone"
                 android:id="@+id/uploadingStatusLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:id="@+id/uploadProgressText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
                 <ProgressBar
                     android:layout_below="@+id/uploadProgressText"
                     android:id="@+id/uploadProgress"
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
-                    style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-                    />
+                    style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" />
+
             </RelativeLayout>
+
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

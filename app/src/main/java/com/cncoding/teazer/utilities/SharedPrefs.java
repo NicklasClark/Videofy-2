@@ -24,6 +24,11 @@ public class SharedPrefs {
     private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
     private static final String SAVE_VIDEO_IN_GALLERY = "saveIntoGallery";
+    private static final String FIRST_START_POST_LIST = "firstStartPostList";
+    private static final String FIRST_START_DISCOVER = "firstStartDiscover";
+    private static final String FIRST_START_PROFILE = "firstStartProfile";
+    private static final String FIRST_START_POST_DETAILS = "firstStartPostDetails";
+    private static final String FIRST_START_MY_INTERESTS = "firstStartMyInterests";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -156,6 +161,46 @@ public class SharedPrefs {
 
     public static boolean getSaveVideoFlag(Context context) {
         return getSharedPreferences(context).getBoolean(SAVE_VIDEO_IN_GALLERY, false);
+    }
+
+    public static void setFirstStartPostList(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_START_POST_LIST, false).apply();
+    }
+
+    public static boolean isFirstStartPostList(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_START_POST_LIST, true);
+    }
+
+    public static void setFirstStartDiscover(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_START_DISCOVER, false).apply();
+    }
+
+    public static boolean isFirstStartDiscover(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_START_DISCOVER, true);
+    }
+
+    public static void setFirstStartProfile(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_START_PROFILE, false).apply();
+    }
+
+    public static boolean isFirstStartProfile(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_START_PROFILE, true);
+    }
+
+    public static void setFirstStartPostDetails(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_START_POST_DETAILS, false).apply();
+    }
+
+    public static boolean isFirstStartPostDetails(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_START_POST_DETAILS, true);
+    }
+
+    public static void setFirstStartMyInterests(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_START_MY_INTERESTS, false).apply();
+    }
+
+    public static boolean isFirstStartMyInterests(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_START_MY_INTERESTS, true);
     }
 
 }

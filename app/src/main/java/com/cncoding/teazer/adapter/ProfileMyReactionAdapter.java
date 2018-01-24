@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -42,6 +43,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
     private List<Reactions> list;
     private Context context;
+    private boolean isPostClicked = false;
 
 
     public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
@@ -74,18 +76,20 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.post_owner.setText(postOwner);
         viewHolder.txtlikes.setText(String.valueOf(likes));
         viewHolder.txtview.setText(String.valueOf(views));
-        viewHolder.duration.setText(reactDuration + " secs");
+        viewHolder.duration.setText(reactDuration);
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         Glide.with(context).load(thumb_url)
                 .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
-        viewHolder.playvideo.setOnClickListener(new View.OnClickListener() {
+        viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                if (!isPostClicked) {
+                    isPostClicked = true;
+                    playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                }
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +173,8 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         TextView duration;
         CircularAppCompatImageView menu;
         ImageView playvideo;
+        RelativeLayout rootLayout;
+
         public ViewHolder(View view) {
             super(view);
 
@@ -183,7 +189,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             duration = view.findViewById(R.id.duration);
             reaction_id = view.findViewById(R.id.reaction_id);
             cardView = view.findViewById(R.id.cardview);
-
+            rootLayout = view.findViewById(R.id.rootLayout);
         }
     }
 }

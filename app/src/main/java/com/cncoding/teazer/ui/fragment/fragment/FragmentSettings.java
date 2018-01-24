@@ -13,13 +13,17 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
+import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import butterknife.BindView;
@@ -37,7 +41,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by farazhabib on 03/12/17.
  */
 
-public class FragmentSettings extends Fragment {
+public class FragmentSettings extends BaseFragment {
 
 //    @BindView(R.id.text_block_layout) ProximaNovaRegularTextView text_block;
 //    @BindView(R.id.recentlyDeleted) ProximaNovaRegularTextView recentlyDeleted;
@@ -57,6 +61,8 @@ public class FragmentSettings extends Fragment {
     Switch simpleSwitch;
     @BindView(R.id.saveVideosSwitch)
     Switch saveVideosSwitch;
+    @BindView(R.id.text_hide_layout)
+    ProximaNovaRegularTextView hidevideos;
 
     public static FragmentSettings newInstance(String accountType) {
         FragmentSettings fragment = new FragmentSettings();
@@ -66,6 +72,13 @@ public class FragmentSettings extends Fragment {
         return fragment;
 
     }
+//    @NonNull
+//    public Settings getParentActivitySettings() {
+//        if (getActivity() != null && getActivity() instanceof Settings) {
+//            return (Settings) getActivity();
+//        }
+//        else throw new IllegalStateException("Fragment is not attached to BaseBottomBarActivity");
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +95,16 @@ public class FragmentSettings extends Fragment {
         simpleSwitch = view.findViewById(R.id.simpleSwitch);
         context = container.getContext();
         ButterKnife.bind(this, view);
+
+        hidevideos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mListener.hideVideoList();
+
+            }
+        });
+
 
         simpleSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +151,7 @@ public class FragmentSettings extends Fragment {
 
     @OnClick(R.id.text_block_layout)
     public void blockListClicked() {
+
         startActivity(new Intent(context, BlockUserList.class));
     }
 
@@ -141,16 +165,19 @@ public class FragmentSettings extends Fragment {
 
     @OnClick(R.id.changePassword)
     public void changePasswordClicked() {
+
         startActivity(new Intent(context, PasswordChange.class));
     }
 
     @OnClick(R.id.invite_friends)
     public void inviteFriendsClicked() {
+
         startActivity(new Intent(context, InviteFriend.class));
     }
 
     @OnClick(R.id.changeCategoriesLayout)
     public void changeCategoriesClicked() {
+
         mListener.changeCategoriesListener();
     }
 
@@ -224,7 +251,7 @@ public class FragmentSettings extends Fragment {
                 startActivity(fbBrowserIntent);
                 break;
             case R.id.instagramLink:
-                Intent instaBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/teaZer.social.media.application/"));
+                Intent instaBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/cnapplications/"));
                 startActivity(instaBrowserIntent);
                 break;
             case R.id.helpCenterLink:
@@ -253,7 +280,8 @@ public class FragmentSettings extends Fragment {
 
     public interface ChangeCategoriesListener {
         void changeCategoriesListener();
-
         void deactivateAccountListener();
+        void hideVideoList();
+
     }
 }

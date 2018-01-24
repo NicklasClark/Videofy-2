@@ -77,6 +77,8 @@
         <!--<item name="android:textColorPrimary">@color/colorPrimary_text</item>-->
         <item name="android:textColorSecondary">@color/colorSecondary_text</item>
         <item name="android:textColorHint">@color/colorSecondary_text</item>
+        <item name="android:windowContentTransitions">true</item>
+
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -609,7 +611,7 @@
               Android versions.-->
         <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:paddingEnd">8dp</item>
+        <!--<item name="android:paddingEnd">8dp</item>-->
         <!-- android:textColorSecondary is the color of the menu
              overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
@@ -618,6 +620,9 @@
     <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
         <item name="android:textAllCaps">false</item>
         <!--<item name="android:capitalize">words</item>-->
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="customActionBar" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Menu">
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -629,4 +634,5 @@
     </style>
 
     <dimen name="text_size_15sp">15sp</dimen>
+
 </resources>

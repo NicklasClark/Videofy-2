@@ -1,9 +1,11 @@
 package com.cncoding.teazer.ui.fragment.activity;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -22,9 +24,16 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
+import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
 
 public class ExoPlayerActivity extends AppCompatActivity{
 
@@ -38,6 +47,12 @@ public class ExoPlayerActivity extends AppCompatActivity{
 //    private int currentWindow;
     private boolean playWhenReady = true;
 
+
+    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
+    private boolean audioAccessGranted = false;
+    private long playerCurrentPosition = 0;
+    private Handler mHandler;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -48,6 +63,36 @@ public class ExoPlayerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exo_player2);
         ButterKnife.bind(this);
+
+        mHandler = new Handler();
+        audioFocusChangeListener =
+                new AudioManager.OnAudioFocusChangeListener() {
+                    public void onAudioFocusChange(int focusChange) {
+                        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                            // Permanent loss of audio focus
+                            // Pause playback immediately
+                            player.setPlayWhenReady(false);
+                            // Wait 30 seconds before stopping playback
+                            mHandler.postDelayed(mDelayedStopRunnable,
+                                    TimeUnit.SECONDS.toMillis(30));
+                        }
+                        else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                            // Pause playback
+                            player.setPlayWhenReady(false);
+                        } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                            // Lower the volume, keep playing
+                        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                            // Your app has been granted audio focus again
+                            // Raise volume to normal, restart playback if necessary
+                            player.setPlayWhenReady(true);
+                            player.seekTo(player.getCurrentWindowIndex(),playerCurrentPosition);
+                        }
+                    }
+                };
+
+
+        //acquire audio play access(transient)
+        audioAccessGranted = acquireAudioLock(this, audioFocusChangeListener);
 
         videoURL = getIntent().getStringExtra("VIDEO_URL");
 
@@ -60,6 +105,14 @@ public class ExoPlayerActivity extends AppCompatActivity{
 ////            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
 //        }
     }
+
+
+    private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            player.setPlayWhenReady(false);
+        }
+    };
 
     @Override
     public void onStart() {
@@ -94,7 +147,10 @@ public class ExoPlayerActivity extends AppCompatActivity{
                     new DefaultTrackSelector(),
                     new DefaultLoadControl());
             playerView.setPlayer(player);
-            player.setPlayWhenReady(playWhenReady);
+            if (audioAccessGranted) {
+                player.setPlayWhenReady(true);
+                player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
+            }
             MediaSource mediaSource=buildMediaSource(Uri.parse(videoURL));
             LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
             player.prepare(loopingSource,true,false);
@@ -108,6 +164,13 @@ public class ExoPlayerActivity extends AppCompatActivity{
         if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
+
+        try {
+            playerCurrentPosition = player.getCurrentPosition();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        releaseAudioLock(this, audioFocusChangeListener);
     }
 
     @Override
@@ -116,6 +179,8 @@ public class ExoPlayerActivity extends AppCompatActivity{
         if (Util.SDK_INT > 23) {
             releasePlayer();
         }
+        releaseAudioLock(this, audioFocusChangeListener);
+        mHandler.removeCallbacks(mDelayedStopRunnable);
     }
     private void releasePlayer() {
         if (player != null) {
@@ -129,6 +194,7 @@ public class ExoPlayerActivity extends AppCompatActivity{
 
     @OnClick(R.id.btnClose)
     public void onViewClicked() {
+        mHandler.removeCallbacks(mDelayedStopRunnable);
         finish();
     }
 

@@ -43,19 +43,20 @@ import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
  */
 
 public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCreationAdapter.ViewHolder> {
-
     private ArrayList<PostDetails> list;
     private ArrayList<PostReaction> reactiolist;
     private Context context;
     myCreationListener listener;
     Fragment fragment;
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
+    private boolean isPostClicked = false;
 
 
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
         this.context = context;
         this.list = list;
         this.fragment=fragment;
+
         listener = (myCreationListener) context;
         if (fragment instanceof OnChildFragmentUpdateVideos) {
             onChildFragmentUpdateVideosllistrener = (OnChildFragmentUpdateVideos) fragment;
@@ -136,9 +137,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.myCreationVideos(2, cont);
+                    if (!isPostClicked) {
+                        isPostClicked = true;
+                        listener.myCreationVideos(2, cont);
+                    }
                 }
             });
+
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -253,7 +258,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ResultObject> call, Throwable t) {
 
@@ -339,8 +343,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                                     .into(viewHolder.image3);
                                             break;
                                         default:
-
-
                                     }
                                 }
 
@@ -468,7 +470,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public interface myCreationListener {
 
-        public void myCreationVideos(int i, PostDetails postDetails);
+        void myCreationVideos(int i, PostDetails postDetails);
     }
 
     public interface OnChildFragmentUpdateVideos {

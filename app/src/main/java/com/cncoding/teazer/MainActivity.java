@@ -84,6 +84,8 @@ import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSignUpEvent;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity
@@ -195,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         try {
             bitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), Uri.parse(imageUri));
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
-            bte = bitmaptoByte(scaledBitmap);
+            bte = bitmapToByte(scaledBitmap);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -249,14 +251,14 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.main_fragment_container, ConfirmOtpFragment.newInstance(args), TAG_OTP_FRAGMENT);
                 break;
             case TAG_SELECT_INTERESTS:
-                toggleUpBtnVisibility(View.VISIBLE);
+                toggleUpBtnVisibility(View.GONE);
                 try {
                     popAllBackStack();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 transaction.replace(R.id.main_fragment_container, Interests.newInstance(
-                        false, false, null, null),
+                        false, false, null, null, false),
                         TAG_SELECT_INTERESTS);
                 break;
             default:
@@ -432,6 +434,9 @@ public class MainActivity extends AppCompatActivity
                                         //updating profile picture
                                         GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
                                         generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
+
+                                        //fabric event
+                                        logSignUpEvent("Facebook", true, facebookData.getString("email").equals("") ? null:facebookData.getString("email"));
                                     }
                                     break;
                                 case 200:
@@ -440,6 +445,9 @@ public class MainActivity extends AppCompatActivity
                                     if (response.body().getStatus()) {
                                         verificationSuccessful(true,
                                                 button, true);
+
+                                        //fabric event
+                                        logLoginEvent("Facebook", true, facebookData.getString("email").equals("") ? null:facebookData.getString("email"));
                                     } else {
                                         new UserNameAlreadyAvailableDialog(true, MainActivity.this,
                                                 null,
@@ -459,6 +467,9 @@ public class MainActivity extends AppCompatActivity
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+
+                            //fabric event
+                            logSignUpEvent("Facebook", false, null);
                         }
                     }
 
@@ -472,6 +483,9 @@ public class MainActivity extends AppCompatActivity
                                         0, 0);
                             }
                         });
+
+                        //fabric event
+                        logLoginEvent("Facebook", false, null);
                     }
                 });
     }
@@ -510,6 +524,9 @@ public class MainActivity extends AppCompatActivity
                                     //updating profile picture
                                     GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
                                     generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
+
+                                    //logging fabric event
+                                    logSignUpEvent("Google", true, googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail());
                                 }
                                 break;
                             case 200:
@@ -518,6 +535,8 @@ public class MainActivity extends AppCompatActivity
                                 if (response.body().getStatus()) {
                                     verificationSuccessful(false,
                                             button, true);
+                                    //logging fabric event
+                                    logLoginEvent("Google", true, googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail());
                                 } else {
                                     new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
                                             null, null, button);
@@ -546,6 +565,7 @@ public class MainActivity extends AppCompatActivity
                                         0, 0);
                             }
                         });
+                        logSignUpEvent("Google", false, null);
                     }
                 });
 
@@ -594,10 +614,15 @@ public class MainActivity extends AppCompatActivity
     public void onOtpInteraction(Authorize verificationDetails, String picturePath) {
         if (verificationDetails != null) {
 //            setFragment(TAG_SELECT_INTERESTS, false, null);
+            //fabric event
+            logSignUpEvent("Email/Phone", true, verificationDetails.getEmail());
+
             startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
             new UpdateProfilePic(this).execute(picturePath);
         } else {
 //            if (isVerified)
+            //fabric event
+//            logSignUpEvent("Email/Phone", true, null);
             successfullyLoggedIn();
         }
     }
@@ -624,7 +649,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
         successfullyLoggedIn();
     }
 
@@ -632,7 +657,7 @@ public class MainActivity extends AppCompatActivity
     public void onInterestsSelected(String resultToShow, String resultToSend, int count) {
     }
 
-    public static byte[] bitmaptoByte(Bitmap bitmap) {
+    public static byte[] bitmapToByte(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();

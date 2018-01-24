@@ -19,12 +19,14 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MyInterestsListAdapter;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchFragment;
+import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -43,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 public class DiscoverFragment extends BaseFragment {
@@ -55,15 +58,17 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
     @BindView(R.id.discover_posts_container) LinearLayout discoverPostsContainer;
     @BindView(R.id.featured_posts_container) LinearLayout featuredPostsContainer;
+    @BindView(R.id.my_interests_header_layout) LinearLayout myInterestsHeaderLayout;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
+    @BindView(R.id.my_interests_view_all) public ProximaNovaSemiboldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
     @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
+    @BindView(R.id.no_my_interests) ProximaNovaRegularTextView noMyInterests;
     @BindView(R.id.no_trending) ProximaNovaBoldTextView noTrending;
     @BindView(R.id.no_featured_videos) ProximaNovaBoldTextView noFeaturedVideos;
-    @BindView(R.id.post_load_error)
-    ProximaNovaRegularTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean updateMyInterests = false;
@@ -107,8 +112,7 @@ public class DiscoverFragment extends BaseFragment {
         getFeaturedPosts(1);
     }
 
-
-    @Override
+        @Override
     public void onResume() {
         super.onResume();
         loadPosts();
@@ -173,7 +177,7 @@ public class DiscoverFragment extends BaseFragment {
         featuredVideosList.setAdapter(new FeaturedVideosListAdapter(featuredPostsList, getContext(), mListener));
     }
 
-    private void loadPosts() {
+    public void loadPosts() {
         postLoadErrorLayout.setVisibility(GONE);
         if (!isLandingPostListsNull())
             getDiscoverLandingPosts();
@@ -201,6 +205,11 @@ public class DiscoverFragment extends BaseFragment {
     @OnClick(R.id.post_load_error_layout) public void reloadStuff() {
         page = 1;
         loadPosts();
+    }
+
+    @OnClick(R.id.no_my_interests) public void onNoMyInterestsClick() {
+        getParentActivity().pushFragmentOnto(Interests.newInstance(false,
+                true, userInterests, null, true));
     }
 
     private void notifyLandingPostsDataSetChanged() {
@@ -265,7 +274,17 @@ public class DiscoverFragment extends BaseFragment {
                     try {
                         if (isAdded()) {
                             if (response.code() == 200) {
-                                new RefreshLandingPosts(DiscoverFragment.this).execute(response.body());
+                                LandingPosts tempLandingPosts = response.body();
+                                new RefreshLandingPosts(DiscoverFragment.this).execute(tempLandingPosts);
+                                if (tempLandingPosts.getUserInterests() != null && tempLandingPosts.getUserInterests().isEmpty()) {
+                                    myInterestsList.setVisibility(INVISIBLE);
+                                    noMyInterests.setVisibility(VISIBLE);
+                                }
+                                if (tempLandingPosts.getMyInterests() != null && tempLandingPosts.getMyInterests().isEmpty()) {
+                                    myInterestsList.setVisibility(GONE);
+//                                    myInterestsHeaderLayout.setVisibility(INVISIBLE);
+//                                    noMyInterests.setVisibility(VISIBLE);
+                                }
                             } else {
                                 Log.e("GetDiscoverLandingPosts", response.code() + "_" + response.message());
                                 showErrorMessage(getString(R.string.something_went_wrong), true);
@@ -296,11 +315,13 @@ public class DiscoverFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(LandingPosts... landingPosts) {
-            reference.get().clearLandingPostData();
-            reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
-            reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
-            reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
-            reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            if (reference != null) {
+                reference.get().clearLandingPostData();
+                reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
+                reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
+                reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
+                reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            }
             return null;
         }
 
@@ -317,7 +338,7 @@ public class DiscoverFragment extends BaseFragment {
         if (myInterests != null) myInterests.clear();
     }
 
-    private void getFeaturedPosts(final int page) {
+    public void getFeaturedPosts(final int page) {
         featuredPostsCall = ApiCallingService.Discover.getFeaturedPosts(page, getContext());
         if (!featuredPostsCall.isExecuted()) {
             featuredPostsCall.enqueue(new Callback<PostList>() {

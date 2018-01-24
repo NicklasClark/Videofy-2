@@ -66,8 +66,14 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implement
     public void onBindViewHolder(final TagsAdapter.ViewHolder holder, int position) {
         final MiniProfile circle = circlesFiltered.get(position);
         String name = circle.getFirstName() + " " + circle.getLastName();
-
         holder.nameView.setText(name);
+
+        if (selectedTagsArray.size() == 0) {
+            setCheck(holder.nameView, position, circle,
+                    selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
+        } else {
+            setCheck(holder.nameView, position, circle, selectedTagsArray.get(circle.getUserId()));
+        }
 
         Glide.with(fragment)
                 .load(circle.getProfileMedia() != null ? circle.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
@@ -75,16 +81,10 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implement
                 .crossFade()
                 .into(holder.image);
 
-//        if (selectedTagsArray.size() == 0) {
-            setCheck(holder.nameView, position, circle,
-                    selectedTagsString != null && selectedTagsString.contains(circle.getFirstName()));
-//        } else
-        if (selectedTagsString == null || selectedTagsString.isEmpty())
-            setCheck(holder.nameView, position, circle, selectedTagsArray.get(position));
-
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedTagsArray.put(circle.getUserId(), !holder.nameView.isChecked());
                 setCheck(holder.nameView, holder.getAdapterPosition(), circle, !holder.nameView.isChecked());
             }
         });
@@ -104,7 +104,6 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implement
             textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             tagsSparseArray.delete(position);
         }
-        selectedTagsArray.put(circle.getUserId(), textView.isChecked());
     }
 
     @Override

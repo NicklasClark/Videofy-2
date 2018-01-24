@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
@@ -43,7 +42,7 @@ public class VideosTabFragment extends BaseFragment {
     private TreeSet<Videos> videosList;
     private DiscoverSearchAdapter adapter;
     private String searchTerm;
-    private BaseBottomBarActivity parentContext;
+    private boolean isSearchTerm;
 
     public VideosTabFragment() {
     }
@@ -61,9 +60,9 @@ public class VideosTabFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
+            isSearchTerm = searchTerm != null && !searchTerm.equals("");
         }
         videosList = new TreeSet<>();
-        parentContext = getParentActivity();
     }
 
     @Override
@@ -73,7 +72,6 @@ public class VideosTabFragment extends BaseFragment {
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -100,6 +98,7 @@ public class VideosTabFragment extends BaseFragment {
         if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
             getVideos(1);
         } else {
+//            TODO: put list of trending videos here
             noPosts.setVisibility(View.VISIBLE);
             noPosts.setText(R.string.search_for_videos);
             noPosts2.setVisibility(View.INVISIBLE);
@@ -120,11 +119,6 @@ public class VideosTabFragment extends BaseFragment {
     }
 
     private void getVideos(final int page) {
-        if (page == 1) {
-            scrollListener.resetState();
-            videosList.clear();
-        }
-
         if (videosListCall != null && videosListCall.isExecuted())
             videosListCall.cancel();
 
@@ -140,15 +134,19 @@ public class VideosTabFragment extends BaseFragment {
                                 VideosList videos = response.body();
                                 is_next_page = videos.isNextPage();
                                 if (videos.getVideos() != null && videos.getVideos().size() > 0) {
+                                    if (page == 1) {
+                                        scrollListener.resetState();
+                                        videosList.clear();
+                                    }
                                     swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     noPosts.setVisibility(View.GONE);
 //                                    videosList.clear();
                                     noPosts2.setVisibility(View.GONE);
-                                    recyclerView.getRecycledViewPool().clear();
                                     videosList.addAll(videos.getVideos());
-                                    adapter = new DiscoverSearchAdapter(parentContext, VideosTabFragment.this,
-                                            true, null, new ArrayList<Videos>(videosList));
+                                    adapter = new DiscoverSearchAdapter(getParentActivity(), VideosTabFragment.this,
+                                            true, null, new ArrayList<>(videosList), isSearchTerm);
                                     recyclerView.setAdapter(adapter);
+//                                    recyclerView.getRecycledViewPool().clear();
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     if (page == 1 && videosList.isEmpty()) {

@@ -2,18 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:keepScreenOn="true"
+    android:layout_height="match_parent"
+    tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
 
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cncoding.teazer.home.post.FragmentPostDetails"
+        tools:context="com.cncoding.teazer.home.post.PostDetailsActivity"
         android:id="@+id/root_layout"
         android:background="@color/material_grey100"
+        android:paddingBottom="?attr/actionBarSize"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="?attr/actionBarSize"
         android:animateLayoutChanges="true">
 
         <RelativeLayout
@@ -125,9 +128,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_play_big"
+                    android:visibility="gone"
                     android:background="@android:color/transparent" />
 
                 <ProgressBar
@@ -341,8 +344,8 @@
 
                     <RelativeLayout
                         android:id="@+id/tags_container"
-                        android:layout_width="60dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="76dp"
                         android:layout_weight="0.1"
                         android:paddingStart="@dimen/padding_thin"
                         android:paddingEnd="@dimen/padding_thin">
@@ -459,6 +462,7 @@
                 android:background="@color/colorDivider"
                 android:layout_below="@+id/post_actions"/>
 
+
             <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
                 android:id="@+id/reactions_header"
                 android:layout_width="match_parent"
@@ -506,8 +510,8 @@
                 android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="14dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="14dp"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
                 android:clipToPadding="false"
@@ -528,17 +532,13 @@
         android:layout_marginTop="@dimen/padding_half"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone"
         android:src="@drawable/ic_arrow_back_off_white" />
 
 
-
     <FrameLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/liked_user_layout"/>
-
     <pl.droidsonroids.gif.GifTextView
         android:layout_width="100dp"
         android:id="@+id/loader"

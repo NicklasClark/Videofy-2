@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
@@ -121,7 +121,7 @@ public class ReportPostTitleAdapter extends RecyclerView.Adapter<ReportPostTitle
 
         @BindView(R.id.reportTitleLayout) RelativeLayout layout;
         @BindView(R.id.reportTitle)
-        TextView reportTitle;
+        ProximaNovaRegularTextView reportTitle;
         @BindView(R.id.tickView) ImageView tickView;
 
         ViewHolder(View view) {

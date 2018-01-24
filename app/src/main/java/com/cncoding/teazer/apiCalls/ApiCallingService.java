@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -211,6 +210,7 @@ public class ApiCallingService {
         public static Call<PostList> getTrendingVideos(int page, int categoryId, Context context){
             return getDiscoverService(context).getTrendingVideos(page, categoryId);
         }
+
 
         /**
          * Call this service to get discover page landing posts.
@@ -639,7 +639,13 @@ public class ApiCallingService {
             return getPostalService(context).getPostedVideos(page);
 
         }
+        public static Call<PostList> getHiddenVideosList(int page, Context context){
+            return getPostalService(context).getHiddenVideosList(page);
+        }
 
+        public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context){
+            return getPostalService(context).getAllHiddenVideosList(userID);
+        }
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
@@ -660,7 +666,6 @@ public class ApiCallingService {
         public static  Call<ResultObject> resetFcmToken(String header, String token, Context context) {
             return getUserService(context).resetFcmToken(header, token);
         }
-
 
         public static Call<ResultObject> setAccountVisibility(int accountType, Context context) {
             return getUserService(context).setAccountVisibility(accountType);
@@ -723,9 +728,9 @@ public class ApiCallingService {
         public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
             return getUserService(context).resetUnreadNotification(type);
         }
-
-
-
+        public static Call<ResultObject> removeProfilepic(Context context) {
+            return getUserService(context).removeProfilePic();
+        }
 
         private static TeazerApiCall.UserCalls getUserService(Context context) {
 
@@ -738,10 +743,6 @@ public class ApiCallingService {
                     .build();
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
-
-
-
-
     }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,
@@ -791,8 +792,8 @@ public class ApiCallingService {
         })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-//                .build();
-                .addInterceptor(logging).build();
+                .build();
+//                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {

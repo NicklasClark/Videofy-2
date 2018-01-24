@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cncoding.teazer.home.post.PostDetailsActivity">
-
-
+    android:keepScreenOn="true"
+   >
 
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="?attr/actionBarSize"
+        android:clipToPadding="false"
         android:animateLayoutChanges="true">
 
         <RelativeLayout
@@ -126,7 +126,6 @@
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/media_controller_play_pause"
                     android:layout_width="40dp"
-                    android:visibility="gone"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
@@ -307,12 +306,11 @@
                         android:minWidth="115dp"
                         android:layout_weight="10">
 
-
                         <com.cncoding.teazer.customViews.ProximaNovaBoldButton
                             android:id="@+id/react_btn"
                             style="@style/AppTheme.ReactButton"
                             android:text="@string/react"
-                            android:drawablePadding="6dp"
+                            android:drawablePadding="4dp"
                             app:drawableStartCompat="@drawable/ic_react"/>
 
                     </FrameLayout>
@@ -325,7 +323,7 @@
                         android:padding="@dimen/padding_thin"
                         android:gravity="center"
                         android:textAlignment="center"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorPrimary_text"
                         android:text="@string/like"
                         android:layout_marginStart="@dimen/padding_thin"
@@ -338,14 +336,14 @@
                         app:drawableTopCompat="@drawable/ic_share"
                         android:padding="@dimen/padding_thin"
                         android:gravity="center"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorPrimary_text"
                         android:text="@string/share"/>
 
                     <RelativeLayout
                         android:id="@+id/tags_container"
-                        android:layout_width="60dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="76dp"
                         android:layout_weight="0.1"
                         android:paddingStart="@dimen/padding_thin"
                         android:paddingEnd="@dimen/padding_thin">
@@ -356,7 +354,7 @@
                             android:layout_height="wrap_content"
                             app:drawableTopCompat="@drawable/ic_person_default"
                             android:gravity="center"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textColor="@color/colorPrimary_text"
                             android:text="@string/tagged"
                             android:layout_centerInParent="true"
@@ -467,12 +465,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/reactions"
-                android:textSize="@dimen/text_size_h4"
-                android:textColor="@color/colorSecondary_text"
+                android:textSize="@dimen/text_size_h6"
+                android:textColor="@color/colorPrimary_text3"
                 android:gravity="start"
                 android:paddingTop="@dimen/padding_half"
                 android:paddingEnd="@dimen/padding_half"
-                android:paddingBottom="@dimen/padding_half"
                 android:paddingStart="14dp"
                 android:layout_below="@+id/separator"/>
 
@@ -510,7 +507,8 @@
                 android:name="com.cncoding.teazer.home.HomeScreenPostListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="14dp"
+                android:layout_marginBottom="@dimen/action_bar_height"
+                android:paddingTop="10dp"
                 android:paddingBottom="14dp"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
@@ -533,7 +531,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_arrow_back_off_white" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

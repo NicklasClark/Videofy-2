@@ -2,6 +2,7 @@ package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -87,33 +88,36 @@ public class FragmentChangeCategories extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
         headerTextView.setHint(R.string.select_minimum_categories);
 
-        tags_categories_done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Integer> selectedCategoriesList= adapter.getSelectedCategories();
-                categoryId=new StringBuilder();
-                for(int i=0;i<selectedCategoriesList.size();i++)
-               {
-                   categoryId.append(selectedCategoriesList.get(i));
-                   if (i == selectedCategoriesList.size() - 1) {
-                   } else {
-                       categoryId.append(",");
-                   }
-               }
-                UpdateCategories categories= new UpdateCategories(categoryId.toString());
-                updateCategories(categories);
-
-
-            }
-        });
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        getProfileInfo();
+        try {
+            getProfileInfo();
 
+            tags_categories_done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    List<Integer> selectedCategoriesList = adapter.getSelectedCategories();
+                    categoryId = new StringBuilder();
+                    for(int i=0;i<selectedCategoriesList.size();i++)
+                    {
+                        categoryId.append(selectedCategoriesList.get(i));
+                        if (i == selectedCategoriesList.size() - 1) {
+
+                        } else {
+                            categoryId.append(",");
+                        }
+                    }
+                    UpdateCategories categories= new UpdateCategories(categoryId.toString());
+                    updateCategories(categories);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void onResume() {
@@ -121,10 +125,7 @@ public class FragmentChangeCategories extends Fragment{
 
     }
 
-    public void getCategories(final ArrayList<Category> usercategoryList) {
-
-
-
+    public void getCategories(final ArrayList<Category> userCategoryList) {
         ApiCallingService.Application.getCategories(getContext()).enqueue(new Callback<ArrayList<Category>>() {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
@@ -132,7 +133,7 @@ public class FragmentChangeCategories extends Fragment{
                  if (response.code() == 200) {
                      if (response.body() != null) {
                          categories = response.body();
-                         adapter = new ChangeCategoriesAdapter(categories, context, usercategoryList);
+                         adapter = new ChangeCategoriesAdapter(categories, context, userCategoryList);
                          recyclerView.setAdapter(adapter);
                          layout.setVisibility(View.VISIBLE);
                          loader.setVisibility(View.GONE);
@@ -156,7 +157,6 @@ public class FragmentChangeCategories extends Fragment{
 
     public void getProfileInfo()
     {
-
         layout.setVisibility(View.GONE);
         loader.setVisibility(View.VISIBLE);
 
@@ -208,5 +208,15 @@ public class FragmentChangeCategories extends Fragment{
             }
         });
     }
+//    public void changeUpdateMessage(int i)
+//    {
+//      if(i>5)
+//        headerTextView.setVisibility(View.GONE);
+//      else {
+//          headerTextView.setVisibility(View.VISIBLE);
+//          headerTextView.setHint(R.string.select_minimum_categories);
+//      }
+//
+//      }
 
 }

@@ -25,6 +25,7 @@ import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSearchEvent;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.showKeyboard;
 
@@ -100,6 +101,11 @@ public class DiscoverSearchFragment extends BaseFragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                if (!searchTerm.isEmpty() && searchTerm != null) {
+                    if (searchTerm.length() > 1) {
+                        logSearchEvent(searchTerm);
+                    }
+                }
                 sectionsPagerAdapter.setTextQueryChanged(searchTerm);
             }
         };

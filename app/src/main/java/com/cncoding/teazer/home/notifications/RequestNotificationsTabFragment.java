@@ -114,7 +114,8 @@ public class RequestNotificationsTabFragment extends BaseFragment {
                             if (response.code() == 200) {
                                 is_next_page = response.body().isNextPage();
                                 if (response.body().getNotifications().size() > 0) {
-                                    if (page == 1) notificationsList.getNotifications().clear();
+                                    if (page == 1){ notificationsList.getNotifications().clear();}
+
                                     swipeRefreshLayout.setVisibility(View.VISIBLE);
                                     noNotifications.setVisibility(View.GONE);
                                     notificationsList.getNotifications().addAll(response.body().getNotifications());

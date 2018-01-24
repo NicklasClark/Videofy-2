@@ -72,7 +72,6 @@ import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -187,15 +186,13 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {
+                    MediaStore.Images.Media.DATA };
             cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
@@ -240,13 +237,9 @@ public class CameraActivity extends AppCompatActivity
                         else {
                             Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
                         }
-
-
-
                         //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
                     }
-                } else if
-                        (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
                     if (type.startsWith("image/")) {
                         Toast.makeText(getApplicationContext(), "Please select a video to upload", Toast.LENGTH_SHORT).show();
                     }
@@ -368,6 +361,8 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         uploadOrTrimAction(videoPath);
+
+
     }
 
     @Override
@@ -379,26 +374,47 @@ public class CameraActivity extends AppCompatActivity
     {
         try {
             if (new File(videoPath).exists()) {
-                if (getVideoDuration(videoPath) < 60) {
-                    //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
-                    //                    compressVideoAsyncTask.delegate = this;
-                    //                    compressVideoAsyncTask.execute(videoPath);
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int)getVideoDuration(videoPath));
-                    startVideoUploadFragment();
+                String videoFormat=new File(videoPath).getName();
+                String filenameArray[] = videoFormat.split("\\.");
+                String extension = filenameArray[filenameArray.length-1];
+                if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
+                    long  videoDuration= getVideoDuration(videoPath);
+                    if (videoDuration < 60) {
+
+                        if (videoDuration >= 5) {
+                            uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int)videoDuration);
+                            startVideoUploadFragment();
+                        } else {
+                            Toast.makeText(this, "Select at least 5 seconds video", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("path", videoPath);
+                        bundle.putInt("MAX_DURATION", (int) getVideoDuration(videoPath));
+                        Intent intent = new Intent(this, TrimmerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, VIDEO_TRIM_REQUEST_CODE);
+                    }
                 }
-                else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("path", videoPath);
-                    bundle.putInt("MAX_DURATION", (int)getVideoDuration(videoPath));
-                    Intent intent = new Intent(this,TrimmerActivity.class);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent,VIDEO_TRIM_REQUEST_CODE);
+                else
+                {
+                    Toast.makeText(this, "This video format is not supported", Toast.LENGTH_SHORT).show();
+
                 }
             } else
                 Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getVideoFormat(String filename)
+    {
+        String filenameArray[] = filename.split("\\.");
+        String extension = filenameArray[filenameArray.length-1];
+        Toast.makeText(this, extension, Toast.LENGTH_SHORT).show();
+        return extension;
     }
     @Override
     public void processFinish(String output) {
@@ -496,9 +512,9 @@ public class CameraActivity extends AppCompatActivity
 
 //            Log.v("IGA", "Address" + add);
             return obj.getSubLocality();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not get address, please try again later", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -506,17 +522,21 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onTagsAndCategoriesInteraction(final String action, final String resultToShow, final String resultToSend,
                                                final SparseBooleanArray selectedTagsArray, final int count) {
-        fragmentManager.popBackStack();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
-            }
-        }, 100);
+        try {
+            fragmentManager.popBackStack();
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
+                }
+            }, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onInterestsInteraction(boolean isEditing, ArrayList<Category> categories) {
+    public void onInterestsInteraction(boolean isFromDiscover, ArrayList<Category> categories) {
     }
 
     @Override
@@ -546,7 +566,7 @@ public class CameraActivity extends AppCompatActivity
                     break;
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
-                            Interests.newInstance(true, false, null, selectedData),
+                            Interests.newInstance(true, false, null, selectedData, false),
 //                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
                             tag);
                     break;
@@ -640,23 +660,31 @@ public class CameraActivity extends AppCompatActivity
 //            cursor = reference.get().getContentResolver().query(uri, projection,
 //                    MediaStore.Video.Media.DURATION + ">=3000", null,
 //                    orderByDateTaken + " DESC");
-            cursor = reference.get().getContentResolver().query(uri, projection,
-                    null, null,
-                    orderByDateTaken + " DESC");
-            if (cursor != null) {
-                columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-//                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
+            try {
+                cursor = reference.get().getContentResolver().query(uri, projection,
+                        null, null,
+                        orderByDateTaken + " DESC");
+                if (cursor != null) {
+                    columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                    duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
-                while (cursor.moveToNext()) {
-                    reference.get().videosList.add(new Videos(
-                            cursor.getString(columnIndexData),              //Video path
-//                            cursor.getString(thumbnailData),                //Thumbnail
-                            cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
-                    ));
+                    while (cursor.moveToNext()) {
+                        try {
+                            reference.get().videosList.add(new Videos(
+                                    cursor.getString(columnIndexData),              //Video path
+        //                            cursor.getString(thumbnailData),                //Thumbnail
+                                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
+                            ));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    cursor.close();
                 }
-                cursor.close();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -721,7 +749,7 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, true, (int) getVideoDuration(videoPath));
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int) getVideoDuration(videoPath));
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;

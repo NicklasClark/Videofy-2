@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.post;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -38,8 +39,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.post_load_error)
-    ProximaNovaRegularTextView postLoadErrorTextView;
+    @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean isRefreshing;
@@ -170,71 +170,82 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
         if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
 //        progressBar.setVisibility(View.VISIBLE);
+        Context context = getParentActivity();
+        if (context != null) {
+            postListCall = ApiCallingService.Posts.getHomePagePosts(page, context);
 
-        postListCall = ApiCallingService.Posts.getHomePagePosts(page, getContext());
-
-        if (!postListCall.isExecuted())
-            postListCall.enqueue(new Callback<PostList>() {
-                @Override
-                public void onResponse(Call<PostList> call, Response<PostList> response) {
-                    try {
-                        switch (response.code()) {
-                            case 200:
-                                PostList tempPostList = response.body();
-                                if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
-                                    is_next_page = tempPostList.isNextPage();
-                                    updatePosts(page, tempPostList);
-                                } else {
-                                    if (page == 1 && postList.isEmpty())
-                                        showErrorMessage(getContext().getString(R.string.no_posts_available));
-                                }
-                                break;
-                            default:
-                                showErrorMessage("Error " + response.code() + " : " + response.message());
-                                break;
+            if (!postListCall.isExecuted())
+                postListCall.enqueue(new Callback<PostList>() {
+                    @Override
+                    public void onResponse(Call<PostList> call, Response<PostList> response) {
+                        try {
+                            switch (response.code()) {
+                                case 200:
+                                    PostList tempPostList = response.body();
+                                    if (tempPostList.getPosts() != null && tempPostList.getPosts().size() > 0) {
+                                        is_next_page = tempPostList.isNextPage();
+                                        updatePosts(page, tempPostList);
+                                    } else {
+                                        if (page == 1 && postList.isEmpty())
+                                            showErrorMessage(getContext().getString(R.string.no_posts_available));
+                                    }
+                                    break;
+                                default:
+                                    showErrorMessage("Error " + response.code() + " : " + response.message());
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            dismissRefreshView();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        dismissRefreshView();
                     }
-                }
 
-                private void updatePosts(int page, PostList tempPostList) {
-                    try {
-                        postListAdapter.clearDimensions();
-                        if (page == 1) {
-                            postList.clear();
-                            postList.addAll(tempPostList.getPosts());
-                            postListAdapter.notifyDataSetChanged();
-                        } else {
-                            postList.addAll(tempPostList.getPosts());
-                            postListAdapter.notifyItemRangeInserted((page - 1) * 10, tempPostList.getPosts().size());
+                    private void updatePosts(int page, PostList tempPostList) {
+                        try {
+                            postListAdapter.clearDimensions();
+                            if (page == 1) {
+                                postList.clear();
+                                postList.addAll(tempPostList.getPosts());
+                                postListAdapter.notifyDataSetChanged();
+                            } else {
+                                postList.addAll(tempPostList.getPosts());
+                                postListAdapter.notifyItemRangeInserted((page - 1) * 30, tempPostList.getPosts().size());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
 
-                private void dismissRefreshView() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isRefreshing)
-                                swipeRefreshLayout.setRefreshing(false);
+                    private void dismissRefreshView() {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isRefreshing)
+                                    swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }, 1000);
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostList> call, Throwable t) {
+                        t.printStackTrace();
+                        try {
+                            if (isAdded()) {
+                                showErrorMessage(getParentActivity().getString(R.string.something_went_wrong));
+                                dismissRefreshView();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }, 1000);
-                }
-
-                @Override
-                public void onFailure(Call<PostList> call, Throwable t) {
-                    t.printStackTrace();
-                    showErrorMessage(getContext().getString(R.string.something_went_wrong));
-                    dismissRefreshView();
-                }
-            });
+                    }
+                });
+        }
     }
 
+    public void scrollToTop() {
+        recyclerView.smoothScrollToPosition(0);
+    }
 
     private void showErrorMessage(String message) {
 //                    dismissProgressBar();

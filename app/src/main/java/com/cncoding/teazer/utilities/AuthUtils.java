@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -48,6 +49,7 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COU
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
@@ -102,12 +104,35 @@ public class AuthUtils {
             if (countryCode != -1)
                 countryCodePicker.setCountryForPhoneCode(countryCode);
             else {
-                countryCodePicker.setCountryForNameCode(Locale.getDefault().getCountry());
+                countryCodePicker.setCountryForNameCode(getUserCountry(fragmentActivity));
                 countryCode = countryCodePicker.getSelectedCountryCodeAsInt();
                 setCountryCode(fragmentActivity.getApplicationContext(), countryCode);
             }
         }
         return countryCode;
+    }
+
+    @NonNull
+    private static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry;
+            if (tm != null) {
+                simCountry = tm.getSimCountryIso();
+                if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                    return simCountry.toLowerCase(Locale.US);
+                } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                    String networkCountry = tm.getNetworkCountryIso();
+                    if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                        return networkCountry.toLowerCase(Locale.US);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "US";
     }
 
     @NonNull
@@ -299,7 +324,11 @@ public class AuthUtils {
                     if (response.body().getStatus()) {
                         if (!isResendAction) {
                             if (mListener != null)
-                                mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, authorize);
+
+                                //fabric event
+                                logLoginEvent("OTP", true, username);
+
+                            mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION, authorize);
                         } else {
                             countDownTimer[0] = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, loginBtn);
                             countDownTimer[0].start();
@@ -320,6 +349,10 @@ public class AuthUtils {
                 loginBtn.setEnabled(true);
                 if (!isResendAction)
                     stopCircularReveal(progressBar);
+
+                //fabric event
+                logLoginEvent("OTP", false, username);
+
             }
         });
     }
@@ -415,7 +448,7 @@ public class AuthUtils {
             try {
                 ErrorBody errorBody = new Gson().fromJson(responseBody.string(), ErrorBody.class);
                 return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again" : errorBody.getReason().get(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "Something went wrong, Please try again";
             }

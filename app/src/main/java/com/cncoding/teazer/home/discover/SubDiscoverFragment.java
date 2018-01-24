@@ -127,9 +127,8 @@ public class SubDiscoverFragment extends BaseFragment {
                 prepareMyInterestsLayout();
                 break;
             case ACTION_VIEW_TRENDING:
-                getParentActivity().updateToolbarTitle(getString(R.string.trending) +
-                        (categories != null && !categories.isEmpty() ?
-                                (" " + categories.get(0).getCategoryName()) + " " : " ") + getString(R.string.videos));
+                getParentActivity().updateToolbarTitle((categories != null && !categories.isEmpty()) ?
+                                (categories.get(0).getCategoryName()):"Trending");
                 prepareTrendingLayout();
                 break;
             default:
@@ -191,7 +190,7 @@ public class SubDiscoverFragment extends BaseFragment {
                 @Override
                 public void run() {
                     getParentActivity().pushFragmentOnto(Interests.newInstance(
-                            false, true, categories, null));
+                            false, true, categories, null, false));
                 }
             }, 1000);
         }
@@ -274,9 +273,7 @@ public class SubDiscoverFragment extends BaseFragment {
                                     postDetailsArrayList.addAll(postList.getPosts());
                                     recyclerView.getAdapter().notifyDataSetChanged();
                                 } else if (page == 1) {
-                                    String noVideosText = getString(R.string.no_videos_tagged) +
-                                            categories.get(0).getCategoryName() +
-                                            getString(R.string.yet_uploaded);
+                                    String noVideosText = getString(R.string.no_videos_tagged);
                                     noPosts.setText(noVideosText);
                                     noPosts.setVisibility(VISIBLE);
                                     noPosts2.setVisibility(VISIBLE);
@@ -347,7 +344,8 @@ public class SubDiscoverFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 //        return super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_edit) {
-            getParentActivity().pushFragmentOnto(Interests.newInstance(false, true, categories, null));
+            getParentActivity().pushFragmentOnto(Interests.newInstance(false, true,
+                    categories, null, false));
             return true;
         }
         return false;

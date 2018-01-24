@@ -33,13 +33,15 @@
         android:visibility="gone"
         android:layout_marginBottom="@dimen/padding_thin"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/action_bar_height"
-        android:layout_below="@+id/interests_header">
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginBottom="@dimen/action_bar_height"-->
+        <!--android:layout_below="@+id/interests_header">-->
 
         <LinearLayout
+            android:layout_marginBottom="@dimen/action_bar_height"
+            android:layout_below="@+id/interests_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -69,9 +71,10 @@
                 android:clipToPadding="false"
                 tools:listItem="@layout/chip"/>
 
+
         </LinearLayout>
 
-    </ScrollView>
+    <!--</ScrollView>-->
 
     <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
         android:id="@+id/save_interests_btn"
@@ -87,5 +90,4 @@
         android:enabled="false"
         android:layout_alignParentBottom="true"
         android:foreground="@drawable/ripple_light_rounded_2dp"/>
-
 </RelativeLayout>

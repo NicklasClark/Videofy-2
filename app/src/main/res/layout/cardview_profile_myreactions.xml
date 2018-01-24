@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/rootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         app:cardElevation="2dp"
-
         android:layout_height="280dp">
         <RelativeLayout
 
@@ -71,10 +71,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginLeft="16dp"
                     android:padding="5dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="14dp"
                     android:layout_marginEnd="@dimen/padding_default"
                     />
                 <TextView
+                    android:layout_centerVertical="true"
                     android:id="@+id/duration"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -107,6 +108,7 @@
 
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/playvideo"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
