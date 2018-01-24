@@ -41,6 +41,7 @@ import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
+import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
@@ -69,10 +70,13 @@ import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteracti
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
@@ -168,8 +172,8 @@ public class BaseBottomBarActivity extends BaseActivity
         FragmentPostDetails.CallProfileFromPostDetails,
 
         TagListAdapter.TaggedListInteractionListener,
-        AudioManager.OnAudioFocusChangeListener,
-        FragmentPostDetails.onPostOptionsClickListener {
+        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener
+{
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
@@ -177,35 +181,21 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int REQUEST_CANCEL_UPLOAD = 45;
     public static final int COACH_MARK_DELAY = 1000;
 
-    @BindArray(R.array.tab_name)
-    String[] TABS;
-    @BindView(R.id.app_bar)
-    AppBarLayout appBar;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.toolbar_center_title)
-    ImageView toolbarCenterTitle;
+    @BindArray(R.array.tab_name) String[] TABS;
+    @BindView(R.id.app_bar) AppBarLayout appBar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
     //    @BindView(R.id.loader) ImageView loader;
-    @BindView(R.id.toolbar_plain_title)
-    ProximaNovaSemiboldTextView toolbarPlainTitle;
-    @BindView(R.id.main_fragment_container)
-    FrameLayout contentFrame;
-    @BindView(R.id.root_layout)
-    NestedCoordinatorLayout rootLayout;
-    @BindView(R.id.blur_view)
-    BlurView blurView;
-    @BindView(R.id.bottom_tab_layout)
-    TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn)
-    ProximaNovaBoldTextView cameraButton;
-    @BindView(R.id.uploadProgressText)
-    ProximaNovaSemiboldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress)
-    ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout)
-    RelativeLayout uploadingStatusLayout;
-    @BindView(R.id.btnToolbarBack)
-    ImageView btnToolbarBack;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
+    @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
+    @BindView(R.id.blur_view) BlurView blurView;
+    @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
+    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.btnToolbarBack) ImageView btnToolbarBack;
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
@@ -232,7 +222,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
@@ -472,7 +461,6 @@ public class BaseBottomBarActivity extends BaseActivity
                     int source_id = notificationBundle.getInt(SOURCE_ID);
                     notificationAction(notification_type, source_id);
                 } else if (profileBundle != null) {
-
                     int userId = profileBundle.getInt("userId");
                     boolean isSelf = profileBundle.getBoolean("isSelf");
                     postDetails = profileBundle.getParcelable("PostDetails");
@@ -759,6 +747,9 @@ public class BaseBottomBarActivity extends BaseActivity
                 btnToolbarBack.setVisibility(VISIBLE);
             } else
                 btnToolbarBack.setVisibility(GONE);
+//            actionBar.setDisplayHomeAsUpEnabled(!navigationController.isRootFragment());
+//            actionBar.setDisplayShowHomeEnabled(!navigationController.isRootFragment());
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
         // toggleBottomBar(navigationController.isRootFragment());
     }
@@ -1003,7 +994,6 @@ public class BaseBottomBarActivity extends BaseActivity
         if (isFollowingTab) {
             pushFragment(FragmentPostDetails.newInstance(postDetails, null, false, false, null, null));
         } else {
-
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
         }
     }
@@ -1051,7 +1041,10 @@ public class BaseBottomBarActivity extends BaseActivity
         fetchPostDetails(this, postDetails.getPostId());
     }
 
-
+    @Override
+    public void ReactionPost(int postId) {
+        fetchPostDetails(this, postId);
+    }
     //</editor-fold>
 
     //<editor-fold desc="Video upload handler">
@@ -1130,22 +1123,28 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
-        pushFragment(isSelf ? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+        pushFragment(isSelf ? ProfileFragment.newInstance() : OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
     public void popFragment() {
         navigationController.popFragment();
     }
 
-    @Override
-    public void onPostLikedClicked(PostDetails postDetails) {
-        pushFragment(FragmentLikedUser.newInstance(postDetails));
-    }
+//    @Override
+//    public void onPostLikedClicked(PostDetails postDetails) {
+//        pushFragment(FragmentLikedUser.newInstance(postDetails));
+//    }
 
     @OnClick(R.id.btnToolbarBack)
     public void onViewClicked() {
         onBackPressed();
+    }
+
+    @Override
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
+
+        pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+
     }
 
     @SuppressWarnings("unused")
@@ -1267,6 +1266,5 @@ public class BaseBottomBarActivity extends BaseActivity
                 }
             }
         }
-
     }
 }

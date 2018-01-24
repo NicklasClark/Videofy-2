@@ -99,7 +99,8 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         } else holder.category.setVisibility(View.GONE);
 
         /*Setting name*/
-        String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+       // String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+        String name = holder.postDetails.getPostOwner().getUserName();
         holder.name.setText(name);
 
         /*Setting likes*/

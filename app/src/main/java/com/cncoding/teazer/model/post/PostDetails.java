@@ -8,6 +8,8 @@ import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -16,7 +18,14 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class PostDetails implements Parcelable {
+public class PostDetails implements Parcelable
+{
+    @SerializedName("is_hided")
+    @Expose
+    private Boolean isHided;
+    @SerializedName("is_hided_all")
+    @Expose
+    private Boolean isHidedAll;
     private int post_id;
     private int posted_by;
     public int likes;
@@ -27,6 +36,7 @@ public class PostDetails implements Parcelable {
     public boolean can_react;
     public boolean can_like;
     private boolean can_delete;
+
     private MiniProfile post_owner;
     private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
     public CheckIn check_in;
@@ -38,7 +48,7 @@ public class PostDetails implements Parcelable {
     public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags, boolean has_checkin,
                        String title, boolean can_react, boolean can_like, boolean can_delete, MiniProfile post_owner,
                        String created_at, CheckIn check_in, ArrayList<Medias> medias, ArrayList<TaggedUser> tagged_users,
-                       ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories) {
+                       ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories,Boolean isHided, Boolean isHidedAll) {
         this.post_id = post_id;
         this.posted_by = posted_by;
         this.likes = likes;
@@ -56,9 +66,16 @@ public class PostDetails implements Parcelable {
         this.tagged_users = tagged_users;
         this.reacted_users = reacted_users;
         this.categories = categories;
+        this.isHided = isHided;
+        this.isHidedAll = isHidedAll;
     }
 
+
     protected PostDetails(Parcel in) {
+        byte tmpIsHided = in.readByte();
+        isHided = tmpIsHided == 0 ? null : tmpIsHided == 1;
+        byte tmpIsHidedAll = in.readByte();
+        isHidedAll = tmpIsHidedAll == 0 ? null : tmpIsHidedAll == 1;
         post_id = in.readInt();
         posted_by = in.readInt();
         likes = in.readInt();
@@ -80,6 +97,8 @@ public class PostDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (isHided == null ? 0 : isHided ? 1 : 2));
+        dest.writeByte((byte) (isHidedAll == null ? 0 : isHidedAll ? 1 : 2));
         dest.writeInt(post_id);
         dest.writeInt(posted_by);
         dest.writeInt(likes);
@@ -115,6 +134,14 @@ public class PostDetails implements Parcelable {
             return new PostDetails[size];
         }
     };
+
+    public Boolean getHided() {
+        return isHided;
+    }
+
+    public Boolean getHidedAll() {
+        return isHidedAll;
+    }
 
     public int getPostId() {
         return post_id;

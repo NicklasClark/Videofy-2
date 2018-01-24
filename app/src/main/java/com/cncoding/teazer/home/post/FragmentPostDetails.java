@@ -411,6 +411,8 @@ public class FragmentPostDetails extends BaseFragment implements
                     .asBitmap()
                     .into(placeholder);
         else
+
+
             Glide.with(this)
                     .load(thumbUrl)
                     .into(placeholder);
@@ -723,7 +725,6 @@ public class FragmentPostDetails extends BaseFragment implements
 
         }
     }
-
     private void dismissProgressBar() {
         loadingProgressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
         new Handler().postDelayed(new Runnable() {
@@ -735,13 +736,14 @@ public class FragmentPostDetails extends BaseFragment implements
     }
 
     public void incrementLikes() {
-        String likesText = FragmentPostDetails.SPACE + ++likes;
+        likes=likes+1;
+        String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
     }
 
     public void decrementLikes() {
-        likes -= likes;
-        if (likes < 0) likes = 0;
+        likes =likes-1;
+        if (likes < 0) {likes = 0;}
         String likesText = FragmentPostDetails.SPACE + likes;
         likesView.setText(likesText);
     }
@@ -1011,11 +1013,11 @@ public class FragmentPostDetails extends BaseFragment implements
         } else {
             likeBtn.setChecked(false);
             likeBtn.setText(R.string.like);
-            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_outline_dark, 0, 0);
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_likebig, 0, 0);
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes -= 1;
-                    if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
+                   if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
                     PostsListFragment.postDetails.can_like = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));

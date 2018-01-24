@@ -22,6 +22,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
 
 import java.util.List;
@@ -43,12 +44,13 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
     private List<Reactions> list;
     private Context context;
+    ReactionPlayerListener reactionPlayerListener;
     private boolean isPostClicked = false;
-
 
     public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
         this.context = context;
         this.list = list;
+        reactionPlayerListener=( ReactionPlayerListener)context;
     }
     @Override
     public ProfileMyReactionAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -86,10 +88,8 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isPostClicked) {
-                    isPostClicked = true;
-                    playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
-                }
+             //   playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                reactionPlayerListener.reactionPlayer(1,null,cont);
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
@@ -191,5 +191,11 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             cardView = view.findViewById(R.id.cardview);
             rootLayout = view.findViewById(R.id.rootLayout);
         }
+    }
+
+    public interface ReactionPlayerListener
+    {
+        public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction);
+
     }
 }

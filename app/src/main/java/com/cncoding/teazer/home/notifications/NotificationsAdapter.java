@@ -115,6 +115,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (viewHolder.getItemViewType()) {
             case TYPE_FOLLOWING:
+
                 final FollowingViewHolder holder1 = (FollowingViewHolder) viewHolder;
                 holder1.notification = notificationsList.getNotifications().get(position);
 
@@ -180,7 +181,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                            } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
+                            }
+                            else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
                                     holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
                                     holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
 
@@ -190,9 +192,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
+                                                {
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
                                                             -1, null);
+
+                                                }
+
+
                                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
+
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
