@@ -41,6 +41,7 @@ import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
+import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
@@ -69,10 +70,13 @@ import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteracti
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
@@ -168,7 +172,7 @@ public class BaseBottomBarActivity extends BaseActivity
         FragmentPostDetails.CallProfileFromPostDetails,
 
         TagListAdapter.TaggedListInteractionListener,
-        AudioManager.OnAudioFocusChangeListener
+        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener
 {
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -981,6 +985,9 @@ public class BaseBottomBarActivity extends BaseActivity
                                            int profileId, String userType) {
         if (isFollowingTab) {
             pushFragment(FragmentPostDetails.newInstance( postDetails, null, false, false, null, null));
+
+
+
         } else {
 
             pushFragment(OthersProfileFragment.newInstance(String.valueOf(profileId), userType, "name"));
@@ -1028,6 +1035,12 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void myCreationVideos(int i, PostDetails postDetails) {
         fetchPostDetails(this, postDetails.getPostId());
+    }
+
+    @Override
+    public void ReactionPost(int postId) {
+
+        fetchPostDetails(this, postId);
     }
 
 
@@ -1106,12 +1119,20 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
-       pushFragment (isSelf? ProfileFragment.newInstance() :
-                OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
+        pushFragment (isSelf? ProfileFragment.newInstance() : OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
     }
 
-    public void popFragment() {
+    public void popFragment()
+    {
+
         navigationController.popFragment();
+    }
+
+    @Override
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
+
+        pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+
     }
 
     @SuppressWarnings("unused")

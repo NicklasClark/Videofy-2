@@ -238,10 +238,12 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                             mListener.onNearbyPlacesAdapterInteraction(new SelectedPlace(placeName, latitude, longitude));
 //                            else
 //                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
-//                                        Toast.LENGTH_SHORT).show();
+//
+//                                  Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
+
             case TYPE_AUTOCOMPLETE:
                 holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
                         0, 0, 0);

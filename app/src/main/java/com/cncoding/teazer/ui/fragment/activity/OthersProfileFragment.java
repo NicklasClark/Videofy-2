@@ -68,7 +68,7 @@ import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+//910
 public class OthersProfileFragment extends BaseFragment {
 
     private static final String ARG_ID = "UserID";
@@ -114,7 +114,7 @@ public class OthersProfileFragment extends BaseFragment {
     GifTextView loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
-
+//893
     Context context;
     ProfileInfo profileInfo;
     public static final int PRIVATE_ACCOUNT = 1;
@@ -130,7 +130,7 @@ public class OthersProfileFragment extends BaseFragment {
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     private static final int UNBLOCK_STATUS = 2;
-
+//
     int accountType;
     boolean requestRecieved;
     String status;
@@ -139,7 +139,7 @@ public class OthersProfileFragment extends BaseFragment {
     boolean isfollower;
     boolean isfollowing;
     boolean youBlocked;
-    boolean isHideAllPost;
+    Boolean isHideAllPost;
 
     String firstName;
     private String userProfileThumbnail;
@@ -156,6 +156,7 @@ public class OthersProfileFragment extends BaseFragment {
     boolean next;
 
 
+//2028
     public static OthersProfileFragment newInstance(String id, String identifier, String username) {
         OthersProfileFragment othersProfileFragment = new OthersProfileFragment();
 
@@ -747,8 +748,15 @@ public class OthersProfileFragment extends BaseFragment {
                 openReportUser(followerfollowingid);
                 break;
             case R.id.action_profile_block:
-                //openBlockUser(followerfollowingid);
-                blockUnblockUsers(followerfollowingid, BLOCK_STATUS);
+                if(youBlocked) {
+                    blockUnblockUsers(followerfollowingid, UNBLOCK_STATUS);
+                    youBlocked=false;
+                }
+                else
+                {
+                    blockunBlock(followerfollowingid, BLOCK_STATUS);
+                    youBlocked=true;
+                }
                 break;
             case android.R.id.home:
                 FragmentManager fm = getChildFragmentManager();
@@ -779,10 +787,10 @@ public class OthersProfileFragment extends BaseFragment {
                             layoutDetail3.setVisibility(View.VISIBLE);
                             layoutDetail.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.GONE);
+
                         } else {
 
                             next = response.body().isNextPage();
-
                             followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
                             _recycler_view.setAdapter(followerCreationAdapter);
 

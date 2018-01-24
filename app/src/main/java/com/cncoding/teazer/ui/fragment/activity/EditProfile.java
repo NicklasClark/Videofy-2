@@ -235,12 +235,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 female.setBackgroundResource(R.drawable.ic_female_white);
                 maletext.setTextColor(Color.parseColor("#2196F3"));
                 femaletxt.setTextColor(Color.parseColor("#333333"));
+                if(userProfileUrl==null) {
+                    Glide.with(context)
+                            .load(R.drawable.ic_user_male_dp)
+                            .into(profile_image);
 
-                Glide.with(context)
-                        .load(R.drawable.ic_user_male_dp)
-                        .into(profile_image);
-
-
+                }
                 gender = 1;
             }
         });
@@ -251,11 +251,13 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 male.setBackgroundResource(R.drawable.ic_male_white);
                 femaletxt.setTextColor(Color.parseColor("#F48fb1"));
                 maletext.setTextColor(Color.parseColor("#333333"));
-                Glide.with(context)
-                        .load(R.drawable.ic_user_female_dp)
-                        .into(profile_image);
-                gender = 2;
-            }
+              if(userProfileUrl==null) {
+                  Glide.with(context)
+                          .load(R.drawable.ic_user_female_dp)
+                          .into(profile_image);
+
+              }
+                gender = 2;}
         });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -331,7 +333,10 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), bte);
                     MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                     saveDataToDatabase(body);
-                }catch (Exception e)
+
+
+                }
+                catch (Exception e)
                 {
                     e.printStackTrace();
                 }
@@ -383,8 +388,12 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 MultipartBody.Part body = MultipartBody.Part.createFormData("media", "profile_image.jpg", reqFile);
                 saveDataToDatabase(body);
 
+
+
             } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+
             }
         } else {
             Toast.makeText(this, "oops something went wrong, please try again", Toast.LENGTH_LONG).show();
@@ -581,7 +590,6 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
 
     public void saveDataToDatabase(MultipartBody.Part body) {
         simpleProgressBar.setVisibility(View.VISIBLE);
-        // layoutdetail.setVisibility(View.GONE);
         profile_image.setClickable(false);
 
         ApiCallingService.User.updateUserProfileMedia(body, context).enqueue(new Callback<ResultObject>() {
@@ -590,13 +598,15 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 try {
 
                     simpleProgressBar.setVisibility(View.GONE);
-                    //layoutdetail.setVisibility(View.VISIBLE);
                     profile_image.setClickable(true);
                     if (response.code() == 400) {
+
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -604,6 +614,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             public void onFailure(Call<ResultObject> call, Throwable t) {
                 simpleProgressBar.setVisibility(View.GONE);
                 layoutdetail.setVisibility(View.VISIBLE);
+                Toast.makeText(context,"Profile pic uploading failed, please try again",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });

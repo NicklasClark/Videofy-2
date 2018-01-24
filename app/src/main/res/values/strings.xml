@@ -132,7 +132,7 @@
     <string name="share">Share</string>
     <string name="hide">Hide</string>
     <string name="delete">Delete</string>
-    <string name="block">Block</string>
+    <string name="block">Block/Unblock</string>
     <string name="report">Report</string>
     <string name="title_activity_tab2">Tab2Activity</string>
     <string name="tab_text_1">Tab 1</string>
@@ -354,4 +354,6 @@
     <string name="my_profile">My Profile</string>
     <string name="coach_mark_post_details_body">React on Videos via videos of your own or record a video instantly.</string>
     <string name="coach_mark_my_interests_body">Discover the videos based on the interests you have selected.</string>
+    <string name="upload_title">Enter Title of video (max 180 words).</string>
+    <string name="error_msg">Title is mandatory</string>
 </resources>

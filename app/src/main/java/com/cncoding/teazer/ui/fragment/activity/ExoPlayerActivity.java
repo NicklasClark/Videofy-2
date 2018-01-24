@@ -178,6 +178,8 @@ public class ExoPlayerActivity extends AppCompatActivity{
         super.onStop();
         if (Util.SDK_INT > 23) {
             releasePlayer();
+
+
         }
         releaseAudioLock(this, audioFocusChangeListener);
         mHandler.removeCallbacks(mDelayedStopRunnable);

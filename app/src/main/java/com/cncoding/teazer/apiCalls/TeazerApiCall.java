@@ -620,7 +620,6 @@ import retrofit2.http.Query;
          * */
         @GET("api/v1/post/video/details/{post_id}")
         Call<PostDetails> getPostDetails(@Path("post_id") int postId);
-
         /**
          * Call this service to get the tagged users of post.
          * @return 200 : If “nextPage” is true some more records present so you can call again with increase the page count by 1,

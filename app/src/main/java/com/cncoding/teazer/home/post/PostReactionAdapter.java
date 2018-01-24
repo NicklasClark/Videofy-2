@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
@@ -39,10 +41,12 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     private SparseArray<Dimension> dimensionSparseArray;
     private ArrayList<PostReaction> postReactions;
     private Context context;
+    ProfileMyReactionAdapter.ReactionPlayerListener reactionPlayerListener;
 
     PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
         this.postReactions = postReactions;
         this.context = context;
+        reactionPlayerListener=(ProfileMyReactionAdapter.ReactionPlayerListener)context;
         dimensionSparseArray = new SparseArray<>();
     }
 
@@ -97,6 +101,16 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        holder.profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(context,"profile",Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
         holder.caption.setText(title);
         String nameText = postOwner.getFirstName() + " " + postOwner.getLastName();
         holder.name.setText(nameText);
@@ -133,7 +147,9 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.root_layout:
-                        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                    //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                        reactionPlayerListener.reactionPlayer(0,postReaction,null);
+
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         //region TODO

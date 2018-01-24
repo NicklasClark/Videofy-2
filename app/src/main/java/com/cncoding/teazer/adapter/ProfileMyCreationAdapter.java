@@ -119,7 +119,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
             } else if (reactions > 3)
                 getPostReactionFour(viewHolder, postId, reactions);
-            else {
+            else
+                {
                 viewHolder.reactions.setText(String.valueOf(reactions) + " R");
                 viewHolder.reactions.setVisibility(View.GONE);
                 getPostReactionThree(viewHolder, postId, reactions);
@@ -467,6 +468,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     public interface myCreationListener {
 
         public void myCreationVideos(int i, PostDetails postDetails);
+        public void ReactionPost(int postId);
     }
 
     public interface OnChildFragmentUpdateVideos {

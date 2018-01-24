@@ -197,6 +197,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public EditPostFragment() {
     }
+
     public static EditPostFragment newInstance(PostDetails postDetails) {
         EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();
