@@ -394,12 +394,22 @@ public class CameraFragment extends Fragment {
 
     @OnClick(R.id.camera_record) public void toggleRecording() {
         if (mIsRecordingVideo) {
-            if (updatedTime > 5000) {
-                stopRecordButtonAnimations();
-                stopRecordingVideo();
-            }
-            else {
-                Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+            if (isReaction) {
+                if (updatedTime > 3000) {
+                    stopRecordButtonAnimations();
+                    stopRecordingVideo();
+                }
+                else {
+                    Toast.makeText(context,"Video can not be less than 3 seconds",Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (updatedTime > 5000) {
+                    stopRecordButtonAnimations();
+                    stopRecordingVideo();
+                }
+                else {
+                    Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             animateRecordButton(activity);

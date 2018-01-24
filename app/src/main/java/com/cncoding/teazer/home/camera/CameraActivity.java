@@ -334,8 +334,10 @@ public class CameraActivity extends AppCompatActivity
 //                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                compressVideoAsyncTask.delegate = this;
 //                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false, (int) getVideoDuration(videoPath));
-                startVideoUploadFragment();
+
+                getVideoDurationAndUpload(uploadParams.getVideoPath(), isReaction, false);
+//                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false, (int) getVideoDuration(videoPath));
+//                startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
                 slidingUpPanelLayout.setPanelState(ANCHORED);
@@ -380,18 +382,30 @@ public class CameraActivity extends AppCompatActivity
                 if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
                     long  videoDuration= getVideoDuration(videoPath);
                     if (videoDuration < 60) {
-
-                        if (videoDuration >= 5) {
-                            uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int)videoDuration);
-                            startVideoUploadFragment();
-                        } else {
-                            Toast.makeText(this, "Select at least 5 seconds video", Toast.LENGTH_SHORT).show();
-
+                        if(isReaction) {
+                            if (videoDuration >= 3) {
+                                getVideoDurationAndUpload(videoPath, true, true);
+//                                uploadFragment = UploadFragment.newInstance(videoPath, true, true, (int) videoDuration);
+//                                startVideoUploadFragment();
+                            } else {
+                                Toast.makeText(this, "Reactions can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else
+                        {
+                            if (videoDuration >= 5) {
+                                getVideoDurationAndUpload(videoPath, false, true);
+//                                uploadFragment = UploadFragment.newInstance(videoPath, false, true, (int) videoDuration);
+//                                startVideoUploadFragment();
+                            } else {
+                                Toast.makeText(this, "Posts can not be less than 5 seconds", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putString("path", videoPath);
                         bundle.putInt("MAX_DURATION", (int) getVideoDuration(videoPath));
+                        bundle.putBoolean("IS_REACTION", isReaction);
                         Intent intent = new Intent(this, TrimmerActivity.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, VIDEO_TRIM_REQUEST_CODE);
@@ -400,7 +414,6 @@ public class CameraActivity extends AppCompatActivity
                 else
                 {
                     Toast.makeText(this, "This video format is not supported", Toast.LENGTH_SHORT).show();
-
                 }
             } else
                 Toast.makeText(this, "Error opening this file", Toast.LENGTH_SHORT).show();
@@ -428,6 +441,19 @@ public class CameraActivity extends AppCompatActivity
         retriever.setDataSource(videoFile);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long timeInSec = Long.parseLong(time)/1000;
+
+        retriever.release();
+        return timeInSec;
+    }
+
+    private long getVideoDurationAndUpload(String videoFile, boolean isReaction, boolean isGallery) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(videoFile);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInSec = Long.parseLong(time)/1000;
+
+        uploadFragment = UploadFragment.newInstance(videoFile, isReaction, isGallery, (int) timeInSec);
+        startVideoUploadFragment();
 
         retriever.release();
         return timeInSec;
@@ -749,13 +775,14 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int) getVideoDuration(videoPath));
+                    getVideoDurationAndUpload(videoPath, isReaction, true);
+//                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int) getVideoDuration(videoPath));
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;
 //                    compressVideoAsyncTask.execute(videoPath);
 
-                    startVideoUploadFragment();
+//                    startVideoUploadFragment();
                 }
                 break;
             default:

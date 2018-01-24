@@ -382,11 +382,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 .load(Uri.fromFile(new File(videoPath)))
                 .into(thumbnailView);
 
-//        new SetVideoDuration(this).execute();
-        String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
-                MILLISECONDS.toMinutes(videoDuration*1000),
-                MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
-        videoDurationTextView.setText(durationText);
+        if (videoDuration > 0) {
+            String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
+                    MILLISECONDS.toMinutes(videoDuration*1000),
+                    MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
+            videoDurationTextView.setText(durationText);
+        } else {
+            new SetVideoDuration(this).execute();
+        }
 
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_white);
