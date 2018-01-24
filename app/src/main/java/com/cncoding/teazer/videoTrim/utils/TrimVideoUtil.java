@@ -100,8 +100,8 @@ public class TrimVideoUtil {
 
     private static String getSavePath(Context context) {
         choseSavePath();
-        copyFilesFassets(context, "Ress", savePath);
-        return savePath;
+//        copyFilesFassets(context, "Ress", savePath);
+        return savePath+"/";
     }
     private static void choseSavePath() {
         savePath = Environment.getExternalStorageDirectory().getPath() + "/teazerTrim/";

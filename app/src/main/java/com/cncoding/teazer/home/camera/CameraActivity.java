@@ -78,7 +78,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -342,7 +341,7 @@ public class CameraActivity extends AppCompatActivity
 //                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                compressVideoAsyncTask.delegate = this;
 //                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
-                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
+                uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false, (int) getVideoDuration(videoPath));
                 startVideoUploadFragment();
                 break;
             case ACTION_SHOW_GALLERY:
@@ -384,7 +383,7 @@ public class CameraActivity extends AppCompatActivity
                     //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
                     //                    compressVideoAsyncTask.delegate = this;
                     //                    compressVideoAsyncTask.execute(videoPath);
-                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true, (int)getVideoDuration(videoPath));
                     startVideoUploadFragment();
                 }
                 else {
@@ -722,7 +721,7 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, false, true, (int) getVideoDuration(videoPath));
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;

@@ -131,6 +131,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final int RC_LOCATION_PERM = 123;
     public static final int VIDEO_UPLOAD = 25;
     public static final int REACTION_UPLOAD = 26;
+    private static final String VIDEO_DURATION = "video_duration";
 
     @BindView(R.id.share_on_facebook)
     ProximaNovaRegularCheckedTextView facebookShareBtn;
@@ -196,17 +197,19 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean convertToGif = false;
     private boolean convertingToGif = false;
     private String gifPath;
+    private int videoDuration;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery, int videoDuration) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
+        args.putInt(VIDEO_DURATION, videoDuration);
         fragment.setArguments(args);
         //CameraActivity.checkFromGallery=false;
         return fragment;
@@ -223,6 +226,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
             isGallery = bundle.getBoolean(IS_GALLERY);
+            videoDuration = bundle.getInt(VIDEO_DURATION);
         }
 
 //        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
@@ -326,23 +330,31 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 convertToGif = isChecked;
 
                 if (convertToGif) {
-                    thumbnailView.setClickable(false);
-                    thumbnailProgressBar.setVisibility(VISIBLE);
-                    playBtn.setVisibility(View.GONE);
-                    disableView(uploadBtn, true);
-                    convertingToGif = true;
+                    if(videoDuration < 60) {
+                        thumbnailView.setClickable(false);
+                        playBtn.setVisibility(View.GONE);
+                        disableView(uploadBtn, true);
+                        convertingToGif = true;
 
-                    if(null == gifPath) {
-                        GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getContext());
-                        gifConvertAsyncTask.delegate = UploadFragment.this;
-                        gifConvertAsyncTask.execute(videoPath);
+                        if (null == gifPath) {
+                            thumbnailProgressBar.setVisibility(VISIBLE);
+                            GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getContext());
+                            gifConvertAsyncTask.delegate = UploadFragment.this;
+                            gifConvertAsyncTask.execute(videoPath);
+                        } else {
+                            Glide.with(context)
+                                    .load(gifPath)
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(thumbnailView);
+                            thumbnailProgressBar.setVisibility(View.GONE);
+
+                            enableView(uploadBtn);
+                            convertingToGif = false;
+                        }
                     }
-                    else
-                    {
-                        Glide.with(context)
-                                .load(gifPath)
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .into(thumbnailView);
+                    else {
+                        Toast.makeText(context, "Duration can not be greater than 8 seconds", Toast.LENGTH_SHORT).show();
+                        gifSwitch.setChecked(false);
                     }
                 }
                 else {
@@ -371,7 +383,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         new GetThumbnail(this).execute();
 
-        new SetVideoDuration(this).execute();
+//        new SetVideoDuration(this).execute();
+        String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
+                MILLISECONDS.toMinutes(videoDuration*1000),
+                MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
+        videoDurationTextView.setText(durationText);
 
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_white);

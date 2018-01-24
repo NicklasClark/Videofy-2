@@ -85,8 +85,8 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         /*Setting reactions*/
                 holder.reactions.setVisibility(holder.postDetails.getTotalReactions() == 0 ? View.GONE : View.VISIBLE);
                 String reactionText = "";
-                if (holder.postDetails.getTotalReactions() > 4)
-                    reactionText = "+" + String.valueOf(holder.postDetails.getTotalReactions() - 3) + " R";
+                if (holder.postDetails.getTotalReactions() > 2)
+                    reactionText = "+" + String.valueOf(holder.postDetails.getTotalReactions() - 2) + " R";
 //            else
 //                reactionText = String.valueOf(holder.postDetails.getTotalReactions()) + " R";
                 holder.reactions.setText(reactionText);

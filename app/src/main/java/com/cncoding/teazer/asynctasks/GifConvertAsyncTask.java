@@ -42,7 +42,7 @@ public class GifConvertAsyncTask extends AsyncTask<String, Void, String> {
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         final String destinationDir = dirPath + "/teazer_" + timeStamp + ".gif";
-        String cmd = "-i " + sourceFile.getAbsolutePath() + " -r 10 -vf scale=160:90 " + destinationDir +" -hide_banner";
+        String cmd = "-i " + sourceFile.getAbsolutePath() + " -preset ultrafast " + destinationDir +" -hide_banner";
 
         EpEditor epEditor =  new EpEditor(context);
         epEditor.execCmd(cmd, 0, new OnEditorListener(){
