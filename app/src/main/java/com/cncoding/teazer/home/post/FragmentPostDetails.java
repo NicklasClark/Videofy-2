@@ -1005,7 +1005,7 @@ public class FragmentPostDetails extends BaseFragment implements
             if (animate) {
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes += 1;
-                    PostsListFragment.postDetails.can_like = false;
+                    PostsListFragment.postDetails.canLike = false;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 incrementLikes();
@@ -1018,7 +1018,7 @@ public class FragmentPostDetails extends BaseFragment implements
                 if (PostsListFragment.postDetails != null) {
                     PostsListFragment.postDetails.likes -= 1;
                    if (PostsListFragment.postDetails.likes < 0) PostsListFragment.postDetails.likes = 0;
-                    PostsListFragment.postDetails.can_like = true;
+                    PostsListFragment.postDetails.canLike = true;
                 }
                 likeBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.selected));
                 decrementLikes();
@@ -1468,7 +1468,7 @@ public class FragmentPostDetails extends BaseFragment implements
 
                                 disableView(reactBtn, true);
                                 if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.can_react = false;
+                                    PostsListFragment.postDetails.canReact = false;
 
                                 finishReactionUploadSession(context);
                                 getPostReactions(postDetails.getPostId(), 1);
@@ -1485,7 +1485,7 @@ public class FragmentPostDetails extends BaseFragment implements
 
                                 enableView(reactBtn);
                                 if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.can_react = true;
+                                    PostsListFragment.postDetails.canReact = true;
 
                                 finishReactionUploadSession(context);
                                 break;
@@ -1505,7 +1505,7 @@ public class FragmentPostDetails extends BaseFragment implements
             finishReactionUploadSession(context);
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
-                PostsListFragment.postDetails.can_react = false;
+                PostsListFragment.postDetails.canReact = false;
             launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
         }
     }

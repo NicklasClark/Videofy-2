@@ -8,6 +8,7 @@ import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,103 +19,104 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class PostDetails implements Parcelable
-{
-    @SerializedName("is_hided")
-    @Expose
-    private Boolean isHided;
-    @SerializedName("is_hided_all")
-    @Expose
-    private Boolean isHidedAll;
-    private int post_id;
-    private int posted_by;
-    public int likes;
-    public int total_reactions;
-    public int total_tags;
-    public boolean has_checkin;
-    public String title;
-    public boolean can_react;
-    public boolean can_like;
-    private boolean can_delete;
+public class PostDetails implements Parcelable {
 
-    private MiniProfile post_owner;
-    private String created_at;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
-    public CheckIn check_in;
-    public ArrayList<Medias> medias;
-    private ArrayList<TaggedUser> tagged_users;
-    private ArrayList<ReactedUser> reacted_users;
-    private ArrayList<Category> categories;
-
-    public PostDetails(int post_id, int posted_by, int likes, int total_reactions, int total_tags, boolean has_checkin,
-                       String title, boolean can_react, boolean can_like, boolean can_delete, MiniProfile post_owner,
-                       String created_at, CheckIn check_in, ArrayList<Medias> medias, ArrayList<TaggedUser> tagged_users,
-                       ArrayList<ReactedUser> reacted_users, ArrayList<Category> categories,Boolean isHided, Boolean isHidedAll) {
-        this.post_id = post_id;
-        this.posted_by = posted_by;
-        this.likes = likes;
-        this.total_reactions = total_reactions;
-        this.total_tags = total_tags;
-        this.has_checkin = has_checkin;
-        this.title = title;
-        this.can_react = can_react;
-        this.can_like = can_like;
-        this.can_delete = can_delete;
-        this.post_owner = post_owner;
-        this.created_at = created_at;
-        this.check_in = check_in;
-        this.medias = medias;
-        this.tagged_users = tagged_users;
-        this.reacted_users = reacted_users;
-        this.categories = categories;
-        this.isHided = isHided;
-        this.isHidedAll = isHidedAll;
-    }
-
+    @SerializedName("post_id") @Expose private Integer postId;
+    @SerializedName("posted_by") @Expose private Integer postedBy;
+    @SerializedName("likes") @Expose public Integer likes;
+    @SerializedName("total_reactions") @Expose public Integer totalReactions;
+    @SerializedName("total_tags") @Expose public Integer totalTags;
+    @SerializedName("has_checkin") @Expose public Boolean hasCheckin;
+    @SerializedName("title") @Expose public String title;
+    @SerializedName("can_react") @Expose public Boolean canReact;
+    @SerializedName("can_like") @Expose public Boolean canLike;
+    @SerializedName("can_delete") @Expose private Boolean canDelete;
+    @SerializedName("is_hided") @Expose private Boolean isHided;
+    @SerializedName("is_hided_all") @Expose private Boolean isHidedAll;
+    @SerializedName("post_owner") @Expose private MiniProfile post_owner;
+    @SerializedName("created_at") @Expose private String createdAt;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
+    @SerializedName("is_hided_all") @Expose public CheckIn checkIn;
+    @SerializedName("check_in") @Expose public ArrayList<Medias> medias;
+    @SerializedName("reactions") @Expose private ArrayList<ReactionDetails> reactions;
+    @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
+    @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
+    @SerializedName("categories") @Expose private ArrayList<Category> categories;
 
     protected PostDetails(Parcel in) {
+        postId = in.readByte() == 0 ? null : in.readInt();
+        postedBy = in.readByte() == 0 ? null : in.readInt();
+        likes = in.readByte() == 0 ? null : in.readInt();
+        totalReactions = in.readByte() == 0 ? null : in.readInt();
+        totalTags = in.readByte() == 0 ? null : in.readInt();
+        byte tmpHasCheckin = in.readByte();
+        hasCheckin = tmpHasCheckin == 0 ? null : tmpHasCheckin == 1;
+        title = in.readString();
+        byte tmpCanReact = in.readByte();
+        canReact = tmpCanReact == 0 ? null : tmpCanReact == 1;
+        byte tmpCanLike = in.readByte();
+        canLike = tmpCanLike == 0 ? null : tmpCanLike == 1;
+        byte tmpCanDelete = in.readByte();
+        canDelete = tmpCanDelete == 0 ? null : tmpCanDelete == 1;
         byte tmpIsHided = in.readByte();
         isHided = tmpIsHided == 0 ? null : tmpIsHided == 1;
         byte tmpIsHidedAll = in.readByte();
         isHidedAll = tmpIsHidedAll == 0 ? null : tmpIsHidedAll == 1;
-        post_id = in.readInt();
-        posted_by = in.readInt();
-        likes = in.readInt();
-        total_reactions = in.readInt();
-        total_tags = in.readInt();
-        has_checkin = in.readByte() != 0;
-        title = in.readString();
-        can_react = in.readByte() != 0;
-        can_like = in.readByte() != 0;
-        can_delete = in.readByte() != 0;
         post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-        created_at = in.readString();
-        check_in = in.readParcelable(CheckIn.class.getClassLoader());
+        createdAt = in.readString();
+        checkIn = in.readParcelable(CheckIn.class.getClassLoader());
         medias = in.createTypedArrayList(Medias.CREATOR);
-        tagged_users = in.createTypedArrayList(TaggedUser.CREATOR);
-        reacted_users = in.createTypedArrayList(ReactedUser.CREATOR);
+        reactions = in.createTypedArrayList(ReactionDetails.CREATOR);
+        taggedUsers = in.createTypedArrayList(TaggedUser.CREATOR);
+        reactedUsers = in.createTypedArrayList(ReactedUser.CREATOR);
         categories = in.createTypedArrayList(Category.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        if (postId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(postId);
+        }
+        if (postedBy == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(postedBy);
+        }
+        if (likes == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(likes);
+        }
+        if (totalReactions == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalReactions);
+        }
+        if (totalTags == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalTags);
+        }
+        dest.writeByte((byte) (hasCheckin == null ? 0 : hasCheckin ? 1 : 2));
+        dest.writeString(title);
+        dest.writeByte((byte) (canReact == null ? 0 : canReact ? 1 : 2));
+        dest.writeByte((byte) (canLike == null ? 0 : canLike ? 1 : 2));
+        dest.writeByte((byte) (canDelete == null ? 0 : canDelete ? 1 : 2));
         dest.writeByte((byte) (isHided == null ? 0 : isHided ? 1 : 2));
         dest.writeByte((byte) (isHidedAll == null ? 0 : isHidedAll ? 1 : 2));
-        dest.writeInt(post_id);
-        dest.writeInt(posted_by);
-        dest.writeInt(likes);
-        dest.writeInt(total_reactions);
-        dest.writeInt(total_tags);
-        dest.writeByte((byte) (has_checkin ? 1 : 0));
-        dest.writeString(title);
-        dest.writeByte((byte) (can_react ? 1 : 0));
-        dest.writeByte((byte) (can_like ? 1 : 0));
-        dest.writeByte((byte) (can_delete ? 1 : 0));
         dest.writeParcelable(post_owner, flags);
-        dest.writeString(created_at);
-        dest.writeParcelable(check_in, flags);
+        dest.writeString(createdAt);
+        dest.writeParcelable(checkIn, flags);
         dest.writeTypedList(medias);
-        dest.writeTypedList(tagged_users);
-        dest.writeTypedList(reacted_users);
+        dest.writeTypedList(reactions);
+        dest.writeTypedList(taggedUsers);
+        dest.writeTypedList(reactedUsers);
         dest.writeTypedList(categories);
     }
 
@@ -143,44 +145,44 @@ public class PostDetails implements Parcelable
         return isHidedAll;
     }
 
-    public int getPostId() {
-        return post_id;
+    public Integer getPostId() {
+        return postId;
     }
 
-    public int getPostedBy() {
-        return posted_by;
+    public Integer getPostedBy() {
+        return postedBy;
     }
 
-    public int getLikes() {
+    public Integer getLikes() {
         return likes;
     }
 
-    public int getTotalReactions() {
-        return total_reactions;
+    public Integer getTotalReactions() {
+        return totalReactions;
     }
 
-    public int getTotalTags() {
-        return total_tags;
+    public Integer getTotalTags() {
+        return totalTags;
     }
 
-    public boolean hasCheckin() {
-        return has_checkin;
+    public Boolean hasCheckin() {
+        return hasCheckin;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public boolean canReact() {
-        return can_react;
+    public Boolean canReact() {
+        return canReact;
     }
 
-    public boolean canLike() {
-        return can_like;
+    public Boolean canLike() {
+        return canLike;
     }
 
-    public boolean canDelete() {
-        return can_delete;
+    public Boolean canDelete() {
+        return canDelete;
     }
 
     public MiniProfile getPostOwner() {
@@ -188,11 +190,11 @@ public class PostDetails implements Parcelable
     }
 
     public String getCreatedAt() {
-        return created_at;
+        return createdAt;
     }
 
     public CheckIn getCheckIn() {
-        return check_in;
+        return checkIn;
     }
 
     public ArrayList<Medias> getMedias() {
@@ -200,14 +202,98 @@ public class PostDetails implements Parcelable
     }
 
     public ArrayList<TaggedUser> getTaggedUsers() {
-        return tagged_users;
+        return taggedUsers;
     }
 
     public ArrayList<ReactedUser> getReactedUsers() {
-        return reacted_users;
+        return reactedUsers;
     }
 
     public ArrayList<Category> getCategories() {
         return categories;
+    }
+
+    public ArrayList<ReactionDetails> getReactions() {
+        return reactions;
+    }
+
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
+    public void setPostedBy(Integer postedBy) {
+        this.postedBy = postedBy;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public void setTotalReactions(Integer totalReactions) {
+        this.totalReactions = totalReactions;
+    }
+
+    public void setTotalTags(Integer totalTags) {
+        this.totalTags = totalTags;
+    }
+
+    public void setHasCheckin(Boolean hasCheckin) {
+        this.hasCheckin = hasCheckin;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCanReact(Boolean canReact) {
+        this.canReact = canReact;
+    }
+
+    public void setCanLike(Boolean canLike) {
+        this.canLike = canLike;
+    }
+
+    public void setCanDelete(Boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    public void setHided(Boolean hided) {
+        isHided = hided;
+    }
+
+    public void setHidedAll(Boolean hidedAll) {
+        isHidedAll = hidedAll;
+    }
+
+    public void setPost_owner(MiniProfile post_owner) {
+        this.post_owner = post_owner;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setCheckIn(CheckIn checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    public void setMedias(ArrayList<Medias> medias) {
+        this.medias = medias;
+    }
+
+    public void setReactions(ArrayList<ReactionDetails> reactions) {
+        this.reactions = reactions;
+    }
+
+    public void setTaggedUsers(ArrayList<TaggedUser> taggedUsers) {
+        this.taggedUsers = taggedUsers;
+    }
+
+    public void setReactedUsers(ArrayList<ReactedUser> reactedUsers) {
+        this.reactedUsers = reactedUsers;
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
     }
 }
