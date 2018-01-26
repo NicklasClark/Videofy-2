@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -168,10 +169,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
-        if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
+        try {
+            if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
 //        progressBar.setVisibility(View.VISIBLE);
-        Context context = getParentActivity();
-        if (context != null) {
+            final Context context = getParentActivity();
             postListCall = ApiCallingService.Posts.getHomePagePosts(page, context);
 
             if (!postListCall.isExecuted())
@@ -187,7 +188,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                         updatePosts(page, tempPostList);
                                     } else {
                                         if (page == 1 && postList.isEmpty())
-                                            showErrorMessage(getContext().getString(R.string.no_posts_available));
+                                            showErrorMessage(Resources.getSystem().getString(R.string.no_posts_available));
                                     }
                                     break;
                                 default:
@@ -232,7 +233,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                         t.printStackTrace();
                         try {
                             if (isAdded()) {
-                                showErrorMessage(getParentActivity().getString(R.string.something_went_wrong));
+                                showErrorMessage(Resources.getSystem().getString(R.string.something_went_wrong));
                                 dismissRefreshView();
                             }
                         } catch (Exception e) {
@@ -240,6 +241,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                         }
                     }
                 });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

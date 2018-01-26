@@ -1,31 +1,42 @@
-package com.cncoding.teazer.ui.fragment.activity;
+package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.home.post.TagListAdapter;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -59,7 +70,6 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
-import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
@@ -68,7 +78,13 @@ import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
-public class ReactionPlayerActivity extends AppCompatActivity {
+/**
+ * Created by farazhabib on 23/01/18.
+ */
+
+public class FragmentReactionplayer extends BaseFragment {
+
+
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView playerView;
@@ -108,19 +124,52 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     private int currentWindow;
     private boolean playWhenReady = true;
     private int playSource;
+    Reactions reactions;
+    int getPlaySource;
+    Context context;
+    public static final int POST_REACTION = 0;
+    public static final int SELF_REACTION = 1;
 
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private long reactionPlayerCurrentPosition = 0;
+    private static long reactionPlayerCurrentPosition = 0;
     private Handler mHandler;
+    public static final String SELF_REACTIONS = "self_reactions";
+    public static final String POST_REACTIONS = "post_reactions";
+    TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
+    ProfileMyCreationAdapter.myCreationListener myCreationListener;
 
+
+
+    public static FragmentReactionplayer newInstance(int source, PostReaction postReaction, Reactions selfPostreaction ) {
+        FragmentReactionplayer fragment = new FragmentReactionplayer();
+        Bundle args = new Bundle();
+        args.putParcelable(SELF_REACTIONS, selfPostreaction);
+        args.putParcelable(POST_REACTIONS, postReaction);
+        args.putInt("SOURCE", source);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reaction_exo_player);
-        ButterKnife.bind(this);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            selfPostDetails = bundle.getParcelable(SELF_REACTIONS);
+            postDetails = bundle.getParcelable(POST_REACTIONS);
+            playSource = bundle.getInt("SOURCE");
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_reaction_exo_player, container, false);
+        ButterKnife.bind(this,view);
+        context=container.getContext();
+
 
         mHandler = new Handler();
         audioFocusChangeListener =
@@ -151,48 +200,48 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 };
 
 
-        //acquire audio play access(transient)
-        audioAccessGranted = acquireAudioLock(this, audioFocusChangeListener);
 
-        playSource = getIntent().getIntExtra("SOURCE", 0);
+        //acquire audio play access(transient)
+        audioAccessGranted = acquireAudioLock(getActivity(), audioFocusChangeListener);
+
+       // playSource = getIntent().getIntExtra("SOURCE", 0);
+
+
         switch (playSource) {
-            case POST_REACTION: {
+
+
+            case 0: {
                 try {
-                    videoURL = getIntent().getStringExtra("VIDEO_URL");
-                    postDetails = getIntent().getParcelableExtra("POST_INFO");
-                    if (postDetails != null)
+
+                    videoURL = postDetails.getMediaDetail().getMediaUrl();
+
+                 //   postDetails = getIntent().getParcelableExtra("POST_INFO");
+                    if (postDetails != null) {
                         reactId = postDetails.getReactId();
 
-//                    if (null != toolbar) {
-//                        this.setSupportActionBar(toolbar);
-//                        //noinspection ConstantConditions
-//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-//                    }
 
-                    isLiked = !postDetails.canLike();
-                    likesCount = postDetails.getLikes();
-                    viewsCount = postDetails.getViews();
-                    reactionTitle = decodeUnicodeString(postDetails.getReact_title());
+                        isLiked = !postDetails.canLike();
+                        likesCount = postDetails.getLikes();
+                        viewsCount = postDetails.getViews();
+                        reactionTitle = postDetails.getReact_title();
 
-                    Glide.with(this)
-                            .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
-                                    : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
-                            .into(reactionPostDp);
-                    if (reactionTitle != null) {
-                        try {
-                            reactionTitle = URLDecoder.decode(reactionTitle, "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                        Glide.with(this)
+                                .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
+                                        : R.drawable.ic_user_male_dp_small)
+                                .asBitmap()
+                                .into(reactionPostDp);
+                        if (reactionTitle != null) {
+                            try {
+                                reactionTitle = URLDecoder.decode(reactionTitle, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            reactionPostCaption.setText(reactionTitle);
                         }
-                        reactionPostCaption.setText(reactionTitle);
-                    }
 
-                    postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
-                    reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+                        postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
+                        reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+                    }
                     initView();
                     incrementView();
                 } catch (Exception e) {
@@ -201,37 +250,34 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 break;
 
             }
-            case SELF_REACTION: {
+            case 1: {
                 try {
-                    videoURL = getIntent().getStringExtra("VIDEO_URL");
-                    selfPostDetails = getIntent().getParcelableExtra("POST_INFO");
-                    if (selfPostDetails != null)
+                    videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
+
+                    if (selfPostDetails != null) {
                         reactId = selfPostDetails.getReactId();
+                        isLiked = !selfPostDetails.canLike();
+                        likesCount = selfPostDetails.getLikes();
+                        viewsCount = selfPostDetails.getViews();
+                        reactionTitle = selfPostDetails.getReactTitle();
 
-//                    if (null != toolbar) {
-//                        this.setSupportActionBar(toolbar);
-//                        //noinspection ConstantConditions
-//                        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-//                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
-//                    }
+                        Glide.with(this)
+                                .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
+                                        : R.drawable.ic_user_male_dp_small)
+                                .asBitmap()
+                                .into(reactionPostDp);
+                        if (reactionTitle != null) {
+                            reactionPostCaption.setText(reactionTitle);
+                        }
+                        String title="Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post";
+                        postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
+                      //  String udata="Underlined Text";
+                        SpannableString content = new SpannableString(title);
+                        content.setSpan(new UnderlineSpan(), 0, title.length(), 0);
+                        reactionPostName.setText(content);
+                       // reactionPostName.setText("Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post");
 
-                    isLiked = !selfPostDetails.canLike();
-                    likesCount = selfPostDetails.getLikes();
-                    viewsCount = selfPostDetails.getViews();
-                    reactionTitle = selfPostDetails.getReactTitle();
-
-                    Glide.with(this)
-                            .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
-                                    : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
-                            .into(reactionPostDp);
-                    if (reactionTitle != null) {
-                        reactionPostCaption.setText(reactionTitle);
                     }
-                    postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
-                    reactionPostName.setText("Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post");
 
                     initView();
 //                    incrementView();
@@ -241,10 +287,44 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        reactionPostDp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(selfPostDetails!=null) {
+                    taggedListInteractionListener.onTaggedUserInteraction(selfPostDetails.getPostOwner().getUserId(), false);
+                }
+                 else if(postDetails!=null)
+                {
+                    taggedListInteractionListener.onTaggedUserInteraction(postDetails.getReactOwner().getUserId(), postDetails.getMySelf());
+
+                }
+            }
+        });
+
+        reactionPostName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(selfPostDetails!=null) {
+                    myCreationListener.ReactionPost(selfPostDetails.getPostId());
+                }
+
+            }
+        });
+        return view;
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        taggedListInteractionListener=(TagListAdapter.TaggedListInteractionListener)context;
+        myCreationListener=(ProfileMyCreationAdapter.myCreationListener)context;
     }
 
     private void incrementView() {
-        ApiCallingService.React.incrementReactionViewCount(reactId, this)
+        ApiCallingService.React.incrementReactionViewCount(reactId, getActivity())
                 .enqueue(new Callback<ResultObject>() {
                     @Override
                     public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -282,7 +362,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-            player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+            player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
             Uri videoURI = Uri.parse(videoURL);
 
@@ -304,13 +384,13 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
     }
 
+
     @OnClick({R.id.btnClose, R.id.btnLike})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnClose:
                 reactionPlayerCurrentPosition = 0;
-                releasePlayer();
-                onBackPressed();
+                getActivity().onBackPressed();
                 break;
             case R.id.btnLike:
                 if (!isLiked) {
@@ -319,7 +399,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     likesCount++;
                     initView();
                     disableView(likeBtn, false);
-                    ApiCallingService.React.likeDislikeReaction(reactId, 1, this).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.React.likeDislikeReaction(reactId, 1, getActivity()).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
@@ -351,7 +431,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     likeAction(isLiked, true);
                     initView();
                     disableView(likeBtn, false);
-                    ApiCallingService.React.likeDislikeReaction(reactId, 2, this).enqueue(new Callback<ResultObject>() {
+                    ApiCallingService.React.likeDislikeReaction(reactId, 2, getActivity()).enqueue(new Callback<ResultObject>() {
                         @Override
                         public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                             try {
@@ -384,7 +464,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 
     private void likeAction(boolean isLiked, boolean animate) {
         if (isLiked) {
-            likeBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_filled));
+            likeBtn.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_like_filled));
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
@@ -393,11 +473,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     case SELF_REACTION:
                         break;
                 }
-                likeBtn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.selected));
+                likeBtn.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.selected));
             }
 
         } else {
-            likeBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_outline));
+            likeBtn.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_like_outline));
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
@@ -408,6 +488,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getParentActivity().showToolbar();
     }
 
     @Override
@@ -421,7 +507,8 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
+        getParentActivity().hideToolbar();
+        //hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -448,16 +535,17 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        releaseAudioLock(this, audioFocusChangeListener);
+        releaseAudioLock(getActivity(), audioFocusChangeListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             releasePlayer();
         }
-        releaseAudioLock(this, audioFocusChangeListener);
+        releaseAudioLock(getActivity(), audioFocusChangeListener);
         mHandler.removeCallbacks(mDelayedStopRunnable);
     }
 
@@ -489,7 +577,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         .addControlParameter("$desktop_url", "https://teazer.in/")
                         .addControlParameter("$ios_url", "https://teazer.in/");
 
-                branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+                branchUniversalObject.generateShortUrl(getActivity(), linkProperties, new Branch.BranchLinkCreateListener() {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
@@ -522,7 +610,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                         .addControlParameter("$desktop_url", "https://teazer.in/")
                         .addControlParameter("$ios_url", "https://teazer.in/");
 
-                branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+                branchUniversalObject.generateShortUrl(getActivity(), linkProperties, new Branch.BranchLinkCreateListener() {
                     @Override
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
@@ -540,4 +628,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

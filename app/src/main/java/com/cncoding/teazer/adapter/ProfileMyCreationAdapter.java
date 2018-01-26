@@ -471,6 +471,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     public interface myCreationListener {
 
         void myCreationVideos(int i, PostDetails postDetails);
+        void ReactionPost(int postId);
     }
 
     public interface OnChildFragmentUpdateVideos {

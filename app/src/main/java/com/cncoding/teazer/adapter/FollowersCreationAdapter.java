@@ -2,7 +2,9 @@ package com.cncoding.teazer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -12,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -20,6 +24,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -72,6 +77,23 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             final PostDetails postDetails = _list.get(i);
             final String videoTitle = postDetails.getTitle();
             final int postId = postDetails.getPostId();
+            final boolean is_hidden=postDetails.getHided();
+            if(is_hidden)
+            {
+
+                viewHolder.hidden_layout.setVisibility(View.VISIBLE);
+                viewHolder.unhide_video.setVisibility(View.VISIBLE);
+                viewHolder.playvideo.setVisibility(View.GONE);
+                viewHolder.cardView.setEnabled(false);
+                viewHolder.menu.setEnabled(false);
+            } else {
+                viewHolder.hidden_layout.setVisibility(View.GONE);
+                viewHolder.unhide_video.setVisibility(View.GONE);
+                viewHolder.playvideo.setVisibility(View.VISIBLE);
+                viewHolder.menu.setEnabled(true);
+                viewHolder.cardView.setEnabled(true);
+            }
+
             final String videoUrl = postDetails.getMedias().get(0).getMediaUrl();
             String postUser = postDetails.getPostOwner().getUserName();
             boolean hasProfileMedia = postDetails.getPostOwner().hasProfileMedia();
@@ -99,6 +121,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             {
                 final String location=postDetails.getCheckIn().getLocation();
                 viewHolder.location.setText(location);
+
             }
             else
             {
@@ -107,8 +130,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
 
             Glide.with(context).load(thumb_url)
                     .into(viewHolder.thumbimage);
-
-
             viewHolder.location.setText(postUser);
             viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
             viewHolder.duration.setText(duration);
@@ -118,12 +139,10 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             //getPostReaction(viewHolder, postId);
 
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View view) {
                     listener.myCreationVideos(2, postDetails);
                     viewHolder.txtview.setText(String.valueOf(txtview+1));
-
 
 
                 }
@@ -134,7 +153,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 public void onClick(View view) {
                     PopupMenu popup = new PopupMenu(context, viewHolder.menu);
                     popup.inflate(R.menu.menu_other_profile_post);
-
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
@@ -147,6 +165,55 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                         reportPostDialogFragment.show(fm, "fragment_report_post");
                                     }
                                     break;
+                                case R.id.action_hide:
+
+
+                                    new AlertDialog.Builder(context)
+                                            .setTitle(R.string.hiding_post)
+                                            .setMessage(R.string.hide_post_confirm)
+                                            .setPositiveButton(context.getString(R.string.yes_hide), new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, context)
+                                                            .enqueue(new Callback<ResultObject>() {
+                                                                @Override
+                                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                                    if (response.body().getStatus()) {
+                                                                        Toast.makeText(context,
+                                                                                R.string.video_hide_successful,
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                        viewHolder.hidden_layout.setVisibility(View.VISIBLE);
+                                                                        viewHolder.unhide_video.setVisibility(View.VISIBLE);
+                                                                        viewHolder.playvideo.setVisibility(View.GONE);
+                                                                        viewHolder.cardView.setEnabled(false);
+                                                                        viewHolder.menu.setEnabled(false);
+
+
+                                                                    } else {
+                                                                        Toast.makeText(context,
+                                                                                R.string.something_went_wrong,
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                                @Override
+                                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                                    t.printStackTrace();
+                                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            })
+                                            .show();
+
+
+                                    break;
                             }
                             return false;
                         }
@@ -155,11 +222,66 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                 }
             });
 
+
+
+            viewHolder.unhide_video.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    new android.support.v7.app.AlertDialog.Builder(context)
+                            .setTitle(R.string.unhiding_post)
+                            .setMessage(R.string.unhide_post_confirm)
+                            .setPositiveButton(context.getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int j) {
+                                    ApiCallingService.Posts.hideOrShowPost(postId, 2, context)
+                                            .enqueue(new Callback<ResultObject>() {
+                                                @Override
+                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                    if (response.body().getStatus()) {
+                                                        Toast.makeText(context,
+                                                                R.string.video_shown_successful,
+                                                                Toast.LENGTH_SHORT).show();
+
+                                                        viewHolder.hidden_layout.setVisibility(View.GONE);
+                                                        viewHolder.unhide_video.setVisibility(View.GONE);
+                                                        viewHolder.playvideo.setVisibility(View.VISIBLE);
+                                                        viewHolder.menu.setEnabled(true);
+                                                        viewHolder.cardView.setEnabled(true);
+
+                                                    } else {
+                                                        Toast.makeText(context,
+                                                                R.string.something_went_wrong,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                                @Override
+                                                public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                    t.printStackTrace();
+                                                    Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .show();
+
+
+
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("Error Message",e.getMessage());
             Toast.makeText(context,"Something went wrong please try again",Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -179,9 +301,11 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
         TextView location;
         TextView duration;
         TextView txtview;
+        ImageView hidden_layout;
         CircularAppCompatImageView userReactionImage;
         View line;
         ImageView playvideo;
+        Button unhide_video;
 
         CircularAppCompatImageView menu;
         public ViewHolder(View view) {
@@ -197,6 +321,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             totalLikes = view.findViewById(R.id.txtlikes);
             txtview = view.findViewById(R.id.txtview);
             userReactionImage = view.findViewById(R.id.userReactionImage);
+            hidden_layout = view.findViewById(R.id.hidden_layput);
+            unhide_video = view.findViewById(R.id.unhide_video);
             menu = view.findViewById(R.id.menu);
         }
     }

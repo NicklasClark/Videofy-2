@@ -235,7 +235,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 //                            posts.get(position).title = bundle.getString(TITLE);
 //                            break;
 //                        case CAN_REACT:
-//                            posts.get(position).can_react = bundle.getBoolean(CAN_REACT);
+//                            posts.get(position).canReact = bundle.getBoolean(CAN_REACT);
 //                            break;
 //                        case CAN_LIKE:
 //                            posts.get(position).can_like = bundle.getBoolean(CAN_LIKE);

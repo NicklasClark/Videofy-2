@@ -40,6 +40,8 @@ public class PasswordChange extends AppCompatActivity {
     ProximaNovaRegularTextInputEditText confirmPassword;
     @BindView(R.id.save)
     Button save;
+    @BindView(R.id.cancel)
+    Button cancel;
     @BindView(R.id.currentPasswordLayout)
     LinearLayout currentPasswordLayout;
     private boolean canChangePassword;
@@ -94,7 +96,19 @@ public class PasswordChange extends AppCompatActivity {
         });
         save.setEnabled(false);
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentPassword.requestFocus();
+                currentPassword.getText().clear();
+                newPassword.getText().clear();
+                confirmPassword.getText().clear();
+
+
+            }
+        });
     }
+
 
 
     public boolean validate() {

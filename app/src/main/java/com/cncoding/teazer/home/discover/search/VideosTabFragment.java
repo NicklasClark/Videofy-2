@@ -111,7 +111,8 @@ public class VideosTabFragment extends BaseFragment {
         super.onResume();
         if (searchTerm != null && !searchTerm.equals("") && videosList != null) {
             getVideos(1);
-        } else {
+        }
+        else {
             noPosts.setVisibility(View.VISIBLE);
             noPosts.setText(R.string.search_for_videos);
             noPosts2.setVisibility(View.INVISIBLE);
@@ -134,6 +135,7 @@ public class VideosTabFragment extends BaseFragment {
                                 VideosList videos = response.body();
                                 is_next_page = videos.isNextPage();
                                 if (videos.getVideos() != null && videos.getVideos().size() > 0) {
+
                                     if (page == 1) {
                                         scrollListener.resetState();
                                         videosList.clear();
