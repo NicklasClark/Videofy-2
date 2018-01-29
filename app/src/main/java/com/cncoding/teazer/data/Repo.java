@@ -66,7 +66,7 @@ public class Repo extends ApiRepository {
         this.executor = executor;
     }
 
-    @Inject public Repo() {
+    public Repo() {
     }
 
     @Override

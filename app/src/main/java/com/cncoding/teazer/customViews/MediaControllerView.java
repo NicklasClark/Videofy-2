@@ -89,7 +89,7 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     //top layout
     RelativeLayout topLayout;
     public ProgressBar progressBar;
-    ProximaNovaSemiboldTextView caption;
+    ProximaNovaSemiBoldTextView caption;
     ProximaNovaRegularTextView locationView;
     ProximaNovaRegularTextView remainingTime;
 
@@ -99,11 +99,11 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     //bottom layout
 //    RelativeLayout bottomLayout;
     CircularAppCompatImageView profilePic;
-    ProximaNovaSemiboldTextView profileNameView;
+    ProximaNovaSemiBoldTextView profileNameView;
     ProximaNovaRegularTextView likesView;
     ProximaNovaRegularTextView viewsView;
-    ProximaNovaSemiboldTextView categoriesView;
-    ProximaNovaSemiboldTextView reactionCountView;
+    ProximaNovaSemiBoldTextView categoriesView;
+    ProximaNovaSemiBoldTextView reactionCountView;
     CircularAppCompatImageView reaction1Pic;
     CircularAppCompatImageView reaction2Pic;
     CircularAppCompatImageView reaction3Pic;

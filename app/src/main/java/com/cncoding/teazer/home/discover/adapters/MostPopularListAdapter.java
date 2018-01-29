@@ -16,9 +16,9 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostDetails;
 
 import java.util.ArrayList;
 
@@ -170,12 +170,15 @@ public class MostPopularListAdapter extends RecyclerView.Adapter<MostPopularList
         @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
         @BindView(R.id.top_layout) LinearLayout topLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.title)
+        ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.name)
+        ProximaNovaSemiBoldTextView name;
         @BindView(R.id.duration) ProximaNovaRegularTextView duration;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
-        @BindView(R.id.reaction_count) ProximaNovaSemiboldTextView reactions;
+        @BindView(R.id.reaction_count)
+        ProximaNovaSemiBoldTextView reactions;
         @BindView(R.id.thumbnail) ImageView thumbnail;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.reaction_1) CircularAppCompatImageView reactionImage1;

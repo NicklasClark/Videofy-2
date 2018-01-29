@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                     android:id="@+id/toolbar_name"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
@@ -74,7 +74,7 @@
                     android:background="@color/colorDivider"
                     android:layout_below="@+id/toolbar_name"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                     android:id="@+id/toolbar_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

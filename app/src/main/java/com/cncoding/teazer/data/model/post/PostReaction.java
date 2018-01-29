@@ -145,4 +145,8 @@ public class PostReaction implements Parcelable {
     public PostReaction(int react_id) {
         this.react_id = react_id;
     }
+
+    public boolean getMySelf() {
+        return can_delete;
+    }
 }

@@ -19,8 +19,8 @@ import com.cncoding.teazer.adapter.FollowersAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.friends.FollowersList;
-import com.cncoding.teazer.model.friends.UserInfo;
+import com.cncoding.teazer.data.model.friends.FollowersList;
+import com.cncoding.teazer.data.model.friends.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;

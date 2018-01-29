@@ -76,7 +76,7 @@
 
     <!--</ScrollView>-->
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
         android:id="@+id/save_interests_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"

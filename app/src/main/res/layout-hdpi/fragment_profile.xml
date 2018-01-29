@@ -97,7 +97,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                                         android:id="@+id/username_title"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"

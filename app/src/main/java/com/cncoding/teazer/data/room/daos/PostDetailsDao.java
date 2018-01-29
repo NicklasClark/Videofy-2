@@ -10,6 +10,7 @@ import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
@@ -23,28 +24,28 @@ public interface PostDetailsDao {
 
     //region Getter queries
     @Query("SELECT * FROM PostDetails")
-    ArrayList<PostDetails> getAllPosts();
+    List<PostDetails> getAllPosts();
 
-    @Query("SELECT * FROM PostDetails WHERE post_id LIKE :postId")
-    PostDetails getPost(int postId);
+    @Query("SELECT * FROM PostDetails WHERE postId LIKE :postId")
+    List<PostDetails> getPost(int postId);
 
-    @Query("SELECT post_owner FROM PostDetails WHERE post_id = :postId LIMIT 1")
-    MiniProfile getPostOwner(int postId);
+//    @Query("SELECT postOwner FROM PostDetails WHERE postId = :postId LIMIT 1")
+//    List<MiniProfile> getPostOwner(int postId);
 
-    @Query("SELECT check_in FROM PostDetails WHERE post_id = :postId LIMIT 1")
-    CheckIn getPostCheckIn(int postId);
+//    @Query("SELECT checkIn FROM PostDetails WHERE postId = :postId LIMIT 1")
+//    List<CheckIn> getPostCheckIn(int postId);
     //endregion
 
     //region Update queries
     @Query("UPDATE PostDetails SET likes = :likeCount")
     void updateLikes(int likeCount);
 
-    @Query("UPDATE PostDetails SET views = :viewCount")
-    void updateViews(int viewCount);
+//    @Query("UPDATE PostDetails SET views = :viewCount")
+//    void updateViews(int viewCount);
     //endregion
 
     //region Deletion queries
-    @Query("DELETE FROM PostDetails WHERE post_id = :postId")
+    @Query("DELETE FROM PostDetails WHERE postId = :postId")
     void deletePost(int postId);
 
     @Delete
@@ -53,7 +54,7 @@ public interface PostDetailsDao {
 
     //region Insertion queries
     @Insert
-    ArrayList<Long> insertAll(ArrayList<PostDetails> postDetails);
+    List<Long> insertAll(ArrayList<PostDetails> postDetails);
 
     @Insert(onConflict = REPLACE)
     long insertPost(PostDetails postDetails);

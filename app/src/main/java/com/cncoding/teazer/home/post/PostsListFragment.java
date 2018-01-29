@@ -3,25 +3,26 @@ package com.cncoding.teazer.home.post;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
+import com.allattentionhere.autoplayvideos.AAH_CustomRecyclerView;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.post_list) RecyclerView recyclerView;
+    @BindView(R.id.post_list) AAH_CustomRecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
@@ -47,14 +48,13 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     public static PostDetails postDetails;
     public static int positionToUpdate = -1;
     private Call<PostList> postListCall;
-    private ArrayList<PostDetails> postList;
+    private ArrayList<PostDetails> postDetailsList;
     private PostsListAdapter postListAdapter;
 
     public PostsListFragment() {
     }
     
     public static PostsListFragment newInstance() {
-
         return new PostsListFragment();
     }
 
@@ -66,19 +66,15 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         getParentActivity().updateToolbarTitle(null);
         View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
         ButterKnife.bind(this, rootView);
-        if (postList == null)
-            postList = new ArrayList<>();
-//        else
-//            progressBar.setVisibility(View.GONE);
-
-        postListAdapter = new PostsListAdapter(postList, getContext());
+        if (postDetailsList == null)
+            postDetailsList = new ArrayList<>();
+//        recyclerView.setOnKeyListener(this);
+        postListAdapter = new PostsListAdapter(postDetailsList, getContext());
+        recyclerView.setActivity(getParentActivity());
         recyclerView.setAdapter(postListAdapter);
-        recyclerView.setSaveEnabled(true);
-        recyclerView.setOnKeyListener(this);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
@@ -94,15 +90,23 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             }
         });
 
-
         return rootView;
     }
 
     private void refreshPosts() {
-//        if (postListCall != null)
-//            postListCall.cancel();
-        getHomePagePosts(1, true);
-        scrollListener.resetState();
+        if (((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() > 0) {
+            recyclerView.smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getHomePagePosts(1, true);
+                    scrollListener.resetState();
+                }
+            }, 500);
+        } else {
+            getHomePagePosts(1, true);
+            scrollListener.resetState();
+        }
     }
 
     @Override
@@ -111,23 +115,22 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             if (keyEvent.getAction() == ACTION_DOWN) {
                 switch (keyCode) {
                     case KEYCODE_VOLUME_DOWN:
-                        recyclerView.smoothScrollBy(0, (int) recyclerView.getChildAt(recyclerView.getChildCount() - 2).getY(),
-                                new DecelerateInterpolator());
+                        recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null,
+                                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition() + 1);
                         return true;
                     case KEYCODE_VOLUME_UP:
-                        int[] positions = new int[2];
-                        if (((StaggeredGridLayoutManager) recyclerView.getLayoutManager())
-                                .findFirstCompletelyVisibleItemPositions(positions)[0] == 0)
+                        if (((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0)
                             refreshPosts();
                         else
-                            recyclerView.smoothScrollBy(0, -((int) recyclerView.getChildAt(recyclerView.getChildCount() - 1).getY()),
-                                new DecelerateInterpolator());
+                            recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null,
+                                    ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition() - 1);
                         return true;
                 }
             }
             return false;
         } catch (Exception e) {
             e.printStackTrace();
+            refreshPosts();
             return false;
         }
     }
@@ -141,21 +144,27 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     @Override
     public void onResume() {
         super.onResume();
+        postListAdapter.registerAudioObserver();
+        recyclerView.setSaveEnabled(true);
+        recyclerView.setDownloadPath(Environment.getDownloadCacheDirectory() + "/Teazer");
+        recyclerView.setDownloadVideos(true);
+        recyclerView.setVisiblePercent(60);
+        recyclerView.setPlayOnlyFirstVideo(true);
+
         getHomePagePosts(1, false);
 
-        if (postList != null && !isRefreshing) {
-            if (postList.isEmpty()) {
+        if (postDetailsList != null && !isRefreshing) {
+            if (postDetailsList.isEmpty()) {
                 getHomePagePosts(1, false);
             } else {
                 recyclerView.getAdapter().notifyDataSetChanged();
-//                dismissProgressBar();
             }
         }
         else {
             isRefreshing = false;
-            if (postList != null && postDetails == null) {
+            if (postDetailsList != null && postDetails == null) {
                 try {
-                    postList.remove(positionToUpdate);
+                    postDetailsList.remove(positionToUpdate);
                     postListAdapter.notifyItemRemoved(positionToUpdate);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -166,12 +175,13 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
         }
+
+        recyclerView.playAvailableVideos(0);
     }
 
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
         try {
             if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
-//        progressBar.setVisibility(View.VISIBLE);
             final Context context = getParentActivity();
             postListCall = ApiCallingService.Posts.getHomePagePosts(page, context);
 
@@ -187,7 +197,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                                         is_next_page = tempPostList.isNextPage();
                                         updatePosts(page, tempPostList);
                                     } else {
-                                        if (page == 1 && postList.isEmpty())
+                                        if (page == 1 && postDetailsList.isEmpty())
                                             showErrorMessage(Resources.getSystem().getString(R.string.no_posts_available));
                                     }
                                     break;
@@ -204,13 +214,15 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
                     private void updatePosts(int page, PostList tempPostList) {
                         try {
-                            postListAdapter.clearDimensions();
+//                            postListAdapter.clearDimensions();
                             if (page == 1) {
-                                postList.clear();
-                                postList.addAll(tempPostList.getPosts());
+                                postDetailsList.clear();
+                                postDetailsList.addAll(tempPostList.getPosts());
                                 postListAdapter.notifyDataSetChanged();
+                                recyclerView.smoothScrollBy(0,1);
+                                recyclerView.smoothScrollBy(0,-1);
                             } else {
-                                postList.addAll(tempPostList.getPosts());
+                                postDetailsList.addAll(tempPostList.getPosts());
                                 postListAdapter.notifyItemRangeInserted((page - 1) * 30, tempPostList.getPosts().size());
                             }
                         } catch (Exception e) {
@@ -251,31 +263,18 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void showErrorMessage(String message) {
-//                    dismissProgressBar();
         recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.setVisibility(View.VISIBLE);
         postLoadErrorTextView.setText(message);
     }
-//    private void updatePostListItems(List<RealmPostDetails> newPostDetailsList) {
-//        if (postList.size() >= newPostDetailsList.size()) {
-//            List<RealmPostDetails> oldPostDetailsList = postList.subList(0, newPostDetailsList.size() - 1);
-//            PostListDiffCallback diffCallback = new PostListDiffCallback(oldPostDetailsList, newPostDetailsList);
-//            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback, true);
-//            postList.clear();
-//            postList.addAll(newPostDetailsList);
-//            diffResult.dispatchUpdatesTo(postListAdapter);
-//        } else {
-//            postList.clear();
-//            postList.addAll(newPostDetailsList);
-//            postListAdapter.notifyDataSetChanged();
-//        }
-//    }
 
-//    public void dismissProgressBar() {
-//        if (progressBar.getVisibility() == View.VISIBLE) {
-//            progressBar.setVisibility(View.GONE);
-//        }
-//    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        recyclerView.stopVideos();
+        if (postListAdapter != null)
+            postListAdapter.unregisterAudioObserver();
+    }
 
     @Override
     public void onDestroy() {

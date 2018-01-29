@@ -11,8 +11,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody.UploadCallbacks;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.post.PostUploadResult;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.post.PostUploadResult;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.utilities.SharedPrefs;
 

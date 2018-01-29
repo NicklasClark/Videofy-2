@@ -20,9 +20,9 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.model.base.Dimension;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.data.model.base.Dimension;
+import com.cncoding.teazer.data.model.post.PostDetails;
 
 import java.util.ArrayList;
 
@@ -174,9 +174,11 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.top_layout) RelativeLayout topLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.title)
+        ProximaNovaSemiBoldTextView title;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.name)
+        ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView postThumbnail;

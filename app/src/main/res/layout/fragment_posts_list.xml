@@ -5,6 +5,7 @@
     tools:context="com.cncoding.teazer.home.post.PostsListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDisabled"
     android:animateLayoutChanges="true">
 
     <LinearLayout
@@ -28,7 +29,7 @@
             android:textSize="@dimen/text_size_h6"
             android:text="@string/could_not_load_posts"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipe_down_to_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +46,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <com.allattentionhere.autoplayvideos.AAH_CustomRecyclerView
+            android:id="@+id/post_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="HomeScreenPostList"
+            android:paddingStart="0.25dp"
+            android:paddingEnd="0.25dp"
+            android:paddingTop="-6dp"
+            android:paddingBottom="@dimen/padding_with_navigation_bar_height"
+            android:clipToPadding="false"
+            app:spanCount="2"
+            app:layoutManager="StaggeredGridLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+<!--        <android.support.v7.widget.RecyclerView
             android:id="@+id/post_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -58,7 +73,7 @@
             app:spanCount="2"
             app:layoutManager="StaggeredGridLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_home_screen_post" />
+            tools:listitem="@layout/item_home_screen_post" />-->
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

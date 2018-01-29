@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -26,10 +25,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.base.MiniProfile;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.data.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             final PostDetails postDetails = _list.get(i);
             final String videoTitle = postDetails.getTitle();
             final int postId = postDetails.getPostId();
-            final boolean is_hidden=postDetails.getHided();
+            final boolean is_hidden=postDetails.isHided();
             if(is_hidden)
             {
 

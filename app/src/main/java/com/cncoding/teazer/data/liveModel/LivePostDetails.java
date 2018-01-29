@@ -26,7 +26,7 @@ public class LivePostDetails extends ViewModel {
     @SerializedName("has_checkin") @Expose public MutableLiveData<Boolean> has_checkin;
     @SerializedName("title") @Expose public MutableLiveData<String> title;
     @SerializedName("can_react") @Expose public MutableLiveData<Boolean> can_react;
-    @SerializedName("can_like") @Expose public MutableLiveData<Boolean> can_like;
+    @SerializedName("canLike") @Expose public MutableLiveData<Boolean> can_like;
     @SerializedName("can_delete") @Expose private MutableLiveData<Boolean> can_delete;
     @SerializedName("post_owner") @Expose private MutableLiveData<LiveMiniProfile> post_owner;
     @SerializedName("created_at") @Expose private MutableLiveData<String> created_at;//use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");

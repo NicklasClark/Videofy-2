@@ -63,7 +63,7 @@
         android:background="@drawable/bg_vignette">
 
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/reaction_post_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 app:srcCompat="@drawable/ic_user_male_dp_small"
                 android:src="@drawable/ic_user_male_dp_small"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+            <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                 android:id="@+id/reaction_post_name"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"

@@ -26,7 +26,7 @@
             android:src="@color/colorShimmer"
             android:layout_alignParentStart="true"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/shimmer_username"
             android:layout_width="50dp"
             android:layout_height="10dp"
@@ -73,7 +73,7 @@
         android:paddingStart="14dp"
         android:paddingBottom="18dp">
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="16dp"
@@ -114,7 +114,7 @@
             android:foreground="@drawable/bg_circle_white_outline_thin"
             android:layout_marginEnd="6dp"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="14dp"
@@ -159,7 +159,7 @@
             android:layout_toEndOf="@+id/likes"
             android:layout_below="@+id/name" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/reaction_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

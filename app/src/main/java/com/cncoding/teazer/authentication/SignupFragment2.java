@@ -14,7 +14,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.model.base.Authorize;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;

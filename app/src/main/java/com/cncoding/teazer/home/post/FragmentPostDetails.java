@@ -52,14 +52,14 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.base.TaggedUser;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.post.PostReactionsList;
-import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.data.model.base.TaggedUser;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.data.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
@@ -188,7 +188,7 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.horizontal_list_view_parent)
     RelativeLayout horizontalListViewParent;
     @BindView(R.id.tags_badge)
-    ProximaNovaSemiboldTextView tagsCountBadge;
+    ProximaNovaSemiBoldTextView tagsCountBadge;
     //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list)
     RecyclerView recyclerView;
@@ -210,7 +210,7 @@ public class FragmentPostDetails extends BaseFragment implements
     FrameLayout controlsContainer;
     //top layout
     @BindView(R.id.media_controller_caption)
-    ProximaNovaSemiboldTextView caption;
+    ProximaNovaSemiBoldTextView caption;
     @BindView(R.id.media_controller_location)
     ProximaNovaRegularTextView locationView;
     @BindView(R.id.media_controller_eta)
@@ -228,9 +228,9 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.media_controller_views)
     ProximaNovaRegularTextView viewsView;
     @BindView(R.id.media_controller_categories)
-    ProximaNovaSemiboldTextView categoriesView;
+    ProximaNovaSemiBoldTextView categoriesView;
     @BindView(R.id.media_controller_reaction_count)
-    ProximaNovaSemiboldTextView reactionCountView;
+    ProximaNovaSemiBoldTextView reactionCountView;
     @BindView(R.id.media_controller_reaction_1)
     CircularAppCompatImageView reaction1Pic;
     @BindView(R.id.media_controller_reaction_2)
@@ -240,7 +240,7 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.loader)
     GifTextView loader;
     @BindView(R.id.uploadProgressText)
-    ProximaNovaSemiboldTextView uploadProgressText;
+    ProximaNovaSemiBoldTextView uploadProgressText;
     @BindView(R.id.uploadProgress)
     ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout)
@@ -1071,7 +1071,6 @@ public class FragmentPostDetails extends BaseFragment implements
             params.height = viewWidth;
             relativeLayout.setLayoutParams(params);
         }
-
 
 //        float scaleX = 1.0f;
 //        float scaleY = 1.0f;

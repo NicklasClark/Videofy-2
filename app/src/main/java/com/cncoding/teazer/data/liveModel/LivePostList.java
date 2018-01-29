@@ -14,6 +14,7 @@ import com.cncoding.teazer.data.model.post.PostList;
 import com.cncoding.teazer.data.room.databases.TeazerDB;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 public class LivePostList extends ViewModel {
 
-    private MediatorLiveData<ArrayList<PostDetails>> postList;
+    private MediatorLiveData<List<PostDetails>> postList;
     private Repo repo;
     private TeazerDB teazerDB;
 
@@ -35,11 +36,11 @@ public class LivePostList extends ViewModel {
     }
 
     @NonNull
-    public MediatorLiveData<ArrayList<PostDetails>> getPostList() {
+    public MediatorLiveData<List<PostDetails>> getPostList() {
         return postList;
     }
 
-    public LiveData<ArrayList<PostDetails>> getLivePosts(int page, String authToken) {
+    public LiveData<List<PostDetails>> getLivePosts(int page, String authToken) {
         postList.addSource(
                 repo.getHomePagePosts(page, authToken),
                 new Observer<PostList>() {

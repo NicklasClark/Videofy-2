@@ -48,11 +48,11 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
-import com.cncoding.teazer.model.friends.ProfileInfo;
-import com.cncoding.teazer.model.friends.PublicProfile;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.user.PrivateProfile;
+import com.cncoding.teazer.data.model.friends.ProfileInfo;
+import com.cncoding.teazer.data.model.friends.PublicProfile;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.data.model.user.PrivateProfile;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
 import java.io.IOException;

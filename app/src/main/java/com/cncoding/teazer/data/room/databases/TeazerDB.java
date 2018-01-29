@@ -10,11 +10,14 @@ import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.data.room.ConvertersFactory;
 import com.cncoding.teazer.data.room.daos.PostDetailsDao;
 
+import javax.inject.Singleton;
+
 /**
  *
  * Created by Prem$ on 1/23/2018.
  */
 
+@Singleton
 @Database(entities =  {PostDetails.class}, version = 1)
 @TypeConverters({ConvertersFactory.class})
 public abstract class TeazerDB extends RoomDatabase {

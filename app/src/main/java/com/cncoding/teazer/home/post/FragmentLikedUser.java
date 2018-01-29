@@ -17,9 +17,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.LikedUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.post.LikedUser;
-import com.cncoding.teazer.model.post.LikedUserPost;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.LikedUser;
+import com.cncoding.teazer.data.model.post.LikedUserPost;
+import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;

@@ -20,7 +20,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.data.model.base.MiniProfile;
 
 import java.util.ArrayList;
 

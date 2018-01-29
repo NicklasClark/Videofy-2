@@ -16,20 +16,20 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "CheckIn")
 public class CheckIn extends ViewModel implements Parcelable {
 
-    @SerializedName("checkin_id") @Expose private int checkin_id;
+    @SerializedName("checkin_id") @Expose private int checkinId;
     @SerializedName("latitude") @Expose private double latitude;
     @SerializedName("longitude") @Expose private double longitude;
     @SerializedName("location") @Expose private String location;
 
-    public CheckIn(int checkin_id, double latitude, double longitude, String location) {
-        this.checkin_id = checkin_id;
+    public CheckIn(int checkinId, double latitude, double longitude, String location) {
+        this.checkinId = checkinId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.location = location;
     }
 
     protected CheckIn(Parcel in) {
-        checkin_id = in.readInt();
+        checkinId = in.readInt();
         latitude = in.readDouble();
         longitude = in.readDouble();
         location = in.readString();
@@ -37,7 +37,7 @@ public class CheckIn extends ViewModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(checkin_id);
+        dest.writeInt(checkinId);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(location);
@@ -61,7 +61,7 @@ public class CheckIn extends ViewModel implements Parcelable {
     };
 
     public int getCheckinId() {
-        return checkin_id;
+        return checkinId;
     }
 
     public double getLatitude() {

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.profile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,11 +36,10 @@ import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.friends.PublicProfile;
-import com.cncoding.teazer.model.post.LikedUser;
-import com.cncoding.teazer.model.user.UserProfile;
+import com.cncoding.teazer.data.model.friends.PublicProfile;
+import com.cncoding.teazer.data.model.user.UserProfile;
 import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.OpenProfilePicActivity;
 import com.cncoding.teazer.ui.fragment.activity.Settings;
@@ -82,7 +80,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     Context context;
     AppBarLayout appBarLayout;
     ProximaNovaRegularCheckedTextView _name;
-    ProximaNovaSemiboldTextView _username;
+    ProximaNovaSemiBoldTextView _username;
     TextView _creations;
     TextView _followers;
     TextView _following;

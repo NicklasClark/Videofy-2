@@ -20,7 +20,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.model.base.Authorize;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -2,6 +2,7 @@ package com.cncoding.teazer.data.room;
 
 import android.arch.persistence.room.TypeConverter;
 
+import com.cncoding.teazer.data.model.react.ReactionDetails;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.cncoding.teazer.data.model.base.*;
@@ -44,6 +45,16 @@ public class ConvertersFactory {
     @TypeConverter
     public static String stringFromMediasList(ArrayList<Medias> list) {
         return new Gson().toJson(list, new TypeToken<ArrayList<Medias>>() {}.getType());
+    }
+
+    @TypeConverter
+    public static ArrayList<ReactionDetails> reactionsListFromString(String value) {
+        return new Gson().fromJson(value, new TypeToken<ArrayList<ReactionDetails>>() {}.getType());
+    }
+
+    @TypeConverter
+    public static String stringFromReactionsList(ArrayList<ReactionDetails> list) {
+        return new Gson().toJson(list, new TypeToken<ArrayList<ReactionDetails>>() {}.getType());
     }
 
     @TypeConverter

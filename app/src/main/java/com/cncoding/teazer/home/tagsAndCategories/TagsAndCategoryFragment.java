@@ -23,9 +23,9 @@ import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.model.base.Category;
-import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.friends.CircleList;
+import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.data.model.base.MiniProfile;
+import com.cncoding.teazer.data.model.friends.CircleList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

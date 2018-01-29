@@ -37,7 +37,7 @@
 
         android:clipToPadding="false"/>
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
         android:id="@+id/save_interests_btn"
         android:visibility="gone"
         android:layout_width="60dp"

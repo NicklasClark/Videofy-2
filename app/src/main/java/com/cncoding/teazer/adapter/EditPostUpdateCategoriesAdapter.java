@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.model.base.Category;
-import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.data.model.friends.PublicProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by farazhabib on 20/12/17.
  */
 

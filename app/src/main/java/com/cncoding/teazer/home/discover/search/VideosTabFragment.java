@@ -17,8 +17,8 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.discover.Videos;
-import com.cncoding.teazer.model.discover.VideosList;
+import com.cncoding.teazer.data.model.discover.Videos;
+import com.cncoding.teazer.data.model.discover.VideosList;
 
 import java.util.ArrayList;
 import java.util.TreeSet;

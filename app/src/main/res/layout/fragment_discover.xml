@@ -82,7 +82,7 @@
                             android:layout_weight="1"
                             android:textSize="16sp"/>
 
-                        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                             android:id="@+id/most_popular_view_all"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:layout_weight="1"
                         android:textSize="16sp"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                         android:id="@+id/my_interests_view_all"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -277,7 +277,7 @@
                     android:textSize="@dimen/text_size_h6"
                     android:text="@string/could_not_load_posts"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                     android:id="@+id/tap_to_retry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -16,8 +16,8 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "Dimension")
 public class Dimension extends ViewModel implements Parcelable {
 
-    @SerializedName("media_id") @Expose private int height;
-    @SerializedName("media_url") @Expose private int width;
+    @SerializedName("height") @Expose private int height;
+    @SerializedName("width") @Expose private int width;
 
     public Dimension(int height, int width) {
         this.height = height;

@@ -43,11 +43,11 @@ import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.model.base.Dimension;
-import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.data.model.base.Dimension;
+import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.data.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
@@ -384,19 +384,25 @@ public class ViewUtils {
                                       int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
         try {
             int width = isPostList ?
+                    getDeviceWidth(context) :
     //                in case of home page post lists, decrease 0.5dp from half the screen width
-                    (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2 :
+    //                (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)):
     //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
                     (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
 
             layoutParams.width = width;
-            if (postHeight < postWidth) {
+//                resize posts in shimmerLayout
+            if (!isPostList ? postHeight < postWidth : postHeight >= postWidth) {
                 postHeight = width;
                 layoutParams.height = postHeight;
             } else {
                 layoutParams.height = width * postHeight / postWidth;
             }
-            dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
+//                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
+//                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio
+//                layoutParams.height = normalHeight > maxHeight ? maxHeight : normalHeight;
+            if (dimensionSparseArray != null)
+                dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -415,7 +421,7 @@ public class ViewUtils {
         }
     }
 
-    public static int getPixels(Context context, int dp) {
+    public static int getPixels(Context context, float dp) {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 

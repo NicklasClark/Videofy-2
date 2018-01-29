@@ -20,10 +20,10 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
-import com.cncoding.teazer.model.base.Dimension;
-import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.data.model.base.Dimension;
+import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
-import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
@@ -184,13 +183,15 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.title)
+        ProximaNovaSemiBoldTextView title;
         @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.top_layout) RelativeLayout topLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.name)
+        ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView thumbnail;

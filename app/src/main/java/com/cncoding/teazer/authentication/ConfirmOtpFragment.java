@@ -27,7 +27,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.model.base.Authorize;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import butterknife.BindView;

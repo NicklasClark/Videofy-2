@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             tools:ignore="RelativeOverlap" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraFilterTip"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -120,7 +120,7 @@
 
         </RelativeLayout>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraTip"
             app:drawableTopCompat="@drawable/ic_filter_arrow"
             android:drawablePadding="@dimen/activity_horizontal_margin"

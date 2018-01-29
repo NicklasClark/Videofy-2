@@ -23,7 +23,7 @@
             android:scaleType="centerCrop"
             android:layout_margin="14dp"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/action"
             android:layout_width="wrap_content"
             android:layout_height="30dp"

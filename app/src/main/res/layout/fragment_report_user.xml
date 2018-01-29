@@ -17,7 +17,7 @@
             android:layout_height="@dimen/action_bar_height"
             android:scaleType="center"
             android:src="@drawable/ic_arrow_back" />
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:textColor="@color/colorPrimary_text"
             android:textSize="20sp"
             android:layout_centerVertical="true"

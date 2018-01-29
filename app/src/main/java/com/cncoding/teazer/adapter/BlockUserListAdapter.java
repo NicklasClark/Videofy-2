@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.model.user.BlockedUser;
+import com.cncoding.teazer.data.model.user.BlockedUser;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 
 import java.util.List;

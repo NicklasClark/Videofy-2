@@ -17,8 +17,8 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.model.base.MiniProfile;
-import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.data.model.base.MiniProfile;
+import com.cncoding.teazer.data.model.friends.UsersList;
 
 import java.util.ArrayList;
 

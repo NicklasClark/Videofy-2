@@ -29,7 +29,7 @@
         android:orientation="horizontal"
         android:layout_alignTop="@+id/user_post_thumb">
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/user_post_caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

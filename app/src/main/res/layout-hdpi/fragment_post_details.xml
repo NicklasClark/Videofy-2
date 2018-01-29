@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-   >
+    android:keepScreenOn="true">
 
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -83,7 +82,7 @@
                         android:layout_marginStart="@dimen/action_bar_height"
                         android:layout_weight="1">
 
-                        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                             android:id="@+id/media_controller_caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -209,7 +208,7 @@
                         android:layout_height="0dp"
                         android:layout_centerHorizontal="true"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                         android:id="@+id/media_controller_categories"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -226,7 +225,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                         android:id="@+id/media_controller_reaction_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -360,7 +359,7 @@
                             android:layout_centerInParent="true"
                             android:padding="@dimen/padding_thin"/>
 
-                        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                             android:id="@+id/tags_badge"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
@@ -436,7 +435,7 @@
                 android:id="@+id/uploadingStatusLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:id="@+id/uploadProgressText"
                     android:layout_width="wrap_content"

@@ -11,18 +11,21 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/dp"
+        android:id="@+id/thumb"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/bg_shimmer"
         android:contentDescription="@string/background_image" />
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
         android:id="@+id/title"
         android:layout_width="60dp"
         android:layout_height="12dp"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
+        android:paddingStart="2dp"
+        android:paddingEnd="0dp"
         android:maxLines="1"
         android:singleLine="true"
         android:ellipsize="end"
