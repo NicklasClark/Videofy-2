@@ -173,10 +173,10 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 //                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
 //                    }
 
-                    isLiked = !postDetails.canLike();
+                    isLiked = !postDetails.getCanLike();
                     likesCount = postDetails.getLikes();
                     viewsCount = postDetails.getViews();
-                    reactionTitle = decodeUnicodeString(postDetails.getReact_title());
+                    reactionTitle = decodeUnicodeString(postDetails.getReactTitle());
 
                     Glide.with(this)
                             .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
@@ -479,7 +479,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             case POST_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
-                        .setTitle(postDetails.getReact_title())
+                        .setTitle(postDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
                         .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
 
@@ -496,7 +496,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
                             //fabric event
-                            logVideoShareEvent("Branch", postDetails.getReact_title(), "Reaction", String.valueOf(postDetails.getReactId()));
+                            logVideoShareEvent("Branch", postDetails.getReactTitle(), "Reaction", String.valueOf(postDetails.getReactId()));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

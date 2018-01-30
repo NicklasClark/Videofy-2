@@ -195,6 +195,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private boolean convertingToGif = false;
     private String gifPath;
     private int videoDuration;
+    private String oldVideoPath;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -262,14 +263,14 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void gifConvertProcessFinish(String output) {
         Log.d("GifConvert", output);
+        oldVideoPath = videoPath;
         thumbnailProgressBar.setVisibility(View.GONE);
         convertingToGif = false;
         gifPath = output;
+        videoPath = gifPath;
 
         Glide.with(context)
                 .load(gifPath)
-//                .asGif()
-//                .error(R.drawable.full_cake)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(thumbnailView);
 
@@ -327,7 +328,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 convertToGif = isChecked;
 
                 if (convertToGif) {
-                    if(videoDuration < 60) {
+                    if(videoDuration < 8) {
                         thumbnailView.setClickable(false);
                         playBtn.setVisibility(View.GONE);
                         disableView(uploadBtn, true);
@@ -358,9 +359,15 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     thumbnailView.setClickable(true);
                     playBtn.setVisibility(View.VISIBLE);
 
-                    Glide.with(context)
-                            .load(Uri.fromFile(new File(videoPath)))
-                            .into(thumbnailView);
+                    if (oldVideoPath != null) {
+                        Glide.with(context)
+                                .load(Uri.fromFile(new File(oldVideoPath)))
+                                .into(thumbnailView);
+                    } else {
+                        Glide.with(context)
+                                .load(Uri.fromFile(new File(videoPath)))
+                                .into(thumbnailView);
+                    }
                 }
             }
         });

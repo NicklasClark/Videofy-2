@@ -236,7 +236,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-//        Log.d("FCM", SharedPrefs.getFcmToken(this));
+        Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()

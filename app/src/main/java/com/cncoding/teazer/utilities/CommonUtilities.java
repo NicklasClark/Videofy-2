@@ -16,6 +16,9 @@ import java.net.URL;
  */
 
 public class CommonUtilities {
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int MEDIA_TYPE_GIF = 3;
+
     public static Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
@@ -92,7 +95,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 })
                 .into(holder.profilePic);
 
-        String title = postReaction.getReact_title();
+        String title = postReaction.getReactTitle();
         try {
             title = URLDecoder.decode(title, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -106,28 +109,37 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         String viewsText = "  " + postReaction.getViews();
         holder.views.setText(viewsText);
 
-        Glide.with(context)
-                .load(postReaction.getMediaDetail().getThumbUrl())
-                .crossFade()
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
-                        holder.vignetteLayout.setVisibility(View.VISIBLE);
-                        holder.caption.setVisibility(View.VISIBLE);
-                        holder.bottomLayout.setVisibility(View.VISIBLE);
-                        return false;
-                    }
+        if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO) {
+            holder.layout.setEnabled(true);
+            Glide.with(context)
+                    .load(postReaction.getMediaDetail().getThumbUrl())
+                    .crossFade()
+                    .skipMemoryCache(false)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                            holder.vignetteLayout.setVisibility(View.VISIBLE);
+                            holder.caption.setVisibility(View.VISIBLE);
+                            holder.bottomLayout.setVisibility(View.VISIBLE);
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-//                .animate(R.anim.float_up)
-                .into(holder.postThumbnail);
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+    //                .animate(R.anim.float_up)
+                    .into(holder.postThumbnail);
+        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+            holder.layout.setEnabled(false);
+            Glide.with(context)
+                    .load(postReaction.getMediaDetail().getMediaUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(holder.postThumbnail);
+        }
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override

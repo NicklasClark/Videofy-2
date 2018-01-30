@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.react.MediaDetail;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
@@ -12,58 +14,120 @@ import com.cncoding.teazer.model.react.MediaDetail;
  */
 
 public class PostReaction implements Parcelable {
-    private int react_id;
-    private int post_id;
-    private String react_title;
-    private int post_owner_id;
-    private int likes;
-    public int views;
-    private boolean can_like;
-    private boolean can_delete;
-    private MediaDetail media_detail;
-    private MiniProfile react_owner;
-    private String reacted_at;
-
-    public PostReaction(int react_id, String react_title, int post_owner_id, int likes, int views, boolean can_like, boolean can_delete, MediaDetail media_detail, MiniProfile react_owner, String reacted_at) {
-        this.react_id = react_id;
-        this.react_title = react_title;
-        this.post_owner_id = post_owner_id;
-        this.likes = likes;
-        this.views = views;
-        this.can_like = can_like;
-        this.can_delete = can_delete;
-        this.media_detail = media_detail;
-        this.react_owner = react_owner;
-        this.reacted_at = reacted_at;
-    }
+    @SerializedName("react_id")
+    @Expose
+    private Integer reactId;
+    @SerializedName("post_id")
+    @Expose
+    private Integer postId;
+    @SerializedName("post_owner_id")
+    @Expose
+    private Integer postOwnerId;
+    @SerializedName("react_title")
+    @Expose
+    private String reactTitle;
+    @SerializedName("likes")
+    @Expose
+    private Integer likes;
+    @SerializedName("views")
+    @Expose
+    private Integer views;
+    @SerializedName("can_like")
+    @Expose
+    private Boolean canLike;
+    @SerializedName("my_self")
+    @Expose
+    private Boolean mySelf;
+    @SerializedName("can_delete")
+    @Expose
+    private Boolean canDelete;
+    @SerializedName("media_detail")
+    @Expose
+    private MediaDetail mediaDetail;
+    @SerializedName("react_owner")
+    @Expose
+    private MiniProfile reactOwner;
+    @SerializedName("reacted_at")
+    @Expose
+    private String reactedAt;
 
     protected PostReaction(Parcel in) {
-        react_id = in.readInt();
-        post_id = in.readInt();
-        react_title = in.readString();
-        post_owner_id = in.readInt();
-        likes = in.readInt();
-        views = in.readInt();
-        can_like = in.readByte() != 0;
-        can_delete = in.readByte() != 0;
-        media_detail = in.readParcelable(MediaDetail.class.getClassLoader());
-        react_owner = in.readParcelable(MiniProfile.class.getClassLoader());
-        reacted_at = in.readString();
+        if (in.readByte() == 0) {
+            reactId = null;
+        } else {
+            reactId = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            postId = null;
+        } else {
+            postId = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            postOwnerId = null;
+        } else {
+            postOwnerId = in.readInt();
+        }
+        reactTitle = in.readString();
+        if (in.readByte() == 0) {
+            likes = null;
+        } else {
+            likes = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            views = null;
+        } else {
+            views = in.readInt();
+        }
+        byte tmpCanLike = in.readByte();
+        canLike = tmpCanLike == 0 ? null : tmpCanLike == 1;
+        byte tmpMySelf = in.readByte();
+        mySelf = tmpMySelf == 0 ? null : tmpMySelf == 1;
+        byte tmpCanDelete = in.readByte();
+        canDelete = tmpCanDelete == 0 ? null : tmpCanDelete == 1;
+        mediaDetail = in.readParcelable(MediaDetail.class.getClassLoader());
+        reactOwner = in.readParcelable(MiniProfile.class.getClassLoader());
+        reactedAt = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(react_id);
-        dest.writeInt(post_id);
-        dest.writeString(react_title);
-        dest.writeInt(post_owner_id);
-        dest.writeInt(likes);
-        dest.writeInt(views);
-        dest.writeByte((byte) (can_like ? 1 : 0));
-        dest.writeByte((byte) (can_delete ? 1 : 0));
-        dest.writeParcelable(media_detail, flags);
-        dest.writeParcelable(react_owner, flags);
-        dest.writeString(reacted_at);
+        if (reactId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(reactId);
+        }
+        if (postId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(postId);
+        }
+        if (postOwnerId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(postOwnerId);
+        }
+        dest.writeString(reactTitle);
+        if (likes == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(likes);
+        }
+        if (views == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(views);
+        }
+        dest.writeByte((byte) (canLike == null ? 0 : canLike ? 1 : 2));
+        dest.writeByte((byte) (mySelf == null ? 0 : mySelf ? 1 : 2));
+        dest.writeByte((byte) (canDelete == null ? 0 : canDelete ? 1 : 2));
+        dest.writeParcelable(mediaDetail, flags);
+        dest.writeParcelable(reactOwner, flags);
+        dest.writeString(reactedAt);
     }
 
     public static final Creator<PostReaction> CREATOR = new Creator<PostReaction>() {
@@ -78,48 +142,100 @@ public class PostReaction implements Parcelable {
         }
     };
 
-    public int getReactId() {
-        return react_id;
+    public Integer getReactId() {
+        return reactId;
     }
 
-    public int getPostId() {
-        return post_id;
+    public void setReactId(Integer reactId) {
+        this.reactId = reactId;
     }
 
-    public String getReact_title() {
-        return react_title;
+    public Integer getPostId() {
+        return postId;
     }
 
-    public int getPostOwnerId() {
-        return post_owner_id;
+    public void setPostId(Integer postId) {
+        this.postId = postId;
     }
 
-    public int getLikes() {
+    public Integer getPostOwnerId() {
+        return postOwnerId;
+    }
+
+    public void setPostOwnerId(Integer postOwnerId) {
+        this.postOwnerId = postOwnerId;
+    }
+
+    public String getReactTitle() {
+        return reactTitle;
+    }
+
+    public void setReactTitle(String reactTitle) {
+        this.reactTitle = reactTitle;
+    }
+
+    public Integer getLikes() {
         return likes;
     }
 
-    public int getViews() {
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getViews() {
         return views;
     }
 
-    public boolean canLike() {
-        return can_like;
+    public void setViews(Integer views) {
+        this.views = views;
     }
 
-    public boolean canDelete() {
-        return can_delete;
+    public Boolean getCanLike() {
+        return canLike;
+    }
+
+    public void setCanLike(Boolean canLike) {
+        this.canLike = canLike;
+    }
+
+    public Boolean getMySelf() {
+        return mySelf;
+    }
+
+    public void setMySelf(Boolean mySelf) {
+        this.mySelf = mySelf;
+    }
+
+    public Boolean getCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(Boolean canDelete) {
+        this.canDelete = canDelete;
     }
 
     public MediaDetail getMediaDetail() {
-        return media_detail;
+        return mediaDetail;
+    }
+
+    public void setMediaDetail(MediaDetail mediaDetail) {
+        this.mediaDetail = mediaDetail;
     }
 
     public MiniProfile getReactOwner() {
-        return react_owner;
+        return reactOwner;
+    }
+
+    public void setReactOwner(MiniProfile reactOwner) {
+        this.reactOwner = reactOwner;
     }
 
     public String getReactedAt() {
-        return reacted_at;
+        return reactedAt;
+    }
+
+    public void setReactedAt(String reactedAt) {
+        this.reactedAt = reactedAt;
     }
 
     @Override
@@ -134,15 +250,15 @@ public class PostReaction implements Parcelable {
 
         PostReaction that = (PostReaction) o;
 
-        return react_id == that.react_id;
+        return reactId == that.reactId;
     }
 
     @Override
     public int hashCode() {
-        return react_id;
+        return reactId;
     }
 
-    public PostReaction(int react_id) {
-        this.react_id = react_id;
+    public PostReaction(int react_id, String reactTitle, Integer postOwnerId, Integer likes, Integer views, Boolean canLike, Boolean canDelete, MediaDetail mediaDetail, MiniProfile miniProfile, String reactedAt) {
+        this.reactId = react_id;
     }
 }

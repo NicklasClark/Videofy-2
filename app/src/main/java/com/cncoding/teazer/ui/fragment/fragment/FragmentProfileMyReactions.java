@@ -93,9 +93,6 @@ public class FragmentProfileMyReactions extends Fragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-
-
-
     }
 
     public void getReactions(final int page) {
@@ -105,7 +102,6 @@ public class FragmentProfileMyReactions extends Fragment {
                 if (response.code() == 200) {
                     try {
                         if ((response.body().getReactions() == null||response.body().getReactions().size()==0) && page==1) {
-
                             alert1.setVisibility(View.VISIBLE);
                             alert2.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
