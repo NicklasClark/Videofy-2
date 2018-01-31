@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -134,10 +135,27 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     //                .animate(R.anim.float_up)
                     .into(holder.postThumbnail);
         } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-            holder.layout.setEnabled(false);
+            holder.layout.setEnabled(true);
             Glide.with(context)
                     .load(postReaction.getMediaDetail().getMediaUrl())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .bitmapTransform(new FitCenter(context))
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                            holder.vignetteLayout.setVisibility(View.VISIBLE);
+                            holder.caption.setVisibility(View.VISIBLE);
+                            holder.bottomLayout.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
                     .into(holder.postThumbnail);
         }
 
@@ -146,7 +164,11 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.root_layout:
-                        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                        if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
+                        } else {
+                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, false);
+                        }
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         //region TODO
@@ -198,6 +220,6 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     }
 
     void playFromDeepLink(PostReaction postReaction) {
-        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+        playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
     }
 }

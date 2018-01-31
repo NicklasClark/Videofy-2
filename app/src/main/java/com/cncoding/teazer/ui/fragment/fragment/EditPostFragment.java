@@ -1019,11 +1019,11 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                             startLocationUpdates();
                         }
                     } else {
-//                        permissions are denied, show empty list
+//                        permissions are denied, show empty myReactions
                         showEmptyList();
                     }
                 } else {
-//                        permissions are denied, show empty list
+//                        permissions are denied, show empty myReactions
                     showEmptyList();
                 }
                 break;

@@ -340,6 +340,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                             gifConvertAsyncTask.delegate = UploadFragment.this;
                             gifConvertAsyncTask.execute(videoPath);
                         } else {
+                            videoPath = gifPath;
                             Glide.with(context)
                                     .load(gifPath)
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -359,6 +360,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     thumbnailView.setClickable(true);
                     playBtn.setVisibility(View.VISIBLE);
 
+                    videoPath = oldVideoPath;
                     if (oldVideoPath != null) {
                         Glide.with(context)
                                 .load(Uri.fromFile(new File(oldVideoPath)))

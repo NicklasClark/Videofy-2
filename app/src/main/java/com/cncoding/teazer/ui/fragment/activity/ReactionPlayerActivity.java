@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -24,7 +25,7 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -95,9 +96,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.postDuration)
     ProximaNovaRegularTextView postDurationView;
+    @BindView(R.id.gif_view)
+    ImageView gifView;
     private String videoURL;
     private PostReaction postDetails;
-    private Reactions selfPostDetails;
+    private MyReactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -114,6 +117,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     private boolean audioAccessGranted = false;
     private long reactionPlayerCurrentPosition = 0;
     private Handler mHandler;
+    private boolean isGif;
 
 
     @Override
@@ -134,8 +138,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                                 // Wait 30 seconds before stopping playback
                                 mHandler.postDelayed(mDelayedStopRunnable,
                                         TimeUnit.SECONDS.toMillis(30));
-                            }
-                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
                                 // Pause playback
                                 player.setPlayWhenReady(false);
                             } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
@@ -161,6 +164,19 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 try {
                     videoURL = getIntent().getStringExtra("VIDEO_URL");
                     postDetails = getIntent().getParcelableExtra("POST_INFO");
+                    isGif = getIntent().getBooleanExtra("IS_GIF", false);
+                    if(isGif) {
+                        gifView.setVisibility(View.VISIBLE);
+
+                        Glide.with(this)
+                                .load(postDetails.getMediaDetail().getMediaUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .into(gifView);
+                    }
+                    else {
+                        playerView.setVisibility(View.VISIBLE);
+                    }
+
                     if (postDetails != null)
                         reactId = postDetails.getReactId();
 
@@ -207,6 +223,18 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 try {
                     videoURL = getIntent().getStringExtra("VIDEO_URL");
                     selfPostDetails = getIntent().getParcelableExtra("POST_INFO");
+                    isGif = getIntent().getBooleanExtra("IS_GIF", false);
+                    if(isGif) {
+                        gifView.setVisibility(View.VISIBLE);
+
+                        Glide.with(this)
+                                .load(selfPostDetails.getMediaDetail().getReactMediaUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .into(gifView);
+                    }
+                    else {
+                        playerView.setVisibility(View.VISIBLE);
+                    }
                     if (selfPostDetails != null)
                         reactId = selfPostDetails.getReactId();
 
@@ -219,7 +247,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 //                        //            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
 //                    }
 
-                    isLiked = !selfPostDetails.canLike();
+                    isLiked = !selfPostDetails.getCanLike();
                     likesCount = selfPostDetails.getLikes();
                     viewsCount = selfPostDetails.getViews();
                     reactionTitle = selfPostDetails.getReactTitle();
@@ -300,8 +328,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 player.setPlayWhenReady(true);
                 player.seekTo(reactionPlayerCurrentPosition);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -508,13 +535,12 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                 });
                 break;
             }
-            case SELF_REACTION:
-            {
+            case SELF_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(selfPostDetails.getPostOwner().getUserId()))
                         .setTitle(selfPostDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(selfPostDetails.getMediaDetail().getThumbUrl());
+                        .setContentImageUrl(selfPostDetails.getMediaDetail().getReactMediaUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")

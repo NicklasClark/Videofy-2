@@ -18,7 +18,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
@@ -42,7 +42,7 @@ public class FragmentProfileMyReactions extends Fragment {
     ProfileMyReactionAdapter profileMyReactionAdapter;
     RecyclerView.LayoutManager layoutManager;
     Context context;
-    List<Reactions>list;
+    List<MyReactions> myReactions;
     int page;
     ProximaNovaSemiboldTextView alert1;
     ProximaNovaRegularTextView alert2;
@@ -70,10 +70,10 @@ public class FragmentProfileMyReactions extends Fragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        list=new ArrayList<>();
+        myReactions =new ArrayList<>();
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, myReactions);
         recyclerView.setAdapter(profileMyReactionAdapter);
         getReactions(1);
 
@@ -110,9 +110,9 @@ public class FragmentProfileMyReactions extends Fragment {
                         else
                         {
                             next=response.body().isNextPage();
-                            list.addAll(response.body().getReactions());
+                            myReactions.addAll(response.body().getReactions());
                             recyclerView.getAdapter().notifyDataSetChanged();
-                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), list.size() - 1);
+                            profileMyReactionAdapter.notifyItemRangeInserted(profileMyReactionAdapter.getItemCount(), myReactions.size() - 1);
                             loader.setVisibility(View.GONE);
                         }
                     }

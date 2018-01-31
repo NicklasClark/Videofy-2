@@ -388,7 +388,7 @@ public class CameraActivity extends AppCompatActivity
 //                                uploadFragment = UploadFragment.newInstance(videoPath, true, true, (int) videoDuration);
 //                                startVideoUploadFragment();
                             } else {
-                                Toast.makeText(this, "Reactions can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "MyReactions can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
                             }
                         }
                         else

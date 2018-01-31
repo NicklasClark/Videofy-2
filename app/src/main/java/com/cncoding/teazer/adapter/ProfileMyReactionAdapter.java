@@ -18,11 +18,13 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
@@ -41,12 +44,12 @@ import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer
 
 public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReactionAdapter.ViewHolder> {
 
-    private List<Reactions> list;
+    private List<MyReactions> list;
     private Context context;
     private boolean isPostClicked = false;
 
 
-    public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
+    public ProfileMyReactionAdapter(Context context, List<MyReactions> list) {
         this.context = context;
         this.list = list;
     }
@@ -57,18 +60,18 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     }
     @Override
     public void onBindViewHolder(final ProfileMyReactionAdapter.ViewHolder viewHolder,  final int i) {
-        final Reactions cont = list.get(i);
-        final int reactId = cont.getReactId();
-        String videoTitle = cont.getReactTitle();
-        final int likes = cont.getLikes();
-        final int views = cont.getViews();
-        final String reactDuration = cont.getMediaDetail().getReactDuration();
-        final String thumb_url = cont.getMediaDetail().getThumbUrl();
-        final String postOwner = cont.getPostOwner().getUserName();
-        final int reaction = cont.getReactedBy();
+        final MyReactions reactions = list.get(i);
+        final int reactId = reactions.getReactId();
+        String videoTitle = reactions.getReactTitle();
+        final int likes = reactions.getLikes();
+        final int views = reactions.getViews();
+        final String reactDuration = reactions.getMediaDetail().getReactDuration();
+        final String thumb_url = reactions.getMediaDetail().getReactThumbUrl();
+        final String postOwner = reactions.getPostOwner().getFirstName();
+        final int reaction = reactions.getReactedBy();
 
 
-        if (videoTitle.equals("") || videoTitle == null) {
+        if (videoTitle.equals("")) {
             viewHolder.videoTitle.setText("No Title");
         } else {
             viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
@@ -79,16 +82,32 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.duration.setText(reactDuration);
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
-        Glide.with(context).load(thumb_url)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
-                .into(viewHolder.thumbimage);
-
+        if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+            Glide.with(context)
+                    .load(reactions.getMediaDetail().getReactMediaUrl())
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .bitmapTransform(new FitCenter(context))
+                    .into(viewHolder.thumbimage);
+            viewHolder.duration.setVisibility(View.GONE);
+        }
+        else {
+            Glide.with(context).load(thumb_url)
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                    .into(viewHolder.thumbimage);
+            viewHolder.duration.setVisibility(View.VISIBLE);
+        }
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isPostClicked) {
                     isPostClicked = true;
-                    playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                    if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                        playOnlineVideoInExoPlayer(context, SELF_REACTION, null, reactions, true);
+                    } else {
+                        playOnlineVideoInExoPlayer(context, SELF_REACTION, null, reactions, false);
+                    }
+                    isPostClicked = false;
                 }
             }
         });
