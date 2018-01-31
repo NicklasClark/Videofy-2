@@ -1,4 +1,4 @@
-package com.cncoding.teazer.data.repository;
+package com.cncoding.teazer.data.repository.remote.post;
 
 import android.arch.lifecycle.LiveData;
 

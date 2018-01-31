@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
@@ -9,10 +10,18 @@
     android:layout_marginTop="6dp"
     android:background="@drawable/bg_card_no_margin_white">
 
-    <RelativeLayout
+    <com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout
+        android:id="@+id/shimmer_layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
+        app:auto_start_="true"
+        app:duration_="1000"
+        app:angle_="cw_90"
+        app:tilt_="30"
+        app:intensity_="0.8"
+        app:shape_="linear"
+        app:repeat_mode_="restart"
         android:background="@drawable/bg_card_no_margin_white">
 
         <LinearLayout
@@ -53,11 +62,10 @@
 
         </LinearLayout>
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
             android:id="@+id/category"
             android:layout_width="wrap_content"
             android:minWidth="52dp"
-            android:maxWidth="100dp"
             android:paddingStart="11dp"
             android:paddingEnd="11dp"
             android:layout_height="18dp"
@@ -79,7 +87,7 @@
             android:layout_below="@+id/category"
             android:layout_alignParentEnd="true"/>
 
-    </RelativeLayout>
+    </com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -106,13 +114,21 @@
             android:padding="12dp"
             android:contentDescription="@string/volume_controls" />
 
-        <RelativeLayout
+        <com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout
+            android:id="@+id/shimmer_layout_mid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/content"
             android:background="@drawable/bg_vignette_bottom"
             android:gravity="bottom"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            app:auto_start_="true"
+            app:duration_="1000"
+            app:angle_="cw_90"
+            app:tilt_="30"
+            app:intensity_="0.8"
+            app:shape_="linear"
+            app:repeat_mode_="restart">
 
             <com.cncoding.teazer.customViews.CircularAppCompatImageView
                 android:id="@+id/dp"
@@ -207,18 +223,26 @@
                 android:paddingStart="@dimen/padding_thin"
                 android:foreground="@drawable/ripple_dark"
                 android:background="@drawable/bg_button_react"
-                android:alpha="0.8"
                 app:drawableStartCompat="@drawable/ic_react_home" />
 
-        </RelativeLayout>
+        </com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout>
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="HomeScreenPostList"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        android:clipToPadding="false"/>
+
+<!--    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+&lt;!&ndash;        <LinearLayout
             android:id="@+id/no_reaction_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -242,17 +266,8 @@
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/bg_shimmer_light"/>
 
-        </LinearLayout>
+        </LinearLayout>&ndash;&gt;
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="HomeScreenPostList"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:clipToPadding="false"/>
-
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 </LinearLayout>

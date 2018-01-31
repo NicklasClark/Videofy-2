@@ -392,11 +392,15 @@ public class ViewUtils {
 
             layoutParams.width = width;
 //                resize posts in shimmerLayout
-            if (!isPostList ? postHeight < postWidth : postHeight >= postWidth) {
-                postHeight = width;
-                layoutParams.height = postHeight;
+            if (!isPostList) {
+                if (postHeight >= postWidth) {
+                    postHeight = width;
+                    layoutParams.height = postHeight;
+                } else {
+                    layoutParams.height = width * postHeight / postWidth;
+                }
             } else {
-                layoutParams.height = width * postHeight / postWidth;
+                layoutParams.height = layoutParams.width * 3 / 4;
             }
 //                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
 //                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio

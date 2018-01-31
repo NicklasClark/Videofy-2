@@ -1,4 +1,4 @@
-package com.cncoding.teazer.data.liveModel;
+package com.cncoding.teazer.data.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import static com.cncoding.teazer.data.liveModel.MutableDataProvider.getMutableData;
+import static com.cncoding.teazer.data.viewmodel.MutableDataProvider.getMutableData;
 
 /**
  *

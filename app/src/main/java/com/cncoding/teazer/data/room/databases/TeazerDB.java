@@ -18,7 +18,7 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-@Database(entities =  {PostDetails.class}, version = 1)
+@Database(entities =  {PostDetails.class}, version = 1, exportSchema = false)
 @TypeConverters({ConvertersFactory.class})
 public abstract class TeazerDB extends RoomDatabase {
     private static TeazerDB INSTANCE;

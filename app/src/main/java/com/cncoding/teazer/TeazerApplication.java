@@ -25,6 +25,7 @@ import io.branch.referral.Branch;
 public class TeazerApplication extends Application  {
 
     private static final String TAG = "Application";
+//    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
@@ -63,7 +64,16 @@ public class TeazerApplication extends Application  {
 
         MobiruckSdk.getInstance().startTracking();  // this starts the tracking system.
 
+//        applicationComponent = DaggerApplicationComponent
+//                .builder()
+//                .applicationModule(new ApplicationModule(this))
+//                .roomModule(new RoomModule(this))
+//                .build();
     }
+
+//    public ApplicationComponent getApplicationComponent() {
+//        return applicationComponent;
+//    }
 
     private void initFFmpegBinary(Context context) {
 

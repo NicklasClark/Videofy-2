@@ -30,6 +30,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.data.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
@@ -72,6 +73,7 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
         this.context = context;
 //        dimensionSparseArray = new SparseArray<>();
         colorArray = new SparseIntArray();
+        isMuted = true;
 
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
@@ -102,8 +104,8 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
             holder.setImageUrl(holder.postDetails.getMedias().get(0).getThumbUrl());
             holder.setVideoUrl(holder.postDetails.getMedias().get(0).getMediaUrl());
 
-            shimmerize(new View[]{holder.title, holder.location, holder.category}, new View[]{holder.username},
-                    holder.popularityLayoutShimmer);
+            shimmerize(new View[] {holder.title, holder.location, holder.category}, new View[]{holder.username},
+                    holder.popularityLayoutShimmer, new ShimmerRelativeLayout[] {holder.shimmerLayoutTop, holder.shimmerLayoutMid});
 
                 /*Adjust view size before loading anything*/
             adjustViewSize(context, holder.postDetails.getMedias().get(0).getDimension().getWidth(),
@@ -126,11 +128,8 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                                        boolean isFromMemoryCache, boolean isFirstResource) {
-                            deShimmerize(new View[]{holder.title, holder.location, holder.username}, holder.popularityLayoutShimmer);
                             holder.getAAH_ImageView().setImageDrawable(resource);
-
                             setFields(holder);
-
                             return false;
                         }
                     })
@@ -144,13 +143,11 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
 
             if (holder.postDetails.getReactions() != null && holder.postDetails.getReactions().size() > 0) {
                 holder.reactionListView.setVisibility(VISIBLE);
-                holder.noReactionPlaceholder.setVisibility(GONE);
                 holder.reactionListView.setLayoutManager(
                         new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 holder.reactionListView.setAdapter(new ReactionAdapter(context, holder.postDetails.getReactions()));
             } else {
                 holder.reactionListView.setVisibility(GONE);
-                holder.noReactionPlaceholder.setVisibility(GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,6 +155,9 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
     }
 
     private void setFields(ViewHolder holder) {
+        deShimmerize(new View[]{holder.title, holder.location, holder.username}, holder.popularityLayoutShimmer,
+                new ShimmerRelativeLayout[] {holder.shimmerLayoutTop, holder.shimmerLayoutMid});
+
 //            SETTING TITLE
         String title = holder.postDetails.getTitle();
         holder.title.setText(decodeUnicodeString(title));
@@ -170,13 +170,13 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
         } else holder.location.setVisibility(GONE);
 
 //            SETTING CATEGORY AND EXTRA CATEGORIES, IF ANY
-        if (holder.postDetails.getCategories() != null) {
+        if (holder.postDetails.getCategories() != null && !holder.postDetails.getCategories().isEmpty()) {
             holder.category.setVisibility(holder.postDetails.getCategories().isEmpty() ? GONE : VISIBLE);
             if (holder.category.getVisibility() == VISIBLE) {
                 holder.category.setText(holder.postDetails.getCategories().get(0).getCategoryName());
                 holder.category.setBackground(
                         getBackground(holder.category, holder.getAdapterPosition(),
-                                Color.parseColor(holder.postDetails.getCategories().get(0).getColor())));
+                                Color.parseColor(holder.postDetails.getCategories().get(0).getMyColor())));
                 int categoriesSize = holder.postDetails.getCategories().size();
                 if (categoriesSize > 1) {
                     holder.categoryExtra.setVisibility(VISIBLE);
@@ -202,7 +202,8 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
         holder.reactions.setText(String.valueOf(holder.postDetails.getTotalReactions()));
     }
 
-    private void shimmerize(View[] viewsToShimmerizeLight, View[] viewsToShimmerizeDark, View popularityLayoutShimmer) {
+    private void shimmerize(View[] viewsToShimmerizeLight, View[] viewsToShimmerizeDark,
+                            View popularityLayoutShimmer, ShimmerRelativeLayout[] shimmers) {
         for (View view : viewsToShimmerizeLight) {
             view.setBackground(context.getResources().getDrawable(R.drawable.bg_shimmer_light));
             if (view instanceof TextView)
@@ -213,12 +214,18 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
             if (view instanceof TextView)
                 ((TextView) view).setText(null);
         }
+        for (ShimmerRelativeLayout shimmer : shimmers) {
+            shimmer.startShimmerAnimation();
+        }
         popularityLayoutShimmer.setVisibility(VISIBLE);
     }
 
-    private void deShimmerize(View[] views, View popularityLayoutShimmer) {
+    private void deShimmerize(View[] views, View popularityLayoutShimmer, ShimmerRelativeLayout[] shimmers) {
         for (View view : views) {
             view.setBackground(null);
+        }
+        for (ShimmerRelativeLayout shimmer : shimmers) {
+            shimmer.stopShimmerAnimation();
         }
         popularityLayoutShimmer.setVisibility(GONE);
     }
@@ -269,15 +276,15 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
 //        }
 //    }
 
-    private GradientDrawable getBackground(ProximaNovaRegularTextView title, int position, int color) {
+    private GradientDrawable getBackground(TextView title, int position, int color) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         if (colorArray.get(position) == 0) {
             colorArray.put(position, color);
         }
-        gradientDrawable.setColor(Color.TRANSPARENT);
+        gradientDrawable.setColor(colorArray.get(position));
         gradientDrawable.setCornerRadius(getPixels(context, 2));
-        gradientDrawable.setStroke(getPixels(context, 0.5f), colorArray.get(position));
-        title.setTextColor(colorArray.get(position));
+//        gradientDrawable.setStroke(getPixels(context, 0.5f), colorArray.get(position));
+        title.setTextColor(Color.WHITE);
         return gradientDrawable;
     }
 
@@ -295,7 +302,7 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
         @BindView(R.id.location) ProximaNovaRegularTextView location;
-        @BindView(R.id.category) ProximaNovaRegularTextView category;
+        @BindView(R.id.category) ProximaNovaSemiBoldTextView category;
         @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
         @BindView(R.id.content) AAH_VideoImage content;
         @BindView(R.id.volume_control) ImageView volumeControl;
@@ -307,12 +314,14 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
         @BindView(R.id.popularity_layout_shimmer) ProximaNovaRegularTextView popularityLayoutShimmer;
         @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
         @BindView(R.id.list) RecyclerView reactionListView;
-        @BindView(R.id.no_reaction_placeholder) LinearLayout noReactionPlaceholder;
+        @BindView(R.id.shimmer_layout_top) ShimmerRelativeLayout shimmerLayoutTop;
+        @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
         PostDetails postDetails;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            muteVideo();
             volumeControl.setImageResource(isMuted ? R.drawable.ic_volume_off : R.drawable.ic_volume_up);
         }
 
@@ -350,13 +359,14 @@ public class PostsListAdapter extends AAH_VideosAdapter implements OnAudioVolume
             return super.toString() + " '" + username.getText() + "' : \"" + title.getText() + "\"";
         }
 
-//        /**
-//         * override this method to get callback when video starts to play
-//         */
-//        @Override
-//        public void videoStarted() {
-//            super.videoStarted();
-//        }
+        /**
+         * override this method to get callback when video starts to play
+         */
+        @Override
+        public void videoStarted() {
+            super.videoStarted();
+            if (isMuted) muteVideo(); else unmuteVideo();
+        }
 
         @Override
         public void muteVideo() {

@@ -1,4 +1,4 @@
-package com.cncoding.teazer.data.liveModel;
+package com.cncoding.teazer.data.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;

@@ -1,15 +1,13 @@
 package com.cncoding.teazer.data.room.daos;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.cncoding.teazer.data.model.base.CheckIn;
-import com.cncoding.teazer.data.model.base.MiniProfile;
 import com.cncoding.teazer.data.model.post.PostDetails;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
@@ -24,24 +22,29 @@ public interface PostDetailsDao {
 
     //region Getter queries
     @Query("SELECT * FROM PostDetails")
-    List<PostDetails> getAllPosts();
+    LiveData<List<PostDetails>> getAllPosts();
 
     @Query("SELECT * FROM PostDetails WHERE postId LIKE :postId")
-    List<PostDetails> getPost(int postId);
+    LiveData<List<PostDetails>> getPost(int postId);
 
 //    @Query("SELECT postOwner FROM PostDetails WHERE postId = :postId LIMIT 1")
-//    List<MiniProfile> getPostOwner(int postId);
+//    LiveData<List<MiniProfile>> getPostOwner(int postId);
+
+//    @Query("SELECT medias FROM PostDetails WHERE postId = :postId LIMIT 1")
+//    LiveData<List<ArrayList<Medias>>> getPostMedia(int postId);
 
 //    @Query("SELECT checkIn FROM PostDetails WHERE postId = :postId LIMIT 1")
 //    List<CheckIn> getPostCheckIn(int postId);
     //endregion
 
     //region Update queries
-    @Query("UPDATE PostDetails SET likes = :likeCount")
-    void updateLikes(int likeCount);
+    @Query("UPDATE PostDetails SET likes = likes + 1")
+    void likePost();
 
-//    @Query("UPDATE PostDetails SET views = :viewCount")
-//    void updateViews(int viewCount);
+    @Query("UPDATE PostDetails SET likes = likes - 1")
+    void dislikePost();
+
+//    void incrementViews();
     //endregion
 
     //region Deletion queries
@@ -53,8 +56,8 @@ public interface PostDetailsDao {
     //endregion
 
     //region Insertion queries
-    @Insert
-    List<Long> insertAll(ArrayList<PostDetails> postDetails);
+    @Insert(onConflict = REPLACE)
+    List<Long> insertAll(List<PostDetails> postDetails);
 
     @Insert(onConflict = REPLACE)
     long insertPost(PostDetails postDetails);

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.data.model.react.ReactionDetails;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         try {
+            holder.layout.startShimmerAnimation();
             if (position < reactions.size()) {
                 holder.thumbUrl = reactions.get(position).getMediaDetail().getThumbUrl();
                 holder.titleText = reactions.get(position).getReactTitle();
@@ -77,6 +79,7 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
                 holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
                 holder.title.setText(null);
             }
+            holder.layout.stopShimmerAnimation();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,6 +92,7 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.root_layout) ShimmerLinearLayout layout;
         @BindView(R.id.thumb) ImageView thumb;
         @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
         String thumbUrl;
