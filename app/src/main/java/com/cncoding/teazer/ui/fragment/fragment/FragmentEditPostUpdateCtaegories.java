@@ -81,10 +81,12 @@ public class FragmentEditPostUpdateCtaegories extends Fragment {
         View view = inflater.inflate(R.layout.fragment_change_categories, container, false);
         ButterKnife.bind(this, view);
         context = container.getContext();
+
         headerTextView.setHint(R.string.select_up_to_5_categories);
         // usercategoryList=new ArrayList<>();
 //        usercategoryList.addAll(postDetails.getCategories());
         //Toast.makeText(context, selecCateg.getCategories().get(1).getCategoryName()+ selecCateg.getCategories().get(2).getCategoryName(), Toast.LENGTH_SHORT).show();
+
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

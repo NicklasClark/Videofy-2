@@ -71,6 +71,7 @@ import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
@@ -178,6 +179,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
     public static final String NOTIFICATION_TYPE = "notification_type";
+    public static final String POST_ID = "post_id";
     public static final int REQUEST_CANCEL_UPLOAD = 45;
     public static final int COACH_MARK_DELAY = 1000;
 
@@ -224,7 +226,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-//        Log.d("FCM", SharedPrefs.getFcmToken(this));
+       Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()
@@ -369,7 +371,8 @@ public class BaseBottomBarActivity extends BaseActivity
                     Log.d("NOTIFYM", bundle.toString());
                     String notification_type = bundle.getString("notification_type");
                     String source_id = bundle.getString("source_id");
-                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
+                    String post_id = bundle.getString("post_id");
+                    notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id),Integer.valueOf(post_id));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -458,7 +461,8 @@ public class BaseBottomBarActivity extends BaseActivity
                     Log.d("NOTIFYM", "BUNDLE Exists on new Intent");
                     int notification_type = notificationBundle.getInt(NOTIFICATION_TYPE);
                     int source_id = notificationBundle.getInt(SOURCE_ID);
-                    notificationAction(notification_type, source_id);
+                    int post_id = notificationBundle.getInt(POST_ID);
+                    notificationAction(notification_type, source_id,post_id);
                 }
 
                  else if (profileBundle != null) {
@@ -506,7 +510,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 Log.d("NOTIFYM", "BUNDLE Exists in onStart");
                 String notification_type = notificationBundle.getString("notification_type");
                 String source_id = notificationBundle.getString("source_id");
-                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id));
+                String post_id = notificationBundle.getString("post_id");
+                notificationAction(Integer.valueOf(notification_type), Integer.valueOf(source_id),Integer.valueOf(post_id));
             } else
                 Log.d("NOTIFYM", "BUNDLE not present in onStart");
         } catch (NumberFormatException e) {
@@ -531,11 +536,12 @@ public class BaseBottomBarActivity extends BaseActivity
         return v;
     }
 
-    private void notificationAction(int notification_type, int source_id) {
+    private void notificationAction(int notification_type, int source_id, int post_id) {
+
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         }
-        else {
+        else if(notification_type == 5 || notification_type == 7 || notification_type == 9){
             ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)
                     .enqueue(new Callback<PostDetails>() {
                         @Override
@@ -555,7 +561,62 @@ public class BaseBottomBarActivity extends BaseActivity
                             Toast.makeText(BaseBottomBarActivity.this, "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+
         }
+        else
+        {
+
+            if(post_id!=0)
+            {
+                ApiCallingService.React.getReactionDetail2(source_id, getApplicationContext())
+                        .enqueue(new Callback<ReactVideoDetailsResponse>() {
+                            @Override
+                            public void onResponse(Call<ReactVideoDetailsResponse> call, Response<ReactVideoDetailsResponse> response) {
+                                if (response.code() == 200) {
+                                    if (response.body() != null) {
+                                        PostReaction postReactDetail = response.body().getPostReactDetail();
+                                        pushFragment(FragmentReactionplayer.newInstance(0, postReactDetail,null));
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else
+                                    Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ReactVideoDetailsResponse> call, Throwable t) {
+                                Toast.makeText(getApplicationContext(), "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+            else
+            {
+                ApiCallingService.Posts.getPostDetails(source_id, getApplicationContext())
+                        .enqueue(new Callback<PostDetails>() {
+                            @Override
+                            public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                if (response.code() == 200)
+                                    pushFragment(FragmentPostDetails.newInstance( postDetails, null, false, false, null, null));
+
+                                else if (response.code() == 412 && response.message().contains("Precondition Failed"))
+                                    Toast.makeText(getApplicationContext(), "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                else {
+                                    Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                    Toast.makeText(getApplicationContext(), "Error fetching post", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<PostDetails> call, Throwable t) {
+                                t.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+            }
+
+        }
+
     }
 
     private void getBranchDynamicLinks() {

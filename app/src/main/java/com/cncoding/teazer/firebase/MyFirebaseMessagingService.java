@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.Map;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
+import static com.cncoding.teazer.BaseBottomBarActivity.POST_ID;
 import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
 
 /**
@@ -78,6 +79,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Bundle bundle = new Bundle();
         bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
         bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
+        String postId=data.get("post_id");
+        if(postId!=null) {
+            bundle.putInt(POST_ID, Integer.parseInt(postId));
+        }
         Log.d("FCMNOT", data.get("notification_type"));
         intent.putExtra("bundle", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -86,6 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         initChannels();
+
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")

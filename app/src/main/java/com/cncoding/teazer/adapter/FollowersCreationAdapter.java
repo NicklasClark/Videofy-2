@@ -30,6 +30,7 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
+import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;
@@ -52,13 +53,15 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
     Context context;
     private ArrayList<PostReaction> reactionList;
     FollowerCreationListener listener;
-    Activity othersProfileFragment;
+    OthersProfileFragment othersProfileFragment;
+    ArrayList<PostReaction>updatelist;
 
-    public FollowersCreationAdapter(Context context, List<PostDetails> _list, Activity othersProfileFragment) {
+    public FollowersCreationAdapter(Context context, List<PostDetails> _list, OthersProfileFragment othersProfileFragment) {
         this.context = context;
         this._list = _list;
         listener = (FollowerCreationListener) context;
         this.othersProfileFragment = othersProfileFragment;
+
 
     }
 
@@ -174,7 +177,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                             .setPositiveButton(context.getString(R.string.yes_hide), new DialogInterface.OnClickListener()
                                             {
                                                 @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                public void onClick(DialogInterface dialogInterface, int item) {
                                                     ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, context)
                                                             .enqueue(new Callback<ResultObject>() {
                                                                 @Override
@@ -188,12 +191,12 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                                         viewHolder.playvideo.setVisibility(View.GONE);
                                                                         viewHolder.cardView.setEnabled(false);
                                                                         viewHolder.menu.setEnabled(false);
+                                                                        postDetails.setHided(true);
+
 
 
                                                                     } else {
-                                                                        Toast.makeText(context,
-                                                                                R.string.something_went_wrong,
-                                                                                Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                                                                     }
                                                                 }
                                                                 @Override
@@ -211,6 +214,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                 }
                                             })
                                             .show();
+                                    othersProfileFragment.resetRecyclerData();
 
 
                                     break;
@@ -248,6 +252,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                         viewHolder.playvideo.setVisibility(View.VISIBLE);
                                                         viewHolder.menu.setEnabled(true);
                                                         viewHolder.cardView.setEnabled(true);
+                                                        postDetails.setHided(false);
+
 
                                                     } else {
                                                         Toast.makeText(context,

@@ -374,6 +374,8 @@ public class FragmentPostDetails extends BaseFragment implements
             }
         });
 
+
+
 //        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
 //            @Override
 //            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -1284,10 +1286,11 @@ public class FragmentPostDetails extends BaseFragment implements
     @Override
     public void onStop() {
         super.onStop();
+        getParentActivity().updateToolbarTitle(previousTitle);
+        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
-            getParentActivity().showToolbar();
         }
         releaseAudioLock(getContext(), audioFocusChangeListener);
     }
@@ -1578,6 +1581,7 @@ public class FragmentPostDetails extends BaseFragment implements
         releaseAudioLock(getContext(), audioFocusChangeListener);
         mHandler.removeCallbacks(mDelayedStopRunnable);
     }
+
 
 
 

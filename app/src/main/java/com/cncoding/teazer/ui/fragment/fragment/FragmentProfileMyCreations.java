@@ -123,7 +123,6 @@ public class FragmentProfileMyCreations extends Fragment {
                             next = response.body().isNextPage();
                             list.addAll(response.body().getPosts());
                             recyclerView.getAdapter().notifyDataSetChanged();
-
                             profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
                             progress_bar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);

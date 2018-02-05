@@ -210,4 +210,80 @@ public class PostDetails implements Parcelable
     public ArrayList<Category> getCategories() {
         return categories;
     }
+
+    public void setHided(Boolean hided) {
+        isHided = hided;
+    }
+
+    public void setHidedAll(Boolean hidedAll) {
+        isHidedAll = hidedAll;
+    }
+
+    public void setPost_id(int post_id) {
+        this.post_id = post_id;
+    }
+
+    public void setPosted_by(int posted_by) {
+        this.posted_by = posted_by;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void setTotal_reactions(int total_reactions) {
+        this.total_reactions = total_reactions;
+    }
+
+    public void setTotal_tags(int total_tags) {
+        this.total_tags = total_tags;
+    }
+
+    public void setHas_checkin(boolean has_checkin) {
+        this.has_checkin = has_checkin;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCan_react(boolean can_react) {
+        this.can_react = can_react;
+    }
+
+    public void setCan_like(boolean can_like) {
+        this.can_like = can_like;
+    }
+
+    public void setCan_delete(boolean can_delete) {
+        this.can_delete = can_delete;
+    }
+
+    public void setPost_owner(MiniProfile post_owner) {
+        this.post_owner = post_owner;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public void setCheck_in(CheckIn check_in) {
+        this.check_in = check_in;
+    }
+
+    public void setMedias(ArrayList<Medias> medias) {
+        this.medias = medias;
+    }
+
+    public void setTagged_users(ArrayList<TaggedUser> tagged_users) {
+        this.tagged_users = tagged_users;
+    }
+
+    public void setReacted_users(ArrayList<ReactedUser> reacted_users) {
+        this.reacted_users = reacted_users;
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
+    }
 }
