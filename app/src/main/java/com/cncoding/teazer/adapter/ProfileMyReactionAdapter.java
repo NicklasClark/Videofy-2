@@ -24,7 +24,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.react.MyReactions;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -33,6 +35,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
@@ -91,11 +95,21 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                     .into(viewHolder.thumbimage);
             viewHolder.duration.setVisibility(View.GONE);
         }
-        else {
+        else if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
             Glide.with(context).load(thumb_url)
                     .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
                     .into(viewHolder.thumbimage);
             viewHolder.duration.setVisibility(View.VISIBLE);
+        } else if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
+
+            Gson gson = new Gson();
+            Images images = gson.fromJson(reactions.getMediaDetail().getExternalMeta(), Images.class);
+            Glide.with(context)
+                    .load(images.getDownsized().getUrl())
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .bitmapTransform(new FitCenter(context))
+                    .into(viewHolder.thumbimage);
         }
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +118,10 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                     isPostClicked = true;
                     if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
                         playOnlineVideoInExoPlayer(context, SELF_REACTION, null, reactions, true);
-                    } else {
+                    } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
                         playOnlineVideoInExoPlayer(context, SELF_REACTION, null, reactions, false);
+                    } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY){
+                        playOnlineVideoInExoPlayer(context, SELF_REACTION, null, reactions, true);
                     }
                     isPostClicked = false;
                 }

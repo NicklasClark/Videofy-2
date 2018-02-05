@@ -55,6 +55,7 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.giphy.Images;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -72,6 +73,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -129,6 +131,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public static final int VIDEO_UPLOAD = 25;
     public static final int REACTION_UPLOAD = 26;
     private static final String VIDEO_DURATION = "video_duration";
+    private static final String IS_GIPHY = "is_giphy";
 
     @BindView(R.id.share_on_facebook)
     ProximaNovaRegularCheckedTextView facebookShareBtn;
@@ -196,18 +199,20 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private String gifPath;
     private int videoDuration;
     private String oldVideoPath;
+    private boolean isGiphy;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery, int videoDuration) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery, int videoDuration, boolean isGiphy) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
         args.putInt(VIDEO_DURATION, videoDuration);
+        args.putBoolean(IS_GIPHY, isGiphy);
         fragment.setArguments(args);
         //CameraActivity.checkFromGallery=false;
         return fragment;
@@ -225,6 +230,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isReaction = bundle.getBoolean(IS_REACTION);
             isGallery = bundle.getBoolean(IS_GALLERY);
             videoDuration = bundle.getInt(VIDEO_DURATION);
+            isGiphy = bundle.getBoolean(IS_GIPHY);
         }
 
 //        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
@@ -383,21 +389,35 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //        if (addingWatermark) {
 //            disableView(uploadBtn, true);
 //        }
-        if (convertingToGif) {
-            disableView(uploadBtn, true);
-        }
+        if (!isGiphy) {
+            if (convertingToGif) {
+                disableView(uploadBtn, true);
+            }
 
-        Glide.with(context)
-                .load(Uri.fromFile(new File(videoPath)))
-                .into(thumbnailView);
+            Glide.with(context)
+                    .load(Uri.fromFile(new File(videoPath)))
+                    .into(thumbnailView);
 
-        if (videoDuration > 0) {
-            String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
-                    MILLISECONDS.toMinutes(videoDuration*1000),
-                    MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
-            videoDurationTextView.setText(durationText);
+            if (videoDuration > 0) {
+                String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
+                        MILLISECONDS.toMinutes(videoDuration*1000),
+                        MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
+                videoDurationTextView.setText(durationText);
+            } else {
+                new SetVideoDuration(this).execute();
+            }
         } else {
-            new SetVideoDuration(this).execute();
+            videoDurationTextView.setVisibility(View.GONE);
+            gifSwitch.setVisibility(View.GONE);
+            thumbnailView.setClickable(false);
+            playBtn.setVisibility(View.GONE);
+
+            Gson gson = new Gson();
+            Images images = gson.fromJson(videoPath, Images.class);
+            Glide.with(context)
+                    .load(images.getDownsized().getUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(thumbnailView);
         }
 
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
@@ -693,11 +713,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             if (!isReaction)
                 mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,
                         Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                        selectedTagsToSend, selectedCategoriesToSend);
+                        selectedTagsToSend, selectedCategoriesToSend, isGiphy);
             else
                 mListener.performUpload(REACTION_UPLOAD, isGallery, videoPath, title, location,
                         Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                        null, null);
+                        null, null, isGiphy);
         }
     }
 
@@ -1061,7 +1081,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
 
         void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
-                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend);
+                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend, boolean isGiphy);
     }
 
 }

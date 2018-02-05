@@ -22,7 +22,9 @@ import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_VIDEO;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
@@ -157,6 +160,33 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                         }
                     })
                     .into(holder.postThumbnail);
+        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
+            holder.layout.setEnabled(true);
+
+            Gson gson = new Gson();
+            Images images = gson.fromJson(postReaction.getMediaDetail().getExternalMeta(), Images.class);
+
+            Glide.with(context)
+                    .load(images.getDownsized().getUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .bitmapTransform(new FitCenter(context))
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                            holder.vignetteLayout.setVisibility(View.VISIBLE);
+                            holder.caption.setVisibility(View.VISIBLE);
+                            holder.bottomLayout.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(holder.postThumbnail);
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -165,6 +195,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 switch (view.getId()) {
                     case R.id.root_layout:
                         if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
+                        } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
                             playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
                         } else {
                             playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, false);

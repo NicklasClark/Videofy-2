@@ -24,6 +24,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
@@ -42,6 +43,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -60,6 +62,8 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
@@ -168,10 +172,22 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if(isGif) {
                         gifView.setVisibility(View.VISIBLE);
 
-                        Glide.with(this)
-                                .load(postDetails.getMediaDetail().getMediaUrl())
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .into(gifView);
+                        if(postDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY)
+                        {
+                            Gson gson = new Gson();
+                            Images images = gson.fromJson(postDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                            Glide.with(this)
+                                    .load(images.getDownsizedLarge().getUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(gifView);
+                        }
+                        else if(postDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            Glide.with(this)
+                                    .load(postDetails.getMediaDetail().getMediaUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(gifView);
+                        }
                     }
                     else {
                         playerView.setVisibility(View.VISIBLE);
@@ -227,10 +243,20 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     if(isGif) {
                         gifView.setVisibility(View.VISIBLE);
 
-                        Glide.with(this)
-                                .load(selfPostDetails.getMediaDetail().getReactMediaUrl())
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .into(gifView);
+                        if (selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                            Glide.with(this)
+                                    .load(selfPostDetails.getMediaDetail().getReactMediaUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(gifView);
+                        } else if(selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY){
+                            Gson gson = new Gson();
+                            Images images = gson.fromJson(selfPostDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                            Glide.with(this)
+                                    .load(images.getDownsizedLarge().getUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(gifView);
+                        }
                     }
                     else {
                         playerView.setVisibility(View.VISIBLE);

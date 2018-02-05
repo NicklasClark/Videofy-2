@@ -42,6 +42,7 @@ import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationList
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
@@ -69,6 +70,8 @@ import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteracti
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
@@ -219,6 +222,7 @@ public class BaseBottomBarActivity extends BaseActivity
     ProfileFragment profilefragment;
     String Identifier;
     PostDetails postDetails;
+    private Call<ReactionResponse> postGiphyCall;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1107,13 +1111,43 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void checkIfAnyVideoIsUploading() {
-        if (getVideoUploadSession(this) != null) {
-            launchVideoUploadService(this, getVideoUploadSession(getApplicationContext()), videoUploadReceiver);
+        UploadParams uploadParams = getVideoUploadSession(this);
+        if (uploadParams != null) {
+            if (!uploadParams.isGiphy()) {
+                launchVideoUploadService(this, uploadParams, videoUploadReceiver);
+            }
+            else {
+                postGiphyReaction(uploadParams);
+            }
 //            new ResumeUpload(this, getVideoUploadSession(getApplicationContext()), false).execute();
         } else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null) {
-            launchVideoUploadService(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), videoUploadReceiver);
+            UploadParams uploadParams2 = getIntent().getParcelableExtra(UPLOAD_PARAMS);
+            if (!uploadParams.isGiphy()) {
+                launchVideoUploadService(this, uploadParams2 , videoUploadReceiver);
+            } else {
+                postGiphyReaction(uploadParams);
+            }
 //            new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
         }
+    }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.body().getCode() == 200)
+                    Toast.makeText(BaseBottomBarActivity.this, "Reaction posted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(BaseBottomBarActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void notifyProgressInNotification() {

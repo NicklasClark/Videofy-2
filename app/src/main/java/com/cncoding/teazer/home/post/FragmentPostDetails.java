@@ -60,6 +60,7 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
@@ -1504,9 +1505,36 @@ public class FragmentPostDetails extends BaseFragment implements
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.can_react = false;
-            launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
+
+            if (!uploadParams.isGiphy()) {
+                launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
+            } else {
+                postGiphyReaction(uploadParams);
+            }
         }
     }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200 || response.code() == 201) {
+                    getPostReactions(postDetails.getPostId(), 1);
+                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
     @SuppressWarnings("unused")

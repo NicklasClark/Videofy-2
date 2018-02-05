@@ -360,4 +360,8 @@
     <string name="report_user_dialog_message">Are you sure you want to report this user?</string>
     <string name="report_user_success_dialog_title">Profile Reported</string>
     <string name="report_user_success_dialog_message">We have reported this profile. We will get back and block this Profile.</string>
+    <string name="reaction_gif">Gif to react</string>
+    <string name="giphy_base_url">https://api.giphy.com</string>
+    <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
+    <string name="search_for_giphys">Search giphy</string>
 </resources>
