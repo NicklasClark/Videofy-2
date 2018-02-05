@@ -137,11 +137,11 @@ public class PostDetails implements Parcelable {
         }
     };
 
-    public Boolean getHided() {
+    public Boolean isHided() {
         return isHided;
     }
 
-    public Boolean getHidedAll() {
+    public Boolean isHidedAll() {
         return isHidedAll;
     }
 

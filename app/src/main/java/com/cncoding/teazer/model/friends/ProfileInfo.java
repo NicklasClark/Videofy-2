@@ -1,5 +1,6 @@
 package com.cncoding.teazer.model.friends;
 
+import com.cncoding.teazer.model.user.PrivateProfile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
