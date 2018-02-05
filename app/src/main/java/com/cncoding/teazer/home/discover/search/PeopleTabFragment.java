@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.friends.UsersList;
@@ -36,7 +36,8 @@ public class PeopleTabFragment extends BaseFragment {
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
-    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.no_posts_2)
+    ProximaNovaBoldTextView noPosts2;
 
     private ArrayList<MiniProfile> usersList;
     private DiscoverSearchAdapter adapter;

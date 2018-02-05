@@ -44,8 +44,8 @@ import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
@@ -61,6 +61,7 @@ import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
 import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.home.post.FragmentPostDetails;
+import com.cncoding.teazer.home.post.FragmentPostDetails.onPostOptionsClickListener;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.home.post.TagListAdapter;
@@ -159,7 +160,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnPostAdapterInteractionListener, OnInterestsInteractionListener,
+        OnPostAdapterInteractionListener, OnInterestsInteractionListener, onPostOptionsClickListener,
 //    Discover page listeners
         OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
@@ -186,13 +187,14 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
     //    @BindView(R.id.loader) ImageView loader;
-    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiboldTextView toolbarPlainTitle;
+    @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
     @BindView(R.id.blur_view) BlurView blurView;
     @BindView(R.id.bottom_tab_layout) TabLayout bottomTabLayout;
-    @BindView(R.id.camera_btn) ProximaNovaBoldTextView cameraButton;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiboldTextView uploadProgressText;
+    @BindView(R.id.camera_btn)
+    ProximaNovaBoldTextView cameraButton;
+    @BindView(R.id.uploadProgressText) ProximaNovaSemiBoldTextView uploadProgressText;
     @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.btnToolbarBack) ImageView btnToolbarBack;
@@ -1144,6 +1146,11 @@ public class BaseBottomBarActivity extends BaseActivity
     public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
 
         pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+
+    }
+
+    @Override
+    public void onPostLikedClicked(PostDetails postDetails) {
 
     }
 

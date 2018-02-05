@@ -27,4 +27,12 @@ public class PostList {
     public void add(PostDetails postDetails) {
         posts.add(postDetails);
     }
+
+    public void setNextPage(boolean next_page) {
+        this.next_page = next_page;
+    }
+
+    public void setPosts(ArrayList<PostDetails> posts) {
+        this.posts = posts;
+    }
 }

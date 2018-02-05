@@ -76,14 +76,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true">
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
                         android:id="@+id/react_btn"
                         style="@style/AppTheme.ReactButton"
                         android:text="@string/react"
                         app:drawableStartCompat="@drawable/ic_react"
                         android:layout_alignParentStart="true"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:id="@+id/like"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                         android:padding="@dimen/padding_half"
                         android:layout_marginStart="@dimen/padding_thin"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                         android:id="@+id/tags_badge"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
@@ -156,7 +156,7 @@
                     android:layout_below="@+id/main_actions"
                     android:visibility="gone">
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                         android:id="@+id/no_tagged_users"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
                 android:background="@color/colorDivider"
                 android:layout_below="@+id/post_actions"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                 android:id="@+id/reactions_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
                 android:layout_centerInParent="true"
                 android:visibility="invisible">
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                     android:id="@+id/post_load_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
                     app:drawableTopCompat="@drawable/ic_reactions"
                     android:textSize="@dimen/text_size_h5"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/post_load_error_subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

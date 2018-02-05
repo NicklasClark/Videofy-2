@@ -59,7 +59,7 @@
                 android:layout_marginBottom="@dimen/padding_default"
                 android:contentDescription="@string/add_user" />-->
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_username"
                 style="@style/AppTheme.RoundedEditText"
                 android:layout_marginBottom="24dp"
@@ -68,7 +68,7 @@
                 android:inputType="text"
                 android:imeOptions="actionNext" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_password"
                 style="@style/AppTheme.RoundedEditText"
                 android:layout_marginBottom="24dp"

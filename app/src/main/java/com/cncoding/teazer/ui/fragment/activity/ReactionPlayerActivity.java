@@ -20,8 +20,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
@@ -78,11 +78,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.btnClose)
     ImageView btnClose;
     @BindView(R.id.reaction_post_caption)
-    ProximaNovaSemiboldTextView reactionPostCaption;
+    ProximaNovaSemiBoldTextView reactionPostCaption;
     @BindView(R.id.reaction_post_dp)
     CircularAppCompatImageView reactionPostDp;
     @BindView(R.id.reaction_post_name)
-    ProximaNovaSemiboldTextView reactionPostName;
+    ProximaNovaSemiBoldTextView reactionPostName;
     @BindView(R.id.reaction_post_likes)
     ProximaNovaRegularTextView reactionPostLikes;
     @BindView(R.id.reaction_post_views)

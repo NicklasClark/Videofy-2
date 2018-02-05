@@ -35,7 +35,7 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;

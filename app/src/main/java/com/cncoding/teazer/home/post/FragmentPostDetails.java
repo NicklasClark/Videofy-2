@@ -48,11 +48,11 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.model.base.UploadParams;
@@ -142,10 +142,10 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
+import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
+import static com.google.android.exoplayer2.Player.STATE_ENDED;
+import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static com.google.android.exoplayer2.Player.STATE_READY;
 
 /**
  *
@@ -188,7 +188,7 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.horizontal_list_view_parent)
     RelativeLayout horizontalListViewParent;
     @BindView(R.id.tags_badge)
-    ProximaNovaSemiboldTextView tagsCountBadge;
+    ProximaNovaSemiBoldTextView tagsCountBadge;
     //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
     @BindView(R.id.list)
     RecyclerView recyclerView;
@@ -210,7 +210,7 @@ public class FragmentPostDetails extends BaseFragment implements
     FrameLayout controlsContainer;
     //top layout
     @BindView(R.id.media_controller_caption)
-    ProximaNovaSemiboldTextView caption;
+    ProximaNovaSemiBoldTextView caption;
     @BindView(R.id.media_controller_location)
     ProximaNovaRegularTextView locationView;
     @BindView(R.id.media_controller_eta)
@@ -228,9 +228,9 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.media_controller_views)
     ProximaNovaRegularTextView viewsView;
     @BindView(R.id.media_controller_categories)
-    ProximaNovaSemiboldTextView categoriesView;
+    ProximaNovaSemiBoldTextView categoriesView;
     @BindView(R.id.media_controller_reaction_count)
-    ProximaNovaSemiboldTextView reactionCountView;
+    ProximaNovaSemiBoldTextView reactionCountView;
     @BindView(R.id.media_controller_reaction_1)
     CircularAppCompatImageView reaction1Pic;
     @BindView(R.id.media_controller_reaction_2)
@@ -240,7 +240,7 @@ public class FragmentPostDetails extends BaseFragment implements
     @BindView(R.id.loader)
     GifTextView loader;
     @BindView(R.id.uploadProgressText)
-    ProximaNovaSemiboldTextView uploadProgressText;
+    ProximaNovaSemiBoldTextView uploadProgressText;
     @BindView(R.id.uploadProgress)
     ProgressBar uploadProgress;
     @BindView(R.id.uploadingStatusLayout)
@@ -1394,6 +1394,16 @@ public class FragmentPostDetails extends BaseFragment implements
                 }
 
                 @Override
+                public void onRepeatModeChanged(int repeatMode) {
+
+                }
+
+                @Override
+                public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+                }
+
+                @Override
                 public void onTimelineChanged(Timeline timeline, Object o) {
                 }
 
@@ -1410,11 +1420,17 @@ public class FragmentPostDetails extends BaseFragment implements
                 }
 
                 @Override
-                public void onPositionDiscontinuity() {
+                public void onPositionDiscontinuity(int reason) {
+
                 }
 
                 @Override
                 public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                }
+
+                @Override
+                public void onSeekProcessed() {
+
                 }
             });
 

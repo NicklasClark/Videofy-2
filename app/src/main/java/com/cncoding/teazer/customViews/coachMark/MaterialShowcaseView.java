@@ -286,7 +286,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
              */
             if (!mRenderOverNav && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mBottomMargin = getSoftButtonsBarSizePort((Activity) getContext());
-                FrameLayout.LayoutParams contentLP = (LayoutParams) getLayoutParams();
+                LayoutParams contentLP = (LayoutParams) getLayoutParams();
 
                 if (contentLP != null && contentLP.bottomMargin != mBottomMargin)
                     contentLP.bottomMargin = mBottomMargin;

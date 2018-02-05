@@ -35,8 +35,8 @@ public class PostDetails implements Parcelable {
     @SerializedName("is_hided_all") @Expose private Boolean isHidedAll;
     @SerializedName("post_owner") @Expose private MiniProfile post_owner;
     @SerializedName("created_at") @Expose private String createdAt;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
-    @SerializedName("is_hided_all") @Expose public CheckIn checkIn;
-    @SerializedName("check_in") @Expose public ArrayList<Medias> medias;
+    @SerializedName("check_in") @Expose public CheckIn checkIn;
+    @SerializedName("medias") @Expose public ArrayList<Medias> medias;
     @SerializedName("reactions") @Expose private ArrayList<ReactionDetails> reactions;
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;

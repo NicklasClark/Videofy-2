@@ -27,9 +27,9 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.UniversalTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.user.Notification;
 import com.cncoding.teazer.model.user.NotificationsList;
@@ -625,7 +625,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return TextUtils.join(", ", highlights);
     }
 
-    private void setActionButton(ProximaNovaSemiboldTextView button, AppCompatImageView declineRequest, int type) {
+    private void setActionButton(ProximaNovaSemiBoldTextView button, AppCompatImageView declineRequest, int type) {
         switch (type) {
             case BUTTON_TYPE_ACCEPT:
                 button.setText(R.string.accept);
@@ -728,7 +728,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.name) UniversalTextView content;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         @BindView(R.id.decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;

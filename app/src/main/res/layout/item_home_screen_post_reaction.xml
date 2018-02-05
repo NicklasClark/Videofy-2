@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_layout"
-    android:layout_width="74dp"
-    android:layout_height="wrap_content"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
-    android:paddingStart="7dp"
-    android:paddingEnd="7dp"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/dp"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/bg_shimmer"
-        android:contentDescription="@string/background_image" />
+    <com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout
+        android:id="@+id/root_layout"
+        android:layout_width="74dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        app:auto_start_="false"
+        app:duration_="1000"
+        app:angle_="cw_90"
+        app:tilt_="30"
+        app:intensity_="0.8"
+        app:shape_="linear"
+        app:repeat_mode_="restart"
+        android:orientation="vertical">
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
-        android:id="@+id/title"
-        android:layout_width="60dp"
-        android:layout_height="12dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textSize="@dimen/text_size_10sp"
-        android:background="@drawable/bg_shimmer"/>
+        <ImageView
+            android:id="@+id/thumb"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_shimmer"
+            android:contentDescription="@string/background_image" />
 
-</LinearLayout>
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
+            android:id="@+id/title"
+            android:layout_width="60dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="0dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_size_10sp"
+            android:background="@drawable/bg_shimmer"/>
+
+    </com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout>
+</FrameLayout>

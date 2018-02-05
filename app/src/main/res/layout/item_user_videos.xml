@@ -29,7 +29,7 @@
         android:orientation="horizontal"
         android:layout_alignTop="@+id/user_post_thumb">
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/user_post_caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:padding="@dimen/padding_half"
             android:layout_weight="1"/>
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/user_post_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         android:layout_alignBottom="@+id/user_post_thumb"
         android:layout_alignStart="@+id/user_post_thumb">
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/home_screen_post_popularity"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

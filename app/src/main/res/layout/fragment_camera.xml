@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             tools:ignore="RelativeOverlap" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraFilterTip"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -84,7 +84,7 @@
                 android:contentDescription="@string/record_video"
                 app:srcCompat="@drawable/ic_record" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/video_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/text_size_content" />
 
-<!--                <com.cncoding.teazer.customViews.ProximaNovaRegularChronometer
+<!--             com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularChronometereter
                     android:id="@+id/chronometer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 
         </RelativeLayout>
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/swipeCameraTip"
             app:drawableTopCompat="@drawable/ic_filter_arrow"
             android:drawablePadding="@dimen/activity_horizontal_margin"

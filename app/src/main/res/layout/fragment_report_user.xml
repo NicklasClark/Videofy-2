@@ -17,7 +17,7 @@
             android:layout_height="@dimen/action_bar_height"
             android:scaleType="center"
             android:src="@drawable/ic_arrow_back" />
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:textColor="@color/colorPrimary_text"
             android:textSize="20sp"
             android:layout_centerVertical="true"
@@ -51,7 +51,7 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
         android:id="@+id/submitReport"
         style="@style/AppTheme.CancelUploadButtonsTheme"
         android:text="@string/report_btn_text"

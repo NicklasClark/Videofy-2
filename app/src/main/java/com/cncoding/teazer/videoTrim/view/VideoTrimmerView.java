@@ -22,7 +22,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.videoTrim.interfaces.OnProgressVideoListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnRangeSeekBarListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;
@@ -83,7 +83,7 @@ public class VideoTrimmerView extends FrameLayout {
     private AudioManager audioManager;
     private boolean isAudioEnabled;
     private int currentVolume;
-    private ProximaNovaSemiboldTextView videoDuration;
+    private ProximaNovaSemiBoldTextView videoDuration;
 
     public VideoTrimmerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -105,7 +105,7 @@ public class VideoTrimmerView extends FrameLayout {
         mPlayView = ((ImageView) findViewById(R.id.icon_video_play));
         videoThumbListView = (VideoThumbHorizontalListView) findViewById(R.id.video_thumb_listview);
         videoMuteButton = (ImageView) findViewById(R.id.icon_video_sound);
-        videoDuration = (ProximaNovaSemiboldTextView) findViewById(R.id.video_shoot_tip);
+        videoDuration = (ProximaNovaSemiBoldTextView) findViewById(R.id.video_shoot_tip);
         videoThumbAdapter = new VideoThumbAdapter(mContext);
         videoThumbListView.setAdapter(videoThumbAdapter);
 

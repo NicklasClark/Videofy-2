@@ -77,7 +77,7 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginEnd="@dimen/padding_default"
                         />
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:id="@+id/duration"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
@@ -154,7 +154,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="5dp"
                     />
-                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                     android:layout_width="wrap_content"
                     android:id="@+id/txtlikes"
                     android:text="800"
@@ -176,7 +176,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_toEndOf="@+id/txtlikes"
                     />
-                <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                     android:layout_width="wrap_content"
                     android:id="@+id/txtview"
                     android:text=""
@@ -197,7 +197,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_alignParentEnd="true">
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:id="@+id/reactions"
                         android:layout_width="wrap_content"
                         android:textSize="12sp"

@@ -2,23 +2,16 @@ package com.cncoding.teazer.model.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import static com.cncoding.teazer.model.base.MiniProfile.FEMALE;
-import static com.cncoding.teazer.model.base.MiniProfile.MALE;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class MiniProfile implements Parcelable  {
+public class MiniProfile implements Parcelable {
 
     public static final int MALE = 1;
     public static final int FEMALE = 2;
@@ -68,6 +61,25 @@ public class MiniProfile implements Parcelable  {
         byte tmpYouBlocked = in.readByte();
         youBlocked = tmpYouBlocked == 0 ? null : tmpYouBlocked == 1;
         profileMedia = in.readParcelable(ProfileMedia.class.getClassLoader());
+    }
+
+    public MiniProfile(Integer userId, String userName, String firstName, String lastName, Integer accountType,
+                       Integer requestId, Boolean requestRecieved, Boolean following, Boolean follower, Boolean requestSent,
+                       Integer gender, Boolean hasProfileMedia, Boolean youBlocked, ProfileMedia profileMedia) {
+        this.userId = userId;
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.accountType = accountType;
+        this.requestId = requestId;
+        this.requestRecieved = requestRecieved;
+        this.following = following;
+        this.follower = follower;
+        this.requestSent = requestSent;
+        this.gender = gender;
+        this.hasProfileMedia = hasProfileMedia;
+        this.youBlocked = youBlocked;
+        this.profileMedia = profileMedia;
     }
 
     @Override
@@ -125,55 +137,115 @@ public class MiniProfile implements Parcelable  {
         }
     };
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
         return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public int getAccountType() {
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Integer getAccountType() {
         return accountType;
     }
 
-    public boolean isFollowing() {
-        return following;
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
     }
 
-    public boolean isFollower() {
-        return follower;
+    public Integer getRequestId() {
+        return requestId;
     }
 
-    public boolean isRequestSent() {
-        return requestSent;
-    }
-
-    public boolean hasProfileMedia() {
-        return hasProfileMedia;
-    }
-
-    public ProfileMedia getProfileMedia() {
-        return profileMedia;
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 
     public Boolean getRequestRecieved() {
         return requestRecieved;
     }
 
-    public Boolean getYouBlocked() {
-        return youBlocked;
+    public void setRequestRecieved(Boolean requestRecieved) {
+        this.requestRecieved = requestRecieved;
+    }
+
+    public Boolean isFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Boolean following) {
+        this.following = following;
+    }
+
+    public Boolean isFollower() {
+        return follower;
+    }
+
+    public void setFollower(Boolean follower) {
+        this.follower = follower;
+    }
+
+    public Boolean isRequestSent() {
+        return requestSent;
+    }
+
+    public void setRequestSent(Boolean requestSent) {
+        this.requestSent = requestSent;
     }
 
     public Integer getGender() {
         return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Boolean hasProfileMedia() {
+        return hasProfileMedia;
+    }
+
+    public void setHasProfileMedia(Boolean hasProfileMedia) {
+        this.hasProfileMedia = hasProfileMedia;
+    }
+
+    public Boolean getYouBlocked() {
+        return youBlocked;
+    }
+
+    public void setYouBlocked(Boolean youBlocked) {
+        this.youBlocked = youBlocked;
+    }
+
+    public ProfileMedia getProfileMedia() {
+        return profileMedia;
+    }
+
+    public void setProfileMedia(ProfileMedia profileMedia) {
+        this.profileMedia = profileMedia;
     }
 }

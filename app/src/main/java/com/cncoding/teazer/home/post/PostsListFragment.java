@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
@@ -18,7 +19,7 @@ import android.widget.LinearLayout;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import im.ene.toro.widget.Container;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +40,7 @@ import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
 //    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.post_list) RecyclerView recyclerView;
+    @BindView(R.id.post_list) Container recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
@@ -68,17 +70,14 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         ButterKnife.bind(this, rootView);
         if (postList == null)
             postList = new ArrayList<>();
-//        else
-//            progressBar.setVisibility(View.GONE);
 
         postListAdapter = new PostsListAdapter(postList, getContext());
         recyclerView.setAdapter(postListAdapter);
-        recyclerView.setSaveEnabled(true);
-        recyclerView.setOnKeyListener(this);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
-        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+//        recyclerView.setSaveEnabled(true);
+//        recyclerView.setOnKeyListener(this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
@@ -94,13 +93,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             }
         });
 
-
         return rootView;
     }
 
     private void refreshPosts() {
-//        if (postListCall != null)
-//            postListCall.cancel();
         getHomePagePosts(1, true);
         scrollListener.resetState();
     }
@@ -132,17 +128,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         }
     }
 
-//    @Override
-//    public void onPause() {
-//        ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(savedPosition);
-//        super.onPause();
-//    }
-
     @Override
     public void onResume() {
         super.onResume();
-        getHomePagePosts(1, false);
-
         if (postList != null && !isRefreshing) {
             if (postList.isEmpty()) {
                 getHomePagePosts(1, false);
@@ -161,17 +149,24 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                     e.printStackTrace();
                 }
             } else {
-                postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+                if (postListAdapter != null) {
+                    postListAdapter.notifyItemChanged(positionToUpdate, postDetails);
+                }
             }
 //            if (savedPosition[1] > 4)
 //                recyclerView.getLayoutManager().scrollToPosition(savedPosition[1]);
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+//        ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(savedPosition);
+    }
+
     public void getHomePagePosts(final int page, final boolean isRefreshing) {
         try {
             if (isRefreshing) swipeRefreshLayout.setRefreshing(true);
-//        progressBar.setVisibility(View.VISIBLE);
             final Context context = getParentActivity();
             postListCall = ApiCallingService.Posts.getHomePagePosts(page, context);
 
@@ -204,11 +199,13 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
                     private void updatePosts(int page, PostList tempPostList) {
                         try {
-                            postListAdapter.clearDimensions();
+//                            postListAdapter.clearDimensions();
                             if (page == 1) {
                                 postList.clear();
                                 postList.addAll(tempPostList.getPosts());
                                 postListAdapter.notifyDataSetChanged();
+                                recyclerView.smoothScrollBy(0,1);
+                                recyclerView.smoothScrollBy(0,-1);
                             } else {
                                 postList.addAll(tempPostList.getPosts());
                                 postListAdapter.notifyItemRangeInserted((page - 1) * 30, tempPostList.getPosts().size());

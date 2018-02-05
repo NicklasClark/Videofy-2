@@ -361,4 +361,6 @@
     <string name="report_user_success_dialog_message">We have reported this profile. We will get back and block this Profile.</string>
     <string name="upload_title">Enter Title of video (max 180 words).</string>
     <string name="error_msg">Title is mandatory</string>
+    <string name="volume_controls">Volume controls</string>
+    <string name="artwork">artwork</string>
 </resources>

@@ -1,30 +1,30 @@
-package com.cncoding.teazer.customViews;
+package com.cncoding.teazer.customViews.proximanovaviews;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
+import android.widget.Chronometer;
 
-import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttrs;
+import static com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton.initAttrs;
 
 /**
  *
  * Created by Prem $ on 9/19/2017.
  */
 
-public class ProximaNovaRegularAutoCompleteTextView extends AppCompatAutoCompleteTextView {
-    public ProximaNovaRegularAutoCompleteTextView(Context context) {
+public class ProximaNovaRegularChronometer extends Chronometer {
+    public ProximaNovaRegularChronometer(Context context) {
         super(context);
         applyCustomFont(context);
     }
 
-    public ProximaNovaRegularAutoCompleteTextView(Context context, AttributeSet attrs) {
+    public ProximaNovaRegularChronometer(Context context, AttributeSet attrs) {
         super(context, attrs);
         applyCustomFont(context);
         initAttrs(context, attrs, this);
     }
 
-    public ProximaNovaRegularAutoCompleteTextView(Context context, AttributeSet attrs, int defStyle) {
+    public ProximaNovaRegularChronometer(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         applyCustomFont(context);
         initAttrs(context, attrs, this);

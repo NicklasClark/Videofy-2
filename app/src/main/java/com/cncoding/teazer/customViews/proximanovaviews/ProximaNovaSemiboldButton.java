@@ -1,4 +1,4 @@
-package com.cncoding.teazer.customViews;
+package com.cncoding.teazer.customViews.proximanovaviews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

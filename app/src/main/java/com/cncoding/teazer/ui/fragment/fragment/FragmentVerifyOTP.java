@@ -1,9 +1,6 @@
 package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -11,34 +8,23 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
-import com.cncoding.teazer.ui.fragment.activity.EditProfile;
 import com.cncoding.teazer.ui.fragment.activity.UpdateMobileNumber;
 import com.cncoding.teazer.utilities.ViewUtils;
-
-import java.io.IOException;
-import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
-import jp.wasabeef.blurry.Blurry;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

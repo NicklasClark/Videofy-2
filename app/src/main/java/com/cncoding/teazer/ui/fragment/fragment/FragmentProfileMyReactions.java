@@ -16,8 +16,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.model.react.ReactionsList;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
@@ -44,7 +44,7 @@ public class FragmentProfileMyReactions extends Fragment {
     Context context;
     List<Reactions>list;
     int page;
-    ProximaNovaSemiboldTextView alert1;
+    ProximaNovaSemiBoldTextView alert1;
     ProximaNovaRegularTextView alert2;
     GifTextView loader;
 

@@ -19,7 +19,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -427,7 +427,7 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
         CircularAppCompatImageView dp;
 
         View line;
-        ProximaNovaSemiboldTextView action;
+        ProximaNovaSemiBoldTextView action;
 
         public ViewHolder(View view) {
             super(view);
