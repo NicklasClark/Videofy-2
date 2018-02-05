@@ -22,7 +22,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.videoTrim.interfaces.OnProgressVideoListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnRangeSeekBarListener;
 import com.cncoding.teazer.videoTrim.interfaces.OnTrimVideoListener;

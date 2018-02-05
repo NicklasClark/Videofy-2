@@ -24,7 +24,7 @@
         android:paddingBottom="?attr/actionBarSize"
         android:id="@+id/recycler_view"/>
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
        android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"

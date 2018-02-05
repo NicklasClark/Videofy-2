@@ -9,8 +9,8 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
-import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.data.model.react.ReactionUploadResult;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.utilities.SharedPrefs;
 

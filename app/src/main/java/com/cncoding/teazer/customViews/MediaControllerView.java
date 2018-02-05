@@ -24,6 +24,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.lang.ref.WeakReference;
@@ -191,8 +193,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
      */
     private void setAnchorView(ViewGroup view) {
         anchorView = view;
-        FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
+        LayoutParams frameParams = new LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
         );
         //remove all before add view
         removeAllViews();
@@ -400,8 +402,8 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
     public void show(boolean autoHide, boolean toggle, boolean animate) {
         if (anchorView != null) {
             //add controller view to bottom of the AnchorView
-            FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
+            LayoutParams frameParams = new LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
             );
             anchorView.removeView(MediaControllerView.this);
             anchorView.addView(MediaControllerView.this, frameParams);

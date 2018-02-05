@@ -18,11 +18,11 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.data.model.base.MiniProfile;
-import com.cncoding.teazer.data.model.discover.Videos;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.discover.Videos;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.data.model.user.Notification}
+ * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
  */
 public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -507,11 +507,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.username)
-        ProximaNovaSemiBoldTextView username;
+        @BindView(R.id.username) ProximaNovaSemiBoldTextView username;
         @BindView(R.id.name) ProximaNovaRegularTextView name;
-        @BindView(R.id.action)
-        ProximaNovaSemiBoldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         MiniProfile user;
 
         PeopleViewHolder(View view) {

@@ -22,10 +22,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
-import com.cncoding.teazer.data.model.application.ReportPostTitlesResponse;
-import com.cncoding.teazer.data.model.user.ReportUser;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
+import com.cncoding.teazer.model.user.ReportUser;
 
 import java.util.List;
 

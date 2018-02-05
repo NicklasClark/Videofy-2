@@ -6,7 +6,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.List;
 

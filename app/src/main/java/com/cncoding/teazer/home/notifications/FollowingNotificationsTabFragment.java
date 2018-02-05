@@ -15,10 +15,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.data.model.user.Notification;
-import com.cncoding.teazer.data.model.user.NotificationsList;
+import com.cncoding.teazer.model.user.Notification;
+import com.cncoding.teazer.model.user.NotificationsList;
 
 import java.util.ArrayList;
 

@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.data.room.ConvertersFactory;
 import com.cncoding.teazer.data.room.daos.PostDetailsDao;
 

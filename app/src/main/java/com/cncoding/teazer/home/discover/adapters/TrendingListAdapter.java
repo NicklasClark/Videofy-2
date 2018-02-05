@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.model.base.Category;
 
 import java.util.ArrayList;
 
@@ -77,8 +77,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_trending)
-        ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.item_trending) ProximaNovaSemiBoldTextView title;
 
         public ViewHolder(View itemView) {
             super(itemView);

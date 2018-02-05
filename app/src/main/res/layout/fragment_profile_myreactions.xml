@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:id="@+id/alert1"
@@ -16,7 +16,7 @@
         android:text="Reactions are a new way to communicate!"
         android:textColor="#505050"
         android:textSize="14sp" />
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
 
         android:id="@+id/alert2"
         android:layout_below="@+id/alert1"

@@ -22,11 +22,11 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.data.model.base.Category;
-import com.cncoding.teazer.data.model.user.UpdateCategories;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.user.UpdateCategories;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -54,8 +54,7 @@ public class Interests extends BaseFragment {
     private static final String ARG_CATEGORIES = "userSelectedCategories";
 
     @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.save_interests_btn)
-    ProximaNovaSemiBoldTextView saveBtn;
+    @BindView(R.id.save_interests_btn) ProximaNovaSemiBoldTextView saveBtn;
 
     private ArrayList<Category> userSelectedCategories;
     private ArrayList<Category> totalCategories;

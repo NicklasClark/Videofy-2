@@ -14,7 +14,7 @@
         android:background="@drawable/bg_card_no_margin_white"
         android:animateLayoutChanges="true">
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/discover_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                         android:paddingEnd="14dp"
                         android:orientation="horizontal">
 
-                        <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                             android:id="@+id/most_popular"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                             android:layout_weight="1"
                             android:textSize="16sp"/>
 
-                        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                             android:id="@+id/most_popular_view_all"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
 
                     </LinearLayout>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                         android:id="@+id/no_most_popular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     android:paddingEnd="14dp"
                     android:orientation="horizontal">
 
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
@@ -135,7 +135,7 @@
                         android:layout_weight="1"
                         android:textSize="16sp"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                         android:id="@+id/my_interests_view_all"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                     android:orientation="vertical"
                     android:background="@drawable/bg_card_no_margin_white">
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                         android:id="@+id/no_my_interests"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                         android:id="@+id/trending"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
                         android:textSize="16sp"
                         android:layout_below="@id/my_interests_list"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                         android:id="@+id/no_trending"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                 android:layout_below="@+id/discover_posts_container"
                 android:visibility="invisible">
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -233,7 +233,7 @@
                     android:text="@string/featured_videos"
                     android:textSize="16sp"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                     android:id="@+id/no_featured_videos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -268,7 +268,7 @@
                 android:foreground="@drawable/ripple_dark_no_rounded"
                 android:visibility="visible">
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/post_load_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -277,7 +277,7 @@
                     android:textSize="@dimen/text_size_h6"
                     android:text="@string/could_not_load_posts"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                     android:id="@+id/tap_to_retry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

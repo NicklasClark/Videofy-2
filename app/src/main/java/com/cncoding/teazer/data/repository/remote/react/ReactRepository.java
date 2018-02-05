@@ -3,10 +3,10 @@ package com.cncoding.teazer.data.repository.remote.react;
 import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.model.react.ReactionResponse;
-import com.cncoding.teazer.data.model.react.ReactionUploadResult;
-import com.cncoding.teazer.data.model.react.ReactionsList;
-import com.cncoding.teazer.data.model.react.ReportReaction;
+import com.cncoding.teazer.model.react.ReactionResponse;
+import com.cncoding.teazer.model.react.ReactionUploadResult;
+import com.cncoding.teazer.model.react.ReactionsList;
+import com.cncoding.teazer.model.react.ReportReaction;
 
 import okhttp3.MultipartBody;
 

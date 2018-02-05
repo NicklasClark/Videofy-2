@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.data.model.base.Category;
-import com.cncoding.teazer.data.model.friends.PublicProfile;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.friends.PublicProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Created by farazhabib on 20/12/17.
  */
 

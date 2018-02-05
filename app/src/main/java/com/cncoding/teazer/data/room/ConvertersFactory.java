@@ -2,11 +2,10 @@ package com.cncoding.teazer.data.room;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.cncoding.teazer.data.model.react.ReactionDetails;
+import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.cncoding.teazer.data.model.base.*;
-import com.cncoding.teazer.data.model.post.ReactedUser;
+import com.cncoding.teazer.model.post.ReactedUser;
 
 import java.util.ArrayList;
 

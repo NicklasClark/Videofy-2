@@ -48,18 +48,18 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.data.model.base.TaggedUser;
-import com.cncoding.teazer.data.model.base.UploadParams;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
-import com.cncoding.teazer.data.model.post.TaggedUsersList;
+import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.post.PostReactionsList;
+import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
@@ -142,10 +142,10 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getCoachMark;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 import static com.cncoding.teazer.utilities.ViewUtils.setTextViewDrawableStart;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_BUFFERING;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_IDLE;
-import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
+import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
+import static com.google.android.exoplayer2.Player.STATE_ENDED;
+import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static com.google.android.exoplayer2.Player.STATE_READY;
 
 /**
  *
@@ -1072,6 +1072,7 @@ public class FragmentPostDetails extends BaseFragment implements
             relativeLayout.setLayoutParams(params);
         }
 
+
 //        float scaleX = 1.0f;
 //        float scaleY = 1.0f;
 //
@@ -1393,6 +1394,16 @@ public class FragmentPostDetails extends BaseFragment implements
                 }
 
                 @Override
+                public void onRepeatModeChanged(int repeatMode) {
+
+                }
+
+                @Override
+                public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+                }
+
+                @Override
                 public void onTimelineChanged(Timeline timeline, Object o) {
                 }
 
@@ -1409,11 +1420,17 @@ public class FragmentPostDetails extends BaseFragment implements
                 }
 
                 @Override
-                public void onPositionDiscontinuity() {
+                public void onPositionDiscontinuity(int reason) {
+
                 }
 
                 @Override
                 public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                }
+
+                @Override
+                public void onSeekProcessed() {
+
                 }
             });
 

@@ -5,7 +5,7 @@
     android:layout_height="54dp"
     android:foreground="@drawable/ripple_semi_dark_no_rounded">
 
-    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
         android:id="@+id/chip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

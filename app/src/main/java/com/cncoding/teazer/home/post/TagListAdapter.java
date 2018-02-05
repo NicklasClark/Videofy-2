@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.data.model.base.TaggedUser;
+import com.cncoding.teazer.model.base.TaggedUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

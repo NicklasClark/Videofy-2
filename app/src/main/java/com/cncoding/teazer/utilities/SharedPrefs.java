@@ -3,7 +3,7 @@ package com.cncoding.teazer.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.cncoding.teazer.data.model.base.UploadParams;
+import com.cncoding.teazer.model.base.UploadParams;
 import com.google.gson.Gson;
 
 /**

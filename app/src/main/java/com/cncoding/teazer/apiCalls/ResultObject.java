@@ -1,6 +1,6 @@
 package com.cncoding.teazer.apiCalls;
 
-import com.cncoding.teazer.data.model.friends.FollowInfo;
+import com.cncoding.teazer.model.friends.FollowInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -22,8 +22,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.DeactivateAccountUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.data.model.user.DeactivateAccountRequest;
-import com.cncoding.teazer.data.model.application.DeactivateTypes;
+import com.cncoding.teazer.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.model.application.DeactivateTypes;
 
 import java.util.List;
 

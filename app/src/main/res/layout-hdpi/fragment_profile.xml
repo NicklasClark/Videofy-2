@@ -97,7 +97,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                    <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+                                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                                         android:id="@+id/username_title"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                                             android:textColor="#b1ffffff"
                                             android:textSize="13sp" />
 
-                                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                             android:id="@+id/username"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                                             android:textSize="12sp" />
                                     </LinearLayout>
 
-                                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                         android:id="@+id/hobby"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"

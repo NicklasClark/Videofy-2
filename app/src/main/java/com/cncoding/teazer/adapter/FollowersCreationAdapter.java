@@ -25,10 +25,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.data.model.base.MiniProfile;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostReaction;
-import com.cncoding.teazer.data.model.post.PostReactionsList;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;

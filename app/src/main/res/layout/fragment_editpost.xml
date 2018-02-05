@@ -61,7 +61,7 @@
                 android:theme="@style/ProgressBarTheme"
                 android:visibility="invisible" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
@@ -85,7 +85,7 @@
                 android:layout_marginStart="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default">
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldButton
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton
                     android:id="@+id/video_upload_location"
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/add_location"
@@ -93,7 +93,7 @@
                     app:drawableStartCompat="@drawable/ic_add_location"
                     android:layout_toStartOf="@+id/spacer"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/video_upload_location_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:layout_height="0dp"
                     android:layout_centerInParent="true"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldButton
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton
                     android:id="@+id/video_upload_tag_friends"
                     style="@style/AppTheme.TransparentButton"
                     android:text="@string/tag_friends"
@@ -118,7 +118,7 @@
                     app:drawableStartCompat="@drawable/ic_person_left"
                     android:layout_toEndOf="@+id/spacer"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/video_upload_tag_friends_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
 
             </RelativeLayout>
 
-            <com.cncoding.teazer.customViews.ProximaNovaBoldButton
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton
                 android:id="@+id/video_upload_categories"
                 style="@style/AppTheme.TransparentButton"
                 android:text="@string/choose_category"
@@ -141,7 +141,7 @@
                 android:layout_marginStart="@dimen/padding_double"
                 android:layout_marginEnd="@dimen/padding_double"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/video_upload_categories_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
                         android:layout_height="0dp"
                         android:layout_centerInParent="true"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
                         android:id="@+id/video_upload_retake_btn"
                         style="@style/AppTheme.CancelUploadButtonsTheme"
                         app:drawableStartCompat="@drawable/ic_arrow_back_white"
@@ -182,7 +182,7 @@
                         android:contentDescription="@string/cancel"
                         android:layout_toStartOf="@+id/spacer1"/>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
                         android:id="@+id/video_upload_check_btn"
                         style="@style/AppTheme.CancelUploadButtonsTheme"
                         app:drawableEndCompat="@drawable/ic_upload"
@@ -193,7 +193,7 @@
 
                 </RelativeLayout>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:id="@+id/video_duration"
                     android:layout_width="88dp"
                     android:layout_height="88dp"

@@ -3,7 +3,7 @@ package com.cncoding.teazer.data.repository.remote.authentication;
 import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.model.base.Authorize;
+import com.cncoding.teazer.model.base.Authorize;
 
 /**
  *

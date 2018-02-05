@@ -2,10 +2,10 @@ package com.cncoding.teazer.data.repository.remote.discover;
 
 import android.arch.lifecycle.LiveData;
 
-import com.cncoding.teazer.data.model.discover.VideosList;
-import com.cncoding.teazer.data.model.friends.UsersList;
-import com.cncoding.teazer.data.model.post.LandingPosts;
-import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.model.discover.VideosList;
+import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.model.post.LandingPosts;
+import com.cncoding.teazer.model.post.PostList;
 
 /**
  *

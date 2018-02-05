@@ -15,7 +15,7 @@ import android.widget.Filterable;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -288,8 +288,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.nearby_place_item_layout) RelativeLayout rootLayout;
 //        @BindView(R.id.location_icon) AppCompatImageView locationIcon;
-        @BindView(R.id.nearby_place_name)
-ProximaNovaSemiBoldTextView placeName;
+        @BindView(R.id.nearby_place_name) ProximaNovaSemiBoldTextView placeName;
 //        @BindView(R.id.nearby_place_address) ProximaNovaRegularTextView placeAddress;
 
         ViewHolder(View view) {

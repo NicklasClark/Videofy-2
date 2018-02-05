@@ -3,13 +3,13 @@ package com.cncoding.teazer.data.repository.remote.friends;
 import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.model.friends.CircleList;
-import com.cncoding.teazer.data.model.friends.FollowersList;
-import com.cncoding.teazer.data.model.friends.FollowingsList;
-import com.cncoding.teazer.data.model.friends.ProfileInfo;
-import com.cncoding.teazer.data.model.friends.UsersList;
-import com.cncoding.teazer.data.model.post.LikedUserPost;
-import com.cncoding.teazer.data.model.user.BlockedUsersList;
+import com.cncoding.teazer.model.friends.CircleList;
+import com.cncoding.teazer.model.friends.FollowersList;
+import com.cncoding.teazer.model.friends.FollowingsList;
+import com.cncoding.teazer.model.friends.ProfileInfo;
+import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.model.post.LikedUserPost;
+import com.cncoding.teazer.model.user.BlockedUsersList;
 
 /**
  *

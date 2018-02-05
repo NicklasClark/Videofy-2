@@ -30,7 +30,7 @@
             android:src="@drawable/bg_shimmer"
             android:contentDescription="@string/background_image" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/title"
             android:layout_width="60dp"
             android:layout_height="12dp"

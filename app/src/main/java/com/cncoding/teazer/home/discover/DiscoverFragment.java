@@ -17,9 +17,9 @@ import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
@@ -27,10 +27,10 @@ import com.cncoding.teazer.home.discover.adapters.MyInterestsListAdapter;
 import com.cncoding.teazer.home.discover.adapters.TrendingListAdapter;
 import com.cncoding.teazer.home.discover.search.DiscoverSearchFragment;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
-import com.cncoding.teazer.data.model.base.Category;
-import com.cncoding.teazer.data.model.post.LandingPosts;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.post.LandingPosts;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -64,10 +64,13 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.my_interests_view_all) public ProximaNovaSemiBoldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
-    @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
+    @BindView(R.id.no_most_popular)
+    ProximaNovaBoldTextView noMostPopular;
     @BindView(R.id.no_my_interests) ProximaNovaRegularTextView noMyInterests;
-    @BindView(R.id.no_trending) ProximaNovaBoldTextView noTrending;
-    @BindView(R.id.no_featured_videos) ProximaNovaBoldTextView noFeaturedVideos;
+    @BindView(R.id.no_trending)
+    ProximaNovaBoldTextView noTrending;
+    @BindView(R.id.no_featured_videos)
+    ProximaNovaBoldTextView noFeaturedVideos;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 

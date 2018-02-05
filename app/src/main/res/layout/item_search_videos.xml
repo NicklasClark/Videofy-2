@@ -22,7 +22,7 @@
             android:scaleType="centerCrop"
             android:contentDescription="@string/post_thumbnail" />
 
-        <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

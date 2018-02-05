@@ -13,9 +13,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
-import com.cncoding.teazer.data.model.react.ReactionDetails;
+import com.cncoding.teazer.model.react.ReactionDetails;
 
 import java.util.ArrayList;
 
@@ -54,10 +54,10 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
                 holder.thumbUrl = reactions.get(position).getMediaDetail().getThumbUrl();
                 holder.titleText = reactions.get(position).getReactTitle();
 
-                holder.title.setBackgroundColor(context.getResources().getColor(R.color.colorDisabled));
+                holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
                 Glide.with(context)
                         .load(holder.thumbUrl)
-                        .placeholder(R.color.colorDisabled)
+                        .placeholder(R.drawable.bg_shimmer_light)
                         .listener(new RequestListener<String, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

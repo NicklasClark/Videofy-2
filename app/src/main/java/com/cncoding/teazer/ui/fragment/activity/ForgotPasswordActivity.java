@@ -14,7 +14,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
 import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
 import com.cncoding.teazer.authentication.LoginFragment;
-import com.cncoding.teazer.data.model.base.Authorize;
+import com.cncoding.teazer.model.base.Authorize;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

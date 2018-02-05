@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
 
 import butterknife.BindView;

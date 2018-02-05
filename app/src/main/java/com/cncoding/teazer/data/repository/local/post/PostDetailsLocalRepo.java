@@ -2,7 +2,7 @@ package com.cncoding.teazer.data.repository.local.post;
 
 import android.arch.lifecycle.LiveData;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.data.room.daos.PostDetailsDao;
 
 import java.util.List;

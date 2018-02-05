@@ -41,9 +41,9 @@ public class AudioVolumeObserver {
                 audioVolumeContentObserver);
     }
 
-    public AudioVolumeContentObserver getAudioVolumeContentObserver() {
-        return audioVolumeContentObserver;
-    }
+//    public AudioVolumeContentObserver getAudioVolumeContentObserver() {
+//        return audioVolumeContentObserver;
+//    }
 
     public void unregister() {
         if (audioVolumeContentObserver != null) {

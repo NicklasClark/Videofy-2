@@ -103,7 +103,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
 
-                                        <com.cncoding.teazer.customViews.SignPainterTextView
+                                        <com.cncoding.teazer.customViews.proximanovaviews.SignPainterTextView
                                             android:id="@+id/username_title"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                                                 android:textColor="#b1ffffff"
                                                 android:textSize="13dp" />
 
-                                            <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                                                 android:id="@+id/username"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                                                 android:textSize="12sp" />
                                         </LinearLayout>
 
-                                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
 
                                             android:id="@+id/hobby"
                                             android:layout_width="wrap_content"
@@ -393,7 +393,7 @@
             android:layout_height="match_parent">
 
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:id="@+id/alert1"
                 android:layout_width="wrap_content"
@@ -403,7 +403,7 @@
                 android:textColor="#505050"
                 android:textSize="14sp"
                 />
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_below="@+id/alert1"
@@ -422,7 +422,7 @@
                 android:visibility="gone"
                 android:layout_height="match_parent">
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="60dp"
                     android:layout_width="wrap_content"
@@ -447,7 +447,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cncoding.teazer.customViews.ProximaNovaBoldTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView
                     android:id="@+id/userCreationTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

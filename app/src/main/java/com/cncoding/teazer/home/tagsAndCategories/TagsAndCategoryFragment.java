@@ -19,13 +19,13 @@ import android.widget.ProgressBar;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
-import com.cncoding.teazer.data.model.base.Category;
-import com.cncoding.teazer.data.model.base.MiniProfile;
-import com.cncoding.teazer.data.model.friends.CircleList;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.friends.CircleList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -54,7 +54,8 @@ public class TagsAndCategoryFragment extends Fragment {
     @BindView(R.id.headerTextView) ProximaNovaRegularAutoCompleteTextView headerTextView;
     @BindView(R.id.tags_categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.tags_categories_save) ProximaNovaSemiboldButton doneBtn;
-    @BindView(R.id.no_friends_text_view) ProximaNovaBoldTextView noFriendsTextView;
+    @BindView(R.id.no_friends_text_view)
+    ProximaNovaBoldTextView noFriendsTextView;
 
     private String action;
     private ArrayList<Category> categories;

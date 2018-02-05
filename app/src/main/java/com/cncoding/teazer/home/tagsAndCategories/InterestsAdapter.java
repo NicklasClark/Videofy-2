@@ -14,9 +14,9 @@ import android.widget.Filterable;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.data.model.base.Category;
+import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.ViewUtils;
 
 import java.util.ArrayList;

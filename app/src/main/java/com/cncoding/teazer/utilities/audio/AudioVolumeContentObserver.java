@@ -24,13 +24,14 @@ public class AudioVolumeContentObserver extends ContentObserver {
      *
      * @param handler The handler to run {@link #onChange} on, or null if none.
      */
-    public AudioVolumeContentObserver(@NonNull Handler handler, @NonNull AudioManager audioManager,
-                                      int audioStreamType, @NonNull OnAudioVolumeChangedListener listener) {
+    AudioVolumeContentObserver(@NonNull Handler handler, @NonNull AudioManager audioManager,
+                               int audioStreamType, @NonNull OnAudioVolumeChangedListener listener) {
         super(handler);
         this.audioManager = audioManager;
         this.audioStreamType = audioStreamType;
         this.listener = listener;
         lastVolume = audioManager.getStreamVolume(audioStreamType);
+        listener.initialVolume(lastVolume);
     }
 
     /**
@@ -50,11 +51,12 @@ public class AudioVolumeContentObserver extends ContentObserver {
         }
     }
 
-    public int getCurrentVolume() {
-        return currentVolume;
-    }
+//    public int getCurrentVolume() {
+//        return currentVolume;
+//    }
 
     public interface OnAudioVolumeChangedListener {
+        void initialVolume(int currentVolume);
         void onVolumeChanged(int currentVolume, int maxVolume);
     }
 }

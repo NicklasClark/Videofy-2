@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.data.model.application.ReportPostSubTitleResponse;
+import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportUserDialogFragment;
 
 import java.io.ByteArrayOutputStream;

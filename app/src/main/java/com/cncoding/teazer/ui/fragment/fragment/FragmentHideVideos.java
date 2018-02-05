@@ -15,14 +15,11 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.HideVideoListAdapter;
-import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostList;
-import com.cncoding.teazer.ui.fragment.activity.Settings;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.utilities.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;

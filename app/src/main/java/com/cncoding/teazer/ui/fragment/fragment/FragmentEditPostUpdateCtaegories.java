@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.EditPostUpdateCategoriesAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.data.model.base.Category;
-import com.cncoding.teazer.data.model.friends.PublicProfile;
-import com.cncoding.teazer.data.model.post.PostDetails;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.friends.PublicProfile;
+import com.cncoding.teazer.model.post.PostDetails;
 
 import java.util.ArrayList;
 import java.util.List;

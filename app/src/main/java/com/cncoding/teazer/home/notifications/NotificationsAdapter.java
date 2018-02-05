@@ -27,12 +27,12 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.UniversalTextView;
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.user.Notification;
-import com.cncoding.teazer.data.model.user.NotificationsList;
+import com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.user.Notification;
+import com.cncoding.teazer.model.user.NotificationsList;
 
 import java.util.ArrayList;
 
@@ -46,7 +46,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.data.model.user.Notification}
+ * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
  */
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -728,8 +728,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.name) UniversalTextView content;
-        @BindView(R.id.action)
-        ProximaNovaSemiBoldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         @BindView(R.id.decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;

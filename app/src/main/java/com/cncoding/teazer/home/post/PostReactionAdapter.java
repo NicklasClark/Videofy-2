@@ -18,11 +18,11 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.data.model.base.Dimension;
-import com.cncoding.teazer.data.model.base.MiniProfile;
-import com.cncoding.teazer.data.model.post.PostReaction;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.model.base.Dimension;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.post.PostReaction;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -150,7 +150,8 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 switch (view.getId()) {
                     case R.id.root_layout:
                     //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-                        reactionPlayerListener.reactionPlayer(0, postReaction,null);
+                        reactionPlayerListener.reactionPlayer(0,postReaction,null);
+
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         //region TODO
@@ -184,11 +185,9 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.reaction_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.reaction_post_caption)
-        ProximaNovaSemiBoldTextView caption;
+        @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView caption;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView profilePic;
-        @BindView(R.id.reaction_post_name)
-        ProximaNovaSemiBoldTextView name;
+        @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView views;
 

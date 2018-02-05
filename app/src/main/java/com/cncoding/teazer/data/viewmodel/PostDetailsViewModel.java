@@ -7,8 +7,8 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.data.model.post.PostDetails;
-import com.cncoding.teazer.data.model.post.PostList;
+import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostList;
 import com.cncoding.teazer.data.repository.local.post.PostDetailsLocalRepo;
 import com.cncoding.teazer.data.repository.remote.post.PostsRepo;
 
