@@ -363,5 +363,5 @@
     <string name="reaction_gif">Gif to react</string>
     <string name="giphy_base_url">https://api.giphy.com</string>
     <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
-    <string name="search_for_giphys">Search giphy</string>
+    <string name="search_for_giphys">Search for Gifs</string>
 </resources>
