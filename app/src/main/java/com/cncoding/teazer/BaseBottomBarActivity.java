@@ -44,10 +44,10 @@ import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -59,12 +59,12 @@ import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscover
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
-import com.cncoding.teazer.home.post.FragmentLikedUser;
+import com.cncoding.teazer.home.post.FragmentLikedUser.CallProfileListener;
 import com.cncoding.teazer.home.post.FragmentPostDetails;
 import com.cncoding.teazer.home.post.FragmentPostDetails.onPostOptionsClickListener;
 import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.home.post.TagListAdapter;
+import com.cncoding.teazer.home.post.TagListAdapter.TaggedListInteractionListener;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
@@ -160,7 +160,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Navigation listeners
         implements FragmentNavigation, TransactionListener, RootFragmentListener,
 //    Post related listeners
-        OnPostAdapterInteractionListener, OnInterestsInteractionListener, onPostOptionsClickListener,
+        OnPostAdapterInteractionListener, OnInterestsInteractionListener, onPostOptionsClickListener, TaggedListInteractionListener,
 //    Discover page listeners
         OnDiscoverSearchInteractionListener, OnDiscoverInteractionListener, OnSubSearchInteractionListener, TrendingListInteractionListener,
 //    Notification listeners
@@ -168,13 +168,10 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Profile listeners
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
-        FragmentLikedUser.CallProfileListener,
-//    profileListener from Postdetails
-        FragmentPostDetails.CallProfileFromPostDetails,
+        CallProfileListener,
+//    Reaction related listeners
+        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener {
 
-        TagListAdapter.TaggedListInteractionListener,
-        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener
-{
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
     public static final String SOURCE_ID = "source_id";
