@@ -3,7 +3,6 @@ package com.cncoding.teazer.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -80,7 +80,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         Glide.with(context).load(thumb_url)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                .apply(new RequestOptions().placeholder(R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -191,9 +191,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         }
     }
 
-    public interface ReactionPlayerListener
-    {
-        public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction);
-
+    public interface ReactionPlayerListener {
+        void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction);
     }
 }

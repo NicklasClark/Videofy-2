@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -21,9 +23,6 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.friends.UserInfo;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -87,18 +86,15 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean isfollowersDp = cont.getHasProfileMedia();
 
                 if (isfollowersDp) {
-
                     String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
-                            .skipMemoryCache(false)
+                            .apply(new RequestOptions().skipMemoryCache(false))
                             .into(viewHolder.dp);
                 } else {
-                    Picasso.with(context)
+                    Glide.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
-                            .fit().centerInside()
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .apply(new RequestOptions().centerInside().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .into(viewHolder.dp);
                 }
 
@@ -199,14 +195,12 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     String followrsDp = cont.getProfileMedia().getMediaUrl();
                     Glide.with(context)
                             .load(followrsDp)
-                            .skipMemoryCache(false)
+                            .apply(new RequestOptions().skipMemoryCache(false))
                             .into(viewHolder.dp);
                 } else {
-                    Picasso.with(context)
+                    Glide.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
-                            .fit().centerInside()
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .apply(new RequestOptions().centerInside().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .into(viewHolder.dp);
                 }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
@@ -37,8 +38,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -305,7 +308,6 @@ public class FragmentPostDetails extends BaseFragment {
         if (image != null && !isDeepLink)
             Glide.with(this)
                     .load(image)
-                    .asBitmap()
                     .into(placeholder);
         else
             Glide.with(this)
@@ -486,19 +488,20 @@ public class FragmentPostDetails extends BaseFragment {
             Glide.with(this)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
                             postDetails.getPostOwner().getProfileMedia().getThumbUrl() : "")
-                    .placeholder(R.drawable.ic_user_male_dp_small)
-                    .crossFade()
-                    .listener(new RequestListener<String, GlideDrawable>() {
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.ic_user_male_dp_small))
+                    .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                    Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                       DataSource dataSource, boolean isFirstResource) {
                             profilePic.setImageDrawable(resource);
-                            return true;
+                            return false;
                         }
                     })
                     .into(profilePic);
@@ -632,19 +635,19 @@ public class FragmentPostDetails extends BaseFragment {
         reaction1Pic.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(reaction1PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ic_user_male_dp_small))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         reaction1Pic.setImageDrawable(resource);
-                        return true;
+                        return false;
                     }
                 })
                 .into(reaction1Pic);
@@ -654,19 +657,18 @@ public class FragmentPostDetails extends BaseFragment {
         reaction2Pic.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(reaction2PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ic_user_male_dp_small))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         reaction2Pic.setImageDrawable(resource);
-                        return true;
+                        return false;
                     }
                 })
                 .into(reaction2Pic);
@@ -676,19 +678,19 @@ public class FragmentPostDetails extends BaseFragment {
         reaction3Pic.setVisibility(VISIBLE);
         Glide.with(this)
                 .load(reaction3PicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ic_user_male_dp_small))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         reaction3Pic.setImageDrawable(resource);
-                        return true;
+                        return false;
                     }
                 })
                 .into(reaction3Pic);

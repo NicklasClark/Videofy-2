@@ -77,12 +77,11 @@ import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 /**
+ *
  * Created by farazhabib on 23/01/18.
  */
 
 public class FragmentReactionplayer extends BaseFragment {
-
-
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView playerView;
@@ -227,7 +226,7 @@ public class FragmentReactionplayer extends BaseFragment {
 
                         Glide.with(this)
                                 .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
-                                        : R.drawable.ic_user_male_dp_small).asBitmap()
+                                        : R.drawable.ic_user_male_dp_small)
                                 .into(reactionPostDp);
                         if (reactionTitle != null) {
                             try {
@@ -291,7 +290,6 @@ public class FragmentReactionplayer extends BaseFragment {
                         Glide.with(this)
                                 .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
                                         : R.drawable.ic_user_male_dp_small)
-                                .asBitmap()
                                 .into(reactionPostDp);
                         if (reactionTitle != null) {
                             reactionPostCaption.setText(reactionTitle);

@@ -21,13 +21,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.model.base.Authorize;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -211,10 +211,9 @@ public class SignupFragment extends AuthFragment {
     public void onResume() {
         super.onResume();
         SharedPreferences prfs = getActivity().getSharedPreferences("AUTHENTICATION_USER_PROFILE", Context.MODE_PRIVATE);
-        final String imageUri = prfs.getString("USER_DP_IMAGES", "");
-        if(imageUri!=null)
-        {
-            Picasso.with(getActivity())
+        final String imageUri = prfs.getString("USER_DP_IMAGES", null);
+        if(imageUri != null) {
+            Glide.with(getActivity())
                     .load(Uri.parse(imageUri))
                     .into(dp);
         }
@@ -271,7 +270,7 @@ public class SignupFragment extends AuthFragment {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("USER_DP_IMAGES", resultUri.toString());
                 editor.apply();
-                Picasso.with(getActivity())
+                Glide.with(getActivity())
                         .load(resultUri)
                         .into(dp);
                 try {

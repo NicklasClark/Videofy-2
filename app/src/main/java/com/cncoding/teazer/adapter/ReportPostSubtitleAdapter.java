@@ -1,7 +1,6 @@
 package com.cncoding.teazer.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -88,12 +85,12 @@ public class ReportPostSubtitleAdapter extends RecyclerView.Adapter<ReportPostSu
 
     }
 
-    private byte[] getImage(ImageView imageView) {
-        Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        return outputStream.toByteArray();
-    }
+//    private byte[] getImage(ImageView imageView) {
+//        Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+//        return outputStream.toByteArray();
+//    }
 
     @Override
     public int getItemCount() {

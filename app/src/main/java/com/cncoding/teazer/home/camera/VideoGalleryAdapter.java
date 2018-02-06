@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.utilities.PlaceHolderDrawableHelper;
@@ -49,9 +51,10 @@ class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapter.ViewH
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))));
 
             Glide.with(cameraActivity).load("file://" + videos.get(position).getPath())
-                    .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
-                    .crossFade()
-                    .skipMemoryCache(false)
+                    .apply(new RequestOptions()
+                            .placeholder(PlaceHolderDrawableHelper.getBackgroundDrawable(position))
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .skipMemoryCache(false))
                     .into(holder.thumbnailView);
 
             holder.thumbnailView.setOnClickListener(new View.OnClickListener() {

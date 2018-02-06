@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
@@ -20,8 +21,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
@@ -302,19 +305,18 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
         }
         Glide.with(getContext())
                 .load(profilePicUrl)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         profilePic.setImageDrawable(resource);
-                        return true;
+                        return false;
                     }
                 })
                 .into(profilePic);

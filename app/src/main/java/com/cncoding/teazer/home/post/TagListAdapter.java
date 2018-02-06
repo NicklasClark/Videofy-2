@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.model.base.TaggedUser;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,61 +55,35 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TaggedVi
 
         Log.d("TagListAdapter", "onBindViewHolder: imageurl"+imageURL);
         Log.d("TagListAdapter", "onBindViewHolder: profile media"+taggedUserList.get(i).toString());
-        if(imageURL)
-        {
+        if(imageURL) {
             Log.d("TagListAdapter", "onBindViewHolder: image url found");
             String image = taggedUserList.get(i).getProfileMedia().getThumbUrl();
             if(image != null) {
                 Log.d("TagListAdapter", "onBindViewHolder: image not null");
-                Picasso.with(context)
+                Glide.with(context)
                         .load(image)
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .fit().centerInside()
-//                        .networkPolicy(NetworkPolicy.NO_CACHE)
-//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .apply(new RequestOptions()
+                                .centerInside()
+                                .placeholder(R.drawable.ic_user_male_dp_small)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE))
                         .into(holder.dp);
             }  else {
                 Log.d("TagListAdapter", "onBindViewHolder: image null");
-                Picasso.with(context)
+                Glide.with(context)
                         .load(R.drawable.ic_user_male_dp_small)
-                        .fit().centerInside()
-//                        .networkPolicy(NetworkPolicy.NO_CACHE)
-//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE))
                         .into(holder.dp);
             }
        }
-       else
-       {
+       else {
            Log.d("TagListAdapter", "onBindViewHolder: image url not found");
-           Picasso.with(context)
+           Glide.with(context)
                    .load(R.drawable.ic_user_male_dp_small)
-                   .fit().centerInside()
-//                   .networkPolicy(NetworkPolicy.NO_CACHE)
-//                   .memoryPolicy(MemoryPolicy.NO_CACHE)
+                   .apply(new RequestOptions()
+                           .diskCacheStrategy(DiskCacheStrategy.NONE))
                    .into(holder.dp);
        }
-
-
-//        Glide.with(context)
-//                .load(taggedUserList.get(i).hasProfileMedia() ? taggedUserList.get(i).getProfileMedia().getThumbUrl() :
-//                        R.drawable.ic_user_male_dp)
-//                .placeholder(R.drawable.ic_user_male_dp)
-//                .crossFade()
-//                .listener(new RequestListener<Serializable, GlideDrawable>() {
-//                    @Override
-//
-//                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
-//                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-//                        holder.dp.setImageDrawable(resource);
-//                        return false;
-//                    }
-//                })
-//                .into(holder.dp);
 
         final int userId = taggedUserList.get(i).getUserId();
         final boolean isSelf = taggedUserList.get(i).isMySelf();

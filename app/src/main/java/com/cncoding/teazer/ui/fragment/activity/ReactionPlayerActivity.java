@@ -180,7 +180,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
                                     : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
                             .into(reactionPostDp);
                     if (reactionTitle != null) {
                         try {
@@ -225,7 +224,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
                                     : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
                             .into(reactionPostDp);
                     if (reactionTitle != null) {
                         reactionPostCaption.setText(reactionTitle);

@@ -1,6 +1,8 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -12,8 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
@@ -24,7 +29,6 @@ import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostReaction;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -79,19 +83,20 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
         Glide.with(context)
                 .load(postOwner.getProfileMedia() != null ? postOwner.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
-                .listener(new RequestListener<Serializable, GlideDrawable>() {
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ic_user_male_dp_small)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         holder.profilePic.setImageDrawable(resource);
-                        return true;
+                        return false;
                     }
                 })
                 .into(holder.profilePic);
@@ -123,21 +128,20 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
 
         Glide.with(context)
                 .load(postReaction.getMediaDetail().getThumbUrl())
-                .crossFade()
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions().skipMemoryCache(false))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onResourceReady(final GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
-                        holder.vignetteLayout.setVisibility(View.VISIBLE);
-                        holder.caption.setVisibility(View.VISIBLE);
-                        holder.bottomLayout.setVisibility(View.VISIBLE);
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
+                        holder.shimmerLayout.setVisibility(View.INVISIBLE);
+                        holder.vignetteLayout.setVisibility(View.VISIBLE);
+                        holder.caption.setVisibility(View.VISIBLE);
+                        holder.bottomLayout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 })
@@ -151,7 +155,6 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                     case R.id.root_layout:
                     //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
                         reactionPlayerListener.reactionPlayer(0,postReaction,null);
-
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         //region TODO

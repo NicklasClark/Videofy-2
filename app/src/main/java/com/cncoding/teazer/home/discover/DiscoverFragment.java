@@ -90,6 +90,7 @@ public class DiscoverFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static DiscoverFragment newInstance() {
         return new DiscoverFragment();
     }
