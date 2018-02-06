@@ -28,16 +28,12 @@ import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView;
-import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.PostReactDetail;
-import com.cncoding.teazer.model.react.ReactOwner;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
-import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.user.Notification;
 import com.cncoding.teazer.model.user.NotificationsList;
 
@@ -51,8 +47,6 @@ import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
-import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -392,7 +386,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             case R.id.action:
                                 String text = holder2.action.getText().toString();
                                 if (text.equals(context.getString(R.string.follow))) {
-
                                     ApiCallingService.Friends.acceptJoinRequest(holder2.notification.getNotificationId(), context)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
@@ -439,25 +432,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
-
-
-                                                            if (response.body().getFollowInfo().getFollowing()) {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setFollowing(true);
-                                                            } else if (holder2.notification.isRequestSent()) {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setRequest_sent(true);
-                                                            } else {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setFollowing(false);
-                                                                holder2.notification.setRequest_sent(false);
-                                                            }
+                                                        if (response.body().getFollowInfo().getFollowing()) {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setFollowing(true);
+                                                        } else if (holder2.notification.isRequestSent()) {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setRequest_sent(true);
+                                                        } else {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setFollowing(false);
+                                                            holder2.notification.setRequest_sent(false);
                                                         }
                                                     }
-
                                                 }
 
                                                 @Override

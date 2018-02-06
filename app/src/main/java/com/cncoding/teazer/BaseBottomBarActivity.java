@@ -170,9 +170,6 @@ public class BaseBottomBarActivity extends BaseActivity
         OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
 //    Profile listeners LikedUser
         FragmentLikedUser.CallProfileListener,
-//    profileListener from Postdetails
-        FragmentPostDetails.CallProfileFromPostDetails,
-
         TagListAdapter.TaggedListInteractionListener,
         AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener
 {
@@ -1180,8 +1177,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void callProfileListener(int id, boolean myself) {
-        pushFragment(myself ? ProfileFragment.newInstance() :
+    public void callProfileListener(int id, boolean isMyself) {
+        pushFragment(isMyself ? ProfileFragment.newInstance() :
                 OthersProfileFragment.newInstance(String.valueOf(id), "", ""));
     }
 
