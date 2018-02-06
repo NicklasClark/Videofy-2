@@ -240,6 +240,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         videoPath = output;
         try {
             enableView(uploadBtn);
+            uploadBtn.setText("Upload");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,6 +307,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if(isCompressing)
         {
             disableView(uploadBtn, true);
+            uploadBtn.setText("Processing...");
         }
 
         new GetThumbnail(this).execute();
