@@ -12,20 +12,7 @@
         android:visibility="gone"
         android:layout_centerInParent="true"/>
 
-    <!--<com.cncoding.teazer.customViews.ProximaNovaBoldTextView-->
-        <!--android:id="@+id/no_notifications"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:textAllCaps="true"-->
-        <!--app:drawableTopCompat="@drawable/ic_happy"-->
-        <!--android:textSize="@dimen/text_size_h5"-->
-        <!--android:text="@strno_notification_messaget_up"-->
-        <!--android:visibility="invisible"/>-->
-
-
-    <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
         android:id="@+id/no_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

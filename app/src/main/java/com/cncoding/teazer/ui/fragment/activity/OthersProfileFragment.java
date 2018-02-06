@@ -29,7 +29,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -44,9 +43,9 @@ import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.SignPainterTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.SignPainterTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.friends.ProfileInfo;
@@ -394,20 +393,15 @@ public class OthersProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
-
-
         getProfileInformation(followerfollowingid);
         followerCreationAdapter = new FollowersCreationAdapter(context, list, OthersProfileFragment.this);
         _recycler_view.setAdapter(followerCreationAdapter);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getParentActivity().updateToolbarTitle("Profile");
-
-
     }
 
     @Override
@@ -415,7 +409,6 @@ public class OthersProfileFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof ProfileFragment.FollowerListListener) {
             followerListListener = (ProfileFragment.FollowerListListener) context;
-
         }
     }
     private void unHideAllVideos(final int userId) {
@@ -430,12 +423,9 @@ public class OthersProfileFragment extends BaseFragment {
                         {
                             Toast.makeText(context,"Now you can see the videos those previously hidden",Toast.LENGTH_SHORT).show();
                         }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_LONG).show();
-
                     }
                 }
             }
@@ -458,8 +448,6 @@ public class OthersProfileFragment extends BaseFragment {
             public void onResponse(Call<ProfileInfo> call, Response<ProfileInfo> response) {
                 if (response.code() == 200) {
                     try {
-
-
                         ProfileInfo profileInfo = response.body();
                         int follower = profileInfo.getFollowers();
                         int following = profileInfo.getFollowings();
@@ -471,16 +459,12 @@ public class OthersProfileFragment extends BaseFragment {
                         isfollowing = profileInfo.getFollowInfo().getFollowing();
                         youBlocked = profileInfo.getFollowInfo().getYouBlocked();
                         isHideAllPost=profileInfo.getIsHidedAllPosts();
-                        if(requestRecieved)
-                        {
+                        if(requestRecieved) {
                             requestId = profileInfo.getFollowInfo().getRequestId();
-
                         }
 
-                        if(isHideAllPost)
-                        {
+                        if(isHideAllPost) {
                             _unHideAll.setVisibility(View.VISIBLE);
-
                         }
 
                         _followers.setText(follower + " Followers");
@@ -488,7 +472,6 @@ public class OthersProfileFragment extends BaseFragment {
                         _creations.setText(totalvideos + " Creations");
 
                         if (response.body().getPrivateProfile() == null) {
-
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
                             username = publicProfile.getUserName();
@@ -548,7 +531,6 @@ public class OthersProfileFragment extends BaseFragment {
                                 progressBar.setVisibility(View.GONE);
 
                             } else {
-
                                 if (isfollowing) {
 
                                     if (requestRecieved == true) {
@@ -557,8 +539,7 @@ public class OthersProfileFragment extends BaseFragment {
 
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }
-                                }
-                                else {
+                                } else {
 
                                     if (hassentrequest == true) {
 
@@ -569,8 +550,7 @@ public class OthersProfileFragment extends BaseFragment {
                                         } else {
                                             setActionButtonText(context, _btnfollow, R.string.requested);
                                         }
-                                    }
-                                    else {
+                                    } else {
 
                                         if (requestRecieved == true && isfollower) {
 
@@ -1185,8 +1165,7 @@ public class OthersProfileFragment extends BaseFragment {
         return gradientDrawable;
     }
 
-    public void resetRecyclerData()
-    {
+    public void resetRecyclerData() {
         _recycler_view.getAdapter().notifyDataSetChanged();
     }
 

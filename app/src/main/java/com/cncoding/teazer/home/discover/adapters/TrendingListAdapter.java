@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.base.Category;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
         });
     }
 
-    private GradientDrawable getBackground(ProximaNovaSemiboldTextView title, int position) {
+    private GradientDrawable getBackground(ProximaNovaSemiBoldTextView title, int position) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         if (sparseIntArray.get(position) == 0) {
             sparseIntArray.put(position, Color.parseColor(trendingCategories.get(position).getMyColor()));
@@ -77,7 +77,7 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_trending) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.item_trending) ProximaNovaSemiBoldTextView title;
 
         public ViewHolder(View itemView) {
             super(itemView);

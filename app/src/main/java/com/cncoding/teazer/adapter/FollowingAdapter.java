@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.friends.FollowersList;
@@ -43,6 +42,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 /**
+ *
  * Created by farazhabib on 10/11/17.
  */
 
@@ -107,6 +107,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
             final int followerId;
             if (userfollowingstatus == FollowersListActivity.USERS_FOLLOWER) {
+
                 final UserInfo cont = list.get(i);
                 final String followingname = cont.getUserName();
                 final int accounttype = cont.getAccountType();
@@ -202,10 +203,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
                     }
                 });
-            }
-            else {
-
-
+            } else {
                 final UserInfo cont = otherlist.get(i);
                 final String usertype;
                 final int requestId;
@@ -222,8 +220,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                 final boolean isrequestRecieved = cont.getRequestRecieved();
                 if (isrequestRecieved) {
                     requestId = cont.getRequestId();}
-                else
-                {
+                else {
                     requestId = 0;
                 }
                 viewHolder.name.setText(followername);
@@ -728,9 +725,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         @BindView(R.id.dp)
         CircularAppCompatImageView dp;
         @BindView(R.id.name)
-        ProximaNovaSemiboldTextView name;
+        ProximaNovaSemiBoldTextView name;
         @BindView(R.id.action)
-        ProximaNovaSemiboldTextView action;
+        ProximaNovaSemiBoldTextView action;
         @BindView(R.id.decline)
         AppCompatImageView declineBtn;
 

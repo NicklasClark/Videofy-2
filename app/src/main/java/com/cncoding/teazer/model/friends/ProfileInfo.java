@@ -1,6 +1,6 @@
 package com.cncoding.teazer.model.friends;
 
-import com.cncoding.teazer.model.user.*;
+import com.cncoding.teazer.model.user.PrivateProfile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -89,6 +89,4 @@ public class ProfileInfo {
     public void setIsHidedAllPosts(Boolean isHidedAllPosts) {
         this.isHidedAllPosts = isHidedAllPosts;
     }
-
-
 }

@@ -37,8 +37,8 @@ import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
@@ -384,19 +384,29 @@ public class ViewUtils {
                                       int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
         try {
             int width = isPostList ?
+                    getDeviceWidth(context) :
     //                in case of home page post lists, decrease 0.5dp from half the screen width
-                    (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2 :
+    //                (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)):
     //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
                     (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
 
             layoutParams.width = width;
-            if (postHeight < postWidth) {
-                postHeight = width;
-                layoutParams.height = postHeight;
+//                resize posts in shimmerLayout
+            if (!isPostList) {
+                if (postHeight >= postWidth) {
+                    postHeight = width;
+                    layoutParams.height = postHeight;
+                } else {
+                    layoutParams.height = width * postHeight / postWidth;
+                }
             } else {
-                layoutParams.height = width * postHeight / postWidth;
+                layoutParams.height = layoutParams.width * 3 / 4;
             }
-            dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
+//                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
+//                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio
+//                layoutParams.height = normalHeight > maxHeight ? maxHeight : normalHeight;
+            if (dimensionSparseArray != null)
+                dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -415,7 +425,7 @@ public class ViewUtils {
         }
     }
 
-    public static int getPixels(Context context, int dp) {
+    public static int getPixels(Context context, float dp) {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 

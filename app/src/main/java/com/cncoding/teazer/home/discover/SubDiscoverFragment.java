@@ -29,8 +29,8 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
@@ -63,7 +63,8 @@ public class SubDiscoverFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
-    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.no_posts_2)
+    ProximaNovaBoldTextView noPosts2;
 
     private Call<PostList> trendingVideosCall;
     private Call<PostList> mostPopularVideosCall;
@@ -127,9 +128,8 @@ public class SubDiscoverFragment extends BaseFragment {
                 prepareMyInterestsLayout();
                 break;
             case ACTION_VIEW_TRENDING:
-                getParentActivity().updateToolbarTitle(getString(R.string.trending) +
-                        (categories != null && !categories.isEmpty() ?
-                                (" " + categories.get(0).getCategoryName()) + " " : " ") + getString(R.string.videos));
+                getParentActivity().updateToolbarTitle((categories != null && !categories.isEmpty()) ?
+                                (categories.get(0).getCategoryName()):"Trending");
                 prepareTrendingLayout();
                 break;
             default:

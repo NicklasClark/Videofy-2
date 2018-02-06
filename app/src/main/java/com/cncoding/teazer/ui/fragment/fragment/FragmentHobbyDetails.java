@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostTitleAdapter;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 
 import java.io.IOException;
 import java.net.URL;

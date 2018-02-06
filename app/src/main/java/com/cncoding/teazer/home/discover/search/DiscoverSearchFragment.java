@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.home.BaseFragment;
 
 import butterknife.BindView;
@@ -102,7 +102,9 @@ public class DiscoverSearchFragment extends BaseFragment {
             @Override
             public void run() {
                 if (!searchTerm.isEmpty() && searchTerm != null) {
-                    logSearchEvent(searchTerm);
+                    if (searchTerm.length() > 1) {
+                        logSearchEvent(searchTerm);
+                    }
                 }
                 sectionsPagerAdapter.setTextQueryChanged(searchTerm);
             }

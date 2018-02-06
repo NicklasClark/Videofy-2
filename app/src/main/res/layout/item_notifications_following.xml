@@ -19,7 +19,7 @@
             android:scaleType="centerCrop"
             android:layout_margin="14dp"/>
 
-        <com.cncoding.teazer.customViews.UniversalTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

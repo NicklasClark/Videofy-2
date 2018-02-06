@@ -18,8 +18,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.discover.Videos;
@@ -559,7 +559,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private void setActionButton(ProximaNovaSemiboldTextView button, int type, int position, boolean savePosition) {
+    private void setActionButton(ProximaNovaSemiBoldTextView button, int type, int position, boolean savePosition) {
         if (savePosition)
             actionArray.put(position, type);
         switch (type) {
@@ -609,9 +609,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.username) ProximaNovaSemiboldTextView username;
+        @BindView(R.id.username) ProximaNovaSemiBoldTextView username;
         @BindView(R.id.name) ProximaNovaRegularTextView name;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         MiniProfile user;
 
         PeopleViewHolder(View view) {

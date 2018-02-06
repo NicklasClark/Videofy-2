@@ -31,7 +31,7 @@ public class UserVideosFragment extends BaseFragment implements AppBarLayout.OnO
     private boolean mIsTheTitleContainerVisible = true;
 
 //    @BindView(R.id.main_linear_layout_title) LinearLayout mTitleContainer;
-//    @BindView(R.id.title_big) ProximaNovaSemiboldTextView bigTitle;
+//    @BindView(R.id.title_big) ProximaNovaSemiBoldTextView bigTitle;
 //    @BindView(R.id.subtitle) ProximaNovaRegularTextView subtitle;
 //    @BindView(R.id.main_text_view_title) TextView mTitle;
 //    @BindView(R.id.up_btn) AppCompatImageView upBtn;

@@ -17,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,7 +37,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -64,7 +63,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @BindView(R.id.fb_login_btn) LoginButton fbLoginButton;
     @BindView(R.id.signup_with_google) ProximaNovaSemiboldButton signupWithGoogleBtn;
     @BindView(R.id.signup_page_btn) ProximaNovaSemiboldButton signupWithEmailBtn;
-    @BindView(R.id.marquee_text) ProximaNovaBoldTextView marqueeText;
+    @BindView(R.id.marquee_text)
+    ProximaNovaBoldTextView marqueeText;
 
     private boolean isConnected;
 
@@ -280,7 +280,7 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
             return bundle;
         }
-        catch(JSONException e) {
+        catch(Exception e) {
             Log.d("getFacebookData()","Error parsing JSON");
         }
         return null;
@@ -313,36 +313,41 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        try {
         /*
          * Google login action
          * */
-        if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                if (account != null)
-                    mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
-                            null, null, account, signupWithGoogleBtn);
-                else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
-            } else {
-                signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
-                    @Override
-                    public void onAnimationEnd() {
-                        signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
-                                0, 0, 0);
-                    }
-                });
-                enableViews();
-                Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
+            if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()) {
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    if (account != null)
+                        mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
+                                null, null, account, signupWithGoogleBtn);
+                    else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
+                } else {
+                    signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
+                        @Override
+                        public void onAnimationEnd() {
+                            signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
+                                    0, 0, 0);
+                        }
+                    });
+                    enableViews();
+                    Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-        /*
-         * Facebook login action
-         * */
-        else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+            /*
+             * Facebook login action
+             * */
+            else {
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+            }
 //        enableViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Override

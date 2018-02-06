@@ -317,9 +317,9 @@
     <string name="yet_uploaded">&#160;yet uploaded</string>
     <string name="could_not_set_profile_pic">Couldn\'t set profile pic, please try again later</string>
     <string name="send_to">Share</string>
-    <string name="report_extra_remark_hint">Remarks(optional)</string>
+    <string name="report_extra_remark_hint">Other Reason</string>
     <string name="report_post_dialog_title">Report Post</string>
-    <string name="report_post_dialog_message">Are you sure you want to report this video</string>
+    <string name="report_post_dialog_message">Are you sure you want to report this video?</string>
     <string name="report_btn_text">Report</string>
     <string name="reaction_not_found">Reaction might be deleted by user</string>
     <string name="top_logo">Top logo</string>
@@ -344,7 +344,6 @@
     <string name="swipe_for_filter_text1">\u2014 &#60; \u2014</string>
     <string name="swipe_for_filter_text">Swipe right to change Filter effects</string>
     <string name="mobiruck_api_key">7a01b47dd932f738bfa28589402f5254a90688123f3c9ba191ba39bd7222e02a</string>
-    <string name="no_categories_available">No Categories available</string>
     <string name="welcome_to_teazer">Welcome to Teazer</string>
     <string name="coach_mark_post_list_body">Browse Videos and start exploring Videos with different mentioned categories, Enjoy!</string>
     <string name="okay_got_it">Okay, got it</string>
@@ -354,6 +353,14 @@
     <string name="my_profile">My Profile</string>
     <string name="coach_mark_post_details_body">React on Videos via videos of your own or record a video instantly.</string>
     <string name="coach_mark_my_interests_body">Discover the videos based on the interests you have selected.</string>
+    <string name="no_categories_available">No Categories available</string>
+    <string name="title_likes">Likes</string>
+    <string name="title_report">Report</string>
+    <string name="report_user_dialog_message">Are you sure you want to report this user?</string>
+    <string name="report_user_success_dialog_title">Profile Reported</string>
+    <string name="report_user_success_dialog_message">We have reported this profile. We will get back and block this Profile.</string>
     <string name="upload_title">Enter Title of video (max 180 words).</string>
     <string name="error_msg">Title is mandatory</string>
+    <string name="volume_controls">Volume controls</string>
+    <string name="artwork">artwork</string>
 </resources>

@@ -14,11 +14,14 @@ public class MediaUtils {
 
         try {
 // Request audio focus for playback
-            int result = am.requestAudioFocus(afChangeListener,
-                    // Use the music stream.
-                    AudioManager.STREAM_MUSIC,
-                    // Request permanent focus.
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            int result = 0;
+            if (am != null) {
+                result = am.requestAudioFocus(afChangeListener,
+                        // Use the music stream.
+                        AudioManager.STREAM_MUSIC,
+                        // Request permanent focus.
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            }
 
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 // Start playback
@@ -33,7 +36,9 @@ public class MediaUtils {
     public static void releaseAudioLock(Context context, AudioManager.OnAudioFocusChangeListener afChangeListener) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         try {
-            am.abandonAudioFocus(afChangeListener);
+            if (am != null) {
+                am.abandonAudioFocus(afChangeListener);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

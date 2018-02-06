@@ -50,7 +50,7 @@ public class ExoPlayerActivity extends AppCompatActivity{
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
-    private static long playerCurrentPosition = 0;
+    private long playerCurrentPosition = 0;
     private Handler mHandler;
 
     @Override
@@ -151,7 +151,7 @@ public class ExoPlayerActivity extends AppCompatActivity{
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
             }
-            MediaSource mediaSource=buildMediaSource(Uri.parse(videoURL));
+            MediaSource mediaSource = buildMediaSource(Uri.parse(videoURL));
             LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
             player.prepare(loopingSource,true,false);
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);

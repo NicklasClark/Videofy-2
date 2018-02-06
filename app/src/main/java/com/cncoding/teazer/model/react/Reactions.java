@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.ProfileMedia;
-import com.cncoding.teazer.model.base.MediaDetail;
 
 /**
  *

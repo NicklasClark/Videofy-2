@@ -138,7 +138,7 @@
                         <!--android:layout_height="100dp"-->
                        <!--/>-->
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -216,7 +216,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@+id/gender_text"/>
 
-                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/maletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                             android:background="@drawable/ic_female_white"
                             android:layout_toEndOf="@+id/male"/>
 
-                        <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                             android:id="@+id/femaletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -299,7 +299,7 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+                    <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"

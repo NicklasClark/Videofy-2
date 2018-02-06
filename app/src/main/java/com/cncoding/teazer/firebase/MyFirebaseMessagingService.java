@@ -73,8 +73,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String messageBody, Bitmap bitmap, String title, Map<String, String> data) {
-        Intent intent = new Intent();
-        intent.setClass(this, BaseBottomBarActivity.class);
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, BaseBottomBarActivity.class);
 //        if (messageBody.contains("follow"))
         Bundle bundle = new Bundle();
         bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
@@ -92,7 +93,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         initChannels();
 
-
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")
                 .setSmallIcon(R.drawable.ic_stat_notification_icon)
@@ -103,11 +103,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        if (bitmap != null)
-            notificationBuilder.setLargeIcon(bitmap);
+            if (bitmap != null)
+                notificationBuilder.setLargeIcon(bitmap);
 
-        if (notificationManager != null) {
-            notificationManager.notify(0, notificationBuilder.build());
+            if (notificationManager != null) {
+                notificationManager.notify(0, notificationBuilder.build());
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

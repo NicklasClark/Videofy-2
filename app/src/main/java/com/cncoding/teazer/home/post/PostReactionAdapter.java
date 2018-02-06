@@ -18,8 +18,8 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostReaction;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
@@ -101,6 +102,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        holder.caption.setText(decodeUnicodeString(title));
 
         holder.profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,9 +185,9 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.reaction_post_thumb) ImageView postThumbnail;
-        @BindView(R.id.reaction_post_caption) ProximaNovaSemiboldTextView caption;
+        @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView caption;
         @BindView(R.id.reaction_post_dp) CircularAppCompatImageView profilePic;
-        @BindView(R.id.reaction_post_name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView views;
 

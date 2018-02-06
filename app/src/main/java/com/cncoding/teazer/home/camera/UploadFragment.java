@@ -7,17 +7,14 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -42,12 +39,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
@@ -84,7 +82,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnTouch;
-import butterknife.Optional;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -305,7 +302,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //            disableView(uploadBtn, true);
 //        }
 
-        new GetThumbnail(this).execute();
+        Glide.with(context)
+                .load(Uri.fromFile(new File(videoPath)))
+                .into(thumbnailView);
 
         new SetVideoDuration(this).execute();
 
@@ -472,49 +471,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void onDestroyView() {
         super.onDestroyView();
 //        null.unbind();
-    }
-
-    private static class GetThumbnail extends AsyncTask<Void, Void, Bitmap> {
-
-        WeakReference<UploadFragment> reference;
-
-        GetThumbnail(UploadFragment context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... voids) {
-            try {
-                return ThumbnailUtils.createVideoThumbnail(reference.get().videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final Bitmap bitmap) {
-            if (reference.get().isAdded()) {
-                try {
-                    if (bitmap != null) {
-                        mActivity.runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-                                reference.get().thumbnailView.setImageBitmap(bitmap);
-                            }
-                        });
-                    }
-//                    else {
-//                        reference.get().thumbnailProgressBar.setVisibility(View.GONE);
-//                        reference.get().thumbnailView.setImageResource(R.color.colorDisabled);
-//                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     private String getNearbySearchUrl(Location location) {
@@ -866,7 +822,9 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> googlePlaces) {
 //            reference.get().toggleInteraction(true);
-            reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
+            if (reference != null) {
+                reference.get().mListener.onUploadInteraction(TAG_NEARBY_PLACES, googlePlaces, null);
+            }
         }
     }
 
@@ -899,7 +857,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     }
                 } else
                     return "";
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "";
             }
@@ -908,6 +866,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         @Override
         protected void onPostExecute(String videoDuration) {
             reference.get().videoDurationTextView.setText(videoDuration);
+            reference.get().thumbnailProgressBar.setVisibility(View.GONE);
             super.onPostExecute(videoDuration);
         }
     }

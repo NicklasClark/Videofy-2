@@ -32,8 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
-import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  *
@@ -45,7 +43,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
     private List<Reactions> list;
     private Context context;
     ReactionPlayerListener reactionPlayerListener;
-
+    private boolean isPostClicked = false;
 
     public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
         this.context = context;
@@ -88,7 +86,6 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
              //   playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
                 reactionPlayerListener.reactionPlayer(1,null,cont);
             }

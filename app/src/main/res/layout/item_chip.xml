@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView
+<com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chip"
     android:layout_width="wrap_content"

@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Category;
@@ -54,7 +54,7 @@ public class Interests extends BaseFragment {
     private static final String ARG_CATEGORIES = "userSelectedCategories";
 
     @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.save_interests_btn) ProximaNovaSemiboldTextView saveBtn;
+    @BindView(R.id.save_interests_btn) ProximaNovaSemiBoldTextView saveBtn;
 
     private ArrayList<Category> userSelectedCategories;
     private ArrayList<Category> totalCategories;
@@ -172,15 +172,19 @@ public class Interests extends BaseFragment {
             @Override
             public void onResponse(Call<ArrayList<Category>> call, Response<ArrayList<Category>> response) {
                 if (response.code() == 200) {
-                    ArrayList<Category> tempList = response.body();
-                    if (!tempList.isEmpty()) {
-                        totalCategories.clear();
-                        totalCategories.addAll(tempList);
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        if(!isEditing)
-                            changeDoneBtnVisibility(VISIBLE);
-                    } else {
-                        changeDoneBtnVisibility(View.GONE);
+                    try {
+                        ArrayList<Category> tempList = response.body();
+                        if (!tempList.isEmpty()) {
+                            totalCategories.clear();
+                            totalCategories.addAll(tempList);
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            if(!isEditing)
+                                changeDoneBtnVisibility(VISIBLE);
+                        } else {
+                            changeDoneBtnVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 } else {
                     changeDoneBtnVisibility(View.GONE);

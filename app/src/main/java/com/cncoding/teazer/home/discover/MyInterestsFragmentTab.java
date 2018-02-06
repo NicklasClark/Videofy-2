@@ -1,6 +1,5 @@
 package com.cncoding.teazer.home.discover;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,15 +13,14 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.SubDiscoverAdapter;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -39,10 +37,12 @@ public class MyInterestsFragmentTab extends BaseFragment {
     @BindView(R.id.list) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.no_posts) ProximaNovaRegularTextView noPosts;
-    @BindView(R.id.no_posts_2) ProximaNovaBoldTextView noPosts2;
+    @BindView(R.id.no_posts_2)
+    ProximaNovaBoldTextView noPosts2;
 
+    private Call<PostList> postListCall;
     private int categoryId;
-    private String categoryName;
+//    private String categoryName;
     private ArrayList<PostDetails> postDetailsArrayList;
 
 //    private OnNotificationsFragmentInteractionListener mListener;
@@ -65,7 +65,7 @@ public class MyInterestsFragmentTab extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
-            categoryName = getArguments().getString(ARG_CATEGORY_NAME);
+//            categoryName = getArguments().getString(ARG_CATEGORY_NAME);
         }
     }
 
@@ -86,73 +86,68 @@ public class MyInterestsFragmentTab extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
-                    new GetPosts(MyInterestsFragmentTab.this).execute(page);
+                    getPosts(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        new GetPosts(this).execute(1);
+        getPosts(1);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 scrollListener.resetState();
-                new GetPosts(MyInterestsFragmentTab.this).execute(1);
+                getPosts(1);
             }
         });
 
         return rootView;
     }
 
-    private static class GetPosts extends AsyncTask<Integer, Void, Void> {
+    private void getPosts(final int page) {
+        try {
+            postListCall = ApiCallingService.Discover.getAllInterestedCategoriesVideos(page, categoryId, getContext());
 
-        private WeakReference<MyInterestsFragmentTab> reference;
+            if (postListCall.isExecuted()) postListCall.cancel();
 
-        GetPosts(MyInterestsFragmentTab context) {
-            reference = new WeakReference<>(context);
-        }
+            postListCall.enqueue(new Callback<PostList>() {
+                @Override
+                public void onResponse(Call<PostList> call, Response<PostList> response) {
+                    try {
+                        if (isAdded()) {
+                            if (response.code() == 200) {
+                                PostList tempPostList = response.body();
+                                is_next_page = tempPostList.isNextPage();
+                                if (!tempPostList.getPosts().isEmpty()) {
+                                    if (page == 1) postDetailsArrayList.clear();
 
-        @Override
-        protected Void doInBackground(final Integer... integers) {
-            if (integers[0] == 1)
-                reference.get().postDetailsArrayList.clear();
-
-            ApiCallingService.Discover.getAllInterestedCategoriesVideos(
-                    integers[0], reference.get().categoryId, reference.get().getContext())
-                    .enqueue(new Callback<PostList>() {
-                        @Override
-                        public void onResponse(Call<PostList> call, Response<PostList> response) {
-                            if (reference.get().isAdded()) {
-                                if (response.code() == 200) {
-                                    reference.get().is_next_page = response.body().isNextPage();
-                                    if (!response.body().getPosts().isEmpty()) {
-                                        reference.get().postDetailsArrayList.addAll(response.body().getPosts());
-                                        reference.get().recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else if (integers[0] == 1){
-                                        reference.get().recyclerView.setVisibility(View.GONE);
-                                        String noVideosText = reference.get().getString(R.string.no_videos_tagged);
-                                        reference.get().noPosts.setText(noVideosText);
-                                        reference.get().noPosts.setVisibility(View.VISIBLE);
-                                        reference.get().noPosts2.setVisibility(View.INVISIBLE);
-                                    }
-                                } else
-                                    Log.e("GetPosts", response.code() + "_" + response.message());
-                            }
+                                    postDetailsArrayList.addAll(tempPostList.getPosts());
+                                    recyclerView.getAdapter().notifyDataSetChanged();
+                                } else if (page == 1){
+                                    recyclerView.setVisibility(View.GONE);
+                                    String noVideosText = getString(R.string.no_videos_tagged);
+                                    noPosts.setText(noVideosText);
+                                    noPosts.setVisibility(View.VISIBLE);
+                                    noPosts2.setVisibility(View.INVISIBLE);
+                                }
+                            } else
+                                Log.e("GetPosts", response.code() + "_" + response.message());
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                        @Override
-                        public void onFailure(Call<PostList> call, Throwable t) {
-                            if (reference.get().isAdded()) {
-                                Log.e("FAILED_GetPosts", t.getMessage() != null ? t.getMessage() : "FAILED!");
-                            }
-                        }
-                    });
-            return null;
-        }
+                @Override
+                public void onFailure(Call<PostList> call, Throwable t) {
+                    if (isAdded()) {
+                        Log.e("FAILED_GetPosts", t.getMessage() != null ? t.getMessage() : "FAILED!");
+                    }
+                }
+            });
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            reference.get().swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -168,11 +163,14 @@ public class MyInterestsFragmentTab extends BaseFragment {
 ////        }
 //    }
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-////        mListener = null;
-//    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (postListCall != null && postListCall.isExecuted()) {
+            postListCall.cancel();
+            postListCall = null;
+        }
+    }
 
 //    public interface OnNotificationsFragmentInteractionListener {
 //        void onFragmentInteraction(Uri uri);

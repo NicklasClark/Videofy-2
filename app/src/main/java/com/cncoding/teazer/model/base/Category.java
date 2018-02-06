@@ -1,18 +1,26 @@
 package com.cncoding.teazer.model.base;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Category implements Parcelable {
-    private int category_id;
-    private String category_name;
-    private String color;
-    private String my_color;
+
+@Entity(tableName = "Category")
+public class Category extends ViewModel implements Parcelable {
+
+    @SerializedName("category_id") @Expose private int category_id;
+    @SerializedName("category_name") @Expose private String category_name;
+    @SerializedName("color") @Expose private String color;
+    @SerializedName("my_color") @Expose private String my_color;
 
     public Category(int category_id, String category_name, String color, String my_color) {
         this.category_id = category_id;

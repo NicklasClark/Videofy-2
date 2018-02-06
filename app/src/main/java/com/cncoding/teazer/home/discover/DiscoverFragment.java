@@ -17,9 +17,9 @@ import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.discover.adapters.FeaturedVideosListAdapter;
 import com.cncoding.teazer.home.discover.adapters.MostPopularListAdapter;
@@ -61,13 +61,16 @@ public class DiscoverFragment extends BaseFragment {
     @BindView(R.id.my_interests_header_layout) LinearLayout myInterestsHeaderLayout;
     @BindView(R.id.most_popular_list) RecyclerView mostPopularList;
     @BindView(R.id.my_interests_list) RecyclerView myInterestsList;
-    @BindView(R.id.my_interests_view_all) public ProximaNovaSemiboldTextView myInterestsViewAll;
+    @BindView(R.id.my_interests_view_all) public ProximaNovaSemiBoldTextView myInterestsViewAll;
     @BindView(R.id.trending_list) RecyclerView trendingList;
     @BindView(R.id.featured_videos_list) RecyclerView featuredVideosList;
-    @BindView(R.id.no_most_popular) ProximaNovaBoldTextView noMostPopular;
+    @BindView(R.id.no_most_popular)
+    ProximaNovaBoldTextView noMostPopular;
     @BindView(R.id.no_my_interests) ProximaNovaRegularTextView noMyInterests;
-    @BindView(R.id.no_trending) ProximaNovaBoldTextView noTrending;
-    @BindView(R.id.no_featured_videos) ProximaNovaBoldTextView noFeaturedVideos;
+    @BindView(R.id.no_trending)
+    ProximaNovaBoldTextView noTrending;
+    @BindView(R.id.no_featured_videos)
+    ProximaNovaBoldTextView noFeaturedVideos;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
@@ -315,11 +318,13 @@ public class DiscoverFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(LandingPosts... landingPosts) {
-            reference.get().clearLandingPostData();
-            reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
-            reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
-            reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
-            reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            if (reference != null) {
+                reference.get().clearLandingPostData();
+                reference.get().mostPopular.addAll(landingPosts[0].getMostPopular());
+                reference.get().userInterests.addAll(landingPosts[0].getUserInterests());
+                reference.get().trendingCategories.addAll(landingPosts[0].getTrendingCategories());
+                reference.get().myInterests.putAll(landingPosts[0].getMyInterests());
+            }
             return null;
         }
 

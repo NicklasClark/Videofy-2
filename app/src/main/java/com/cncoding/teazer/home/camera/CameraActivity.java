@@ -72,7 +72,6 @@ import com.google.android.gms.location.places.Places;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -187,9 +186,6 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -377,23 +373,19 @@ public class CameraActivity extends AppCompatActivity
     private void uploadOrTrimAction(String videoPath)
     {
         try {
-
             if (new File(videoPath).exists()) {
-
-
-
                 String videoFormat=new File(videoPath).getName();
                 String filenameArray[] = videoFormat.split("\\.");
                 String extension = filenameArray[filenameArray.length-1];
                 if(extension.equals("mp4")||extension.equals("avi")||extension.equals("mov")) {
-                    long  videoduration= getVideoDuration(videoPath);
-                    if (videoduration < 60) {
+                    long  videoDuration= getVideoDuration(videoPath);
+                    if (videoDuration < 60) {
 
-                        if (videoduration >= 5) {
+                        if (videoDuration >= 5) {
                             uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
                             startVideoUploadFragment();
                         } else {
-                            Toast.makeText(this, "Select atleast 5 seconds video", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Select at least 5 seconds video", Toast.LENGTH_SHORT).show();
 
                         }
                     } else {
@@ -520,9 +512,9 @@ public class CameraActivity extends AppCompatActivity
 
 //            Log.v("IGA", "Address" + add);
             return obj.getSubLocality();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not get address, please try again later", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -668,27 +660,31 @@ public class CameraActivity extends AppCompatActivity
 //            cursor = reference.get().getContentResolver().query(uri, projection,
 //                    MediaStore.Video.Media.DURATION + ">=3000", null,
 //                    orderByDateTaken + " DESC");
-            cursor = reference.get().getContentResolver().query(uri, projection,
-                    null, null,
-                    orderByDateTaken + " DESC");
-            if (cursor != null) {
-                columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-//                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
+            try {
+                cursor = reference.get().getContentResolver().query(uri, projection,
+                        null, null,
+                        orderByDateTaken + " DESC");
+                if (cursor != null) {
+                    columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                    duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+    //                    columnId = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+                    thumbnailData = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
-                while (cursor.moveToNext()) {
-                    try {
-                        reference.get().videosList.add(new Videos(
-                                cursor.getString(columnIndexData),              //Video path
-    //                            cursor.getString(thumbnailData),                //Thumbnail
-                                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
-                        ));
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
+                    while (cursor.moveToNext()) {
+                        try {
+                            reference.get().videosList.add(new Videos(
+                                    cursor.getString(columnIndexData),              //Video path
+        //                            cursor.getString(thumbnailData),                //Thumbnail
+                                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION))    //Duration
+                            ));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    cursor.close();
                 }
-                cursor.close();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -753,7 +749,7 @@ public class CameraActivity extends AppCompatActivity
             case VIDEO_TRIM_REQUEST_CODE:
                 if (data != null) {
                     videoPath = data.getStringExtra("trimmed_path");
-                    uploadFragment = UploadFragment.newInstance(videoPath, false, true);
+                    uploadFragment = UploadFragment.newInstance(videoPath, isReaction, true);
 
 //                    CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
 //                    compressVideoAsyncTask.delegate = this;

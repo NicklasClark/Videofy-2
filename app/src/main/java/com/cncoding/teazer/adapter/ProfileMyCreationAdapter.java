@@ -22,7 +22,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
@@ -49,6 +49,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     myCreationListener listener;
     Fragment fragment;
     OnChildFragmentUpdateVideos onChildFragmentUpdateVideosllistrener;
+    private boolean isPostClicked = false;
 
 
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
@@ -119,8 +120,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
             } else if (reactions > 3)
                 getPostReactionFour(viewHolder, postId, reactions);
-            else
-                {
+            else {
                 viewHolder.reactions.setText(String.valueOf(reactions) + " R");
                 viewHolder.reactions.setVisibility(View.GONE);
                 getPostReactionThree(viewHolder, postId, reactions);
@@ -137,7 +137,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.myCreationVideos(2, cont);
+                    if (!isPostClicked) {
+                        isPostClicked = true;
+                        listener.myCreationVideos(2, cont);
+                    }
                 }
             });
 
@@ -467,8 +470,8 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
     public interface myCreationListener {
 
-        public void myCreationVideos(int i, PostDetails postDetails);
-        public void ReactionPost(int postId);
+        void myCreationVideos(int i, PostDetails postDetails);
+        void ReactionPost(int postId);
     }
 
     public interface OnChildFragmentUpdateVideos {

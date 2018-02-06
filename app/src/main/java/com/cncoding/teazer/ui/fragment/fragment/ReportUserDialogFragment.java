@@ -1,7 +1,10 @@
 package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,7 +22,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.user.ReportUser;
@@ -69,8 +73,27 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         Bundle args = new Bundle();
         args.putInt("userId", userId);
         args.putString("userName", username);
+        args.putString("blah1", username);
+        args.putString("blah2", username);
         frag.setArguments(args);
         return frag;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
     @Override
@@ -147,8 +170,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
-                    Toast.makeText(getContext(), "User reported", Toast.LENGTH_SHORT).show();
-                    ReportUserDialogFragment.this.dismiss();
+                    showReportUserSuccessDialog();
                 }
             }
 
@@ -163,7 +185,7 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
     private void showReportUserAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getContext().getString(R.string.report_user_dialog_title));
-        builder.setMessage(getContext().getString(R.string.report_post_dialog_message));
+        builder.setMessage(getContext().getString(R.string.report_user_dialog_message));
 
         String positiveText = getContext().getString(android.R.string.ok);
         builder.setPositiveButton(positiveText,
@@ -192,8 +214,33 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         dialog.show();
     }
 
-    @OnClick(R.id.submitReport)
-    public void onViewClicked() {
-        showReportUserAlertDialog();
+    private void showReportUserSuccessDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getContext().getString(R.string.report_user_success_dialog_title));
+        builder.setMessage(getContext().getString(R.string.report_user_success_dialog_message));
+
+        String positiveText = getContext().getString(android.R.string.ok);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ReportUserDialogFragment.this.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @OnClick({R.id.btnClose, R.id.submitReport})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnClose:
+                this.dismiss();
+                break;
+            case R.id.submitReport:
+                showReportUserAlertDialog();
+                break;
+        }
     }
 }

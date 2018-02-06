@@ -26,16 +26,15 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.LoginFragment.LoginInteractionListener;
 import com.cncoding.teazer.authentication.SignupFragment2;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.TypeFactory;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.base.Authorize;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -448,7 +447,7 @@ public class AuthUtils {
             try {
                 ErrorBody errorBody = new Gson().fromJson(responseBody.string(), ErrorBody.class);
                 return errorBody.getReason().isEmpty() ? "Something went wrong, Please try again" : errorBody.getReason().get(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "Something went wrong, Please try again";
             }

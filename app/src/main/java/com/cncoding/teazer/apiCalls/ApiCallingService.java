@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -797,8 +797,8 @@ public class ApiCallingService {
         })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-//                .build();
-                .addInterceptor(logging).build();
+                .build();
+//                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {

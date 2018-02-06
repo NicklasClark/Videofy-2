@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.model.post.PostDetails;
 
@@ -184,8 +184,8 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.reaction_count) ProximaNovaRegularTextView reactions;

@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostSubtitleFragment;
@@ -105,7 +105,7 @@ public class ReportPostSubtitleAdapter extends RecyclerView.Adapter<ReportPostSu
         @BindView(R.id.reportTitleLayout)
         RelativeLayout layout;
         @BindView(R.id.reportTitle)
-        TextView reportTitle;
+        ProximaNovaRegularTextView reportTitle;
         @BindView(R.id.tickView) ImageView tickView;
 
         ViewHolder(View view) {
