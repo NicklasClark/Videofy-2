@@ -219,6 +219,7 @@ public class FragmentReactionplayer extends BaseFragment {
                 try {
 
                     videoURL = postDetails.getMediaDetail().getMediaUrl();
+
                     if (postDetails != null) {
                         reactId = postDetails.getReactId();
                         isLiked = !postDetails.canLike();
@@ -239,10 +240,8 @@ public class FragmentReactionplayer extends BaseFragment {
                             }
                             reactionPostCaption.setText(reactionTitle);
                         }
-
                         postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                         reactionPostName.setText(postDetails.getReactOwner().getFirstName());
-
 
                         ApiCallingService.Posts.getPostDetails(postDetails.getPostId(), context)
                                 .enqueue(new Callback<PostDetails>() {
