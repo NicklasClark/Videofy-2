@@ -439,25 +439,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                                                     if (response.code() == 200) {
-
-
-                                                            if (response.body().getFollowInfo().getFollowing()) {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setFollowing(true);
-                                                            } else if (holder2.notification.isRequestSent()) {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setRequest_sent(true);
-                                                            } else {
-                                                                setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
-                                                                holder2.notification.setIs_actioned(true);
-                                                                holder2.notification.setFollowing(false);
-                                                                holder2.notification.setRequest_sent(false);
-                                                            }
+                                                        if (response.body().getFollowInfo().getFollowing()) {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOWING);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setFollowing(true);
+                                                        } else if (holder2.notification.isRequestSent()) {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_REQUESTED);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setRequest_sent(true);
+                                                        } else {
+                                                            setActionButton(holder2.action, null, BUTTON_TYPE_FOLLOW);
+                                                            holder2.notification.setIs_actioned(true);
+                                                            holder2.notification.setFollowing(false);
+                                                            holder2.notification.setRequest_sent(false);
                                                         }
                                                     }
-
                                                 }
 
                                                 @Override
