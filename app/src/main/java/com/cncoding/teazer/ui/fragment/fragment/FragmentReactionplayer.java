@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,10 @@ public class FragmentReactionplayer extends BaseFragment {
     RelativeLayout rootLayout;
     @BindView(R.id.postDuration)
     ProximaNovaRegularTextView postDurationView;
+    @BindView(R.id.postImage)
+    ImageView postImage;
+    @BindView(R.id.postTitle)
+    ProximaNovaRegularTextView postTitle;
     private String videoURL;
     private PostReaction postDetails;
     private Reactions selfPostDetails;
@@ -209,21 +214,17 @@ public class FragmentReactionplayer extends BaseFragment {
                 try {
 
                     videoURL = postDetails.getMediaDetail().getMediaUrl();
-
-                 //   postDetails = getIntent().getParcelableExtra("POST_INFO");
                     if (postDetails != null) {
                         reactId = postDetails.getReactId();
-
-
                         isLiked = !postDetails.canLike();
                         likesCount = postDetails.getLikes();
                         viewsCount = postDetails.getViews();
                         reactionTitle = postDetails.getReact_title();
 
+
                         Glide.with(this)
                                 .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
-                                        : R.drawable.ic_user_male_dp_small)
-                                .asBitmap()
+                                        : R.drawable.ic_user_male_dp_small).asBitmap()
                                 .into(reactionPostDp);
                         if (reactionTitle != null) {
                             try {
@@ -236,6 +237,36 @@ public class FragmentReactionplayer extends BaseFragment {
 
                         postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                         reactionPostName.setText(postDetails.getReactOwner().getFirstName());
+
+
+                        ApiCallingService.Posts.getPostDetails(postDetails.getPostId(), context)
+                                .enqueue(new Callback<PostDetails>() {
+                                    @Override
+                                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                        if (response.code() == 200)
+                                        {
+                                            Glide.with(context).load(response.body().getMedias().get(0).getThumbUrl()).into(postImage);
+                                            postTitle.setText("Reacted on "+response.body().getTitle());
+
+
+                                        }
+
+                                        else if (response.code() == 412 && response.message().contains("Precondition Failed"))
+                                            Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                        else {
+                                            Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                            Toast.makeText(context, "Error fetching post", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<PostDetails> call, Throwable t) {
+                                        t.printStackTrace();
+                                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
+
                     }
                     initView();
                     incrementView();
@@ -304,9 +335,42 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
+                else if(postDetails!=null)
+                {
+                    myCreationListener.ReactionPost(postDetails.getPostId());
+                }
 
             }
         });
+
+        postTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(selfPostDetails!=null) {
+                    myCreationListener.ReactionPost(selfPostDetails.getPostId());
+                }
+                else if(postDetails!=null)
+                {
+                    myCreationListener.ReactionPost(postDetails.getPostId());
+                }
+            }
+        });
+        postImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(selfPostDetails!=null) {
+                    myCreationListener.ReactionPost(selfPostDetails.getPostId());
+                }
+                else if(postDetails!=null)
+                {
+                    myCreationListener.ReactionPost(postDetails.getPostId());
+                }
+            }
+        });
+
+
         return view;
 
     }

@@ -257,8 +257,7 @@ public class FragmentPostDetails extends BaseFragment implements AudioManager.On
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image,
-                                                  boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
+    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
         FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
@@ -1182,10 +1181,11 @@ public class FragmentPostDetails extends BaseFragment implements AudioManager.On
     @Override
     public void onStop() {
         super.onStop();
+        getParentActivity().updateToolbarTitle(previousTitle);
+        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
-            getParentActivity().showToolbar();
         }
         releaseAudioLock(getContext(), audioFocusChangeListener);
     }
@@ -1319,7 +1319,6 @@ public class FragmentPostDetails extends BaseFragment implements AudioManager.On
 
                 @Override
                 public void onPositionDiscontinuity(int reason) {
-
                 }
 
                 @Override
@@ -1482,7 +1481,6 @@ public class FragmentPostDetails extends BaseFragment implements AudioManager.On
         }
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -1495,8 +1493,6 @@ public class FragmentPostDetails extends BaseFragment implements AudioManager.On
             e.printStackTrace();
         }
     }
-
-
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);

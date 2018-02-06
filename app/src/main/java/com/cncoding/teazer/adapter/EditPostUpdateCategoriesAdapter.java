@@ -46,6 +46,7 @@ public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPo
 
         this.context = context;
         this.usercategoryList=usercategoryList;
+
         selectedPositions = new boolean[categories.size()];
 
         for(int i = 0;i<categories.size();i++)
@@ -72,14 +73,16 @@ public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPo
     public void onBindViewHolder(final EditPostUpdateCategoriesAdapter.ViewHolder holder, final int position) {
         try {
             final Category category = this.categories.get(position);
-            for (int i = 0; i < selecteCategriesName.size(); i++) {
+
+            for (int i = 0; i < selecteCategriesName.size(); i++)
+            {
                 if (selecteCategriesName.get(i).equals(category.getCategoryName())) {
 
                     setCheck(holder.nameView, true);
-                        selectedPositions[position] = true;
+                    selectedPositions[position] = true;
 
-                    }
                 }
+            }
                 holder.nameView.setText(category.getCategoryName());
 
             if (selectedPositions[position]) {
@@ -145,6 +148,7 @@ public class EditPostUpdateCategoriesAdapter extends RecyclerView.Adapter<EditPo
     }
     @Override
     public int getItemCount() {
+
         return categories.size();
     }
 

@@ -140,13 +140,15 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 if (actionArray.get(position) == 0) {
                     switch (holder2.user.getAccountType()) {
+
                         case ACCOUNT_TYPE_PRIVATE:
+
                             if(holder2.user.getYouBlocked()) {
                                 setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
                             }
                             else {
                                 if (holder2.user.isFollowing()) {
-                                    if (holder2.user.getRequestRecieved()) {
+                                    if (holder2.user.getRequestRecieved()&& holder2.user.isFollower()) {
 
                                         setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
                                     }
@@ -159,31 +161,84 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                                         if (holder2.user.getRequestRecieved()) {
                                             setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
-                                        } else {
+                                        }
+                                        else {
                                             setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, position, true);
                                         }
                                     } else {
-                                        if (holder2.user.getRequestRecieved()) {
-
+                                        if (holder2.user.getRequestRecieved() && holder2.user.isFollower()) {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                                        }
+                                        else if(holder2.user.getRequestRecieved() && !holder2.user.isFollower())
+                                        {
                                             setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
-                                        } else {
+
+                                        }
+                                        else if(!holder2.user.getRequestRecieved()  && holder2.user.isFollower())
+
+                                        {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                                       }
+                                        else if(!holder2.user.getRequestRecieved() )
+                                        {
                                             setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
 
                                         }
+                                        else
+                                        {
+
+                                        }
+
                                     }
                                 }
                             }
                             break;
-
                         case ACCOUNT_TYPE_PUBLIC:
                             if(holder2.user.getYouBlocked()) {
+
                                 setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
                             }
                             else {
                                 if (holder2.user.isFollowing())
                                     setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING, position, true);
                                 else
-                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                                {
+                                    if (holder2.user.isRequestSent()) {
+
+                                        if (holder2.user.getRequestRecieved()) {
+                                            setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
+                                        }
+                                        else {
+                                            setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, position, true);
+                                        }
+                                    } else {
+                                        if (holder2.user.getRequestRecieved() && holder2.user.isFollower()) {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+                                        }
+                                        else if(holder2.user.getRequestRecieved() && !holder2.user.isFollower())
+                                        {
+                                            setActionButton(holder2.action, BUTTON_TYPE_ACCEPT, position, true);
+
+                                        }
+                                        else if(!holder2.user.getRequestRecieved()  && holder2.user.isFollower())
+
+                                        {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                                        }
+                                        else if(!holder2.user.getRequestRecieved() )
+                                        {
+                                            setActionButton(holder2.action, BUTTON_TYPE_FOLLOW, position, true);
+
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+                                    }
+                                }
                             }
                             break;
                         default:
@@ -201,37 +256,84 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 break;
                             case R.id.action:
                                 if (holder2.action.getText().equals(context.getString(R.string.follow))) {
-                                    ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), baseFragment.getContext())
-                                            .enqueue(new Callback<ResultObject>() {
-                                                @Override
-                                                public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                                                    if (baseFragment.isAdded()) {
-                                                        if (response.code() == 200) {
-                                                            switch (holder2.user.getAccountType()) {
-                                                                case ACCOUNT_TYPE_PRIVATE:
-                                                                    setActionButton(holder2.action, BUTTON_TYPE_REQUESTED,
-                                                                            holder2.getAdapterPosition(), true);
-                                                                    break;
-                                                                case ACCOUNT_TYPE_PUBLIC:
-                                                                    setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
-                                                                            holder2.getAdapterPosition(), true);
-                                                                    break;
-                                                                default:
-                                                                    break;
-                                                            }
-                                                        } else
-                                                            Log.e("sendJoinRequest", response.code() + "_" + response.message());
-                                                    }
-                                                }
 
-                                                @Override
-                                                public void onFailure(Call<ResultObject> call, Throwable t) {
-                                                    if (baseFragment.isAdded()) {
-                                                        if (t.getMessage() != null)
-                                                            Log.e("sendJoinRequest", t.getMessage());
+                                    if(holder2.user.getRequestRecieved()&&holder2.user.isFollower())
+                                    {
+                                        ApiCallingService.Friends.acceptJoinRequest(holder2.user.getRequestId(), context)
+                                                .enqueue(new Callback<ResultObject>() {
+                                                    @Override
+                                                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                        try {
+
+                                                            if (response.code() == 200) {
+                                                                if (response.body().getStatus()) {
+
+                                                                    if (response.body().getFollowInfo().getFollowing())
+                                                                    {
+                                                                        Toast.makeText(context, "You also have started following", Toast.LENGTH_LONG).show();
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
+                                                                                holder2.getAdapterPosition(), true);
+
+                                                                    } else if (response.body().getFollowInfo().getRequestSent()) {
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_REQUESTED, holder2.getAdapterPosition(), true);
+                                                                                Toast.makeText(context, "Your request has been sent", Toast.LENGTH_LONG).show();
+
+
+                                                                    } else {
+
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOW,
+                                                                                holder2.getAdapterPosition(), true);
+                                                                    }
+                                                                }
+                                                                else {
+                                                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                                }
+                                                            }
+                                                        }
+                                                        catch (Exception e) {
+                                                            Toast.makeText(context, "Something went wrong, Please try again..", Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                        t.printStackTrace();
+
+                                                    }
+                                                });
+                                    }
+                                    else {
+                                        ApiCallingService.Friends.sendJoinRequestByUserId(holder2.user.getUserId(), baseFragment.getContext())
+                                                .enqueue(new Callback<ResultObject>() {
+                                                    @Override
+                                                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                                                        if (baseFragment.isAdded()) {
+                                                            if (response.code() == 200) {
+                                                                switch (holder2.user.getAccountType()) {
+                                                                    case ACCOUNT_TYPE_PRIVATE:
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_REQUESTED,
+                                                                                holder2.getAdapterPosition(), true);
+                                                                        break;
+                                                                    case ACCOUNT_TYPE_PUBLIC:
+                                                                        setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
+                                                                                holder2.getAdapterPosition(), true);
+                                                                        break;
+                                                                    default:
+                                                                        break;
+                                                                }
+                                                            } else
+                                                                Log.e("sendJoinRequest", response.code() + "_" + response.message());
+                                                        }
+                                                    }
+                                                    @Override
+                                                    public void onFailure(Call<ResultObject> call, Throwable t) {
+                                                        if (baseFragment.isAdded()) {
+                                                            if (t.getMessage() != null)
+                                                                Log.e("sendJoinRequest", t.getMessage());
+                                                        }
+                                                    }
+                                                });
+                                    }
                                 }
 
 

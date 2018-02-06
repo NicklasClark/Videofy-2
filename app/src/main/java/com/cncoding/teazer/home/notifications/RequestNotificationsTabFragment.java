@@ -72,6 +72,7 @@ public class RequestNotificationsTabFragment extends BaseFragment {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (is_next_page)
