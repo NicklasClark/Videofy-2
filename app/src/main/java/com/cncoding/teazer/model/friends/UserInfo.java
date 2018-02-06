@@ -62,25 +62,6 @@ public class UserInfo {
     @Expose
     private Medias profileMedia;
 
-    public UserInfo(Integer userId, String userName, String firstName, String lastName, Boolean isBlockedYou, Boolean youBlocked,
-                    Boolean mySelf, Integer accountType, Boolean hasProfileMedia, Boolean following, Boolean follower, Boolean requestSent,
-                    Integer requestId, Boolean requestRecieved, Medias profileMedia) {
-        this.userId = userId;
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.isBlockedYou = isBlockedYou;
-        this.youBlocked = youBlocked;
-        this.mySelf = mySelf;
-        this.accountType = accountType;
-        this.hasProfileMedia = hasProfileMedia;
-        this.following = following;
-        this.follower = follower;
-        this.requestSent = requestSent;
-        this.requestId = requestId;
-        this.requestRecieved = requestRecieved;
-        this.profileMedia = profileMedia;
-    }
 
     public Integer getUserId() {
         return userId;

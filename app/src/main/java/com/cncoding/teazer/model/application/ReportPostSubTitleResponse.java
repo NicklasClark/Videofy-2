@@ -71,7 +71,7 @@ public class ReportPostSubTitleResponse implements Parcelable {
         in.readList(this.subReports, Object.class.getClassLoader());
     }
 
-    public static final Creator<ReportPostSubTitleResponse> CREATOR = new Creator<ReportPostSubTitleResponse>() {
+    public static final Parcelable.Creator<ReportPostSubTitleResponse> CREATOR = new Parcelable.Creator<ReportPostSubTitleResponse>() {
         @Override
         public ReportPostSubTitleResponse createFromParcel(Parcel source) {
             return new ReportPostSubTitleResponse(source);

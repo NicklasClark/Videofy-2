@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -29,7 +30,6 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
-import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 
 import java.util.ArrayList;
@@ -52,15 +52,13 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
     Context context;
     private ArrayList<PostReaction> reactionList;
     FollowerCreationListener listener;
-    OthersProfileFragment othersProfileFragment;
-    ArrayList<PostReaction>updatelist;
+    Activity othersProfileFragment;
 
-    public FollowersCreationAdapter(Context context, List<PostDetails> _list, OthersProfileFragment othersProfileFragment) {
+    public FollowersCreationAdapter(Context context, List<PostDetails> _list, Activity othersProfileFragment) {
         this.context = context;
         this._list = _list;
         listener = (FollowerCreationListener) context;
         this.othersProfileFragment = othersProfileFragment;
-
 
     }
 
@@ -79,7 +77,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             final PostDetails postDetails = _list.get(i);
             final String videoTitle = postDetails.getTitle();
             final int postId = postDetails.getPostId();
-            final boolean is_hidden=postDetails.isHided();
+            final boolean is_hidden=postDetails.getHided();
             if(is_hidden)
             {
 
@@ -176,7 +174,7 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                             .setPositiveButton(context.getString(R.string.yes_hide), new DialogInterface.OnClickListener()
                                             {
                                                 @Override
-                                                public void onClick(DialogInterface dialogInterface, int item) {
+                                                public void onClick(DialogInterface dialogInterface, int i) {
                                                     ApiCallingService.Posts.hideOrShowPost(postDetails.getPostId(), 1, context)
                                                             .enqueue(new Callback<ResultObject>() {
                                                                 @Override
@@ -190,12 +188,12 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                                         viewHolder.playvideo.setVisibility(View.GONE);
                                                                         viewHolder.cardView.setEnabled(false);
                                                                         viewHolder.menu.setEnabled(false);
-                                                                        postDetails.setHided(true);
-
 
 
                                                                     } else {
-                                                                        Toast.makeText(context, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(context,
+                                                                                R.string.something_went_wrong,
+                                                                                Toast.LENGTH_SHORT).show();
                                                                     }
                                                                 }
                                                                 @Override
@@ -213,7 +211,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                 }
                                             })
                                             .show();
-                                    othersProfileFragment.resetRecyclerData();
 
 
                                     break;
@@ -251,8 +248,6 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
                                                         viewHolder.playvideo.setVisibility(View.VISIBLE);
                                                         viewHolder.menu.setEnabled(true);
                                                         viewHolder.cardView.setEnabled(true);
-                                                        postDetails.setHided(false);
-
 
                                                     } else {
                                                         Toast.makeText(context,

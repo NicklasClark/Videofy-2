@@ -3,8 +3,8 @@ package com.cncoding.teazer.model.friends;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.Medias;
+import com.cncoding.teazer.model.base.Category;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

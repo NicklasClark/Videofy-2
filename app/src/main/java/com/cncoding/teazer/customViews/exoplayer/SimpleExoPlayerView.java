@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
@@ -531,9 +532,7 @@ public final class SimpleExoPlayerView extends FrameLayout {
         }
         this.useController = useController;
         if (useController) {
-            if (controller != null) {
-                controller.setPlayer(player);
-            }
+            controller.setPlayer(player);
         } else if (controller != null) {
             controller.hide();
             controller.setPlayer(null);
@@ -554,27 +553,48 @@ public final class SimpleExoPlayerView extends FrameLayout {
     /**
      * Sets the background color of the {@code exo_shutter} view.
      *
-     * @param url The url containing the thumbnail.
+     * @param url The url containing png or gif.
      */
     public void setShutterBackground(String url) {
         if (shutterView != null) {
-            Glide.with(getContext())
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+            if (url.contains(".gif")) {
+                Glide.with(getContext())
+                        .load(url)
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .listener(new RequestListener<String, GifDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            shutterView.setImageDrawable(resource);
-                            return true;
-                        }
-                    })
-                    .into(shutterView);
+                            @Override
+                            public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target,
+                                                           boolean isFromMemoryCache, boolean isFirstResource) {
+                                shutterView.setImageDrawable(resource);
+                                return false;
+                            }
+                        })
+                        .into(shutterView);
+            } else {
+                Glide.with(getContext())
+                        .load(url)
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                           boolean isFromMemoryCache, boolean isFirstResource) {
+                                shutterView.setImageDrawable(resource);
+                                return false;
+                            }
+                        })
+                        .into(shutterView);
+            }
         }
     }
 
@@ -794,20 +814,18 @@ public final class SimpleExoPlayerView extends FrameLayout {
         return subtitleView;
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
-//            return false;
-//        }
-//        else {
-//            if (!controller.isVisible()) {
-//                maybeShowController(true);
-//            } else if (controllerHideOnTouch) {
-//                controller.hide();
-//            }
-//            return true;
-//        }
-//    }
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
+            return false;
+        }
+        if (!controller.isVisible()) {
+            maybeShowController(true);
+        } else if (controllerHideOnTouch) {
+            controller.hide();
+        }
+        return true;
+    }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
@@ -1007,5 +1025,7 @@ public final class SimpleExoPlayerView extends FrameLayout {
                 hideController();
             }
         }
+
     }
+
 }

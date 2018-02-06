@@ -1,5 +1,6 @@
 package com.cncoding.teazer.home.post;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
@@ -46,7 +48,6 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
-import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
@@ -65,9 +66,9 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -80,6 +81,7 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
@@ -109,7 +111,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static android.util.DisplayMetrics.DENSITY_HIGH;
+import static android.util.DisplayMetrics.DENSITY_MEDIUM;
+import static android.util.DisplayMetrics.DENSITY_XHIGH;
+import static android.util.DisplayMetrics.DENSITY_XXHIGH;
+import static android.util.DisplayMetrics.DENSITY_XXXHIGH;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -144,7 +152,8 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class FragmentPostDetails extends BaseFragment {
+public class FragmentPostDetails extends BaseFragment implements
+        AudioManager.OnAudioFocusChangeListener {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
@@ -152,47 +161,98 @@ public class FragmentPostDetails extends BaseFragment {
     public static final String ARG_REACT_ID = "react_id";
     //    private static final String ARG_ENABLE_REACT_BTN = "enableReactBtn";
     public static final String ARG_IS_COMING_FROM_HOME_PAGE = "isComingFromHomePage";
+    CallProfileFromPostDetails callProfileFromPostDetails;
 
-    @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
-    @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
-    @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
-    @BindView(R.id.no_tagged_users) ProximaNovaRegularTextView noTaggedUsers;
-    @BindView(R.id.tagged_user_list) RecyclerView taggedUserListView;
-    @BindView(R.id.horizontal_list_view_parent) RelativeLayout horizontalListViewParent;
-    @BindView(R.id.tags_badge) ProximaNovaSemiBoldTextView tagsCountBadge;
-    @BindView(R.id.list) RecyclerView recyclerView;
-    @BindView(R.id.post_load_error) ProximaNovaBoldTextView postLoadErrorTextView;
-    @BindView(R.id.reactions_header) ProximaNovaBoldTextView reactionsHeader;
-    @BindView(R.id.post_load_error_subtitle) ProximaNovaRegularTextView postLoadErrorSubtitle;
-    @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
-    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
-    @BindView(R.id.controls) FrameLayout controlsContainer;
-    @BindView(R.id.media_controller_caption) ProximaNovaSemiBoldTextView caption;
-    @BindView(R.id.media_controller_location) ProximaNovaRegularTextView locationView;
-    @BindView(R.id.media_controller_eta) ProximaNovaRegularTextView remainingTime;
-    @BindView(R.id.media_controller_play_pause) AppCompatImageButton playPauseButton;
-    @BindView(R.id.media_controller_dp) CircularAppCompatImageView profilePic;
-    @BindView(R.id.media_controller_name) ProximaNovaRegularTextView profileNameView;
-    @BindView(R.id.media_controller_likes) ProximaNovaRegularTextView likesView;
-    @BindView(R.id.media_controller_views) ProximaNovaRegularTextView viewsView;
-    @BindView(R.id.media_controller_categories) ProximaNovaSemiBoldTextView categoriesView;
-    @BindView(R.id.media_controller_reaction_count) ProximaNovaSemiBoldTextView reactionCountView;
-    @BindView(R.id.media_controller_reaction_1) CircularAppCompatImageView reaction1Pic;
-    @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
-    @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
-    @BindView(R.id.loader) GifTextView loader;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiBoldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
-    @BindView(R.id.liked_user_layout) FrameLayout frameLayout;
+    //<editor-fold desc="Main layout views">
+//    @BindView(R.id.root_layout) NestedScrollView nestedScrollView;
+//    @BindView(R.id.video_container) RelativeLayout videoContainer;
 
+    @BindView(R.id.relative_layout)
+    RelativeLayout relativeLayout;
+    @BindView(R.id.tags_container)
+    RelativeLayout tagsLayout;
+    @BindView(R.id.placeholder)
+    ImageView placeholder;
+    @BindView(R.id.loading)
+    ProgressBar loadingProgressBar;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.react_btn)
+    ProximaNovaBoldButton reactBtn;
+    @BindView(R.id.like)
+    ProximaNovaRegularCheckedTextView likeBtn;
+    @BindView(R.id.no_tagged_users)
+    ProximaNovaRegularTextView noTaggedUsers;
+    @BindView(R.id.tagged_user_list)
+    RecyclerView taggedUserListView;
+    @BindView(R.id.horizontal_list_view_parent)
+    RelativeLayout horizontalListViewParent;
+    @BindView(R.id.tags_badge)
+    ProximaNovaSemiBoldTextView tagsCountBadge;
+    //    @BindView(R.id.menu) ProximaNovaRegularTextView menu;
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    @BindView(R.id.post_load_error)
+    ProximaNovaBoldTextView postLoadErrorTextView;
+    @BindView(R.id.reactions_header)
+    ProximaNovaBoldTextView reactionsHeader;
+    @BindView(R.id.post_load_error_subtitle)
+    ProximaNovaRegularTextView postLoadErrorSubtitle;
+    @BindView(R.id.post_load_error_layout)
+    LinearLayout postLoadErrorLayout;
+    //    @BindView(R.id.share) ProximaNovaRegularTextView share;
+    @BindView(R.id.video_view)
+    SimpleExoPlayerView playerView;
+    //</editor-fold>
+
+    //<editor-fold desc="Controller views">
+    @BindView(R.id.controls)
+    FrameLayout controlsContainer;
+    //top layout
+    @BindView(R.id.media_controller_caption)
+    ProximaNovaSemiBoldTextView caption;
+    @BindView(R.id.media_controller_location)
+    ProximaNovaRegularTextView locationView;
+    @BindView(R.id.media_controller_eta)
+    ProximaNovaRegularTextView remainingTime;
+    //center layout
+    @BindView(R.id.media_controller_play_pause)
+    AppCompatImageButton playPauseButton;
+    //bottom layout
+    @BindView(R.id.media_controller_dp)
+    CircularAppCompatImageView profilePic;
+    @BindView(R.id.media_controller_name)
+    ProximaNovaRegularTextView profileNameView;
+    @BindView(R.id.media_controller_likes)
+    ProximaNovaRegularTextView likesView;
+    @BindView(R.id.media_controller_views)
+    ProximaNovaRegularTextView viewsView;
+    @BindView(R.id.media_controller_categories)
+    ProximaNovaSemiBoldTextView categoriesView;
+    @BindView(R.id.media_controller_reaction_count)
+    ProximaNovaSemiBoldTextView reactionCountView;
+    @BindView(R.id.media_controller_reaction_1)
+    CircularAppCompatImageView reaction1Pic;
+    @BindView(R.id.media_controller_reaction_2)
+    CircularAppCompatImageView reaction2Pic;
+    @BindView(R.id.media_controller_reaction_3)
+    CircularAppCompatImageView reaction3Pic;
+    @BindView(R.id.loader)
+    GifTextView loader;
+    @BindView(R.id.uploadProgressText)
+    ProximaNovaSemiBoldTextView uploadProgressText;
+    @BindView(R.id.uploadProgress)
+    ProgressBar uploadProgress;
+    @BindView(R.id.uploadingStatusLayout)
+    RelativeLayout uploadingStatusLayout;
+    public static final String USER_PROFILE = "userprofile";
+    //</editor-fold>
+
+    //<editor-fold desc="primitive members">
 //    private long playbackPosition;
 //    private int currentWindow;
 //    private boolean enableReactBtn;
+    private boolean playWhenReady = true;
     private boolean isComingFromHomePage;
     private byte[] image;
     private boolean is_next_page;
@@ -202,11 +262,16 @@ public class FragmentPostDetails extends BaseFragment {
     private int views;
     private long totalDuration;
     private boolean oneShotFlag;
+    public static boolean isPostDetailActivity = false;
+    @BindView(R.id.liked_user_layout)
+    FrameLayout frameLayout;
     Context context;
 
     //    StartCountDownClass startCountDownClass;
     private Handler customHandler = new Handler();
+    //</editor-fold>
 
+    //<editor-fold desc="Objects">
     private SimpleExoPlayer player;
     private PostDetails postDetails;
     private Call<PostReactionsList> postReactionsListCall;
@@ -215,9 +280,15 @@ public class FragmentPostDetails extends BaseFragment {
     private ArrayList<TaggedUser> taggedUsersList;
     private PostReactionAdapter postReactionAdapter;
     private AudioManager audioManager;
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder builder;
     private ReactionUploadReceiver reactionUploadReceiver;
     private static boolean isDeepLink = false;
     private String thumbUrl;
+    private String reactId;
+    private static boolean isReactionPlayed = false;
+    TaggedUsersList taggedList;
+    //</editor-fold>
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
@@ -229,7 +300,9 @@ public class FragmentPostDetails extends BaseFragment {
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
+    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image,
+                                                  boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
+
         FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
@@ -244,7 +317,6 @@ public class FragmentPostDetails extends BaseFragment {
         fragmentPostDetails.setArguments(bundle);
         return fragmentPostDetails;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -267,6 +339,7 @@ public class FragmentPostDetails extends BaseFragment {
 
         ButterKnife.bind(this, view);
 
+        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         setupServiceReceiver();
         categoriesView.setSelected(true);
         postReactions = new ArrayList<>();
@@ -276,7 +349,8 @@ public class FragmentPostDetails extends BaseFragment {
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.callProfileListener(postDetails.getPostOwner().getUserId(), postDetails.canDelete());
+
+                callProfileFromPostDetails.callProfileListener(postDetails.getPostOwner().getUserId(), postDetails.canDelete());
             }
         });
 
@@ -286,10 +360,39 @@ public class FragmentPostDetails extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if(likes>0) {
+//                    ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(abc_slide_in_bottom, abc_slide_out_top, abc_slide_in_top, abc_slide_out_bottom)
+//                            .add(R.id.liked_user_layout, FragmentLikedUser.newInstance(postDetails))
+//                            .addToBackStack("FragmentLikedUserPost")
+//                            .commit();
+
                     mListener.onPostLikedClicked(postDetails);
                 }
             }
         });
+
+//        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                if (next) {
+//                    if (identifier.equals("Other")) {
+//                        if (page > 2) {
+//                            loader.setVisibility(View.VISIBLE);
+//                        }
+//                        taggedUserListView(Integer.parseInt(followerid), page);
+//                    } else {
+//                        if (page > 2) {
+//                            loader.setVisibility(View.VISIBLE);
+//                        }
+//                        getUserfollowerList(page);
+//
+//                    }
+//                }
+//
+//            }
+//        };
+ //       recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
+
         return view;
     }
 
@@ -308,6 +411,8 @@ public class FragmentPostDetails extends BaseFragment {
                     .asBitmap()
                     .into(placeholder);
         else
+
+
             Glide.with(this)
                     .load(thumbUrl)
                     .into(placeholder);
@@ -357,11 +462,9 @@ public class FragmentPostDetails extends BaseFragment {
                             else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
                                 // Pause playback
                                 player.setPlayWhenReady(false);
-                            }
-//                            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-//                                // Lower the volume, keep playing
-//                            }
-                            else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                                // Lower the volume, keep playing
+                            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                                 // Your app has been granted audio focus again
                                 // Raise volume to normal, restart playback if necessary
                                 player.setPlayWhenReady(true);
@@ -395,15 +498,18 @@ public class FragmentPostDetails extends BaseFragment {
             }
             else {
                 thumbUrl = bundle.getString(ARG_THUMBNAIL);
-                String reactId = bundle.getString(ARG_REACT_ID);
+                reactId = bundle.getString(ARG_REACT_ID);
+                isReactionPlayed = false;
 
                 if (reactId != null) {
                     fetchReactionDetails(context, Integer.parseInt(reactId));
                 }
             }
+//            enableReactBtn = getIntent().getBooleanExtra(ARG_ENABLE_REACT_BTN, true);
             isComingFromHomePage = bundle.getBoolean(ARG_IS_COMING_FROM_HOME_PAGE, false);
         }
-        audioManager = (AudioManager) getParentActivity().getSystemService(Context.AUDIO_SERVICE);
+
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
     }
 
     private Runnable mDelayedStopRunnable = new Runnable() {
@@ -415,9 +521,34 @@ public class FragmentPostDetails extends BaseFragment {
         }
     };
 
+    private void logTheDensity() {
+        switch (getResources().getDisplayMetrics().densityDpi) {
+            case DENSITY_MEDIUM:
+                Log.d("DEVICE DENSITY", "mdpi");
+                break;
+            case DENSITY_HIGH:
+                Log.d("DEVICE DENSITY", "hdpi");
+                break;
+            case DENSITY_XHIGH:
+                Log.d("DEVICE DENSITY", "xhdpi");
+                break;
+            case DENSITY_XXHIGH:
+                Log.d("DEVICE DENSITY", "xxhdpi");
+                break;
+            case DENSITY_XXXHIGH:
+                Log.d("DEVICE DENSITY", "xxhdpi");
+                break;
+            default:
+                Log.d("DEVICE DENSITY DPI", String.valueOf(getResources().getDisplayMetrics().densityDpi));
+                Log.d("DEVICE DENSITY", String.valueOf(getResources().getDisplayMetrics().density));
+                break;
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+
         getParentActivity().hideToolbar();
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getContext(), audioFocusChangeListener);
@@ -474,14 +605,11 @@ public class FragmentPostDetails extends BaseFragment {
             }
 
             if (postDetails.getTotalReactions() <= 3) {
-                String reactionCountText = String.valueOf(postDetails.getTotalReactions()) + " R";
-                reactionCountView.setText(reactionCountText);
+                reactionCountView.setText(String.valueOf(postDetails.getTotalReactions()) + " R");
             } else {
-                String reactionCountText = "+" + String.valueOf(postDetails.getTotalReactions()-3) + " R";
-                reactionCountView.setText(reactionCountText);
+                reactionCountView.setText("+" + String.valueOf(postDetails.getTotalReactions()-3) + " R");
             }
-            if (postDetails.getTotalTags() != null)
-                tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+            tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
 
             Glide.with(this)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
@@ -550,6 +678,7 @@ public class FragmentPostDetails extends BaseFragment {
                                             setReaction3Pic(postReactions.get(2).getMediaDetail().getThumbUrl());
                                         }
                                     }
+
                                 } else {
                                     setNoReactions();
                                     showNoReactionMessage();
@@ -566,6 +695,7 @@ public class FragmentPostDetails extends BaseFragment {
 
                 private void showErrorMessage(String message) {
                     dismissProgressBar();
+//                        recyclerView.setVisibility(View.INVISIBLE);
                     postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                     postLoadErrorLayout.setVisibility(VISIBLE);
                     message = getString(R.string.could_not_load_posts) + message;
@@ -786,27 +916,78 @@ public class FragmentPostDetails extends BaseFragment {
 
             @Override
             public void onResponse(Call<TaggedUsersList> call, Response<TaggedUsersList> response) {
-                try {
-                    if(response.code()==200) {
+
+                try
+                {
+                    if(response.code()==200)
+                    {
                         TaggedUsersList taggedList = response.body();
                         boolean next= taggedList.isNextPage();
+
                         taggedUsersList.addAll(taggedList.getTaggedUsers());
-                        if ((taggedUsersList != null && taggedUsersList.size() != 0) || page != 1) {
-                            if(next) {
-                                int pages = page + 1;
+
+                        if ((taggedUsersList == null || taggedUsersList.size() == 0) && page == 1) {
+
+
+                        }
+                        else
+                        {
+                            if(next)
+                            {
+                                int pages=page+1;
                                 getTaggedUsers(pages) ;
                             }
                             taggedUserListView.getAdapter().notifyDataSetChanged();
                             taggedUserListView.getAdapter().notifyItemRangeInserted( taggedUserListView.getAdapter().getItemCount(), taggedUsersList.size() - 1);
                         }
+
                     }
-                    else {
+                    else
+                    {
+                        // Toast.makeText(context,response.message(),Toast.LENGTH_SHORT).show();
                         Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
                     }
+
+
                 }
-                catch(Exception e) {
+                catch(Exception e)
+                {
                     e.printStackTrace();
                 }
+
+//                try {
+//                    if (response.code() == 200) {
+//                        TaggedUsersList taggedList = response.body();
+//                        if (taggedList.isNextPage()) {
+//                            if (!taggedList.getTaggedUsers().isEmpty()) {
+//                                if (page == 1)
+//                                    taggedUsersList.clear();
+//
+//                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+//                                getTaggedUsers(page + 1);
+//                                noTaggedUsers.setVisibility(GONE);
+//                            } else if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+//                                taggedUsersList.clear();
+//                                noTaggedUsers.setVisibility(VISIBLE);
+//
+//                            }
+//                        } else {
+//                            if (page == 1 && taggedList.getTaggedUsers().isEmpty()) {
+//                                taggedUsersList.clear();
+//                                noTaggedUsers.setVisibility(VISIBLE);
+//
+//                            } else {
+//                                noTaggedUsers.setVisibility(GONE);
+//                                taggedUsersList.addAll(taggedList.getTaggedUsers());
+//                                taggedUserListView.getAdapter().notifyDataSetChanged();
+//                            }
+//                        }
+//                    } else {
+//                        Log.d("PostDetailActivity", getString(R.string.error_getting_tagged_users));
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
 
             @Override
@@ -880,7 +1061,7 @@ public class FragmentPostDetails extends BaseFragment {
 
     private void updateTextureViewSize(int viewWidth, int viewHeight) {
         Point point = new Point();
-        getParentActivity().getWindowManager().getDefaultDisplay().getSize(point);
+        getActivity().getWindowManager().getDefaultDisplay().getSize(point);
         int systemWidth = point.x;
         viewHeight = systemWidth * viewHeight / viewWidth;
         viewWidth = systemWidth;
@@ -890,6 +1071,8 @@ public class FragmentPostDetails extends BaseFragment {
             params.height = viewWidth;
             relativeLayout.setLayoutParams(params);
         }
+
+
 //        float scaleX = 1.0f;
 //        float scaleY = 1.0f;
 //
@@ -913,6 +1096,7 @@ public class FragmentPostDetails extends BaseFragment {
 //        textureView.setLayoutParams(params);
 //        textureView.animate().alpha(1).setDuration(280).start();
 //        textureView.setVisibility(GONE);
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerView.setLayoutParams(params);
@@ -1073,6 +1257,7 @@ public class FragmentPostDetails extends BaseFragment {
         }
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -1099,11 +1284,10 @@ public class FragmentPostDetails extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        getParentActivity().updateToolbarTitle(previousTitle);
-        getParentActivity().showToolbar();
         if (Util.SDK_INT > 23) {
             customHandler.removeCallbacks(updateTimerThread);
             releasePlayer();
+            getParentActivity().showToolbar();
         }
         releaseAudioLock(getContext(), audioFocusChangeListener);
     }
@@ -1112,6 +1296,7 @@ public class FragmentPostDetails extends BaseFragment {
         if (player != null) {
 //            playbackPosition = player.getCurrentPosition();
 //            currentWindow = player.getCurrentWindowIndex();
+            playWhenReady = player.getPlayWhenReady();
             player.release();
             player = null;
         }
@@ -1147,7 +1332,8 @@ public class FragmentPostDetails extends BaseFragment {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-            player.addListener(new Player.EventListener() {
+            player.addListener(new ExoPlayer.EventListener() {
+
                 @Override
                 public void onPlayerStateChanged(boolean b, int i) {
                     switch (i) {
@@ -1235,6 +1421,7 @@ public class FragmentPostDetails extends BaseFragment {
 
                 @Override
                 public void onPositionDiscontinuity(int reason) {
+
                 }
 
                 @Override
@@ -1389,10 +1576,14 @@ public class FragmentPostDetails extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 //        getParentActivity().hideToolbar();
-        if (context instanceof onPostOptionsClickListener) {
+
+        if (context instanceof CallProfileFromPostDetails) {
+            callProfileFromPostDetails = (CallProfileFromPostDetails) context;
             mListener = (onPostOptionsClickListener) context;
+
         }
     }
+
 
     @Override
     public void onDetach() {
@@ -1406,6 +1597,8 @@ public class FragmentPostDetails extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+
 
     public void onBackPressed() {
         customHandler.removeCallbacks(updateTimerThread);
@@ -1434,12 +1627,34 @@ public class FragmentPostDetails extends BaseFragment {
 
     };
 
-    public void callUserProfile(int userId, boolean isMyself) {
-        mListener.callProfileListener(userId,isMyself);
+    public void callUserProfile(int userId, boolean ismyself)
+    {
+        callProfileFromPostDetails.callProfileListener(userId,ismyself);
+    }
+
+    public interface CallProfileFromPostDetails
+    {
+        public void callProfileListener(int userid, boolean ismyself);
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        if(focusChange == AUDIOFOCUS_LOSS_TRANSIENT)
+        {
+            // Pause
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_GAIN)
+        {
+            // Resume
+        }
+        else if(focusChange == AudioManager.AUDIOFOCUS_LOSS)
+        {
+            // Stop or pause depending on your need
+        }
     }
 
     public interface onPostOptionsClickListener {
         void onPostLikedClicked(PostDetails postDetails);
-        void callProfileListener(int userid, boolean isMyself);
     }
 }

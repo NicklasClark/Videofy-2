@@ -1,6 +1,5 @@
 package com.cncoding.teazer;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -27,14 +26,9 @@ public class TeazerApplication extends Application  {
 
     private static final String TAG = "Application";
 
-    //    private ApplicationComponent applicationComponent;
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
         BaseUtils.init(this);
 //        initImageLoader(this);
         initFFmpegBinary(this);
@@ -69,19 +63,6 @@ public class TeazerApplication extends Application  {
 
         MobiruckSdk.getInstance().startTracking();  // this starts the tracking system.
 
-//        applicationComponent = DaggerApplicationComponent
-//                .builder()
-//                .applicationModule(new ApplicationModule(this))
-//                .roomModule(new RoomModule(this))
-//                .build();
-    }
-
-//    public ApplicationComponent getApplicationComponent() {
-//        return applicationComponent;
-//    }
-
-    public static Context getContext() {
-        return context;
     }
 
     private void initFFmpegBinary(Context context) {

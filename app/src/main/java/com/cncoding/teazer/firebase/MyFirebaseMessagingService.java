@@ -26,7 +26,6 @@ import java.net.URL;
 import java.util.Map;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
-import static com.cncoding.teazer.BaseBottomBarActivity.POST_ID;
 import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
 
 /**
@@ -77,31 +76,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Intent intent = new Intent();
             intent.setClass(this, BaseBottomBarActivity.class);
 //        if (messageBody.contains("follow"))
-        Bundle bundle = new Bundle();
-        bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
-        bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
-        String postId=data.get("post_id");
-        if(postId!=null) {
-            bundle.putInt(POST_ID, Integer.parseInt(postId));
-        }
-        Log.d("FCMNOT", data.get("notification_type"));
-        intent.putExtra("bundle", bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Bundle bundle = new Bundle();
+            bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
+            bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
+            Log.d("FCMNOT", data.get("notification_type"));
+            intent.putExtra("bundle", bundle);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        initChannels();
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            initChannels();
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")
-                .setSmallIcon(R.drawable.ic_stat_notification_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentTitle(title != null ? title : "Teazer")
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+            Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")
+                    .setSmallIcon(R.drawable.ic_stat_notification_icon)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                    .setContentTitle(title != null ? title : "Teazer")
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
 
             if (bitmap != null)
                 notificationBuilder.setLargeIcon(bitmap);

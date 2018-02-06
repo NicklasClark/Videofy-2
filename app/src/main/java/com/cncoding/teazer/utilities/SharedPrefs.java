@@ -2,7 +2,6 @@ package com.cncoding.teazer.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.base.UploadParams;
 import com.google.gson.Gson;
@@ -73,14 +72,13 @@ public class SharedPrefs {
         getSharedPreferences(context).edit().putString(AUTH_TOKEN, authToken).apply();
     }
 
-    @Nullable
     public static String getAuthToken(Context context) {
         try {
             return getSharedPreferences(context)
                     .getString(AUTH_TOKEN, null);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 

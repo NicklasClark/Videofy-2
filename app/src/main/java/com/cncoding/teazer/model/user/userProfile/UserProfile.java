@@ -13,22 +13,54 @@ import java.util.List;
 
 public class UserProfile {
 
-    @SerializedName("user_id") @Expose private Integer userId;
-    @SerializedName("user_name") @Expose private String userName;
-    @SerializedName("first_name") @Expose private String firstName;
-    @SerializedName("last_name") @Expose private String lastName;
-    @SerializedName("email") @Expose private String email;
-    @SerializedName("phone_number") @Expose private Integer phoneNumber;
-    @SerializedName("country_code") @Expose private Integer countryCode;
-    @SerializedName("gender") @Expose private Integer gender;
-    @SerializedName("is_active") @Expose private Boolean isActive;
-    @SerializedName("description") @Expose private String description;
-    @SerializedName("account_type") @Expose private Integer accountType;
-    @SerializedName("created_at") @Expose private String createdAt;
-    @SerializedName("updated_at") @Expose private String updatedAt;
-    @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
-    @SerializedName("profile_media") @Expose private Medias profileMedia;
-    @SerializedName("categories") @Expose private List<Object> categories = null;
+    @SerializedName("user_id")
+    @Expose
+    private Integer userId;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("phone_number")
+    @Expose
+    private Integer phoneNumber;
+    @SerializedName("country_code")
+    @Expose
+    private Integer countryCode;
+    @SerializedName("gender")
+    @Expose
+    private Integer gender;
+    @SerializedName("is_active")
+    @Expose
+    private Boolean isActive;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("account_type")
+    @Expose
+    private Integer accountType;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+    @SerializedName("has_profile_media")
+    @Expose
+    private Boolean hasProfileMedia;
+    @SerializedName("profile_media")
+    @Expose
+    private Medias profileMedia;
+    @SerializedName("categories")
+    @Expose
+    private List<Object> categories = null;
 
     public Integer getUserId() {
         return userId;

@@ -67,7 +67,6 @@ import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 //910
 public class OthersProfileFragment extends BaseFragment {
 
@@ -220,18 +219,11 @@ public class OthersProfileFragment extends BaseFragment {
             public void onClick(View view) {
 
                 if (_btnfollow.getText().equals("Accept")) {
-
-                    acceptUser(requestId,true);
+                    acceptUser(requestId);
                 }
                 if (_btnfollow.getText().equals("Follow")) {
 
-                    if(requestRecieved )
-                    {
-                        acceptUser(requestId,false);
-                    }
-                    else {
-                        followUser(followerfollowingid, context);
-                    }
+                    followUser(followerfollowingid, context);
                 }
                 if (_btnfollow.getText().equals(context.getString(R.string.following))) {
 
@@ -391,9 +383,9 @@ public class OthersProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
+
         getProfileInformation(followerfollowingid);
-        followerCreationAdapter = new FollowersCreationAdapter(context, list, OthersProfileFragment.this);
-        _recycler_view.setAdapter(followerCreationAdapter);
+
     }
 
     @Override
@@ -446,6 +438,7 @@ public class OthersProfileFragment extends BaseFragment {
             public void onResponse(Call<ProfileInfo> call, Response<ProfileInfo> response) {
                 if (response.code() == 200) {
                     try {
+
                         ProfileInfo profileInfo = response.body();
                         int follower = profileInfo.getFollowers();
                         int following = profileInfo.getFollowings();
@@ -457,12 +450,10 @@ public class OthersProfileFragment extends BaseFragment {
                         isfollowing = profileInfo.getFollowInfo().getFollowing();
                         youBlocked = profileInfo.getFollowInfo().getYouBlocked();
                         isHideAllPost=profileInfo.getIsHidedAllPosts();
-                        if(requestRecieved) {
-                            requestId = profileInfo.getFollowInfo().getRequestId();
-                        }
-
-                        if(isHideAllPost) {
+                        if(isHideAllPost)
+                        {
                             _unHideAll.setVisibility(View.VISIBLE);
+
                         }
 
                         _followers.setText(follower + " Followers");
@@ -470,6 +461,8 @@ public class OthersProfileFragment extends BaseFragment {
                         _creations.setText(totalvideos + " Creations");
 
                         if (response.body().getPrivateProfile() == null) {
+
+
                             PublicProfile publicProfile = response.body().getPublicProfile();
                             userCreationTitle.setText("Creations of " + publicProfile.getFirstName());
                             username = publicProfile.getUserName();
@@ -532,6 +525,7 @@ public class OthersProfileFragment extends BaseFragment {
                                 if (isfollowing) {
 
                                     if (requestRecieved == true) {
+                                        requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
                                     } else {
 
@@ -542,51 +536,39 @@ public class OthersProfileFragment extends BaseFragment {
                                     if (hassentrequest == true) {
 
                                         if (requestRecieved == true) {
-                                           // requestId = profileInfo.getFollowInfo().getRequestId();
+
                                             setActionButtonText(context, _btnfollow, R.string.accept);
 
                                         } else {
+
                                             setActionButtonText(context, _btnfollow, R.string.requested);
                                         }
                                     } else {
 
-                                        if (requestRecieved == true && isfollower) {
-
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                        }
-                                        else if(requestRecieved == true && !isfollower)
-                                        {
+                                        if (requestRecieved == true) {
+                                            requestId = profileInfo.getFollowInfo().getRequestId();
                                             setActionButtonText(context, _btnfollow, R.string.accept);
-                                        }
-                                        else if(requestRecieved == false && isfollower)
-                                        {
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                        }
-                                        else if(requestRecieved == false)
-                                        {
+                                        } else {
                                             setActionButtonText(context, _btnfollow, R.string.follow);
                                         }
                                     }
+
                                     layout.setVisibility(View.VISIBLE);
                                     progressBar.setVisibility(View.GONE);
                                 }
                                 if (accountType == 2) {
                                     getProfileVideos(followersid,1);
-                                }
-                                else {
+                                } else {
                                     if (isfollowing) {
                                         getProfileVideos(followersid,1);
-
-                                    }else {
+                                    } else {
                                         layoutDetail2.setVisibility(View.VISIBLE);
                                         layoutDetail.setVisibility(View.GONE);
                                     }
-
                                 }
                             }
 
                         } else if (response.body().getPublicProfile() == null) {
-                          //  Toast.makeText(context,"private",Toast.LENGTH_SHORT).show();
                             PrivateProfile privateProfile = response.body().getPrivateProfile();
                             accountType = privateProfile.getAccountType();
                             userCreationTitle.setText("Creations of " + privateProfile.getFirstName());
@@ -625,7 +607,9 @@ public class OthersProfileFragment extends BaseFragment {
                             _name.setText(firstnamelastname);
                             hobby.setText("");
 
+
                             if (youBlocked) {
+
                                 _btnfollow.setText("Unblock");
                                 layoutDetail2.setVisibility(View.VISIBLE);
                                 layoutDetail.setVisibility(View.INVISIBLE);
@@ -636,47 +620,35 @@ public class OthersProfileFragment extends BaseFragment {
                                 if (isfollowing) {
 
                                     if (requestRecieved == true) {
-                                       // requestId = profileInfo.getFollowInfo().getRequestId();
+                                        requestId = profileInfo.getFollowInfo().getRequestId();
                                         setActionButtonText(context, _btnfollow, R.string.accept);
                                     } else {
                                         setActionButtonText(context, _btnfollow, R.string.following);
                                     }
-                                } else
-                                    {
+                                } else {
                                     if (hassentrequest == true) {
 
                                         if (requestRecieved == true) {
+
                                             setActionButtonText(context, _btnfollow, R.string.accept);
-                                        }
-                                        else {
+
+                                        } else {
                                             setActionButtonText(context, _btnfollow, R.string.requested);
                                         }
                                     } else {
+                                        if (requestRecieved == true) {
 
-                                        if (requestRecieved == true && isfollower) {
-
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                        }
-                                        else if(requestRecieved == true && !isfollower)
-                                        {
+                                            requestId = profileInfo.getFollowInfo().getRequestId();
                                             setActionButtonText(context, _btnfollow, R.string.accept);
-                                        }
-                                        else if(requestRecieved == false && isfollower)
-                                        {
+                                        } else {
                                             setActionButtonText(context, _btnfollow, R.string.follow);
                                         }
-                                        else if(requestRecieved == false)
-                                        {
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                        }
-
                                     }
 
                                 }
                                 if (accountType == 2) {
                                     getProfileVideos(followersid,1);
-                                }
-                                else {
+                                } else {
                                     if (isfollowing) {
                                         getProfileVideos(followersid,1);
 
@@ -709,11 +681,11 @@ public class OthersProfileFragment extends BaseFragment {
             }
         });
 
+
     }
 
 
     public void profileBlur(final String pic) {
-
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
@@ -793,19 +765,21 @@ public class OthersProfileFragment extends BaseFragment {
                 Log.d("getProfileVideos", String.valueOf(response));
                 if (response.code() == 200) {
                     try {
-
-                        if ((response.body().getPosts() == null || response.body().getPosts().size() == 0) && page == 1) {
+                        list.addAll(response.body().getPosts());
+                        if ((list == null || list.size() == 0) && page == 1) {
                             layoutDetail3.setVisibility(View.VISIBLE);
                             layoutDetail.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.GONE);
 
                         } else {
-                            next = response.body().isNextPage();
-                            list.addAll(response.body().getPosts());
 
-                            _recycler_view.getAdapter().notifyDataSetChanged();
-                            followerCreationAdapter.notifyItemRangeInserted(followerCreationAdapter.getItemCount(), list.size() - 1);
+                            next = response.body().isNextPage();
+                            followerCreationAdapter = new FollowersCreationAdapter(context, list, getActivity());
+                            _recycler_view.setAdapter(followerCreationAdapter);
+
+
                         }
+
                         blur_bacground.setVisibility(View.VISIBLE);
                         loader.setVisibility(View.GONE);
                     } catch (Exception e) {
@@ -911,7 +885,12 @@ public class OthersProfileFragment extends BaseFragment {
                     try {
                         boolean b = response.body().getStatus();
 
-//
+//                        boolean isfollowing=response.body().getFollowInfo().getFollowing();
+//                        boolean isfollower=response.body().getFollowInfo().getFollower();
+//                        boolean isrequestSent=response.body().getFollowInfo().getRequestSent();
+//                        boolean isRequestreceived=response.body().getFollowInfo().getRequestReceived();
+//                        boolean youBlocked=response.body().getFollowInfo().getYouBlocked();
+//                        boolean isBlockedyou=response.body().getFollowInfo().getIsBlockedYou();
                         if (b == true) {
 
 
@@ -929,8 +908,29 @@ public class OthersProfileFragment extends BaseFragment {
                             if (isfollowing) {
 
                                 setActionButtonText(context, _btnfollow, R.string.following);
+
+
                             } else {
 
+//                                if (isrequestSent)
+//
+//                                    if (accountType == 1) {
+//                                        setActionButtonText(context, _btnfollow, R.string.requested);
+//                                        Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
+//
+//                                    } else {
+//
+//                                        setActionButtonText(context, _btnfollow, R.string.following);
+//                                        Toast.makeText(context, "You have started following", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                else {
+//
+//                                    if (isRequestreceived) {
+//                                        setActionButtonText(context, _btnfollow, R.string.requested);
+//                                        Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
                                 Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             }
 
@@ -1002,6 +1002,7 @@ public class OthersProfileFragment extends BaseFragment {
         });
     }
 
+
     public void openReportUser(final int blockUserId) {
         FragmentManager fm = getFragmentManager();
         ReportUserDialogFragment reportUserDialogFragment = ReportUserDialogFragment.newInstance(blockUserId, username);
@@ -1051,9 +1052,10 @@ public class OthersProfileFragment extends BaseFragment {
         });
     }
 
-    public void acceptUser(final int requestId,final boolean isacceptFollow) {
-
+    public void acceptUser(final int requestId) {
         loader.setVisibility(View.VISIBLE);
+
+
         ApiCallingService.Friends.acceptJoinRequest(requestId, context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override
@@ -1061,40 +1063,17 @@ public class OthersProfileFragment extends BaseFragment {
                         try {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
-                                    requestRecieved= response.body().getFollowInfo().getRequestSent();
-                                    isfollowing=response.body().getFollowInfo().getFollowing();
 
-                                    if(isacceptFollow) {
-                                        Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();
-                                        if (isfollowing) {
-                                            setActionButtonText(context, _btnfollow, R.string.following);
-                                            loader.setVisibility(View.GONE);
-                                        } else if (hassentrequest) {
-                                            loader.setVisibility(View.GONE);
-                                            setActionButtonText(context, _btnfollow, R.string.requested);
-                                        } else {
-                                            loader.setVisibility(View.GONE);
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                        }
-                                    }
-                                    else {
-                                        if(isfollowing)
-                                        {
-                                            Toast.makeText(context, "You also have started following", Toast.LENGTH_LONG).show();
-                                            setActionButtonText(context, _btnfollow, R.string.following);
-                                            loader.setVisibility(View.GONE);
-                                        }
-                                        else if(requestRecieved)
-                                        {
-                                            Toast.makeText(context, "Your request has been sent", Toast.LENGTH_LONG).show();
-                                            setActionButtonText(context, _btnfollow, R.string.requested);
-                                            loader.setVisibility(View.GONE);
-                                        }
-                                        else{
-                                            setActionButtonText(context, _btnfollow, R.string.follow);
-                                            loader.setVisibility(View.GONE);
-
-                                        }
+                                    Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();
+                                    if (isfollowing) {
+                                        setActionButtonText(context, _btnfollow, R.string.following);
+                                        loader.setVisibility(View.GONE);
+                                    } else if (hassentrequest) {
+                                        loader.setVisibility(View.GONE);
+                                        setActionButtonText(context, _btnfollow, R.string.requested);
+                                    } else {
+                                        loader.setVisibility(View.GONE);
+                                        setActionButtonText(context, _btnfollow, R.string.follow);
                                     }
                                 } else {
                                     Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -1161,10 +1140,6 @@ public class OthersProfileFragment extends BaseFragment {
         gradientDrawable.setStroke((int) (1 * density + 0.5), strokeColor);
         textView.setTextColor(textColor);
         return gradientDrawable;
-    }
-
-    public void resetRecyclerData() {
-        _recycler_view.getAdapter().notifyDataSetChanged();
     }
 
 }

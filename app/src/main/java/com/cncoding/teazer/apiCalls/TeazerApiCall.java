@@ -17,13 +17,11 @@ import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
-import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -530,14 +528,7 @@ import retrofit2.http.Query;
         //Call this service to get reaction data by reaction id
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactionResponse> getReactionDetail(@Path("react_id") int reactId);
-        @GET("/api/v1/react/details/{react_id}")
-        Call<ReactVideoDetailsResponse> getReactionDetail2(@Path("react_id") int reactId);
-
-
-
-
     }
-
 
     /**
      * Posts interface

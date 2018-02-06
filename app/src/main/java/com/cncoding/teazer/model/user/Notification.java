@@ -28,69 +28,6 @@ public class Notification implements Parcelable {
     private boolean request_sent;
     private boolean following;
 
-    public void setNotification_id(int notification_id) {
-        this.notification_id = notification_id;
-    }
-
-    public void setNotification_type(int notification_type) {
-        this.notification_type = notification_type;
-    }
-
-    public void setSource_id(int source_id) {
-        this.source_id = source_id;
-    }
-
-    public void setAccount_type(int account_type) {
-        this.account_type = account_type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public void setHas_profile_media(boolean has_profile_media) {
-        this.has_profile_media = has_profile_media;
-    }
-
-    public void setIs_actioned(boolean is_actioned) {
-        this.is_actioned = is_actioned;
-    }
-
-    public void setProfile_media(ProfileMedia profile_media) {
-        this.profile_media = profile_media;
-    }
-
-    public void setHighlights(ArrayList<String> highlights) {
-        this.highlights = highlights;
-    }
-
-    public void setMeta_data(MetaData meta_data) {
-        this.meta_data = meta_data;
-    }
-
-    public void setRequest_sent(boolean request_sent) {
-        this.request_sent = request_sent;
-    }
-
-    public void setFollowing(boolean following) {
-        this.following = following;
-    }
-
-    public void setRequestRecieved(boolean requestRecieved) {
-        isRequestRecieved = requestRecieved;
-    }
-
-    private boolean isRequestRecieved;
-
-
 
     protected Notification(Parcel in) {
         notification_id = in.readInt();

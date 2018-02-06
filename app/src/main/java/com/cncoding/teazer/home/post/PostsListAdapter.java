@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,13 +31,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostListViewHolder> {
 
     private SparseIntArray colorArray;
 //    private SparseArray<Dimension> dimensionSparseArray;
-    protected OnPostAdapterInteractionListener listener;
+protected OnPostAdapterInteractionListener listener;
     ArrayList<PostDetails> posts;
     protected Context context;
     boolean isPostClicked = false;
+    private AudioVolumeObserver audioVolumeObserver;
     float currentVol;
     boolean isMuted;
-    private RecyclerView recyclerView;
 
     PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
@@ -46,33 +46,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostListViewHolder> {
         colorArray = new SparseIntArray();
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
-        }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        if (this.recyclerView == null) {
-            this.recyclerView = recyclerView;
-        }
-    }
-
-    void addPosts(int page, List<PostDetails> postDetailsList) {
-        try {
-            if (page == 1) {
-                posts.clear();
-                posts.addAll(postDetailsList);
-                notifyDataSetChanged();
-                if (recyclerView != null) {
-                    recyclerView.smoothScrollBy(0, 1);
-                    recyclerView.smoothScrollBy(0, -1);
-                }
-            } else {
-                posts.addAll(postDetailsList);
-                notifyItemRangeInserted((page - 1) * 30, postDetailsList.size());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -159,15 +132,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostListViewHolder> {
         void onPostInteraction(int action, PostDetails postDetails);
         void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage,
                          boolean isDeepLink, String getThumbUrl, String reactId);
-    }
-
-    public void release() {
-        colorArray.clear();
-        colorArray = null;
-        posts.clear();
-        listener = null;
-        context = null;
-        recyclerView = null;
     }
 
     void fetchPostDetails(int postId, final int adapterPosition) {

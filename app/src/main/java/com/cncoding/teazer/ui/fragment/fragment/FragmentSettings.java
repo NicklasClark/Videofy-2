@@ -207,7 +207,6 @@ public class FragmentSettings extends BaseFragment {
 
                         if (status == 1) {
                             ProfileFragment.checkprofileupdated = true;
-
                             Toast.makeText(context, "Your account has become private", Toast.LENGTH_SHORT).show();
                         } else {
 

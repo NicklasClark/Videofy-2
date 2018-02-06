@@ -21,8 +21,6 @@ public class ResultObject {
     @Expose
     private FollowInfo followInfo;
 
-
-
     public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody, int user_id, FollowInfo followInfo) {
         this.code = code;
         this.message = message;

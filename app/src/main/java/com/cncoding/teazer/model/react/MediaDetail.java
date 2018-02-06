@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by amit on 26/12/17.
  */
 
-public class MediaDetail implements Parcelable {
+public class MediaDetail implements Parcelable{
     @SerializedName("media_id")
     @Expose
     private Integer mediaId;
