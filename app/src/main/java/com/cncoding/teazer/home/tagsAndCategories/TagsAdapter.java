@@ -16,6 +16,7 @@ import android.widget.Filterable;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
@@ -77,8 +78,7 @@ class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> implement
 
         Glide.with(fragment)
                 .load(circle.getProfileMedia() != null ? circle.getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                 .into(holder.image);
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {

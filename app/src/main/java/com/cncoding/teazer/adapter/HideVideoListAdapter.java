@@ -27,7 +27,6 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -38,6 +37,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
+ * 
  * Created by farazhabib on 15/01/18.
  */
 
@@ -332,7 +332,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                     String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -340,14 +340,14 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             break;
                                         case 1:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image2);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             break;
 
                                         case 2:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image3);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
@@ -364,7 +364,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image1);
                                             break;
@@ -373,7 +373,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -382,7 +382,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -430,7 +430,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                     String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -438,7 +438,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             break;
                                         case 1:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image2);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -448,7 +448,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
 
                                         case 2:
 
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image3);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -467,7 +467,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image1);
                                             break;
@@ -476,7 +476,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -485,7 +485,7 @@ public class HideVideoListAdapter  extends RecyclerView.Adapter<HideVideoListAda
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;

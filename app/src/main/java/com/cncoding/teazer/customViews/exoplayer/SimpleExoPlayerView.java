@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -36,10 +37,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.google.android.exoplayer2.C;
@@ -532,7 +534,9 @@ public final class SimpleExoPlayerView extends FrameLayout {
         }
         this.useController = useController;
         if (useController) {
-            controller.setPlayer(player);
+            if (controller != null) {
+                controller.setPlayer(player);
+            }
         } else if (controller != null) {
             controller.hide();
             controller.setPlayer(null);
@@ -553,48 +557,28 @@ public final class SimpleExoPlayerView extends FrameLayout {
     /**
      * Sets the background color of the {@code exo_shutter} view.
      *
-     * @param url The url containing png or gif.
+     * @param url The url containing the thumbnail.
      */
     public void setShutterBackground(String url) {
         if (shutterView != null) {
-            if (url.contains(".gif")) {
-                Glide.with(getContext())
-                        .load(url)
-                        .asGif()
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                        .listener(new RequestListener<String, GifDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
-                                return false;
-                            }
+            Glide.with(getContext())
+                    .load(url)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                shutterView.setImageDrawable(resource);
-                                return false;
-                            }
-                        })
-                        .into(shutterView);
-            } else {
-                Glide.with(getContext())
-                        .load(url)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                        .listener(new RequestListener<String, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                           boolean isFromMemoryCache, boolean isFirstResource) {
-                                shutterView.setImageDrawable(resource);
-                                return false;
-                            }
-                        })
-                        .into(shutterView);
-            }
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                       DataSource dataSource, boolean isFirstResource) {
+                            shutterView.setImageDrawable(resource);
+                            return false;
+                        }
+                    })
+                    .into(shutterView);
         }
     }
 
@@ -814,18 +798,20 @@ public final class SimpleExoPlayerView extends FrameLayout {
         return subtitleView;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
-            return false;
-        }
-        if (!controller.isVisible()) {
-            maybeShowController(true);
-        } else if (controllerHideOnTouch) {
-            controller.hide();
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
+//            return false;
+//        }
+//        else {
+//            if (!controller.isVisible()) {
+//                maybeShowController(true);
+//            } else if (controllerHideOnTouch) {
+//                controller.hide();
+//            }
+//            return true;
+//        }
+//    }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
@@ -1025,7 +1011,5 @@ public final class SimpleExoPlayerView extends FrameLayout {
                 hideController();
             }
         }
-
     }
-
 }

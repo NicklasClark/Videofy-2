@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
@@ -16,21 +17,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
+import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
-import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
-import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
-
-import java.io.Serializable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -191,16 +192,18 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
             Glide.with(postsListAdapter.context)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
                             postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
-                    .placeholder(placeholder)
-                    .listener(new RequestListener<Serializable, GlideDrawable>() {
+                    .apply(new RequestOptions()
+                            .skipMemoryCache(false)
+                            .placeholder(R.drawable.ic_user_male_dp_small))
+                    .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onException(Exception e, Serializable model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, Serializable model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                       DataSource dataSource, boolean isFirstResource) {
                             setFields();
                             dp.setImageDrawable(resource);
                             return false;

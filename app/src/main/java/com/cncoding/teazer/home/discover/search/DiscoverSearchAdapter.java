@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
@@ -107,11 +108,10 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder1.content.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                         !isSearchTerm ? R.drawable.ic_trending_up : 0, 0);
 
-                Glide.with(baseFragment.getContext())
+                Glide.with(context)
                         .load(holder1.video.getPostVideoInfo() != null ? holder1.video.getPostVideoInfo().get(0).getThumbUrl() :
                                 R.drawable.bg_placeholder)
-                        .placeholder(R.drawable.bg_placeholder)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.bg_placeholder))
                         .into(holder1.thumbnail);
 
                 holder1.layout.setOnClickListener(new View.OnClickListener() {
@@ -131,11 +131,10 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder2.name.setText(name);
 
 
-                Glide.with(baseFragment.getContext())
+                Glide.with(context)
                         .load(holder2.user.getProfileMedia() != null ? holder2.user.getProfileMedia().getThumbUrl() :
                                 R.drawable.ic_user_male_dp_small)
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.bg_placeholder))
                         .into(holder2.dp);
 
                 if (actionArray.get(position) == 0) {

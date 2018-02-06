@@ -2,7 +2,9 @@ package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -14,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
@@ -113,22 +117,20 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         Glide.with(context)
                 .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
                         holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                 .into(holder.dp);
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
                                 holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
