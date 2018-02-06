@@ -298,7 +298,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 switchTab(tab.getPosition());
                 if (tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
                     ((PostsListFragment) currentFragment).scrollToTop();
-                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
+                    ((PostsListFragment) currentFragment).getHomePagePosts(1);
                 }
             }
         });
@@ -1074,7 +1074,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 finishVideoUploadSession(getApplicationContext());
 
                                 if (currentFragment instanceof PostsListFragment) {
-                                    ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
+                                    ((PostsListFragment) currentFragment).getHomePagePosts(1);
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:

@@ -189,7 +189,7 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:${archLifecycleVersion}"
     implementation "android.arch.lifecycle:runtime:${archLifecycleVersion}"
-    annotationProcessor "android.arch.lifecycle:compiler:"
+    annotationProcessor "android.arch.lifecycle:compiler:${archLifecycleVersion}"
     // Room
     implementation "android.arch.persistence.room:runtime:${archPersistenceVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archPersistenceVersion}"

@@ -1,5 +1,6 @@
 package com.cncoding.teazer;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -25,11 +26,15 @@ import io.branch.referral.Branch;
 public class TeazerApplication extends Application  {
 
     private static final String TAG = "Application";
-//    private ApplicationComponent applicationComponent;
+
+    //    private ApplicationComponent applicationComponent;
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         BaseUtils.init(this);
 //        initImageLoader(this);
         initFFmpegBinary(this);
@@ -74,6 +79,10 @@ public class TeazerApplication extends Application  {
 //    public ApplicationComponent getApplicationComponent() {
 //        return applicationComponent;
 //    }
+
+    public static Context getContext() {
+        return context;
+    }
 
     private void initFFmpegBinary(Context context) {
 

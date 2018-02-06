@@ -27,8 +27,8 @@ import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
-import com.cncoding.teazer.utilities.exoplayerhelper.ExoPlayerViewHelper;
-import com.cncoding.teazer.utilities.exoplayerhelper.SimpleExoPlayerView;
+import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
+import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 
 import java.io.Serializable;
 
@@ -82,6 +82,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
         super(view);
         this.postsListAdapter = postsListAdapter;
         ButterKnife.bind(this, view);
+        playerView.setUseController(false);
         if (audioVolumeObserver == null) {
             audioVolumeObserver = new AudioVolumeObserver(postsListAdapter.context);
         }
@@ -112,6 +113,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     @OnClick(R.id.volume_control) void controlVolume() {
         postsListAdapter.isMuted = !postsListAdapter.isMuted;
         if (postsListAdapter.isMuted) postsListAdapter.currentVol = 0;
+        playerView.getPlayer().setVolume(postsListAdapter.isMuted ? 0 : postsListAdapter.currentVol);
         adjustVolume(postsListAdapter.currentVol);
     }
 
@@ -207,7 +209,6 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
                         }
                     })
                     .into(dp);
-
 
             if (postDetails.getReactions() != null && postDetails.getReactions().size() > 0) {
                 reactionListView.setVisibility(VISIBLE);
@@ -319,7 +320,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     private void adjustVolume(float currentVolume) {
         postsListAdapter.isMuted = currentVolume == 0;
         postsListAdapter.currentVol = currentVolume;
-        playerView.getPlayer().setVolume(postsListAdapter.isMuted ? 0 : postsListAdapter.currentVol);
+//        playerView.getPlayer().setVolume(postsListAdapter.isMuted ? 0 : postsListAdapter.currentVol);
         volumeControl.setImageResource(postsListAdapter.isMuted ? R.drawable.ic_volume_off :
                 R.drawable.ic_volume_up);
     }

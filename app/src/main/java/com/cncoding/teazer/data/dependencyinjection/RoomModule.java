@@ -23,7 +23,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 
 import com.cncoding.teazer.data.repository.local.post.PostDetailsLocalRepo;
-import com.cncoding.teazer.data.repository.remote.post.PostsRepo;
 import com.cncoding.teazer.data.room.daos.PostDetailsDao;
 import com.cncoding.teazer.data.room.databases.TeazerDB;
 import com.cncoding.teazer.data.viewmodel.factory.PostDetailsViewModelFactory;
@@ -70,7 +69,7 @@ public class RoomModule {
 
     @Provides
     @Singleton
-    ViewModelProvider.Factory provideViewModelFactory(PostsRepo apiRepository, PostDetailsLocalRepo localRepository){
-        return new PostDetailsViewModelFactory(apiRepository, localRepository);
+    ViewModelProvider.Factory provideViewModelFactory(String token){
+        return new PostDetailsViewModelFactory(token);
     }
 }

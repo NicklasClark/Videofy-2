@@ -4,9 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.cncoding.teazer.data.repository.local.post.PostDetailsLocalRepo;
-import com.cncoding.teazer.data.repository.remote.post.PostsRepo;
-import com.cncoding.teazer.data.viewmodel.LivePostList;
+import com.cncoding.teazer.data.viewmodel.PostDetailsViewModel;
 
 import javax.inject.Inject;
 
@@ -17,20 +15,16 @@ import javax.inject.Inject;
 
 public class PostDetailsViewModelFactory implements ViewModelProvider.Factory {
 
-    private PostsRepo apiRepository;
-    private PostDetailsLocalRepo localRepository;
+    private String token;
 
-    @Inject public PostDetailsViewModelFactory(PostsRepo apiRepository, PostDetailsLocalRepo localRepository) {
-        this.apiRepository = apiRepository;
-        this.localRepository = localRepository;
+    @Inject public PostDetailsViewModelFactory(String token) {
+        this.token = token;
     }
 
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(LivePostList.class))
-            return (T) new LivePostList(apiRepository, localRepository);
-
+    @SuppressWarnings("unchecked")
+    @NonNull @Override public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if (modelClass.isAssignableFrom(PostDetailsViewModel.class))
+            return (T) new PostDetailsViewModel(token);
         else throw new IllegalArgumentException("ViewModel Not Found");
     }
 }
