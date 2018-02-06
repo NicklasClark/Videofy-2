@@ -30,12 +30,12 @@ android {
         releaseconfig {
             keyAlias 'teazerkey'
             keyPassword 'Teazer@123'
-            storeFile file('/Users/farazhabib/Documents/Android Keystores/Teazer.jks')
+            storeFile file('D:/AndroidStudio/KeyStores/Teazer/Teazer.jks')
             storePassword 'Teazer@123'
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
@@ -173,7 +173,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'jp.wasabeef:glide-transformations:2.0.2'
+    implementation 'jp.wasabeef:glide-transformations:3.0.1'
     implementation('com.expletus.mobiruck:mobiruck:2.1.28@aar') {
         //exclude group: if needed
         exclude group: 'com.android.support', module: 'appcompat-v7'
