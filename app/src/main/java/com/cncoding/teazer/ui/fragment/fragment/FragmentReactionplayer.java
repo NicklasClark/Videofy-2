@@ -104,8 +104,6 @@ public class FragmentReactionplayer extends BaseFragment {
     ImageView likeBtn;
     @BindView(R.id.reaction_post_name_popularity_layout)
     RelativeLayout reactionPostNamePopularityLayout;
-    @BindView(R.id.root_layout)
-    RelativeLayout rootLayout;
     @BindView(R.id.postDuration)
     ProximaNovaRegularTextView postDurationView;
     @BindView(R.id.postImage)
@@ -131,7 +129,6 @@ public class FragmentReactionplayer extends BaseFragment {
     public static final int POST_REACTION = 0;
     public static final int SELF_REACTION = 1;
 
-
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
     private static long reactionPlayerCurrentPosition = 0;
@@ -140,8 +137,6 @@ public class FragmentReactionplayer extends BaseFragment {
     public static final String POST_REACTIONS = "post_reactions";
     TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
     ProfileMyCreationAdapter.myCreationListener myCreationListener;
-
-
 
     public static FragmentReactionplayer newInstance(int source, PostReaction postReaction, Reactions selfPostreaction ) {
         FragmentReactionplayer fragment = new FragmentReactionplayer();
@@ -169,8 +164,7 @@ public class FragmentReactionplayer extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_reaction_exo_player, container, false);
         ButterKnife.bind(this,view);
-        context=container.getContext();
-
+        context = getContext();
 
         mHandler = new Handler();
         audioFocusChangeListener =
@@ -441,7 +435,6 @@ public class FragmentReactionplayer extends BaseFragment {
             e.printStackTrace();
         }
     }
-
 
     @OnClick({R.id.btnClose, R.id.btnLike})
     public void onViewClicked(View view) {

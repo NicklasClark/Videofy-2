@@ -88,10 +88,8 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -319,10 +317,6 @@ public class FragmentPostDetails extends BaseFragment {
         likeAction(postDetails.canLike(), false);
         if (!postDetails.canReact()) disableView(reactBtn, true);
 
-        tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
-        tagsCountBadge.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
-        tagsLayout.setVisibility(postDetails.getTotalTags() == 0 ? GONE : VISIBLE);
-
         prepareController();
 
         postReactionAdapter = new PostReactionAdapter(postReactions, context);
@@ -470,8 +464,7 @@ public class FragmentPostDetails extends BaseFragment {
                 Date date = sdf.parse("1970-01-01 " + duration);
                 totalDuration = date.getTime();
             }
-            catch (ParseException e) {
-
+            catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -482,8 +475,10 @@ public class FragmentPostDetails extends BaseFragment {
                 String reactionCountText = "+" + String.valueOf(postDetails.getTotalReactions()-3) + " R";
                 reactionCountView.setText(reactionCountText);
             }
-            if (postDetails.getTotalTags() != null)
-                tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
+
+            tagsCountBadge.setVisibility(postDetails.getTotalTags() != null && postDetails.getTotalTags() > 0 ? VISIBLE : GONE);
+            tagsLayout.setVisibility(postDetails.getTotalTags() != null && postDetails.getTotalTags() > 0 ? VISIBLE : GONE);
+            if (postDetails.getTotalTags() != null) tagsCountBadge.setText(String.valueOf(postDetails.getTotalTags()));
 
             Glide.with(this)
                     .load(postDetails.getPostOwner().getProfileMedia() != null ?
@@ -1356,16 +1351,10 @@ public class FragmentPostDetails extends BaseFragment {
             Bitmap bitmap = null;
             try {
                 final URL url = new URL(strings[0]);
-                try {
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return bitmap;
         }
 
