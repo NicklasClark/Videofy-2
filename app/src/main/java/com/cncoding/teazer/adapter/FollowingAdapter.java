@@ -281,6 +281,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                         }
                     }
                 }
+
                 viewHolder.action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -295,6 +296,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
                             blockUnblockUsers(followerId, UNBLOCK_STATUS, followername, viewHolder);
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
+
                             followUser(followerId, context, viewHolder, accounttype);
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.requested))) {

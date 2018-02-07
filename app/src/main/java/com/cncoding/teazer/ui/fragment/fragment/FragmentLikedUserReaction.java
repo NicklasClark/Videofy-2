@@ -1,10 +1,10 @@
-package com.cncoding.teazer.home.post;
-
+package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +17,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.LikedUserAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -32,11 +33,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by farazhabib on 29/12/17.
+ * Created by farazhabib on 07/02/18.
  */
 
-public class FragmentLikedUser extends BaseFragment {
-    int postId;
+public class FragmentLikedUserReaction extends BaseFragment {
+
     int reactId;
     PostDetails postDetails;
     Context context;
@@ -47,16 +48,14 @@ public class FragmentLikedUser extends BaseFragment {
     RecyclerView.LayoutManager layoutManager;
     List<LikedUser> likedUsersList;
     LikedUserAdapter likedUserAdapter;
-    CallProfileListener callProfileListener;
+    FragmentLikedUser.CallProfileListener callProfileListener;
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next;
 
-
-    public static FragmentLikedUser newInstance(PostDetails postDetails) {
+    public static FragmentLikedUser newInstance(int reactId) {
         FragmentLikedUser fragment = new FragmentLikedUser();
         Bundle args = new Bundle();
-        args.putString("PostId", String.valueOf(postDetails.getPostId()));
-        args.putParcelable("PostDetails", postDetails);
+        args.putString("ReactId", String.valueOf(reactId));
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,10 +68,9 @@ public class FragmentLikedUser extends BaseFragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            if (bundle.getParcelable("PostDetails") != null) {
-                postId = Integer.parseInt(bundle.getString("PostId"));
-                postDetails = bundle.getParcelable("PostDetails");
-            }
+
+                reactId = Integer.parseInt(bundle.getString("ReactId"));
+
 
 
         }
@@ -96,19 +94,14 @@ public class FragmentLikedUser extends BaseFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (next) {
-
-                        getLikedUser(postId, page);
-
+                    getLikedUser(reactId, page);
                 }
             }
         };
-
         recyclerView.addOnScrollListener(scrollListener);
-
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getParentActivity().onBackPressed();
             }
         });
@@ -119,7 +112,7 @@ public class FragmentLikedUser extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
 
-            getLikedUser(postId, 1);
+        getLikedUser(reactId, 1);
 
     }
 
@@ -130,7 +123,7 @@ public class FragmentLikedUser extends BaseFragment {
 
     public void getLikedUser(final int postId, final int pageId) {
 
-        ApiCallingService.Friends.getLikedUsers(postId, pageId, context).enqueue(new Callback<LikedUserPost>() {
+        ApiCallingService.React.getLikedUsersReaction(postId, pageId, context).enqueue(new Callback<LikedUserPost>() {
 
             @Override
             public void onResponse(Call<LikedUserPost> call, Response<LikedUserPost> response) {
@@ -165,8 +158,8 @@ public class FragmentLikedUser extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            if (context instanceof CallProfileListener) {
-                callProfileListener = (CallProfileListener) context;
+            if (context instanceof FragmentLikedUser.CallProfileListener) {
+                callProfileListener = (FragmentLikedUser.CallProfileListener) context;
             }
         } catch (Exception e) {
             e.printStackTrace();

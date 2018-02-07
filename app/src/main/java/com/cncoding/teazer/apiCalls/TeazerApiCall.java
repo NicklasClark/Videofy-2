@@ -528,6 +528,10 @@ import retrofit2.http.Query;
         //Call this service to get reaction data by reaction id
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactionResponse> getReactionDetail(@Path("react_id") int reactId);
+
+       @GET("/api//v1/react/liked/users/{react_id}/{page}")
+       Call<LikedUserPost>getLikedUsersReaction(@Path("react_id") int postId, @Path("page") int page);
+
     }
 
     /**

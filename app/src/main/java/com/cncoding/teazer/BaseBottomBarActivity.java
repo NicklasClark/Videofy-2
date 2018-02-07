@@ -59,6 +59,7 @@ import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscover
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
+import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.home.post.FragmentLikedUser.CallProfileListener;
 import com.cncoding.teazer.home.post.FragmentPostDetails;
 import com.cncoding.teazer.home.post.FragmentPostDetails.onPostOptionsClickListener;
@@ -77,6 +78,7 @@ import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentLikedUserReaction;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
@@ -170,7 +172,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Profile listeners LikedUser
         CallProfileListener,
 //    Reaction related listeners
-        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener {
+        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener , FragmentReactionplayer.LikedUserReactions
+{
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -231,11 +234,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .into(loader);
 
         //logging mobiruck event
-        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-
-        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-
-        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
+//        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+//
+//        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+//
+//        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -1129,10 +1132,10 @@ public class BaseBottomBarActivity extends BaseActivity
         navigationController.popFragment();
     }
 
-//    @Override
-//    public void onPostLikedClicked(PostDetails postDetails) {
-//        pushFragment(FragmentLikedUser.newInstance(postDetails));
-//    }
+    @Override
+    public void onPostLikedClicked(PostDetails postDetails) {
+        pushFragment(FragmentLikedUser.newInstance(postDetails));
+    }
 
     @OnClick(R.id.btnToolbarBack)
     public void onViewClicked() {
@@ -1145,10 +1148,14 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void onPostLikedClicked(PostDetails postDetails) {
+    public void likedUserReaction(int i) {
+
+        pushFragment(FragmentLikedUserReaction.newInstance(i));
+
+
     }
 
-    @SuppressWarnings("unused")
+
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
 
         private WeakReference<BaseBottomBarActivity> reference;

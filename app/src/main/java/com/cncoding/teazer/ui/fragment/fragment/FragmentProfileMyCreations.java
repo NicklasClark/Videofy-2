@@ -107,26 +107,24 @@ public class FragmentProfileMyCreations extends Fragment {
     public void getProfileVideos(final int page) {
 
         ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<PostList>() {
-
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
                 try {
                     if (response.code() == 200) {
+
                         if ((response.body().getPosts().size() == 0) && page == 1) {
                             alert1.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                             progress_bar.setVisibility(View.GONE);
                             loader.setVisibility(View.GONE);
                         } else
-                        {
-                            next = response.body().isNextPage();
-                            list.addAll(response.body().getPosts());
-                            recyclerView.getAdapter().notifyDataSetChanged();
-
-                            profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
-                            progress_bar.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            loader.setVisibility(View.GONE);
+                            {
+                                next = response.body().isNextPage();
+                                list.addAll(response.body().getPosts());
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);progress_bar.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                loader.setVisibility(View.GONE);
 
                         }
                     }

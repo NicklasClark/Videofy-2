@@ -553,6 +553,9 @@ public class ApiCallingService {
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
         }
+        public static Call<LikedUserPost> getLikedUsersReaction(int reactId,int page, Context context) {
+            return getReactService(context).getLikedUsersReaction(reactId,page);
+        }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -646,6 +649,9 @@ public class ApiCallingService {
         public static Call<ResultObject> getAllHiddenVideosList(int userID, Context context){
             return getPostalService(context).getAllHiddenVideosList(userID);
         }
+
+
+
         private static TeazerApiCall.Posts getPostalService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))

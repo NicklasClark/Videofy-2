@@ -234,10 +234,10 @@ public class OthersProfileFragment extends BaseFragment {
                 }
                 if (_btnfollow.getText().equals(context.getString(R.string.requested))) {
 
-
                     cancelRequest(followerfollowingid, context);
                 }
                 if (_btnfollow.getText().equals("Unblock")) {
+
                     blockUnblockUsers(followerfollowingid, UNBLOCK_STATUS);
 
                 }

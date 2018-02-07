@@ -137,6 +137,7 @@ public class FragmentReactionplayer extends BaseFragment {
     public static final String POST_REACTIONS = "post_reactions";
     TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
     ProfileMyCreationAdapter.myCreationListener myCreationListener;
+    LikedUserReactions mylikedUserReaction;
 
     public static FragmentReactionplayer newInstance(int source, PostReaction postReaction, Reactions selfPostreaction ) {
         FragmentReactionplayer fragment = new FragmentReactionplayer();
@@ -357,6 +358,17 @@ public class FragmentReactionplayer extends BaseFragment {
             }
         });
 
+        reactionPostLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (postDetails != null) {
+                    mylikedUserReaction.likedUserReaction(postDetails.getReactId());}
+                if(selfPostDetails != null)
+                {
+                    mylikedUserReaction.likedUserReaction(selfPostDetails.getReactId());}
+
+            }
+        });
 
         return view;
 
@@ -365,8 +377,16 @@ public class FragmentReactionplayer extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        taggedListInteractionListener=(TagListAdapter.TaggedListInteractionListener)context;
-        myCreationListener=(ProfileMyCreationAdapter.myCreationListener)context;
+        if(context instanceof TagListAdapter.TaggedListInteractionListener) {
+            taggedListInteractionListener = (TagListAdapter.TaggedListInteractionListener) context;
+        }
+        if(context instanceof ProfileMyCreationAdapter.myCreationListener) {
+            myCreationListener = (ProfileMyCreationAdapter.myCreationListener) context;
+        }
+        if(context instanceof LikedUserReactions)
+        {
+            mylikedUserReaction=(LikedUserReactions)context;
+        }
     }
 
     private void incrementView() {
@@ -674,5 +694,9 @@ public class FragmentReactionplayer extends BaseFragment {
 
     }
 
+    public interface LikedUserReactions
+    {
+    public void likedUserReaction(int i);
 
+    }
 }
