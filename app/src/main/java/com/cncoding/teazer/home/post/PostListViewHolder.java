@@ -26,6 +26,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
@@ -47,6 +48,8 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.model.base.MiniProfile.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
+import static com.cncoding.teazer.utilities.ViewUtils.disableView;
+import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 
 /**
@@ -63,6 +66,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     @BindView(R.id.category) ProximaNovaSemiBoldTextView category;
     @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
     @BindView(R.id.content) SimpleExoPlayerView playerView;
+    @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.volume_control) ImageView volumeControl;
     @BindView(R.id.dp) CircularAppCompatImageView dp;
     @BindView(R.id.username) ProximaNovaSemiBoldTextView username;
@@ -174,6 +178,9 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     public void bind(int position) {
         try {
             postDetails = postsListAdapter.posts.get(position);
+
+            if (!postDetails.canReact()) disableView(reactBtn, true);
+            else enableView(reactBtn);
 
             playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
