@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -238,6 +239,11 @@ public final class SimpleExoPlayerView extends FrameLayout {
     private int controllerShowTimeoutMs;
     private boolean controllerAutoShow;
     private boolean controllerHideOnTouch;
+    private OnThumbReadyListener listener;
+
+    public void setOnThumbReadyListener(OnThumbReadyListener listener) {
+        this.listener = listener;
+    }
 
     public SimpleExoPlayerView(Context context) {
         this(context, null);
@@ -574,12 +580,21 @@ public final class SimpleExoPlayerView extends FrameLayout {
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
                                                        DataSource dataSource, boolean isFirstResource) {
+                            try {
+                                listener.onThumbReady((BitmapDrawable) resource);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             shutterView.setImageDrawable(resource);
                             return false;
                         }
                     })
                     .into(shutterView);
         }
+    }
+
+    public void setShutterBackground(Bitmap background) {
+        shutterView.setImageBitmap(background);
     }
 
     @Override
@@ -1011,5 +1026,9 @@ public final class SimpleExoPlayerView extends FrameLayout {
                 hideController();
             }
         }
+    }
+
+    public interface OnThumbReadyListener {
+        void onThumbReady(BitmapDrawable thumbnail);
     }
 }

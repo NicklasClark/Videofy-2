@@ -85,8 +85,6 @@ import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
-import com.expletus.mobiruck.MobiruckEvent;
-import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
@@ -231,11 +229,11 @@ public class BaseBottomBarActivity extends BaseActivity
 //                .into(loader);
 
         //logging mobiruck event
-        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-
-        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-
-        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
+//        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+//
+//        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+//
+//        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -910,12 +908,9 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String getTumbUrl, String reactId) {
-        //  pushFragment(postDetails);
-        //  hideToolbar();
-
-        pushFragment(FragmentPostDetails.newInstance(postDetails, null, true,
-                true, postDetails.getMedias().get(0).getThumbUrl(), null));
+    public void postDetails(PostDetails postDetails, Bitmap image, boolean isComingFromHomePage, boolean isDeepLink, String getThumbUrl, String reactId) {
+        pushFragment(FragmentPostDetails.newInstance(postDetails, image, true,
+                false, postDetails.getMedias().get(0).getThumbUrl(), null));
     }
 
     @Override

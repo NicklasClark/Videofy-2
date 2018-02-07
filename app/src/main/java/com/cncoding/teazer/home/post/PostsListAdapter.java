@@ -1,6 +1,7 @@
 package com.cncoding.teazer.home.post;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
 import java.util.ArrayList;
 
@@ -21,8 +21,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.ViewUtils.disableView;
-import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 
 /**
@@ -32,19 +30,15 @@ import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 public class PostsListAdapter extends RecyclerView.Adapter<PostListViewHolder> {
 
     private SparseIntArray colorArray;
-//    private SparseArray<Dimension> dimensionSparseArray;
-protected OnPostAdapterInteractionListener listener;
+    protected OnPostAdapterInteractionListener listener;
     ArrayList<PostDetails> posts;
     protected Context context;
     boolean isPostClicked = false;
-    private AudioVolumeObserver audioVolumeObserver;
-    float currentVol;
     boolean isMuted;
 
     PostsListAdapter(ArrayList<PostDetails> posts, Context context) {
         this.posts = posts;
         this.context = context;
-//        dimensionSparseArray = new SparseArray<>();
         colorArray = new SparseIntArray();
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
@@ -132,11 +126,11 @@ protected OnPostAdapterInteractionListener listener;
 
     public interface OnPostAdapterInteractionListener {
         void onPostInteraction(int action, PostDetails postDetails);
-        void postDetails(PostDetails postDetails, byte[] image, boolean isComingFromHomePage,
+        void postDetails(PostDetails postDetails, Bitmap image, boolean isComingFromHomePage,
                          boolean isDeepLink, String getThumbUrl, String reactId);
     }
 
-    void fetchPostDetails(int postId, final int adapterPosition) {
+    void fetchPostDetails(int postId, final int adapterPosition, final Bitmap thumbnail) {
         ApiCallingService.Posts.getPostDetails(postId, context)
                 .enqueue(new Callback<PostDetails>() {
                     @Override
@@ -145,11 +139,9 @@ protected OnPostAdapterInteractionListener listener;
                             if (response.body() != null) {
                                 PostsListFragment.positionToUpdate = adapterPosition;
                                 PostsListFragment.postDetails = response.body();
-//                                 PostDetailsActivity.newInstance(context, response.body(), null, true,
-//                                        true, response.body().getMedias().get(0).getThumbUrl(), null);
 //                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
 
-                                listener.postDetails(response.body(), null, true,
+                                listener.postDetails(response.body(), thumbnail, true,
                                         false, response.body().getMedias().get(0).getThumbUrl(), null);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
