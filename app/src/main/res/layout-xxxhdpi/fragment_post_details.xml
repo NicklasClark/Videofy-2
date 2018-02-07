@@ -43,15 +43,6 @@
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/placeholder"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignTop="@+id/relative_layout"
-                android:layout_alignBottom="@+id/relative_layout"
-                android:contentDescription="@string/video_preview_thumbnail" />
-
             <FrameLayout
                 android:id="@+id/controls"
                 android:layout_width="match_parent"
@@ -272,16 +263,6 @@
                 </RelativeLayout>
 
             </FrameLayout>
-
-            <ProgressBar
-                android:id="@+id/loading"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="-12dp"
-                android:indeterminate="true"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:theme="@style/ProgressBarTheme" />
 
             <RelativeLayout
                 android:id="@+id/post_actions"

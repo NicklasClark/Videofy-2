@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/colorPrimary_text3"
+            android:textColor="@color/colorPrimary_text"
             android:textSize="@dimen/text_size_h6"
             android:text="@string/could_not_load_posts"/>
 

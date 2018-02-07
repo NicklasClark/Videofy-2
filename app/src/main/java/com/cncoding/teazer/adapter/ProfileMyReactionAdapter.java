@@ -32,8 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
-import static com.cncoding.teazer.utilities.ViewUtils.SELF_REACTION;
-import static com.cncoding.teazer.utilities.ViewUtils.playOnlineVideoInExoPlayer;
 
 /**
  *

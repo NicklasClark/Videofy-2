@@ -118,13 +118,16 @@ public class FragmentProfileMyCreations extends Fragment {
                             progress_bar.setVisibility(View.GONE);
                             loader.setVisibility(View.GONE);
                         } else
-                            {
-                                next = response.body().isNextPage();
-                                list.addAll(response.body().getPosts());
-                                recyclerView.getAdapter().notifyDataSetChanged();
-                                profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);progress_bar.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                loader.setVisibility(View.GONE);
+
+                        {
+                            next = response.body().isNextPage();
+                            list.addAll(response.body().getPosts());
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                            profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
+                            progress_bar.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            loader.setVisibility(View.GONE);
+
 
                         }
                     }

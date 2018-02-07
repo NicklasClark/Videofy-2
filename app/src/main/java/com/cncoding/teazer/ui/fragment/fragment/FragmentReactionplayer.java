@@ -238,10 +238,14 @@ public class FragmentReactionplayer extends BaseFragment {
                                 .enqueue(new Callback<PostDetails>() {
                                     @Override
                                     public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                        if (response.code() == 200) {
+                                        if (response.code() == 200)
+                                        {
                                             Glide.with(context).load(response.body().getMedias().get(0).getThumbUrl()).into(postImage);
                                             postTitle.setText("Reacted on "+response.body().getTitle());
+
+
                                         }
+
                                         else if (response.code() == 412 && response.message().contains("Precondition Failed"))
                                             Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                         else {
@@ -325,9 +329,11 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
-                else if(postDetails!=null) {
+                else if(postDetails!=null)
+                {
                     myCreationListener.ReactionPost(postDetails.getPostId());
                 }
+
             }
         });
 

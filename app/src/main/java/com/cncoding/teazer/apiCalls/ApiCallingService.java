@@ -20,11 +20,13 @@ import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -553,8 +555,14 @@ public class ApiCallingService {
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
         }
+
         public static Call<LikedUserPost> getLikedUsersReaction(int reactId,int page, Context context) {
-            return getReactService(context).getLikedUsersReaction(reactId,page);
+            return getReactService(context).getLikedUsersReaction(reactId, page);
+        }
+
+        public static Call<ReactVideoDetailsResponse> getReactionDetail2(int reactId, Context context) {
+            return getReactService(context).getReactionDetail2(reactId);
+
         }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {

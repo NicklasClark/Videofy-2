@@ -1,6 +1,6 @@
 package com.cncoding.teazer.model.post;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -9,19 +9,32 @@ import java.util.ArrayList;
 
 public class PostList {
     private boolean next_page;
-    private ArrayList<PostDetails> posts;
+    private int page;
+    private List<PostDetails> posts;
+    private Throwable error;
 
-    public PostList(boolean next_page, ArrayList<PostDetails> posts) {
-        this.next_page = next_page;
+    public PostList(List<PostDetails> posts) {
         this.posts = posts;
+    }
+
+    public PostList(Throwable error) {
+        this.error = error;
     }
 
     public boolean isNextPage() {
         return next_page;
     }
 
-    public ArrayList<PostDetails> getPosts() {
+    public List<PostDetails> getPosts() {
         return posts;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
+
+    public int getPage() {
+        return page;
     }
 
     public void add(PostDetails postDetails) {
@@ -32,7 +45,15 @@ public class PostList {
         this.next_page = next_page;
     }
 
-    public void setPosts(ArrayList<PostDetails> posts) {
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setPosts(List<PostDetails> posts) {
         this.posts = posts;
+    }
+
+    public void setError(Throwable error) {
+        this.error = error;
     }
 }

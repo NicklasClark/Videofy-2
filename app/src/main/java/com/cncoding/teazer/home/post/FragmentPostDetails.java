@@ -230,9 +230,7 @@ public class FragmentPostDetails extends BaseFragment {
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image,
-                                                  boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
-
+    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
         FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
