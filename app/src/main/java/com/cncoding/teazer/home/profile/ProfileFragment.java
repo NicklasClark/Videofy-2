@@ -182,7 +182,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
 
 
 
-
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -623,7 +622,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                         }
                     }
                     _detail.setText(detail);
-                    _name.setText(firstname + " " + lastname);
+                    _name.setText(firstname);
                     _username.setText(username);
                     _followers.setText(String.valueOf(totalfollowers) + " Followers");
                     _following.setText(String.valueOf(totalfollowing + " Following"));

@@ -17,7 +17,6 @@ public class AudioVolumeContentObserver extends ContentObserver {
     @NonNull private final AudioManager audioManager;
     private final int audioStreamType;
     private int lastVolume;
-    private int currentVolume;
 
     /**
      * Creates a content observer.
@@ -40,23 +39,22 @@ public class AudioVolumeContentObserver extends ContentObserver {
     @Override
     public void onChange(boolean selfChange, Uri uri) {
         try {
-            int maxVolume = audioManager.getStreamMaxVolume(audioStreamType);
-            currentVolume = audioManager.getStreamVolume(audioStreamType);
-            if (currentVolume != lastVolume) {
+            int currentVolume = audioManager.getStreamVolume(audioStreamType);
+            if (currentVolume > 0) {
                 lastVolume = currentVolume;
-                listener.onVolumeChanged(currentVolume, maxVolume);
             }
+            listener.onVolumeChanged(currentVolume);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-//    public int getCurrentVolume() {
-//        return currentVolume;
-//    }
+    int getLastVolume() {
+        return lastVolume > 0 ? lastVolume : audioManager.getStreamMaxVolume(audioStreamType);
+    }
 
     public interface OnAudioVolumeChangedListener {
         void initialVolume(int currentVolume);
-        void onVolumeChanged(int currentVolume, int maxVolume);
+        void onVolumeChanged(int currentVolume);
     }
 }
