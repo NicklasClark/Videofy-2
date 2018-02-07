@@ -78,6 +78,9 @@
                 android:textSize="@dimen/text_size_9sp"
                 android:gravity="center"
                 android:textAllCaps="true"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:background="@drawable/bg_shimmer_light"/>
 
             <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
@@ -86,6 +89,9 @@
                 android:layout_height="13dp"
                 android:textColor="@color/colorPrimary_text3"
                 android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:layout_marginTop="4dp"
                 android:textSize="@dimen/text_size_11_sp"/>
 
