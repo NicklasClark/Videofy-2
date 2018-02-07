@@ -1191,10 +1191,10 @@ public class BaseBottomBarActivity extends BaseActivity
         navigationController.popFragment();
     }
 
-//    @Override
-//    public void onPostLikedClicked(PostDetails postDetails) {
-//        pushFragment(FragmentLikedUser.newInstance(postDetails));
-//    }
+    @Override
+    public void onPostLikedClicked(PostDetails postDetails) {
+        pushFragment(FragmentLikedUser.newInstance(postDetails));
+    }
 
     @OnClick(R.id.btnToolbarBack)
     public void onViewClicked() {
@@ -1204,10 +1204,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @Override
     public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
         pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
-    }
-
-    @Override
-    public void onPostLikedClicked(PostDetails postDetails) {
     }
 
     @SuppressWarnings("unused")
