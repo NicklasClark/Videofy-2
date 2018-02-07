@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -156,8 +155,6 @@ public class FragmentPostDetails extends BaseFragment {
 
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
@@ -195,7 +192,7 @@ public class FragmentPostDetails extends BaseFragment {
 //    private int currentWindow;
 //    private boolean enableReactBtn;
     private boolean isComingFromHomePage;
-    private byte[] image;
+    private Bitmap image;
     private boolean is_next_page;
     private int currentVolume;
     private boolean isAudioEnabled;
@@ -230,12 +227,13 @@ public class FragmentPostDetails extends BaseFragment {
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image, boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
+    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, Bitmap image,
+                                                  boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
         FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
         if (!isDeepLink) {
-            bundle.putByteArray(ARG_THUMBNAIL, image);
+            bundle.putParcelable(ARG_THUMBNAIL, image);
         } else {
             FragmentPostDetails.isDeepLink = true;
             bundle.putString(ARG_THUMBNAIL, thumbUrl);
@@ -249,24 +247,13 @@ public class FragmentPostDetails extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
-//        logTheDensity();
-
-//                getActivity().getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-//                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-//                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-//                       // View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN |                                            // hide status bar
-//                       View.SYSTEM_UI_FLAG_IMMERSIVE
-//                );
-
-        //   getActivity().setContentView(R.layout.activity_post_details);
-        //   ButterKnife.bind(getActivity());
-
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
 
         ButterKnife.bind(this, view);
+
+        if (image != null && !isDeepLink)
+            playerView.setShutterBackground(image);
+        else playerView.setShutterBackground(thumbUrl);
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
@@ -302,17 +289,6 @@ public class FragmentPostDetails extends BaseFragment {
 
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
-
-        if (image != null && !isDeepLink)
-            Glide.with(this)
-                    .load(image)
-                    .into(placeholder);
-        else
-            Glide.with(this)
-                    .load(thumbUrl)
-                    .into(placeholder);
-
-        loadingProgressBar.setVisibility(VISIBLE);
 
         likeAction(postDetails.canLike(), false);
         if (!postDetails.canReact()) disableView(reactBtn, true);
@@ -387,7 +363,7 @@ public class FragmentPostDetails extends BaseFragment {
         if (bundle != null) {
             postDetails = bundle.getParcelable(ARG_POST_DETAILS);
             if (!isDeepLink) {
-                image = bundle.getByteArray(ARG_THUMBNAIL);
+                image = bundle.getParcelable(ARG_THUMBNAIL);
             }
             else {
                 thumbUrl = bundle.getString(ARG_THUMBNAIL);
@@ -439,7 +415,10 @@ public class FragmentPostDetails extends BaseFragment {
             caption.setText(decodeUnicodeString(title));
             locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
             locationView.setText(locationView.getVisibility() == VISIBLE ?
-                    (postDetails.hasCheckin() ? SPACE + postDetails.getCheckIn().getLocation() : "") : "");
+                    (postDetails.hasCheckin() ?
+                            SPACE + postDetails.getCheckIn().getLocation() :
+                            null) :
+                    null);
             profileNameView.setText(postDetails.getPostOwner().getUserName());
 
             this.likes = postDetails.getLikes();
@@ -563,7 +542,6 @@ public class FragmentPostDetails extends BaseFragment {
                 }
 
                 private void showErrorMessage(String message) {
-                    dismissProgressBar();
                     postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                     postLoadErrorLayout.setVisibility(VISIBLE);
                     message = getString(R.string.could_not_load_posts) + message;
@@ -579,12 +557,9 @@ public class FragmentPostDetails extends BaseFragment {
     }
 
     private void showNoReactionMessage() {
-        dismissProgressBar();
         reactionsHeader.setVisibility(GONE);
-//        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-        //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
         if (postDetails.canDelete()) {
             postLoadErrorSubtitle.setText(R.string.there_is_no_reaction_yet);
 
@@ -592,15 +567,6 @@ public class FragmentPostDetails extends BaseFragment {
             postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
 
         }
-    }
-    private void dismissProgressBar() {
-        loadingProgressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingProgressBar.setVisibility(INVISIBLE);
-            }
-        }, 280);
     }
 
     public void incrementLikes() {
@@ -704,8 +670,7 @@ public class FragmentPostDetails extends BaseFragment {
 
     }
 
-    @OnClick(R.id.media_controller_eta)
-    public void toggleSound() {
+    @OnClick(R.id.media_controller_eta) public void toggleSound() {
         if (audioManager != null) {
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
@@ -1162,7 +1127,6 @@ public class FragmentPostDetails extends BaseFragment {
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
-                                placeholder.setImageBitmap(null);
                                 image = null;
 //                                startCountDownClass = new StartCountDownClass(player.getDuration(), 1000, remainingTime);
 //                                startCountDownClass.start();
@@ -1259,8 +1223,6 @@ public class FragmentPostDetails extends BaseFragment {
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
             }
-//            player.getPlaybackState();
-            dismissProgressBar();
         } catch (Exception e) {
             e.printStackTrace();
         }

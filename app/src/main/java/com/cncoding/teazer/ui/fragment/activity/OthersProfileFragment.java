@@ -215,6 +215,7 @@ public class OthersProfileFragment extends BaseFragment {
         menu = view.findViewById(R.id.menu);
         layoutManager = new LinearLayoutManager(context);
         _recycler_view.setLayoutManager(layoutManager);
+
         _btnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -225,14 +226,22 @@ public class OthersProfileFragment extends BaseFragment {
                 }
                 if (_btnfollow.getText().equals("Follow")) {
 
-                    if(requestRecieved )
+                    if(requestRecieved && isfollower )
                     {
+                        followUser(followerfollowingid, context);
+
+                    }
+                    else if(requestRecieved){
                         acceptUser(requestId,false);
                     }
-                    else {
+                    else if(!requestRecieved)
+                    {
+
                         followUser(followerfollowingid, context);
+
                     }
                 }
+
                 if (_btnfollow.getText().equals(context.getString(R.string.following))) {
 
                     _btnfollow.setText("Follow");

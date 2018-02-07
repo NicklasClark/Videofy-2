@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.CheckIn;
@@ -14,6 +15,8 @@ import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 
@@ -157,11 +160,14 @@ public class PostDetails implements Parcelable {
     }
 
     public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
+        @NonNull
         @Override
         public PostDetails createFromParcel(Parcel in) {
             return new PostDetails(in);
         }
 
+        @NonNull
+        @Contract(pure = true)
         @Override
         public PostDetails[] newArray(int size) {
             return new PostDetails[size];
