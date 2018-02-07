@@ -1,7 +1,6 @@
 package com.cncoding.teazer.home.post;
 
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaCodec;
@@ -27,11 +26,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
-import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView.OnThumbReadyListener;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
@@ -51,15 +47,13 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.model.base.MiniProfile.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
-import static com.cncoding.teazer.utilities.ViewUtils.disableView;
-import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 
 /**
  *
  * Created by Prem$ on 2/2/2018.
  */
-class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, OnAudioVolumeChangedListener, OnThumbReadyListener {
+class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, OnAudioVolumeChangedListener {
 
     @LayoutRes static final int LAYOUT_RES = R.layout.item_home_screen_post_new;
 
@@ -69,7 +63,6 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     @BindView(R.id.category) ProximaNovaSemiBoldTextView category;
     @BindView(R.id.category_extra) ProximaNovaRegularTextView categoryExtra;
     @BindView(R.id.content) SimpleExoPlayerView playerView;
-    @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.volume_control) ImageView volumeControl;
     @BindView(R.id.dp) CircularAppCompatImageView dp;
     @BindView(R.id.username) ProximaNovaSemiBoldTextView username;
@@ -78,20 +71,19 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     @BindView(R.id.reactions) ProximaNovaRegularTextView reactions;
     @BindView(R.id.popularity_layout_shimmer) ProximaNovaRegularTextView popularityLayoutShimmer;
     @BindView(R.id.list) RecyclerView reactionListView;
-    @BindView(R.id.shimmer_layout_top) ShimmerLinearLayout shimmerLayoutTop;
+    @BindView(R.id.shimmer_layout_top) ShimmerRelativeLayout shimmerLayoutTop;
     @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
 
     private AudioVolumeObserver audioVolumeObserver;
     private PostsListAdapter postsListAdapter;
     private ExoPlayerViewHelper helper;
     private PostDetails postDetails;
-    private BitmapDrawable thumbnailDrawable;
 
     PostListViewHolder(PostsListAdapter postsListAdapter, View view) {
         super(view);
         this.postsListAdapter = postsListAdapter;
         ButterKnife.bind(this, view);
-        playerView.setOnThumbReadyListener(this);
+        playerView.setUseController(false);
         if (audioVolumeObserver == null) {
             audioVolumeObserver = new AudioVolumeObserver(postsListAdapter.context);
         }
@@ -101,8 +93,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     @OnClick(R.id.content) void viewPost() {
         if (!postsListAdapter.isPostClicked) {
             postsListAdapter.isPostClicked = true;
-            postsListAdapter.fetchPostDetails(postDetails.getPostId(), getAdapterPosition(),
-                    thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null);
+            postsListAdapter.fetchPostDetails(postDetails.getPostId(), getAdapterPosition());
         }
     }
 
@@ -121,8 +112,10 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
     }
 
     @OnClick(R.id.volume_control) void controlVolume() {
-        audioVolumeObserver.toggleMute();
-        adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
+        postsListAdapter.isMuted = !postsListAdapter.isMuted;
+        if (postsListAdapter.isMuted) postsListAdapter.currentVol = 0;
+        playerView.getPlayer().setVolume(postsListAdapter.isMuted ? 0 : postsListAdapter.currentVol);
+        adjustVolume(postsListAdapter.currentVol);
     }
 
     @OnClick(R.id.react_btn) public void react() {
@@ -150,7 +143,7 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
 
     @Override public void play() {
         if (helper != null) helper.play();
-        adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
+        adjustVolume(postsListAdapter.currentVol);
     }
 
     @Override public void pause() {
@@ -184,13 +177,11 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
         try {
             postDetails = postsListAdapter.posts.get(position);
 
-            if (!postDetails.canReact()) disableView(reactBtn, true);
-            else enableView(reactBtn);
-
             playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
             playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
 
-            shimmerize(new View[]{title, location, category}, new View[]{username});
+            shimmerize(new View[]{title, location, category}, new View[]{username},
+                    popularityLayoutShimmer, new ShimmerRelativeLayout[]{shimmerLayoutTop, shimmerLayoutMid});
 
                 /*Adjust view size before loading anything*/
             adjustViewSize(postsListAdapter.context, postDetails.getMedias().get(0).getDimension().getWidth(),
@@ -222,7 +213,6 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
                     })
                     .into(dp);
 
-
             if (postDetails.getReactions() != null && postDetails.getReactions().size() > 0) {
                 reactionListView.setVisibility(VISIBLE);
                 reactionListView.setLayoutManager(
@@ -236,8 +226,27 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
         }
     }
 
+    private void shimmerize(View[] viewsToShimmerizeLight, View[] viewsToShimmerizeDark,
+                            View popularityLayoutShimmer, ShimmerRelativeLayout[] shimmers) {
+        for (View view : viewsToShimmerizeLight) {
+            view.setBackground(postsListAdapter.context.getResources().getDrawable(R.drawable.bg_shimmer_light));
+            if (view instanceof TextView)
+                ((TextView) view).setText(null);
+        }
+        for (View view : viewsToShimmerizeDark) {
+            view.setBackground(postsListAdapter.context.getResources().getDrawable(R.drawable.bg_shimmer_dark));
+            if (view instanceof TextView)
+                ((TextView) view).setText(null);
+        }
+        for (ShimmerRelativeLayout shimmer : shimmers) {
+            shimmer.startShimmerAnimation();
+        }
+        popularityLayoutShimmer.setVisibility(VISIBLE);
+    }
+
     private void setFields() {
-        deShimmerize(new View[]{title, location, username});
+        deShimmerize(new View[]{title, location, username}, popularityLayoutShimmer,
+                new ShimmerRelativeLayout[]{shimmerLayoutTop, shimmerLayoutMid});
 
 //            SETTING TITLE
         String titleText = postDetails.getTitle();
@@ -245,7 +254,6 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
 
 //            SETTING LOCATION
         if (postDetails.getCheckIn() != null) {
-            location.setVisibility(VISIBLE);
             String locationText = postDetails.getCheckIn().getLocation();
             location.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_place_small, 0, 0, 0);
             location.setText(locationText);
@@ -284,28 +292,13 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
         reactions.setText(String.valueOf(postDetails.getTotalReactions()));
     }
 
-    private void shimmerize(View[] viewsToShimmerizeLight, View[] viewsToShimmerizeDark) {
-        for (View view : viewsToShimmerizeLight) {
-            view.setBackground(postsListAdapter.context.getResources().getDrawable(R.drawable.bg_shimmer_light));
-            if (view instanceof TextView)
-                ((TextView) view).setText(null);
-        }
-        for (View view : viewsToShimmerizeDark) {
-            view.setBackground(postsListAdapter.context.getResources().getDrawable(R.drawable.bg_shimmer_dark));
-            if (view instanceof TextView)
-                ((TextView) view).setText(null);
-        }
-        shimmerLayoutTop.startShimmerAnimation();
-        shimmerLayoutMid.startShimmerAnimation();
-        popularityLayoutShimmer.setVisibility(VISIBLE);
-    }
-
-    private void deShimmerize(View[] views) {
+    private void deShimmerize(View[] views, View popularityLayoutShimmer, ShimmerRelativeLayout[] shimmers) {
         for (View view : views) {
             view.setBackground(null);
         }
-        shimmerLayoutTop.stopShimmerAnimation();
-        shimmerLayoutMid.stopShimmerAnimation();
+        for (ShimmerRelativeLayout shimmer : shimmers) {
+            shimmer.stopShimmerAnimation();
+        }
         popularityLayoutShimmer.setVisibility(GONE);
     }
 
@@ -327,22 +320,19 @@ class PostListViewHolder extends RecyclerView.ViewHolder implements ToroPlayer, 
         }
     }
 
-    private void adjustVolumeButtons(float currentVolume) {
-        volumeControl.setVisibility(VISIBLE);
-        volumeControl.setImageResource(currentVolume == 0 ? R.drawable.ic_volume_off :
+    private void adjustVolume(float currentVolume) {
+        postsListAdapter.isMuted = currentVolume == 0;
+        postsListAdapter.currentVol = currentVolume;
+//        playerView.getPlayer().setVolume(postsListAdapter.isMuted ? 0 : postsListAdapter.currentVol);
+        volumeControl.setImageResource(postsListAdapter.isMuted ? R.drawable.ic_volume_off :
                 R.drawable.ic_volume_up);
     }
 
     @Override public void initialVolume(int currentVolume) {
-//        adjustVolumeButtons(currentVolume);
+        adjustVolume(currentVolume);
     }
 
-    @Override public void onVolumeChanged(int currentVolume) {
-        adjustVolumeButtons(currentVolume);
-    }
-
-    @Override
-    public void onThumbReady(BitmapDrawable thumbnail) {
-        thumbnailDrawable = thumbnail;
+    @Override public void onVolumeChanged(int currentVolume, int maxVolume) {
+        adjustVolume(currentVolume);
     }
 }

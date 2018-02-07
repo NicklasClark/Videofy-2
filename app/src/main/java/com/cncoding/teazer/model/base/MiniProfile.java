@@ -1,5 +1,7 @@
 package com.cncoding.teazer.model.base;
 
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,6 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Prem $ on 12/14/2017.
  */
 
+@Entity
 public class MiniProfile implements Parcelable {
 
     public static final int MALE = 1;
@@ -29,7 +32,7 @@ public class MiniProfile implements Parcelable {
     @SerializedName("gender") @Expose private Integer gender;
     @SerializedName("has_profile_media") @Expose private Boolean hasProfileMedia;
     @SerializedName("you_blocked") @Expose private Boolean youBlocked;
-    @SerializedName("profile_media") @Expose private ProfileMedia profileMedia;
+    @Embedded(prefix = "profileMedia_") @SerializedName("profile_media") @Expose private ProfileMedia profileMedia;
 
     public MiniProfile(int user_id, String user_name, String first_name, String last_name, boolean has_profile_media, ProfileMedia profile_media) {
         this.userId = user_id;

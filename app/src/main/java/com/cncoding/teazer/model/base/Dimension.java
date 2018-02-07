@@ -1,16 +1,23 @@
 package com.cncoding.teazer.model.base;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Dimension implements Parcelable {
-    private int height;
-    private int width;
+@Entity(tableName = "Dimension")
+public class Dimension extends ViewModel implements Parcelable {
+
+    @SerializedName("height") @Expose private int height;
+    @SerializedName("width") @Expose private int width;
 
     public Dimension(int height, int width) {
         this.height = height;

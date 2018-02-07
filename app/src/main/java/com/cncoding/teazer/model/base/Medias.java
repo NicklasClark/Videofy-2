@@ -1,34 +1,30 @@
 package com.cncoding.teazer.model.base;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Medias implements Parcelable {
-    private int media_id;
-    private String media_url;
-    private String thumb_url;
-    private String duration;
-    private Dimension media_dimension;
-    private boolean is_image;
-    public int views;
-    private String created_at;
+@Entity(tableName = "Medias")
+public class Medias extends ViewModel implements Parcelable {
 
-    public Medias(int media_id, String media_url, String thumb_url, String duration,
-                  Dimension dimension, boolean is_image, int views, String created_at) {
-        this.media_id = media_id;
-        this.media_url = media_url;
-        this.thumb_url = thumb_url;
-        this.duration = duration;
-        this.media_dimension = dimension;
-        this.is_image = is_image;
-        this.views = views;
-        this.created_at = created_at;
-    }
+    @SerializedName("media_id") @Expose private int media_id;
+    @SerializedName("media_url") @Expose private String media_url;
+    @SerializedName("thumb_url") @Expose private String thumb_url;
+    @SerializedName("duration") @Expose private String duration;
+    @Embedded(prefix = "dimension_") @SerializedName("media_dimension") @Expose private Dimension media_dimension;
+    @SerializedName("is_image") @Expose private boolean is_image;
+    @SerializedName("views") @Expose public int views;
+    @SerializedName("created_at") @Expose private String created_at;
 
     public int getMediaId() {
         return media_id;
@@ -56,6 +52,10 @@ public class Medias implements Parcelable {
 
     public int getViews() {
         return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 
     public String getCreatedAt() {

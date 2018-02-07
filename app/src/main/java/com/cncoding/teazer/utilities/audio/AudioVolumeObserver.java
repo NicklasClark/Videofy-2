@@ -15,12 +15,10 @@ public class AudioVolumeObserver {
     private final Context context;
     private final AudioManager audioManager;
     private AudioVolumeContentObserver audioVolumeContentObserver;
-    private boolean isMuted;
 
     public AudioVolumeObserver(@NonNull Context context) {
         this.context = context;
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        isMuted = getCurrentVolume() == 0;
     }
 
     public void register(int audioStreamType, @NonNull AudioVolumeContentObserver.OnAudioVolumeChangedListener listener) {
@@ -43,29 +41,9 @@ public class AudioVolumeObserver {
                 audioVolumeContentObserver);
     }
 
-    public void toggleMute() {
-        isMuted = !isMuted;
-        if (isMuted) setCurrentVolume(0);
-        else setCurrentVolume(getLastVolume());
-    }
-
-    private int getLastVolume() {
-        return audioVolumeContentObserver != null ?
-                audioVolumeContentObserver.getLastVolume() :
-                (getCurrentVolume() > 0 ? getCurrentVolume() : getMaxVolume());
-    }
-
-    private void setCurrentVolume(int currentVolume) {
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
-    }
-
-    public int getCurrentVolume() {
-        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-    }
-
-    private int getMaxVolume() {
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-    }
+//    public AudioVolumeContentObserver getAudioVolumeContentObserver() {
+//        return audioVolumeContentObserver;
+//    }
 
     public void unregister() {
         if (audioVolumeContentObserver != null) {

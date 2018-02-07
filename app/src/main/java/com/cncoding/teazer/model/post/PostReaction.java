@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.react.MediaDetail;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  *
@@ -25,9 +23,6 @@ public class PostReaction implements Parcelable {
     private MediaDetail media_detail;
     private MiniProfile react_owner;
     private String reacted_at;
-    @SerializedName("my_self")
-    @Expose
-    private Boolean mySelf;
 
     public PostReaction(int react_id, String react_title, int post_owner_id, int likes, int views, boolean can_like, boolean can_delete, MediaDetail media_detail, MiniProfile react_owner, String reacted_at) {
         this.react_id = react_id;
@@ -42,11 +37,6 @@ public class PostReaction implements Parcelable {
         this.reacted_at = reacted_at;
     }
 
-    public Boolean getMySelf()
-    {
-        return mySelf;
-    }
-
     protected PostReaction(Parcel in) {
         react_id = in.readInt();
         post_id = in.readInt();
@@ -59,8 +49,6 @@ public class PostReaction implements Parcelable {
         media_detail = in.readParcelable(MediaDetail.class.getClassLoader());
         react_owner = in.readParcelable(MiniProfile.class.getClassLoader());
         reacted_at = in.readString();
-        byte tmpMySelf = in.readByte();
-        mySelf = tmpMySelf == 0 ? null : tmpMySelf == 1;
     }
 
     @Override
@@ -76,7 +64,6 @@ public class PostReaction implements Parcelable {
         dest.writeParcelable(media_detail, flags);
         dest.writeParcelable(react_owner, flags);
         dest.writeString(reacted_at);
-        dest.writeByte((byte) (mySelf == null ? 0 : mySelf ? 1 : 2));
     }
 
     public static final Creator<PostReaction> CREATOR = new Creator<PostReaction>() {
@@ -157,5 +144,9 @@ public class PostReaction implements Parcelable {
 
     public PostReaction(int react_id) {
         this.react_id = react_id;
+    }
+
+    public boolean getMySelf() {
+        return can_delete;
     }
 }

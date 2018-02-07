@@ -69,7 +69,7 @@ public class ReportPostTitlesResponse implements Parcelable {
         this.subReports = in.createTypedArrayList(ReportPostSubTitleResponse.CREATOR);
     }
 
-    public static final Parcelable.Creator<ReportPostTitlesResponse> CREATOR = new Parcelable.Creator<ReportPostTitlesResponse>() {
+    public static final Creator<ReportPostTitlesResponse> CREATOR = new Creator<ReportPostTitlesResponse>() {
         @Override
         public ReportPostTitlesResponse createFromParcel(Parcel source) {
             return new ReportPostTitlesResponse(source);
