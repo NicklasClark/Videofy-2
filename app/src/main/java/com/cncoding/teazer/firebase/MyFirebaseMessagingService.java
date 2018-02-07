@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static com.cncoding.teazer.BaseBottomBarActivity.NOTIFICATION_TYPE;
 import static com.cncoding.teazer.BaseBottomBarActivity.SOURCE_ID;
+import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
  *
@@ -77,7 +78,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.setClass(this, BaseBottomBarActivity.class);
 //        if (messageBody.contains("follow"))
             Bundle bundle = new Bundle();
-            bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
+            if (data.get("source_id") != null) {
+                bundle.putInt(SOURCE_ID, Integer.parseInt(data.get("source_id")));
+            }
             bundle.putInt(NOTIFICATION_TYPE, Integer.parseInt(data.get("notification_type")));
             Log.d("FCMNOT", data.get("notification_type"));
             intent.putExtra("bundle", bundle);
@@ -92,8 +95,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "teazer_notification_01")
                     .setSmallIcon(R.drawable.ic_stat_notification_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                    .setContentTitle(title != null ? title : "Teazer")
-                    .setContentText(messageBody)
+                    .setContentTitle(title != null ? decodeUnicodeString(title) : "Teazer")
+                    .setContentText(decodeUnicodeString(messageBody))
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
