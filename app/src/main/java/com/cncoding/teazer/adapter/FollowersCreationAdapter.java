@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -77,10 +76,8 @@ public class FollowersCreationAdapter extends RecyclerView.Adapter<FollowersCrea
             final PostDetails postDetails = _list.get(i);
             final String videoTitle = postDetails.getTitle();
             final int postId = postDetails.getPostId();
-            final boolean is_hidden=postDetails.getHided();
-            if(is_hidden)
-            {
-
+            final boolean is_hidden=postDetails.isHided();
+            if(is_hidden) {
                 viewHolder.hidden_layout.setVisibility(View.VISIBLE);
                 viewHolder.unhide_video.setVisibility(View.VISIBLE);
                 viewHolder.playvideo.setVisibility(View.GONE);

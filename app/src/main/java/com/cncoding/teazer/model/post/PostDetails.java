@@ -1,7 +1,11 @@
 package com.cncoding.teazer.model.post;
 
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.CheckIn;
@@ -12,6 +16,8 @@ import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 
 /**
@@ -19,9 +25,10 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
+@Entity
 public class PostDetails implements Parcelable {
 
-    @SerializedName("post_id") @Expose private Integer postId;
+    @PrimaryKey @SerializedName("post_id") @Expose private Integer postId;
     @SerializedName("posted_by") @Expose private Integer postedBy;
     @SerializedName("likes") @Expose public Integer likes;
     @SerializedName("total_reactions") @Expose public Integer totalReactions;
@@ -33,9 +40,9 @@ public class PostDetails implements Parcelable {
     @SerializedName("can_delete") @Expose private Boolean canDelete;
     @SerializedName("is_hided") @Expose private Boolean isHided;
     @SerializedName("is_hided_all") @Expose private Boolean isHidedAll;
-    @SerializedName("post_owner") @Expose private MiniProfile post_owner;
+    @Embedded(prefix = "postOwner_") @SerializedName("post_owner") @Expose private MiniProfile postOwner;
     @SerializedName("created_at") @Expose private String createdAt;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
-    @SerializedName("check_in") @Expose public CheckIn checkIn;
+    @Embedded(prefix = "checkIn_") @SerializedName("check_in") @Expose public CheckIn checkIn;
     @SerializedName("medias") @Expose public ArrayList<Medias> medias;
     @SerializedName("reactions") @Expose private ArrayList<ReactionDetails> reactions;
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
@@ -61,7 +68,7 @@ public class PostDetails implements Parcelable {
         isHided = tmpIsHided == 0 ? null : tmpIsHided == 1;
         byte tmpIsHidedAll = in.readByte();
         isHidedAll = tmpIsHidedAll == 0 ? null : tmpIsHidedAll == 1;
-        post_owner = in.readParcelable(MiniProfile.class.getClassLoader());
+        postOwner = in.readParcelable(MiniProfile.class.getClassLoader());
         createdAt = in.readString();
         checkIn = in.readParcelable(CheckIn.class.getClassLoader());
         medias = in.createTypedArrayList(Medias.CREATOR);
@@ -69,6 +76,33 @@ public class PostDetails implements Parcelable {
         taggedUsers = in.createTypedArrayList(TaggedUser.CREATOR);
         reactedUsers = in.createTypedArrayList(ReactedUser.CREATOR);
         categories = in.createTypedArrayList(Category.CREATOR);
+    }
+
+    public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
+                       Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete, Boolean isHided,
+                       Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn, ArrayList<Medias> medias,
+                       ArrayList<ReactionDetails> reactions, ArrayList<TaggedUser> taggedUsers, ArrayList<ReactedUser> reactedUsers,
+                       ArrayList<Category> categories) {
+        this.postId = postId;
+        this.postedBy = postedBy;
+        this.likes = likes;
+        this.totalReactions = totalReactions;
+        this.totalTags = totalTags;
+        this.hasCheckin = hasCheckin;
+        this.title = title;
+        this.canReact = canReact;
+        this.canLike = canLike;
+        this.canDelete = canDelete;
+        this.isHided = isHided;
+        this.isHidedAll = isHidedAll;
+        this.postOwner = postOwner;
+        this.createdAt = createdAt;
+        this.checkIn = checkIn;
+        this.medias = medias;
+        this.reactions = reactions;
+        this.taggedUsers = taggedUsers;
+        this.reactedUsers = reactedUsers;
+        this.categories = categories;
     }
 
     @Override
@@ -110,7 +144,7 @@ public class PostDetails implements Parcelable {
         dest.writeByte((byte) (canDelete == null ? 0 : canDelete ? 1 : 2));
         dest.writeByte((byte) (isHided == null ? 0 : isHided ? 1 : 2));
         dest.writeByte((byte) (isHidedAll == null ? 0 : isHidedAll ? 1 : 2));
-        dest.writeParcelable(post_owner, flags);
+        dest.writeParcelable(postOwner, flags);
         dest.writeString(createdAt);
         dest.writeParcelable(checkIn, flags);
         dest.writeTypedList(medias);
@@ -126,22 +160,25 @@ public class PostDetails implements Parcelable {
     }
 
     public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
+        @NonNull
         @Override
         public PostDetails createFromParcel(Parcel in) {
             return new PostDetails(in);
         }
 
+        @NonNull
+        @Contract(pure = true)
         @Override
         public PostDetails[] newArray(int size) {
             return new PostDetails[size];
         }
     };
 
-    public Boolean getHided() {
+    public Boolean isHided() {
         return isHided;
     }
 
-    public Boolean getHidedAll() {
+    public Boolean isHidedAll() {
         return isHidedAll;
     }
 
@@ -186,7 +223,7 @@ public class PostDetails implements Parcelable {
     }
 
     public MiniProfile getPostOwner() {
-        return post_owner;
+        return postOwner;
     }
 
     public String getCreatedAt() {
@@ -265,8 +302,8 @@ public class PostDetails implements Parcelable {
         isHidedAll = hidedAll;
     }
 
-    public void setPost_owner(MiniProfile post_owner) {
-        this.post_owner = post_owner;
+    public void setPostOwner(MiniProfile postOwner) {
+        this.postOwner = postOwner;
     }
 
     public void setCreatedAt(String createdAt) {
