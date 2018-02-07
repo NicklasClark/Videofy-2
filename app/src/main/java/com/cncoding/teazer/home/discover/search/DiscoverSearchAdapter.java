@@ -14,12 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.discover.Videos;
@@ -107,11 +108,10 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder1.content.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                         !isSearchTerm ? R.drawable.ic_trending_up : 0, 0);
 
-                Glide.with(baseFragment.getContext())
+                Glide.with(context)
                         .load(holder1.video.getPostVideoInfo() != null ? holder1.video.getPostVideoInfo().get(0).getThumbUrl() :
                                 R.drawable.bg_placeholder)
-                        .placeholder(R.drawable.bg_placeholder)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.bg_placeholder))
                         .into(holder1.thumbnail);
 
                 holder1.layout.setOnClickListener(new View.OnClickListener() {
@@ -131,11 +131,10 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder2.name.setText(name);
 
 
-                Glide.with(baseFragment.getContext())
+                Glide.with(context)
                         .load(holder2.user.getProfileMedia() != null ? holder2.user.getProfileMedia().getThumbUrl() :
                                 R.drawable.ic_user_male_dp_small)
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.bg_placeholder))
                         .into(holder2.dp);
 
                 if (actionArray.get(position) == 0) {
@@ -457,7 +456,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private void setActionButton(ProximaNovaSemiboldTextView button, int type, int position, boolean savePosition) {
+    private void setActionButton(ProximaNovaSemiBoldTextView button, int type, int position, boolean savePosition) {
         if (savePosition)
             actionArray.put(position, type);
         switch (type) {
@@ -507,9 +506,9 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
-        @BindView(R.id.username) ProximaNovaSemiboldTextView username;
+        @BindView(R.id.username) ProximaNovaSemiBoldTextView username;
         @BindView(R.id.name) ProximaNovaRegularTextView name;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         MiniProfile user;
 
         PeopleViewHolder(View view) {

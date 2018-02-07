@@ -8,14 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.model.user.SetPasswordRequest;
 import com.cncoding.teazer.model.user.UpdatePasswordRequest;
 import com.cncoding.teazer.model.user.UserProfile;
@@ -40,6 +39,8 @@ public class PasswordChange extends AppCompatActivity {
     ProximaNovaRegularTextInputEditText confirmPassword;
     @BindView(R.id.save)
     Button save;
+    @BindView(R.id.cancel)
+    Button cancel;
     @BindView(R.id.currentPasswordLayout)
     LinearLayout currentPasswordLayout;
     private boolean canChangePassword;
@@ -94,7 +95,19 @@ public class PasswordChange extends AppCompatActivity {
         });
         save.setEnabled(false);
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentPassword.requestFocus();
+                currentPassword.getText().clear();
+                newPassword.getText().clear();
+                confirmPassword.getText().clear();
+
+
+            }
+        });
     }
+
 
 
     public boolean validate() {

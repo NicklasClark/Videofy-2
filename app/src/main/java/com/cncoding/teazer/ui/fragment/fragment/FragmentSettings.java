@@ -6,24 +6,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.ui.fragment.activity.BlockUserList;
 import com.cncoding.teazer.ui.fragment.activity.InviteFriend;
 import com.cncoding.teazer.ui.fragment.activity.PasswordChange;
-import com.cncoding.teazer.ui.fragment.activity.Settings;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import butterknife.BindView;
@@ -48,7 +45,7 @@ public class FragmentSettings extends BaseFragment {
 //    @BindView(R.id.logoutLayout) ProximaNovaRegularTextView logout;
 //    @BindView(R.id.changePassword) TextView changePassword;
 //    @BindView(R.id.changeCategoriesLayout) ProximaNovaRegularTextView changeCategoriesLayout;
-//    @BindView(R.id.invite_friends) ProximaNovaSemiboldTextView inviteFriendsLayout;
+//    @BindView(R.id.invite_friends) ProximaNovaSemiBoldTextView inviteFriendsLayout;
 //    @BindView(R.id.deactivateAccountLayout) ProximaNovaRegularTextView deactivateAccountLayout;
 
     Context context;

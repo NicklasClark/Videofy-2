@@ -43,9 +43,9 @@ import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
@@ -152,6 +152,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     ProximaNovaRegularTextView uploadCategoriesBadge;
     @BindView(R.id.gifSwitch)
     Switch gifSwitch;
+
+    @BindView(R.id.erro_msg)
+    @Nullable
+     ProximaNovaRegularTextView erro_msg;
 
     public static boolean checkFacebookButtonPressed = false;
     public static boolean checkedTwitterButton = false;
@@ -632,11 +636,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     private boolean validateFields() {
         if (!isReaction && TextUtils.isEmpty(videoTitle.getText())) {
-            videoTitle.setError(getString(R.string.required));
+           // videoTitle.setError(getString(R.string.required));
             videoTitle.requestFocus();
+            erro_msg.setVisibility(View.VISIBLE);
             return false;
         } else if (!isReaction && (selectedCategoriesToSend == null || selectedCategoriesToSend.length() == 0)) {
             Toast.makeText(context, getString(R.string.required_categories), Toast.LENGTH_SHORT).show();
+            erro_msg.setVisibility(View.VISIBLE);
             return false;
         }
         return true;

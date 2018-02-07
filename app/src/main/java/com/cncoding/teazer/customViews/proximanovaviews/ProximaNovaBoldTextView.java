@@ -1,30 +1,30 @@
-package com.cncoding.teazer.customViews;
+package com.cncoding.teazer.customViews.proximanovaviews;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatButton;
+import android.support.text.emoji.widget.EmojiAppCompatTextView;
 import android.util.AttributeSet;
 
-import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttrs;
+import static com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton.initAttrs;
 
 /**
  *
  * Created by Prem $ on 9/19/2017.
  */
 
-public class ProximaNovaBoldButton extends AppCompatButton {
-    public ProximaNovaBoldButton(Context context) {
+public class ProximaNovaBoldTextView extends EmojiAppCompatTextView {
+    public ProximaNovaBoldTextView(Context context) {
         super(context);
         applyCustomFont(context);
     }
 
-    public ProximaNovaBoldButton(Context context, AttributeSet attrs) {
+    public ProximaNovaBoldTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         applyCustomFont(context);
         initAttrs(context, attrs, this);
     }
 
-    public ProximaNovaBoldButton(Context context, AttributeSet attrs, int defStyle) {
+    public ProximaNovaBoldTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         applyCustomFont(context);
         initAttrs(context, attrs, this);

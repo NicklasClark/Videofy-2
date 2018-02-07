@@ -50,7 +50,7 @@
 
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content">
-                            <com.cncoding.teazer.customViews.SignPainterTextView
+                            <com.cncoding.teazer.customViews.proximanovaviews.SignPainterTextView
                                 android:id="@+id/username_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

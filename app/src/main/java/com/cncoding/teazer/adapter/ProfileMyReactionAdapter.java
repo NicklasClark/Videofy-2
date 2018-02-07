@@ -3,7 +3,6 @@ package com.cncoding.teazer.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +17,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
 
 import java.util.List;
@@ -43,12 +44,13 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
 
     private List<Reactions> list;
     private Context context;
+    ReactionPlayerListener reactionPlayerListener;
     private boolean isPostClicked = false;
-
 
     public ProfileMyReactionAdapter(Context context, List<Reactions> list) {
         this.context = context;
         this.list = list;
+        reactionPlayerListener=( ReactionPlayerListener)context;
     }
     @Override
     public ProfileMyReactionAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -80,16 +82,14 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
         viewHolder.reaction_id.setText(String.valueOf("+" + reaction + "R"));
 
         Glide.with(context).load(thumb_url)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.material_flat))
+                .apply(new RequestOptions().placeholder(R.drawable.material_flat))
                 .into(viewHolder.thumbimage);
 
         viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isPostClicked) {
-                    isPostClicked = true;
-                    playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
-                }
+             //   playOnlineVideoInExoPlayer(context, SELF_REACTION, null, cont);
+                reactionPlayerListener.reactionPlayer(1,null,cont);
             }
         });
         viewHolder.menu.setOnClickListener(new View.OnClickListener() {
@@ -191,5 +191,9 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
             cardView = view.findViewById(R.id.cardview);
             rootLayout = view.findViewById(R.id.rootLayout);
         }
+    }
+
+    public interface ReactionPlayerListener {
+        void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction);
     }
 }

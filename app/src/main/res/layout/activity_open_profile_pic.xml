@@ -38,7 +38,7 @@
         android:layout_height="50dp">
 
 
-        <com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView
+        <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
             android:id="@+id/remove_image_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/action_bar_height"

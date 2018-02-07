@@ -17,7 +17,7 @@ import android.view.Window;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportPostSubtitleAdapter;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 

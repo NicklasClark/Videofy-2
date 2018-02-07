@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -20,16 +22,19 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
-import com.cncoding.teazer.customViews.UniversalTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.UniversalTextView;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.user.Notification;
 import com.cncoding.teazer.model.user.NotificationsList;
@@ -115,32 +120,32 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (viewHolder.getItemViewType()) {
             case TYPE_FOLLOWING:
+
                 final FollowingViewHolder holder1 = (FollowingViewHolder) viewHolder;
                 holder1.notification = notificationsList.getNotifications().get(position);
 
                 if (holder1.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder1.notification.getProfileMedia().getThumbUrl())
-                            .placeholder(R.drawable.ic_user_male_dp_small)
-                            .crossFade()
-                            .listener(new RequestListener<String, GlideDrawable>() {
+                            .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
+                            .listener(new RequestListener<Drawable>() {
                                 @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                                     return false;
                                 }
 
                                 @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                               boolean isFromMemoryCache, boolean isFirstResource) {
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                               DataSource dataSource, boolean isFirstResource) {
                                     holder1.dp.setImageDrawable(resource);
-                                    return true;
+                                    return false;
                                 }
                             })
                             .into(holder1.dp);
                 else {
                     Glide.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
-                            .crossFade()
+                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .into(holder1.dp);
                 }
 
@@ -148,8 +153,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 Glide.with(context)
                         .load(holder1.notification.getMetaData().getThumbUrl())
-                        .placeholder(context.getResources().getDrawable(R.drawable.bg_placeholder, null))
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(context.getResources().getDrawable(R.drawable.bg_placeholder, null)))
                         .into(holder1.thumbnail);
 
                 View.OnClickListener postListener = new View.OnClickListener() {
@@ -180,7 +184,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                            } else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
+                            }
+                            else if (holder1.notification.getNotificationType() == REACTED_TO_YOUR_VIDEO ||
                                     holder1.notification.getNotificationType() == LIKED_YOUR_REACTION ||
                                     holder1.notification.getNotificationType() == REACTED_TO_A_VIDEO_THAT_YOU_ARE_TAGGED_IN) {
 
@@ -190,9 +195,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                             @Override
                                             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
                                                 if (response.code() == 200)
+                                                {
                                                     mListener.onNotificationsInteraction(isFollowingTab, response.body(),
                                                             -1, null);
+
+                                                }
+
+
                                                 else if (response.code() == 412 && response.message().contains("Precondition Failed"))
+
                                                     Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
                                                 else {
                                                     Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
@@ -231,12 +242,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (holder2.notification.hasProfileMedia())
                     Glide.with(context)
                             .load(holder2.notification.getProfileMedia().getThumbUrl())
-                            .crossFade()
                             .into(holder2.dp);
                 else {
                     Glide.with(context)
                             .load(R.drawable.ic_user_male_dp_small)
-                            .crossFade()
                             .into(holder2.dp);
                 }
                 holder2.content.setText(getString(getHighlights(holder2.notification.getHighlights()), holder2.notification.getMessage()));
@@ -617,7 +626,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return TextUtils.join(", ", highlights);
     }
 
-    private void setActionButton(ProximaNovaSemiboldTextView button, AppCompatImageView declineRequest, int type) {
+    private void setActionButton(ProximaNovaSemiBoldTextView button, AppCompatImageView declineRequest, int type) {
         switch (type) {
             case BUTTON_TYPE_ACCEPT:
                 button.setText(R.string.accept);
@@ -720,7 +729,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.root_layout) LinearLayout layout;
         @BindView(R.id.dp) CircularAppCompatImageView dp;
         @BindView(R.id.name) UniversalTextView content;
-        @BindView(R.id.action) ProximaNovaSemiboldTextView action;
+        @BindView(R.id.action) ProximaNovaSemiBoldTextView action;
         @BindView(R.id.decline) AppCompatImageView declineRequest;
         Notification notification;
         boolean isActioned;

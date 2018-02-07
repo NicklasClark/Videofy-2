@@ -1,11 +1,11 @@
-package com.cncoding.teazer.customViews;
+package com.cncoding.teazer.customViews.proximanovaviews;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.util.AttributeSet;
 
-import static com.cncoding.teazer.customViews.ProximaNovaSemiboldButton.initAttrs;
+import static com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton.initAttrs;
 
 /**
  *

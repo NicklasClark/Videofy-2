@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.base.Category;
 
 import java.util.ArrayList;

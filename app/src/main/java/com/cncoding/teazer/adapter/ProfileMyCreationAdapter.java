@@ -22,13 +22,12 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularCheckedTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,6 +38,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 
 /**
+ * 
  * Created by farazhabib on 09/11/17.
  */
 
@@ -288,7 +288,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -296,14 +296,14 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             break;
                                         case 1:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image2);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             break;
 
                                         case 2:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image3);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
@@ -320,7 +320,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image1);
                                             break;
@@ -329,7 +329,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -338,7 +338,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -384,7 +384,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                     String profileurl = miniProfile.getProfileMedia().getMediaUrl();
                                     switch (i) {
                                         case 0:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image1);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -392,7 +392,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
                                             break;
                                         case 1:
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image2);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -402,7 +402,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                         case 2:
 
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(profileurl)
                                                     .into(viewHolder.image3);
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
@@ -422,7 +422,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image1);
                                             break;
@@ -431,7 +431,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -440,7 +440,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
-                                            Picasso.with(context)
+                                            Glide.with(context)
                                                     .load(R.drawable.ic_user_male_dp_small)
                                                     .into(viewHolder.image3);
                                             break;
@@ -471,6 +471,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     public interface myCreationListener {
 
         void myCreationVideos(int i, PostDetails postDetails);
+        void ReactionPost(int postId);
     }
 
     public interface OnChildFragmentUpdateVideos {

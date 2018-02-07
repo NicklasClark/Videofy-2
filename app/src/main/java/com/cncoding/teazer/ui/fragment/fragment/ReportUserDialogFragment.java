@@ -22,7 +22,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ReportUserTitleAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.model.application.ReportPostSubTitleResponse;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.user.ReportUser;
@@ -73,6 +73,8 @@ public class ReportUserDialogFragment extends DialogFragment implements ReportUs
         Bundle args = new Bundle();
         args.putInt("userId", userId);
         args.putString("userName", username);
+        args.putString("blah1", username);
+        args.putString("blah2", username);
         frag.setArguments(args);
         return frag;
     }

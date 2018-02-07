@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.post.PostDetails;

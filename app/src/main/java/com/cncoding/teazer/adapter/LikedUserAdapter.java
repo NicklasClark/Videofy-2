@@ -15,17 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.FragmentLikedUser;
 import com.cncoding.teazer.model.post.LikedUser;
 import com.cncoding.teazer.model.post.PostDetails;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,6 +35,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.ViewUtils.setActionButtonText;
 
 /**
+ * 
  * Created by farazhabib on 02/01/18.
  */
 
@@ -89,17 +89,15 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
 
             if (islikedUserDp) {
                 String LikedUserDp = cont.getProfileMedia().getMediaUrl();
-
                 Glide.with(context)
                         .load(LikedUserDp)
-                        .skipMemoryCache(false)
+                        .apply(new RequestOptions().skipMemoryCache(false))
                         .into(viewHolder.dp);
             } else {
-                Picasso.with(context)
+                Glide.with(context)
                         .load(R.drawable.ic_user_male_dp_small)
-                        .fit().centerInside()
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE))
                         .into(viewHolder.dp);
             }
 
@@ -427,7 +425,7 @@ public class LikedUserAdapter extends RecyclerView.Adapter<LikedUserAdapter.View
         CircularAppCompatImageView dp;
 
         View line;
-        ProximaNovaSemiboldTextView action;
+        ProximaNovaSemiBoldTextView action;
 
         public ViewHolder(View view) {
             super(view);

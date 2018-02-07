@@ -132,7 +132,7 @@
     <string name="share">Share</string>
     <string name="hide">Hide</string>
     <string name="delete">Delete</string>
-    <string name="block">Block</string>
+    <string name="block">Block/Unblock</string>
     <string name="report">Report</string>
     <string name="title_activity_tab2">Tab2Activity</string>
     <string name="tab_text_1">Tab 1</string>
@@ -359,4 +359,8 @@
     <string name="report_user_dialog_message">Are you sure you want to report this user?</string>
     <string name="report_user_success_dialog_title">Profile Reported</string>
     <string name="report_user_success_dialog_message">We have reported this profile. We will get back and block this Profile.</string>
+    <string name="upload_title">Enter Title of video (max 180 words).</string>
+    <string name="error_msg">Title is mandatory</string>
+    <string name="volume_controls">Volume controls</string>
+    <string name="artwork">artwork</string>
 </resources>

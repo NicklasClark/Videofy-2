@@ -2,7 +2,9 @@ package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -14,13 +16,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -35,7 +39,6 @@ import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_POST;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
-import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
 import static com.cncoding.teazer.utilities.ViewUtils.prepareLayout;
 
@@ -99,7 +102,8 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         } else holder.category.setVisibility(View.GONE);
 
         /*Setting name*/
-        String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+       // String name = holder.postDetails.getPostOwner().getFirstName() + BLANK_SPACE + holder.postDetails.getPostOwner().getLastName();
+        String name = holder.postDetails.getPostOwner().getUserName();
         holder.name.setText(name);
 
         /*Setting likes*/
@@ -113,22 +117,20 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
         Glide.with(context)
                 .load(holder.postDetails.getPostOwner().hasProfileMedia() ?
                         holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl() : R.drawable.ic_user_male_dp_small)
-                .placeholder(R.drawable.ic_user_male_dp_small)
-                .crossFade()
+                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                 .into(holder.dp);
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
                                 holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
@@ -183,13 +185,13 @@ public class FeaturedVideosListAdapter extends RecyclerView.Adapter<FeaturedVide
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.root_layout) RelativeLayout layout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
         @BindView(R.id.shimmer_layout) RelativeLayout shimmerLayout;
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.top_layout) RelativeLayout topLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView thumbnail;

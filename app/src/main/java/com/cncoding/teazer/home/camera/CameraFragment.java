@@ -64,8 +64,8 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.AutoFitTextureView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.utilities.OnSwipeTouchListener;
 
@@ -156,9 +156,9 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
     @BindView(R.id.swipeCameraTip)
-    ProximaNovaSemiboldTextView swipeForFilterTip;
+    ProximaNovaSemiBoldTextView swipeForFilterTip;
     @BindView(R.id.swipeCameraFilterTip)
-    ProximaNovaSemiboldTextView swipeForFilterNameTip;
+    ProximaNovaSemiBoldTextView swipeForFilterNameTip;
 //    @BindView(R.id.chronometer) ProximaNovaRegularChronometer chronometer;
 
     private long startTime = 0L;

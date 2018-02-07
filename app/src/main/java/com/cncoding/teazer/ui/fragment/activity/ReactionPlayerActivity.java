@@ -20,8 +20,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.post.PostsListFragment;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
@@ -78,11 +78,11 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     @BindView(R.id.btnClose)
     ImageView btnClose;
     @BindView(R.id.reaction_post_caption)
-    ProximaNovaSemiboldTextView reactionPostCaption;
+    ProximaNovaSemiBoldTextView reactionPostCaption;
     @BindView(R.id.reaction_post_dp)
     CircularAppCompatImageView reactionPostDp;
     @BindView(R.id.reaction_post_name)
-    ProximaNovaSemiboldTextView reactionPostName;
+    ProximaNovaSemiBoldTextView reactionPostName;
     @BindView(R.id.reaction_post_likes)
     ProximaNovaRegularTextView reactionPostLikes;
     @BindView(R.id.reaction_post_views)
@@ -154,7 +154,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(this, audioFocusChangeListener);
 
-
         playSource = getIntent().getIntExtra("SOURCE", 0);
         switch (playSource) {
             case POST_REACTION: {
@@ -181,7 +180,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
                                     : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
                             .into(reactionPostDp);
                     if (reactionTitle != null) {
                         try {
@@ -194,7 +192,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
 
                     postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
                     reactionPostName.setText(postDetails.getReactOwner().getFirstName());
-
                     initView();
                     incrementView();
                 } catch (Exception e) {
@@ -227,7 +224,6 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
                                     : R.drawable.ic_user_male_dp_small)
-                            .asBitmap()
                             .into(reactionPostDp);
                     if (reactionTitle != null) {
                         reactionPostCaption.setText(reactionTitle);

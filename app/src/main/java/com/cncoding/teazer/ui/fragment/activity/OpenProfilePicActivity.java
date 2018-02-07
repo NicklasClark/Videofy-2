@@ -12,8 +12,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 
 import butterknife.BindView;
@@ -27,7 +26,7 @@ public class OpenProfilePicActivity extends AppCompatActivity {
     @BindView(R.id.media_controller_dp)
     CircularAppCompatImageView media_controller_dp;
     @BindView(R.id.remove_image_btn)
-    ProximaNovaSemiboldTextView remove_image_btn;
+    ProximaNovaSemiBoldTextView remove_image_btn;
     int gender;
 
     @BindView(R.id.close)

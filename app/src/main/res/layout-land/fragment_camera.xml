@@ -47,7 +47,7 @@
                 android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_video_files" />
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/video_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 android:foreground="@drawable/ripple_dark_circle"
                 app:srcCompat="@drawable/ic_rotate" />
 
-            <!--                <com.cncoding.teazer.customViews.ProximaNovaRegularChronometer
+            <!--             com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularChronometereter
                                 android:id="@+id/chronometer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

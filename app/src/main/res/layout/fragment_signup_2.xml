@@ -21,7 +21,7 @@
             android:isScrollContainer="true"
             tools:context="com.cncoding.teazer.authentication.SignupFragment">
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
                 android:id="@+id/signup_page_header"
                 android:text="@string/you_are_almost_there"
                 android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:layout_marginBottom="@dimen/padding_double"
                 android:textColor="@color/colorIcons"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_name"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/first_and_last_name"
@@ -41,7 +41,7 @@
                 android:inputType="text|textPersonName|textCapWords"
                 android:imeOptions="actionNext"/>
 
-            <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                 android:id="@+id/signup_email"
                 style="@style/AppTheme.RoundedEditText"
                 android:hint="@string/your_email"
@@ -72,7 +72,7 @@
                     android:layout_alignBottom="@+id/signup_phone_number"
                     android:layout_alignTop="@+id/signup_phone_number"/>
 
-                <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView
                     android:id="@+id/signup_phone_number"
                     style="@style/AppTheme.PhoneNumberEditText"
                     android:hint="@string/phone_number"
@@ -85,7 +85,7 @@
 
             </RelativeLayout>
 
-            <com.cncoding.teazer.customViews.ProximaNovaSemiboldButton
+            <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
                 android:id="@+id/signup_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

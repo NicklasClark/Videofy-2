@@ -18,8 +18,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.ui.fragment.activity.EditPost;
 import com.cncoding.teazer.utilities.ViewUtils;

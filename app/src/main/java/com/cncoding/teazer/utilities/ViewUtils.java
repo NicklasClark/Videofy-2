@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -23,25 +21,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
@@ -51,7 +46,6 @@ import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Locale;
 
@@ -347,25 +341,25 @@ public class ViewUtils {
         context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{videoPath});
     }
 
-    public static byte[] getByteArrayFromImage(ImageView imageView) {
-        if (imageView.getDrawable() != null) {
-            try {
-                Bitmap bitmap;
-                if (imageView.getDrawable() instanceof TransitionDrawable)
-                    bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
-                else
-                    bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                return outputStream.toByteArray();
-            } catch (ClassCastException e) {
-                if (e.getMessage() != null)
-                    Log.e("Getting thumbnail", e.getMessage());
-                return null;
-            }
-        } else
-            return null;
-    }
+//    public static byte[] getByteArrayFromImage(ImageView imageView) {
+//        if (imageView.getDrawable() != null) {
+//            try {
+//                Bitmap bitmap;
+//                if (imageView.getDrawable() instanceof TransitionDrawable)
+//                    bitmap = ((GlideBitmapDrawable) ((TransitionDrawable) imageView.getDrawable()).getDrawable(1)).getBitmap();
+//                else
+//                    bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+//                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+//                return outputStream.toByteArray();
+//            } catch (ClassCastException e) {
+//                if (e.getMessage() != null)
+//                    Log.e("Getting thumbnail", e.getMessage());
+//                return null;
+//            }
+//        } else
+//            return null;
+//    }
 
     public static void initializeShimmer(ViewGroup shimmerLayout, ViewGroup topLayout,
                                          ViewGroup bottomLayout, ViewGroup vignetteLayout) {
@@ -384,19 +378,29 @@ public class ViewUtils {
                                       int position, SparseArray<Dimension> dimensionSparseArray, boolean isPostList) {
         try {
             int width = isPostList ?
+                    getDeviceWidth(context) :
     //                in case of home page post lists, decrease 0.5dp from half the screen width
-                    (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2 :
+    //                (ViewUtils.getDeviceWidth(context) - (int)((0.5 * context.getResources().getDisplayMetrics().density) + 0.5)):
     //                in case of other lists, decrease 21dp (14 dp + 7dp) from half the screen width
                     (ViewUtils.getDeviceWidth(context) - (int)((21 * context.getResources().getDisplayMetrics().density) + 0.5)) / 2;
 
             layoutParams.width = width;
-            if (postHeight < postWidth) {
-                postHeight = width;
-                layoutParams.height = postHeight;
+//                resize posts in shimmerLayout
+            if (!isPostList) {
+                if (postHeight >= postWidth) {
+                    postHeight = width;
+                    layoutParams.height = postHeight;
+                } else {
+                    layoutParams.height = width * postHeight / postWidth;
+                }
             } else {
-                layoutParams.height = width * postHeight / postWidth;
+                layoutParams.height = layoutParams.width * 3 / 4;
             }
-            dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
+//                int normalHeight = width * postHeight / postWidth;                                  //original aspect ratio
+//                int maxHeight = (width * 6) / 5;                                                    //height according to 6:5 ratio
+//                layoutParams.height = normalHeight > maxHeight ? maxHeight : normalHeight;
+            if (dimensionSparseArray != null)
+                dimensionSparseArray.put(position, new Dimension(layoutParams.height, layoutParams.width));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -415,7 +419,7 @@ public class ViewUtils {
         }
     }
 
-    public static int getPixels(Context context, int dp) {
+    public static int getPixels(Context context, float dp) {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 

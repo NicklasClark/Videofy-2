@@ -38,9 +38,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.customViews.ProximaNovaBoldButton;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextInputEditText;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList;
@@ -197,6 +197,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
 
     public EditPostFragment() {
     }
+
     public static EditPostFragment newInstance(PostDetails postDetails) {
         EditPostFragment fragment = new EditPostFragment();
         Bundle args = new Bundle();

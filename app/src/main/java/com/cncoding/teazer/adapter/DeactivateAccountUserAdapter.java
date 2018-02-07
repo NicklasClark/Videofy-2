@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.model.user.DeactivateAccountRequest;
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentDeactivateAccount;

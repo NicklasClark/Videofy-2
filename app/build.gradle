@@ -19,6 +19,11 @@ ext {
     supportLibVersion = '27.0.2'
     fblibVersion = '4.29.0'
     firebaseVersion = '11.8.0'
+    toroVersion = '3.3.0'
+    archLifecycleVersion = "1.1.0"
+    archPersistenceVersion = "1.0.0"
+    daggerVersion = "2.13"
+    butterknifeVersion = "8.8.1"
 }
 
 android {
@@ -31,7 +36,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.cncoding.teazer"
         minSdkVersion 21
@@ -128,13 +133,6 @@ dependencies {
     implementation "com.android.support:palette-v7:$supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
     implementation "com.android.support:support-vector-drawable:$supportLibVersion"
-    implementation 'com.jakewharton:butterknife:8.5.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.squareup.okio:okio:1.13.0'
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
@@ -142,18 +140,24 @@ dependencies {
     implementation "com.google.android.gms:play-services-places:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
     implementation 'com.google.android:flexbox:0.3.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    implementation 'jp.wasabeef:glide-transformations:3.0.1'
     implementation 'com.hbb20:ccp:2.0.5'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'br.com.simplepass:loading-button-android:1.8.3'
     implementation 'jp.wasabeef:blurry:2.1.1'
-    //noinspection GradleDependency
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
     androidTestImplementation 'junit:junit:4.12'
     implementation 'com.github.jrvansuita:PickImage:2.1.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
     implementation 'pub.devrel:easypermissions:0.3.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation 'pub.devrel:easypermissions:0.3.1'
     implementation 'com.eightbitlab:blurview:1.3.3'
@@ -163,24 +167,42 @@ dependencies {
     implementation 'com.github.iknow4:android-utils-sdk:1.1.1'
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.android.support:multidex:1.0.2'
-    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
+
+    //    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
     implementation 'com.github.yangjie10930:EpMedia:v0.9.1'
     implementation 'io.branch.sdk.android:library:2.14.2'
-    implementation 'com.github.sharish:ShimmerRecyclerView:v1.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'jp.wasabeef:glide-transformations:2.0.2'
-    compile('com.expletus.mobiruck:mobiruck:2.1.28@aar') {
+    implementation('com.expletus.mobiruck:mobiruck:2.1.28@aar') {
         //exclude group: if needed
         exclude group: 'com.android.support', module: 'appcompat-v7'
         transitive = true
     }
     implementation 'com.android.installreferrer:installreferrer:1.0'
     compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
-        transitive = true;
+        transitive = true
     }
-    compile 'com.github.tcking:giraffecompressor:0.1.4'
+    implementation "im.ene.toro3:toro:${toroVersion}"
+    implementation "im.ene.toro3:toro-ext-exoplayer:${toroVersion}"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:${archLifecycleVersion}"
+    implementation "android.arch.lifecycle:runtime:${archLifecycleVersion}"
+    annotationProcessor "android.arch.lifecycle:compiler:${archLifecycleVersion}"
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:${archPersistenceVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${archPersistenceVersion}"
+
+    // Paging
+
+    //    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:${daggerVersion}"
+    implementation "com.google.dagger:dagger-android-support:${daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
 }
 
 configurations.all {

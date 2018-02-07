@@ -2,7 +2,9 @@ package com.cncoding.teazer.home.discover.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -14,13 +16,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.post.PostDetails;
 
@@ -105,13 +110,12 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
             if (holder.postDetails.getPostOwner().hasProfileMedia() && holder.postDetails.getPostOwner().getProfileMedia() != null) {
                 Glide.with(context)
                         .load(holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                         .into(holder.dp);
             } else {
                 Glide.with(context)
                         .load(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
+                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                         .into(holder.dp);
             }
         } catch (Exception e) {
@@ -120,17 +124,16 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
 
         Glide.with(context)
                 .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                .crossFade()
-                .skipMemoryCache(false)
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions().skipMemoryCache(false))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                   DataSource dataSource, boolean isFirstResource) {
                         prepareLayout(holder.layout, holder.shimmerLayout, holder.topLayout, holder.bottomLayout,
                                 holder.vignetteLayout, resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
                         return false;
@@ -174,9 +177,9 @@ public class SubDiscoverAdapter extends RecyclerView.Adapter<SubDiscoverAdapter.
         @BindView(R.id.vignette_layout) FrameLayout vignetteLayout;
         @BindView(R.id.top_layout) RelativeLayout topLayout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
+        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
         @BindView(R.id.category) ProximaNovaRegularTextView category;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.thumbnail) ImageView postThumbnail;

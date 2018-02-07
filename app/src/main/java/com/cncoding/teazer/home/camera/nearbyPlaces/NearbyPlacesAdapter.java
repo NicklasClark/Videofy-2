@@ -15,7 +15,7 @@ import android.widget.Filterable;
 import android.widget.RelativeLayout;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -238,10 +238,12 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
                             mListener.onNearbyPlacesAdapterInteraction(new SelectedPlace(placeName, latitude, longitude));
 //                            else
 //                                Toast.makeText(context, "mListener is null!\nImplement NearbyPlacesInteractionListener",
-//                                        Toast.LENGTH_SHORT).show();
+//
+//                                  Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
+
             case TYPE_AUTOCOMPLETE:
                 holder.placeName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location_padded_left,
                         0, 0, 0);
@@ -286,7 +288,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.nearby_place_item_layout) RelativeLayout rootLayout;
 //        @BindView(R.id.location_icon) AppCompatImageView locationIcon;
-        @BindView(R.id.nearby_place_name) ProximaNovaSemiboldTextView placeName;
+        @BindView(R.id.nearby_place_name) ProximaNovaSemiBoldTextView placeName;
 //        @BindView(R.id.nearby_place_address) ProximaNovaRegularTextView placeAddress;
 
         ViewHolder(View view) {

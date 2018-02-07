@@ -10,10 +10,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
-import com.cncoding.teazer.customViews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.discover.DiscoverFragment.OnDiscoverInteractionListener;
 import com.cncoding.teazer.model.post.PostDetails;
 
@@ -94,8 +95,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
         /*Setting thumbnail*/
                 Glide.with(context)
                         .load(holder.postDetails.getMedias().get(0).getThumbUrl())
-                        .placeholder(R.drawable.bg_placeholder)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.bg_placeholder))
                         .into(holder.thumbnail);
 
         /*Setting DP*/
@@ -104,8 +104,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                                 holder.postDetails.getPostOwner().getProfileMedia() != null) ?
                                 R.drawable.ic_user_male_dp_small :
                                 holder.postDetails.getPostOwner().getProfileMedia().getThumbUrl())
-                        .placeholder(R.drawable.ic_user_male_dp_small)
-                        .crossFade()
+                        .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                         .into(holder.dp);
 
         /*Setting reaction thumbnails*/
@@ -115,8 +114,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                             .load(holder.postDetails.getReactedUsers().get(0).getProfileMedia() == null ?
                                     R.drawable.ic_user_male_dp_small :
                                     holder.postDetails.getReactedUsers().get(0).getProfileMedia().getThumbUrl())
-                            .placeholder(R.drawable.ic_user_male_dp_small)
-                            .crossFade()
+                            .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                             .into(holder.reactionImage1);
 
                     if (holder.postDetails.getReactedUsers().size() > 1) {
@@ -125,8 +123,7 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
                                 .load(holder.postDetails.getReactedUsers().get(1).getProfileMedia() == null ?
                                         R.drawable.ic_user_male_dp_small :
                                         holder.postDetails.getReactedUsers().get(1).getProfileMedia().getThumbUrl())
-                                .placeholder(R.drawable.ic_user_male_dp_small)
-                                .crossFade()
+                                .apply(new RequestOptions().placeholder(R.drawable.ic_user_male_dp_small))
                                 .into(holder.reactionImage2);
                     } else {
                         holder.reactionImage2.setVisibility(View.VISIBLE);
@@ -184,8 +181,8 @@ public class MyInterestsListItemAdapter extends RecyclerView.Adapter<MyInterests
 
         @BindView(R.id.root_layout) RelativeLayout layout;
         @BindView(R.id.bottom_layout) RelativeLayout bottomLayout;
-        @BindView(R.id.title) ProximaNovaSemiboldTextView title;
-        @BindView(R.id.name) ProximaNovaSemiboldTextView name;
+        @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
+        @BindView(R.id.name) ProximaNovaSemiBoldTextView name;
         @BindView(R.id.likes) ProximaNovaRegularTextView likes;
         @BindView(R.id.views) ProximaNovaRegularTextView views;
         @BindView(R.id.reaction_count) ProximaNovaRegularTextView reactions;

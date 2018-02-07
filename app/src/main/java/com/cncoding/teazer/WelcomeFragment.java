@@ -17,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.cncoding.teazer.customViews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -63,7 +63,8 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @BindView(R.id.fb_login_btn) LoginButton fbLoginButton;
     @BindView(R.id.signup_with_google) ProximaNovaSemiboldButton signupWithGoogleBtn;
     @BindView(R.id.signup_page_btn) ProximaNovaSemiboldButton signupWithEmailBtn;
-    @BindView(R.id.marquee_text) ProximaNovaBoldTextView marqueeText;
+    @BindView(R.id.marquee_text)
+    ProximaNovaBoldTextView marqueeText;
 
     private boolean isConnected;
 

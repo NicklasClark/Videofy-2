@@ -53,7 +53,7 @@ public class GalleryUtil extends AppCompatActivity implements EasyPermissions.Pe
             startActivityForResult(
                     Intent.createChooser(
                             new Intent(Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
                             "Select profile pic"), RESULT_SELECT_IMAGE);
         } else {
             // Do not have permissions, request them now
