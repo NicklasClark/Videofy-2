@@ -85,8 +85,6 @@ import com.cncoding.teazer.utilities.NavigationController.TransactionListener;
 import com.cncoding.teazer.utilities.NavigationTransactionOptions;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
-import com.expletus.mobiruck.MobiruckEvent;
-import com.expletus.mobiruck.MobiruckSdk;
 import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
@@ -224,18 +222,18 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-//        Log.d("FCM", SharedPrefs.getFcmToken(this));
+        Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()
 //                .into(loader);
 
         //logging mobiruck event
-        MobiruckEvent mobiruckEvent = new MobiruckEvent();
-
-        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
-
-        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
+//        MobiruckEvent mobiruckEvent = new MobiruckEvent();
+//
+//        mobiruckEvent.setEvent("logged_in");  // event name should match as added in the dashboard.
+//
+//        MobiruckSdk.getInstance().logEvent(mobiruckEvent);
 
         Log.d("NOTIFY", "onCreate called");
 
@@ -527,7 +525,12 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void notificationAction(int notification_type, int source_id) {
-        if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
+        if(notification_type == 11)
+        {
+            //do nothing as of now
+            Log.d("Notification", String.valueOf(notification_type));
+        }
+        else if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         } else {
             ApiCallingService.Posts.getPostDetails(source_id, BaseBottomBarActivity.this)

@@ -1,6 +1,5 @@
 package com.cncoding.teazer.firebase;
 
-import com.cncoding.teazer.utilities.AuthUtils;
 import com.cncoding.teazer.utilities.SharedPrefs;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -16,7 +15,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
 
         //Getting registration token
-        if (!AuthUtils.isUserLoggedIn(getApplicationContext()))
+//        if (!AuthUtils.isUserLoggedIn(getApplicationContext()))
             SharedPrefs.saveFcmToken(getApplicationContext(), FirebaseInstanceId.getInstance().getToken());
     }
 

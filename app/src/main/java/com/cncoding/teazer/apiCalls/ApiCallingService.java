@@ -728,7 +728,7 @@ public class ApiCallingService {
         public static Call<ResultObject> resetUnreadNotification(Context context, int type) {
             return getUserService(context).resetUnreadNotification(type);
         }
-        public static Call<ResultObject> removeProfilepic(Context context) {
+        public static Call<ResultObject> removeProfilePicture(Context context) {
             return getUserService(context).removeProfilePic();
         }
 
@@ -792,8 +792,8 @@ public class ApiCallingService {
         })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-                .build();
-//                .addInterceptor(logging).build();
+//                .build();
+                .addInterceptor(logging).build();
     }
 
     private static OkHttpClient getOkHttpClient() {

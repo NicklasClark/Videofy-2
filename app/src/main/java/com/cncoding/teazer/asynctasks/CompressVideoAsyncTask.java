@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.github.tcking.giraffecompressor.GiraffeCompressor;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +30,6 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... sourceVideoPath) {
-        GiraffeCompressor.init(context);
 
         File sourceFile = new File(sourceVideoPath[0]);
 

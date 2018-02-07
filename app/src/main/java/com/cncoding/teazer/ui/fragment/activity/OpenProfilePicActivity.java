@@ -106,7 +106,7 @@ public class OpenProfilePicActivity extends AppCompatActivity {
     {
 
 
-        ApiCallingService.User.removeProfilepic(getApplicationContext()).enqueue(new Callback<ResultObject>() {
+        ApiCallingService.User.removeProfilePicture(getApplicationContext()).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
                 if (response.code() == 200) {
