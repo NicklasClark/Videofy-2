@@ -5,8 +5,8 @@ import android.widget.Toast;
 
 import com.cncoding.teazer.BaseBottomBarActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.home.post.FragmentPostDetails;
-import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;

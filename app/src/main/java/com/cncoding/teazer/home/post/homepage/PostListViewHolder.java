@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.homepage;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;

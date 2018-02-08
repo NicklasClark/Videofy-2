@@ -32,8 +32,8 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.home.post.TagListAdapter;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
@@ -83,6 +83,8 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class FragmentReactionplayer extends BaseFragment {
 
+    public static final int OPENED_FROM_OTHER_SOURCE = 0;
+    public static final int OPENED_FROM_PROFILE = 1;
     @BindView(R.id.video_view)
     SimpleExoPlayerView playerView;
     SimpleExoPlayer player;
@@ -201,11 +203,8 @@ public class FragmentReactionplayer extends BaseFragment {
 
        // playSource = getIntent().getIntExtra("SOURCE", 0);
 
-
         switch (playSource) {
-
-
-            case 0: {
+            case OPENED_FROM_OTHER_SOURCE: {
                 try {
 
                     videoURL = postDetails.getMediaDetail().getMediaUrl();
@@ -215,7 +214,7 @@ public class FragmentReactionplayer extends BaseFragment {
                         isLiked = !postDetails.canLike();
                         likesCount = postDetails.getLikes();
                         viewsCount = postDetails.getViews();
-                        reactionTitle = postDetails.getReact_title();
+                        reactionTitle = postDetails.getReactTitle();
 
 
                         Glide.with(this)
@@ -270,7 +269,7 @@ public class FragmentReactionplayer extends BaseFragment {
                 break;
 
             }
-            case 1: {
+            case OPENED_FROM_PROFILE: {
                 try {
                     videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
 
@@ -616,7 +615,7 @@ public class FragmentReactionplayer extends BaseFragment {
             case POST_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
-                        .setTitle(postDetails.getReact_title())
+                        .setTitle(postDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
                         .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
 
@@ -633,7 +632,7 @@ public class FragmentReactionplayer extends BaseFragment {
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
                             //fabric event
-                            logVideoShareEvent("Branch", postDetails.getReact_title(), "Reaction", String.valueOf(postDetails.getReactId()));
+                            logVideoShareEvent("Branch", postDetails.getReactTitle(), "Reaction", String.valueOf(postDetails.getReactId()));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

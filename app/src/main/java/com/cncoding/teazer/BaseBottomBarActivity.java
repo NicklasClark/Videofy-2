@@ -59,12 +59,12 @@ import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscover
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
-import com.cncoding.teazer.home.post.FragmentLikedUser;
-import com.cncoding.teazer.home.post.FragmentPostDetails;
-import com.cncoding.teazer.home.post.FragmentPostDetails.onPostOptionsClickListener;
-import com.cncoding.teazer.home.post.PostsListAdapter.OnPostAdapterInteractionListener;
-import com.cncoding.teazer.home.post.PostsListFragment;
-import com.cncoding.teazer.home.post.TagListAdapter;
+import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
+import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
+import com.cncoding.teazer.home.post.homepage.PostsListAdapter.OnPostAdapterInteractionListener;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
@@ -139,6 +139,7 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadService;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
@@ -571,7 +572,7 @@ public class BaseBottomBarActivity extends BaseActivity
                                 if (response.code() == 200) {
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
-                                        pushFragment(FragmentReactionplayer.newInstance(0, postReactDetail,null));
+                                        pushFragment(FragmentReactionplayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null));
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                     }

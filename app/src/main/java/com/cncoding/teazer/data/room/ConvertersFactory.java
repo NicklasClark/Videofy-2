@@ -5,8 +5,8 @@ import android.arch.persistence.room.TypeConverter;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.TaggedUser;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.ReactedUser;
-import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -50,13 +50,13 @@ public class ConvertersFactory {
     }
 
     @TypeConverter
-    public static ArrayList<ReactionDetails> reactionsListFromString(String value) {
-        return new Gson().fromJson(value, new TypeToken<ArrayList<ReactionDetails>>() {}.getType());
+    public static ArrayList<PostReaction> reactionsListFromString(String value) {
+        return new Gson().fromJson(value, new TypeToken<ArrayList<PostReaction>>() {}.getType());
     }
 
     @TypeConverter
-    public static String stringFromReactionsList(ArrayList<ReactionDetails> list) {
-        return new Gson().toJson(list, new TypeToken<ArrayList<ReactionDetails>>() {}.getType());
+    public static String stringFromReactionsList(ArrayList<PostReaction> list) {
+        return new Gson().toJson(list, new TypeToken<ArrayList<PostReaction>>() {}.getType());
     }
 
     @TypeConverter

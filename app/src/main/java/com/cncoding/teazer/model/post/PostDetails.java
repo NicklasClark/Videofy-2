@@ -12,7 +12,6 @@ import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.base.Medias;
 import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
-import com.cncoding.teazer.model.react.ReactionDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -44,7 +43,7 @@ public class PostDetails implements Parcelable {
     @SerializedName("created_at") @Expose private String createdAt;                  //use DateTime.Now.ToString("yyyy-MM-ddThh:mm:sszzz");
     @Embedded(prefix = "checkIn_") @SerializedName("check_in") @Expose public CheckIn checkIn;
     @SerializedName("medias") @Expose public ArrayList<Medias> medias;
-    @SerializedName("reactions") @Expose private ArrayList<ReactionDetails> reactions;
+    @SerializedName("reactions") @Expose private ArrayList<PostReaction> reactions;
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
     @SerializedName("categories") @Expose private ArrayList<Category> categories;
@@ -72,7 +71,7 @@ public class PostDetails implements Parcelable {
         createdAt = in.readString();
         checkIn = in.readParcelable(CheckIn.class.getClassLoader());
         medias = in.createTypedArrayList(Medias.CREATOR);
-        reactions = in.createTypedArrayList(ReactionDetails.CREATOR);
+        reactions = in.createTypedArrayList(PostReaction.CREATOR);
         taggedUsers = in.createTypedArrayList(TaggedUser.CREATOR);
         reactedUsers = in.createTypedArrayList(ReactedUser.CREATOR);
         categories = in.createTypedArrayList(Category.CREATOR);
@@ -81,7 +80,7 @@ public class PostDetails implements Parcelable {
     public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
                        Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete, Boolean isHided,
                        Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn, ArrayList<Medias> medias,
-                       ArrayList<ReactionDetails> reactions, ArrayList<TaggedUser> taggedUsers, ArrayList<ReactedUser> reactedUsers,
+                       ArrayList<PostReaction> reactions, ArrayList<TaggedUser> taggedUsers, ArrayList<ReactedUser> reactedUsers,
                        ArrayList<Category> categories) {
         this.postId = postId;
         this.postedBy = postedBy;
@@ -250,7 +249,7 @@ public class PostDetails implements Parcelable {
         return categories;
     }
 
-    public ArrayList<ReactionDetails> getReactions() {
+    public ArrayList<PostReaction> getReactions() {
         return reactions;
     }
 
@@ -318,7 +317,7 @@ public class PostDetails implements Parcelable {
         this.medias = medias;
     }
 
-    public void setReactions(ArrayList<ReactionDetails> reactions) {
+    public void setReactions(ArrayList<PostReaction> reactions) {
         this.reactions = reactions;
     }
 

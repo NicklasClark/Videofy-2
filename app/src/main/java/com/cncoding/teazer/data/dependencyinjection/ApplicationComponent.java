@@ -20,8 +20,8 @@ package com.cncoding.teazer.data.dependencyinjection;
 
 import android.app.Application;
 
-import com.cncoding.teazer.home.post.FragmentPostDetails;
-import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 
 import javax.inject.Singleton;
 

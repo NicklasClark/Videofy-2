@@ -22,7 +22,7 @@ import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
-import com.cncoding.teazer.home.post.PostsListFragment;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentProfileMyCreations;
@@ -175,7 +175,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     isLiked = !postDetails.canLike();
                     likesCount = postDetails.getLikes();
                     viewsCount = postDetails.getViews();
-                    reactionTitle = decodeUnicodeString(postDetails.getReact_title());
+                    reactionTitle = decodeUnicodeString(postDetails.getReactTitle());
 
                     Glide.with(this)
                             .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
@@ -475,7 +475,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
             case POST_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
                         .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
-                        .setTitle(postDetails.getReact_title())
+                        .setTitle(postDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
                         .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
 
@@ -492,7 +492,7 @@ public class ReactionPlayerActivity extends AppCompatActivity {
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
                             //fabric event
-                            logVideoShareEvent("Branch", postDetails.getReact_title(), "Reaction", String.valueOf(postDetails.getReactId()));
+                            logVideoShareEvent("Branch", postDetails.getReactTitle(), "Reaction", String.valueOf(postDetails.getReactId()));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);
