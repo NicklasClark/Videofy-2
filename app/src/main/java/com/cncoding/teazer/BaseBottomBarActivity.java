@@ -226,7 +226,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-       Log.d("FCM", SharedPrefs.getFcmToken(this));
+//       Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()
@@ -295,9 +295,12 @@ public class BaseBottomBarActivity extends BaseActivity
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
-                if (tab.getPosition() == TAB1 && currentFragment instanceof PostsListFragment) {
-                    ((PostsListFragment) currentFragment).scrollToTop();
-                    ((PostsListFragment) currentFragment).getHomePagePosts(1);
+                if (tab.getPosition() == TAB1 && navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                    PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
+                    if (!fragment.isListAtTop()) {
+                        fragment.scrollToTop();
+                        fragment.refreshPosts();
+                    }
                 }
             }
         });
@@ -316,7 +319,6 @@ public class BaseBottomBarActivity extends BaseActivity
         BReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 int postId = Integer.parseInt(intent.getStringExtra("PostID"));
                 String postTitle = intent.getStringExtra("PostTitle");
                 String postUrl = intent.getStringExtra("PostURL");
@@ -352,16 +354,12 @@ public class BaseBottomBarActivity extends BaseActivity
                                 shareTwitter(url);
                                 UploadFragment.checkFacebookButtonPressed = false;
                             }
-
                         }
                     }
                 });
-
-
             }
 
         };
-
 
         if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();

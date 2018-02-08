@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter.ReactionPlayerListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
+import com.cncoding.teazer.home.BaseRecyclerViewAdapter;
+import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.PostReaction;
 
 import java.util.ArrayList;
@@ -35,15 +36,12 @@ import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OP
  * Created by Prem$ on 1/26/2018.
  */
 
-public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHolder> {
+public class ReactionAdapter extends BaseRecyclerViewAdapter {
 
     private Context context;
     private ArrayList<PostReaction> reactions;
     private ReactionPlayerListener listener;
 
-    /**
-     * @param reactions first String in pair contains the thumbUrl, second String contains the title.
-     */
     ReactionAdapter(Context context, ArrayList<PostReaction> reactions) {
         this.context = context;
         this.reactions = reactions;
@@ -57,52 +55,20 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            holder.layout.startShimmerAnimation();
-            if (position < reactions.size()) {
-                holder.postReaction = reactions.get(position);
-
-                if (holder.postReaction.getMediaDetail() != null) {
-                    holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
-                    Glide.with(context)
-                            .load(holder.postReaction.getMediaDetail().getThumbUrl())
-                            .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                            Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                               DataSource dataSource, boolean isFirstResource) {
-                                    holder.title.setBackgroundColor(Color.TRANSPARENT);
-                                    holder.title.setText(holder.postReaction.getReactTitle());
-                                    holder.thumb.setImageDrawable(resource);
-                                    return false;
-                                }
-                            })
-                            .into(holder.thumb);
-                }
-            } else {
-                holder.thumb.setImageResource(R.drawable.bg_shimmer_light);
-                holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
-                holder.title.setText(null);
-            }
-            holder.layout.stopShimmerAnimation();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
     }
 
     @Override
     public int getItemCount() {
-        return reactions.size();
+        return reactions.size() < 6 ? 6 : reactions.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void release() {
+    }
+
+    class ViewHolder extends BaseRecyclerViewHolder {
 
         @BindView(R.id.root_layout) ShimmerLinearLayout layout;
         @BindView(R.id.thumb) ImageView thumb;
@@ -112,6 +78,47 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void bind(int position) {
+            try {
+                layout.startShimmerAnimation();
+                if (position < reactions.size()) {
+                    postReaction = reactions.get(position);
+
+                    if (postReaction.getMediaDetail() != null) {
+                        title.setBackgroundResource(R.drawable.bg_shimmer_light);
+                        Glide.with(context)
+                                .load(postReaction.getMediaDetail().getThumbUrl())
+                                .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                                Target<Drawable> target, boolean isFirstResource) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                                   DataSource dataSource, boolean isFirstResource) {
+                                        title.setBackgroundColor(Color.TRANSPARENT);
+                                        title.setText(postReaction.getReactTitle());
+                                        thumb.setImageDrawable(resource);
+                                        return false;
+                                    }
+                                })
+                                .into(thumb);
+                    }
+                } else {
+                    thumb.setImageResource(R.drawable.bg_shimmer_extra_light);
+                    title.setBackgroundResource(R.drawable.bg_shimmer_extra_light);
+                    title.setText(null);
+                }
+                layout.stopShimmerAnimation();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @OnClick(R.id.root_layout) public void onReactionClick() {

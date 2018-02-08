@@ -40,11 +40,7 @@ public class PostDetailsViewModel extends ViewModel {
                         @Override
                         public void onChanged(@Nullable PostList postList) {
                             if (postList != null) {
-                                setValue(postList);
-//                                if (page == 1)
-//                                    setValue(postList);
-//                                else
-//                                    addValues(postList);
+                                livePostDetailsList.setValue(postList);
                             }
                         }
                     }
@@ -54,16 +50,9 @@ public class PostDetailsViewModel extends ViewModel {
         }
     }
 
-    private void setValue(PostList postList) {
-        livePostDetailsList.setValue(postList);
-    }
-
-    private void addValues(PostList postList) {
-        PostList postList1 = livePostDetailsList.getValue();
-        if (postList1 != null && !postList.getPosts().isEmpty()) {
-            postList1.getPosts().addAll(postList.getPosts());
-
-        } else
-            livePostDetailsList.setValue(postList);
+    public void clear() {
+        if (livePostDetailsList.getValue() != null) {
+            livePostDetailsList.getValue().getPosts().clear();
+        }
     }
 }

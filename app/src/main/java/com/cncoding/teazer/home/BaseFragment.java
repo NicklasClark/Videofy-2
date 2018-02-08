@@ -17,24 +17,19 @@ import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 public class BaseFragment extends Fragment {
 
     protected String previousTitle;
-    public FragmentNavigation fragmentNavigation;
+    public FragmentNavigation navigation;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected boolean is_next_page = false;
+    private BaseRecyclerViewAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-//    public void updateToolbar(boolean showHomeAsUp) {
-//        ActionBar actionBar = ((BaseBottomBarActivity) getActivity()).getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(showHomeAsUp);
-//            actionBar.setDisplayShowHomeEnabled(showHomeAsUp);
-//            if (showHomeAsUp)
-//                actionBar.setHomeAsUpIndicator(R.drawable.ic_previous);
-//        }
-//    }
+    protected void bindRecyclerViewAdapter(BaseRecyclerViewAdapter adapter) {
+        this.adapter = adapter;
+    }
 
     @NonNull
     public BaseBottomBarActivity getParentActivity() {
@@ -52,7 +47,7 @@ public class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof FragmentNavigation) {
-            fragmentNavigation = (FragmentNavigation) context;
+            navigation = (FragmentNavigation) context;
         }
     }
 
@@ -63,6 +58,7 @@ public class BaseFragment extends Fragment {
             scrollListener.resetState();
             scrollListener = null;
         }
+        if (adapter != null) adapter.release();
     }
 
     public interface FragmentNavigation {

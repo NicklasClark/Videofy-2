@@ -56,4 +56,8 @@ public class PostList {
     public void setError(Throwable error) {
         this.error = error;
     }
+
+    public void clear() {
+        posts.clear();
+    }
 }

@@ -15,8 +15,11 @@
         android:id="@+id/shimmer_layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="63dp"
-        android:padding="12dp"
+        android:minHeight="54dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:orientation="horizontal"
         android:background="@drawable/bg_card_no_margin_white">
 
@@ -45,15 +48,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="112dp"
-                android:minHeight="13dp"
                 android:textColor="@color/colorPrimary_text3"
                 android:textSize="13sp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="#dddddd"
+                android:layout_marginTop="3dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/bg_shimmer_light"/>
 
@@ -62,14 +63,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center_vertical|end">
 
             <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="18dp"
                 android:minWidth="52dp"
                 android:textColor="@color/white"
                 android:paddingStart="11dp"
@@ -92,7 +93,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:textSize="@dimen/text_size_11_sp"/>
 
         </LinearLayout>
@@ -101,17 +102,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="200dp"
+        android:layout_height="250dp"
         android:animateLayoutChanges="true"
         android:background="@color/colorDisabled">
 
         <com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="150dp"
-            app:resize_mode="fill"
+            android:layout_height="300dp"
+            app:resize_mode="fit"
             app:surface_type="texture_view"
             app:use_controller="false"/>
 
@@ -129,9 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/bg_vignette_bottom"
+            android:background="@drawable/bg_vignette_bottom_left"
             android:gravity="bottom"
-            android:paddingTop="20dp"
+            android:paddingTop="40dp"
             app:repeat_mode_="restart">
 
             <com.cncoding.teazer.customViews.CircularAppCompatImageView

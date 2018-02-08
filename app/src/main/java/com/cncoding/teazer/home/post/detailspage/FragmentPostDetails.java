@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -117,6 +116,7 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
+import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_FILL;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
@@ -808,8 +808,7 @@ public class FragmentPostDetails extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.menu)
-    public void showMenu(View anchor) {
+    @OnClick(R.id.menu) public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
@@ -879,11 +878,10 @@ public class FragmentPostDetails extends BaseFragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerView.setLayoutParams(params);
-        playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        playerView.setResizeMode(RESIZE_MODE_FILL);
     }
 
-    @OnClick(R.id.share)
-    public void onViewClicked() {
+    @OnClick(R.id.share) public void onViewClicked() {
         loader.setVisibility(VISIBLE);
 
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
@@ -917,6 +915,7 @@ public class FragmentPostDetails extends BaseFragment {
             }
         });
     }
+
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {

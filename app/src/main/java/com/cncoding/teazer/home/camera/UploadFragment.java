@@ -302,9 +302,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 //            disableView(uploadBtn, true);
 //        }
 
-        Glide.with(context)
-                .load(Uri.fromFile(new File(videoPath)))
-                .into(thumbnailView);
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                Glide.with(context)
+                        .load(Uri.fromFile(new File(videoPath)))
+                        .into(thumbnailView);
+            }
+        }, 1000);
 
         new SetVideoDuration(this).execute();
 
