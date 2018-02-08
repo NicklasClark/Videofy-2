@@ -226,20 +226,16 @@ public class OthersProfileFragment extends BaseFragment {
                 }
                 if (_btnfollow.getText().equals("Follow")) {
 
-                    if(requestRecieved && isfollower )
+                    if(requestRecieved)
                     {
-                        followUser(followerfollowingid, context);
-
-                    }
-                    else if(requestRecieved){
                         acceptUser(requestId,false);
-                    }
-                    else if(!requestRecieved)
-                    {
 
+                    }
+                    else {
                         followUser(followerfollowingid, context);
 
                     }
+
                 }
 
                 if (_btnfollow.getText().equals(context.getString(R.string.following))) {

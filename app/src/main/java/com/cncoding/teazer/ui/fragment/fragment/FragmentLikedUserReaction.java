@@ -52,8 +52,8 @@ public class FragmentLikedUserReaction extends BaseFragment {
     private EndlessRecyclerViewScrollListener scrollListener;
     boolean next;
 
-    public static FragmentLikedUser newInstance(int reactId) {
-        FragmentLikedUser fragment = new FragmentLikedUser();
+    public static FragmentLikedUserReaction newInstance(int reactId) {
+        FragmentLikedUserReaction fragment = new FragmentLikedUserReaction();
         Bundle args = new Bundle();
         args.putString("ReactId", String.valueOf(reactId));
         fragment.setArguments(args);

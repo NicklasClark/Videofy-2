@@ -566,7 +566,6 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         else
         {
-
             if(post_id!=0)
             {
                 ApiCallingService.React.getReactionDetail2(source_id, getApplicationContext())

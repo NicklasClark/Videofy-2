@@ -24,7 +24,6 @@ import java.util.ArrayList;
  *
  * Created by Prem $ on 12/14/2017.
  */
-
 @Entity
 public class PostDetails implements Parcelable {
 

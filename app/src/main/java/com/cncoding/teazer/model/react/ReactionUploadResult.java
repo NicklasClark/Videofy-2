@@ -3,6 +3,8 @@ package com.cncoding.teazer.model.react;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cncoding.teazer.model.post.PostReaction;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -12,9 +14,9 @@ public class ReactionUploadResult implements Parcelable {
     private boolean status;
     private int react_id;
     private String message;
-    private ReactionDetails post_react_detail;
+    private PostReaction post_react_detail;
 
-    public ReactionUploadResult(boolean status, int react_id, String message, ReactionDetails post_react_detail) {
+    public ReactionUploadResult(boolean status, int react_id, String message, PostReaction post_react_detail) {
         this.status = status;
         this.react_id = react_id;
         this.message = message;
@@ -25,7 +27,7 @@ public class ReactionUploadResult implements Parcelable {
         status = in.readByte() != 0;
         react_id = in.readInt();
         message = in.readString();
-        post_react_detail = in.readParcelable(ReactionDetails.class.getClassLoader());
+        post_react_detail = in.readParcelable(PostReaction.class.getClassLoader());
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ReactionUploadResult implements Parcelable {
         return message;
     }
 
-    public ReactionDetails getPostReactDetail() {
+    public PostReaction getPostReactDetail() {
         return post_react_detail;
     }
 }

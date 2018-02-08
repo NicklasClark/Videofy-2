@@ -1,5 +1,7 @@
 package com.cncoding.teazer.model.react;
 
+import com.cncoding.teazer.model.post.PostReaction;
+
 import java.util.ArrayList;
 
 /**
@@ -9,9 +11,9 @@ import java.util.ArrayList;
 
 public class HiddenReactionsList {
     private boolean next_page;
-    private ArrayList<ReactionDetails> reactions;
+    private ArrayList<PostReaction> reactions;
 
-    public HiddenReactionsList(boolean next_page, ArrayList<ReactionDetails> reactions) {
+    public HiddenReactionsList(boolean next_page, ArrayList<PostReaction> reactions) {
         this.next_page = next_page;
         this.reactions = reactions;
     }
@@ -20,7 +22,7 @@ public class HiddenReactionsList {
         return next_page;
     }
 
-    public ArrayList<ReactionDetails> getReactions() {
+    public ArrayList<PostReaction> getReactions() {
         return reactions;
     }
 }

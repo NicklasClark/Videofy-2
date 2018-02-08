@@ -564,6 +564,7 @@ public class ApiCallingService {
 
         }
 
+
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
