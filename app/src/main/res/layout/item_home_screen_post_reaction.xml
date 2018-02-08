@@ -45,4 +45,5 @@
             android:background="@drawable/bg_shimmer"/>
 
     </com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout>
+
 </FrameLayout>

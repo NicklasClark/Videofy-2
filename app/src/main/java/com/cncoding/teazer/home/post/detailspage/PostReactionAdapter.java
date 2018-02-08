@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.detailspage;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.adjustViewSize;
@@ -46,7 +47,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
     private SparseArray<Dimension> dimensionSparseArray;
     private ArrayList<PostReaction> postReactions;
     private Context context;
-    ProfileMyReactionAdapter.ReactionPlayerListener reactionPlayerListener;
+    private ProfileMyReactionAdapter.ReactionPlayerListener reactionPlayerListener;
 
     PostReactionAdapter(ArrayList<PostReaction> postReactions, Context context) {
         this.postReactions = postReactions;
@@ -101,7 +102,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 })
                 .into(holder.profilePic);
 
-        String title = postReaction.getReact_title();
+        String title = postReaction.getReactTitle();
         try {
             title = URLDecoder.decode(title, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -154,7 +155,7 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 switch (view.getId()) {
                     case R.id.root_layout:
                     //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-                        reactionPlayerListener.reactionPlayer(0,postReaction,null);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null);
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:
                         //region TODO

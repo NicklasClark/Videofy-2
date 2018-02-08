@@ -52,6 +52,7 @@ import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -206,7 +207,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
 
-                                                            reactionPlayerListener.reactionPlayer(0, postReactDetail, null);
+                                                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null);
                                                         } else {
                                                             Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                                         }

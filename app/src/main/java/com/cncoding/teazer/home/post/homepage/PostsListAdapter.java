@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.homepage;
 
 import android.content.Context;
 import android.graphics.Bitmap;

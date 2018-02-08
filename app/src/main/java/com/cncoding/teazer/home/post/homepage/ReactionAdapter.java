@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.homepage;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,14 +17,18 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.adapter.ProfileMyReactionAdapter.ReactionPlayerListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
-import com.cncoding.teazer.model.react.ReactionDetails;
+import com.cncoding.teazer.model.post.PostReaction;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  *
@@ -34,14 +38,16 @@ import butterknife.ButterKnife;
 public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<ReactionDetails> reactions;
+    private ArrayList<PostReaction> reactions;
+    private ReactionPlayerListener listener;
 
     /**
      * @param reactions first String in pair contains the thumbUrl, second String contains the title.
      */
-    ReactionAdapter(Context context, ArrayList<ReactionDetails> reactions) {
+    ReactionAdapter(Context context, ArrayList<PostReaction> reactions) {
         this.context = context;
         this.reactions = reactions;
+        listener = (ReactionPlayerListener) context;
     }
 
     @Override
@@ -55,29 +61,31 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
         try {
             holder.layout.startShimmerAnimation();
             if (position < reactions.size()) {
-                holder.thumbUrl = reactions.get(position).getMediaDetail().getThumbUrl();
-                holder.titleText = reactions.get(position).getReactTitle();
+                holder.postReaction = reactions.get(position);
 
-                holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
-                Glide.with(context)
-                        .load(holder.thumbUrl)
-                        .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
+                if (holder.postReaction.getMediaDetail() != null) {
+                    holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
+                    Glide.with(context)
+                            .load(holder.postReaction.getMediaDetail().getThumbUrl())
+                            .apply(new RequestOptions().placeholder(R.drawable.bg_shimmer_light))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                            Target<Drawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                           DataSource dataSource, boolean isFirstResource) {
-                                holder.title.setBackgroundColor(Color.TRANSPARENT);
-                                holder.title.setText(holder.titleText);
-                                holder.thumb.setImageDrawable(resource);
-                                return false;
-                            }
-                        })
-                        .into(holder.thumb);
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                               DataSource dataSource, boolean isFirstResource) {
+                                    holder.title.setBackgroundColor(Color.TRANSPARENT);
+                                    holder.title.setText(holder.postReaction.getReactTitle());
+                                    holder.thumb.setImageDrawable(resource);
+                                    return false;
+                                }
+                            })
+                            .into(holder.thumb);
+                }
             } else {
                 holder.thumb.setImageResource(R.drawable.bg_shimmer_light);
                 holder.title.setBackgroundResource(R.drawable.bg_shimmer_light);
@@ -91,7 +99,7 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return reactions.size() < 6 ? 6 : reactions.size();
+        return reactions.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,12 +107,17 @@ public class ReactionAdapter extends RecyclerView.Adapter<ReactionAdapter.ViewHo
         @BindView(R.id.root_layout) ShimmerLinearLayout layout;
         @BindView(R.id.thumb) ImageView thumb;
         @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
-        String thumbUrl;
-        String titleText;
+        PostReaction postReaction;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.root_layout) public void onReactionClick() {
+            if (postReaction != null && listener != null) {
+                listener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null);
+            }
         }
     }
 }
