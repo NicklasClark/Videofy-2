@@ -387,7 +387,7 @@ public class ViewUtils {
             layoutParams.width = width;
 //                resize posts in shimmerLayout
             if (!isPostList) {
-                if (postHeight >= postWidth) {
+                if (postHeight <= postWidth) {
                     postHeight = width;
                     layoutParams.height = postHeight;
                 } else {

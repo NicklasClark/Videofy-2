@@ -1,28 +1,35 @@
 package com.cncoding.teazer.model.base;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * Created by Prem $ on 12/14/2017.
  */
 
-public class CheckIn implements Parcelable {
-    private int checkin_id;
-    private double latitude;
-    private double longitude;
-    private String location;
+@Entity(tableName = "CheckIn")
+public class CheckIn extends ViewModel implements Parcelable {
 
-    public CheckIn(int checkin_id, int latitude, int longitude, String location) {
-        this.checkin_id = checkin_id;
+    @SerializedName("checkin_id") @Expose private int checkinId;
+    @SerializedName("latitude") @Expose private double latitude;
+    @SerializedName("longitude") @Expose private double longitude;
+    @SerializedName("location") @Expose private String location;
+
+    public CheckIn(int checkinId, double latitude, double longitude, String location) {
+        this.checkinId = checkinId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.location = location;
     }
 
     protected CheckIn(Parcel in) {
-        checkin_id = in.readInt();
+        checkinId = in.readInt();
         latitude = in.readDouble();
         longitude = in.readDouble();
         location = in.readString();
@@ -30,7 +37,7 @@ public class CheckIn implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(checkin_id);
+        dest.writeInt(checkinId);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(location);
@@ -54,7 +61,7 @@ public class CheckIn implements Parcelable {
     };
 
     public int getCheckinId() {
-        return checkin_id;
+        return checkinId;
     }
 
     public double getLatitude() {

@@ -1,8 +1,13 @@
 package com.cncoding.teazer.model.post;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.cncoding.teazer.model.base.ProfileMedia;
 
 /**
@@ -10,16 +15,17 @@ import com.cncoding.teazer.model.base.ProfileMedia;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class ReactedUser implements Parcelable {
+@Entity(tableName = "ReactedUser")
+public class ReactedUser extends ViewModel implements Parcelable {
 
-    private Integer user_id;
-    private String user_name;
-    private String first_name;
-    private String last_name;
-    private boolean is_blocked_you;
-    private boolean my_self;
-    private boolean has_profile_media;
-    private ProfileMedia profile_media;
+    @SerializedName("user_id") @Expose private Integer user_id;
+    @SerializedName("user_name") @Expose private String user_name;
+    @SerializedName("first_name") @Expose private String first_name;
+    @SerializedName("last_name") @Expose private String last_name;
+    @SerializedName("is_blocked_you") @Expose boolean is_blocked_you;
+    @SerializedName("my_self") @Expose private boolean my_self;
+    @SerializedName("has_profile_media") @Expose private boolean has_profile_media;
+    @Embedded(prefix = "profileMedia_") @SerializedName("profile_media") @Expose private ProfileMedia profile_media;
 
     public ReactedUser(Integer user_id, String user_name, String first_name, String last_name,
                        boolean is_blocked_you, boolean my_self, boolean has_profile_media, ProfileMedia profile_media) {

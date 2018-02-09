@@ -25,6 +25,7 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -553,6 +554,9 @@ public class ApiCallingService {
         public static Call<ReactionResponse> getReactionDetail(int reactId, Context context) {
             return getReactService(context).getReactionDetail(reactId);
         }
+        public static Call<ReactVideoDetailsResponse> getReactionDetail2(int reactId, Context context) {
+            return getReactService(context).getReactionDetail2(reactId);
+        }
 
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -777,23 +781,24 @@ public class ApiCallingService {
     }
 
     private static OkHttpClient getOkHttpClientWithAuthToken(final Context context) {
-        return new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
+        return new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
 
-                Request request = original.newBuilder()
-                        .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
-                        .method(original.method(), original.body())
-                        .build();
+                        Request request = original.newBuilder()
+                                .header("Authorization", "Bearer " + SharedPrefs.getAuthToken(context))
+                                .method(original.method(), original.body())
+                                .build();
 //                Log.d("AuthToken Fresh",SharedPrefs.getAuthToken(context));
-                return chain.proceed(request);
-            }
-        })
+                        return chain.proceed(request);
+                    }
+                })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-//                .build();
-                .addInterceptor(logging).build();
+                .addInterceptor(logging)
+                .build();
     }
 
     private static OkHttpClient getOkHttpClient() {

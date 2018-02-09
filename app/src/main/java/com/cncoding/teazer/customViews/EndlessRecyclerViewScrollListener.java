@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  *
  * Created by Prem $ on 11/14/2017.
@@ -27,7 +29,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 
     protected EndlessRecyclerViewScrollListener(LinearLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
-//        loadFirstPage();
+        loadFirstPage();
     }
 
 //    protected EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
@@ -41,6 +43,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 //        loadFirstPage();
     }
 
+    @Contract(pure = true)
     private int getLastVisibleItem(int[] lastVisibleItemPositions) {
         int maxSize = 0;
         for (int i = 0; i < lastVisibleItemPositions.length; i++) {
@@ -108,7 +111,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     }
 
     // Defines the process for loading the first page
-//    public abstract void loadFirstPage();
+    public void loadFirstPage(){}
     // Defines the process for actually loading more data based on page
     public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
 }

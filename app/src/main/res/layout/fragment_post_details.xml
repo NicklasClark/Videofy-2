@@ -9,7 +9,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cncoding.teazer.home.post.FragmentPostDetails"
+        tools:context="com.cncoding.teazer.home.post.detailspage.FragmentPostDetails"
         android:id="@+id/root_layout"
         android:background="@color/material_grey100"
         android:layout_width="match_parent"
@@ -42,15 +42,6 @@
                     android:visibility="visible"/>
 
             </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/placeholder"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignTop="@+id/relative_layout"
-                android:layout_alignBottom="@+id/relative_layout"
-                android:contentDescription="@string/video_preview_thumbnail" />
 
             <FrameLayout
                 android:id="@+id/controls"
@@ -273,24 +264,12 @@
 
             </FrameLayout>
 
-            <ProgressBar
-                android:id="@+id/loading"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="-12dp"
-                android:indeterminate="true"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:theme="@style/ProgressBarTheme" />
-
             <RelativeLayout
                 android:id="@+id/post_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:animateLayoutChanges="true"
                 android:layout_below="@+id/controls">
-
 
                 <LinearLayout
                     android:id="@+id/main_actions"
@@ -300,13 +279,11 @@
                     android:orientation="horizontal"
                     android:layout_alignParentTop="true">
 
-
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:minWidth="115dp"
                         android:layout_weight="10">
-
 
                         <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton
                             android:id="@+id/react_btn"
@@ -468,7 +445,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/reactions"
                 android:textSize="@dimen/text_size_h6"
-                android:textColor="@color/colorPrimary_text3"
+                android:textColor="@color/colorPrimary_text"
                 android:gravity="start"
                 android:paddingTop="@dimen/padding_half"
                 android:paddingEnd="@dimen/padding_half"

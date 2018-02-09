@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by Prem $ on 12/14/2017.
  */
 
-public class Videos implements Parcelable, Comparable<Videos>{
+public class Videos implements Parcelable, Comparable<Videos> {
     private int post_id;
     private int posted_by;
     private int likes;

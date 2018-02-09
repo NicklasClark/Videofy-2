@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.detailspage;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

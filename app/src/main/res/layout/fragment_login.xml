@@ -28,7 +28,8 @@
                 android:padding="10dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_teazer_logo"
-                android:layout_marginTop="@dimen/padding_big"/>
+                android:layout_marginTop="@dimen/padding_big"
+                android:contentDescription="@string/logo" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

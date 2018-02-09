@@ -171,37 +171,37 @@ public class LoginFragment extends AuthFragment {
         if (usernameView.getCompoundDrawables()[2] != null) {
             clearDrawables(usernameView);
         }
-        if (charSequence.length() > 0) {
-            if (TextUtils.isDigitsOnly(charSequence)) {
-                if (countryCodePicker.getVisibility() != VISIBLE) {
-                    countryCodePicker.setVisibility(View.GONE);
-                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
-                    float scale = getResources().getDisplayMetrics().density;
-                    int trbPadding = (int) (14*scale + 0.5f);
-                    int leftPadding = (int) (0*scale + 0.5f);
-                    usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
-                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(15) });
-                }
-            } else {
-                if (countryCodePicker.getVisibility() == VISIBLE) {
-                    countryCodePicker.setVisibility(View.GONE);
-                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
-                    float scale = getResources().getDisplayMetrics().density;
-                    int trbPadding = (int) (14*scale + 0.5f);
-                    usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
-                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
-                }
-            }
-        } else {
-            if (countryCodePicker.getVisibility() == VISIBLE) {
-                countryCodePicker.setVisibility(View.GONE);
-                usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
-                float scale = getResources().getDisplayMetrics().density;
-                int trbPadding = (int) (14*scale + 0.5f);
-                usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
-                usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
-            }
-        }
+//        if (charSequence.length() > 0) {
+//            if (TextUtils.isDigitsOnly(charSequence)) {
+//                if (countryCodePicker.getVisibility() != VISIBLE) {
+//                    countryCodePicker.setVisibility(View.GONE);
+//                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+//                    float scale = getResources().getDisplayMetrics().density;
+//                    int trbPadding = (int) (14*scale + 0.5f);
+//                    int leftPadding = (int) (0*scale + 0.5f);
+//                    usernameView.setPadding(leftPadding, trbPadding, trbPadding, trbPadding);
+//                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(15) });
+//                }
+//            } else {
+//                if (countryCodePicker.getVisibility() == VISIBLE) {
+//                    countryCodePicker.setVisibility(View.GONE);
+//                    usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_white));
+//                    float scale = getResources().getDisplayMetrics().density;
+//                    int trbPadding = (int) (14*scale + 0.5f);
+//                    usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+//                    usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
+//                }
+//            }
+//        } else {
+//            if (countryCodePicker.getVisibility() == VISIBLE) {
+//                countryCodePicker.setVisibility(View.GONE);
+//                usernameView.setBackground(getResources().getDrawable(R.drawable.bg_button_right_curved));
+//                float scale = getResources().getDisplayMetrics().density;
+//                int trbPadding = (int) (14*scale + 0.5f);
+//                usernameView.setPadding(trbPadding, trbPadding, trbPadding, trbPadding);
+//                usernameView.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(100) });
+//            }
+//        }
     }
 
     @OnFocusChange(R.id.login_username) public void onUsernameFocusChanged(boolean isFocused) {

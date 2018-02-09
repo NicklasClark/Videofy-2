@@ -92,7 +92,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.home.camera.nearbyPlaces.NearbyPlacesList.TURN_ON_LOCATION_ACTION;
-import static com.cncoding.teazer.home.post.FragmentPostDetails.SPACE;
+import static com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.SPACE;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.CommonUtilities.encodeUnicodeString;
@@ -312,9 +312,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             uploadBtn.setText("Processing...");
         }
 
-        Glide.with(context)
-                .load(Uri.fromFile(new File(videoPath)))
-                .into(thumbnailView);
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                Glide.with(context)
+                        .load(Uri.fromFile(new File(videoPath)))
+                        .into(thumbnailView);
+            }
+        }, 1000);
 
         new SetVideoDuration(this).execute();
 

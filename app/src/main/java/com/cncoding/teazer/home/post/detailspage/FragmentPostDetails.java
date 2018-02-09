@@ -1,4 +1,4 @@
-package com.cncoding.teazer.home.post;
+package com.cncoding.teazer.home.post.detailspage;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -50,12 +48,14 @@ import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
+import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -83,7 +83,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
@@ -118,6 +117,7 @@ import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
+import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_FILL;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
@@ -160,8 +160,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
     @BindView(R.id.relative_layout) RelativeLayout relativeLayout;
     @BindView(R.id.tags_container) RelativeLayout tagsLayout;
-    @BindView(R.id.placeholder) ImageView placeholder;
-    @BindView(R.id.loading) ProgressBar loadingProgressBar;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.react_btn) ProximaNovaBoldButton reactBtn;
     @BindView(R.id.like) ProximaNovaRegularCheckedTextView likeBtn;
@@ -199,7 +197,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 //    private int currentWindow;
 //    private boolean enableReactBtn;
     private boolean isComingFromHomePage;
-    private byte[] image;
+    private Bitmap image;
     private boolean is_next_page;
     private int currentVolume;
     private boolean isAudioEnabled;
@@ -234,14 +232,13 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
     }
 
-    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, byte[] image,
+    public static FragmentPostDetails newInstance(@NonNull PostDetails postDetails, Bitmap image,
                                                   boolean isComingFromHomePage, boolean isDeepLink, String thumbUrl, String react_id) {
-
         FragmentPostDetails fragmentPostDetails = new FragmentPostDetails();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_POST_DETAILS, postDetails);
         if (!isDeepLink) {
-            bundle.putByteArray(ARG_THUMBNAIL, image);
+            bundle.putParcelable(ARG_THUMBNAIL, image);
         } else {
             FragmentPostDetails.isDeepLink = true;
             bundle.putString(ARG_THUMBNAIL, thumbUrl);
@@ -255,24 +252,13 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
-//        logTheDensity();
-
-//                getActivity().getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-//                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-//                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-//                       // View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |                                       // hide nav bar
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN |                                            // hide status bar
-//                       View.SYSTEM_UI_FLAG_IMMERSIVE
-//                );
-
-        //   getActivity().setContentView(R.layout.activity_post_details);
-        //   ButterKnife.bind(getActivity());
-
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
 
         ButterKnife.bind(this, view);
+
+        if (image != null && !isDeepLink)
+            playerView.setShutterBackground(image);
+        else playerView.setShutterBackground(thumbUrl);
 
         setupServiceReceiver();
         categoriesView.setSelected(true);
@@ -308,17 +294,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
         updateTextureViewSize(postDetails.getMedias().get(0).getDimension().getWidth(),
                 postDetails.getMedias().get(0).getDimension().getHeight());
-
-        if (image != null && !isDeepLink)
-            Glide.with(this)
-                    .load(image)
-                    .into(placeholder);
-        else
-            Glide.with(this)
-                    .load(thumbUrl)
-                    .into(placeholder);
-
-        loadingProgressBar.setVisibility(VISIBLE);
 
         likeAction(postDetails.canLike(), false);
         if (!postDetails.canReact()) disableView(reactBtn, true);
@@ -393,7 +368,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
         if (bundle != null) {
             postDetails = bundle.getParcelable(ARG_POST_DETAILS);
             if (!isDeepLink) {
-                image = bundle.getByteArray(ARG_THUMBNAIL);
+                image = bundle.getParcelable(ARG_THUMBNAIL);
             }
             else {
                 thumbUrl = bundle.getString(ARG_THUMBNAIL);
@@ -445,7 +420,10 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             caption.setText(decodeUnicodeString(title));
             locationView.setVisibility(postDetails.getCheckIn() != null ? VISIBLE : GONE);
             locationView.setText(locationView.getVisibility() == VISIBLE ?
-                    (postDetails.hasCheckin() ? SPACE + postDetails.getCheckIn().getLocation() : "") : "");
+                    (postDetails.hasCheckin() ?
+                            SPACE + postDetails.getCheckIn().getLocation() :
+                            null) :
+                    null);
             profileNameView.setText(postDetails.getPostOwner().getUserName());
 
             this.likes = postDetails.getLikes();
@@ -569,7 +547,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                 }
 
                 private void showErrorMessage(String message) {
-                    dismissProgressBar();
                     postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
                     postLoadErrorLayout.setVisibility(VISIBLE);
                     message = getString(R.string.could_not_load_posts) + message;
@@ -585,12 +562,9 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
     }
 
     private void showNoReactionMessage() {
-        dismissProgressBar();
         reactionsHeader.setVisibility(GONE);
-//        recyclerView.setVisibility(View.INVISIBLE);
         postLoadErrorLayout.animate().alpha(1).setDuration(280).start();
         postLoadErrorLayout.setVisibility(VISIBLE);
-        //  postLoadErrorTextView.setText(R.string.no_reactions_yet);
         if (postDetails.canDelete()) {
             postLoadErrorSubtitle.setText(R.string.there_is_no_reaction_yet);
 
@@ -598,15 +572,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             postLoadErrorSubtitle.setText(R.string.be_the_first_one_to_react);
 
         }
-    }
-    private void dismissProgressBar() {
-        loadingProgressBar.animate().scaleX(0).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingProgressBar.setVisibility(INVISIBLE);
-            }
-        }, 280);
     }
 
     public void incrementLikes() {
@@ -710,8 +675,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
     }
 
-    @OnClick(R.id.media_controller_eta)
-    public void toggleSound() {
+    @OnClick(R.id.media_controller_eta) public void toggleSound() {
         if (audioManager != null) {
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
@@ -848,8 +812,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
         }
     }
 
-    @OnClick(R.id.menu)
-    public void showMenu(View anchor) {
+    @OnClick(R.id.menu) public void showMenu(View anchor) {
         PopupMenu popupMenu = new PopupMenu(context, anchor);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener());
         if (postDetails.canDelete())
@@ -919,11 +882,10 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerView.setLayoutParams(params);
-        playerView.setResizeMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        playerView.setResizeMode(RESIZE_MODE_FILL);
     }
 
-    @OnClick(R.id.share)
-    public void onViewClicked() {
+    @OnClick(R.id.share) public void onViewClicked() {
         loader.setVisibility(VISIBLE);
 
         BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
@@ -957,6 +919,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             }
         });
     }
+
     private class OnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -1168,7 +1131,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                                 if (playPauseButton.getVisibility() == VISIBLE)
                                     togglePlayPauseBtnVisibility(false);
                                 progressBar.setVisibility(GONE);
-                                placeholder.setImageBitmap(null);
                                 image = null;
 //                                startCountDownClass = new StartCountDownClass(player.getDuration(), 1000, remainingTime);
 //                                startCountDownClass.start();
@@ -1265,8 +1227,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                 player.setPlayWhenReady(true);
                 player.seekTo(player.getCurrentWindowIndex(), playerCurrentPosition);
             }
-//            player.getPlaybackState();
-            dismissProgressBar();
         } catch (Exception e) {
             e.printStackTrace();
         }
