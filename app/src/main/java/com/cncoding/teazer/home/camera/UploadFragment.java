@@ -230,7 +230,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
-    public void waterMarkProcessFinish(String output) {
+    public void waterMarkProcessFinish(String output, String s) {
         Log.d("Watermark", output);
         addingWatermark = false;
         enableView(uploadBtn);

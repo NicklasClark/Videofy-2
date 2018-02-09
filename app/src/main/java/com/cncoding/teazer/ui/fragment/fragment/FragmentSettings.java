@@ -127,13 +127,6 @@ public class FragmentSettings extends BaseFragment {
             }
         });
 
-        if(SharedPrefs.getSaveVideoFlag(getContext()))
-        {
-            saveVideosSwitch.setChecked(true);
-        }
-        else
-            saveVideosSwitch.setChecked(false);
-
         return view;
     }
 
@@ -144,6 +137,13 @@ public class FragmentSettings extends BaseFragment {
         } else {
             simpleSwitch.setChecked(false);
         }
+
+        if(SharedPrefs.getSaveVideoFlag(getContext()))
+        {
+            saveVideosSwitch.setChecked(true);
+        }
+        else
+            saveVideosSwitch.setChecked(false);
     }
 
     @OnClick(R.id.text_block_layout)
@@ -203,8 +203,7 @@ public class FragmentSettings extends BaseFragment {
 
                 try {
                     boolean b = response.body().getStatus();
-                    if (b == true) {
-
+                    if (b) {
                         if (status == 1) {
                             ProfileFragment.checkprofileupdated = true;
                             Toast.makeText(context, "Your account has become private", Toast.LENGTH_SHORT).show();
@@ -215,13 +214,12 @@ public class FragmentSettings extends BaseFragment {
                         }
                     } else {
 
-                        Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-
                     e.printStackTrace();
-                    Toast.makeText(context, "Ooops! Something went wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
                 }
 
             }

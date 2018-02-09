@@ -43,6 +43,7 @@ import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowin
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
@@ -131,11 +132,14 @@ import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYP
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
+import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.services.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadService;
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
 import static com.cncoding.teazer.utilities.NavigationController.TAB2;
@@ -168,7 +172,8 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Profile listeners LikedUser
         CallProfileListener,
 //    Reaction related listeners
-        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener {
+        AudioManager.OnAudioFocusChangeListener,ProfileMyReactionAdapter.ReactionPlayerListener,
+        AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final int ACTION_VIEW_POST = 0;
     public static final int ACTION_VIEW_PROFILE = 123;
@@ -1076,6 +1081,17 @@ public class BaseBottomBarActivity extends BaseActivity
                                 if (currentFragment instanceof PostsListFragment) {
                                     ((PostsListFragment) currentFragment).getHomePagePosts(1, true);
                                 }
+
+                                //add watermark for local creations/reactions
+                                if(resultData.getBoolean(ADD_WATERMARK))
+                                {
+                                    AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
+                                    addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
+                                    addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                                }
+                                else
+                                    deleteFilePermanently(resultData.getString(VIDEO_PATH));
+
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 uploadProgressText.setText("Failed, please try again");
@@ -1099,6 +1115,11 @@ public class BaseBottomBarActivity extends BaseActivity
                         }
                     }
                 });
+    }
+
+    @Override
+    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
+       deleteFilePermanently(sourcePath);
     }
 
     private void checkIfAnyVideoIsUploading() {

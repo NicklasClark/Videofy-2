@@ -331,11 +331,15 @@ public class CameraActivity extends AppCompatActivity
             case ACTION_START_UPLOAD_FRAGMENT:
 //                SEND BROADCAST TO UPDATE THE VIDEO IN MEDIASTORE DATABASE.
 //                updateMediaStoreDatabase(this, uploadParams.getVideoPath());
-//                CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(this);
-//                compressVideoAsyncTask.delegate = this;
-//                compressVideoAsyncTask.execute(uploadParams.getVideoPath());
                 uploadFragment = UploadFragment.newInstance(uploadParams.getVideoPath(), isReaction, false);
-                startVideoUploadFragment();
+
+                final Handler handler = new Handler(getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startVideoUploadFragment();
+                    }
+                }, 1000);
                 break;
             case ACTION_SHOW_GALLERY:
                 slidingUpPanelLayout.setPanelState(ANCHORED);

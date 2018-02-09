@@ -46,6 +46,7 @@ import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.CustomStaggeredGridLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
@@ -118,11 +119,14 @@ import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.services.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
@@ -145,7 +149,7 @@ import static com.google.android.exoplayer2.Player.STATE_READY;
  * Created by farazhabib on 02/01/18.
  */
 
-public class FragmentPostDetails extends BaseFragment {
+public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final String SPACE = "  ";
     public static final String ARG_POST_DETAILS = "postDetails";
@@ -1300,6 +1304,17 @@ public class FragmentPostDetails extends BaseFragment {
 
                                 finishReactionUploadSession(context);
                                 getPostReactions(postDetails.getPostId(), 1);
+
+                                //add watermark for local creations/reactions
+                                if(resultData.getBoolean(ADD_WATERMARK))
+                                {
+                                    AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getActivity());
+                                    addWaterMarkAsyncTask.delegate = FragmentPostDetails.this;
+                                    addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                                }
+                                else
+                                    deleteFilePermanently(resultData.getString(VIDEO_PATH));
+
                                 break;
                             case UPLOAD_ERROR_CODE:
                                 uploadProgressText.setText(R.string.failed);
@@ -1325,6 +1340,11 @@ public class FragmentPostDetails extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void waterMarkProcessFinish(String destinationPath, String sourcePath) {
+        deleteFilePermanently(sourcePath);
     }
 
     private void checkIfAnyReactionIsUploading() {

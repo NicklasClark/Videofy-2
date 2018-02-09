@@ -27,7 +27,6 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
@@ -40,6 +39,8 @@ import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
 public class ReactionUploadService extends IntentService implements ProgressRequestBody.UploadCallbacks {
 
     private static final String REACTION_UPLOAD_RECEIVER = "reactionUploadReceiver";
+    private static final String ADD_WATERMARK = "addWatermark";
+    private static final String VIDEO_PATH = "videoPath";
     private ResultReceiver receiver;
     private Bundle bundle;
     private Call<ReactionUploadResult> reactionUploadCall;
@@ -125,11 +126,18 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
 
     @Override
     public void onUploadFinish(String videoPath, boolean gallery) {
-        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
-            deleteFilePermanently(videoPath);
-        }
         bundle.clear();
-        bundle.putString(UPLOAD_COMPLETE, "Video successfully uploaded");
+
+        if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
+            bundle.putBoolean(ADD_WATERMARK, false);
+            bundle.putString(VIDEO_PATH, videoPath);
+        }
+        else if(!gallery)
+        {
+            bundle.putBoolean(ADD_WATERMARK, true);
+            bundle.putString(VIDEO_PATH, videoPath);
+        }
+        bundle.putString(UPLOAD_COMPLETE, "Video uploaded successfully");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);
     }
 }

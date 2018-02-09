@@ -202,7 +202,7 @@
     <string name="private_account">Private Account</string>
     <string name="videos_save">Videos Saving</string>
     <string name="private_account_detail">When your Account is private, only people you approve can see your posts.</string>
-    <string name="video_saving_detail">When your video Saving is on,you can store your creation and reaction in your device storage</string>
+    <string name="video_saving_detail">When your video saving is on, you can store your creation and reaction in your device storage</string>
     <string name="this_is_embarrassing">This is embarrassing</string>
     <string name="the_username">The username&#160;</string>
     <string name="username_already_exists">&#160;already exists!\nPlease choose another username below.</string>
