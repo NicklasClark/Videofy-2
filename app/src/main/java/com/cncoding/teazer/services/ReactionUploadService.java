@@ -130,13 +130,12 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
 
         if (!SharedPrefs.getSaveVideoFlag(getApplicationContext()) && !gallery) {
             bundle.putBoolean(ADD_WATERMARK, false);
-            bundle.putString(VIDEO_PATH, videoPath);
         }
         else if(!gallery)
         {
             bundle.putBoolean(ADD_WATERMARK, true);
-            bundle.putString(VIDEO_PATH, videoPath);
         }
+        bundle.putString(VIDEO_PATH, videoPath);
         bundle.putString(UPLOAD_COMPLETE, "Video uploaded successfully");
         receiver.send(UPLOAD_COMPLETE_CODE, bundle);
     }

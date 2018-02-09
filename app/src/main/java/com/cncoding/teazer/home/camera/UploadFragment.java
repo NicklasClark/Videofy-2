@@ -24,7 +24,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,8 +48,6 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.model.base.Category;
-import com.cncoding.teazer.model.base.MiniProfile;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -175,8 +172,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private SelectedPlace selectedPlace;
     private Context context;
     private Activity activity;
-    private SparseArray<Category> selectedCategories;
-    private SparseArray<MiniProfile> selectedTags;
 
     private OnUploadFragmentInteractionListener mListener;
     private boolean isGallery;
@@ -215,7 +210,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isGallery = bundle.getBoolean(IS_GALLERY);
         }
 
-        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext());
+        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
         compressVideoAsyncTask.delegate = this;
         compressVideoAsyncTask.execute(videoPath);
         isCompressing = true;

@@ -25,9 +25,11 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
     private final Context context;
     public AsyncResponse delegate = null;
     private String filePath;
+    private boolean isGallery;
 
-    public CompressVideoAsyncTask(Context context) {
+    public CompressVideoAsyncTask(Context context, boolean isGallery) {
         this.context = context;
+        this.isGallery = isGallery;
     }
 
     @Override
@@ -56,7 +58,9 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
             @Override
             public void onSuccess(){
                 Log.d("Compress", "Success");
-                deleteFilePermanently(sourceVideoPath[0]);
+                if (!isGallery) {
+                    deleteFilePermanently(sourceVideoPath[0]);
+                }
                 delegate.compressionProcessFinish(destinationDir);
             }
 
