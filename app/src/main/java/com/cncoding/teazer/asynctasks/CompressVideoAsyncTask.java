@@ -13,6 +13,8 @@ import java.util.Locale;
 import VideoHandle.EpEditor;
 import VideoHandle.OnEditorListener;
 
+import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
+
 /**
  *
  * Created by amit on 6/12/17.
@@ -29,7 +31,7 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... sourceVideoPath) {
+    protected Void doInBackground(final String... sourceVideoPath) {
 
         File sourceFile = new File(sourceVideoPath[0]);
 
@@ -54,6 +56,7 @@ public class CompressVideoAsyncTask extends AsyncTask<String, Void, Void> {
             @Override
             public void onSuccess(){
                 Log.d("Compress", "Success");
+                deleteFilePermanently(sourceVideoPath[0]);
                 delegate.compressionProcessFinish(destinationDir);
             }
 

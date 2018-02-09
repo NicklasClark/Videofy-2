@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -103,26 +104,42 @@ public class FragmentSettings extends BaseFragment {
         });
 
 
-        simpleSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (simpleSwitch.isChecked()) {
-                    publicprivateProfile(PRIVATE_STATUS);
-                } else {
-                    publicprivateProfile(PUBLIC_STATUS);
-                }
+//        simpleSwitch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (simpleSwitch.isChecked()) {
+//                    publicprivateProfile(PRIVATE_STATUS);
+//                } else {
+//                    publicprivateProfile(PUBLIC_STATUS);
+//                }
+//
+//            }
+//        });
+        simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if (accountType == 2) {
+                        publicprivateProfile(PRIVATE_STATUS);
+                    }
+                } else {
+                    if (accountType == 1) {
+                        publicprivateProfile(PUBLIC_STATUS);
+                    }
+                }
             }
         });
 
         //save video to gallery switch button
-        saveVideosSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()) {
-                    SharedPrefs.setSaveVideoFlag(getContext(), true);
-                } else if(!saveVideosSwitch.isChecked() && saveVideosSwitch.isPressed()){
-                    SharedPrefs.setSaveVideoFlag(getContext(), false);
+        saveVideosSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if(!SharedPrefs.getSaveVideoFlag(getContext()))
+                        SharedPrefs.setSaveVideoFlag(getContext(), true);
+                }else {
+                    if(SharedPrefs.getSaveVideoFlag(getContext()))
+                        SharedPrefs.setSaveVideoFlag(getContext(), false);
                 }
             }
         });

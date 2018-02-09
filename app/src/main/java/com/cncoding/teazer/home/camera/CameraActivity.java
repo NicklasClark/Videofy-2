@@ -339,7 +339,7 @@ public class CameraActivity extends AppCompatActivity
                     public void run() {
                         startVideoUploadFragment();
                     }
-                }, 1000);
+                }, 3000);
                 break;
             case ACTION_SHOW_GALLERY:
                 slidingUpPanelLayout.setPanelState(ANCHORED);

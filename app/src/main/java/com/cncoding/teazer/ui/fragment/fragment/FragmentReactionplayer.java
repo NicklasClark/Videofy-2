@@ -32,7 +32,6 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
@@ -518,7 +517,7 @@ public class FragmentReactionplayer extends BaseFragment {
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+//                        PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;
@@ -531,7 +530,7 @@ public class FragmentReactionplayer extends BaseFragment {
             if (animate) {
                 switch (playSource) {
                     case POST_REACTION:
-                        PostsListFragment.postDetails.likes++;
+//                        PostsListFragment.postDetails.likes++;
                         break;
                     case SELF_REACTION:
                         break;

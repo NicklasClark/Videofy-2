@@ -70,7 +70,7 @@ public class AddWaterMarkAsyncTask extends AsyncTask<String, Void, String> {
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         final String destinationDir = videoFolder.getAbsolutePath() + "/teazer_" + timeStamp + ".mp4";
-        String cmd =  "-i "+ sourceFile.getAbsolutePath() +" -i "+ mPath +" -vcodec h264 -movflags +faststart -preset ultrafast -c:a copy -filter_complex " + "overlay=W-w-5:H-h-5 " + destinationDir;
+        String cmd =  "-i "+ sourceFile.getAbsolutePath() +" -i "+ mPath +" -profile:v main -vcodec libx264 -movflags +faststart -preset ultrafast -c:a copy -filter_complex " + "overlay=W-w-5:H-h-5 " + destinationDir;
 
         EpEditor epEditor =  new EpEditor(context);
         epEditor.execCmd(cmd, 0, new OnEditorListener(){
