@@ -1,6 +1,6 @@
 package com.cncoding.teazer.data.api;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -10,13 +10,13 @@ import java.util.ArrayList;
 public class ErrorBody {
 
     private String message;
-    private ArrayList<String> reason;
+    private List<String> reason;
 
     public String getMessage() {
         return message;
     }
 
-    public ArrayList<String> getReason() {
+    public List<String> getReason() {
         return reason;
     }
 }

@@ -1,6 +1,8 @@
-package com.cncoding.teazer;
+package com.cncoding.teazer.authentication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -9,17 +11,26 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.GenerateBitmapFromUrl;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
+import com.cncoding.teazer.data.api.ResultObject;
+import com.cncoding.teazer.model.auth.SocialSignup;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
+import com.cncoding.teazer.utilities.ViewUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -51,20 +62,25 @@ import butterknife.OnClick;
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
-import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_FACEBOOK_ACTION;
-import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_GOOGLE_ACTION;
+import static com.cncoding.teazer.MainActivity.SOCIAL_SIGNUP_ACTION;
+import static com.cncoding.teazer.MainActivity.getBitmapFromVectorDrawable;
+import static com.cncoding.teazer.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_FACEBOOK;
+import static com.cncoding.teazer.model.auth.SocialSignup.SOCIAL_LOGIN_TYPE_GOOGLE;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
+import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSignUpEvent;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveAuthToken;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveUserId;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
-public class WelcomeFragment extends Fragment implements NetworkStateReceiver.NetworkStateListener {
+public class WelcomeFragment extends AuthFragment implements NetworkStateReceiver.NetworkStateListener {
 
     @BindView(R.id.login_page_btn) ProximaNovaSemiboldButton loginBtn;
-    @BindView(R.id.signup_with_facebook) ProximaNovaSemiboldButton signupWithFbBtn;
     @BindView(R.id.fb_login_btn) LoginButton fbLoginButton;
+    @BindView(R.id.signup_with_facebook) ProximaNovaSemiboldButton signupWithFbBtn;
     @BindView(R.id.signup_with_google) ProximaNovaSemiboldButton signupWithGoogleBtn;
     @BindView(R.id.signup_page_btn) ProximaNovaSemiboldButton signupWithEmailBtn;
-    @BindView(R.id.marquee_text)
-    ProximaNovaBoldTextView marqueeText;
 
     private boolean isConnected;
 
@@ -72,12 +88,14 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     private OnWelcomeInteractionListener mListener;
     private CallbackManager callbackManager;
     private GoogleApiClient googleApiClient;
-    private Snackbar notConnectedSnackbar;
+    private Snackbar notConnectedSnackBar;
     private View rootView;
     private FragmentActivity fragmentActivity;
-    private Context context;
     private Profile facebookProfile;
     private ProfileTracker profileTracker;
+    private SocialSignup socialSignup;
+    private Bundle facebookData;
+    private GoogleSignInAccount googleAccount;
 
     public WelcomeFragment() {
         // Required empty public constructor
@@ -90,15 +108,13 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
         fragmentActivity.registerReceiver(networkStateReceiver, new IntentFilter(CONNECTIVITY_ACTION));
-        context = getContext();
+        socialSignup = new SocialSignup();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_welcome, container, false);
         ButterKnife.bind(this, rootView);
-
-        marqueeText.setSelected(true);
 
         callbackManager = CallbackManager.Factory.create();
         fbLoginButton.setReadPermissions("email");
@@ -110,19 +126,12 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         return rootView;
     }
 
-//    private boolean isConnected() {
-//        ConnectivityManager conman = (ConnectivityManager) fragmentActivity.getSystemService(CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = conman.getActiveNetworkInfo();
-//        return networkInfo != null && networkInfo.isConnected();
-//    }
-
     private void showNotConnectedDialog(ProximaNovaSemiboldButton view) {
         final Snackbar snackbar = Snackbar.make(view, R.string.not_connected_message, Snackbar.LENGTH_SHORT);
         snackbar.setAction(R.string.dismiss, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 snackbar.dismiss();
-//                        view.performClick();
             }
         })
                 .setActionTextColor(Color.rgb(105, 240, 174));
@@ -131,28 +140,30 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
 
     @OnClick(R.id.login_page_btn) public void onLoginBtnClick() {
         if (isConnected)
-            mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null, null, null, null);
+            mListener.onWelcomeInteraction(LOGIN_WITH_PASSWORD_ACTION, null);
         else showNotConnectedDialog(loginBtn);
     }
 
     @OnClick(R.id.signup_page_btn) public void onSignupOptionClick() {
         if (isConnected)
-            mListener.onWelcomeInteraction(SIGNUP_WITH_EMAIL_ACTION, null, null, null, null);
+            mListener.onWelcomeInteraction(SIGNUP_WITH_EMAIL_ACTION, null);
         else showNotConnectedDialog(signupWithEmailBtn);
     }
 
     @OnClick(R.id.signup_with_google) public void onGoogleSignupClick() {
         if (isConnected) {
+            socialSignup.setSocialLoginType(SOCIAL_LOGIN_TYPE_GOOGLE);
             signupWithGoogleBtn.startAnimation();
             disableViews(signupWithGoogleBtn);
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            startActivityForResult(intent, SIGNUP_WITH_GOOGLE_ACTION);
+            startActivityForResult(intent, SOCIAL_LOGIN_TYPE_GOOGLE);
         }
         else showNotConnectedDialog(signupWithGoogleBtn);
     }
 
     @OnClick(R.id.signup_with_facebook) public void onFacebookSignupClick() {
         if (isConnected) {
+            socialSignup.setSocialLoginType(SOCIAL_LOGIN_TYPE_FACEBOOK);
             signupWithFbBtn.startAnimation();
             disableViews(signupWithFbBtn);
             fbSignup();
@@ -185,12 +196,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     }
 
     private void registerFacebookCallback() {
-//        accessTokenTracker = new AccessTokenTracker() {
-//            @Override
-//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-//                accessToken = currentAccessToken;
-//            }
-//        };
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -200,7 +205,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-//                accessToken = loginResult.getAccessToken();
                 facebookProfile = Profile.getCurrentProfile();
                 String accessToken = loginResult.getAccessToken().getToken();
                 Log.i("accessToken", accessToken);
@@ -211,52 +215,38 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.i("registerFbCallback()", response.toString());
                         // Get facebook data from login
-                        Bundle facebookData = getFacebookData(object);
-                        handleFacebookAccessToken(facebookData);
+                        facebookData = getFacebookData(object);
+                        if (facebookData != null) {
+                            handleFacebookLogin();
+                        }
+                        else Log.d("FACEBOOK_LOGIN: ", "account is null!!!!");
                     }
                 });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
                 request.setParameters(parameters);
                 request.executeAsync();
-//                enableViews();
             }
 
             @Override
             public void onCancel() {
-                signupWithFbBtn.revertAnimation(new OnAnimationEndListener() {
-                    @Override
-                    public void onAnimationEnd() {
-                        signupWithFbBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
-                                0, 0, 0);
-                    }
-                });
-                enableViews();
+                revertButtonAnimation();
             }
 
             @Override
             public void onError(FacebookException error) {
-                signupWithFbBtn.revertAnimation(new OnAnimationEndListener() {
-                    @Override
-                    public void onAnimationEnd() {
-                        signupWithFbBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
-                                0, 0, 0);
-                    }
-                });
-                enableViews();
-               // Log.v("registerFbCallback()", error.getCause().toString());
+                revertButtonAnimation();
             }
         });
     }
 
-    private Bundle getFacebookData(JSONObject object) {
+    @Nullable private Bundle getFacebookData(JSONObject object) {
         try {
             Bundle bundle = new Bundle();
             String id = object.getString("id");
 
             try {
                 URL profile_pic = new URL("https://graph.facebook.com/" + id + "/picture?width=400&height=400");
-//                Log.i("profile_pic", profile_pic + "");
                 bundle.putString("profile_pic", profile_pic.toString());
 
             } catch (MalformedURLException e) {
@@ -286,10 +276,19 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         return null;
     }
 
-    private void handleFacebookAccessToken(Bundle facebookData) {
+    private void handleFacebookLogin() {
         try {
-            mListener.onWelcomeInteraction(SIGNUP_WITH_FACEBOOK_ACTION, facebookProfile,
-                    facebookData, null, signupWithFbBtn);
+            socialSignup.extractFromFacebookData(facebookProfile, facebookData, context);
+            socialSignUp(socialSignup);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleGoogleSignIn() {
+        try {
+            socialSignup.extractFromGoogleData(googleAccount, context);
+            socialSignUp(socialSignup);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -310,60 +309,103 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         enableView(signupWithGoogleBtn);
     }
 
+    @Override protected void handleResponse(ResultObject resultObject) {
+        try {
+            switch (resultObject.getCode()) {
+                case 201:
+                    if (resultObject.getStatus()) {
+                        saveAuthToken(getParentActivity().getApplicationContext(), resultObject.getAuthToken());
+                        saveUserId(getParentActivity().getApplicationContext(), resultObject.getUserId());
+                        verificationSuccessful(false);
+                        //updating profile picture
+                        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(context);
+                        if (isFacebook()) {
+                            if (facebookData.getString("profile_pic") != null)
+                                generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
+                        } else {
+                            if (googleAccount.getPhotoUrl() != null)
+                                generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
+                        }
+                        logSignUpEvent(isFacebook() ? "Facebook" : "Google", true, facebookData.getString("email"));
+                    }
+                    break;
+                case 200:
+                    saveAuthToken(getParentActivity().getApplicationContext(), resultObject.getAuthToken());
+                    saveUserId(getParentActivity().getApplicationContext(), resultObject.getUserId());
+                    if (resultObject.getStatus()) {
+                        verificationSuccessful(true);
+                        if (isFacebook())
+                            logLoginEvent("Facebook", true, facebookData.getString("email"));
+                        else
+                            logLoginEvent("Google", true, googleAccount.getEmail());
+                    }
+                    else new ShowUserNameAlreadyAvailableDialog();
+                    break;
+                default:
+                    Log.d(isFacebook() ? "handleFacebookLogin()" : "handleGoogleSignIn()",
+                            resultObject.getCode() + "_" + resultObject.getMessage());
+                    revertButtonAnimation();
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logSignUpEvent("Facebook", false, null);
+        }
+    }
+
+    @Override
+    protected void handleError(Throwable throwable) {
+        throwable.printStackTrace();
+        revertButtonAnimation();
+        showSnackBar(loginBtn, getString(R.string.something_is_not_right));
+        logLoginEvent(isFacebook() ? "Facebook" : "Google", false, null);
+    }
+
+    @Override
+    protected void notifyNoInternetConnection() {
+    }
+
+    @Override
+    protected boolean isFieldValidated(int whichType) {
+        return false;
+    }
+
+    @Override
+    protected boolean isFieldFilled(int whichType) {
+        return false;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         try {
-        /*
-         * Google login action
-         * */
-            if (requestCode == SIGNUP_WITH_GOOGLE_ACTION) {
+//            Google login action
+            if (requestCode == SOCIAL_LOGIN_TYPE_GOOGLE) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
-                    GoogleSignInAccount account = result.getSignInAccount();
-                    if (account != null)
-                        mListener.onWelcomeInteraction(SIGNUP_WITH_GOOGLE_ACTION,
-                                null, null, account, signupWithGoogleBtn);
+                    googleAccount = result.getSignInAccount();
+                    if (googleAccount != null)
+                        handleGoogleSignIn();
                     else Log.d("GOOGLE_SIGN_IN: ", "account is null!!!!");
                 } else {
-                    signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
-                        @Override
-                        public void onAnimationEnd() {
-                            signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
-                                    0, 0, 0);
-                        }
-                    });
-                    enableViews();
+                    revertButtonAnimation();
                     Toast.makeText(context, "Google sign in failed!", Toast.LENGTH_SHORT).show();
                 }
             }
-            /*
-             * Facebook login action
-             * */
+//            Facebook login action
             else {
                 callbackManager.onActivityResult(requestCode, resultCode, data);
             }
-//        enableViews();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mListener.onWelcomeInteraction(RESUME_WELCOME_VIDEO_ACTION, null, null, null, null);
-//    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnWelcomeInteractionListener) {
             mListener = (OnWelcomeInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnWelcomeInteractionListener");
         }
     }
 
@@ -384,7 +426,6 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
         profileTracker.stopTracking();
         signupWithGoogleBtn.dispose();
         signupWithFbBtn.dispose();
-//        accessTokenTracker.stopTracking();
     }
 
     @Override
@@ -396,14 +437,14 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
     @Override
     public void onNetworkAvailable() {
         isConnected = true;
-        if (notConnectedSnackbar != null && notConnectedSnackbar.isShown())
-            notConnectedSnackbar.dismiss();
+        if (notConnectedSnackBar != null && notConnectedSnackBar.isShown())
+            notConnectedSnackBar.dismiss();
     }
 
     @Override
     public void onNetworkUnavailable() {
         isConnected = false;
-        notConnectedSnackbar = Snackbar.make(rootView, R.string.not_connected_message, Snackbar.LENGTH_INDEFINITE)
+        notConnectedSnackBar = Snackbar.make(rootView, R.string.not_connected_message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.settings, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -411,15 +452,126 @@ public class WelcomeFragment extends Fragment implements NetworkStateReceiver.Ne
                     }
                 })
                 .setActionTextColor(Color.rgb(105, 240, 174));
-        notConnectedSnackbar.show();
+        notConnectedSnackBar.show();
+    }
+
+    private class ShowUserNameAlreadyAvailableDialog extends AlertDialog.Builder {
+
+        ShowUserNameAlreadyAvailableDialog() {
+            super(context);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+            LayoutInflater inflater = getParentActivity().getLayoutInflater();
+            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
+            dialogBuilder.setView(dialogView);
+
+            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
+
+            setupEditText(editText);
+
+            dialogBuilder.setTitle(R.string.this_is_embarrassing);
+            dialogBuilder.setMessage(getString(R.string.the_username) + socialSignup.getUserName()
+                    + getString(R.string.username_already_exists));
+            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (!editText.getText().toString().equals("")) {
+                        if (isFacebook())
+                            handleFacebookLogin();
+                        else
+                            handleGoogleSignIn();
+                    }
+                }
+            });
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    revertButtonAnimation();
+                }
+            });
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+        }
+
+        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (editText.getText().toString().equals("")) {
+                        editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
+                    } else {
+                        if (editText.getCompoundDrawables()[2] != null) {
+                            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                        }
+                    }
+                }
+            });
+
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (editable.toString().equals("")) {
+                        editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
+                    } else {
+                        if (editText.getCompoundDrawables()[2] != null) {
+                            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                        }
+                    }
+                }
+            });
+
+            editText.requestFocus();
+
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    ViewUtils.hideKeyboard(getParentActivity(), textView);
+                    return true;
+                }
+            });
+        }
+    }
+
+    private void revertButtonAnimation() {
+        if (isFacebook()) {
+            signupWithFbBtn.revertAnimation(new OnAnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    signupWithFbBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0, 0, 0);
+                }
+            });
+        } else {
+            signupWithGoogleBtn.revertAnimation(new OnAnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    signupWithGoogleBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0, 0, 0);
+                }
+            });
+        }
+        enableViews();
+    }
+
+    private boolean isFacebook() {
+        return socialSignup.getSocialLoginType() == SOCIAL_LOGIN_TYPE_FACEBOOK;
+    }
+
+    private void verificationSuccessful(final boolean accountAlreadyExists) {
+        if (isFacebook()) {
+            signupWithFbBtn.doneLoadingAnimation(Color.parseColor("#4469AF"),
+                    getBitmapFromVectorDrawable(context, R.drawable.ic_check_white));
+        } else {
+            signupWithGoogleBtn.doneLoadingAnimation(Color.parseColor("#DC4E41"),
+                    getBitmapFromVectorDrawable(context, R.drawable.ic_check_white));
+        }
+        mListener.onWelcomeInteraction(SOCIAL_SIGNUP_ACTION, accountAlreadyExists);
     }
 
     public interface OnWelcomeInteractionListener {
-        void onWelcomeInteraction(int action,
-                                  Profile facebookProfile, Bundle facebookData, @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button);
+        void onWelcomeInteraction(int action, Boolean accountAlreadyExists);
     }
-
-
-
-
 }

@@ -13,11 +13,11 @@ import javax.inject.Inject;
  * Created by Prem$ on 1/31/2018.
  */
 
-public class PostDetailsViewModelFactory implements ViewModelProvider.Factory {
+public class AuthTokenViewModelFactory implements ViewModelProvider.Factory {
 
     private String token;
 
-    @Inject public PostDetailsViewModelFactory(String token) {
+    @Inject public AuthTokenViewModelFactory(String token) {
         this.token = token;
     }
 

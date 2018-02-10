@@ -1,13 +1,10 @@
 package com.cncoding.teazer;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
@@ -16,53 +13,44 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.cncoding.teazer.WelcomeFragment.OnWelcomeInteractionListener;
+import com.cncoding.teazer.authentication.WelcomeFragment;
+import com.cncoding.teazer.authentication.WelcomeFragment.OnWelcomeInteractionListener;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ResultObject;
-import com.cncoding.teazer.asynctasks.GenerateBitmapFromUrl;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment;
 import com.cncoding.teazer.authentication.ConfirmOtpFragment.OnOtpInteractionListener;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment;
 import com.cncoding.teazer.authentication.ForgotPasswordFragment.OnForgotPasswordInteractionListener;
-import com.cncoding.teazer.authentication.ForgotPasswordResetFragment;
-import com.cncoding.teazer.authentication.ForgotPasswordResetFragment.OnResetForgotPasswordInteractionListener;
 import com.cncoding.teazer.authentication.LoginFragment;
 import com.cncoding.teazer.authentication.LoginFragment.LoginInteractionListener;
+import com.cncoding.teazer.authentication.ResetPasswordFragment;
+import com.cncoding.teazer.authentication.ResetPasswordFragment.OnResetForgotPasswordInteractionListener;
 import com.cncoding.teazer.authentication.SignupFragment;
 import com.cncoding.teazer.authentication.SignupFragment.OnInitialSignupInteractionListener;
 import com.cncoding.teazer.authentication.SignupFragment2;
 import com.cncoding.teazer.authentication.SignupFragment2.OnFinalSignupInteractionListener;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.tagsAndCategories.Interests;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.model.auth.BaseAuth;
+import com.cncoding.teazer.model.auth.ForgotPassword;
+import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.model.auth.ProceedSignup;
+import com.cncoding.teazer.model.auth.VerifySignUp;
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.utilities.SharedPrefs;
-import com.cncoding.teazer.utilities.ViewUtils;
-import com.facebook.Profile;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,7 +59,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import br.com.simplepass.loading_button_lib.interfaces.OnAnimationEndListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -82,49 +69,31 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
-import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
-import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logSignUpEvent;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity
-        implements
-//        SurfaceTextureListener,
-        OnWelcomeInteractionListener,
-        LoginInteractionListener, OnOtpInteractionListener,
+        implements OnWelcomeInteractionListener, LoginInteractionListener, OnOtpInteractionListener,
         OnInitialSignupInteractionListener, OnFinalSignupInteractionListener,
         OnForgotPasswordInteractionListener, OnResetForgotPasswordInteractionListener, OnInterestsInteractionListener {
 
-//    public static final String USER_PROFILE = "profile";
-//    public static final String CURRENT_LOGIN_ACTION = "currentLoginAction";
     public static final int ACCOUNT_TYPE_PRIVATE = 1;
     public static final int ACCOUNT_TYPE_PUBLIC = 2;
 
     public static final int DEVICE_TYPE_ANDROID = 2;
-//    public static final int OPEN_CAMERA_ACTION = 98;
-    private static final int SOCIAL_LOGIN_TYPE_FACEBOOK = 1;
-    private static final int SOCIAL_LOGIN_TYPE_GOOGLE = 2;
     private static final String TAG_WELCOME_FRAGMENT = "welcomeFragment";
     public static final String TAG_LOGIN_FRAGMENT = "loginFragment";
     public static final String TAG_FORGOT_PASSWORD_FRAGMENT = "forgotPasswordFragment";
-    public static final String TAG_FORGOT_PASSWORD_RESET_FRAGMENT = "forgotPasswordResetFragment";
+    public static final String TAG_RESET_PASSWORD_FRAGMENT = "forgotPasswordResetFragment";
     public static final String TAG_SIGNUP_FRAGMENT = "signupFragment";
     public static final String TAG_SELECT_INTERESTS = "selectInterests";
     private static final String TAG_SECOND_SIGNUP_FRAGMENT = "secondSignupFragment";
     public static final String TAG_OTP_FRAGMENT = "otpFragment";
     public static final int LOGIN_WITH_PASSWORD_ACTION = 10;
-//    public static final int LOGIN_WRONG_CREDENTIALS_ACTION = 9;
     public static final int LOGIN_WITH_OTP_ACTION = 11;
-//    public static final int FACEBOOK_SIGNUP_BTN_CLICKED = 18;
-//    public static final int GOOGLE_SIGNUP_BTN_CLICKED = 19;
-    public static final int SIGNUP_WITH_FACEBOOK_ACTION = 20;
-    public static final int SIGNUP_WITH_GOOGLE_ACTION = 21;
+    public static final int SOCIAL_SIGNUP_ACTION = 21;
     public static final int SIGNUP_WITH_EMAIL_ACTION = 22;
-//    public static final int SIGNUP_FAILED_ACTION = 23;
     public static final int EMAIL_SIGNUP_PROCEED_ACTION = 23;
-//    public static final int SIGNUP_OTP_VERIFICATION_ACTION = 41;
-//    public static final int LOGIN_OTP_VERIFICATION_ACTION = 42;
     public static final int FORGOT_PASSWORD_ACTION = 5;
     private static final String VIDEO_PATH = "android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.welcome_video;
     static byte[] bte;
@@ -135,10 +104,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.up_btn) ImageView upBtn;
 
     String imageUri;
-//    private MediaPlayer mediaPlayer;
     private FragmentManager fragmentManager;
-//    private BlurView.ControllerSettings settings;
-//    private ValueAnimator animator;
     private TransitionDrawable transitionDrawable;
 
     @Override
@@ -231,11 +197,11 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.main_fragment_container,
                         ForgotPasswordFragment.newInstance((String) args[0]), TAG_FORGOT_PASSWORD_FRAGMENT);
                 break;
-            case TAG_FORGOT_PASSWORD_RESET_FRAGMENT:
+            case TAG_RESET_PASSWORD_FRAGMENT:
                 if (args.length >= 3) {
                     transaction.replace(R.id.main_fragment_container,
-                            ForgotPasswordResetFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
-                            TAG_FORGOT_PASSWORD_FRAGMENT);
+                            ResetPasswordFragment.newInstance(((String) args[0]), ((int) args[1]), ((boolean) args[2])),
+                            TAG_RESET_PASSWORD_FRAGMENT);
                 }
                 break;
             case TAG_SIGNUP_FRAGMENT:
@@ -244,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAG_SECOND_SIGNUP_FRAGMENT:
                 transaction.replace(R.id.main_fragment_container,
-                        SignupFragment2.newInstance(((String) args[0]), ((String) args[1]), ((String) args[2])),
+                        SignupFragment2.newInstance(((ProceedSignup) args[0]), ((String) args[1])),
                         TAG_SECOND_SIGNUP_FRAGMENT);
                 break;
             case TAG_OTP_FRAGMENT:
@@ -295,341 +261,72 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    private static class Blur extends AsyncTask<Void, Void, Bitmap> {
-//
-//        private WeakReference<MainActivity> reference;
-//
-//        Blur(MainActivity context) {
-//            reference = new WeakReference<>(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            if (reference.get().mediaPlayer.isPlaying())
-//                reference.get().mediaPlayer.pause();
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(Void... voids) {
-//            Bitmap bitmap = reference.get().welcomeVideo.getBitmap();
-//            return BlurBuilder.blur(reference.get(),
-//                    Bitmap.createBitmap(bitmap,
-//                            bitmap.getWidth() / 5, bitmap.getHeight() / 5,
-//                            bitmap.getWidth() / 3, bitmap.getHeight() / 3));
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            Drawable[] backgrounds = {reference.get().getResources().getDrawable(R.drawable.bg_transparent),
-//                    new BitmapDrawable(reference.get().getResources(), bitmap)};
-//            reference.get().transitionDrawable = new TransitionDrawable(backgrounds);
-//            reference.get().transitionDrawable.setCrossFadeEnabled(true);
-//            reference.get().secondFragmentContainer.setBackground(reference.get().transitionDrawable);
-//            reference.get().transitionDrawable.startTransition(400);
-//        }
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    @Override
-//    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-//        Surface surface = new Surface(surfaceTexture);
-//        mediaPlayer = new MediaPlayer();
-//        mediaPlayer.setScreenOnWhilePlaying(true);
-//        try {
-//            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(VIDEO_PATH));
-//            mediaPlayer.setSurface(surface);
-//            mediaPlayer.setLooping(true);
-//            mediaPlayer.prepareAsync();
-//
-//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mediaPlayer) {
-//                    mediaPlayer.start();
-//                }
-//            });
-//        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-//    }
-//
-//    @Override
-//    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-//        return false;
-//    }
-//
-//    @Override
-//    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-//    }
-
     @Override
-    public void onWelcomeInteraction(int action, Profile facebookProfile, Bundle facebookData,
-                                     @Nullable GoogleSignInAccount googleAccount, ProximaNovaSemiboldButton button) {
+    public void onWelcomeInteraction(int action, final Boolean accountAlreadyExists) {
         switch (action) {
             case LOGIN_WITH_PASSWORD_ACTION:
-//                setFragment(TAG_LOGIN_FRAGMENT, true, null);
                 startFragmentTransition(false, TAG_LOGIN_FRAGMENT, true);
                 break;
-            case SIGNUP_WITH_FACEBOOK_ACTION:
-//                mediaPlayer.pause();
-                if (facebookProfile != null && facebookData != null) {
-                    handleFacebookLogin(facebookProfile, facebookData, button, null);
-                }
-                break;
-            case SIGNUP_WITH_GOOGLE_ACTION:
-//                mediaPlayer.pause();
-                if (googleAccount != null)
-                    handleGoogleSignIn(googleAccount, button, null);
-                break;
             case SIGNUP_WITH_EMAIL_ACTION:
-//                setFragment(TAG_SIGNUP_FRAGMENT, true, null);
                 startFragmentTransition(false, TAG_SIGNUP_FRAGMENT, true);
                 break;
-//            case RESUME_WELCOME_VIDEO_ACTION:
-//                if (mediaPlayer != null && loggingIn)
-//                    if (!mediaPlayer.isPlaying())
-//                        mediaPlayer.start();
-//                break;
+            case SOCIAL_SIGNUP_ACTION:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!accountAlreadyExists)
+                            startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
+                        else
+                            successfullyLoggedIn();
+                    }
+                }, 500);
+                break;
             default:
                 break;
         }
     }
 
-    private void handleFacebookLogin(final Profile facebookProfile, final Bundle facebookData,
-                                     final ProximaNovaSemiboldButton button, String username) {
-
-        username = username == null ? facebookProfile.getName() : username.replace(" ", "");
-
-        ApiCallingService.Auth.socialSignUp(this, new Authorize(
-                getFcmToken(this),
-                getDeviceId(this),
-                DEVICE_TYPE_ANDROID,
-                facebookProfile.getId(),                                            //social ID
-                SOCIAL_LOGIN_TYPE_FACEBOOK,
-                facebookData.getString("email") == null || facebookData.getString("email").equals("") ? null:facebookData.getString("email"),                               //email
-                username,                                                           //Username
-                facebookProfile.getFirstName(),
-                facebookProfile.getLastName(),
-                facebookData.getString("profile_pic")))
-
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-//                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//1
-                        try {
-                            switch (response.code()) {
-                                case 201:
-                                    if (response.body().getStatus()) {
-                                        SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());
-                                        SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());
-                                        verificationSuccessful(true,
-                                                button, false);
-                                        //updating profile picture
-                                        GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
-                                        generateBitmapFromUrl.execute(facebookData.getString("profile_pic"));
-
-                                        //fabric event
-                                        logSignUpEvent("Facebook", true, facebookData.getString("email").equals("") ? null:facebookData.getString("email"));
-                                    }
-                                    break;
-                                case 200:
-                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());
-                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());
-                                    if (response.body().getStatus()) {
-                                        verificationSuccessful(true,
-                                                button, true);
-
-                                        //fabric event
-                                        logLoginEvent("Facebook", true, facebookData.getString("email").equals("") ? null:facebookData.getString("email"));
-                                    } else {
-                                        new UserNameAlreadyAvailableDialog(true, MainActivity.this,
-                                                null,
-                                                facebookProfile, facebookData, button);
-                                    }
-                                    break;
-                                default:
-                                    Log.d("handleFacebookLogin()", response.code() + "_" + response.message());
-                                    button.revertAnimation(new OnAnimationEndListener() {
-                                        @Override
-                                        public void onAnimationEnd() {
-                                            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white,
-                                                    0, 0, 0);
-                                        }
-                                    });
-                                    break;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-
-                            //fabric event
-                            logSignUpEvent("Facebook", false, null);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        Log.d("handleFacebookLogin()", t.getMessage());
-                        button.revertAnimation(new OnAnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd() {
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_facebook_white, 0,
-                                        0, 0);
-                            }
-                        });
-
-                        //fabric event
-                        logLoginEvent("Facebook", false, null);
-                    }
-                });
-    }
-
-    private void handleGoogleSignIn(final GoogleSignInAccount googleAccount, final ProximaNovaSemiboldButton button,
-                                    String username) {
-
-//        String profilePicUrl = googleAccount.getPhotoUrl().toString();
-
-        username = username == null ? googleAccount.getDisplayName() : username;
-
-        Authorize authorize = new Authorize(
-                getFcmToken(this),
-                getDeviceId(this),
-                DEVICE_TYPE_ANDROID,
-                googleAccount.getId(),              //Social ID
-                SOCIAL_LOGIN_TYPE_GOOGLE,
-                googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail(),
-                username,                           //Username
-                googleAccount.getGivenName(),       //First name
-                googleAccount.getFamilyName(),      //Last name
-                googleAccount.getPhotoUrl() != null ? googleAccount.getPhotoUrl().toString() : null);
-
-        ApiCallingService.Auth.socialSignUp(this, authorize)
-
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        switch (response.code()) {
-                            case 201:
-                                if (response.body().getStatus()) {
-                                    SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
-                                    SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
-                                    verificationSuccessful(false,
-                                            button, false);
-                                    //updating profile picture
-                                    GenerateBitmapFromUrl generateBitmapFromUrl = new GenerateBitmapFromUrl(MainActivity.this);
-                                    generateBitmapFromUrl.execute(googleAccount.getPhotoUrl().toString());
-
-                                    //logging fabric event
-                                    logSignUpEvent("Google", true, googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail());
-                                }
-                                break;
-                            case 200:
-                                SharedPrefs.saveAuthToken(getApplicationContext(), response.body().getAuthToken());//2
-                                SharedPrefs.saveUserId(getApplicationContext(), response.body().getUser_id());//1
-                                if (response.body().getStatus()) {
-                                    verificationSuccessful(false,
-                                            button, true);
-                                    //logging fabric event
-                                    logLoginEvent("Google", true, googleAccount.getEmail() == null || googleAccount.getEmail().equals("") || googleAccount.getEmail().isEmpty()? null:googleAccount.getEmail());
-                                } else {
-                                    new UserNameAlreadyAvailableDialog(false, MainActivity.this, googleAccount,
-                                            null, null, button);
-                                }
-                                break;
-                            default:
-                                Log.d("handleGoogleSignIn()", response.code() + "_" + response.message());
-                                button.revertAnimation(new OnAnimationEndListener() {
-                                    @Override
-                                    public void onAnimationEnd() {
-                                        button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white,
-                                                0, 0, 0);
-                                    }
-                                });
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        button.revertAnimation(new OnAnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd() {
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_google_white, 0,
-                                        0, 0);
-                            }
-                        });
-                        logSignUpEvent("Google", false, null);
-                    }
-                });
-
-    }
-
-    private void verificationSuccessful(boolean isFacebookAccount, ProximaNovaSemiboldButton button,
-                                        final boolean accountAlreadyExists) {
-        if (isFacebookAccount) {
-            button.doneLoadingAnimation(Color.parseColor("#4469AF"),
-                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
-        } else {
-            button.doneLoadingAnimation(Color.parseColor("#DC4E41"),
-                    getBitmapFromVectorDrawable(MainActivity.this, R.drawable.ic_check_white));
-        }
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!accountAlreadyExists)
-//                    setFragment(TAG_SELECT_INTERESTS, false, null);
-                    startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
-                else
+    @Override public void onLoginFragmentInteraction(int action, BaseAuth baseAuth) {
+        try {
+            switch (action) {
+                case LOGIN_WITH_PASSWORD_ACTION:
                     successfullyLoggedIn();
+                    break;
+                case LOGIN_WITH_OTP_ACTION:
+                    if (baseAuth instanceof InitiateLoginWithOtp)
+                    setFragment(TAG_OTP_FRAGMENT, true, new Object[]{baseAuth, LOGIN_WITH_OTP_ACTION});
+                    break;
+                case FORGOT_PASSWORD_ACTION:
+                    if (baseAuth instanceof ForgotPassword)
+                        setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[]{((ForgotPassword) baseAuth).getUserName()});
+                    break;
+                default:
+                    break;
             }
-        }, 500);
-    }
-
-    @Override
-    public void onLoginFragmentInteraction(int action, Authorize authorize) {
-        switch (action) {
-            case LOGIN_WITH_PASSWORD_ACTION:
-                successfullyLoggedIn();
-                break;
-            case LOGIN_WITH_OTP_ACTION:
-                setFragment(TAG_OTP_FRAGMENT, true, new Object[]{authorize, LOGIN_WITH_OTP_ACTION});
-                break;
-            case FORGOT_PASSWORD_ACTION:
-                setFragment(TAG_FORGOT_PASSWORD_FRAGMENT, true, new Object[]{authorize.getUsername()});
-                break;
-            default:
-                break;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void onOtpInteraction(Authorize verificationDetails, String picturePath) {
+    public void onOtpInteraction(VerifySignUp verificationDetails, String picturePath) {
         if (verificationDetails != null) {
-//            setFragment(TAG_SELECT_INTERESTS, false, null);
             //fabric event
             logSignUpEvent("Email/Phone", true, verificationDetails.getEmail());
-
             startFragmentTransition(false, TAG_SELECT_INTERESTS, false);
             new UpdateProfilePic(this).execute(picturePath);
-        } else {
-//            if (isVerified)
-            //fabric event
-//            logSignUpEvent("Email/Phone", true, null);
-            successfullyLoggedIn();
         }
+        else successfullyLoggedIn();
     }
 
     @Override
     public void onForgotPasswordInteraction(String enteredText, int countryCode, boolean isEmail) {
-        setFragment(TAG_FORGOT_PASSWORD_RESET_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
+        setFragment(TAG_RESET_PASSWORD_FRAGMENT, true, new Object[] {enteredText, countryCode, isEmail});
     }
 
     @Override
@@ -638,14 +335,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInitialEmailSignupInteraction(int action, final Authorize signUpDetails, String picturePath) {
-        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true,
-                new Object[]{signUpDetails.getUsername(), signUpDetails.getPassword(), picturePath});
+    public void onInitialEmailSignupInteraction(int action, final ProceedSignup proceedSignup, String picturePath) {
+        setFragment(TAG_SECOND_SIGNUP_FRAGMENT, true, new Object[]{proceedSignup, picturePath});
     }
 
     @Override
-    public void onFinalEmailSignupInteraction(final Authorize signUpDetails, String picturePath) {
-        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {signUpDetails, SIGNUP_WITH_EMAIL_ACTION, picturePath});
+    public void onFinalEmailSignupInteraction(final VerifySignUp verifySignUp, String picturePath) {
+        setFragment(TAG_OTP_FRAGMENT, true, new Object[] {verifySignUp, SIGNUP_WITH_EMAIL_ACTION, picturePath});
     }
 
     @Override
@@ -745,105 +441,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         return bitmap;
-    }
-
-    private class UserNameAlreadyAvailableDialog extends AlertDialog.Builder {
-
-        UserNameAlreadyAvailableDialog(final boolean isFacebook, @NonNull Context context,
-                                       final GoogleSignInAccount googleAccount,
-                                       final Profile facebookProfile, final Bundle facebookData,
-                                       final ProximaNovaSemiboldButton button) {
-            super(context);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogTheme);
-            LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-            @SuppressLint("InflateParams") final View dialogView = inflater.inflate(R.layout.dialog_alternate_email, null);
-            dialogBuilder.setView(dialogView);
-
-            final ProximaNovaRegularAutoCompleteTextView editText = dialogView.findViewById(R.id.edit_query);
-
-            setupEditText(editText);
-
-            dialogBuilder.setTitle(R.string.this_is_embarrassing);
-            if (isFacebook) {
-                dialogBuilder.setMessage(getString(R.string.the_username) + facebookProfile.getName()
-                        + getString(R.string.username_already_exists));
-            } else {
-                dialogBuilder.setMessage(getString(R.string.the_username) + googleAccount.getDisplayName()
-                        + getString(R.string.username_already_exists));
-            }
-            dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    if (!editText.getText().toString().equals("")) {
-                        if (isFacebook)
-                            handleFacebookLogin(facebookProfile, facebookData, button, editText.getText().toString());
-                        else
-                            handleGoogleSignIn(googleAccount, button, editText.getText().toString());
-                    }
-                }
-            });
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    fragmentManager.popBackStackImmediate();
-                }
-            });
-            AlertDialog dialog = dialogBuilder.create();
-//            button.setTextColor(Color.parseColor("#757575"));
-//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#5a000000"));
-//            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#5a000000"));
-//            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(
-// MainActivity.this, R.color.black));
-            dialog.show();
-        }
-
-        private void setupEditText(final ProximaNovaRegularAutoCompleteTextView editText) {
-            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (editText.getText().toString().equals("")) {
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                0, 0, R.drawable.ic_error, 0);
-                    } else {
-                        if (editText.getCompoundDrawables()[2] != null) {
-                            editText.setCompoundDrawablesWithIntrinsicBounds(
-                                    0, 0, 0, 0);
-                        }
-                    }
-                }
-            });
-
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (editable.toString().equals("")) {
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                0, 0, R.drawable.ic_error, 0);
-                    } else {
-                        if (editText.getCompoundDrawables()[2] != null) {
-                            editText.setCompoundDrawablesWithIntrinsicBounds(
-                                    0, 0, 0, 0);
-                        }
-                    }
-                }
-            });
-
-            editText.requestFocus();
-
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    ViewUtils.hideKeyboard(MainActivity.this, textView);
-                    return true;
-                }
-            });
-        }
     }
 
     @Override

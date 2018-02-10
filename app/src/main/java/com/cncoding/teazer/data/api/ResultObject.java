@@ -1,5 +1,6 @@
 package com.cncoding.teazer.data.api;
 
+import com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,31 +11,34 @@ import com.google.gson.annotations.SerializedName;
 
 public class ResultObject {
 
-    @SerializedName("code") @Expose private int code;
+    @SerializedName("code") @Expose private Integer code;
     @SerializedName("message") @Expose private String message;
-    @SerializedName("auth_token") @Expose private String auth_token;
-    @SerializedName("status") @Expose private boolean status;
+    @SerializedName("auth_token") @Expose private String authToken;
+    @SerializedName("status") @Expose private Boolean status;
     @SerializedName("errorBody") @Expose private ErrorBody errorBody;
-    @SerializedName("user_id") @Expose private int user_id;
-//    @SerializedName("follow_info") @Expose private FollowInfo followInfo;
+    @SerializedName("user_id") @Expose private Integer userId;
+    @CallType private int callType;
+    private Throwable error;
 
-    public ResultObject(int code, String message, String auth_token, boolean status, ErrorBody errorBody, int user_id
-//            , FollowInfo followInfo
-    ) {
+    public ResultObject(Integer code, String message, String authToken, Boolean status, ErrorBody errorBody, Integer userId) {
         this.code = code;
         this.message = message;
-        this.auth_token = auth_token;
+        this.authToken = authToken;
         this.status = status;
         this.errorBody = errorBody;
-        this.user_id = user_id;
-//        this.followInfo = followInfo;
+        this.userId = userId;
     }
 
-//    public FollowInfo getFollowInfo() {
-//        return followInfo;
-//    }
+    public ResultObject(Throwable error) {
+        this.error = error;
+    }
 
-    public int getCode() {
+    public ResultObject(Throwable error, int callType) {
+        this.error = error;
+        this.callType = callType;
+    }
+
+    public Integer getCode() {
         return code;
     }
 
@@ -42,19 +46,46 @@ public class ResultObject {
         return message;
     }
 
-    public boolean getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
     public String getAuthToken() {
-        return auth_token;
+        return authToken;
     }
 
     public ErrorBody getErrorBody() {
         return errorBody;
     }
 
-    public int getUserId() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
+
+    public ResultObject setError(Throwable error) {
+        this.error = error;
+        return this;
+    }
+
+    public void clearData() {
+        code = null;
+        message = null;
+        status = null;
+        authToken = null;
+        errorBody = null;
+        userId = null;
+        error = null;
+    }
+
+    @CallType public int getCallType() {
+        return callType;
+    }
+
+    public void setCallType(@CallType int callType) {
+        this.callType = callType;
     }
 }

@@ -63,7 +63,7 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
                 }
             } else {
                 posts.addAll(postDetailsList);
-                notifyItemRangeInserted(posts.size(), postDetailsList.size());
+                notifyItemRangeInserted((page - 1) * 30, postDetailsList.size());
             }
         } catch (Exception e) {
             e.printStackTrace();

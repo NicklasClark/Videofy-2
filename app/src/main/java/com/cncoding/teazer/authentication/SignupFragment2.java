@@ -14,7 +14,10 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.api.ResultObject;
+import com.cncoding.teazer.model.auth.InitiateSignup;
+import com.cncoding.teazer.model.auth.ProceedSignup;
+import com.cncoding.teazer.model.auth.VerifySignUp;
 import com.hbb20.CountryCodePicker;
 
 import butterknife.BindView;
@@ -22,19 +25,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
+import butterknife.OnTextChanged;
 
-import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
+import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.FAILED;
+import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.NOT_SUCCESSFUL;
+import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidEmailAddress;
 import static com.cncoding.teazer.utilities.AuthUtils.isValidPhoneNumber;
-import static com.cncoding.teazer.utilities.AuthUtils.performInitialSignUp;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
 import static com.cncoding.teazer.utilities.ViewUtils.setEditTextDrawableEnd;
+import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
 
 public class SignupFragment2 extends AuthFragment {
-    private static final String ARG_USERNAME = "username";
-    private static final String ARG_PASS = "pass";
+
+    private static final String ARG_SIGNUP_INFO = "info";
     public static final String ARG_PICTURE_PATH = "picturePath";
 
     @BindView(R.id.signup_name) ProximaNovaRegularAutoCompleteTextView nameView;
@@ -43,9 +50,9 @@ public class SignupFragment2 extends AuthFragment {
     @BindView(R.id.signup_phone_number) ProximaNovaRegularAutoCompleteTextView phoneNumberView;
     @BindView(R.id.signup_btn) ProximaNovaSemiboldButton signupBtn;
 
-    private String username;
-    private String pass;
+    private ProceedSignup proceedSignup;
     private String picturePath;
+    private InitiateSignup initiateSignup;
 
     private OnFinalSignupInteractionListener mListener;
 
@@ -53,11 +60,10 @@ public class SignupFragment2 extends AuthFragment {
         // Required empty public constructor
     }
 
-    public static SignupFragment2 newInstance(String username, String pass, String picturePath) {
+    public static SignupFragment2 newInstance(ProceedSignup proceedSignup, String picturePath) {
         SignupFragment2 fragment = new SignupFragment2();
         Bundle args = new Bundle();
-        args.putString(ARG_USERNAME, username);
-        args.putString(ARG_PASS, pass);
+        args.putParcelable(ARG_SIGNUP_INFO, proceedSignup);
         args.putString(ARG_PICTURE_PATH, picturePath);
         fragment.setArguments(args);
         return fragment;
@@ -68,10 +74,13 @@ public class SignupFragment2 extends AuthFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            username = bundle.getString(ARG_USERNAME);
-            pass = bundle.getString(ARG_PASS);
+            proceedSignup = bundle.getParcelable(ARG_SIGNUP_INFO);
             picturePath = bundle.getString(ARG_PICTURE_PATH);
         }
+        if (initiateSignup == null && proceedSignup != null)
+            initiateSignup = new InitiateSignup()
+                .setUserName(proceedSignup.getUserName())
+                .setPassword(proceedSignup.getPassword());
     }
 
     @Override
@@ -87,7 +96,7 @@ public class SignupFragment2 extends AuthFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getCountryCode(countryCodeView, getParentActivity());
+        initiateSignup.setCountryCodeOnly(getCountryCode(countryCodeView, getParentActivity()));
     }
 
     private void setOnCountryChangeListener() {
@@ -102,6 +111,14 @@ public class SignupFragment2 extends AuthFragment {
                         .apply();
             }
         });
+    }
+
+    @OnTextChanged(R.id.signup_email) public void emailEntered(CharSequence charSequence) {
+        initiateSignup.setEmailOnly(charSequence.toString());
+    }
+
+    @OnTextChanged(R.id.signup_phone_number) public void phoneNumberEntered(CharSequence charSequence) {
+        initiateSignup.setPhoneNumberOnly(charSequence.toString());
     }
 
     @OnEditorAction(R.id.signup_email) public boolean goToPhoneNumberField(int actionId) {
@@ -141,30 +158,26 @@ public class SignupFragment2 extends AuthFragment {
         }
     }
 
+    @OnFocusChange(R.id.signup_name) public void getNameEntered() {
+        initiateSignup.setFirstAndLastNames(getFirstAndLastNames(nameView.getText().toString()));
+    }
+
     @OnClick(R.id.signup_btn) public void performSignup() {
         hideKeyboard(getParentActivity(), signupBtn);
         if (isConnected) {
-            if (areAllViewsFilled()) {
-                if (getFirstAndLastNames(nameView.getText().toString()).length >= 2) {
+            if (isFieldFilled(CHECK_USERNAME)) {
+                if (getFirstAndLastNames(nameView.getText().toString()).length < 2) {
                     if (isValidEmailAddress(emailView.getText().toString())) {
-                        String[] names = getFirstAndLastNames(nameView.getText().toString());
-                        final Authorize authorize = new Authorize(
-                                username,
-                                names[0],
-                                names[1],
-                                emailView.getText().toString(),
-                                pass,
-                                Long.parseLong(phoneNumberView.getText().toString()),
-                                countryCodeView.getSelectedCountryCodeAsInt()
-                        );
                         signupBtn.setEnabled(false);
-                        performInitialSignUp(getContext(), mListener, authorize, signupBtn, picturePath);
-                    } else Snackbar.make(signupBtn, "Please provide a valid email address.", Snackbar.LENGTH_SHORT).show();
-                } else Snackbar.make(signupBtn, "Please provide both first and last names, separated by blank space", Snackbar.LENGTH_SHORT).show();
-            } else
-                Snackbar.make(signupBtn, "All fields are required", Snackbar.LENGTH_SHORT).show();
-        } else
-            Snackbar.make(signupBtn, R.string.not_connected_message, Snackbar.LENGTH_SHORT).show();
+                        signUp(initiateSignup);
+                    }
+                    else showSnackBar(signupBtn, "Please provide a valid email address.");
+                }
+                else showSnackBar(signupBtn, "Please provide both first and last names, separated by blank space");
+            }
+            else showSnackBar(signupBtn, "All fields are required");
+        }
+        else notifyNoInternetConnection();
     }
 
     public static String[] getFirstAndLastNames(String name) {
@@ -175,18 +188,51 @@ public class SignupFragment2 extends AuthFragment {
             return names;
     }
 
-    private boolean areAllViewsFilled() {
+    @Override
+    protected void handleResponse(ResultObject resultObject) {
+        signupBtn.setEnabled(true);
+        if (resultObject.getError() != null) {
+            //noinspection ThrowableNotThrown
+            switch (resultObject.getError().getMessage()) {
+                case NOT_SUCCESSFUL:
+                    showSnackBar(signupBtn, getString(R.string.something_is_not_right));
+                    break;
+                case STATUS_FALSE:
+                    showSnackBar(signupBtn, context.getString(R.string.already_exists_signup));
+                    break;
+                default:
+                    showSnackBar(signupBtn, getString(R.string.signup_failed));
+                    break;
+            }
+        } else
+            mListener.onFinalEmailSignupInteraction(new VerifySignUp().setInitialSignup(initiateSignup), picturePath);
+        signupBtn.setEnabled(true);
+    }
+
+    @Override
+    protected void handleError(Throwable throwable) {
+        showSnackBar(signupBtn, throwable.getMessage().equals(FAILED) ?
+                getString(R.string.something_went_wrong) :getString(R.string.signup_failed));
+        signupBtn.setEnabled(true);
+    }
+
+    @Override
+    protected void notifyNoInternetConnection() {
+        Snackbar.make(signupBtn, R.string.not_connected_message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected boolean isFieldValidated(int whichType) {
+        return false;
+    }
+
+    @Override
+    protected boolean isFieldFilled(int whichType) {
         return !nameView.getText().toString().isEmpty() &&
                 !emailView.getText().toString().isEmpty() &&
                 !countryCodeView.getSelectedCountryCode().isEmpty() &&
                 !phoneNumberView.getText().toString().isEmpty();
     }
-
-//    private void setTextFilters() {
-////        InputFilter[] inputFilters = new InputFilter[] {FilterFactory.passwordFilter};
-////        passwordView.setFilters(inputFilters);
-////        confirmPasswordView.setFilters(inputFilters);
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -206,6 +252,6 @@ public class SignupFragment2 extends AuthFragment {
     }
 
     public interface OnFinalSignupInteractionListener {
-        void onFinalEmailSignupInteraction(Authorize signUpDetails, String picturePath);
+        void onFinalEmailSignupInteraction(VerifySignUp verifySignUp, String picturePath);
     }
 }

@@ -3,7 +3,14 @@ package com.cncoding.teazer.data.api.calls.authentication;
 import android.arch.lifecycle.LiveData;
 
 import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.model.auth.InitiateSignup;
+import com.cncoding.teazer.model.auth.Login;
+import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
+import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
+import com.cncoding.teazer.model.auth.SocialSignup;
+import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
+import com.cncoding.teazer.model.auth.VerifySignUp;
 
 /**
  *
@@ -12,17 +19,17 @@ import com.cncoding.teazer.model.base.Authorize;
 
 public interface AuthenticationRepository {
 
-    LiveData<ResultObject> signUp(Authorize signUpBody);
+    LiveData<ResultObject> signUp(InitiateSignup initiateSignup);
 
-    LiveData<ResultObject> verifySignUp(Authorize verifySignUp);
+    LiveData<ResultObject> verifySignUp(VerifySignUp verifySignUp);
 
-    LiveData<ResultObject> socialSignUp(Authorize socialSignUpDetails);
+    LiveData<ResultObject> socialSignUp(SocialSignup socialSignup);
 
-    LiveData<ResultObject> loginWithPassword(Authorize loginWithPassword);
+    LiveData<ResultObject> loginWithPassword(Login login);
 
-    LiveData<ResultObject> loginWithOtp(Authorize phoneNumberDetails);
+    LiveData<ResultObject> loginWithOtp(InitiateLoginWithOtp initiateLoginWithOtp);
 
-    LiveData<ResultObject> verifyLoginWithOtp(Authorize verifyLoginWithOtp);
+    LiveData<ResultObject> verifyLoginWithOtp(VerifyLoginWithOtp verifyLoginWithOtp);
 
     LiveData<ResultObject> checkUsernameAvailability(String username);
 
@@ -34,7 +41,7 @@ public interface AuthenticationRepository {
 
     LiveData<ResultObject> requestResetPasswordByEmail(String email);
 
-    LiveData<ResultObject> requestResetPasswordByPhone(Authorize phoneNumberDetails);
+    LiveData<ResultObject> requestResetPasswordByPhone(ResetPasswordByPhoneNumber resetPasswordByPhoneNumber);
 
-    LiveData<ResultObject> resetPasswordByOtp(Authorize resetPasswordDetails);
+    LiveData<ResultObject> resetPasswordByOtp(ResetPasswordByOtp resetPasswordByOtp);
 }

@@ -1,7 +1,14 @@
 package com.cncoding.teazer.data.api.calls.authentication;
 
 import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.model.auth.InitiateSignup;
+import com.cncoding.teazer.model.auth.Login;
+import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
+import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
+import com.cncoding.teazer.model.auth.SocialSignup;
+import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
+import com.cncoding.teazer.model.auth.VerifySignUp;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,52 +26,42 @@ public interface AuthenticationService {
     /**
      * Call this service for Signup into application
      * Signup Step 1.
-     * @return :
-     *      200: If status is true OTP will send to given mobile number.
-     *           If Status is false the Username, Email and Phone Number already exist or you may reached maximum OTP retry attempts.
-     *   or 400: Invalid JSON Format present in Request Body
-     *   or 412: Validation Failed
-     * @param signUpBody containing username, first name, last name, email, password, phone number and country code.
+     * @param initiateSignup containing username, first name, last name, email, password, phone number and country code.
      */
     @POST("/api/v1/authentication/signup")
-    Call<ResultObject> signUp(@Body Authorize signUpBody);
+    Call<ResultObject> signUp(@Body InitiateSignup initiateSignup);
 
     /**
      * Call this service for verify the OTP and complete the signup process.
-     * Signup Step 1.
-     * @return :
-     *      200: If status is true OTP will send to given mobile number.
-     *           If Status is false the Username, Email and Phone Number already exist or you may reached maximum OTP retry attempts.
-     *   or 400: Invalid JSON Format present in Request Body
-     *   or 412: Validation Failed
+     * Signup Step 2.
      * @param verifySignUp containing fcm_token, device_id, device_type, username, first name, last name,
      *                     email, password, phone number, country code and otp.
      */
     @POST("/api/v1/authentication/signup/verify")
-    Call<ResultObject> verifySignUp(@Body Authorize verifySignUp);
+    Call<ResultObject> verifySignUp(@Body VerifySignUp verifySignUp);
 
     @POST("/api/v1/authentication/social/signup")
-    Call<ResultObject> socialSignUp(@Body Authorize socialSignUpDetails);
+    Call<ResultObject> socialSignUp(@Body SocialSignup socialSignup);
 
     /**
      * Perform sign in with password.
      */
     @POST("/api/v1/authentication/signin/with/password")
-    Call<ResultObject> loginWithPassword(@Body Authorize loginWithPassword);
+    Call<ResultObject> loginWithPassword(@Body Login login);
 
     /**
      * Perform sign in with OTP.
      * Login step 1.
      */
     @POST("/api/v1/authentication/signin/with/otp")
-    Call<ResultObject> loginWithOtp(@Body Authorize phoneNumberDetails);
+    Call<ResultObject> loginWithOtp(@Body InitiateLoginWithOtp initiateLoginWithOtp);
 
     /**
      * Verify sign in with OTP.
      * Login step 2.
      */
     @POST("/api/v1/authentication/signin/with/otp/verify")
-    Call<ResultObject> verifyLoginWithOtp(@Body Authorize verifyLoginWithOtp);
+    Call<ResultObject> verifyLoginWithOtp(@Body VerifyLoginWithOtp verifyLoginWithOtp);
 
     /**
      * Check username availability, Pass in @param String username
@@ -103,12 +100,12 @@ public interface AuthenticationService {
      * Call this service to reset the password by OTP received in email or phone number
      */
     @POST("/api/v1/authentication/reset/password/by/phonenumber")
-    Call<ResultObject> requestResetPasswordByPhone(@Body Authorize phoneNumberDetails);
+    Call<ResultObject> requestResetPasswordByPhone(@Body ResetPasswordByPhoneNumber resetPasswordByPhoneNumber);
 
     /**
      * Call this service to reset the password by OTP received in email or phone number.
      * Either you need to send Email or Phone number and Country code along with OTP and New password
      * */
     @POST("/api/v1/authentication/password/reset")
-    Call<ResultObject> resetPasswordByOtp(@Body Authorize resetPasswordDetails);
+    Call<ResultObject> resetPasswordByOtp(@Body ResetPasswordByOtp resetPasswordByOtp);
 }

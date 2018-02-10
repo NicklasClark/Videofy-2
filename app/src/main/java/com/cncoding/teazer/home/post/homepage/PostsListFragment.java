@@ -21,7 +21,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.data.viewmodel.PostDetailsViewModel;
-import com.cncoding.teazer.data.viewmodel.factory.PostDetailsViewModelFactory;
+import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
@@ -63,7 +63,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostDetailsViewModelFactory factory = new PostDetailsViewModelFactory(SharedPrefs.getAuthToken(getContext()));
+        AuthTokenViewModelFactory factory = new AuthTokenViewModelFactory(SharedPrefs.getAuthToken(getContext()));
         postDetailsViewModel = ViewModelProviders.of(this, factory).get(PostDetailsViewModel.class);
         currentPage = 1;
     }
