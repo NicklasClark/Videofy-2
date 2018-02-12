@@ -19,7 +19,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.data.api.ResultObject;
+import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.model.auth.ResetPasswordByOtp;
 
 import butterknife.BindView;

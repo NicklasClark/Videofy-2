@@ -5,9 +5,9 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepository;
-import com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepository;
+import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
 import com.cncoding.teazer.model.auth.Login;

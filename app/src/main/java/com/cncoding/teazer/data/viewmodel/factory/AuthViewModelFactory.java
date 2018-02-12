@@ -6,8 +6,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepository;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepository;
 import com.cncoding.teazer.data.viewmodel.AuthViewModel;
 
 import javax.inject.Inject;

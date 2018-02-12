@@ -6,8 +6,8 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.data.api.calls.post.PostsRepository;
-import com.cncoding.teazer.data.api.calls.post.PostsRepositoryImpl;
+import com.cncoding.teazer.data.remote.api.calls.post.PostsRepository;
+import com.cncoding.teazer.data.remote.api.calls.post.PostsRepositoryImpl;
 import com.cncoding.teazer.model.post.PostList;
 
 import javax.inject.Inject;

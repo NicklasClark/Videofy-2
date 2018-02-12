@@ -15,7 +15,7 @@ import android.view.View;
 
 import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.data.api.ResultObject;
+import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.viewmodel.AuthViewModel;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
@@ -32,7 +32,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
+import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 
 /**
  * A simple {@link Fragment} subclass.

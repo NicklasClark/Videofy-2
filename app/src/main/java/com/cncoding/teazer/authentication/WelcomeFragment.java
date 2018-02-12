@@ -27,7 +27,7 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.GenerateBitmapFromUrl;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.data.api.ResultObject;
+import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.model.auth.SocialSignup;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
 import com.cncoding.teazer.utilities.ViewUtils;

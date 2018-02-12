@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
+import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.model.auth.ResetPasswordByPhoneNumber;
 import com.hbb20.CountryCodePicker;
 
@@ -21,8 +22,8 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 import static android.text.TextUtils.isDigitsOnly;
-import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_EMAIL;
-import static com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_PHONE;
+import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_EMAIL;
+import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.REQUEST_RESET_PASSWORD_BY_PHONE;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.setCountryCode;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
@@ -154,7 +155,7 @@ public class ForgotPasswordFragment extends AuthFragment {
     }
 
     @Override
-    protected void handleResponse(com.cncoding.teazer.data.api.ResultObject resultObject) {
+    protected void handleResponse(ResultObject resultObject) {
         try {
             switch (resultObject.getCallType()) {
                 case REQUEST_RESET_PASSWORD_BY_EMAIL:

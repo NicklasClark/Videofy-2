@@ -23,8 +23,8 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
-import com.cncoding.teazer.data.api.ResultObject;
-import com.cncoding.teazer.data.api.calls.authentication.AuthenticationRepositoryImpl;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl;
 import com.cncoding.teazer.model.auth.ProceedSignup;
 import com.theartofdev.edmodo.cropper.CropImage;
 
