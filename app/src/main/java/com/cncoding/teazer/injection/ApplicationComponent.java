@@ -16,34 +16,29 @@
  *
  */
 
-package com.cncoding.teazer.data.dependencyinjection;
+package com.cncoding.teazer.injection;
 
 import android.app.Application;
 
-import com.cncoding.teazer.TeazerApplication;
+import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
- *
- *
- * Created by R_KAY on 8/15/2017.
+ * Annotated as a Singelton since we don't want to have multiple instances of a Single Database,
+ * <p>
+ * Created by Prem$ on 8/15/2017.
  */
-@Module
-public class ApplicationModule {
-    private final TeazerApplication application;
-    public ApplicationModule(TeazerApplication application) {
-        this.application = application;
-    }
 
-    @Provides
-    TeazerApplication provideRoomDemoApplication(){
-        return application;
-    }
+@Singleton
+@Component(modules = {ApplicationModule.class, RoomModule.class})
+public interface ApplicationComponent {
 
-    @Provides
-    Application provideApplication(){
-        return application;
-    }
+    void inject(PostsListFragment postsListFragment);
+    void inject(FragmentPostDetails fragmentPostDetails);
+
+    Application application();
 }

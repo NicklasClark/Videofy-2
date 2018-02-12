@@ -316,7 +316,6 @@
             android:name=".ui.fragment.activity.PasswordChange"
             android:screenOrientation="portrait"
             android:theme="@style/MyCustomTextAppearance" />
-        <activity android:name=".ui.fragment.activity.OthersPostDetails" />
         <activity
             android:name=".ui.fragment.activity.Main2Activity"
             android:label="@string/title_activity_main2" />
@@ -352,7 +351,7 @@
             android:name=".ui.fragment.activity.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DetailAppTheme" />
-        <activity android:name=".ui.fragment.activity.ShareActivityApp"></activity>
+        <activity android:name=".ui.fragment.activity.ShareActivityApp"/>
 
         <!-- //mobiruck starts// -->
 
@@ -368,7 +367,8 @@
         <service android:name="com.expletus.mobiruck.service.MobiruckUpdateServices" />
 
         <activity android:name=".ui.fragment.activity.OpenProfilePicActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".BaseActivity" />
     </application>
 
 </manifest>

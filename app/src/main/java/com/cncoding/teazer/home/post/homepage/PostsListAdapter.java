@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,9 @@ import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
  */
 public class PostsListAdapter extends BaseRecyclerViewAdapter {
 
-    private SparseIntArray colorArray;
     protected OnPostAdapterInteractionListener listener;
     ArrayList<PostDetails> posts;
     protected Context context;
-//    boolean isPostClicked = false;
     private RecyclerView recyclerView;
 
     PostsListAdapter(Context context) {
@@ -37,14 +34,12 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         if (posts == null) {
             posts = new ArrayList<>();
         }
-        colorArray = new SparseIntArray();
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         if (this.recyclerView == null) {
             this.recyclerView = recyclerView;
@@ -54,7 +49,7 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
     void addPosts(int page, List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
-                posts.clear();
+                clearData();
                 posts.addAll(postDetailsList);
                 notifyDataSetChanged();
                 if (recyclerView != null) {
@@ -70,32 +65,28 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         }
     }
 
-    void clear() {
-        posts.clear();
+    private void clearData() {
+        if (posts != null) {
+            posts.clear();
+        }
     }
 
-    @Override
-    public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(PostListViewHolder.LAYOUT_RES, parent, false);
+    @Override public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(PostListViewHolder.LAYOUT_RES, parent, false);
         return new PostListViewHolder(this, view);
     }
 
-    @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
+    @Override public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return posts.size();
     }
 
-    @Override
-    public void release() {
-        colorArray.clear();
-        colorArray = null;
-        posts.clear();
+    @Override public void release() {
+        clearData();
+        posts = null;
         listener = null;
         context = null;
         recyclerView = null;
@@ -103,9 +94,6 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
 
     GradientDrawable getBackground(ColorStateList color) {
         GradientDrawable gradientDrawable = new GradientDrawable();
-//        if (colorArray.get(position) == 0) {
-//            colorArray.put(position, color);
-//        }
         gradientDrawable.setColor(color);
         gradientDrawable.setCornerRadius(getPixels(context, 2));
         return gradientDrawable;

@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -397,6 +398,7 @@ public class ViewUtils {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 
+    @Nullable
     public static View getTabChild(TabLayout tabLayout, int tabIndex) {
         try {
             return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);

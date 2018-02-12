@@ -7,16 +7,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +26,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
@@ -72,7 +68,7 @@ import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, OnAudioVolumeChangedListener, OnThumbReadyListener {
 
     @LayoutRes static final int LAYOUT_RES = R.layout.item_home_screen_post_new;
-    private static final long DOUBLE_CLICK_DURATION = 500;
+//    private static final long DOUBLE_CLICK_DURATION = 500;
 
     @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
     @BindView(R.id.location) ProximaNovaRegularTextView location;
@@ -91,15 +87,15 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     @BindView(R.id.shimmer_layout_top) ShimmerLinearLayout shimmerLayoutTop;
     @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
 
-    private Handler handler;
-    private Runnable runnable;
+//    private boolean doubleClicked;
+//    private Handler handler;
+//    private Runnable runnable;
     private AudioVolumeObserver audioVolumeObserver;
     private PostsListAdapter postsListAdapter;
     private ExoPlayerViewHelper helper;
     private PostDetails postDetails;
     private BitmapDrawable thumbnailDrawable;
-    private boolean doubleClicked;
-    private boolean viewed;
+//    private boolean viewed;
 
     PostListViewHolder(PostsListAdapter postsListAdapter, View view) {
         super(view);
@@ -110,29 +106,29 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
             audioVolumeObserver = new AudioVolumeObserver(postsListAdapter.context);
         }
         registerAudioObserver();
-        viewed = false;
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                doubleClicked = false;
-                fetchPostDetails(postDetails.getPostId(), thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null);
-            }
-        };
+//        viewed = false;
+//        handler = new Handler();
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                doubleClicked = false;
+//                fetchPostDetails(postDetails.getPostId(), thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null);
+//            }
+//        };
     }
 
     @OnClick(R.id.content) void viewPost() {
-        if (doubleClicked) {
-            doubleClicked = false;
-            handler.removeCallbacks(runnable);
-            likeDislikePost();
-            return;
-        }
-
-        this.doubleClicked = true;
-//        Toast.makeText(this, "Hit back again to exit", Toast.LENGTH_SHORT).show();
-
-        handler.postDelayed(runnable, DOUBLE_CLICK_DURATION);
+        fetchPostDetails(postDetails.getPostId(), thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null);
+//        if (doubleClicked) {
+//            doubleClicked = false;
+//            handler.removeCallbacks(runnable);
+//            likeDislikePost();
+//            return;
+//        }
+//
+//        this.doubleClicked = true;
+//
+//        handler.postDelayed(runnable, DOUBLE_CLICK_DURATION);
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
@@ -180,10 +176,10 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     @Override public void play() {
         if (helper != null) helper.play();
         adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
-        if (!viewed) {
-            viewed = true;
-            incrementView();
-        }
+//        if (!viewed) {
+//            viewed = true;
+//            incrementView();
+//        }
     }
 
     @Override public void pause() {
@@ -350,63 +346,65 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         popularityLayoutShimmer.setVisibility(GONE);
     }
 
-    private void likeDislikePost() {
-        Callback<ResultObject> callback = new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() != 200) {
-                    if (response.body() != null)
-                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
-                    else
-                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
-                }
-            }
+//    private void likeDislikePost() {
+//        Callback<ResultObject> callback = new Callback<ResultObject>() {
+//            @Override
+//            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                if (response.code() != 200) {
+//                    if (response.body() != null)
+//                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
+//                    else
+//                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResultObject> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        };
+//
+//        if (postDetails.canLike()) {
+////            Like the post
+//            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, postsListAdapter.context).enqueue(callback);
+//            postDetails.canLike = false;
+//            postDetails.likes++;
+//        } else {
+////            Unlike the post
+//            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, postsListAdapter.context).enqueue(callback);
+//            postDetails.canLike = true;
+//            postDetails.likes--;
+//        }
+//
+//        setLikes();
+//        likes.startAnimation(AnimationUtils.loadAnimation(postsListAdapter.context, R.anim.selected));
+//    }
 
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        };
-
-        if (postDetails.canLike()) {
-//            Like the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, postsListAdapter.context).enqueue(callback);
-            postDetails.canLike = false;
-            postDetails.likes++;
-        } else {
-//            Unlike the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, postsListAdapter.context).enqueue(callback);
-            postDetails.canLike = true;
-            postDetails.likes--;
-        }
-
-        setLikes();
-        likes.startAnimation(AnimationUtils.loadAnimation(postsListAdapter.context, R.anim.selected));
-    }
-
-    private void incrementView() {
-        ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), postsListAdapter.context)
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        try {
-                            if (response.code() == 200 && response.body().getStatus()) {
-                                if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.getMedias().get(0).views++;
-                                postDetails.getMedias().get(0).views++;
-                                setViews();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
-    }
+//    private void incrementView() {
+//        if (!postDetails.canDelete()) {
+//            ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), postsListAdapter.context)
+//                    .enqueue(new Callback<ResultObject>() {
+//                        @Override
+//                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                            try {
+//                                if (response.code() == 200 && response.body().getStatus()) {
+//                                    if (PostsListFragment.postDetails != null)
+//                                        PostsListFragment.postDetails.getMedias().get(0).views++;
+//                                    postDetails.getMedias().get(0).views++;
+//                                    setViews();
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ResultObject> call, Throwable t) {
+//                            t.printStackTrace();
+//                        }
+//                    });
+//        }
+//    }
 
     private void registerAudioObserver() {
         try {
@@ -427,9 +425,11 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     }
 
     private void adjustVolumeButtons(float currentVolume) {
-        volumeControl.setVisibility(VISIBLE);
-        volumeControl.setImageResource(currentVolume == 0 ? R.drawable.ic_volume_off :
-                R.drawable.ic_volume_up);
+        if (isPlaying()) {
+            volumeControl.setVisibility(VISIBLE);
+            volumeControl.setImageResource(currentVolume == 0 ? R.drawable.ic_volume_off :
+                    R.drawable.ic_volume_up);
+        }
     }
 
     @Override public void initialVolume(int currentVolume) {

@@ -18,6 +18,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.CustomLinearLayoutManager;
 import com.cncoding.teazer.customViews.EndlessRecyclerViewScrollListener;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.data.viewmodel.PostDetailsViewModel;
@@ -108,12 +109,14 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         recyclerView.setAdapter(postListAdapter);
         bindRecyclerViewAdapter(postListAdapter);
         recyclerView.setSaveEnabled(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(getParentActivity(), LinearLayoutManager.VERTICAL, false));
         scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void loadFirstPage() {
-                currentPage = 1;
-                getHomePagePosts(1);
+                if (PostsListFragment.this.postDetailsViewModel.getPostList().getValue() == null) {
+                    currentPage = 1;
+                    refreshPosts();
+                }
             }
 
             @Override
@@ -128,14 +131,16 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     public void refreshPosts() {
-        swipeRefreshLayout.setRefreshing(true);
-        postDetailsViewModel.clear();
-        postListAdapter.clear();
+        if (!swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(true);
+        if (!isListAtTop()) recyclerView.scrollToPosition(0);
+        toggleRecyclerViewScrolling();
+        if (scrollListener != null) scrollListener.resetState();
+        postDetailsViewModel.clearData();
         getHomePagePosts(1);
-        scrollListener.resetState();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                toggleRecyclerViewScrolling();
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
@@ -200,6 +205,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
     private void handleResponse(List<PostDetails> postDetailsList) {
         postListAdapter.addPosts(currentPage, postDetailsList);
+        isRefreshing = false;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -222,8 +228,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         return ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0;
     }
 
-    public void scrollToTop() {
-        recyclerView.scrollToPosition(0);
+    private void toggleRecyclerViewScrolling() {
+        CustomLinearLayoutManager manager = (CustomLinearLayoutManager) recyclerView.getLayoutManager();
+        manager.setScrollEnabled(!manager.isScrollEnabled());
     }
 
     @Override

@@ -16,7 +16,7 @@
  *
  */
 
-package com.cncoding.teazer.data.dependencyinjection;
+package com.cncoding.teazer.injection;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
@@ -34,8 +34,9 @@ import dagger.Provides;
 
 /**
  *
- * Created by R_KAY on 8/18/2017.
+ * Created by Prem$ on 8/18/2017.
  */
+
 @Module
 public class RoomModule {
 
