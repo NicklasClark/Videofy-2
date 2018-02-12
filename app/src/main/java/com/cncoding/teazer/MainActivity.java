@@ -313,8 +313,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onOtpInteraction(VerifySignUp verificationDetails, String picturePath) {
+    @Override public void onOtpInteraction(VerifySignUp verificationDetails, String picturePath) {
         if (verificationDetails != null) {
             //fabric event
             logSignUpEvent("Email/Phone", true, verificationDetails.getEmail());
