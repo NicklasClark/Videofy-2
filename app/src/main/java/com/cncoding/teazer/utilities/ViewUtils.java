@@ -10,9 +10,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -35,8 +35,6 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
@@ -47,13 +45,10 @@ import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
 import java.io.File;
-import java.util.Locale;
 
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  *
@@ -202,26 +197,6 @@ public class ViewUtils {
 
     public static void showSnackBar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    public static CountDownTimer startCountDownTimer(final Context context, final ProximaNovaRegularTextView otpVerifiedTextView,
-                                                     final ProximaNovaSemiboldButton otpResendBtn) {
-        return new CountDownTimer(120000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                String remainingTime = context.getString(R.string.retry_in) + " " + String.format(Locale.UK, "%02d:%02d",
-                        MILLISECONDS.toMinutes(millisUntilFinished),
-                        MILLISECONDS.toSeconds(millisUntilFinished) -
-                                MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
-                otpVerifiedTextView.setText(remainingTime);
-            }
-
-            @Override
-            public void onFinish() {
-                otpVerifiedTextView.setText(R.string.you_can_try_again);
-                otpResendBtn.setEnabled(true);
-            }
-        };
     }
 
     public static void launchVideoUploadCamera(Context packageContext) {
@@ -423,6 +398,7 @@ public class ViewUtils {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 
+    @Nullable
     public static View getTabChild(TabLayout tabLayout, int tabIndex) {
         try {
             return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);

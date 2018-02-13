@@ -64,7 +64,7 @@
                 style="@style/AppTheme.RoundedEditText"
                 android:layout_marginBottom="24dp"
                 android:hint="@string/choose_a_username"
-                android:maxLength="15"
+                android:maxLength="50"
                 android:inputType="text"
                 android:imeOptions="actionNext" />
 
@@ -76,7 +76,6 @@
                 android:maxLength="32"
                 android:inputType="textPassword"
                 android:imeOptions="actionGo" />
-
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/signup__proceed_btn"

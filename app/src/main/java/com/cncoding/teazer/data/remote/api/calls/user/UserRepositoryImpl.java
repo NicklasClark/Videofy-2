@@ -1,0 +1,124 @@
+package com.cncoding.teazer.data.remote.api.calls.user;
+
+import android.arch.lifecycle.LiveData;
+
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
+import com.cncoding.teazer.model.updatemobilenumber.UpdateMobileNumber;
+import com.cncoding.teazer.model.user.DeactivateAccountRequest;
+import com.cncoding.teazer.model.user.NotificationsList;
+import com.cncoding.teazer.model.user.Profile;
+import com.cncoding.teazer.model.user.ProfileUpdateRequest;
+import com.cncoding.teazer.model.user.ReportUser;
+import com.cncoding.teazer.model.user.SetPasswordRequest;
+import com.cncoding.teazer.model.user.UpdateCategories;
+import com.cncoding.teazer.model.user.UpdatePasswordRequest;
+import com.cncoding.teazer.model.user.UserProfile;
+
+import okhttp3.MultipartBody;
+
+import static com.cncoding.teazer.data.remote.api.calls.ClientProvider.getRetrofitWithAuthToken;
+
+/**
+ *
+ * Created by Prem$ on 2/5/2018.
+ */
+
+public class UserRepositoryImpl implements UserRepository {
+
+    private UserService userService;
+
+    public UserRepositoryImpl(String token) {
+        userService = getRetrofitWithAuthToken(token).create(UserService.class);
+    }
+
+    @Override
+    public LiveData<ResultObject> updateUserProfileMedia(MultipartBody.Part media) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> resetFcmToken(String header, String token) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> setAccountVisibility(int accountType) {
+        return null;
+    }
+
+    @Override
+    public LiveData<UserProfile> getUserProfile() {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> changeMobileNumber(ChangeMobileNumber changeMobileNumber) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> updateMobileNumber(UpdateMobileNumber updateMobileNumber) {
+        return null;
+    }
+
+    @Override
+    public LiveData<Profile> getUserProfileDetail() {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> updateUserProfile(ProfileUpdateRequest updateProfileDetails) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> updatePassword(UpdatePasswordRequest updatePasswordDetails) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> setPassword(SetPasswordRequest setPasswordDetails) {
+        return null;
+    }
+
+    @Override
+    public LiveData<NotificationsList> getFollowingNotifications(int page) {
+        return null;
+    }
+
+    @Override
+    public LiveData<NotificationsList> getRequestNotifications(int page) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> updateCategories(UpdateCategories categories) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> logout(String header) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> removeProfilePic() {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> reportUser(ReportUser reportuser) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> deactivateAccount(DeactivateAccountRequest deactivateAccountRequest) {
+        return null;
+    }
+
+    @Override
+    public LiveData<ResultObject> resetUnreadNotification(int notificationType) {
+        return null;
+    }
+}

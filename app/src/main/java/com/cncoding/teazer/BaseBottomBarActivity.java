@@ -1,7 +1,6 @@
 package com.cncoding.teazer;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -45,10 +43,10 @@ import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -63,9 +61,9 @@ import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificati
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
+import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
-import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
@@ -75,7 +73,7 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.Reactions;
-import com.cncoding.teazer.services.receivers.VideoUploadReceiver;
+import com.cncoding.teazer.data.receiver.VideoUploadReceiver;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
@@ -120,27 +118,22 @@ import retrofit2.Response;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.cncoding.teazer.R.anim.float_down;
+import static com.cncoding.teazer.R.anim.fast_fade_in;
+import static com.cncoding.teazer.R.anim.fast_fade_out;
 import static com.cncoding.teazer.R.anim.float_up;
-import static com.cncoding.teazer.R.anim.sink_down;
-import static com.cncoding.teazer.R.anim.sink_up;
-import static com.cncoding.teazer.R.anim.slide_in_left;
-import static com.cncoding.teazer.R.anim.slide_in_right;
-import static com.cncoding.teazer.R.anim.slide_out_left;
-import static com.cncoding.teazer.R.anim.slide_out_right;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
+import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
+import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
-import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.services.VideoUploadService.VIDEO_PATH;
-import static com.cncoding.teazer.services.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
@@ -190,7 +183,6 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.app_bar) AppBarLayout appBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_center_title) ImageView toolbarCenterTitle;
-    //    @BindView(R.id.loader) ImageView loader;
     @BindView(R.id.toolbar_plain_title) ProximaNovaSemiBoldTextView toolbarPlainTitle;
     @BindView(R.id.main_fragment_container) FrameLayout contentFrame;
     @BindView(R.id.root_layout) NestedCoordinatorLayout rootLayout;
@@ -202,17 +194,13 @@ public class BaseBottomBarActivity extends BaseActivity
     @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.btnToolbarBack) ImageView btnToolbarBack;
 
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder builder;
     private VideoUploadReceiver videoUploadReceiver;
     private NavigationController navigationController;
     private FragmentHistory fragmentHistory;
     private Fragment currentFragment;
     private BroadcastReceiver BReceiver;
-    private NavigationTransactionOptions transactionOptions;
     public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
-    String Identifier;
     PostDetails postDetails;
 
     @Override
@@ -250,8 +238,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 .blurAlgorithm(new RenderScriptBlur(this))
                 .blurRadius(20);
 
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         setupServiceReceiver();
         checkIfAnyVideoIsUploading();
 
@@ -269,16 +255,12 @@ public class BaseBottomBarActivity extends BaseActivity
 
         navigationController = NavigationController
                 .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_fragment_container)
+                .activity(this)
+                .defaultTransactionOptions(new NavigationTransactionOptions.Builder()
+                        .customAnimations(float_up, fast_fade_out, fast_fade_in, fast_fade_out)
+                        .build())
                 .transactionListener(this)
                 .rootFragmentListener(this, TABS.length)
-                .build();
-
-        transactionOptions = new NavigationTransactionOptions.Builder()
-                .customAnimations(
-                        navigationController.isRootFragment() ? float_up : slide_in_right,
-                        navigationController.isRootFragment() ? sink_down : slide_out_left,
-                        navigationController.isRootFragment() ? float_down : slide_in_left,
-                        navigationController.isRootFragment() ? sink_up : slide_out_right)
                 .build();
 
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -290,22 +272,13 @@ public class BaseBottomBarActivity extends BaseActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                Drawable icon = tab.getIcon();
-//                if (icon != null)
-//                    icon.setTint(Color.BLACK);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 navigationController.clearStack();
                 switchTab(tab.getPosition());
-                if (tab.getPosition() == TAB1 && navigationController.getCurrentFragment() instanceof PostsListFragment) {
-                    PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
-                    if (!fragment.isListAtTop()) {
-                        fragment.scrollToTop();
-                        fragment.refreshPosts();
-                    }
-                }
+                maybeRefreshTab(tab);
             }
         });
 
@@ -388,10 +361,52 @@ public class BaseBottomBarActivity extends BaseActivity
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
 //        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
-        tab.setCustomView(null);
-        tab.setCustomView(getTabView(unreadNotificationCount));
+        if (tab != null) {
+            tab.setCustomView(null);
+            tab.setCustomView(getTabView(unreadNotificationCount));
+        }
         switchTab(TAB1);
-        switchTab(0);
+    }
+
+    private void maybeRefreshTab(TabLayout.Tab tab) {
+        final View tabButton = getTabChild(bottomTabLayout, tab.getPosition());
+        if (tabButton != null) {
+            tabButton.setEnabled(false);
+            switch (tab.getPosition()) {
+                case TAB1:
+                    if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                        PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
+                        if (!fragment.isListAtTop()) {
+                            PostsListFragment.isRefreshing = true;
+                            fragment.refreshPosts();
+                        }
+                    }
+                    break;
+                case TAB2:
+                    if (navigationController.getCurrentFragment() instanceof DiscoverFragment) {
+                        navigationController.replaceFragment(getRootFragment(TAB2));
+                    }
+                    break;
+                case TAB4:
+                    if (navigationController.getCurrentFragment() instanceof NotificationsFragment) {
+                        navigationController.replaceFragment(getRootFragment(TAB4));
+                    }
+                    break;
+                case TAB5:
+                    if (navigationController.getCurrentFragment() instanceof ProfileFragment) {
+                        navigationController.replaceFragment(getRootFragment(TAB5));
+                    }
+                    break;
+            }
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (tabButton != null) {
+                    tabButton.setEnabled(true);
+                }
+            }
+        }, 1000);
     }
 
     private void shareTwitter(String message) {
@@ -520,6 +535,7 @@ public class BaseBottomBarActivity extends BaseActivity
 
     }
 
+    @SuppressLint("InflateParams")
     public View getTabView(int value) {
         View v = null;
         try {
@@ -718,7 +734,7 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void switchTab(final int position) {
-        navigationController.switchTab(position, transactionOptions);
+        navigationController.switchTab(position);
         updateBottomTabIconFocus(position);
         if (position == 1 || position == 3)
             setAppBarElevation(0);
@@ -1168,7 +1184,6 @@ public class BaseBottomBarActivity extends BaseActivity
                                 finishVideoUploadSession(getApplicationContext());
                                 break;
                             case REQUEST_CANCEL_UPLOAD:
-                                builder.setOngoing(false);
                                 Toast.makeText(BaseBottomBarActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
@@ -1190,12 +1205,6 @@ public class BaseBottomBarActivity extends BaseActivity
         } else if (getIntent().getParcelableExtra(UPLOAD_PARAMS) != null) {
             launchVideoUploadService(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), videoUploadReceiver);
 //            new ResumeUpload(this, (UploadParams) getIntent().getParcelableExtra(UPLOAD_PARAMS), true).execute();
-        }
-    }
-
-    private void notifyProgressInNotification() {
-        if (notificationManager != null) {
-            notificationManager.notify(0, builder.build());
         }
     }
 
@@ -1331,7 +1340,6 @@ public class BaseBottomBarActivity extends BaseActivity
                 if (fragmentHistory.isEmpty()) {
                     super.onBackPressed();
                 } else {
-
                     if (fragmentHistory.getStackSize() > 1) {
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);

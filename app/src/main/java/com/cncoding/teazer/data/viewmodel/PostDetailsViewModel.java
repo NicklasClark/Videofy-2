@@ -6,9 +6,11 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.cncoding.teazer.data.api.calls.post.PostsRepository;
-import com.cncoding.teazer.data.api.calls.post.PostsRepositoryImpl;
+import com.cncoding.teazer.data.remote.api.calls.post.PostsRepository;
+import com.cncoding.teazer.data.remote.api.calls.post.PostsRepositoryImpl;
 import com.cncoding.teazer.model.post.PostList;
+
+import javax.inject.Inject;
 
 /**
  *
@@ -22,7 +24,7 @@ public class PostDetailsViewModel extends ViewModel {
     private PostsRepository apiRepository;
 //    private PostDetailsLocalRepo localRepository;
 
-    public PostDetailsViewModel(String token) {
+    @Inject public PostDetailsViewModel(String token) {
 //        this.localRepository = new PostDetailsLocalRepo();
         this.apiRepository = new PostsRepositoryImpl(token);
         livePostDetailsList = new MediatorLiveData<>();
@@ -50,7 +52,7 @@ public class PostDetailsViewModel extends ViewModel {
         }
     }
 
-    public void clear() {
+    public void clearData() {
         if (livePostDetailsList.getValue() != null) {
             livePostDetailsList.getValue().getPosts().clear();
         }

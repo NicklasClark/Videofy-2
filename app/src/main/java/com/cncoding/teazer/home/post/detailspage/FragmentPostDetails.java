@@ -62,7 +62,7 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
+import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -118,6 +118,7 @@ import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_FILL;
+<<<<<<< HEAD
 import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
 import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
@@ -125,6 +126,13 @@ import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
 import static com.cncoding.teazer.services.VideoUploadService.VIDEO_PATH;
+=======
+import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+>>>>>>> prem_dev
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
