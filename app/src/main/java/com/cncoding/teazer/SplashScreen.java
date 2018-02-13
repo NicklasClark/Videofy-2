@@ -8,6 +8,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.inmobi.sdk.InMobiSdk;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -22,6 +23,11 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        Fabric.with(this, new Crashlytics());
+
+
+        //initializing inmobi
+        InMobiSdk.setLogLevel(InMobiSdk.LogLevel.DEBUG);
+        InMobiSdk.init(SplashScreen.this, getString(R.string.inmobi_account_id));
 
         Fabric.with(this, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())

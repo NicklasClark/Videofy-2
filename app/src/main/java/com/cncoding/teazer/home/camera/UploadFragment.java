@@ -65,6 +65,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.inmobi.sdk.InMobiSdk;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -403,6 +404,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 currentLocation = location;
+
+                                //location for inmobi
+                                InMobiSdk.setLocation(currentLocation);
+
                                 if (firstTime) {
                                     new GetNearbyPlacesData(UploadFragment.this).execute(getNearbySearchUrl(currentLocation));
                                 }
@@ -419,6 +424,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
                     currentLocation = locationResult.getLastLocation();
+
+                    //location for inmobi
+                    InMobiSdk.setLocation(currentLocation);
+
                     stopLocationUpdates();
                 }
             };

@@ -48,7 +48,7 @@ public class PostDetails implements Parcelable {
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
     @SerializedName("categories") @Expose private ArrayList<Category> categories;
 
-    protected PostDetails(Parcel in) {
+    public PostDetails(Parcel in) {
         postId = in.readByte() == 0 ? null : in.readInt();
         postedBy = in.readByte() == 0 ? null : in.readInt();
         likes = in.readByte() == 0 ? null : in.readInt();

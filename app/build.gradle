@@ -203,6 +203,11 @@ dependencies {
     implementation "com.google.dagger:dagger:${daggerVersion}"
     implementation "com.google.dagger:dagger-android-support:${daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+
+    //inmobi
+    compile 'com.inmobi.monetization:inmobi-ads:7.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }
 
 configurations.all {

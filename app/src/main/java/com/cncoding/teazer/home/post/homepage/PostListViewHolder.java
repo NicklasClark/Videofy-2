@@ -40,9 +40,11 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextV
 import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
+import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
+import com.inmobi.ads.InMobiNative;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +102,7 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     private BitmapDrawable thumbnailDrawable;
     private boolean doubleClicked;
     private boolean viewed;
+    private AdFeedItem adFeedItem;
 
     PostListViewHolder(PostsListAdapter postsListAdapter, View view) {
         super(view);
@@ -218,54 +221,84 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     public void bind(int position) {
         try {
             postDetails = postsListAdapter.posts.get(position);
+            if(postDetails instanceof AdFeedItem)
+            {
+                final InMobiNative inMobiNative = ((AdFeedItem) postDetails).mNativeStrand;
+//                playerView.setShutterBackground(adFeedItem.getInMobiNative().getAdIconUrl());
+//                playerView.setResizeMode(RESIZE_MODE_ZOOM);
+                Glide.with(postsListAdapter.context)
+                        .load(inMobiNative.getAdIconUrl())
+                        .apply(new RequestOptions()
+                                .skipMemoryCache(false)
+                                .placeholder(R.drawable.ic_user_male_dp_small))
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-            if (!postDetails.canReact()) disableView(reactBtn, true);
-            else enableView(reactBtn);
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                           DataSource dataSource, boolean isFirstResource) {
+                                setFields();
+                                dp.setImageDrawable(resource);
+                                return false;
+                            }
+                        })
+                        .into(dp);
 
-            playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
-            playerView.setResizeMode(RESIZE_MODE_ZOOM);
 
-            shimmerize(new View[]{title, location, category}, new View[]{username});
+            }
+            else {
+
+                if (!postDetails.canReact()) disableView(reactBtn, true);
+                else enableView(reactBtn);
+
+                playerView.setShutterBackground(postDetails.getMedias().get(0).getThumbUrl());
+                playerView.setResizeMode(RESIZE_MODE_ZOOM);
+
+                shimmerize(new View[]{title, location, category}, new View[]{username});
 
 //                /*Adjust view size before loading anything*/
 //            adjustViewSize(postsListAdapter.context, postDetails.getMedias().get(0).getDimension().getWidth(),
 //                    postDetails.getMedias().get(0).getDimension().getHeight(),
 //                    playerView.getLayoutParams(), position, null, true);
 
-            @DrawableRes int placeholder = postDetails.getPostOwner().getGender() == MALE ? R.drawable.ic_user_male_dp_small :
-                    R.drawable.ic_user_female_dp;
+                @DrawableRes int placeholder = postDetails.getPostOwner().getGender() == MALE ? R.drawable.ic_user_male_dp_small :
+                        R.drawable.ic_user_female_dp;
 
-            Glide.with(postsListAdapter.context)
-                    .load(postDetails.getPostOwner().getProfileMedia() != null ?
-                            postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
-                    .apply(new RequestOptions()
-                            .skipMemoryCache(false)
-                            .placeholder(R.drawable.ic_user_male_dp_small))
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+                Glide.with(postsListAdapter.context)
+                        .load(postDetails.getPostOwner().getProfileMedia() != null ?
+                                postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
+                        .apply(new RequestOptions()
+                                .skipMemoryCache(false)
+                                .placeholder(R.drawable.ic_user_male_dp_small))
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                       DataSource dataSource, boolean isFirstResource) {
-                            setFields();
-                            dp.setImageDrawable(resource);
-                            return false;
-                        }
-                    })
-                    .into(dp);
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                                           DataSource dataSource, boolean isFirstResource) {
+                                setFields();
+                                dp.setImageDrawable(resource);
+                                return false;
+                            }
+                        })
+                        .into(dp);
 
-            if (postDetails.getReactions() != null && postDetails.getReactions().size() > 0) {
-                reactionListView.setVisibility(VISIBLE);
-                reactionListView.setLayoutManager(
-                        new LinearLayoutManager(postsListAdapter.context, LinearLayoutManager.HORIZONTAL, false));
-                reactionListView.setAdapter(new ReactionAdapter(postsListAdapter.context, postDetails.getReactions()));
-            } else {
-                reactionListView.setVisibility(GONE);
+                if (postDetails.getReactions() != null && postDetails.getReactions().size() > 0) {
+                    reactionListView.setVisibility(VISIBLE);
+                    reactionListView.setLayoutManager(
+                            new LinearLayoutManager(postsListAdapter.context, LinearLayoutManager.HORIZONTAL, false));
+                    reactionListView.setAdapter(new ReactionAdapter(postsListAdapter.context, postDetails.getReactions()));
+                } else {
+                    reactionListView.setVisibility(GONE);
+                }
             }
-        } catch (Exception e) {
+        } catch(Exception e){
             e.printStackTrace();
         }
     }
