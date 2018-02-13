@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ProgressRequestBody;
+import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
-import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.utilities.SharedPrefs;
 
 import java.io.File;
@@ -21,22 +21,12 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-<<<<<<< HEAD:app/src/main/java/com/cncoding/teazer/services/ReactionUploadService.java
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
-=======
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
->>>>>>> prem_dev:app/src/main/java/com/cncoding/teazer/data/service/ReactionUploadService.java
 import static com.cncoding.teazer.utilities.SharedPrefs.finishReactionUploadSession;
 import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
 import static com.cncoding.teazer.utilities.ViewUtils.UPLOAD_PARAMS;
