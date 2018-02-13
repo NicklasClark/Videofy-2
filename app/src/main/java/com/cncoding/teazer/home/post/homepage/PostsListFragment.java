@@ -3,7 +3,6 @@ package com.cncoding.teazer.home.post.homepage;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -80,6 +79,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                isRefreshing = true;
                 refreshPosts();
             }
         });
@@ -133,17 +133,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     public void refreshPosts() {
         if (!swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(true);
         if (!isListAtTop()) recyclerView.scrollToPosition(0);
-        toggleRecyclerViewScrolling();
+        toggleRecyclerViewScrolling(false);
         if (scrollListener != null) scrollListener.resetState();
         postDetailsViewModel.clearData();
         getHomePagePosts(1);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toggleRecyclerViewScrolling();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000);
     }
 
     public void getHomePagePosts(int page) {
@@ -204,8 +197,16 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     }
 
     private void handleResponse(List<PostDetails> postDetailsList) {
-        postListAdapter.addPosts(currentPage, postDetailsList);
-        isRefreshing = false;
+        toggleRecyclerViewScrolling(true);
+        if (isRefreshing) {
+            isRefreshing = false;
+            postListAdapter.updateNewPosts(postDetailsList);
+        } else {
+            postListAdapter.addPosts(currentPage, postDetailsList);
+        }
+        if (currentPage == 1) {
+            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -228,9 +229,9 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         return ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0;
     }
 
-    private void toggleRecyclerViewScrolling() {
+    private void toggleRecyclerViewScrolling(boolean enabled) {
         CustomLinearLayoutManager manager = (CustomLinearLayoutManager) recyclerView.getLayoutManager();
-        manager.setScrollEnabled(!manager.isScrollEnabled());
+        manager.setScrollEnabled(enabled);
     }
 
     @Override

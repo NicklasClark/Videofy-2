@@ -1,9 +1,8 @@
 package com.cncoding.teazer.home.post.homepage;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,10 @@ import android.view.ViewGroup;
 import com.cncoding.teazer.home.BaseRecyclerViewAdapter;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -46,6 +44,28 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         }
     }
 
+    @Override public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(PostListViewHolder.LAYOUT_RES, parent, false);
+        return new PostListViewHolder(this, view);
+    }
+
+    @Override
+    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override public int getItemCount() {
+        return posts.size();
+    }
+
+    @Override public void release() {
+        clearData();
+        posts = null;
+        listener = null;
+        context = null;
+        recyclerView = null;
+    }
+
     void addPosts(int page, List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
@@ -65,38 +85,18 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         }
     }
 
+    void updateNewPosts(List<PostDetails> postDetailsList) {
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDiffCallback(posts.subList(0, 29), postDetailsList));
+        clearData();
+        posts.addAll(postDetailsList);
+//        posts.addAll(0, postDetailsList);
+        result.dispatchUpdatesTo(this);
+    }
+
     private void clearData() {
         if (posts != null) {
             posts.clear();
         }
-    }
-
-    @Override public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(PostListViewHolder.LAYOUT_RES, parent, false);
-        return new PostListViewHolder(this, view);
-    }
-
-    @Override public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
-    }
-
-    @Override public int getItemCount() {
-        return posts.size();
-    }
-
-    @Override public void release() {
-        clearData();
-        posts = null;
-        listener = null;
-        context = null;
-        recyclerView = null;
-    }
-
-    GradientDrawable getBackground(ColorStateList color) {
-        GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(color);
-        gradientDrawable.setCornerRadius(getPixels(context, 2));
-        return gradientDrawable;
     }
 
     public interface OnPostAdapterInteractionListener {

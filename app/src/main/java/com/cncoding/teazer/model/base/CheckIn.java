@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 /**
  *
  * Created by Prem $ on 12/14/2017.
@@ -74,5 +76,10 @@ public class CheckIn extends ViewModel implements Parcelable {
 
     public String getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CheckIn && Objects.equals(getCheckinId(), ((CheckIn) obj).getCheckinId());
     }
 }

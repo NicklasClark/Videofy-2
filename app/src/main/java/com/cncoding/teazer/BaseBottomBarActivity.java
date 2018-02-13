@@ -357,10 +357,11 @@ public class BaseBottomBarActivity extends BaseActivity
         int unreadNotificationCount = getFollowingNotificationCount(this) + getRequestNotificationCount(this);
 //        bottomTabLayout.getTabAt(3).setCustomView(getTabView(unreadNotificationCount));
         TabLayout.Tab tab = bottomTabLayout.getTabAt(3);
-        tab.setCustomView(null);
-        tab.setCustomView(getTabView(unreadNotificationCount));
+        if (tab != null) {
+            tab.setCustomView(null);
+            tab.setCustomView(getTabView(unreadNotificationCount));
+        }
         switchTab(TAB1);
-        switchTab(0);
     }
 
     private void maybeRefreshTab(TabLayout.Tab tab) {
@@ -371,7 +372,10 @@ public class BaseBottomBarActivity extends BaseActivity
                 case TAB1:
                     if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
                         PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
-                        if (!fragment.isListAtTop()) fragment.refreshPosts();
+                        if (!fragment.isListAtTop()) {
+                            PostsListFragment.isRefreshing = true;
+                            fragment.refreshPosts();
+                        }
                     }
                     break;
                 case TAB2:

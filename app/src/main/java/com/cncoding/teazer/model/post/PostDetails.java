@@ -18,6 +18,7 @@ import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -331,5 +332,18 @@ public class PostDetails implements Parcelable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PostDetails &&
+                Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
+                Objects.equals(likes, ((PostDetails) obj).getLikes()) &&
+                Objects.equals(totalReactions, ((PostDetails) obj).getTotalReactions()) &&
+                Objects.equals(hasCheckin, ((PostDetails) obj).hasCheckin()) &&
+                Objects.equals(title, ((PostDetails) obj).getTitle()) &&
+                Objects.equals(canReact, ((PostDetails) obj).canReact()) &&
+                Objects.equals(canLike, ((PostDetails) obj).canLike()) &&
+                Objects.equals(checkIn, ((PostDetails) obj).getCheckIn());
     }
 }
