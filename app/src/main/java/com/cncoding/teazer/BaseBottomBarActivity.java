@@ -373,7 +373,7 @@ public class BaseBottomBarActivity extends BaseActivity
                     if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
                         PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
                         if (!fragment.isListAtTop()) {
-                            PostsListFragment.isRefreshing = true;
+                            fragment.manualRefreshTriggered = true;
                             fragment.refreshPosts();
                         }
                     }
@@ -549,7 +549,6 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     private void notificationAction(int notification_type, int source_id, int post_id) {
-
         if (notification_type == 1 || notification_type == 2 || notification_type == 3 || notification_type == 10) {
             pushFragment(OthersProfileFragment.newInstance3(String.valueOf(source_id), String.valueOf(notification_type)));
         }
@@ -574,11 +573,8 @@ public class BaseBottomBarActivity extends BaseActivity
                         }
                     });
         }
-        else
-        {
-
-            if(post_id!=0)
-            {
+        else {
+            if(post_id!=0) {
                 ApiCallingService.React.getReactionDetail2(source_id, getApplicationContext())
                         .enqueue(new Callback<ReactVideoDetailsResponse>() {
                             @Override
@@ -600,8 +596,7 @@ public class BaseBottomBarActivity extends BaseActivity
                             }
                         });
             }
-            else
-            {
+            else {
                 ApiCallingService.Posts.getPostDetails(source_id, getApplicationContext())
                         .enqueue(new Callback<PostDetails>() {
                             @Override
@@ -1147,8 +1142,12 @@ public class BaseBottomBarActivity extends BaseActivity
 
                                 finishVideoUploadSession(getApplicationContext());
 
-                                if (currentFragment instanceof PostsListFragment) {
-                                    ((PostsListFragment) currentFragment).getHomePagePosts(1);
+                                if (navigationController.getCurrentFragment() instanceof PostsListFragment) {
+                                    PostsListFragment fragment = (PostsListFragment) navigationController.getCurrentFragment();
+                                    if (fragment != null) {
+                                        fragment.manualRefreshTriggered = true;
+                                        fragment.refreshPosts();
+                                    }
                                 }
                                 break;
                             case UPLOAD_ERROR_CODE:

@@ -11,28 +11,22 @@ import com.google.gson.annotations.SerializedName;
 
 public class ProfileInfo {
 
-    @SerializedName("total_videos")
-    @Expose
-    private Integer totalVideos;
-    @SerializedName("private_profile")
-    @Expose
-    private PrivateProfile privateProfile;
-    @SerializedName("public_profile")
-    @Expose
-    private PublicProfile publicProfile;
-    @SerializedName("followers")
-    @Expose
-    private Integer followers;
-    @SerializedName("followings")
-    @Expose
-    private Integer followings;
-    @SerializedName("follow_info")
-    @Expose
-    private FollowInfo followInfo;
+    @SerializedName("total_videos") @Expose private Integer totalVideos;
+    @SerializedName("private_profile") @Expose private PrivateProfile privateProfile;
+    @SerializedName("public_profile") @Expose private PublicProfile publicProfile;
+    @SerializedName("followers") @Expose private Integer followers;
+    @SerializedName("followings") @Expose private Integer followings;
+    @SerializedName("follow_info") @Expose private FollowInfo followInfo;
+    @SerializedName("is_hided_all_posts") @Expose private Boolean isHidedAllPosts;
+    private Throwable error;
 
-    @SerializedName("is_hided_all_posts")
-    @Expose
-    private Boolean isHidedAllPosts;
+    public ProfileInfo(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public Integer getTotalVideos() {
         return totalVideos;

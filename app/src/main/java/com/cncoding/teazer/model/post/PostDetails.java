@@ -2,10 +2,10 @@ package com.cncoding.teazer.model.post;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.CheckIn;
@@ -14,8 +14,6 @@ import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.base.TaggedUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -48,6 +46,38 @@ public class PostDetails implements Parcelable {
     @SerializedName("tagged_users") @Expose private ArrayList<TaggedUser> taggedUsers;
     @SerializedName("reacted_users") @Expose private ArrayList<ReactedUser> reactedUsers;
     @SerializedName("categories") @Expose private ArrayList<Category> categories;
+    @Ignore private Throwable error;
+
+    public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
+                       Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete,
+                       Boolean isHided, Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn,
+                       ArrayList<Medias> medias, ArrayList<PostReaction> reactions, ArrayList<TaggedUser> taggedUsers,
+                       ArrayList<ReactedUser> reactedUsers, ArrayList<Category> categories) {
+        this.postId = postId;
+        this.postedBy = postedBy;
+        this.likes = likes;
+        this.totalReactions = totalReactions;
+        this.totalTags = totalTags;
+        this.hasCheckin = hasCheckin;
+        this.title = title;
+        this.canReact = canReact;
+        this.canLike = canLike;
+        this.canDelete = canDelete;
+        this.isHided = isHided;
+        this.isHidedAll = isHidedAll;
+        this.postOwner = postOwner;
+        this.createdAt = createdAt;
+        this.checkIn = checkIn;
+        this.medias = medias;
+        this.reactions = reactions;
+        this.taggedUsers = taggedUsers;
+        this.reactedUsers = reactedUsers;
+        this.categories = categories;
+    }
+
+    public PostDetails(Throwable error) {
+        this.error = error;
+    }
 
     protected PostDetails(Parcel in) {
         postId = in.readByte() == 0 ? null : in.readInt();
@@ -76,33 +106,6 @@ public class PostDetails implements Parcelable {
         taggedUsers = in.createTypedArrayList(TaggedUser.CREATOR);
         reactedUsers = in.createTypedArrayList(ReactedUser.CREATOR);
         categories = in.createTypedArrayList(Category.CREATOR);
-    }
-
-    public PostDetails(Integer postId, Integer postedBy, Integer likes, Integer totalReactions, Integer totalTags,
-                       Boolean hasCheckin, String title, Boolean canReact, Boolean canLike, Boolean canDelete, Boolean isHided,
-                       Boolean isHidedAll, MiniProfile postOwner, String createdAt, CheckIn checkIn, ArrayList<Medias> medias,
-                       ArrayList<PostReaction> reactions, ArrayList<TaggedUser> taggedUsers, ArrayList<ReactedUser> reactedUsers,
-                       ArrayList<Category> categories) {
-        this.postId = postId;
-        this.postedBy = postedBy;
-        this.likes = likes;
-        this.totalReactions = totalReactions;
-        this.totalTags = totalTags;
-        this.hasCheckin = hasCheckin;
-        this.title = title;
-        this.canReact = canReact;
-        this.canLike = canLike;
-        this.canDelete = canDelete;
-        this.isHided = isHided;
-        this.isHidedAll = isHidedAll;
-        this.postOwner = postOwner;
-        this.createdAt = createdAt;
-        this.checkIn = checkIn;
-        this.medias = medias;
-        this.reactions = reactions;
-        this.taggedUsers = taggedUsers;
-        this.reactedUsers = reactedUsers;
-        this.categories = categories;
     }
 
     @Override
@@ -160,14 +163,11 @@ public class PostDetails implements Parcelable {
     }
 
     public static final Creator<PostDetails> CREATOR = new Creator<PostDetails>() {
-        @NonNull
         @Override
         public PostDetails createFromParcel(Parcel in) {
             return new PostDetails(in);
         }
 
-        @NonNull
-        @Contract(pure = true)
         @Override
         public PostDetails[] newArray(int size) {
             return new PostDetails[size];
@@ -252,6 +252,10 @@ public class PostDetails implements Parcelable {
 
     public ArrayList<PostReaction> getReactions() {
         return reactions;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public void setPostId(Integer postId) {

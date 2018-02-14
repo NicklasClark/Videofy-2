@@ -20,6 +20,7 @@ public class LandingPosts {
     @SerializedName("my_interests")
     @Expose
     private Map<String, ArrayList<PostDetails>> my_interests;
+    private Throwable error;
 
     public LandingPosts(ArrayList<PostDetails> most_popular, ArrayList<Category> user_interests,
                         ArrayList<Category> trending_categories, Map<String, ArrayList<PostDetails>> my_interests) {
@@ -27,6 +28,10 @@ public class LandingPosts {
         this.user_interests = user_interests;
         this.trending_categories = trending_categories;
         this.my_interests = my_interests;
+    }
+
+    public LandingPosts(Throwable error) {
+        this.error = error;
     }
 
     public void clearData() {
@@ -45,6 +50,10 @@ public class LandingPosts {
 //                return most_popular.isEmpty() && user_interests.isEmpty() && trending_categories.isEmpty() &&
 //                        Collections.frequency(my_interests.values(), Collections.EMPTY_LIST) == my_interests.size();
 //            }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public ArrayList<PostDetails> getMostPopular() {
         return most_popular;

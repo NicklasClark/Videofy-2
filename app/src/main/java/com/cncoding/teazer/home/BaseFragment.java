@@ -40,7 +40,7 @@ public class BaseFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return (BaseBottomBarActivity) getActivity();
     }
 
     @Override
@@ -54,6 +54,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        navigation = null;
         if (scrollListener != null) {
             scrollListener.resetState();
             scrollListener = null;

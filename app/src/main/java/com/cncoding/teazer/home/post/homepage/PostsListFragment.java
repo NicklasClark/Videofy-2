@@ -39,13 +39,13 @@ import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 
 public class PostsListFragment extends BaseFragment implements View.OnKeyListener {
 
-//    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.post_list) Container recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.post_load_error) ProximaNovaRegularTextView postLoadErrorTextView;
     @BindView(R.id.post_load_error_layout) LinearLayout postLoadErrorLayout;
 
     public static boolean isRefreshing;
+    public boolean manualRefreshTriggered;
     public static PostDetails postDetails;
     public static int positionToUpdate = -1;
     private int currentPage;
@@ -79,7 +79,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                isRefreshing = true;
+                manualRefreshTriggered = true;
                 refreshPosts();
             }
         });
@@ -198,8 +198,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
     private void handleResponse(List<PostDetails> postDetailsList) {
         toggleRecyclerViewScrolling(true);
-        if (isRefreshing) {
-            isRefreshing = false;
+        if (manualRefreshTriggered) {
+            manualRefreshTriggered = false;
             postListAdapter.updateNewPosts(postDetailsList);
         } else {
             postListAdapter.addPosts(currentPage, postDetailsList);

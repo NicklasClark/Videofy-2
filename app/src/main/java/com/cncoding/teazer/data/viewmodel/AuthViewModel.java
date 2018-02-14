@@ -3,11 +3,9 @@ package com.cncoding.teazer.data.viewmodel;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepository;
-import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl;
+import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepository;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
 import com.cncoding.teazer.model.auth.Login;
@@ -29,17 +27,6 @@ public class AuthViewModel extends ViewModel {
     private MediatorLiveData<ResultObject> apiResponseLiveData;
     private AuthenticationRepository authenticationRepository;
     private Observer<ResultObject> resultObjectObserver;
-
-    public AuthViewModel() {
-        this.apiResponseLiveData = new MediatorLiveData<>();
-        this.authenticationRepository = new AuthenticationRepositoryImpl();
-        this.resultObjectObserver = new Observer<ResultObject>() {
-            @Override
-            public void onChanged(@Nullable ResultObject resultObject) {
-                AuthViewModel.this.apiResponseLiveData.setValue(resultObject);
-            }
-        };
-    }
 
     @Inject public AuthViewModel(MediatorLiveData<ResultObject> apiResponseLiveData, AuthenticationRepository authenticationRepository,
                          Observer<ResultObject> resultObjectObserver) {

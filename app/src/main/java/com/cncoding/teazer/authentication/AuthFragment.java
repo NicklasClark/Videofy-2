@@ -32,7 +32,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 
 /**
  * A simple {@link Fragment} subclass.
