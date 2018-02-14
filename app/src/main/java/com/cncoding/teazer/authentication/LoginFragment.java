@@ -318,6 +318,8 @@ public class LoginFragment extends AuthFragment {
 
     @OnClick(R.id.already_have_otp) public void alreadyHaveOtp() {
         ViewUtils.hideKeyboard(getActivity(), loginBtn);
+
+
         if (!login.getUserName().isEmpty() && isDigitsOnly(login.getUserName())) {
             mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION,
                     new InitiateLoginWithOtp(Long.parseLong(login.getUserName()), countryCode));
@@ -376,9 +378,6 @@ public class LoginFragment extends AuthFragment {
                 break;
             case LOGIN_WITH_OTP:
                 try {
-                    SharedPrefs.saveAuthToken(getParentActivity().getApplicationContext(), resultObject.getAuthToken());
-                    SharedPrefs.saveUserId(getParentActivity().getApplicationContext(), resultObject.getUserId());
-
                     logLoginEvent("OTP", true, login.getUserName());
 
                     mListener.onLoginFragmentInteraction(LOGIN_WITH_OTP_ACTION,
@@ -426,7 +425,7 @@ public class LoginFragment extends AuthFragment {
         switch (whichType) {
             case CHECK_USERNAME:
                 return login.getUserName() != null &&
-                        login.getUserName().length() > 4 && login.getUserName().length() <= 50;
+                        login.getUserName().length() >= 4 && login.getUserName().length() <= 50;
             case CHECK_PASSWORD:
                 return login.getPassword() != null &&
                         login.getPassword().length() >= 8 && login.getPassword().length() <= 32;
