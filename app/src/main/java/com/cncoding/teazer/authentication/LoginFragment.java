@@ -342,8 +342,10 @@ public class LoginFragment extends AuthFragment {
     }
 
     private void markValidity(boolean status) {
-        setEditTextDrawableEnd(usernameView, !status ? R.drawable.ic_cross :
-                R.drawable.ic_tick_circle);
+        setEditTextDrawableEnd(usernameView,
+                status ?
+                        R.drawable.ic_tick_circle :
+                        R.drawable.ic_cross);
     }
 
     @Override protected void handleResponse(ResultObject resultObject) {
@@ -426,7 +428,7 @@ public class LoginFragment extends AuthFragment {
         switch (whichType) {
             case CHECK_USERNAME:
                 return login.getUserName() != null &&
-                        login.getUserName().length() > 4 && login.getUserName().length() <= 50;
+                        login.getUserName().length() >= 4 && login.getUserName().length() <= 50;
             case CHECK_PASSWORD:
                 return login.getPassword() != null &&
                         login.getPassword().length() >= 8 && login.getPassword().length() <= 32;
