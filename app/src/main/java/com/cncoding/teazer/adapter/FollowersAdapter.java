@@ -99,6 +99,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 }
 
                 final boolean following = cont.getFollowing();
+                final boolean follower = cont.getFollower();
                 final boolean requestsent = cont.getRequestSent();
                 followerId = cont.getUserId();
                 final int accounttype = cont.getAccountType();
@@ -110,13 +111,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     if (following) {
                         setActionButtonText(context, viewHolder.action, R.string.following);
                         usertype = "Following";
-                    }
-                    else {
+                    } else {
                         if (requestsent) {
                             setActionButtonText(context, viewHolder.action, R.string.requested);
                             usertype = "Requested";
-                        }
-                        else {
+                        } else {
                             setActionButtonText(context, viewHolder.action, R.string.follow);
                             usertype = "Follow";
                         }
@@ -152,23 +151,28 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
-                            followUser(followerId, context, viewHolder, accounttype,i,true);
+                            if(follower)
+                            {
+                              //  acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, false);
+
+                            }
+                            else{
+                                followUser(followerId, context, viewHolder, accounttype, i, true);
+                        }
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.requested))) {
-                            cancelRequest(followerId, context, viewHolder, accounttype,i,true);
+                            cancelRequest(followerId, context, viewHolder, accounttype, i, true);
 
                         }
 
                         if (viewHolder.action.getText().equals(context.getString(R.string.following))) {
-                            unFollowUser(followerId, context, viewHolder, accounttype,i,true);
+                            unFollowUser(followerId, context, viewHolder, accounttype, i, true);
                         }
 
 
                     }
                 });
-            }
-            else
-                {
+            } else {
 
                 final UserInfo cont = list.get(i);
                 final String usertype;
@@ -179,11 +183,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                 final boolean following = cont.getFollowing();
                 final boolean requestsent = cont.getRequestSent();
                 final boolean requestrecived = cont.getRequestRecieved();
-                if(requestrecived)
-                {
-                    requestId=cont.getRequestId();
-                }
-                else requestId=0;
+                if (requestrecived) {
+                    requestId = cont.getRequestId();
+                } else requestId = 0;
 
                 final String followername = cont.getUserName();
                 followerId = cont.getUserId();
@@ -203,11 +205,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             .apply(new RequestOptions().centerInside().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .into(viewHolder.dp);
                 }
-
-
                 if (myself) {
-
-
                     viewHolder.name.setTextColor(Color.parseColor("#333333"));
                     viewHolder.action.setVisibility(View.INVISIBLE);
                     usertype = "";
@@ -241,37 +239,28 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                     if (requestrecived == true) {
                                         setActionButtonText(context, viewHolder.action, R.string.accept);
                                         usertype = "Accept";
-                                    }
-                                    else {
+                                    } else {
                                         setActionButtonText(context, viewHolder.action, R.string.requested);
-                                        usertype = "Requested";}
-                                }
-                                else {
+                                        usertype = "Requested";
+                                    }
+                                } else {
 
 
                                     if (requestrecived == true && follower) {
 
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else if(requestrecived == true && !follower)
-                                    {
+                                    } else if (requestrecived == true && !follower) {
                                         setActionButtonText(context, viewHolder.action, R.string.accept);
                                         usertype = "Accept";
 
-                                    }
-                                    else if(requestrecived == false && follower)
-                                    {
+                                    } else if (requestrecived == false && follower) {
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else if(requestrecived == false)
-                                    {
+                                    } else if (requestrecived == false) {
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         usertype = "Follow";
 
                                     }
@@ -279,10 +268,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
                                 }
                             }
-                        }
-
-
-                        else {
+                        } else {
                             if (following) {
                                 if (requestrecived == true) {
                                     setActionButtonText(context, viewHolder.action, R.string.accept);
@@ -291,56 +277,40 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                     setActionButtonText(context, viewHolder.action, R.string.following);
                                     usertype = "Following";
                                 }
-                            }
-                            else {
+                            } else {
                                 if (requestsent) {
                                     if (requestrecived == true) {
                                         setActionButtonText(context, viewHolder.action, R.string.accept);
                                         usertype = "Accept";
-                                    }
-                                    else {
+                                    } else {
                                         setActionButtonText(context, viewHolder.action, R.string.requested);
                                         usertype = "Requested";
                                     }
-                                }
-                                else {
+                                } else {
 
                                     if (requestrecived == true && follower) {
 
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else if(requestrecived == true && !follower)
-                                    {
+                                    } else if (requestrecived == true && !follower) {
                                         setActionButtonText(context, viewHolder.action, R.string.accept);
                                         usertype = "Accept";
 
-                                    }
-                                    else if(requestrecived == false && follower)
-                                    {
+                                    } else if (requestrecived == false && follower) {
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else if(requestrecived == false)
-                                    {
+                                    } else if (requestrecived == false) {
                                         setActionButtonText(context, viewHolder.action, R.string.follow);
                                         usertype = "Follow";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         usertype = "Follow";
 
                                     }
-
 
 
                                 }
                             }
                         }
-
-
-
-
 
                     }
                 }
@@ -366,29 +336,29 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                     public void onClick(View view) {
 
                         if (viewHolder.action.getText().equals(context.getString(R.string.accept))) {
-
-                            acceptUser(requestId, viewHolder, accounttype,following,requestsent,i,true);
+                            acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, true);
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.follow))) {
-                            if(requestrecived && follower)
+
+                            if (requestrecived && follower)
+
                             {
-                                acceptUser(requestId, viewHolder, accounttype,following,requestsent,i,false);
+                                acceptUser(requestId, viewHolder, accounttype, following, requestsent, i, false);
+
+                            } else {
+                                followUser(followerId, context, viewHolder, accounttype, i, false);
 
                             }
-                            else if(requestrecived)
-                            {
-                                followUser(followerId, context, viewHolder, accounttype,i,false);
 
-                            }
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.requested))) {
-                            cancelRequest(followerId, context, viewHolder, accounttype,i,false);
+                            cancelRequest(followerId, context, viewHolder, accounttype, i, false);
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.following))) {
-                            unFollowUser(followerId, context, viewHolder, accounttype,i,false);
+                            unFollowUser(followerId, context, viewHolder, accounttype, i, false);
                         }
                         if (viewHolder.action.getText().equals(context.getString(R.string.unblock))) {
-                            blockUnblockUsers(followerId, UNBLOCK_STATUS, followername, viewHolder,i);
+                            blockUnblockUsers(followerId, UNBLOCK_STATUS, followername, viewHolder, i);
                         }
                     }
                 });
@@ -398,8 +368,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         }
     }
 
-    public void acceptUser(final int requestId,final ViewHolder viewHolder, final int accounttype, final boolean isfollowing,final boolean requestSent,final int i,final boolean isAcceptFollow) {
-      //  loader.setVisibility(View.VISIBLE);
+    public void acceptUser(final int requestId, final ViewHolder viewHolder, final int accounttype, final boolean isfollowing, final boolean requestSent, final int i, final boolean isAcceptFollow) {
+        //  loader.setVisibility(View.VISIBLE);
         ApiCallingService.Friends.acceptJoinRequest(requestId, context)
                 .enqueue(new Callback<ResultObject>() {
                     @Override
@@ -407,7 +377,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         try {
                             if (response.code() == 200) {
                                 if (response.body().getStatus()) {
-                                    if(isAcceptFollow) {
+                                    if (isAcceptFollow) {
                                         Toast.makeText(context, "Request Accepted", Toast.LENGTH_LONG).show();
                                         if (isfollowing) {
                                             setActionButtonText(context, viewHolder.action, R.string.following);
@@ -419,9 +389,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                             setActionButtonText(context, viewHolder.action, R.string.follow);
                                             list.get(i).setFollower(true);
                                         }
-                                    }
-                                    else
-                                    {
+                                    } else {
 
                                         if (response.body().getFollowInfo().getFollowing()) {
                                             setActionButtonText(context, viewHolder.action, R.string.following);
@@ -441,11 +409,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                                     Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Toast.makeText(context, "Something went wrong, Please try again..", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<ResultObject> call, Throwable t) {
                         t.printStackTrace();
@@ -455,9 +423,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
 
-
-
-    private void followUser(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype,final int i,final boolean isUser) {
+    private void followUser(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype, final int i, final boolean isUser) {
 
         ApiCallingService.Friends.followUser(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -468,16 +434,12 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         if (b) {
 
 
-
                             if (accounttype == 1) {
                                 setActionButtonText(context, viewHolder.action, R.string.requested);
                                 Toast.makeText(context, "You have sent following request", Toast.LENGTH_LONG).show();
-                                if(isUser)
-                                {
+                                if (isUser) {
                                     userlist.get(i).setRequestSent(true);
-                                }
-
-                                else {
+                                } else {
                                     list.get(i).setRequestSent(true);
                                 }
 
@@ -485,12 +447,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             } else {
                                 setActionButtonText(context, viewHolder.action, R.string.following);
                                 Toast.makeText(context, "You have started following", Toast.LENGTH_LONG).show();
-                                if(isUser)
-                                {
+                                if (isUser) {
                                     userlist.get(i).setFollowing(true);
-                                }
-
-                                else {
+                                } else {
                                     list.get(i).setFollowing(true);
                                 }
                             }
@@ -517,7 +476,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
 
-    private void cancelRequest(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype,final int i,final boolean isUser) {
+    private void cancelRequest(final int userId, final Context context, final ViewHolder viewHolder, final int accounttype, final int i, final boolean isUser) {
 
         ApiCallingService.Friends.cancelRequest(userId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -527,12 +486,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                         boolean b = response.body().getStatus();
                         if (b) {
 
-                            if(isUser)
-                            {
-                              userlist.get(i).setRequestSent(false);
-                            }
-                            else
-                            {
+                            if (isUser) {
+                                userlist.get(i).setRequestSent(false);
+                            } else {
                                 list.get(i).setRequestSent(false);
                             }
                             setActionButtonText(context, viewHolder.action, R.string.follow);
@@ -559,7 +515,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
 
-    public void unFollowUser(int userId, final Context context, final FollowersAdapter.ViewHolder viewHolder, final int accountType,final int i,final boolean isUser )
+    public void unFollowUser(int userId, final Context context, final FollowersAdapter.ViewHolder viewHolder, final int accountType, final int i, final boolean isUser)
 
     {
 
@@ -574,11 +530,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
                             Toast.makeText(context, "User has been unfollowed", Toast.LENGTH_LONG).show();
                             //_btnfollow.setText("Follow");
                             setActionButtonText(context, viewHolder.action, R.string.follow);
-                            if (isUser)
-                            {
+                            if (isUser) {
                                 userlist.get(i).setFollowing(false);
-                            }
-                            else {
+                            } else {
                                 list.get(i).setFollowing(false);
                             }
                         } else {
@@ -607,7 +561,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
 
     }
 
-    public void blockUnblockUsers(final int userId, final int status, final String username, final FollowersAdapter.ViewHolder viewHolder,final int i) {
+    public void blockUnblockUsers(final int userId, final int status, final String username, final FollowersAdapter.ViewHolder viewHolder, final int i) {
         android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
         dialogBuilder.setMessage("Are you sure you want to Unblock " + username + "?");
         dialogBuilder.setPositiveButton("CONFIRM", null);
@@ -622,7 +576,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             @Override
             public void onClick(View v) {
 
-                blockunBlock(userId, status, viewHolder,i);
+                blockunBlock(userId, status, viewHolder, i);
                 alertDialog.dismiss();
 
 
@@ -631,7 +585,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
 
-    public void blockunBlock(int userId, final int status, final FollowersAdapter.ViewHolder holder,final int i) {
+    public void blockunBlock(int userId, final int status, final FollowersAdapter.ViewHolder holder, final int i) {
         ApiCallingService.Friends.blockUnblockUser(userId, status, context).enqueue(new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {

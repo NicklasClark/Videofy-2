@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class FragmentProfileMyReactions extends Fragment {
     CircularAppCompatImageView menuitem;
     RecyclerView recyclerView;
     ProfileMyReactionAdapter profileMyReactionAdapter;
-    RecyclerView.LayoutManager layoutManager;
+    GridLayoutManager layoutManager;
     Context context;
     List<Reactions>list;
     int page;
@@ -71,7 +72,7 @@ public class FragmentProfileMyReactions extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         list=new ArrayList<>();
-        layoutManager=new LinearLayoutManager(getActivity());
+        layoutManager=new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
         profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
         recyclerView.setAdapter(profileMyReactionAdapter);

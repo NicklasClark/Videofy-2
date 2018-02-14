@@ -8,13 +8,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -25,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -66,19 +63,16 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logProfileShareEvent;
 
 public class ProfileFragment extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+
+
     private static final int RC_REQUEST_STORAGE = 1001;
     public static boolean checkprofileupdated = false;
     public static boolean checkpostupdated = false;
     public static boolean checkpicUpdated = false;
-    ImageView profile_image;
+
     ImageView bgImage;
-    ImageView settings;
-    ImageView small_profile_icon;
-    LinearLayout mContainerView;
     Context context;
-    AppBarLayout appBarLayout;
     ProximaNovaRegularCheckedTextView _name;
     ProximaNovaSemiBoldTextView _username;
     TextView _creations;
@@ -88,7 +82,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     TabLayout tabLayout;
     ProximaNovaRegularCheckedTextView _detail;
     ImageView backgroundProfile;
-    UserProfile userprofile;
     Button btnedit;
     Button btnshare;
     int totalfollowers;
@@ -98,30 +91,24 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
     String userId;
     String lastname;
     String username;
+    String detail;
     String email;
     int accountType;
     boolean hasProfleMedia;
     Long mobilenumber;
     int gender;
     int countrycode;
-    String detail;
+
     ProgressBar progressbar;
     CircularAppCompatImageView profile_id;
     PublicProfile userProfile;
-    NestedScrollView nestedscrollview;
-    private String mParam1;
-    private String mParam2;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private FollowerListListener mListener;
-    private String imageUri;
     private String userProfileThumbnail;
     private String userProfileUrl;
-    private boolean ismySelf;
     @BindView(R.id.loader)GifTextView loader;
     @BindView(R.id.blur_bacground)
     CoordinatorLayout blur_bacground;
-    
-    int increamentcounter=1;
 
     public ProfileFragment() {
     }
@@ -145,6 +132,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         return newBitmap;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,15 +150,15 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
         ButterKnife.bind(this,view);
-       // loader = view.findViewById(R.id.loader);
         tabLayout = view.findViewById(R.id.sliding_tabs);
         viewPager = view.findViewById(R.id.viewpager);
         _name = view.findViewById(R.id.username);
         _username = view.findViewById(R.id.username_title);
+        _detail = view.findViewById(R.id.hobby);
+
         _creations = view.findViewById(R.id.creations);
         _followers = view.findViewById(R.id.followers);
         _following = view.findViewById(R.id.following);
-        _detail = view.findViewById(R.id.hobby);
 
         backgroundProfile = view.findViewById(R.id.background_profile);
         collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
@@ -185,6 +173,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(context, EditProfile.class);
                 intent.putExtra("UserName", username);
                 intent.putExtra("FirstName", firstname);
@@ -204,6 +193,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                 startActivity(intent);
             }
         });
+
         _followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -378,7 +368,10 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                 intent.putExtra("AccountType", String.valueOf(accountType));
                 intent.putExtra("UserProfile", userProfile);
                 startActivity(intent);
+                break;
+
             case R.id.action_profile_block:
+                break;
 
         }
         return true;
@@ -404,7 +397,6 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     totalvideos = response.body().getTotalVideos();
                     userId = String.valueOf(userProfile.getUserId());
                     gender = userProfile.getGender();
-
                     Long mobilno = userProfile.getPhoneNumber();
 
                     if (mobilno == null) {
@@ -526,6 +518,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
             mListener = (FollowerListListener) context;
         }
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -549,6 +542,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         else {
         }
     }
+
     public void updateProfile() {
         loader.setVisibility(View.VISIBLE);
         blur_bacground.setVisibility(View.GONE);

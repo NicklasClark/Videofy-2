@@ -18,28 +18,28 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
+        android:layout_margin="10dp"
         app:cardElevation="2dp"
-        android:layout_height="280dp">
+        android:layout_height="250dp">
         <RelativeLayout
 
             android:id="@+id/layout1"
             android:layout_width="match_parent"
-            android:layout_height="280dp">
+            android:layout_height="250dp">
             <ImageView
                 android:id="@+id/demoimage"
                 android:layout_width="match_parent"
                 android:scaleType="centerCrop"
-                android:layout_height="280dp"
+                android:layout_height="250dp"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp">
+                android:layout_height="250dp">
                 <ImageView
 
                     android:layout_width="match_parent"
                     android:background="@drawable/bg_vignette"
-                    android:layout_height="280dp" />
+                    android:layout_height="250dp" />
 
 
             </RelativeLayout>

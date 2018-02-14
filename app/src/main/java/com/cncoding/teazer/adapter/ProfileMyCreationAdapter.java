@@ -52,6 +52,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     private boolean isPostClicked = false;
 
 
+
     public ProfileMyCreationAdapter(Context context, ArrayList<PostDetails> list,Fragment fragment) {
         this.context = context;
         this.list = list;
@@ -60,9 +61,11 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         listener = (myCreationListener) context;
         if (fragment instanceof OnChildFragmentUpdateVideos) {
             onChildFragmentUpdateVideosllistrener = (OnChildFragmentUpdateVideos) fragment;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnChildFragmentInteractionListener");
+        }
+
+        else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnChildFragmentInteractionListener");
         }
     }
 
@@ -102,34 +105,45 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                 String location2 = cont.getCheckIn().getLocation();
 
                 if (location2.equals("") || location2 == null) {
+
                     viewHolder.location.setText("");
                     viewHolder.locationimage.setVisibility(View.GONE);
-                } else {
-                    viewHolder.location.setText(location2);
-                    viewHolder.locationimage.setVisibility(View.VISIBLE);
                 }
-            } else {
-                viewHolder.location.setText("");
-                viewHolder.locationimage.setVisibility(View.GONE);
+                else {
+
+                    viewHolder.location.setText(location2);
+                    viewHolder.locationimage.setVisibility(View.GONE);
+                }
+            }
+            else{
+                    viewHolder.location.setText("");
+                    viewHolder.locationimage.setVisibility(View.GONE);
             }
 
             if (reactions == 0) {
-                viewHolder.reactions.setVisibility(View.GONE);
-                viewHolder.imagelayout1.setVisibility(View.INVISIBLE);
-                viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
-                viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+
+              //  viewHolder.reactions.setVisibility(View.GONE);
+              //  viewHolder.imagelayout1.setVisibility(View.INVISIBLE);
+              //  viewHolder.imagelayout2.setVisibility(View.INVISIBLE);
+              //  viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
+
             } else if (reactions > 3)
-                getPostReactionFour(viewHolder, postId, reactions);
-            else {
-                viewHolder.reactions.setText(String.valueOf(reactions) + " R");
-                viewHolder.reactions.setVisibility(View.GONE);
-                getPostReactionThree(viewHolder, postId, reactions);
+            {
             }
+
+              //  getPostReactionFour(viewHolder, postId, reactions);
+            else {
+             //   viewHolder.reactions.setText(String.valueOf(reactions) + " R");
+              //  viewHolder.reactions.setVisibility(View.GONE);
+              //  getPostReactionThree(viewHolder, postId, reactions);
+            }
+
 
             viewHolder.videoTitle.setText(decodeUnicodeString(videoTitle));
             viewHolder.txtlikes.setText(likes);
             viewHolder.duration.setText(duration);
             viewHolder.txtview.setText(views);
+            viewHolder.txtreation.setText("+"+String.valueOf(reactions)+"R");
 
             Glide.with(context).load(thumb_url)
                     .into(viewHolder.thumbimage);
@@ -143,18 +157,17 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                     }
                 }
             });
-
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     PopupMenu popup = new PopupMenu(context, viewHolder.menu);
                     popup.inflate(R.menu.menu_profile_creation);
-
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_delete:
+
                                     final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                                     alertDialog.setTitle("Confirm Deletion...");
                                     alertDialog.setMessage("Are you sure you want to delete this video.");
@@ -200,7 +213,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
     public int getItemCount() {
         return list.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ProximaNovaRegularCheckedTextView videoTitle;
         private ProximaNovaRegularCheckedTextView duration;
@@ -208,6 +220,7 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         private ProximaNovaRegularCheckedTextView txtview;
         private ProximaNovaRegularCheckedTextView reactions;
         private ProximaNovaRegularCheckedTextView location;
+        private ProximaNovaRegularCheckedTextView txtreation;
         VideoView videoviewContainer;
         ImageView thumbimage;
         RelativeLayout imagelayout1;
@@ -218,7 +231,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         View line;
         ImageView playvideo;
         CircularAppCompatImageView menu;
-
         public ViewHolder(View view) {
             super(view);
             videoTitle = view.findViewById(R.id.video_details);
@@ -237,11 +249,10 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
             imagelayout2 = view.findViewById(R.id.image2_layout);
             imagelayout3 = view.findViewById(R.id.image3_layout);
             locationimage = view.findViewById(R.id.locationimage);
+            txtreation = view.findViewById(R.id.txtreation);
             menu = view.findViewById(R.id.menu);
-
         }
     }
-
     private void deleteVideos(int deleteId) {
         ApiCallingService.Posts.deletePosts(deleteId, context).enqueue(new Callback<ResultObject>() {
             @Override
@@ -266,7 +277,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
         });
     }
-
     public void getPostReactionFour(final ProfileMyCreationAdapter.ViewHolder viewHolder, int postId, final int reactions) {
         int page = 1;
         ApiCallingService.Posts.getReactionsOfPost(postId, page, context).enqueue(new Callback<PostReactionsList>() {
@@ -316,7 +326,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
 
                                     switch (i) {
                                         case 0:
-
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
@@ -325,7 +334,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                                     .into(viewHolder.image1);
                                             break;
                                         case 1:
-
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.INVISIBLE);
@@ -334,7 +342,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                                     .into(viewHolder.image3);
                                             break;
                                         case 2:
-
                                             viewHolder.imagelayout1.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout2.setVisibility(View.VISIBLE);
                                             viewHolder.imagelayout3.setVisibility(View.VISIBLE);
@@ -345,18 +352,13 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
                                         default:
                                     }
                                 }
-
-
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
-
             @Override
             public void onFailure(Call<PostReactionsList> call, Throwable t) {
             }

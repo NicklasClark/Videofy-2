@@ -421,7 +421,7 @@ public class FragmentReactionplayer extends BaseFragment {
 
     private void initView() {
         try {
-            likeAction(isLiked, true);
+            likeAction(isLiked, false);
             reactionPostLikes.setText(String.valueOf(likesCount));
             reactionPostViews.setText(String.valueOf(viewsCount));
         } catch (Exception e) {

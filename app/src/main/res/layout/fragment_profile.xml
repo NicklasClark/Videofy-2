@@ -83,6 +83,7 @@
                                                 android:fitsSystemWindows="true"
                                                 android:scaleType="centerCrop"
                                                 app:layout_collapseMode="parallax" />
+
                                         </RelativeLayout>
                                     </LinearLayout>
 

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +40,7 @@ public class FragmentProfileMyCreations extends Fragment {
     ArrayList<PostDetails> list = new ArrayList<>();
     RecyclerView recyclerView;
     ProfileMyCreationAdapter profileMyCreationAdapter;
-    RecyclerView.LayoutManager layoutManager;
+    GridLayoutManager layoutManager;
     ProgressBar progress_bar;
     ProximaNovaRegularTextView alert1;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -79,14 +79,14 @@ public class FragmentProfileMyCreations extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
         list = new ArrayList<>();
         getProfileVideos(1);
         profileMyCreationAdapter = new ProfileMyCreationAdapter(context, list,getParentFragment());
         recyclerView.setAdapter(profileMyCreationAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManager) {
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 

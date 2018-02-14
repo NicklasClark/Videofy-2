@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/ic_edit_black_24dp"
+        app:showAsAction="ifRoom|withText"
+        android:title="Profile">
+
+    </item>
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="ifRoom"
+        android:title="Compose">
+    </item>
+    <item
+        android:id="@+id/ic_settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom"
+        android:title="Compose">
+    </item>
+</menu>

@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -44,10 +43,10 @@ import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseSequence;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment.FragmentNavigation;
 import com.cncoding.teazer.home.camera.UploadFragment;
 import com.cncoding.teazer.home.discover.DiscoverFragment;
@@ -59,14 +58,13 @@ import com.cncoding.teazer.home.discover.search.DiscoverSearchAdapter.OnDiscover
 import com.cncoding.teazer.home.notifications.NotificationsAdapter.OnNotificationsInteractionListener;
 import com.cncoding.teazer.home.notifications.NotificationsFragment;
 import com.cncoding.teazer.home.notifications.NotificationsFragment.OnNotificationsFragmentInteractionListener;
-
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser;
 import com.cncoding.teazer.home.post.detailspage.FragmentLikedUser.CallProfileListener;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails;
 import com.cncoding.teazer.home.post.detailspage.FragmentPostDetails.onPostOptionsClickListener;
+import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.post.homepage.PostsListAdapter.OnPostAdapterInteractionListener;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
-import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
 import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.home.profile.ProfileFragment.FollowerListListener;
 import com.cncoding.teazer.home.tagsAndCategories.Interests.OnInterestsInteractionListener;
@@ -82,6 +80,7 @@ import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentLikedUserReaction;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
+import com.cncoding.teazer.ui.fragment.fragment.NewProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
@@ -708,7 +707,7 @@ public class BaseBottomBarActivity extends BaseActivity
             switchTab(TAB2);
         else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
             switchTab(TAB4);
-        else if (navigationController.getCurrentFragment() instanceof ProfileFragment)
+        else if (navigationController.getCurrentFragment() instanceof NewProfileFragment)
             switchTab(TAB5);
     }
 
@@ -821,15 +820,16 @@ public class BaseBottomBarActivity extends BaseActivity
 //        if (getSupportActionBar() != null) {
 //            getSupportActionBar().hide();
 //        }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+     //   getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         toolbar.setVisibility(GONE);
+
     }
 
     public void showToolbar() {
 //        if (getSupportActionBar() != null) {
-//            getSupportActionBar().show();
+            getSupportActionBar().show();
 //        }
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+       // getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         toolbar.setVisibility(VISIBLE);
     }
 
@@ -939,7 +939,8 @@ public class BaseBottomBarActivity extends BaseActivity
                 currentFragment = NotificationsFragment.newInstance();
                 break;
             case TAB5:
-                currentFragment = ProfileFragment.newInstance();
+                //currentFragment = ProfileFragment.newInstance();
+                currentFragment = NewProfileFragment.newInstance(1);
                 break;
             default:
                 currentFragment = PostsListFragment.newInstance();

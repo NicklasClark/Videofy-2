@@ -74,4 +74,10 @@
     <color name="DialogBoxCancel">#999999</color>
     <color name="colorShimmer">#C1C1C1</color>
     <color name="seperater_color">#DDDDDD</color>
+
+
+
+
+    <color name="primary">#785447</color>
+    <color name="primaryDark">#5B3F36</color>
 </resources>

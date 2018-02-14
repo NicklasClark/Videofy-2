@@ -36,10 +36,10 @@ import com.cncoding.teazer.apiCalls.ProgressRequestBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
-import com.cncoding.teazer.home.profile.ProfileFragment;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentVerifyOTP;
+import com.cncoding.teazer.ui.fragment.fragment.NewProfileFragment;
 import com.hbb20.CountryCodePicker;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -271,7 +271,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             @Override
             public void onClick(View view) {
 
-                ProfileFragment.checkprofileupdated = true;
+                NewProfileFragment.checkprofileupdated = true;
 
 
                 // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
@@ -305,7 +305,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            ProfileFragment.checkprofileupdated = true;
+           NewProfileFragment.checkprofileupdated = true;
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (resultCode == RESULT_OK) {
@@ -353,7 +353,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         if (r.getError() == null) {
             try {
 
-                ProfileFragment.checkprofileupdated = true;
+                NewProfileFragment.checkprofileupdated = true;
 
 //                SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
 //                final String imageUri = prfs.getString("MYIMAGES", "");
@@ -558,7 +558,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
-                            ProfileFragment.checkprofileupdated = true;
+                            NewProfileFragment.checkprofileupdated = true;
                             finish();
                         } else {
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
