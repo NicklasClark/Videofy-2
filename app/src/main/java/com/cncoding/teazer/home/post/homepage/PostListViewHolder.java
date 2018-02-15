@@ -44,7 +44,6 @@ import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
-import com.inmobi.ads.InMobiNative;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -174,19 +173,19 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     }
 
     @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
-        if (helper == null)
-            helper = new ExoPlayerViewHelper(container, this,
-                    Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
-        helper.initialize(playbackInfo);
+            if (helper == null)
+                helper = new ExoPlayerViewHelper(container, this,
+                        Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
+            helper.initialize(playbackInfo);
     }
 
     @Override public void play() {
         if (helper != null) helper.play();
-        adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
-        if (!viewed) {
-            viewed = true;
-            incrementView();
-        }
+            adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
+            if (!viewed) {
+                viewed = true;
+                incrementView();
+            }
     }
 
     @Override public void pause() {
@@ -221,35 +220,6 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     public void bind(int position) {
         try {
             postDetails = postsListAdapter.posts.get(position);
-            if(postDetails instanceof AdFeedItem)
-            {
-                final InMobiNative inMobiNative = ((AdFeedItem) postDetails).mNativeStrand;
-//                playerView.setShutterBackground(adFeedItem.getInMobiNative().getAdIconUrl());
-//                playerView.setResizeMode(RESIZE_MODE_ZOOM);
-                Glide.with(postsListAdapter.context)
-                        .load(inMobiNative.getAdIconUrl())
-                        .apply(new RequestOptions()
-                                .skipMemoryCache(false)
-                                .placeholder(R.drawable.ic_user_male_dp_small))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-                                                           DataSource dataSource, boolean isFirstResource) {
-                                setFields();
-                                dp.setImageDrawable(resource);
-                                return false;
-                            }
-                        })
-                        .into(dp);
-
-
-            }
-            else {
 
                 if (!postDetails.canReact()) disableView(reactBtn, true);
                 else enableView(reactBtn);
@@ -297,7 +267,6 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
                 } else {
                     reactionListView.setVisibility(GONE);
                 }
-            }
         } catch(Exception e){
             e.printStackTrace();
         }

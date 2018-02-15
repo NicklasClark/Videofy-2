@@ -20,9 +20,4 @@ public abstract class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseR
     public abstract int getItemCount();
 
     public abstract void release();
-
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
-    }
 }

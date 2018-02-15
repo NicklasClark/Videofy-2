@@ -426,7 +426,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     currentLocation = locationResult.getLastLocation();
 
                     //location for inmobi
-                    InMobiSdk.setLocation(currentLocation);
+//                    InMobiSdk.setLocation(currentLocation);
 
                     stopLocationUpdates();
                 }

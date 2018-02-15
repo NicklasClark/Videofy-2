@@ -52,7 +52,11 @@ public class PostDetailsViewModel extends ViewModel {
 
     public void clear() {
         if (livePostDetailsList.getValue() != null) {
-            livePostDetailsList.getValue().getPosts().clear();
+            try {
+                livePostDetailsList.getValue().getPosts().clear();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

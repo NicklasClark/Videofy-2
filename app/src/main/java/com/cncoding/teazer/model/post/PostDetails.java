@@ -2,6 +2,7 @@ package com.cncoding.teazer.model.post;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -102,6 +103,11 @@ public class PostDetails implements Parcelable {
         this.taggedUsers = taggedUsers;
         this.reactedUsers = reactedUsers;
         this.categories = categories;
+    }
+
+    @Ignore
+    public PostDetails(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

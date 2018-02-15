@@ -66,5 +66,6 @@
     <dimen name="frames_video_height">60dip</dimen>
     <dimen name="padding_4dp">4dp</dimen>
     <dimen name="text_size_11_sp">11sp</dimen>
+    <dimen name="adContentPadding">8dp</dimen>
 
 </resources>

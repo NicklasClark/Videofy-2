@@ -72,48 +72,33 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         }
     }
 
-    void addInMobiPost(int page, AdFeedItem postDetailsList, int adPosition) {
-        try {
-            if (page == 1) {
-                posts.clear();
-                posts.add(adPosition, postDetailsList);
-                notifyDataSetChanged();
-                if (recyclerView != null) {
-                    recyclerView.smoothScrollBy(0, 1);
-                    recyclerView.smoothScrollBy(0, -1);
-                }
-            } else {
-                posts.add(adPosition, postDetailsList);
-//                notifyItemRangeInserted((page - 1) *
-                notifyDataSetChanged();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     void clear() {
         posts.clear();
     }
 
     @Override
-    public PostListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(PostListViewHolder.LAYOUT_RES, parent, false);
-        switch (viewType)
-        {
-            case POST:
-                return new PostListViewHolder(this, view);
-            case AD:
-                return new PostListViewHolder(this, view);
-            default:
-                return new PostListViewHolder(this, view);
-        }
+    public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        BaseRecyclerViewHolder viewHolder = null;
+        if(viewType == POST)
+            {
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(PostListViewHolder.LAYOUT_RES, parent, false);
+                viewHolder = new PostListViewHolder(this, view);
+            }
+            else
+            {
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(AdViewHolder.LAYOUT_RES, parent, false);
+                viewHolder = new AdViewHolder(this, view);
+            }
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
+//        super.onBindViewHolder(holder, position);
+        holder.bind(position);
     }
 
     @Override
@@ -149,11 +134,9 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (posts.get(position) instanceof PostDetails) {
-            return POST;
-        } else if (posts.get(position) instanceof AdFeedItem) {
+        if (posts.get(position) instanceof AdFeedItem)
             return AD;
-        }
-        return -1;
+        else
+            return POST;
     }
 }

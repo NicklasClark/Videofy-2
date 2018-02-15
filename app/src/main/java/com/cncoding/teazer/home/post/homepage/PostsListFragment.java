@@ -137,6 +137,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
             public void loadFirstPage() {
                 currentPage = 1;
                 getHomePagePosts(1);
+
+                //for inmobi ads
+                createStrands();
+                loadAds();
             }
 
             @Override
@@ -153,8 +157,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        createStrands();
-        loadAds();
     }
 
     private void createStrands() {
@@ -205,6 +207,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         postDetailsViewModel.clear();
         postListAdapter.clear();
         getHomePagePosts(1);
+
+        //to refresh inmobi ads
+        refreshAds();
+
         scrollListener.resetState();
         new Handler().postDelayed(new Runnable() {
             @Override

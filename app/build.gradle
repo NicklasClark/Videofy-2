@@ -139,6 +139,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$firebaseVersion"
     implementation "com.google.android.gms:play-services-places:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
+    implementation "com.google.android.gms:play-services:$firebaseVersion"
     implementation 'com.google.android:flexbox:0.3.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -205,8 +206,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
 
     //inmobi
-    compile 'com.inmobi.monetization:inmobi-ads:7.0.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.inmobi.monetization:inmobi-ads:7.0.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
 }
 
