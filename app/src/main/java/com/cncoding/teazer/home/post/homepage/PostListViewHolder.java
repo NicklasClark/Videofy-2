@@ -37,6 +37,7 @@ import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
 
@@ -67,6 +68,7 @@ import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_CHEC
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_HAS_CHECKIN;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_LIKES;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_REACTIONS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TITLE;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TOTAL_REACTIONS;
 import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TOTAL_TAGS;
@@ -250,6 +252,11 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     public void bind(int position, List<Object> payloads) {
         if (payloads.isEmpty()) return;
 
+        if (payloads.get(0) instanceof PostDetails) {
+            bind(position);
+            return;
+        }
+
         Bundle bundle = (Bundle) payloads.get(0);
         if (bundle.containsKey(DIFF_POST_DETAILS)) {
             postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
@@ -264,6 +271,7 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
                         break;
                     case DIFF_TOTAL_REACTIONS:
                         postDetails.setTotalReactions(bundle.getInt(DIFF_TOTAL_REACTIONS));
+                        postDetails.setReactions(bundle.<PostReaction>getParcelableArrayList(DIFF_REACTIONS));
                         break;
                     case DIFF_TOTAL_TAGS:
                         postDetails.setTotalTags(bundle.getInt(DIFF_TOTAL_TAGS));

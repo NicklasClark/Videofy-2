@@ -184,9 +184,9 @@ public class FragmentPostDetails extends BaseFragment {
     @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
     @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
     @BindView(R.id.loader) GifTextView loader;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiBoldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.upload_progress_text) ProximaNovaSemiBoldTextView uploadProgressText;
+    @BindView(R.id.video_upload_progress) ProgressBar uploadProgress;
+    @BindView(R.id.uploading_status_layout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.liked_user_layout) FrameLayout frameLayout;
 
 //    private long playbackPosition;
@@ -679,14 +679,14 @@ public class FragmentPostDetails extends BaseFragment {
 
             if (isAudioEnabled) {
                 volume = 0;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeoff);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_off);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = maxVolume;
 //                volume = 100 * maxVolume + currentVolume;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeon);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
 
@@ -701,13 +701,11 @@ public class FragmentPostDetails extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.react_btn)
-    public void react() {
+    @OnClick(R.id.react_btn) public void react() {
         launchReactionCamera(context, postDetails);
     }
 
-    @OnClick(R.id.like)
-    public void likePost() {
+    @OnClick(R.id.like) public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -818,8 +816,7 @@ public class FragmentPostDetails extends BaseFragment {
         popupMenu.show();
     }
 
-    @OnClick(R.id.controls)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
         try {
 
 //            if(player.getPlayWhenReady())
@@ -1136,8 +1133,7 @@ public class FragmentPostDetails extends BaseFragment {
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
                                     incrementViews();
-                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(),
-                                            context)
+                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -1170,12 +1166,10 @@ public class FragmentPostDetails extends BaseFragment {
 
                 @Override
                 public void onRepeatModeChanged(int repeatMode) {
-
                 }
 
                 @Override
                 public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
                 }
 
                 @Override
@@ -1204,7 +1198,6 @@ public class FragmentPostDetails extends BaseFragment {
 
                 @Override
                 public void onSeekProcessed() {
-
                 }
             });
 
@@ -1230,7 +1223,6 @@ public class FragmentPostDetails extends BaseFragment {
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
-
         reactionUploadReceiver = new ReactionUploadReceiver(new Handler())
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
                     @Override
@@ -1297,7 +1289,6 @@ public class FragmentPostDetails extends BaseFragment {
             launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
         }
     }
-
 
     @SuppressWarnings("unused")
     private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {

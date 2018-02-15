@@ -75,28 +75,27 @@ public class ReactionUploadService extends IntentService implements ProgressRequ
                 ProgressRequestBody videoBody = new ProgressRequestBody(videoFile, this);
                 part = MultipartBody.Part.createFormData("video", videoFile.getName(), videoBody);
 
-
-
-
                 if (reactionUploadCall == null) {
                     reactionUploadCall = ApiCallingService.React.uploadReaction(part, uploadParams.getPostDetails().getPostId(),
                             getApplicationContext(), uploadParams.getTitle());
                 }
 
                 try {
-                    Response<ReactionUploadResult> response = reactionUploadCall.execute();
+                    if (!reactionUploadCall.isExecuted()) {
+                        Response<ReactionUploadResult> response = reactionUploadCall.execute();
 
-                    if (response.isSuccessful()) {
-                        try {
-                                onUploadFinish(uploadParams.getVideoPath(), uploadParams.isGallery());
-                                finishReactionUploadSession(getApplicationContext());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            onUploadError(e.getMessage());
+                        if (response.isSuccessful()) {
+                            try {
+                                    onUploadFinish(uploadParams.getVideoPath(), uploadParams.isGallery());
+                                    finishReactionUploadSession(getApplicationContext());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                onUploadError(e.getMessage());
+                            }
                         }
-                    }
-                    else {
-                        onUploadError(response.body().getMessage());
+                        else {
+                            onUploadError(response.body().getMessage());
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

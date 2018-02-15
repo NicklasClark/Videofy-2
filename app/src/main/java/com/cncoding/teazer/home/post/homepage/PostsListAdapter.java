@@ -59,8 +59,8 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
     }
 
     @Override public void release() {
-        clearData();
-        posts = null;
+//        clearData();
+//        posts = null;
         listener = null;
         context = null;
         recyclerView = null;
@@ -86,11 +86,22 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
     }
 
     void updateNewPosts(List<PostDetails> postDetailsList) {
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDiffCallback(posts.subList(0, 29), postDetailsList));
-        clearData();
-        posts.addAll(postDetailsList);
+        try {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDiffCallback(new ArrayList<>(posts.subList(0, 30)), postDetailsList));
+            clearData();
+            posts.addAll(postDetailsList);
 //        posts.addAll(0, postDetailsList);
-        result.dispatchUpdatesTo(this);
+            result.dispatchUpdatesTo(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (posts == null) posts = new ArrayList<>();
+            posts.addAll(postDetailsList);
+            notifyDataSetChanged();
+            if (recyclerView != null) {
+                recyclerView.smoothScrollBy(0, 1);
+                recyclerView.smoothScrollBy(0, -1);
+            }
+        }
     }
 
     private void clearData() {

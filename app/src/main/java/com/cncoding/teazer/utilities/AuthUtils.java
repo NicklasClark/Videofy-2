@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 
@@ -18,6 +17,7 @@ import com.cncoding.teazer.MainActivity;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
 import com.cncoding.teazer.apiCalls.ErrorBody;
 import com.cncoding.teazer.apiCalls.ResultObject;
+import com.cncoding.teazer.data.remote.apicalls.ClientProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
@@ -29,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.text.TextUtils.isDigitsOnly;
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
@@ -113,7 +114,7 @@ public class AuthUtils {
      * */
     public static int getEnteredUserFormat(String text) {
         if (!text.isEmpty()) {
-            if (TextUtils.isDigitsOnly(text)) {
+            if (isDigitsOnly(text)) {
 //                    Phone number is entered
                 return PHONE_NUMBER_FORMAT;
             }
@@ -133,8 +134,12 @@ public class AuthUtils {
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
-        char[] chars = phoneNumber.toCharArray();
-        return chars.length >= 4 && chars.length <= 13;
+        if (isDigitsOnly(phoneNumber)) {
+            char[] chars = phoneNumber.toCharArray();
+            return chars.length >= 4 && chars.length <= 13;
+        } else {
+            return false;
+        }
     }
 
     public static void removeView(final View view) {
@@ -160,6 +165,7 @@ public class AuthUtils {
 
                     private void LTFO() {
                         SharedPrefs.resetAuthToken(context);
+                        ClientProvider.clearRetrofitWithAuthToken();
                         if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

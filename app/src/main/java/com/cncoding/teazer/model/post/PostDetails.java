@@ -15,6 +15,8 @@ import com.cncoding.teazer.model.base.TaggedUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -340,14 +342,20 @@ public class PostDetails implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof PostDetails &&
-                Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
-                Objects.equals(likes, ((PostDetails) obj).getLikes()) &&
-                Objects.equals(totalReactions, ((PostDetails) obj).getTotalReactions()) &&
-                Objects.equals(hasCheckin, ((PostDetails) obj).hasCheckin()) &&
-                Objects.equals(title, ((PostDetails) obj).getTitle()) &&
-                Objects.equals(canReact, ((PostDetails) obj).canReact()) &&
-                Objects.equals(canLike, ((PostDetails) obj).canLike()) &&
-                Objects.equals(checkIn, ((PostDetails) obj).getCheckIn());
+        boolean result;
+        if (obj instanceof PostDetails) {
+            result =  Objects.equals(postId, ((PostDetails) obj).getPostId()) &&
+                    Objects.equals(likes, ((PostDetails) obj).getLikes()) &&
+                    Objects.equals(totalReactions, ((PostDetails) obj).getTotalReactions()) &&
+                    Objects.equals(hasCheckin, ((PostDetails) obj).hasCheckin()) &&
+                    Objects.equals(title, ((PostDetails) obj).getTitle()) &&
+                    Objects.equals(canReact, ((PostDetails) obj).canReact()) &&
+                    Objects.equals(canLike, ((PostDetails) obj).canLike()) &&
+                    Objects.equals(checkIn, ((PostDetails) obj).getCheckIn());
+            if (reactions != null && ((PostDetails) obj).getReactions() != null) {
+                result = CollectionUtils.isEqualCollection(reactions, ((PostDetails) obj).getReactions());
+            }
+        } else result = false;
+        return result;
     }
 }

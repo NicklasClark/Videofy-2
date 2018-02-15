@@ -242,21 +242,23 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     }
 
     private void incrementView() {
-        ApiCallingService.React.incrementReactionViewCount(reactId, this)
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.body().getStatus())
-                            viewsCount++;
-                        initView();
-                    }
+        if (!postDetails.getMySelf()) {
+            ApiCallingService.React.incrementReactionViewCount(reactId, this)
+                    .enqueue(new Callback<ResultObject>() {
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            if (response.body().getStatus())
+                                viewsCount++;
+                            initView();
+                        }
 
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        initView();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            t.printStackTrace();
+                            initView();
+                        }
+                    });
+        }
     }
 
     private Runnable mDelayedStopRunnable = new Runnable() {

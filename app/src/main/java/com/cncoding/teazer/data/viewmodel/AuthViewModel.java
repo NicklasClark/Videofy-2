@@ -3,9 +3,11 @@ package com.cncoding.teazer.data.viewmodel;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.data.remote.ResultObject;
 import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepository;
+import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl;
 import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
 import com.cncoding.teazer.model.auth.InitiateSignup;
 import com.cncoding.teazer.model.auth.Login;
@@ -33,6 +35,17 @@ public class AuthViewModel extends ViewModel {
         this.apiResponseLiveData = apiResponseLiveData;
         this.authenticationRepository = authenticationRepository;
         this.resultObjectObserver = resultObjectObserver;
+    }
+
+    public AuthViewModel() {
+        apiResponseLiveData = new MediatorLiveData<>();
+        authenticationRepository = new AuthenticationRepositoryImpl();
+        resultObjectObserver = new Observer<ResultObject>() {
+            @Override
+            public void onChanged(@Nullable ResultObject resultObject) {
+                apiResponseLiveData.setValue(resultObject);
+            }
+        };
     }
 
     public MediatorLiveData<ResultObject> getApiResponse() {

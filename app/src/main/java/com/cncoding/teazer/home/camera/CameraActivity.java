@@ -91,19 +91,15 @@ import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.R.anim.sink_down;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_SHOW_GALLERY;
 import static com.cncoding.teazer.home.camera.CameraFragment.ACTION_START_UPLOAD_FRAGMENT;
-import static com.cncoding.teazer.home.camera.UploadFragment.REACTION_UPLOAD;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_NULL_NEARBY_PLACES;
 import static com.cncoding.teazer.home.camera.UploadFragment.TAG_TAGS_FRAGMENT;
-import static com.cncoding.teazer.home.camera.UploadFragment.VIDEO_UPLOAD;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_CATEGORIES_FRAGMENT;
 import static com.cncoding.teazer.home.tagsAndCategories.TagsAndCategoryFragment.ACTION_TAGS_FRAGMENT;
 import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.POST_DETAILS;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
-import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
-import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.videoTrim.TrimmerActivity.VIDEO_TRIM_REQUEST_CODE;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.ANCHORED;
 import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED;
@@ -130,7 +126,7 @@ public class CameraActivity extends AppCompatActivity
     private ArrayList<Videos> videosList;
 
     private boolean isReaction = false;
-    private PostDetails postDetails;
+    PostDetails postDetails;
     private CameraFragment cameraFragment;
     private UploadFragment uploadFragment;
     private String videoPath;
@@ -527,7 +523,7 @@ public class CameraActivity extends AppCompatActivity
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, selectedTagsArray, count);
+                    uploadFragment.onTagsAndCategoriesInteraction(action, resultToShow, resultToSend, count);
                 }
             }, 100);
         } catch (Exception e) {
@@ -547,7 +543,7 @@ public class CameraActivity extends AppCompatActivity
                 public void run() {
                     try {
                         uploadFragment.onTagsAndCategoriesInteraction(ACTION_CATEGORIES_FRAGMENT,
-                                resultToShow, resultToSend, null, count);
+                                resultToShow, resultToSend, count);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -566,9 +562,7 @@ public class CameraActivity extends AppCompatActivity
                     break;
                 case TAG_CATEGORIES_FRAGMENT:
                     fragmentTransaction.replace(R.id.uploading_container,
-                            Interests.newInstance(true, false, null, selectedData, false),
-//                            TagsAndCategoryFragment.newInstance(ACTION_CATEGORIES_FRAGMENT,selectedData),
-                            tag);
+                            Interests.newInstance(true, false, null, selectedData, false), tag);
                     break;
                 case TAG_NEARBY_PLACES:
                     fragmentTransaction.replace(R.id.uploading_container,
@@ -585,39 +579,6 @@ public class CameraActivity extends AppCompatActivity
             fragmentTransaction.commit();
         } else {
             fragmentManager.popBackStack();
-        }
-    }
-
-    @Override
-    public void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
-                              double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend) {
-        switch (whichUpload) {
-            case VIDEO_UPLOAD:
-                performVideoUpload(this,
-                        new UploadParams(
-                                isGallery,
-                                videoPath,
-                                title,
-                                location,
-                                latitude,
-                                longitude,
-                                selectedTagsToSend,
-                                selectedCategoriesToSend,
-                                postDetails));
-                break;
-            case REACTION_UPLOAD:
-                performReactionUpload(this,
-                        new UploadParams(
-                                isGallery,
-                                videoPath,
-                                title,
-                                location,
-                                latitude,
-                                longitude,
-                                postDetails));
-                break;
-            default:
-                break;
         }
     }
 

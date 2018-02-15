@@ -56,7 +56,7 @@ public class PostDetailsViewModel extends ViewModel {
     }
 
     public void clearData() {
-        if (livePostDetailsList.getValue() != null) {
+        if (livePostDetailsList.getValue() != null && livePostDetailsList.getValue().getPosts() != null) {
             livePostDetailsList.getValue().getPosts().clear();
         }
     }

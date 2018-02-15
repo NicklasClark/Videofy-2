@@ -245,36 +245,4 @@
         android:paddingEnd="7dp"
         android:clipToPadding="false"/>
 
-<!--    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-&lt;!&ndash;        <LinearLayout
-            android:id="@+id/no_reaction_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_shimmer_light"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_shimmer_light"/>
-
-        </LinearLayout>&ndash;&gt;
-
-    </RelativeLayout>-->
-
 </LinearLayout>
