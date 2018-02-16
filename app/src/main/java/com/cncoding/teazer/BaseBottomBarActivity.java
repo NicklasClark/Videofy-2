@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.adapter.FollowersAdapter.OtherProfileListener;
 import com.cncoding.teazer.adapter.FollowersCreationAdapter.FollowerCreationListener;
 import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowing;
@@ -93,6 +94,7 @@ import org.jetbrains.annotations.Contract;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -900,12 +902,16 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void popFragment() {
+        navigationController.popFragment();
+    }
+
     public void pushFragmentOnto(Fragment fragment) {
         if (navigationController != null) {
             navigationController.pushFragmentOnto(fragment);
         }
     }
-
 
     @Override
     public Fragment getRootFragment(int index) {
@@ -945,18 +951,21 @@ public class BaseBottomBarActivity extends BaseActivity
     private void checkIfAnyVideoIsUploading() {
         UploadParams videoUploadParams = getVideoUploadSession(getApplicationContext());
         if (videoUploadParams != null) {
-            setupVideoUploadServiceReceiver();
+            setupVideoUploadServiceReceiver(videoUploadParams);
             launchVideoUploadService(this, videoUploadParams, videoUploadReceiver);
         }
         UploadParams reactionUploadParams = getReactionUploadSession(getApplicationContext());
         if (reactionUploadParams != null) {
-            setupReactionUploadServiceReceiver();
+            setupReactionUploadServiceReceiver(reactionUploadParams);
             launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
         }
     }
 
-    private void setupVideoUploadServiceReceiver() {
+    private void setupVideoUploadServiceReceiver(UploadParams videoUploadParams) {
         videoUploadProgress.setVisibility(VISIBLE);
+        Glide.with(this)
+                .load(Uri.fromFile(new File(videoUploadParams.getVideoPath())))
+                .into(uploadThumb);
         if (videoUploadReceiver == null) {
             videoUploadReceiver = new VideoUploadReceiver(new Handler()).setReceiver(new VideoUploadReceiver.Receiver() {
                 @Override
@@ -1011,8 +1020,11 @@ public class BaseBottomBarActivity extends BaseActivity
         }
     }
 
-    private void setupReactionUploadServiceReceiver() {
+    private void setupReactionUploadServiceReceiver(UploadParams reactionUploadParams) {
         reactionUploadProgress.setVisibility(VISIBLE);
+        Glide.with(this)
+                .load(Uri.fromFile(new File(reactionUploadParams.getVideoPath())))
+                .into(uploadThumb);
         if (reactionUploadReceiver == null) {
             reactionUploadReceiver = new ReactionUploadReceiver(new Handler()).setReceiver(new ReactionUploadReceiver.Receiver() {
                 @Override
@@ -1242,10 +1254,6 @@ public class BaseBottomBarActivity extends BaseActivity
     public void onTaggedUserInteraction(int userId, boolean isSelf) {
         pushFragment(isSelf ? ProfileFragment.newInstance() :
                 OthersProfileFragment.newInstance(String.valueOf(userId), "", ""));
-    }
-
-    public void popFragment() {
-        navigationController.popFragment();
     }
 
     @Override

@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -37,6 +40,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
@@ -271,7 +279,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation", "unused"})
@@ -304,7 +311,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             facebookShareBtn.setChecked(true);
             facebookShareBtn.setBackgroundTintList(null);
         }
-
 
         if (checkedTwitterButton) {
             twitterShareBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_twitter,
@@ -404,7 +410,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        null.unbind();
     }
 
     private String getNearbySearchUrl(Location location) {
@@ -479,8 +484,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return false;
     }
 
-    @OnTouch(R.id.video_upload_tag_friends)
-    public boolean getMyFollowings(View view, MotionEvent motionEvent) {
+    @OnTouch(R.id.video_upload_tag_friends) public boolean getMyFollowings(View view, MotionEvent motionEvent) {
         Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
                 rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
@@ -659,13 +663,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             enableView(addLocationBtn);
             enableView(tagFriendsBtn);
             enableView(uploadCategoriesBtn);
-//            enableView(uploadBtn);
         } else {
             disableView(videoTitle, false);
             disableView(addLocationBtn, false);
             disableView(tagFriendsBtn, false);
             disableView(uploadCategoriesBtn, false);
-//            disableView(uploadBtn, false);
         }
     }
 
@@ -692,8 +694,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
-                        Snackbar.make(uploadBtn, "Location services are required to get your nearby locations.", Snackbar.LENGTH_SHORT)
-                                .show();
+                        Snackbar.make(uploadBtn, R.string.location_services_required, Snackbar.LENGTH_SHORT).show();
                         isRequestingLocationUpdates = false;
                         break;
                     default:
@@ -882,9 +883,5 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
-
-//        void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
-//                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend);
     }
-
 }

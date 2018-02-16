@@ -933,7 +933,7 @@ public class FragmentPostDetails extends BaseFragment {
                                                         Toast.makeText(context,
                                                                 R.string.video_hide_successful,
                                                                 Toast.LENGTH_SHORT).show();
-                                                        getParentActivity().popFragment();
+                                                        navigation.popFragment();
 
                                                     } else {
                                                         Toast.makeText(context,
@@ -966,7 +966,7 @@ public class FragmentPostDetails extends BaseFragment {
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
    //                                 PostsListFragment.postDetails = null;
-                                    getParentActivity().popFragment();
+                                    navigation.popFragment();
 
 //                                    getActivity().finish();
                                 }

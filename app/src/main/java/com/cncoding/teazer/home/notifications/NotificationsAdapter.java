@@ -206,8 +206,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                     if (response.code() == 200) {
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
-
-                                                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null);
+                                                            if (postReactDetail != null) {
+                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null);
+                                                            } else {
+                                                                Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
+                                                            }
                                                         } else {
                                                             Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                                         }
@@ -221,8 +224,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                 }
                                             });
                                 }
-                                else
-                                    {
+                                else {
                                         ApiCallingService.Posts.getPostDetails(holder1.notification.getMetaData().getSourceId(), context)
                                                 .enqueue(new Callback<PostDetails>() {
                                                     @Override

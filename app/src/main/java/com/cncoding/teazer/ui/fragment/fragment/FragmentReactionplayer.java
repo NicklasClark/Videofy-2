@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -32,8 +31,8 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
+import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.react.Reactions;
@@ -85,35 +84,21 @@ public class FragmentReactionplayer extends BaseFragment {
 
     public static final int OPENED_FROM_OTHER_SOURCE = 0;
     public static final int OPENED_FROM_PROFILE = 1;
-    @BindView(R.id.video_view)
-    SimpleExoPlayerView playerView;
-    SimpleExoPlayer player;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.btnClose)
-    ImageView btnClose;
-    @BindView(R.id.reaction_post_caption)
-    ProximaNovaSemiBoldTextView reactionPostCaption;
-    @BindView(R.id.reaction_post_dp)
-    CircularAppCompatImageView reactionPostDp;
-    @BindView(R.id.reaction_post_name)
-    ProximaNovaSemiBoldTextView reactionPostName;
-    @BindView(R.id.reaction_post_likes)
-    ProximaNovaRegularTextView reactionPostLikes;
-    @BindView(R.id.reaction_post_views)
-    ProximaNovaRegularTextView reactionPostViews;
-    @BindView(R.id.btnLike)
-    ImageView likeBtn;
-    @BindView(R.id.reaction_post_name_popularity_layout)
-    RelativeLayout reactionPostNamePopularityLayout;
-    @BindView(R.id.postDuration)
-    ProximaNovaRegularTextView postDurationView;
-    @BindView(R.id.postImage)
-    ImageView postImage;
-    @BindView(R.id.postTitle)
-    ProximaNovaRegularTextView postTitle;
+
+    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.btnClose) ImageView btnClose;
+    @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView reactionPostCaption;
+    @BindView(R.id.reaction_post_dp) CircularAppCompatImageView reactionPostDp;
+    @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView reactionPostName;
+    @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView reactionPostLikes;
+    @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView reactionPostViews;
+    @BindView(R.id.btnLike) ImageView likeBtn;
+    @BindView(R.id.reaction_post_name_popularity_layout) RelativeLayout reactionPostNamePopularityLayout;
+    @BindView(R.id.postDuration) ProximaNovaRegularTextView postDurationView;
+    @BindView(R.id.postImage) ImageView postImage;
+    @BindView(R.id.postTitle) ProximaNovaRegularTextView postTitle;
     private String videoURL;
-    private PostReaction postDetails;
+    private PostReaction othersPostDetails;
     private Reactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
@@ -126,6 +111,7 @@ public class FragmentReactionplayer extends BaseFragment {
     private boolean playWhenReady = true;
     private int playSource;
     Reactions reactions;
+    SimpleExoPlayer player;
     int getPlaySource;
     Context context;
     public static final int POST_REACTION = 0;
@@ -156,7 +142,7 @@ public class FragmentReactionplayer extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             selfPostDetails = bundle.getParcelable(SELF_REACTIONS);
-            postDetails = bundle.getParcelable(POST_REACTIONS);
+            othersPostDetails = bundle.getParcelable(POST_REACTIONS);
             playSource = bundle.getInt("SOURCE");
         }
     }
@@ -196,8 +182,6 @@ public class FragmentReactionplayer extends BaseFragment {
                     }
                 };
 
-
-
         //acquire audio play access(transient)
         audioAccessGranted = acquireAudioLock(getActivity(), audioFocusChangeListener);
 
@@ -207,62 +191,60 @@ public class FragmentReactionplayer extends BaseFragment {
             case OPENED_FROM_OTHER_SOURCE: {
                 try {
 
-                    videoURL = postDetails.getMediaDetail().getMediaUrl();
+                    if (othersPostDetails != null) {
+                        videoURL = othersPostDetails.getMediaDetail().getMediaUrl();
 
-                    if (postDetails != null) {
-                        reactId = postDetails.getReactId();
-                        isLiked = !postDetails.canLike();
-                        likesCount = postDetails.getLikes();
-                        viewsCount = postDetails.getViews();
-                        reactionTitle = postDetails.getReactTitle();
+                        if (othersPostDetails != null) {
+                            reactId = othersPostDetails.getReactId();
+                            isLiked = !othersPostDetails.canLike();
+                            likesCount = othersPostDetails.getLikes();
+                            viewsCount = othersPostDetails.getViews();
+                            reactionTitle = othersPostDetails.getReactTitle();
 
 
-                        Glide.with(this)
-                                .load(postDetails.getReactOwner().getProfileMedia() != null ? postDetails.getReactOwner().getProfileMedia().getMediaUrl()
-                                        : R.drawable.ic_user_male_dp_small)
-                                .into(reactionPostDp);
-                        if (reactionTitle != null) {
-                            try {
-                                reactionTitle = URLDecoder.decode(reactionTitle, "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                            Glide.with(this)
+                                    .load(othersPostDetails.getReactOwner().getProfileMedia() != null ? othersPostDetails.getReactOwner().getProfileMedia().getMediaUrl()
+                                            : R.drawable.ic_user_male_dp_small)
+                                    .into(reactionPostDp);
+                            if (reactionTitle != null) {
+                                try {
+                                    reactionTitle = URLDecoder.decode(reactionTitle, "UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                                reactionPostCaption.setText(reactionTitle);
                             }
-                            reactionPostCaption.setText(reactionTitle);
+                            postDurationView.setText(othersPostDetails.getMediaDetail().getReactDuration());
+                            reactionPostName.setText(othersPostDetails.getReactOwner().getFirstName());
+
+                            ApiCallingService.Posts.getPostDetails(othersPostDetails.getPostId(), context)
+                                    .enqueue(new Callback<PostDetails>() {
+                                        @Override
+                                        public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+                                            if (response.code() == 200) {
+                                                Glide.with(context).load(response.body().getMedias().get(0).getThumbUrl()).into(postImage);
+                                                postTitle.setText("Reacted on " + response.body().getTitle());
+                                            }
+                                            else if (response.code() == 412 && response.message().contains("Precondition Failed"))
+                                                Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
+                                            else {
+                                                Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
+                                                Toast.makeText(context, "Error fetching post", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<PostDetails> call, Throwable t) {
+                                            t.printStackTrace();
+                                            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
-                        postDurationView.setText(postDetails.getMediaDetail().getReactDuration());
-                        reactionPostName.setText(postDetails.getReactOwner().getFirstName());
-
-                        ApiCallingService.Posts.getPostDetails(postDetails.getPostId(), context)
-                                .enqueue(new Callback<PostDetails>() {
-                                    @Override
-                                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                                        if (response.code() == 200)
-                                        {
-                                            Glide.with(context).load(response.body().getMedias().get(0).getThumbUrl()).into(postImage);
-                                            postTitle.setText("Reacted on "+response.body().getTitle());
-
-
-                                        }
-
-                                        else if (response.code() == 412 && response.message().contains("Precondition Failed"))
-                                            Toast.makeText(context, "This post no longer exists", Toast.LENGTH_SHORT).show();
-                                        else {
-                                            Log.d("FETCHING PostDetails", response.code() + " : " + response.message());
-                                            Toast.makeText(context, "Error fetching post", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(Call<PostDetails> call, Throwable t) {
-                                        t.printStackTrace();
-                                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-
-
-
+                        initView();
+                        incrementView();
+                    } else {
+                        Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
+                        navigation.popFragment();
                     }
-                    initView();
-                    incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -271,33 +253,38 @@ public class FragmentReactionplayer extends BaseFragment {
             }
             case OPENED_FROM_PROFILE: {
                 try {
-                    videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
-
                     if (selfPostDetails != null) {
-                        reactId = selfPostDetails.getReactId();
-                        isLiked = !selfPostDetails.canLike();
-                        likesCount = selfPostDetails.getLikes();
-                        viewsCount = selfPostDetails.getViews();
-                        reactionTitle = selfPostDetails.getReactTitle();
+                        videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
 
-                        Glide.with(this)
-                                .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
-                                        : R.drawable.ic_user_male_dp_small)
-                                .into(reactionPostDp);
-                        if (reactionTitle != null) {
-                            reactionPostCaption.setText(reactionTitle);
+                        if (selfPostDetails != null) {
+                            reactId = selfPostDetails.getReactId();
+                            isLiked = !selfPostDetails.canLike();
+                            likesCount = selfPostDetails.getLikes();
+                            viewsCount = selfPostDetails.getViews();
+                            reactionTitle = selfPostDetails.getReactTitle();
+
+                            Glide.with(this)
+                                    .load(selfPostDetails.getPostOwner().getProfileMedia() != null ? selfPostDetails.getPostOwner().getProfileMedia().getMediaUrl()
+                                            : R.drawable.ic_user_male_dp_small)
+                                    .into(reactionPostDp);
+                            if (reactionTitle != null) {
+                                reactionPostCaption.setText(reactionTitle);
+                            }
+                            String title="Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post";
+                            postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
+                          //  String udata="Underlined Text";
+                            SpannableString content = new SpannableString(title);
+                            content.setSpan(new UnderlineSpan(), 0, title.length(), 0);
+                            reactionPostName.setText(content);
+                           // reactionPostName.setText("Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post");
+
                         }
-                        String title="Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post";
-                        postDurationView.setText(selfPostDetails.getMediaDetail().getReactDuration());
-                      //  String udata="Underlined Text";
-                        SpannableString content = new SpannableString(title);
-                        content.setSpan(new UnderlineSpan(), 0, title.length(), 0);
-                        reactionPostName.setText(content);
-                       // reactionPostName.setText("Reacted on " + selfPostDetails.getPostOwner().getFirstName() + " post");
 
+                        initView();
+                    } else {
+                        Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
+                        navigation.popFragment();
                     }
-
-                    initView();
 //                    incrementView();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -312,9 +299,9 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     taggedListInteractionListener.onTaggedUserInteraction(selfPostDetails.getPostOwner().getUserId(), false);
                 }
-                 else if(postDetails!=null)
+                 else if(othersPostDetails !=null)
                 {
-                    taggedListInteractionListener.onTaggedUserInteraction(postDetails.getReactOwner().getUserId(), postDetails.getMySelf());
+                    taggedListInteractionListener.onTaggedUserInteraction(othersPostDetails.getReactOwner().getUserId(), othersPostDetails.getMySelf());
 
                 }
             }
@@ -327,9 +314,9 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
-                else if(postDetails!=null)
+                else if(othersPostDetails !=null)
                 {
-                    myCreationListener.ReactionPost(postDetails.getPostId());
+                    myCreationListener.ReactionPost(othersPostDetails.getPostId());
                 }
 
             }
@@ -342,9 +329,9 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
-                else if(postDetails!=null)
+                else if(othersPostDetails !=null)
                 {
-                    myCreationListener.ReactionPost(postDetails.getPostId());
+                    myCreationListener.ReactionPost(othersPostDetails.getPostId());
                 }
             }
         });
@@ -355,9 +342,9 @@ public class FragmentReactionplayer extends BaseFragment {
                 if(selfPostDetails!=null) {
                     myCreationListener.ReactionPost(selfPostDetails.getPostId());
                 }
-                else if(postDetails!=null)
+                else if(othersPostDetails !=null)
                 {
-                    myCreationListener.ReactionPost(postDetails.getPostId());
+                    myCreationListener.ReactionPost(othersPostDetails.getPostId());
                 }
             }
         });
@@ -375,21 +362,23 @@ public class FragmentReactionplayer extends BaseFragment {
     }
 
     private void incrementView() {
-        ApiCallingService.React.incrementReactionViewCount(reactId, getActivity())
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.body().getStatus())
-                            viewsCount++;
-                        initView();
-                    }
+        if (othersPostDetails.getMySelf() && !othersPostDetails.canDelete()) {
+            ApiCallingService.React.incrementReactionViewCount(reactId, getActivity())
+                    .enqueue(new Callback<ResultObject>() {
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            if (response.body().getStatus())
+                                viewsCount++;
+                            initView();
+                        }
 
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        initView();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            t.printStackTrace();
+                            initView();
+                        }
+                    });
+        }
     }
 
     private Runnable mDelayedStopRunnable = new Runnable() {
@@ -401,7 +390,7 @@ public class FragmentReactionplayer extends BaseFragment {
 
     private void initView() {
         try {
-            likeAction(isLiked, true);
+            likeAction(isLiked, false);
             reactionPostLikes.setText(String.valueOf(likesCount));
             reactionPostViews.setText(String.valueOf(viewsCount));
         } catch (Exception e) {
@@ -614,16 +603,16 @@ public class FragmentReactionplayer extends BaseFragment {
         switch (playSource) {
             case POST_REACTION: {
                 BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
-                        .setCanonicalIdentifier(String.valueOf(postDetails.getReactOwner().getUserId()))
-                        .setTitle(postDetails.getReactTitle())
+                        .setCanonicalIdentifier(String.valueOf(othersPostDetails.getReactOwner().getUserId()))
+                        .setTitle(othersPostDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(postDetails.getMediaDetail().getThumbUrl());
+                        .setContentImageUrl(othersPostDetails.getMediaDetail().getThumbUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")
                         .setFeature("sharing")
-                        .addControlParameter("react_id", String.valueOf(postDetails.getReactId()))
-                        .addControlParameter("post_id", String.valueOf(postDetails.getPostId()))
+                        .addControlParameter("react_id", String.valueOf(othersPostDetails.getReactId()))
+                        .addControlParameter("post_id", String.valueOf(othersPostDetails.getPostId()))
                         .addControlParameter("$desktop_url", "https://teazer.in/")
                         .addControlParameter("$ios_url", "https://teazer.in/");
 
@@ -632,7 +621,7 @@ public class FragmentReactionplayer extends BaseFragment {
                     public void onLinkCreate(String url, BranchError error) {
                         if (error == null) {
                             //fabric event
-                            logVideoShareEvent("Branch", postDetails.getReactTitle(), "Reaction", String.valueOf(postDetails.getReactId()));
+                            logVideoShareEvent("Branch", othersPostDetails.getReactTitle(), "Reaction", String.valueOf(othersPostDetails.getReactId()));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

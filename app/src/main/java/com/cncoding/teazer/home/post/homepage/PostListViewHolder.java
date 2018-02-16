@@ -26,9 +26,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.exoplayer.Container;
 import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView.OnThumbReadyListener;
+import com.cncoding.teazer.customViews.exoplayer.ToroPlayer;
+import com.cncoding.teazer.customViews.exoplayer.ToroUtil;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -46,10 +49,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import im.ene.toro.ToroPlayer;
-import im.ene.toro.ToroUtil;
 import im.ene.toro.media.PlaybackInfo;
-import im.ene.toro.widget.Container;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -157,7 +157,8 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         return helper != null ? helper.getLatestPlaybackInfo() : new PlaybackInfo();
     }
 
-    @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
+    @Override
+    public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
         if (helper == null)
             helper = new ExoPlayerViewHelper(container, this, Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
         helper.initialize(playbackInfo);
@@ -169,8 +170,8 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     }
 
     @Override public void pause() {
-        volumeControl.setVisibility(INVISIBLE);
         if (helper != null) helper.pause();
+        volumeControl.setVisibility(INVISIBLE);
     }
 
     @Override public boolean isPlaying() {
@@ -193,7 +194,8 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         return getAdapterPosition();
     }
 
-    @Override public void onSettled(Container container) {
+    @Override
+    public void onSettled(Container container) {
         // Do nothing
     }
 

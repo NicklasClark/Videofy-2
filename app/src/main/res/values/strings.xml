@@ -370,4 +370,6 @@
     <string name="signup_failed">Signup failed, please check the fields and try again</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
     <string name="otp_is_required">Otp is required</string>
+    <string name="reaction_no_longer_exists">This reaction no longer exists</string>
+    <string name="location_services_required">Location services are required to get your nearby locations.</string>
 </resources>
