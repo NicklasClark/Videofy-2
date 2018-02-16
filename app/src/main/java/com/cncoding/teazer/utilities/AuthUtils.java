@@ -48,6 +48,7 @@ import static com.cncoding.teazer.authentication.ForgotPasswordResetFragment.COU
 import static com.cncoding.teazer.authentication.LoginFragment.EMAIL_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.PHONE_NUMBER_FORMAT;
 import static com.cncoding.teazer.authentication.LoginFragment.USERNAME_FORMAT;
+import static com.cncoding.teazer.data.api.calls.ClientProvider.clearRetrofitObject;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logLoginEvent;
 import static com.cncoding.teazer.utilities.SharedPrefs.TEAZER;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
@@ -426,6 +427,7 @@ public class AuthUtils {
 
                     private void LTFO() {
                         SharedPrefs.resetAuthToken(context);
+                        clearRetrofitObject();
                         if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

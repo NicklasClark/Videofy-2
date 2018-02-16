@@ -338,4 +338,6 @@ public class PostDetails implements Parcelable {
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
     }
+
+
 }

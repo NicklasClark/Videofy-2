@@ -35,9 +35,6 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.AuthUtils.logout;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * Created by farazhabib on 03/12/17.
- */
 
 public class FragmentSettings extends BaseFragment {
 

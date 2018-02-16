@@ -148,6 +148,10 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                 if (is_next_page) {
                     currentPage = page;
                     getHomePagePosts(page);
+
+                    //for inmobi ads
+                    createStrands();
+                    loadAds();
                 }
             }
         };
@@ -163,7 +167,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         Long placement_id = 1519192553502L;
         for (int position : mAdPositions) {
             final InMobiNative nativeStrand = new InMobiNative(getActivity(),
-                    placement_id, new StrandAdListener(position));
+                    placement_id, new StrandAdListener((currentPage-1)*30+position));
             mStrands.add(nativeStrand);
         }
     }

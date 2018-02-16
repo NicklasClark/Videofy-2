@@ -10,14 +10,17 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.inmobi.ads.InMobiNative;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 
@@ -49,7 +52,7 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
     View adView;
 
     ImageView adIcon;
-    TextView adTitle, adDescription;
+    ProximaNovaSemiBoldTextView adTitle, adDescription;
     Button adAction;
     FrameLayout adContent;
     RatingBar adRating;
@@ -80,6 +83,14 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
             cardView.removeAllViews();
             adContent.removeAllViews();
 
+            JSONObject customContent = inMobiNative.getCustomAdContent();
+            boolean isBackFillBanner = false;
+            try {
+                isBackFillBanner = customContent.getBoolean("isHTMLResponse");
+            } catch (JSONException e) {
+                isBackFillBanner = false;
+            }
+
             Picasso.with(postsListAdapter.context)
                     .load(inMobiNative.getAdIconUrl())
                     .into(adIcon);
@@ -87,10 +98,18 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
             adDescription.setText(inMobiNative.getAdDescription());
             adAction.setText(inMobiNative.getAdCtaText());
 
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            ((Activity) postsListAdapter.context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            adContent.addView(inMobiNative.getPrimaryViewOfWidth(adView,
-                    cardView, cardView.getWidth()));
+            if(isBackFillBanner)
+            {
+                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context, adView, cardView, Math.round(postsListAdapter.context.getResources().getDisplayMetrics().density*250)));
+                adAction.setVisibility(View.GONE);
+            }
+            else
+            {
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ((Activity) postsListAdapter.context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                adContent.addView(inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context , adView,
+                        cardView, cardView.getWidth()));
+            }
 
             float rating  = inMobiNative.getAdRating();
             if (rating != 0) {
@@ -106,6 +125,32 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
             });
 
             cardView.addView(adView);
+            //Detect whether its a backfill response or normal native
+//            JSONObject customContent = inMobiNative.getCustomAdContent();
+//            boolean isBackFillBanner = false;
+//            try {
+//                isBackFillBanner = customContent.getBoolean("isHTMLResponse");
+//            } catch (JSONException e) {
+//                isBackFillBanner = false;
+//            }
+
+//            if(isBackFillBanner){
+//                View primaryView = inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context, adView, cardView, Math.round(postsListAdapter.context.getResources().getDisplayMetrics().density*250));
+//                if(adView==null){
+//                    adView = LayoutInflater.from(postsListAdapter.context).inflate(R.layout.layout_ad, null);
+//                }
+//                adContent.addView(primaryView);
+//            }
+//            else {
+//                View primaryView = inMobiNative.getPrimaryViewOfWidth(postsListAdapter.context, adView, cardView, cardView.getWidth());
+//                if(adView==null){
+//                    adView = LayoutInflater.from(postsListAdapter.context).inflate(R.layout.layout_ad, cardView, false);
+//                }
+//                adContent.addView(primaryView);
+//                adTitle.setText(inMobiNative.getAdTitle());
+//                adDescription.setText(inMobiNative.getAdDescription());
+//                adAction.setText(inMobiNative.getAdCtaText());
+//            }
         }
     }
 }

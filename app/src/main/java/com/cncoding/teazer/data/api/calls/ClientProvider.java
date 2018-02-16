@@ -80,4 +80,9 @@ public class ClientProvider {
                 .addInterceptor(logging)
                 .build();
     }
+
+    public static void clearRetrofitObject()
+    {
+        retrofitWithAuthToken = null;
+    }
 }
