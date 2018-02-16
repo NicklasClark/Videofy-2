@@ -11,13 +11,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
+import com.bumptech.glide.Glide;
 import com.cncoding.teazer.R;
+import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.inmobi.ads.InMobiNative;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,20 +33,6 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
 
     @LayoutRes
     static final int LAYOUT_RES = R.layout.recycler_card_layout;
-//    @BindView(R.id.adIcon)
-//    AppCompatImageView adIcon;
-//    @BindView(R.id.adSponsored)
-//    AppCompatTextView adSponsored;
-//    @BindView(R.id.adTitle)
-//    AppCompatTextView adTitle;
-//    @BindView(R.id.adRating)
-//    AppCompatRatingBar adRating;
-//    @BindView(R.id.adContent)
-//    FrameLayout adContent;
-//    @BindView(R.id.adAction)
-//    AppCompatButton adAction;
-//    @BindView(R.id.adDescription)
-//    AppCompatTextView adDescription;
     private PostsListAdapter postsListAdapter;
     private PostDetails postDetails;
     CardView cardView;
@@ -53,6 +40,7 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
 
     ImageView adIcon;
     ProximaNovaSemiBoldTextView adTitle, adDescription;
+    ProximaNovaRegularTextView adSponsored;
     Button adAction;
     FrameLayout adContent;
     RatingBar adRating;
@@ -72,6 +60,7 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
         adAction = adView.findViewById(R.id.adAction);
         adContent = adView.findViewById(R.id.adContent);
         adRating = adView.findViewById(R.id.adRating);
+        adSponsored = adView.findViewById(R.id.adSponsored);
     }
 
     @Override
@@ -91,7 +80,7 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
                 isBackFillBanner = false;
             }
 
-            Picasso.with(postsListAdapter.context)
+            Glide.with(postsListAdapter.context)
                     .load(inMobiNative.getAdIconUrl())
                     .into(adIcon);
             adTitle.setText(inMobiNative.getAdTitle());
@@ -112,10 +101,10 @@ public class AdViewHolder extends BaseRecyclerViewHolder {
             }
 
             float rating  = inMobiNative.getAdRating();
-            if (rating != 0) {
-                adRating.setRating(rating);
-            }
-            adRating.setVisibility(rating != 0 ? View.VISIBLE : View.GONE);
+//            if (rating != 0) {
+//                adRating.setRating(rating);
+//            }
+//            adRating.setVisibility(rating != 0 ? View.VISIBLE : View.GONE);
 
             adAction.setOnClickListener(new View.OnClickListener() {
                 @Override

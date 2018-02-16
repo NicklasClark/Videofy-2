@@ -63,7 +63,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
 
     private final List<InMobiNative> mNativeAds = new ArrayList<>();
     private InMobiNative.NativeAdListener nativeAdListener;
-    private int[] mAdPositions = new int[]{3, 8, 18};
+    private int[] mAdPositions = new int[]{3, 8, 15, 23};
 
     //All the InMobiNativeStrand instances created for this list feed will be held here
     private List<InMobiNative> mStrands = new ArrayList<>();
@@ -261,6 +261,7 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         if (isRefreshing) {
             isRefreshing = false;
             updateOrRemovePostDetailsAtThePosition();
+            refreshAds();
         }
     }
 
