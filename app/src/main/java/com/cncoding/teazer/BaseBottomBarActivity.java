@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +38,7 @@ import com.cncoding.teazer.adapter.FollowingAdapter.OtherProfileListenerFollowin
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter.myCreationListener;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.NestedCoordinatorLayout;
@@ -72,12 +72,14 @@ import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
-import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer;
 import com.cncoding.teazer.utilities.FragmentHistory;
 import com.cncoding.teazer.utilities.NavigationController;
 import com.cncoding.teazer.utilities.NavigationController.RootFragmentListener;
@@ -121,17 +123,17 @@ import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
-import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_TRENDING;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchPostDetails;
 import static com.cncoding.teazer.utilities.NavigationController.TAB1;
@@ -207,6 +209,7 @@ public class BaseBottomBarActivity extends BaseActivity
     public MaterialShowcaseView materialShowcaseView;
     ProfileFragment profilefragment;
     PostDetails postDetails;
+    private Call<ReactionResponse> postGiphyCall;
 
     @Contract(value = " -> !null", pure = true)
     private BaseBottomBarActivity getThis() {
@@ -591,7 +594,11 @@ public class BaseBottomBarActivity extends BaseActivity
                                 if (response.code() == 200) {
                                     if (response.body() != null) {
                                         PostReaction postReactDetail = response.body().getPostReactDetail();
-                                        pushFragment(FragmentReactionplayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null));
+                                        if (postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF || postReactDetail.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                        } else {
+                                            pushFragment(FragmentReactionPlayer.newInstance(OPENED_FROM_OTHER_SOURCE, postReactDetail,null, true));
+                                        }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                                     }
@@ -966,8 +973,13 @@ public class BaseBottomBarActivity extends BaseActivity
         }
         UploadParams reactionUploadParams = getReactionUploadSession(getApplicationContext());
         if (reactionUploadParams != null) {
-            setupReactionUploadServiceReceiver(reactionUploadParams);
-            launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
+            if (!reactionUploadParams.isGiphy()) {
+                setupReactionUploadServiceReceiver(reactionUploadParams);
+                launchReactionUploadService(this, reactionUploadParams, reactionUploadReceiver);
+            }
+            else {
+                postGiphyReaction(reactionUploadParams);
+            }
         }
     }
 
@@ -1261,6 +1273,24 @@ public class BaseBottomBarActivity extends BaseActivity
        deleteFilePermanently(sourcePath);
     }
 
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, this).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.body().getCode() == 200)
+                    Toast.makeText(BaseBottomBarActivity.this, "Reaction posted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(BaseBottomBarActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public void callProfileListener(int id, boolean isMyself) {
@@ -1285,8 +1315,8 @@ public class BaseBottomBarActivity extends BaseActivity
     }
 
     @Override
-    public void reactionPlayer(int selfReaction, PostReaction postReaction, Reactions reaction) {
-        pushFragment(FragmentReactionplayer.newInstance(selfReaction, postReaction,reaction));
+    public void reactionPlayer(int selfReaction, PostReaction postReaction, MyReactions reaction, boolean isGif) {
+        pushFragment(FragmentReactionPlayer.newInstance(selfReaction, postReaction,reaction, isGif));
     }
 
     @Override

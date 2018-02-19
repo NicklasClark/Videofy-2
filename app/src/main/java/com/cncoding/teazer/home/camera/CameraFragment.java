@@ -60,6 +60,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
@@ -95,6 +96,7 @@ public class CameraFragment extends Fragment {
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     public static final int ACTION_START_UPLOAD_FRAGMENT = 21;
     public static final int ACTION_SHOW_GALLERY = 22;
+    public static final int ACTION_SHOW_GIFS = 23;
 //    public static final int ACTION_EXIT = 23;
 
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
@@ -154,6 +156,7 @@ public class CameraFragment extends Fragment {
     @BindView(R.id.camera_files) AppCompatImageView cameraFilesView;
     @BindView(R.id.camera_flip) AppCompatImageView cameraFlipView;
     @BindView(R.id.camera_flash) AppCompatImageView cameraFlashView;
+    @BindView(R.id.reaction_gif) AppCompatImageView cameraGifView;
     @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDuration;
     @BindView(R.id.swipeCameraTip)
     ProximaNovaSemiBoldTextView swipeForFilterTip;
@@ -315,6 +318,8 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(isReaction)
+            cameraGifView.setVisibility(View.VISIBLE);
 
         mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override public void onSwipeTop() {
@@ -393,12 +398,22 @@ public class CameraFragment extends Fragment {
 
     @OnClick(R.id.camera_record) public void toggleRecording() {
         if (mIsRecordingVideo) {
-            if (updatedTime > 5000) {
-                stopRecordButtonAnimations();
-                stopRecordingVideo();
-            }
-            else {
-                Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+            if (isReaction) {
+                if (updatedTime > 3000) {
+                    stopRecordButtonAnimations();
+                    stopRecordingVideo();
+                }
+                else {
+                    Toast.makeText(context,"Video can not be less than 3 seconds",Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (updatedTime > 5000) {
+                    stopRecordButtonAnimations();
+                    stopRecordingVideo();
+                }
+                else {
+                    Toast.makeText(context,"Video can not be less than 5 seconds",Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             animateRecordButton(activity);
@@ -413,6 +428,7 @@ public class CameraFragment extends Fragment {
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_FRONT);
             } else
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight(), CAMERA_BACK);
+            setupFlashButton();
         } catch (Exception e) {
             Toast.makeText(context, "Camera not configured correctly, please retry!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -442,22 +458,36 @@ public class CameraFragment extends Fragment {
         }
     }
     public void setupFlashButton() {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)cameraGifView.getLayoutParams();
+
         if (cameraId.equals(String.valueOf(CAMERA_BACK)) && isFlashSupported) {
             cameraFlashView.setVisibility(View.VISIBLE);
 
             if (isTorchOn) {
                 cameraFlashView.setImageResource(R.drawable.ic_flash_on);
             } else {
+
                 cameraFlashView.setImageResource(R.drawable.ic_flash_off);
             }
 
+            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.START_OF, R.id.camera_flash);
         } else {
             cameraFlashView.setVisibility(View.GONE);
+
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.removeRule(RelativeLayout.START_OF);
+
         }
+        cameraGifView.setLayoutParams(params);
     }
 
     @OnClick(R.id.camera_files) public void showGallery() {
         mListener.onCameraInteraction(ACTION_SHOW_GALLERY, null);
+    }
+
+    @OnClick(R.id.reaction_gif) public void showGIFs() {
+        mListener.onCameraInteraction(ACTION_SHOW_GIFS, null);
     }
 
     private void animateRecordButton(Context context) {

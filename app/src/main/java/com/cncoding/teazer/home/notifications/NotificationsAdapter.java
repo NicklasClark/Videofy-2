@@ -52,7 +52,7 @@ import retrofit2.Response;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.cncoding.teazer.MainActivity.PUBLIC_ACCOUNT;
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.cncoding.teazer.model.user.Notification}
@@ -207,7 +207,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                         if (response.body() != null) {
                                                             PostReaction postReactDetail = response.body().getPostReactDetail();
                                                             if (postReactDetail != null) {
-                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null);
+                                                                reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReactDetail, null, true);
                                                             } else {
                                                                 Toast.makeText(context, R.string.reaction_no_longer_exists, Toast.LENGTH_SHORT).show();
                                                             }

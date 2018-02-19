@@ -63,6 +63,8 @@ import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
+import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -1306,46 +1308,37 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.canReact = false;
-            launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
-        }
-    }
 
-    @SuppressWarnings("unused")
-    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
-
-        private WeakReference<FragmentPostDetails> reference;
-
-        ShowShareDialog(FragmentPostDetails context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap bitmap = null;
-            try {
-                final URL url = new URL(strings[0]);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!uploadParams.isGiphy()) {
+                launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
+            } else {
+                postGiphyReaction(uploadParams);
             }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(reference.get());
-            shareDialog.show(content);
-            // ShareApi.share(content, null);
-            super.onPostExecute(bitmap);
         }
     }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200 || response.code() == 201) {
+                    getPostReactions(postDetails.getPostId(), 1);
+                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     //</editor-fold>
 

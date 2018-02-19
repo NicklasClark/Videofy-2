@@ -24,6 +24,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -56,6 +58,16 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.model.base.UploadParams;
+import com.cncoding.teazer.R;
+import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
+import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
+import com.cncoding.teazer.asynctasks.GifConvertAsyncTask;
+import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
+import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
+import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.model.base.Category;
+import com.cncoding.teazer.model.base.MiniProfile;
+import com.cncoding.teazer.model.giphy.Images;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -73,6 +85,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -113,7 +126,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks,
-        CompressVideoAsyncTask.AsyncResponse, AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+        CompressVideoAsyncTask.AsyncResponse,
+        AddWaterMarkAsyncTask.WatermarkAsyncResponse,
+        GifConvertAsyncTask.GifConvertAsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
@@ -127,6 +142,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private static final int RC_LOCATION_PERM = 123;
     private static final int TAGGED_CATEGORIES = 2;
     private static final int TAGGED_FRIENDS = 1;
+
+    public static final int VIDEO_UPLOAD = 25;
+    public static final int REACTION_UPLOAD = 26;
+    private static final String VIDEO_DURATION = "video_duration";
+    private static final String IS_GIPHY = "is_giphy";
 
     @BindView(R.id.share_on_facebook) ProximaNovaRegularCheckedTextView facebookShareBtn;
     @BindView(R.id.share_on_twitter) ProximaNovaRegularCheckedTextView twitterShareBtn;
@@ -150,6 +170,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public boolean isReaction;
     private boolean isRequestingLocationUpdates;
     private boolean isGallery;
+    @BindView(R.id.playBtn)
+    AppCompatImageView playBtn;
     private int tagCount;
     private int categoryCount;
     private String videoPath;
@@ -172,17 +194,25 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private long initialSize;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private OnUploadFragmentInteractionListener mListener;
+    private boolean convertToGif = false;
+    private boolean convertingToGif = false;
+    private String gifPath;
+    private int videoDuration;
+    private String oldVideoPath;
+    private boolean isGiphy;
 
     public UploadFragment() {
         // Required empty public constructor
     }
 
-    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery) {
+    public static UploadFragment newInstance(String videoPath, boolean isReaction, boolean isGallery, int videoDuration, boolean isGiphy) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
         args.putString(VIDEO_PATH, videoPath);
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
+        args.putInt(VIDEO_DURATION, videoDuration);
+        args.putBoolean(IS_GIPHY, isGiphy);
         fragment.setArguments(args);
         return fragment;
     }
@@ -195,6 +225,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
             isGallery = bundle.getBoolean(IS_GALLERY);
+            videoDuration = bundle.getInt(VIDEO_DURATION);
+            isGiphy = bundle.getBoolean(IS_GIPHY);
         }
 
         CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
@@ -232,6 +264,24 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         Log.d("SIZE", "Before: "+initialSize/1024+" After:"+compressedSize/1024);
     }
 
+
+    @Override
+    public void gifConvertProcessFinish(String output) {
+        Log.d("GifConvert", output);
+        oldVideoPath = videoPath;
+        thumbnailProgressBar.setVisibility(View.GONE);
+        convertingToGif = false;
+        gifPath = output;
+        videoPath = gifPath;
+
+        Glide.with(context)
+                .load(gifPath)
+//                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(thumbnailView);
+
+        enableView(uploadBtn);
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, isRequestingLocationUpdates);
@@ -251,7 +301,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -277,6 +327,57 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         createLocationCallback();
         createLocationRequest();
 
+        gifSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                convertToGif = isChecked;
+
+                if (convertToGif) {
+                    if(videoDuration < 8) {
+                        thumbnailView.setClickable(false);
+                        playBtn.setVisibility(View.GONE);
+                        disableView(uploadBtn, true);
+                        convertingToGif = true;
+
+                        if (null == gifPath) {
+                            thumbnailProgressBar.setVisibility(VISIBLE);
+                            GifConvertAsyncTask gifConvertAsyncTask = new GifConvertAsyncTask(getContext());
+                            gifConvertAsyncTask.delegate = UploadFragment.this;
+                            gifConvertAsyncTask.execute(videoPath);
+                        } else {
+                            videoPath = gifPath;
+                            Glide.with(context)
+                                    .load(gifPath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(thumbnailView);
+                            thumbnailProgressBar.setVisibility(View.GONE);
+
+                            enableView(uploadBtn);
+                            convertingToGif = false;
+                        }
+                    }
+                    else {
+                        Toast.makeText(context, "Duration can not be greater than 8 seconds", Toast.LENGTH_SHORT).show();
+                        gifSwitch.setChecked(false);
+                    }
+                }
+                else {
+                    thumbnailView.setClickable(true);
+                    playBtn.setVisibility(View.VISIBLE);
+
+                    videoPath = oldVideoPath;
+                    if (oldVideoPath != null) {
+                        Glide.with(context)
+                                .load(Uri.fromFile(new File(oldVideoPath)))
+                                .into(thumbnailView);
+                    } else {
+                        Glide.with(context)
+                                .load(Uri.fromFile(new File(videoPath)))
+                                .into(thumbnailView);
+                    }
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -292,15 +393,44 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             uploadBtn.setText("Processing...");
         }
 
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                Glide.with(UploadFragment.this)
-                        .load(Uri.fromFile(new File(videoPath)))
-                        .into(thumbnailView);
-            }
-        }, 1000);
+//        new Handler().postDelayed(new Runnable() {
+//            public void run() {
+//                Glide.with(UploadFragment.this)
+//                        .load(Uri.fromFile(new File(videoPath)))
+//                        .into(thumbnailView);
+//            }
+//        }, 1000);
 
-        new SetVideoDuration(this).execute();
+        if (!isGiphy) {
+            if (convertingToGif) {
+                disableView(uploadBtn, true);
+            }
+
+            Glide.with(context)
+                    .load(Uri.fromFile(new File(videoPath)))
+                    .into(thumbnailView);
+
+            if (videoDuration > 0) {
+                String durationText = "Duration " + String.format(Locale.UK, "%02d:%02d",
+                        MILLISECONDS.toMinutes(videoDuration*1000),
+                        MILLISECONDS.toSeconds(videoDuration*1000) - MINUTES.toSeconds(MILLISECONDS.toMinutes(videoDuration*1000)));
+                videoDurationTextView.setText(durationText);
+            } else {
+                new SetVideoDuration(this).execute();
+            }
+        } else {
+            videoDurationTextView.setVisibility(View.GONE);
+            gifSwitch.setVisibility(View.GONE);
+            thumbnailView.setClickable(false);
+            playBtn.setVisibility(View.GONE);
+
+            Gson gson = new Gson();
+            Images images = gson.fromJson(videoPath, Images.class);
+            Glide.with(context)
+                    .load(images.getDownsized().getUrl())
+//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(thumbnailView);
+        }
 
         if (getActivity() != null && getActivity() instanceof CameraActivity) {
             ((CameraActivity) getActivity()).updateBackButton(R.drawable.ic_arrow_back_white);
@@ -563,11 +693,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                     performVideoUpload(activity,
                             new UploadParams(isGallery, videoPath, title, location,
                                     Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                                    selectedTagsToSend, selectedCategoriesToSend, ((CameraActivity) getActivity()).postDetails));
+                                    selectedTagsToSend, selectedCategoriesToSend, ((CameraActivity) getActivity()).postDetails, isGiphy));
                 } else {
                     performReactionUpload(activity,
                             new UploadParams(isGallery, videoPath, title, location, latitude, longitude,
-                                    ((CameraActivity) getActivity()).postDetails));
+                                    ((CameraActivity) getActivity()).postDetails, isGiphy));
                 }
             }
         }

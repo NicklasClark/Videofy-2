@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer.OPENED_FROM_OTHER_SOURCE;
+import static com.cncoding.teazer.ui.fragment.fragment.FragmentReactionPlayer.OPENED_FROM_OTHER_SOURCE;
 
 /**
  *
@@ -123,7 +123,7 @@ public class ReactionAdapter extends BaseRecyclerViewAdapter {
 
         @OnClick(R.id.root_layout) void onReactionClick() {
             if (postReaction != null && listener != null) {
-                listener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null);
+                listener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null, true);
             }
         }
     }

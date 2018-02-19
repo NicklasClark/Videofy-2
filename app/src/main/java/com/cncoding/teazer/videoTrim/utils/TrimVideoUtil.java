@@ -36,7 +36,7 @@ public class TrimVideoUtil {
     private static String savePath;
     private static final String TAG = TrimVideoUtil.class.getSimpleName();
     public static final int VIDEO_MAX_DURATION = 60;
-    public static final int MIN_TIME_FRAME = 5;
+    public static int MIN_TIME_FRAME = 5;
 //    private static final int thumb_Width = (DeviceUtil.getDeviceWidth() - UnitConverter.dpToPx(50)) / VIDEO_MAX_DURATION;
     private static final int thumb_Width = UnitConverter.dpToPx(50);
     private static final int thumb_Height = UnitConverter.dpToPx(60);
@@ -100,8 +100,8 @@ public class TrimVideoUtil {
 
     private static String getSavePath(Context context) {
         choseSavePath();
-        copyFilesFassets(context, "Ress", savePath);
-        return savePath;
+//        copyFilesFassets(context, "Ress", savePath);
+        return savePath+"/";
     }
     private static void choseSavePath() {
         savePath = Environment.getExternalStorageDirectory().getPath() + "/teazerTrim/";

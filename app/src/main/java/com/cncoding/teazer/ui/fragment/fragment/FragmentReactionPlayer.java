@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
@@ -32,10 +34,10 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.post.detailspage.TagListAdapter;
-import com.cncoding.teazer.home.post.homepage.PostsListFragment;
+import com.cncoding.teazer.model.giphy.Images;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -51,6 +53,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -69,6 +72,8 @@ import retrofit2.Response;
 
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
 import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIF;
+import static com.cncoding.teazer.utilities.CommonUtilities.MEDIA_TYPE_GIFHY;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logVideoShareEvent;
 import static com.cncoding.teazer.utilities.MediaUtils.acquireAudioLock;
 import static com.cncoding.teazer.utilities.MediaUtils.releaseAudioLock;
@@ -80,12 +85,13 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
  * Created by farazhabib on 23/01/18.
  */
 
-public class FragmentReactionplayer extends BaseFragment {
+public class FragmentReactionPlayer extends BaseFragment {
 
     public static final int OPENED_FROM_OTHER_SOURCE = 0;
     public static final int OPENED_FROM_PROFILE = 1;
 
     @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+    @BindView(R.id.gif_view) ImageView gifView;
     @BindView(R.id.btnClose) ImageView btnClose;
     @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView reactionPostCaption;
     @BindView(R.id.reaction_post_dp) CircularAppCompatImageView reactionPostDp;
@@ -99,7 +105,7 @@ public class FragmentReactionplayer extends BaseFragment {
     @BindView(R.id.postTitle) ProximaNovaRegularTextView postTitle;
     private String videoURL;
     private PostReaction othersPostDetails;
-    private Reactions selfPostDetails;
+    private MyReactions selfPostDetails;
     private boolean isLiked;
     private int likesCount;
     private int viewsCount;
@@ -110,12 +116,13 @@ public class FragmentReactionplayer extends BaseFragment {
     private int currentWindow;
     private boolean playWhenReady = true;
     private int playSource;
-    Reactions reactions;
+    MyReactions reactions;
     SimpleExoPlayer player;
     int getPlaySource;
     Context context;
     public static final int POST_REACTION = 0;
     public static final int SELF_REACTION = 1;
+    private boolean isGif;
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private boolean audioAccessGranted = false;
@@ -123,14 +130,16 @@ public class FragmentReactionplayer extends BaseFragment {
     private Handler mHandler;
     public static final String SELF_REACTIONS = "self_reactions";
     public static final String POST_REACTIONS = "post_reactions";
+    public static final String IS_GIF = "is_gif";
     TagListAdapter.TaggedListInteractionListener taggedListInteractionListener;
     ProfileMyCreationAdapter.myCreationListener myCreationListener;
 
-    public static FragmentReactionplayer newInstance(int source, PostReaction postReaction, Reactions selfPostreaction ) {
-        FragmentReactionplayer fragment = new FragmentReactionplayer();
+    public static FragmentReactionPlayer newInstance(int source, PostReaction postReaction, MyReactions selfPostreaction, boolean isGIF) {
+        FragmentReactionPlayer fragment = new FragmentReactionPlayer();
         Bundle args = new Bundle();
         args.putParcelable(SELF_REACTIONS, selfPostreaction);
         args.putParcelable(POST_REACTIONS, postReaction);
+        args.putBoolean(IS_GIF, isGIF);
         args.putInt("SOURCE", source);
         fragment.setArguments(args);
         return fragment;
@@ -144,6 +153,7 @@ public class FragmentReactionplayer extends BaseFragment {
             selfPostDetails = bundle.getParcelable(SELF_REACTIONS);
             othersPostDetails = bundle.getParcelable(POST_REACTIONS);
             playSource = bundle.getInt("SOURCE");
+            isGif = bundle.getBoolean(IS_GIF);
         }
     }
 
@@ -193,6 +203,30 @@ public class FragmentReactionplayer extends BaseFragment {
 
                     if (othersPostDetails != null) {
                         videoURL = othersPostDetails.getMediaDetail().getMediaUrl();
+
+                        if(isGif) {
+                            gifView.setVisibility(View.VISIBLE);
+
+                            if(othersPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY)
+                            {
+                                Gson gson = new Gson();
+                                Images images = gson.fromJson(othersPostDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                                Glide.with(this)
+                                        .load(images.getDownsizedLarge().getUrl())
+                                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                        .into(gifView);
+                            }
+                            else if(othersPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                                Glide.with(this)
+                                        .load(othersPostDetails.getMediaDetail().getMediaUrl())
+                                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                        .into(gifView);
+                            }
+                        }
+                        else {
+                            playerView.setVisibility(View.VISIBLE);
+                        }
 
                         if (othersPostDetails != null) {
                             reactId = othersPostDetails.getReactId();
@@ -254,11 +288,35 @@ public class FragmentReactionplayer extends BaseFragment {
             case OPENED_FROM_PROFILE: {
                 try {
                     if (selfPostDetails != null) {
-                        videoURL = selfPostDetails.getMediaDetail().getMediaUrl();
+                        videoURL = selfPostDetails.getMediaDetail().getReactMediaUrl();
+
 
                         if (selfPostDetails != null) {
+
+                            if (isGif) {
+                                gifView.setVisibility(View.VISIBLE);
+
+                                if (selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
+                                    Gson gson = new Gson();
+                                    Images images = gson.fromJson(selfPostDetails.getMediaDetail().getExternalMeta(), Images.class);
+
+                                    Glide.with(this)
+                                            .load(images.getDownsizedLarge().getUrl())
+                                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                            .into(gifView);
+                                } else if (selfPostDetails.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
+                                    Glide.with(this)
+                                            .load(selfPostDetails.getMediaDetail().getReactMediaUrl())
+                                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                                            .into(gifView);
+                                }
+                            } else {
+                                playerView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (selfPostDetails != null) {
                             reactId = selfPostDetails.getReactId();
-                            isLiked = !selfPostDetails.canLike();
+                            isLiked = !selfPostDetails.getCanLike();
                             likesCount = selfPostDetails.getLikes();
                             viewsCount = selfPostDetails.getViews();
                             reactionTitle = selfPostDetails.getReactTitle();
@@ -639,7 +697,7 @@ public class FragmentReactionplayer extends BaseFragment {
                         .setCanonicalIdentifier(String.valueOf(selfPostDetails.getPostOwner().getUserId()))
                         .setTitle(selfPostDetails.getReactTitle())
                         .setContentDescription("View this awesome video on Teazer app")
-                        .setContentImageUrl(selfPostDetails.getMediaDetail().getThumbUrl());
+                        .setContentImageUrl(selfPostDetails.getMediaDetail().getReactThumbUrl());
 
                 LinkProperties linkProperties = new LinkProperties()
                         .setChannel("facebook")

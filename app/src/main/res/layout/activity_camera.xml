@@ -73,6 +73,38 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_video_gallery"/>
 
+        <com.cncoding.teazer.customViews.ProximaNovaRegularAutoCompleteTextView
+            android:visibility="gone"
+            android:id="@+id/giphy_search"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="@string/search_for_giphys"
+            android:textSize="@dimen/text_size_14sp"
+            android:layout_marginTop="@dimen/padding_thin"
+            android:layout_marginBottom="@dimen/padding_thin"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="18dp"
+            android:textColorHint="@color/colorSecondary_text"
+            android:textColor="#333333"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionGo"
+            app:drawableEndCompat="@drawable/giphy_logo"
+            android:background="@drawable/bg_card_rounded_corners"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reaction_gif_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_gravity="center_horizontal"
+            android:numColumns="auto_fit"
+            android:padding="@dimen/padding_default"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_trending_giphy"/>
+
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

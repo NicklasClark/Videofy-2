@@ -373,4 +373,8 @@
     <string name="otp_is_required">Otp is required</string>
     <string name="reaction_no_longer_exists">This reaction no longer exists</string>
     <string name="location_services_required">Location services are required to get your nearby locations.</string>
+    <string name="reaction_gif">Gif to react</string>
+    <string name="giphy_base_url">https://api.giphy.com</string>
+    <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
+    <string name="search_for_giphys">Search for Gifs</string>
 </resources>

@@ -2,7 +2,6 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
-
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -13,6 +12,7 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -24,6 +24,7 @@ import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -533,9 +534,9 @@ import retrofit2.http.Query;
         @GET("/api/v1/react/details/{react_id}")
         Call<ReactVideoDetailsResponse> getReactionDetail2(@Path("react_id") int reactId);
 
-
-
-
+        //Call this service to post reaction using Giphy
+        @POST("/api/v1/react/by/gif")
+        Call<ResultObject> createReactionByGiphy(@Body GiphyReactionRequest giphyReactionRequest);
     }
 
 
@@ -810,5 +811,18 @@ import retrofit2.http.Query;
 
         @PUT("api/v1/user/reset/notification/count")
         Call<ResultObject> resetUnreadNotification(@Query("type") int notificatioType);
+    }
+
+    /**
+     * Giphy actions
+     */
+    interface GiphyCalls {
+
+        @GET("/v1/gifs/trending")
+        Call<TrendingGiphy> getTrendingGiphys(@Query("api_key") String api_key, @Query("limit") int limit, @Query("offset") int offset, @Query("rating") String rating);
+
+        @GET("/v1/gifs/search")
+        Call<TrendingGiphy> searchGiphy(@Query("api_key") String api_key, @Query("limit") int limit, @Query("offset") int offset, @Query("rating") String rating, @Query("lang") String lang, @Query("q") String query);
+
     }
 }
