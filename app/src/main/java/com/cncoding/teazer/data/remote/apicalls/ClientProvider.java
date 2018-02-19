@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -22,7 +23,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ClientProvider {
 
-//    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static Retrofit retrofitWithAuthToken;
     private static Retrofit retrofitWithoutAuthToken;
 
@@ -55,20 +56,20 @@ public class ClientProvider {
                 .addInterceptor(new Interceptor() {
                     @Override
                     public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
-                        try {
+//                        try {
                             Request original = chain.request();
                             Request request = original.newBuilder()
                                     .header("Authorization", "Bearer " + authToken)
                                     .method(original.method(), original.body())
                                     .build();
                             return chain.proceed(request);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return null;
-                        }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            return null;
+//                        }
                     }
                 })
-//                .addInterceptor(logging)
+                .addInterceptor(logging)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .build();

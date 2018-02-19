@@ -66,6 +66,10 @@ public class ResultObject {
         return error;
     }
 
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
     public ResultObject setError(Throwable error) {
         this.error = error;
         return this;

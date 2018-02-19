@@ -179,6 +179,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                     if (response.isSuccessful()) {
                         ResultObject tempResultObject = response.body();
                         tempResultObject.setCallType(callType);
+                        tempResultObject.setCode(response.code());
                         if (tempResultObject.getStatus()) {
                             liveData.setValue(tempResultObject);
                         } else {
