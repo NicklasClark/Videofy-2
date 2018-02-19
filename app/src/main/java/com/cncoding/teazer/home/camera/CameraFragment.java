@@ -316,12 +316,11 @@ public class CameraFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         mTextureView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeTop() {
+            @Override public void onSwipeTop() {
 //                Toast.makeText(getContext(), "top", Toast.LENGTH_SHORT).show();
             }
-            public void onSwipeRight() {
+            @Override public void onSwipeRight() {
                 if (selected_filter_mode_index > 0) {
                     selected_filter_mode_index--;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
@@ -329,7 +328,7 @@ public class CameraFragment extends Fragment {
                     updatePreview();
                 }
             }
-            public void onSwipeLeft() {
+            @Override public void onSwipeLeft() {
                 if (selected_filter_mode_index < CAMERA_FILTER_MODES.length-1) {
                     selected_filter_mode_index++;
                     mPreviewBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CAMERA_FILTER_MODES[selected_filter_mode_index]);
@@ -337,7 +336,7 @@ public class CameraFragment extends Fragment {
                     updatePreview();
                 }
             }
-            public void onSwipeBottom() {
+            @Override public void onSwipeBottom() {
 //                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
             }
 

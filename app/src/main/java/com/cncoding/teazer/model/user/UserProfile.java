@@ -16,7 +16,15 @@ public class UserProfile implements Parcelable {
     private int followings;
     private int total_videos;
     private boolean can_change_password;
+    private Throwable error;
 
+    public UserProfile(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     protected UserProfile(Parcel in) {
         user_profile = in.readParcelable(PublicProfile.class.getClassLoader());

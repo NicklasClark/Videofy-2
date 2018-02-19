@@ -25,6 +25,7 @@ public class PostsDiffCallback extends DiffUtil.Callback {
     public static final String DIFF_CAN_REACT = "canReact";
     public static final String DIFF_CAN_LIKE = "canLike";
     public static final String DIFF_CHECKIN = "checkIn";
+    public static final String DIFF_REACTIONS = "reactions";
 
     private List<PostDetails> oldPostDetails;
     private List<PostDetails> newPostDetails;
@@ -92,8 +93,6 @@ public class PostsDiffCallback extends DiffUtil.Callback {
     private Bundle getDiffBundle(PostDetails oldPostDetails, PostDetails newPostDetails, Bundle diffBundle) {
         if (!Objects.equals(oldPostDetails.getLikes(), newPostDetails.getLikes()))
             diffBundle.putInt(DIFF_LIKES, newPostDetails.getLikes());
-        if (!Objects.equals(oldPostDetails.getTotalReactions(), newPostDetails.getTotalReactions()))
-            diffBundle.putInt(DIFF_TOTAL_REACTIONS, newPostDetails.getTotalReactions());
         if (!Objects.equals(oldPostDetails.getTotalTags(), newPostDetails.getTotalTags()))
             diffBundle.putInt(DIFF_TOTAL_TAGS, newPostDetails.getTotalTags());
         if (!Objects.equals(oldPostDetails.getTitle(), newPostDetails.getTitle()))
@@ -106,6 +105,12 @@ public class PostsDiffCallback extends DiffUtil.Callback {
             diffBundle.putBoolean(DIFF_HAS_CHECKIN, newPostDetails.hasCheckin());
         if (!Objects.equals(oldPostDetails.getCheckIn(), newPostDetails.getCheckIn()))
             diffBundle.putParcelable(DIFF_CHECKIN, newPostDetails.getCheckIn());
+        if (!Objects.equals(oldPostDetails.getTotalReactions(), newPostDetails.getTotalReactions())) {
+            diffBundle.putInt(DIFF_TOTAL_REACTIONS, newPostDetails.getTotalReactions());
+            diffBundle.putParcelableArrayList(DIFF_REACTIONS, newPostDetails.getReactions());
+        }
+//        if (CollectionUtils.isEqualCollection(oldPostDetails.getReactions(), newPostDetails.getReactions()))
+//            diffBundle.putParcelableArrayList(DIFF_REACTIONS, newPostDetails.getReactions());
         return diffBundle;
     }
 }

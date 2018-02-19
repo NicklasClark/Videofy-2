@@ -27,17 +27,18 @@ import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
 import com.cncoding.teazer.model.auth.VerifySignUp;
 import com.cncoding.teazer.ui.fragment.activity.ForgotPasswordActivity;
 import com.cncoding.teazer.utilities.NetworkStateReceiver;
+import com.cncoding.teazer.utilities.NetworkStateReceiver.NetworkStateListener;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.STATUS_FALSE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class AuthFragment extends Fragment implements NetworkStateReceiver.NetworkStateListener {
+public abstract class AuthFragment extends Fragment implements NetworkStateListener {
 
     /**
      * Field Validation types for any {@link Fragment} extending {@link AuthFragment}.
@@ -56,7 +57,7 @@ public abstract class AuthFragment extends Fragment implements NetworkStateRecei
     private NetworkStateReceiver networkStateReceiver;
     protected  boolean isPasswordShown = true;
     AuthViewModel authViewModel;
-    
+
     public AuthFragment() {
         // Required empty public constructor
     }

@@ -12,11 +12,16 @@ public class PostUploadResult implements Parcelable {
     private boolean status;
     private String message;
     private PostDetails post_details;
+    private Throwable error;
 
     public PostUploadResult(boolean status, String message, PostDetails post_details) {
         this.status = status;
         this.message = message;
         this.post_details = post_details;
+    }
+
+    public PostUploadResult(Throwable error) {
+        this.error = error;
     }
 
     protected PostUploadResult(Parcel in) {
@@ -55,6 +60,10 @@ public class PostUploadResult implements Parcelable {
 
     public String getMessage() {
         return message;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public PostDetails getPostDetails() {

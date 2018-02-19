@@ -1,11 +1,15 @@
 package com.cncoding.teazer.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 import com.cncoding.teazer.model.base.UploadParams;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import static com.cncoding.teazer.utilities.ViewUtils.BLANK_SPACE;
 
 /**
  *
@@ -20,11 +24,12 @@ public class SharedPrefs {
     private static final String CURRENT_PASSWORD = "current_password";
     private static final String FCM_TOKEN = "fcmToken";
     private static final String VIDEO_UPLOAD_SESSION = "videoUploadSession";
-    private static final String BLURRED_PROFILE_PIC = "homePageCache";
+//    private static final String BLURRED_PROFILE_PIC = "homePageCache";
     private static final String REACTION_UPLOAD_SESSION = "reactionUploadSession";
     private static final String FOLLOWING_NOTIFICATION = "followingNotificationCount";
     private static final String REQUEST_NOTIFICATION = "requestNotificationCount";
     private static final String SAVE_VIDEO_IN_GALLERY = "saveIntoGallery";
+    private static final String ACTIVE = "active";
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TEAZER, Context.MODE_PRIVATE);
@@ -59,10 +64,10 @@ public class SharedPrefs {
 //    public static boolean isBlurredProfilePicSaved(Context context) {
 //        return getBlurredProfilePic(context) != null;
 //    }
-
-    public static void deleteSavedBlurredProfilePic(Context context) {
-        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, null).apply();
-    }
+//
+//    public static void deleteSavedBlurredProfilePic(Context context) {
+//        getSharedPreferences(context).edit().putString(BLURRED_PROFILE_PIC, null).apply();
+//    }
 
     public static void saveAuthToken(Context context, String authToken) {
         getSharedPreferences(context).edit().putString(AUTH_TOKEN, authToken).apply();
@@ -86,12 +91,15 @@ public class SharedPrefs {
         getSharedPreferences(context).edit().putString(FCM_TOKEN, fcmToken).apply();
     }
 
-    public static String getFcmToken(Context context) {
+    static String getFcmToken(Context context) {
         return getSharedPreferences(context).getString(FCM_TOKEN, null);
     }
 
     public static void saveVideoUploadSession(Context context, UploadParams uploadParams) {
-        getSharedPreferences(context).edit().putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+        getSharedPreferences(context)
+                .edit()
+                .putString(VIDEO_UPLOAD_SESSION, new Gson().toJson(uploadParams, new TypeToken<UploadParams>() {}.getType()))
+                .apply();
     }
 
     public static void finishVideoUploadSession(Context context) {
@@ -99,11 +107,15 @@ public class SharedPrefs {
     }
 
     public static UploadParams getVideoUploadSession(Context context) {
-        return new Gson().fromJson(getSharedPreferences(context).getString(VIDEO_UPLOAD_SESSION, null), UploadParams.class);
+        return new Gson().fromJson(getSharedPreferences(context)
+                .getString(VIDEO_UPLOAD_SESSION, null), new TypeToken<UploadParams>() {}.getType());
     }
 
     public static void saveReactionUploadSession(Context context, UploadParams uploadParams) {
-        getSharedPreferences(context).edit().putString(REACTION_UPLOAD_SESSION, new Gson().toJson(uploadParams)).apply();
+        getSharedPreferences(context)
+                .edit()
+                .putString(REACTION_UPLOAD_SESSION, new Gson().toJson(uploadParams, new TypeToken<UploadParams>() {}.getType()))
+                .apply();
     }
 
     public static void finishReactionUploadSession(Context context) {
@@ -111,7 +123,8 @@ public class SharedPrefs {
     }
 
     public static UploadParams getReactionUploadSession(Context context) {
-        return new Gson().fromJson(getSharedPreferences(context).getString(REACTION_UPLOAD_SESSION, null), UploadParams.class);
+        return new Gson().fromJson(getSharedPreferences(context)
+                .getString(REACTION_UPLOAD_SESSION, null), new TypeToken<UploadParams>() {}.getType());
     }
 
     public static void setCurrentPassword(Context context, String password) {
@@ -156,5 +169,24 @@ public class SharedPrefs {
 
     public static boolean getSaveVideoFlag(Context context) {
         return getSharedPreferences(context).getBoolean(SAVE_VIDEO_IN_GALLERY, false);
+    }
+
+    public static void onActivityActive(Activity activity) {
+        getSharedPreferences(activity.getApplicationContext())
+                .edit()
+                .putBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), true)
+                .apply();
+    }
+
+    public static boolean isActivityActive(Activity activity) {
+        return getSharedPreferences(activity.getApplicationContext())
+                .getBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), true);
+    }
+
+    public static void onActivityInactive(Activity activity) {
+        getSharedPreferences(activity.getApplicationContext())
+                .edit()
+                .putBoolean(ACTIVE + BLANK_SPACE + activity.getPackageName(), false)
+                .apply();
     }
 }

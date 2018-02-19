@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -70,51 +69,36 @@ import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 
 public class ReactionPlayerActivity extends AppCompatActivity {
 
-    @BindView(R.id.video_view)
-    SimpleExoPlayerView playerView;
+    @BindView(R.id.btnClose) ImageView btnClose;
+    @BindView(R.id.reaction_post_caption) ProximaNovaSemiBoldTextView reactionPostCaption;
+    @BindView(R.id.reaction_post_dp) CircularAppCompatImageView reactionPostDp;
+    @BindView(R.id.reaction_post_name) ProximaNovaSemiBoldTextView reactionPostName;
+    @BindView(R.id.reaction_post_likes) ProximaNovaRegularTextView reactionPostLikes;
+    @BindView(R.id.reaction_post_views) ProximaNovaRegularTextView reactionPostViews;
+    @BindView(R.id.btnLike) ImageView likeBtn;
+    @BindView(R.id.reaction_post_name_popularity_layout) RelativeLayout reactionPostNamePopularityLayout;
+    @BindView(R.id.root_layout) RelativeLayout rootLayout;
+    @BindView(R.id.postDuration) ProximaNovaRegularTextView postDurationView;
+    @BindView(R.id.video_view) SimpleExoPlayerView playerView;
+
     SimpleExoPlayer player;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.btnClose)
-    ImageView btnClose;
-    @BindView(R.id.reaction_post_caption)
-    ProximaNovaSemiBoldTextView reactionPostCaption;
-    @BindView(R.id.reaction_post_dp)
-    CircularAppCompatImageView reactionPostDp;
-    @BindView(R.id.reaction_post_name)
-    ProximaNovaSemiBoldTextView reactionPostName;
-    @BindView(R.id.reaction_post_likes)
-    ProximaNovaRegularTextView reactionPostLikes;
-    @BindView(R.id.reaction_post_views)
-    ProximaNovaRegularTextView reactionPostViews;
-    @BindView(R.id.btnLike)
-    ImageView likeBtn;
-    @BindView(R.id.reaction_post_name_popularity_layout)
-    RelativeLayout reactionPostNamePopularityLayout;
-    @BindView(R.id.root_layout)
-    RelativeLayout rootLayout;
-    @BindView(R.id.postDuration)
-    ProximaNovaRegularTextView postDurationView;
-    private String videoURL;
     private PostReaction postDetails;
     private Reactions selfPostDetails;
+    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
+    private Handler mHandler;
+
+    private String reactionTitle;
+    private String videoURL;
     private boolean isLiked;
+    private boolean playWhenReady = true;
+    private boolean audioAccessGranted = false;
+    private long reactionPlayerCurrentPosition = 0;
+    private long playbackPosition;
     private int likesCount;
     private int viewsCount;
     private int reactId;
-    private String reactionTitle;
-
-    private long playbackPosition;
     private int currentWindow;
-    private boolean playWhenReady = true;
     private int playSource;
-
-
-    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
-    private boolean audioAccessGranted = false;
-    private long reactionPlayerCurrentPosition = 0;
-    private Handler mHandler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,21 +226,23 @@ public class ReactionPlayerActivity extends AppCompatActivity {
     }
 
     private void incrementView() {
-        ApiCallingService.React.incrementReactionViewCount(reactId, this)
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        if (response.body().getStatus())
-                            viewsCount++;
-                        initView();
-                    }
+        if (!postDetails.getMySelf()) {
+            ApiCallingService.React.incrementReactionViewCount(reactId, this)
+                    .enqueue(new Callback<ResultObject>() {
+                        @Override
+                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                            if (response.body().getStatus())
+                                viewsCount++;
+                            initView();
+                        }
 
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                        initView();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResultObject> call, Throwable t) {
+                            t.printStackTrace();
+                            initView();
+                        }
+                    });
+        }
     }
 
     private Runnable mDelayedStopRunnable = new Runnable() {

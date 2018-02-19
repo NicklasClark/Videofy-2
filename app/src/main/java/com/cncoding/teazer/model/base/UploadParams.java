@@ -12,7 +12,7 @@ import com.cncoding.teazer.model.post.PostDetails;
 
 public class UploadParams implements Parcelable {
     private String videoPath;
-    public boolean isReaction;
+    private boolean isReaction;
     private String title;
     private String location;
     private double latitude;

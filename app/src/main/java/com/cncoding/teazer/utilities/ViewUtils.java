@@ -49,6 +49,8 @@ import java.io.File;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 
 /**
  *
@@ -59,8 +61,8 @@ import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYP
 public class ViewUtils {
 
     //    private String email;
-    public static final int GALLERY_ACTIVITY_CODE=200;
-    public static final int RESULT_CROP = 400;
+//    public static final int GALLERY_ACTIVITY_CODE=200;
+//    public static final int RESULT_CROP = 400;
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";
@@ -213,17 +215,16 @@ public class ViewUtils {
     }
 
     public static void performVideoUpload(Context packageContext, UploadParams uploadParams) {
+        saveVideoUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
-        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
     }
 
     public static void performReactionUpload(Context packageContext, UploadParams uploadParams) {
-        SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
+        saveReactionUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
-//        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();

@@ -20,6 +20,15 @@ public class ReactionResponse {
     @SerializedName("post_react_detail")
     @Expose
     private PostReactDetail postReactDetail;
+    private Throwable error;
+
+    public ReactionResponse(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public Boolean getStatus() {
         return status;

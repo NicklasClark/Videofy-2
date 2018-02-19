@@ -1,6 +1,6 @@
 package com.cncoding.teazer.data.remote;
 
-import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.CallType;
+import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.CallType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

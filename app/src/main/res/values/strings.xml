@@ -340,7 +340,7 @@
     <string name="teazer_support_url">http://www.cnapplications.com</string>
     <string name="video_upload_confirm_notification">Video will be uploaded, you can check progress in notifications panel</string>
     <string name="loader">Loader</string>
-    <string name="failed">Failed, try again</string>
+    <string name="failed">Failed, please try again</string>
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
     <!--<string name="base_url">https://api.teazer.online/</string>-->
@@ -371,4 +371,6 @@
     <string name="signup_failed">Signup failed, please check the fields and try again</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
     <string name="otp_is_required">Otp is required</string>
+    <string name="reaction_no_longer_exists">This reaction no longer exists</string>
+    <string name="location_services_required">Location services are required to get your nearby locations.</string>
 </resources>

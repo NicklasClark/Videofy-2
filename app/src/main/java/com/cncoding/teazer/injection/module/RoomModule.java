@@ -22,9 +22,9 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 
-import com.cncoding.teazer.data.local.repository.local.post.PostDetailsLocalRepo;
-import com.cncoding.teazer.data.local.room.daos.PostDetailsDao;
-import com.cncoding.teazer.data.local.room.databases.TeazerDB;
+import com.cncoding.teazer.data.local.repository.LocalPostsRepository;
+import com.cncoding.teazer.data.local.room.dao.PostDetailsDao;
+import com.cncoding.teazer.data.local.room.database.TeazerDB;
 import com.cncoding.teazer.data.viewmodel.factory.AuthTokenViewModelFactory;
 
 import javax.inject.Singleton;
@@ -52,8 +52,8 @@ public class RoomModule {
 
     @Provides
     @Singleton
-    PostDetailsLocalRepo provideListItemRepository(PostDetailsDao postDetailsDao){
-        return new PostDetailsLocalRepo(postDetailsDao);
+    LocalPostsRepository provideListItemRepository(PostDetailsDao postDetailsDao){
+        return new LocalPostsRepository(postDetailsDao);
     }
 
     @Provides

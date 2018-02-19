@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -20,7 +23,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,6 +41,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
@@ -48,6 +55,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextVi
 import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
+import com.cncoding.teazer.model.base.UploadParams;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.api.ApiException;
@@ -98,74 +106,58 @@ import static com.cncoding.teazer.utilities.ViewUtils.IS_REACTION;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
 import static com.cncoding.teazer.utilities.ViewUtils.hideKeyboard;
+import static com.cncoding.teazer.utilities.ViewUtils.performReactionUpload;
+import static com.cncoding.teazer.utilities.ViewUtils.performVideoUpload;
 import static com.cncoding.teazer.utilities.ViewUtils.playVideoInExoPlayer;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
-public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks, CompressVideoAsyncTask.AsyncResponse, AddWaterMarkAsyncTask.WatermarkAsyncResponse {
+public class UploadFragment extends Fragment implements EasyPermissions.PermissionCallbacks,
+        CompressVideoAsyncTask.AsyncResponse, AddWaterMarkAsyncTask.WatermarkAsyncResponse {
 
     public static final String VIDEO_PATH = "videoPath";
     public static final String TAG_NEARBY_PLACES = "nearbyPlaces";
     public static final String TAG_NULL_NEARBY_PLACES = "nullNearbyPlaces";
     public static final String TAG_CATEGORIES_FRAGMENT = "interestsFragment";
     public static final String TAG_TAGS_FRAGMENT = "tagsFragment";
-    //    private static final int REQUEST_PLACE_PICKER = 212;
     private static final int REQUEST_LOCATION_PERMISSIONS = 211;
-    //    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 210;
     private static final int REQUEST_CODE_CHECK_SETTINGS = 312;
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "locationUpdates";
     private static final String KEY_LOCATION = "location";
     private static final int RC_LOCATION_PERM = 123;
-    public static final int VIDEO_UPLOAD = 25;
-    public static final int REACTION_UPLOAD = 26;
+    private static final int TAGGED_CATEGORIES = 2;
+    private static final int TAGGED_FRIENDS = 1;
 
-    @BindView(R.id.share_on_facebook)
-    ProximaNovaRegularCheckedTextView facebookShareBtn;
-    @BindView(R.id.share_on_twitter)
-    ProximaNovaRegularCheckedTextView twitterShareBtn;
-    @BindView(R.id.video_preview_thumbnail_container)
-    RelativeLayout thumbnailViewContainer;
-    @BindView(R.id.video_preview_thumbnail)
-    ImageView thumbnailView;
-    @BindView(R.id.video_duration)
-    ProximaNovaRegularTextView videoDurationTextView;
-    @BindView(R.id.thumbnail_progress_bar)
-    ProgressBar thumbnailProgressBar;
-    @BindView(R.id.progress_bar)
-    ProgressBar topProgressBar;
-    @BindView(R.id.video_upload_check_btn)
-    Button uploadBtn;
-    @BindView(R.id.video_upload_title)
-    ProximaNovaRegularTextInputEditText videoTitle;
-    @BindView(R.id.video_upload_location)
-    ProximaNovaRegularTextInputEditText addLocationBtn;
-    @BindView(R.id.video_upload_tag_friends)
-    ProximaNovaRegularTextInputEditText tagFriendsBtn;
-    @BindView(R.id.tag_friends_badge)
-    ProximaNovaRegularTextView tagFriendsBadge;
-    @BindView(R.id.video_upload_categories)
-    ProximaNovaRegularTextInputEditText uploadCategoriesBtn;
-    @BindView(R.id.categories_badge)
-    ProximaNovaRegularTextView uploadCategoriesBadge;
-    @BindView(R.id.gifSwitch)
-    Switch gifSwitch;
-
-    @BindView(R.id.erro_msg)
-    @Nullable
-     ProximaNovaRegularTextView erro_msg;
+    @BindView(R.id.share_on_facebook) ProximaNovaRegularCheckedTextView facebookShareBtn;
+    @BindView(R.id.share_on_twitter) ProximaNovaRegularCheckedTextView twitterShareBtn;
+    @BindView(R.id.video_preview_thumbnail_container) RelativeLayout thumbnailViewContainer;
+    @BindView(R.id.video_preview_thumbnail) ImageView thumbnailView;
+    @BindView(R.id.video_duration) ProximaNovaRegularTextView videoDurationTextView;
+    @BindView(R.id.thumbnail_progress_bar) ProgressBar thumbnailProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar topProgressBar;
+    @BindView(R.id.video_upload_btn) Button uploadBtn;
+    @BindView(R.id.video_upload_title) ProximaNovaRegularTextInputEditText videoTitle;
+    @BindView(R.id.video_upload_location) ProximaNovaRegularTextInputEditText addLocationBtn;
+    @BindView(R.id.video_upload_tag_friends) ProximaNovaRegularTextInputEditText tagFriendsBtn;
+    @BindView(R.id.tag_friends_badge) ProximaNovaRegularTextView tagFriendsBadge;
+    @BindView(R.id.video_upload_categories) ProximaNovaRegularTextInputEditText uploadCategoriesBtn;
+    @BindView(R.id.categories_badge) ProximaNovaRegularTextView uploadCategoriesBadge;
+    @BindView(R.id.gifSwitch) Switch gifSwitch;
+    @BindView(R.id.erro_msg) ProximaNovaRegularTextView errorMessage;
 
     public static boolean checkFacebookButtonPressed = false;
     public static boolean checkedTwitterButton = false;
-    public String videoPath;
     public boolean isReaction;
+    private boolean isRequestingLocationUpdates;
+    private boolean isGallery;
     private int tagCount;
     private int categoryCount;
-    String selectedCategoriesToSend = null;
-    String selectedTagsToSend = null;
-    String selectedCategoriesToShow = null;
-    String selectedTagsToShow = null;
-    private boolean isRequestingLocationUpdates;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private String videoPath;
+    private String selectedCategoriesToSend = null;
+    private String selectedTagsToSend = null;
+    private String selectedCategoriesToShow = null;
+    private String selectedTagsToShow = null;
+
     public Location currentLocation;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
@@ -173,14 +165,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     private Context context;
     private Activity activity;
 
-    private OnUploadFragmentInteractionListener mListener;
-    private boolean isGallery;
     private static boolean isCompressing = false;
     private static boolean addingWatermark = true;
-    private static FragmentActivity mActivity;
     static final int TaggedCategories = 2;
     static final int TaggedFriends = 1;
     private long initialSize;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private OnUploadFragmentInteractionListener mListener;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -193,16 +184,12 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         args.putBoolean(IS_REACTION, isReaction);
         args.putBoolean(IS_GALLERY, isGallery);
         fragment.setArguments(args);
-        //CameraActivity.checkFromGallery=false;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mActivity = getActivity();
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
@@ -227,7 +214,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void waterMarkProcessFinish(String output, String s) {
         Log.d("Watermark", output);
-        addingWatermark = false;
         enableView(uploadBtn);
         videoPath = output;
     }
@@ -279,11 +265,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         ButterKnife.bind(this, rootView);
 
         topProgressBar.setVisibility(View.GONE);
-        context = getContext();
         activity = getActivity();
 
-        setBadge(uploadCategoriesBadge, categoryCount, TaggedCategories);
-        setBadge(tagFriendsBadge, tagCount, TaggedFriends);
+        setBadge(uploadCategoriesBadge, categoryCount, TAGGED_CATEGORIES);
+        setBadge(tagFriendsBadge, tagCount, TAGGED_FRIENDS);
 
         isRequestingLocationUpdates = false;
         updateValuesFromBundle(savedInstanceState);
@@ -309,7 +294,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                Glide.with(context)
+                Glide.with(UploadFragment.this)
                         .load(Uri.fromFile(new File(videoPath)))
                         .into(thumbnailView);
             }
@@ -325,38 +310,16 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation", "unused"})
     public void setupFacebookShareIntent() {
-
-//        if(checkFacebookButtonPressed==true) {
-//            String s="https://www.youtube.com/";
-//            Uri videoFileUri = Uri.parse(s);
-//            ShareVideo shareVideo = new ShareVideo.Builder()
-//                    .setLocalUrl(videoFileUri)
-//                    .build();
-//            ShareVideoContent content = new ShareVideoContent.Builder()
-//                    .setVideo(shareVideo)
-//                    .build();
-//        }
-//        else
-//        {
-//            Toast.makeText(getContext(),"check not upload",Toast.LENGTH_SHORT).show();
-//
-//        }
-
         try {
             ShareDialog shareDialog;
-//            FacebookSdk.sdkInitialize(getContext());
             shareDialog = new ShareDialog(getActivity());
-
-
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(videoTitle.getText().toString())
-                    .setContentDescription(
-                            "")
+                    .setContentDescription("")
                     .setContentUrl(Uri.parse(videoPath))
                     .build();
 
@@ -380,7 +343,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             facebookShareBtn.setBackgroundTintList(null);
         }
 
-
         if (checkedTwitterButton) {
             twitterShareBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_twitter,
                     0, R.drawable.btn_checked, 0);
@@ -390,7 +352,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     private void getLastLocation(final boolean firstTime) {
-        if (arePermissionsAllowed(context)) {
+        if (arePermissionsAllowed(activity)) {
             if (ActivityCompat.checkSelfPermission(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(
@@ -479,7 +441,6 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        null.unbind();
     }
 
     private String getNearbySearchUrl(Location location) {
@@ -498,8 +459,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return (googlePlacesUrl.toString());
     }
 
-    @OnEditorAction(R.id.video_upload_title)
-    public boolean titleDone(TextView view, int actionId) {
+    @OnEditorAction(R.id.video_upload_title) public boolean titleDone(TextView view, int actionId) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             hideKeyboard(activity, view);
             return true;
@@ -507,9 +467,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return false;
     }
 
-    @OnClick(R.id.share_on_facebook)
-    public void shareOnFacebookAction() {
-
+    @OnClick(R.id.share_on_facebook) public void shareOnFacebookAction() {
         if (!checkFacebookButtonPressed) {
             checkAction("facebook", facebookShareBtn);
             checkFacebookButtonPressed = true;
@@ -523,9 +481,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    @OnClick(R.id.share_on_twitter)
-    public void shareOnTwitterAction() {
-
+    @OnClick(R.id.share_on_twitter) public void shareOnTwitterAction() {
         if (!checkedTwitterButton) {
             checkAction("twitter", twitterShareBtn);
             checkedTwitterButton = true;
@@ -539,20 +495,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         }
     }
 
-    @OnClick(R.id.video_preview_thumbnail)
-    public void playVideoPreview() {
+    @OnClick(R.id.video_preview_thumbnail) public void playVideoPreview() {
         hideKeyboard(activity, videoTitle);
-        playVideoInExoPlayer(context, videoPath);
+        playVideoInExoPlayer(activity, videoPath);
     }
 
-    @OnTouch(R.id.video_upload_location)
-    public boolean addLocation(View view, MotionEvent motionEvent) {
+    @OnTouch(R.id.video_upload_location) public boolean addLocation(View view, MotionEvent motionEvent) {
         Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
                 rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
 //            addLocationBtn.requestFocus();
             hideKeyboard(activity, view);
-            if (arePermissionsAllowed(context)) {
+            if (arePermissionsAllowed(activity)) {
                 if (currentLocation != null)
                     new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
             } else requestPermissions();
@@ -561,8 +515,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return false;
     }
 
-    @OnTouch(R.id.video_upload_tag_friends)
-    public boolean getMyFollowings(View view, MotionEvent motionEvent) {
+    @OnTouch(R.id.video_upload_tag_friends) public boolean getMyFollowings(View view, MotionEvent motionEvent) {
         Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
                 rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
@@ -575,8 +528,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return false;
     }
 
-    @OnTouch(R.id.video_upload_categories)
-    public boolean getCategories(View view, MotionEvent motionEvent) {
+    @OnTouch(R.id.video_upload_categories) public boolean getCategories(View view, MotionEvent motionEvent) {
         Rect rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         if (motionEvent.getAction() == MotionEvent.ACTION_UP &&
                 rect.contains(view.getLeft() + (int) motionEvent.getX(), view.getTop() + (int) motionEvent.getY())) {
@@ -590,12 +542,10 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         return false;
     }
 
-    @OnClick(R.id.video_upload_check_btn)
-    public void onUploadBtnClick() {
+    @OnClick(R.id.video_upload_btn) public void onUploadBtnClick() {
         if (validateFields()) {
             toggleInteraction(false);
-            String title = videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString();
-            title = encodeUnicodeString(title);
+            String title = encodeUnicodeString(videoTitle.getText().toString().equals("") ? null : videoTitle.getText().toString());
             String location = null;
             double latitude = 0;
             double longitude = 0;
@@ -608,14 +558,18 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             }
             DecimalFormat df = new DecimalFormat("#.#####");
 
-            if (!isReaction)
-                mListener.performUpload(VIDEO_UPLOAD, isGallery, videoPath, title, location,
-                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                        selectedTagsToSend, selectedCategoriesToSend);
-            else
-                mListener.performUpload(REACTION_UPLOAD, isGallery, videoPath, title, location,
-                        Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
-                        null, null);
+            if (getActivity() instanceof CameraActivity) {
+                if (!isReaction) {
+                    performVideoUpload(activity,
+                            new UploadParams(isGallery, videoPath, title, location,
+                                    Double.parseDouble(df.format(latitude)), Double.parseDouble(df.format(longitude)),
+                                    selectedTagsToSend, selectedCategoriesToSend, ((CameraActivity) getActivity()).postDetails));
+                } else {
+                    performReactionUpload(activity,
+                            new UploadParams(isGallery, videoPath, title, location, latitude, longitude,
+                                    ((CameraActivity) getActivity()).postDetails));
+                }
+            }
         }
     }
 
@@ -637,20 +591,19 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         if (!isReaction && TextUtils.isEmpty(videoTitle.getText())) {
            // videoTitle.setError(getString(R.string.required));
             videoTitle.requestFocus();
-            erro_msg.setVisibility(View.VISIBLE);
+            errorMessage.setVisibility(View.VISIBLE);
             return false;
         } else if (!isReaction && (selectedCategoriesToSend == null || selectedCategoriesToSend.length() == 0)) {
-            Toast.makeText(context, getString(R.string.required_categories), Toast.LENGTH_SHORT).show();
-            erro_msg.setVisibility(View.VISIBLE);
+            Toast.makeText(activity, getString(R.string.required_categories), Toast.LENGTH_SHORT).show();
+            errorMessage.setVisibility(View.VISIBLE);
             return false;
         }
         return true;
     }
 
-    @AfterPermissionGranted(RC_LOCATION_PERM)
-    private void startLocationService() {
+    @AfterPermissionGranted(RC_LOCATION_PERM) private void startLocationService() {
         String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (EasyPermissions.hasPermissions(context, perms)) {
+        if (EasyPermissions.hasPermissions(activity, perms)) {
             new GetNearbyPlacesData(this).execute(getNearbySearchUrl(currentLocation));
         } else {
             // Do not have permissions, request them now
@@ -660,16 +613,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     }
 
     public void onNearbyPlacesListInteraction(int action) {
-        switch (action) {
-            case TURN_ON_LOCATION_ACTION:
-                createLocationRequest();
-                break;
-//            case NEARBY_PLACE_AUTOCOMPLETE_ACTION:
-////                launchPlacePicker();
-//                break;
-            default:
-                break;
-        }
+        if (action == TURN_ON_LOCATION_ACTION) createLocationRequest();
     }
 
     public void onNearbyPlacesAdapterInteraction(SelectedPlace selectedPlace) {
@@ -685,12 +629,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             }, 500);
         } else {
             addLocationBtn.setText(null);
-            Toast.makeText(context, R.string.could_not_find_location, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.could_not_find_location, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend,
-                                               SparseBooleanArray selectedItemsArray, final int count) {
+    public void onTagsAndCategoriesInteraction(String action, String resultToShow, String resultToSend, final int count) {
         final String finalResultToShow = SPACE + resultToShow;
         switch (action) {
             case ACTION_TAGS_FRAGMENT:
@@ -708,7 +651,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         }
                     }, 500);
                 }
-                setBadge(tagFriendsBadge, count, TaggedFriends);
+                setBadge(tagFriendsBadge, count, TAGGED_FRIENDS);
                 break;
             case ACTION_CATEGORIES_FRAGMENT:
                 categoryCount = count;
@@ -722,11 +665,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         @Override
                         public void run() {
                             uploadCategoriesBtn.setText(finalResultToShow);
-                            setBadge(uploadCategoriesBadge, count, TaggedCategories);
+                            setBadge(uploadCategoriesBadge, count, TAGGED_CATEGORIES);
                         }
                     }, 500);
                 }
-                setBadge(uploadCategoriesBadge, count, TaggedCategories);
+                setBadge(uploadCategoriesBadge, count, TAGGED_CATEGORIES);
                 break;
         }
     }
@@ -735,13 +678,8 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
         view.setVisibility(count == 0 ? View.GONE : VISIBLE);
         if (view.getVisibility() == VISIBLE) {
             String countText = String.valueOf(count);
-            if (count <= 9)
-                countText = "0" + countText;
-            if (check == TaggedFriends)
-                view.setText(countText + " Tagged Friends");
-            else
-                view.setText(countText + " Tagged Categories");
-
+            if (count <= 9) countText = "0" + countText;
+            view.setText(check == TAGGED_FRIENDS ? countText + " Tagged Friends" : countText + " Tagged Categories");
         }
     }
 
@@ -756,13 +694,11 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             enableView(addLocationBtn);
             enableView(tagFriendsBtn);
             enableView(uploadCategoriesBtn);
-//            enableView(uploadBtn);
         } else {
             disableView(videoTitle, false);
             disableView(addLocationBtn, false);
             disableView(tagFriendsBtn, false);
             disableView(uploadCategoriesBtn, false);
-//            disableView(uploadBtn, false);
         }
     }
 
@@ -789,8 +725,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
-                        Snackbar.make(uploadBtn, "Location services are required to get your nearby locations.", Snackbar.LENGTH_SHORT)
-                                .show();
+                        Snackbar.make(uploadBtn, R.string.location_services_required, Snackbar.LENGTH_SHORT).show();
                         isRequestingLocationUpdates = false;
                         break;
                     default:
@@ -979,9 +914,5 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
 
     public interface OnUploadFragmentInteractionListener {
         void onUploadInteraction(String tag, ArrayList<HashMap<String, String>> googlePlaces, String selectedData);
-
-        void performUpload(int whichUpload, boolean isGallery, String videoPath, String title, String location,
-                           double latitude, double longitude, String selectedTagsToSend, String selectedCategoriesToSend);
     }
-
 }

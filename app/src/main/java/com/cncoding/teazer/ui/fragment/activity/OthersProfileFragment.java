@@ -130,7 +130,7 @@ public class OthersProfileFragment extends BaseFragment {
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private static final int BLOCK_STATUS = 1;
     private static final int UNBLOCK_STATUS = 2;
-//
+
     int accountType;
     boolean requestRecieved;
     String status;

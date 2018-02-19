@@ -24,7 +24,7 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.TypeFactory;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.data.remote.ResultObject;
-import com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl;
+import com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl;
 import com.cncoding.teazer.model.auth.ProceedSignup;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -225,8 +225,8 @@ public class SignupFragment extends AuthFragment {
     @Override
     protected void handleResponse(ResultObject resultObject) {
         if (resultObject.getCallType() == AuthenticationRepositoryImpl.CHECK_USERNAME_AVAILABILITY) {
-            setEditTextDrawableEnd(usernameView, !resultObject.getStatus() ? R.drawable.ic_tick_circle :
-                    R.drawable.ic_cross);
+            setEditTextDrawableEnd(usernameView, resultObject.getStatus() ? R.drawable.ic_cross :
+                    R.drawable.ic_tick_circle);
         }
     }
 

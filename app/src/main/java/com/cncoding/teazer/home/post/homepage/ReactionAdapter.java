@@ -121,7 +121,7 @@ public class ReactionAdapter extends BaseRecyclerViewAdapter {
             }
         }
 
-        @OnClick(R.id.root_layout) public void onReactionClick() {
+        @OnClick(R.id.root_layout) void onReactionClick() {
             if (postReaction != null && listener != null) {
                 listener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null);
             }

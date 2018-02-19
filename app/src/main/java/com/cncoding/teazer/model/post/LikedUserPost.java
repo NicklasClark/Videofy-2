@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
+ *
  * Created by farazhabib on 29/12/17.
  */
 
@@ -18,6 +19,15 @@ public class LikedUserPost {
     @SerializedName("liked_users")
     @Expose
     private List<LikedUser> likedUsers = null;
+    private Throwable error;
+
+    public LikedUserPost(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public Boolean getNextPage() {
         return nextPage;

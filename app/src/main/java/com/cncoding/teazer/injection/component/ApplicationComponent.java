@@ -30,7 +30,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 /**
- * Annotated as a Singelton since we don't want to have multiple instances of a Single Database,
+ * Annotated as a Singleton since we don't want to have multiple instances of a Single Database,
  * <p>
  * Created by Prem$ on 8/15/2017.
  */
@@ -41,6 +41,8 @@ public interface ApplicationComponent {
 
     void inject(PostsListFragment postsListFragment);
     void inject(FragmentPostDetails fragmentPostDetails);
+
+
 
     Application application();
 }

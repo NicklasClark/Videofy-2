@@ -18,6 +18,15 @@ public class FollowersList {
     @SerializedName("followers")
     @Expose
     private List<UserInfo> userInfos = null;
+    private Throwable error;
+
+    public FollowersList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public Boolean getNextPage() {
         return nextPage;

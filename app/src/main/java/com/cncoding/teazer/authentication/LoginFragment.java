@@ -48,11 +48,11 @@ import static com.cncoding.teazer.MainActivity.LOGIN_WITH_PASSWORD_ACTION;
 import static com.cncoding.teazer.authentication.ResetPasswordFragment.COUNTRY_CODE;
 import static com.cncoding.teazer.authentication.ResetPasswordFragment.ENTERED_TEXT;
 import static com.cncoding.teazer.authentication.ResetPasswordFragment.IS_EMAIL;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.CHECK_EMAIL_AVAILABILITY;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.CHECK_PHONE_NUMBER_AVAILABILITY;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.CHECK_USERNAME_AVAILABILITY;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.LOGIN_WITH_OTP;
-import static com.cncoding.teazer.data.remote.api.calls.authentication.AuthenticationRepositoryImpl.LOGIN_WITH_PASSWORD;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.CHECK_EMAIL_AVAILABILITY;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.CHECK_PHONE_NUMBER_AVAILABILITY;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.CHECK_USERNAME_AVAILABILITY;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.LOGIN_WITH_OTP;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.LOGIN_WITH_PASSWORD;
 import static com.cncoding.teazer.utilities.AuthUtils.getCountryCode;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
 import static com.cncoding.teazer.utilities.AuthUtils.getEnteredUserFormat;
@@ -344,8 +344,10 @@ public class LoginFragment extends AuthFragment {
     }
 
     private void markValidity(boolean status) {
-        setEditTextDrawableEnd(usernameView, !status ? R.drawable.ic_cross :
-                R.drawable.ic_tick_circle);
+        setEditTextDrawableEnd(usernameView,
+                status ?
+                        R.drawable.ic_tick_circle :
+                        R.drawable.ic_cross);
     }
 
     @Override protected void handleResponse(ResultObject resultObject) {
