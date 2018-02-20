@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -27,7 +24,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,14 +39,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
 import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
 import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
+import com.cncoding.teazer.asynctasks.GifConvertAsyncTask;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
@@ -58,15 +52,6 @@ import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
 import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
 import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
 import com.cncoding.teazer.model.base.UploadParams;
-import com.cncoding.teazer.R;
-import com.cncoding.teazer.asynctasks.AddWaterMarkAsyncTask;
-import com.cncoding.teazer.asynctasks.CompressVideoAsyncTask;
-import com.cncoding.teazer.asynctasks.GifConvertAsyncTask;
-import com.cncoding.teazer.home.camera.nearbyPlaces.DataParser;
-import com.cncoding.teazer.home.camera.nearbyPlaces.DownloadUrl;
-import com.cncoding.teazer.home.camera.nearbyPlaces.SelectedPlace;
-import com.cncoding.teazer.model.base.Category;
-import com.cncoding.teazer.model.base.MiniProfile;
 import com.cncoding.teazer.model.giphy.Images;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -221,6 +206,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
+        context = getContext();
         if (bundle != null) {
             videoPath = bundle.getString(VIDEO_PATH);
             isReaction = bundle.getBoolean(IS_REACTION);
@@ -229,11 +215,13 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             isGiphy = bundle.getBoolean(IS_GIPHY);
         }
 
-        CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
-        compressVideoAsyncTask.delegate = this;
-        compressVideoAsyncTask.execute(videoPath);
-        isCompressing = true;
-        initialSize = new File(videoPath).length();
+        if (!isGiphy) {
+            CompressVideoAsyncTask compressVideoAsyncTask = new CompressVideoAsyncTask(getContext(), isGallery);
+            compressVideoAsyncTask.delegate = this;
+            compressVideoAsyncTask.execute(videoPath);
+            isCompressing = true;
+            initialSize = new File(videoPath).length();
+        }
 
 //        AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(getContext());
 //        addWaterMarkAsyncTask.delegate = this;
@@ -428,7 +416,7 @@ public class UploadFragment extends Fragment implements EasyPermissions.Permissi
             Images images = gson.fromJson(videoPath, Images.class);
             Glide.with(context)
                     .load(images.getDownsized().getUrl())
-//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
                     .into(thumbnailView);
         }
 

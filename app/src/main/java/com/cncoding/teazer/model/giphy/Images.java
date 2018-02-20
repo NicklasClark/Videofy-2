@@ -15,9 +15,9 @@ public class Images {
 //    @SerializedName("fixed_width")
 //    @Expose
 //    private FixedWidth fixedWidth;
-//    @SerializedName("fixed_height_small_still")
-//    @Expose
-//    private FixedHeightSmallStill fixedHeightSmallStill;
+    @SerializedName("fixed_height_small_still")
+    @Expose
+    private FixedHeightSmallStill fixedHeightSmallStill;
 //    @SerializedName("fixed_height_downsampled")
 //    @Expose
 //    private FixedHeightDownsampled fixedHeightDownsampled;
@@ -103,13 +103,13 @@ public class Images {
 //        this.fixedWidth = fixedWidth;
 //    }
 //
-//    public FixedHeightSmallStill getFixedHeightSmallStill() {
-//        return fixedHeightSmallStill;
-//    }
-//
-//    public void setFixedHeightSmallStill(FixedHeightSmallStill fixedHeightSmallStill) {
-//        this.fixedHeightSmallStill = fixedHeightSmallStill;
-//    }
+    public FixedHeightSmallStill getFixedHeightSmallStill() {
+        return fixedHeightSmallStill;
+    }
+
+    public void setFixedHeightSmallStill(FixedHeightSmallStill fixedHeightSmallStill) {
+        this.fixedHeightSmallStill = fixedHeightSmallStill;
+    }
 //
 //    public FixedHeightDownsampled getFixedHeightDownsampled() {
 //        return fixedHeightDownsampled;

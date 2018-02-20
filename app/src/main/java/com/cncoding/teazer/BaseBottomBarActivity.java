@@ -123,10 +123,12 @@ import static com.cncoding.teazer.R.anim.float_up;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
 import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.data.service.VideoUploadService.launchVideoUploadService;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MOST_POPULAR;
 import static com.cncoding.teazer.home.discover.DiscoverFragment.ACTION_VIEW_MY_INTERESTS;
@@ -1015,6 +1017,16 @@ public class BaseBottomBarActivity extends BaseActivity
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishVideoUploadSession(getApplicationContext());
+
+                            //add watermark for local creations/reactions
+                            if(resultData.getBoolean(ADD_WATERMARK))
+                            {
+                                AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
+                                addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
+                                addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                            }
+                            else
+                                deleteFilePermanently(resultData.getString(VIDEO_PATH));
                             break;
                         case UPLOAD_ERROR_CODE:
                             if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {
@@ -1076,6 +1088,17 @@ public class BaseBottomBarActivity extends BaseActivity
                                 refreshPosts();
                             } else uploadingStatusLayout.setVisibility(GONE);
                             finishReactionUploadSession(getApplicationContext());
+
+                            //add watermark for local creations/reactions
+                            if(resultData.getBoolean(ADD_WATERMARK))
+                            {
+                                AddWaterMarkAsyncTask addWaterMarkAsyncTask = new AddWaterMarkAsyncTask(BaseBottomBarActivity.this);
+                                addWaterMarkAsyncTask.delegate = BaseBottomBarActivity.this;
+                                addWaterMarkAsyncTask.execute(resultData.getString(VIDEO_PATH));
+                            }
+                            else
+                                deleteFilePermanently(resultData.getString(VIDEO_PATH));
+
                             break;
                         case UPLOAD_ERROR_CODE:
                             if (isActivityActive(getThis()) && navigationController.getCurrentFragment() instanceof PostsListFragment) {

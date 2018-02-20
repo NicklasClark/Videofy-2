@@ -213,13 +213,12 @@ public class PostReactionAdapter extends RecyclerView.Adapter<PostReactionAdapte
                 switch (view.getId()) {
                     case R.id.root_layout:
                     //    playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE,postReaction,null, true);
                         if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
+                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null, true);
                         } else if (postReaction.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY) {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
+                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null, true);
                         } else {
-                            playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, false);
+                            reactionPlayerListener.reactionPlayer(OPENED_FROM_OTHER_SOURCE, postReaction, null, false);
                         }
                         break;
                     case R.id.reaction_post_dp | R.id.reaction_post_name:

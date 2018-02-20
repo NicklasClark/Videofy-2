@@ -117,7 +117,7 @@ public class ProfileMyReactionAdapter extends RecyclerView.Adapter<ProfileMyReac
                     if (reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIF) {
                         reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, true);
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_VIDEO){
-                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, true);
+                        reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, false);
                     } else if(reactions.getMediaDetail().getMediaType() == MEDIA_TYPE_GIFHY){
                         reactionPlayerListener.reactionPlayer(OPENED_FROM_PROFILE,null,reactions, true);
                     }

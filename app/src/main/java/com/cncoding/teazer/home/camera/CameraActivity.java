@@ -402,7 +402,7 @@ public class CameraActivity extends AppCompatActivity
                                 uploadOrTrimAction(getRealPathFromURI(getApplicationContext(), uri));
 
                             else {
-                                Toast.makeText(getApplicationContext(), "Select atleast 5 seconds video to upload", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Select at least 5 seconds video to upload", Toast.LENGTH_SHORT).show();
                             }
                             //Log.d("CompressedLength", String.valueOf(intent.getParcelableExtra(Intent.EXTRA_STREAM)));
                         }
@@ -413,9 +413,6 @@ public class CameraActivity extends AppCompatActivity
                         if (type.startsWith("video/")) {
                             Toast.makeText(getApplicationContext(), "You can select only one video to upload", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please select one video to upload", Toast.LENGTH_SHORT).show();
-
                     }
                 }
 
