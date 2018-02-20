@@ -20,6 +20,15 @@ public class Profile implements Parcelable {
     private PublicProfile public_profile;
     private int followers;
     private int followings;
+    private Throwable error;
+
+    public Profile(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     protected Profile(Parcel in) {
         total_videos = in.readInt();

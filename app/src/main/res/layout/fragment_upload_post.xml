@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_bg_blur"
             android:background="@color/colorDisabled"
             android:layout_centerInParent="true"
             android:contentDescription="@string/video_preview_thumbnail" />
@@ -41,6 +42,7 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/playBtn"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_centerInParent="true"
@@ -101,8 +103,7 @@
                     android:layout_marginTop="-30dp"
                     android:text="@string/error_msg"
                     android:visibility="gone"
-                    android:textSize="@dimen/text_size_12sp"
-                    />
+                    android:textSize="@dimen/text_size_12sp" />
 
                 <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
@@ -263,7 +264,7 @@
     </ScrollView>
 
     <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
-        android:id="@+id/video_upload_check_btn"
+        android:id="@+id/video_upload_btn"
         style="@style/AppTheme.CancelUploadButtonsTheme"
         android:text="@string/upload"
         android:contentDescription="@string/check"

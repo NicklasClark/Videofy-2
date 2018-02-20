@@ -429,7 +429,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     {
 
                         Glide.with(context)
-                                .load(R.drawable.ic_default_bg)
+                                .load(R.drawable.ic_bg_blur)
                                 .into(bgImage);
                         if(gender==1)
                         {
@@ -596,7 +596,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
                     else
                     {
                         Glide.with(context)
-                                .load(R.drawable.ic_default_bg)
+                                .load(R.drawable.ic_bg_blur)
                                 .into(bgImage);
 
                         if(gender==1)

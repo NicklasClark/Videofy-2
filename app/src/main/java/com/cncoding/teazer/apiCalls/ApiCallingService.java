@@ -16,6 +16,7 @@ import com.cncoding.teazer.model.friends.FollowersList;
 import com.cncoding.teazer.model.friends.FollowingsList;
 import com.cncoding.teazer.model.friends.ProfileInfo;
 import com.cncoding.teazer.model.friends.UsersList;
+import com.cncoding.teazer.model.giphy.TrendingGiphy;
 import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
@@ -26,6 +27,7 @@ import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
 import com.cncoding.teazer.model.react.ReactionsList;
@@ -558,6 +560,10 @@ public class ApiCallingService {
             return getReactService(context).getReactionDetail2(reactId);
         }
 
+        public static Call<ResultObject> createReactionByGiphy(GiphyReactionRequest giphyReactionRequest, Context context) {
+            return getReactService(context).createReactionByGiphy(giphyReactionRequest);
+        }
+
         private static TeazerApiCall.ReactCalls getReactService(Context context) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(context.getString(R.string.base_url))
@@ -748,6 +754,27 @@ public class ApiCallingService {
             return retrofit.create(TeazerApiCall.UserCalls.class);
         }
     }
+    public static class Giphy {
+
+        public static Call<TrendingGiphy> getTrendingGiphys(Context context, String api_key, int limit, int offset, String rating) {
+            return getGiphyService(context).getTrendingGiphys(api_key, limit, offset, rating);
+        }
+
+        public static Call<TrendingGiphy> searchGiphy(Context context, String api_key, int limit, int offset, String rating, String lang, String query) {
+            return getGiphyService(context).searchGiphy(api_key, limit, offset, rating, lang, query);
+        }
+
+        private static TeazerApiCall.GiphyCalls getGiphyService(Context context) {
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(context.getString(R.string.giphy_base_url))
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getOkHttpClient())
+                    .build();
+            return retrofit.create(TeazerApiCall.GiphyCalls.class);
+        }
+    }
 
     private static void getAvailabilityServiceCallback(Call<ResultObject> service,
                                                        final ProximaNovaRegularAutoCompleteTextView view,
@@ -797,11 +824,14 @@ public class ApiCallingService {
                 })
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build();
     }
 
     private static OkHttpClient getOkHttpClient() {
-        return new OkHttpClient.Builder().addInterceptor(logging).build();
+        return new OkHttpClient.Builder()
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(logging).build();
     }
 }

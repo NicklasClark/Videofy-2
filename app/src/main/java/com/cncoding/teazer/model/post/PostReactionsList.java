@@ -10,10 +10,19 @@ import java.util.ArrayList;
 public class PostReactionsList {
     private boolean next_page;
     private ArrayList<PostReaction> reactions;
+    private Throwable error;
 
     public PostReactionsList(boolean next_page, ArrayList<PostReaction> reactions) {
         this.next_page = next_page;
         this.reactions = reactions;
+    }
+
+    public PostReactionsList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public boolean isNextPage() {

@@ -1,20 +1,19 @@
 package com.cncoding.teazer.authentication;
 
-import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +21,27 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularAutoCompleteTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
-import com.cncoding.teazer.model.base.Authorize;
+import com.cncoding.teazer.data.remote.ResultObject;
+import com.cncoding.teazer.model.auth.InitiateLoginWithOtp;
+import com.cncoding.teazer.model.auth.InitiateSignup;
+import com.cncoding.teazer.model.auth.VerifyLoginWithOtp;
+import com.cncoding.teazer.model.auth.VerifySignUp;
+import com.cncoding.teazer.utilities.SharedPrefs;
 import com.cncoding.teazer.utilities.ViewUtils;
+import com.cncoding.teazer.utilities.smscatcher.OnSmsCatchListener;
+import com.cncoding.teazer.utilities.smscatcher.SmsVerifyCatcher;
+
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.RECEIVE_SMS;
@@ -45,17 +50,20 @@ import static com.cncoding.teazer.MainActivity.DEVICE_TYPE_ANDROID;
 import static com.cncoding.teazer.MainActivity.LOGIN_WITH_OTP_ACTION;
 import static com.cncoding.teazer.MainActivity.SIGNUP_WITH_EMAIL_ACTION;
 import static com.cncoding.teazer.authentication.SignupFragment2.ARG_PICTURE_PATH;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.LOGIN_WITH_OTP;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.SIGNUP;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.VERIFY_LOGIN_WITH_OTP;
+import static com.cncoding.teazer.data.remote.apicalls.authentication.AuthenticationRepositoryImpl.VERIFY_SIGNUP;
 import static com.cncoding.teazer.utilities.AuthUtils.getDeviceId;
-import static com.cncoding.teazer.utilities.AuthUtils.getErrorMessage;
 import static com.cncoding.teazer.utilities.AuthUtils.getFcmToken;
-import static com.cncoding.teazer.utilities.AuthUtils.loginWithOtp;
-import static com.cncoding.teazer.utilities.AuthUtils.performFinalSignup;
-import static com.cncoding.teazer.utilities.AuthUtils.verifyOtpLogin;
 import static com.cncoding.teazer.utilities.ViewUtils.showSnackBar;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
+@SuppressLint("SwitchIntDef")
 public class ConfirmOtpFragment extends AuthFragment {
 
-    private static final String USER_DETAILS = "userDetails";
+    private static final String ARG_INITIAL_SIGNUP_DETAILS = "userDetails";
     private static final String LAUNCH_ACTION = "launchAction";
     private static final int REQUEST_PERMISSIONS = 123;
 
@@ -67,32 +75,24 @@ public class ConfirmOtpFragment extends AuthFragment {
     @BindView(R.id.otp_verified_view) ProximaNovaRegularTextView otpVerifiedTextView;
     @BindView(R.id.otp_resend_btn) ProximaNovaSemiboldButton otpResendBtn;
 
-    private Authorize userSignUpDetails;
+    private VerifySignUp verifySignUp;
+    private InitiateLoginWithOtp initiateLoginWithOtp;
     int launchAction;
     private String picturePath;
 
+    private SmsVerifyCatcher smsVerifyCatcher;
     private OnOtpInteractionListener mListener;
     private CountDownTimer countDownTimer;
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase("otp")) {
-                final String message = intent.getStringExtra("message");
-                //Do whatever you want with the code here
-            }
-        }
-    };
 
     public ConfirmOtpFragment() {
         // Required empty public constructor
     }
 
-    public static ConfirmOtpFragment newInstance(Object[] signUpDetails) {
+    public static ConfirmOtpFragment newInstance(Object[] verifySignup) {
         ConfirmOtpFragment fragment = new ConfirmOtpFragment();
         Bundle args = new Bundle();
-        args.putParcelable(USER_DETAILS, (Parcelable) signUpDetails[0]);
-        args.putInt(LAUNCH_ACTION, (Integer) signUpDetails[1]);
+        args.putParcelable(ARG_INITIAL_SIGNUP_DETAILS, (Parcelable) verifySignup[0]);
+        args.putInt(LAUNCH_ACTION, (Integer) verifySignup[1]);
 //        args.putString(ARG_PICTURE_PATH, (String) signUpDetails[2]); not available in case of otp login
         fragment.setArguments(args);
         return fragment;
@@ -103,10 +103,25 @@ public class ConfirmOtpFragment extends AuthFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            userSignUpDetails = bundle.getParcelable(USER_DETAILS);
             launchAction = bundle.getInt(LAUNCH_ACTION);
+            switch (launchAction) {
+                case SIGNUP_WITH_EMAIL_ACTION:
+                    verifySignUp = bundle.getParcelable(ARG_INITIAL_SIGNUP_DETAILS);
+                    break;
+                case LOGIN_WITH_OTP_ACTION:
+                    initiateLoginWithOtp = bundle.getParcelable(ARG_INITIAL_SIGNUP_DETAILS);
+                    break;
+                default:
+                    break;
+            }
             picturePath = bundle.getString(ARG_PICTURE_PATH);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        smsVerifyCatcher.onStart();
     }
 
     @Override
@@ -114,59 +129,76 @@ public class ConfirmOtpFragment extends AuthFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_confirm_otp, container, false);
         ButterKnife.bind(this, rootView);
-        LoginFragment.isAlreadyOTP=true;
+        LoginFragment.isAlreadyOTP = true;
+        smsVerifyCatcher = new SmsVerifyCatcher(getParentActivity(), this, new OnSmsCatchListener<String>() {
+            @Override
+            public void onSmsCatch(String message) {
+                String code = parseCode(message);//Parse verification code
+                if (code.length() == 4) {
+                    otp1EditText.setText(String.valueOf(code.charAt(0)));
+                    otp2EditText.setText(String.valueOf(code.charAt(1)));
+                    otp3EditText.setText(String.valueOf(code.charAt(2)));
+                    otp4EditText.setText(String.valueOf(code.charAt(3)));
+                }
+            }
+        });
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startCountDownTimer();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            String sent = getString(R.string.otp_sent_1) + " " + userSignUpDetails.getPhoneNumber();
+            String sent;
+            switch (launchAction) {
+                case SIGNUP_WITH_EMAIL_ACTION:
+                    sent = getString(R.string.otp_sent_1) + " " + verifySignUp.getPhoneNumber();
+                    break;
+                case LOGIN_WITH_OTP_ACTION:
+                    sent = getString(R.string.otp_sent_1) + " " + initiateLoginWithOtp.getPhoneNumber();
+                    break;
+                default:
+                    sent = getString(R.string.otp_sent_1) + " your phone number";
+                    break;
+            }
             otpSentTextView.setText(sent);
-
-            countDownTimer = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, otpResendBtn);
-
-            //noinspection ConstantConditions
             if (!arePermissionsAllowed(context.getApplicationContext()))
                 requestPermissions();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    /**
+     * Parse verification code
+     *
+     * @param message sms message
+     * @return only four numbers from massage string
+     */
+    private String parseCode(String message) {
+        Pattern p = Pattern.compile("\\b\\d{4}\\b");
+        Matcher m = p.matcher(message);
+        String code = "";
+        while (m.find()) {
+            code = m.group(0);
+        }
+        return code;
     }
 
     @OnClick(R.id.otp_resend_btn) public void resendOtp() {
         switch (launchAction) {
             case SIGNUP_WITH_EMAIL_ACTION:
                 if (isConnected) {
-                    ApiCallingService.Auth.performSignUp(getContext(), userSignUpDetails).enqueue(new Callback<ResultObject>() {
-                        @Override
-                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                            if (response.code() == 200) {
-                                if (response.body().getStatus()) {
-
-                                    showSnackBar(otpResendBtn, "New otp sent to " + userSignUpDetails.getPhoneNumber());
-                                    otpResendBtn.setEnabled(false);
-                                    otpResendBtn.setAlpha(0.5f);
-                                    countDownTimer = ViewUtils.startCountDownTimer(context, otpVerifiedTextView, otpResendBtn).start();
-                                }
-                            } else {
-                                showSnackBar(otpResendBtn, getErrorMessage(response.errorBody()));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResultObject> call, Throwable t) {
-                            t.printStackTrace();
-                            otpResendBtn.setEnabled(true);
-                            otpResendBtn.setAlpha(1);
-                        }
-                    });
-                } else {
-                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                }
+                    signUp(new InitiateSignup().extractFromVerifySignUp(verifySignUp));
+                } else
+                    notifyNoInternetConnection();
                 break;
             case LOGIN_WITH_OTP_ACTION:
                 if (isConnected) {
@@ -175,12 +207,9 @@ public class ConfirmOtpFragment extends AuthFragment {
                     otp3EditText.getText().clear();
                     otp4EditText.getText().clear();
                     otp1EditText.requestFocus();
-
-                    loginWithOtp(context, String.valueOf(userSignUpDetails.getPhoneNumber()), userSignUpDetails.getCountryCode(),
-                            null, otpResendBtn, null, otpVerifiedTextView, new CountDownTimer[]{countDownTimer},
-                            true);
+                    loginWithOtp(initiateLoginWithOtp);
                 } else {
-                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    notifyNoInternetConnection();
                 }
                 break;
             default:
@@ -188,8 +217,7 @@ public class ConfirmOtpFragment extends AuthFragment {
         }
     }
 
-    @OnTextChanged(R.id.otp_1)
-    public void Otp1TextChanged(CharSequence charSequence) {
+    @OnTextChanged(R.id.otp_1) public void Otp1TextChanged(CharSequence charSequence) {
         if (charSequence.toString().length() >= 1) {
             otp2EditText.requestFocus();
         }
@@ -219,44 +247,126 @@ public class ConfirmOtpFragment extends AuthFragment {
             otp3EditText.requestFocus();
     }
 
-
     @SuppressWarnings("ConstantConditions")
     private void verifyOtp() {
         otpVerifiedTextView.setText("");
         ViewUtils.hideKeyboard(getParentActivity(), otp4EditText);
+        if (isConnected) {
+            switch (launchAction) {
+                case SIGNUP_WITH_EMAIL_ACTION:
+                    verifySignUp(verifySignUp
+                            .setFcmToken(getFcmToken(context))
+                            .setDeviceId(getDeviceId(context))
+                            .setDeviceType(DEVICE_TYPE_ANDROID).setOtp(getOtp()));
+                    break;
+                case LOGIN_WITH_OTP_ACTION:
+                    verifyLoginWithOtp(
+                            new VerifyLoginWithOtp()
+                                    .setFcmToken(getFcmToken(context))
+                                    .setDeviceId(getDeviceId(context))
+                                    .setDeviceType(DEVICE_TYPE_ANDROID)
+                                    .setPhoneNumber(initiateLoginWithOtp.getPhoneNumber())
+                                    .setCountryCode(initiateLoginWithOtp.getCountryCode())
+                                    .setOtp(getOtp()));
+                    break;
+                default:
+                    break;
+            }
+        } else notifyNoInternetConnection();
+    }
 
-        switch (launchAction) {
-            case SIGNUP_WITH_EMAIL_ACTION:
-                final Authorize verify = new Authorize(
-                        userSignUpDetails.getUsername(),
-                        userSignUpDetails.getFirstName(),
-                        userSignUpDetails.getLastName(),
-                        userSignUpDetails.getEmail(),
-                        userSignUpDetails.getPassword(),
-                        userSignUpDetails.getPhoneNumber(),
-                        userSignUpDetails.getCountryCode(),
-                        getOtp(),
-                        getFcmToken(context),
-                        getDeviceId(context),
-                        DEVICE_TYPE_ANDROID);
-                if (isConnected) {
-                    performFinalSignup(context.getApplicationContext(), verify, countDownTimer,
-                            otpVerifiedTextView, mListener, otpResendBtn, picturePath);
+    @Override
+    protected void handleResponse(ResultObject resultObject) {
+        switch (resultObject.getCallType()) {
+            case SIGNUP:
+                showSnackBar(otpResendBtn, "New otp sent to " + verifySignUp.getPhoneNumber());
+                otpResendBtn.setEnabled(false);
+                otpResendBtn.setAlpha(0.5f);
+                startCountDownTimer();
+                break;
+            case VERIFY_LOGIN_WITH_OTP:
+                if (resultObject.getStatus()) {
+                    SharedPrefs.saveAuthToken(context, resultObject.getAuthToken());
+                    SharedPrefs.saveUserId(context, resultObject.getUserId());//1
+                    countDownTimer.cancel();
+                    otpVerifiedTextView.setText(context.getString(R.string.verified));
+                    ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_check_24dp);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mListener != null)
+                                mListener.onOtpInteraction(null, null);
+                        }
+                    }, 1000);
                 } else {
-                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(otpVerifiedTextView, R.string.wrong_otp, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
-            case LOGIN_WITH_OTP_ACTION:
-                if (isConnected) {
-                    verifyOtpLogin(context.getApplicationContext(), userSignUpDetails, getOtp(),
-                            countDownTimer, otpVerifiedTextView, mListener, otpResendBtn);
-                } else {
-                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+            case VERIFY_SIGNUP:
+                switch (resultObject.getCode()) {
+//                    Authorize successful
+                    case 201:
+                        countDownTimer.cancel();
+                        otpVerifiedTextView.setText(context.getString(R.string.verified));
+                        SharedPrefs.saveAuthToken(context, resultObject.getAuthToken());
+                        ViewUtils.setTextViewDrawableEnd(otpVerifiedTextView, R.drawable.ic_check_24dp);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mListener.onOtpInteraction(verifySignUp, picturePath);
+                            }
+                        }, 1000);
+                        break;
+//                    Username, Email or Phone Number already exists
+                    case 200:
+                        countDownTimer.cancel();
+                        otpVerifiedTextView.setText(R.string.wrong_otp);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                otpVerifiedTextView.setText("");
+                            }
+                        }, 2800);
+                        otpResendBtn.setEnabled(true);
+                        otpResendBtn.setAlpha(1);
+                        break;
+//                    Failed, Invalid JSON or validation failed
+                    default:
+                        showSnackBar(otpResendBtn, getString(R.string.signup_failed));
+                        break;
                 }
+                break;
+            case LOGIN_WITH_OTP:
+                startCountDownTimer();
+                showSnackBar(otpResendBtn, "New otp sent to " + initiateLoginWithOtp.getPhoneNumber());
                 break;
             default:
                 break;
         }
+        otpResendBtn.setEnabled(true);
+        otpResendBtn.setAlpha(1);
+    }
+
+    @Override
+    protected void handleError(Throwable throwable) {
+        otpResendBtn.setEnabled(true);
+        otpResendBtn.setAlpha(1);
+        showSnackBar(otpResendBtn, getString(R.string.something_went_wrong));
+    }
+
+    @Override
+    protected void notifyNoInternetConnection() {
+        showSnackBar(otpResendBtn, getString(R.string.no_internet_connection));
+    }
+
+    @Override
+    protected boolean isFieldValidated(int whichType) {
+        return false;
+    }
+
+    @Override
+    protected boolean isFieldFilled(int whichType) {
+        return false;
     }
 
     public int getOtp() {
@@ -267,12 +377,24 @@ public class ConfirmOtpFragment extends AuthFragment {
                 otp4EditText.getText().toString());
     }
 
-    @Override
-    public void onResume() {
-        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter("otp"));
-        super.onResume();
-        if (countDownTimer!= null)
-            countDownTimer.start();
+    public void startCountDownTimer() {
+        if (countDownTimer != null) countDownTimer.cancel();
+        countDownTimer = new CountDownTimer(120000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String remainingTime = context.getString(R.string.retry_in) + " " + String.format(Locale.UK, "%02d:%02d",
+                        MILLISECONDS.toMinutes(millisUntilFinished),
+                        MILLISECONDS.toSeconds(millisUntilFinished) -
+                                MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
+                otpVerifiedTextView.setText(remainingTime);
+            }
+
+            @Override
+            public void onFinish() {
+                otpVerifiedTextView.setText(R.string.you_can_try_again);
+                otpResendBtn.setEnabled(true);
+            }
+        }.start();
     }
 
     @Override
@@ -281,7 +403,12 @@ public class ConfirmOtpFragment extends AuthFragment {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        smsVerifyCatcher.onStop();
     }
 
     @Override
@@ -321,6 +448,7 @@ public class ConfirmOtpFragment extends AuthFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        smsVerifyCatcher.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_PERMISSIONS:
                 if (grantResults.length > 0) {
@@ -365,6 +493,6 @@ public class ConfirmOtpFragment extends AuthFragment {
     }
 
     public interface OnOtpInteractionListener {
-        void onOtpInteraction(Authorize verificationDetails, String picturePath);
+        void onOtpInteraction(VerifySignUp verificationDetails, String picturePath);
     }
 }

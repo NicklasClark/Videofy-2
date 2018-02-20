@@ -330,14 +330,14 @@ public class MediaControllerView extends FrameLayout implements VideoGestureList
 
             if (isAudioEnabled) {
                 volume = 0;
-                ViewUtils.setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeoff);
+                ViewUtils.setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_off);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = maxVolume;
 //                volume = 100 * maxVolume + currentVolume;
-                ViewUtils.setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeon);
+                ViewUtils.setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
 

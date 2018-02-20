@@ -1,11 +1,9 @@
 package com.cncoding.teazer.home.post.homepage;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,10 @@ import com.cncoding.teazer.home.BaseRecyclerViewAdapter;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.AdFeedItem;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.utilities.diffutil.PostsDiffCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 
 /**
  * {@link RecyclerView.Adapter} that can display {@link PostDetails} and make a call to the
@@ -26,11 +23,9 @@ import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
  */
 public class PostsListAdapter extends BaseRecyclerViewAdapter {
 
-    private SparseIntArray colorArray;
     protected OnPostAdapterInteractionListener listener;
     ArrayList<PostDetails> posts;
     protected Context context;
-    //    boolean isPostClicked = false;
     private RecyclerView recyclerView;
     private final int POST = 0, AD = 1;
 
@@ -39,24 +34,39 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         if (posts == null) {
             posts = new ArrayList<>();
         }
-        colorArray = new SparseIntArray();
         if (context instanceof OnPostAdapterInteractionListener) {
             listener = (OnPostAdapterInteractionListener) context;
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         if (this.recyclerView == null) {
             this.recyclerView = recyclerView;
         }
     }
 
+    @Override
+    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override public int getItemCount() {
+        return posts.size();
+    }
+
+    @Override public void release() {
+//        clearData();
+//        posts = null;
+        listener = null;
+        context = null;
+        recyclerView = null;
+    }
+
     void addPosts(int page, List<PostDetails> postDetailsList) {
         try {
             if (page == 1) {
-                posts.clear();
+                clearData();
                 posts.addAll(postDetailsList);
                 notifyDataSetChanged();
                 if (recyclerView != null) {
@@ -101,29 +111,29 @@ public class PostsListAdapter extends BaseRecyclerViewAdapter {
         holder.bind(position);
     }
 
-    @Override
-    public int getItemCount() {
-        return posts.size();
+    void updateNewPosts(List<PostDetails> postDetailsList) {
+        try {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new PostsDiffCallback(new ArrayList<>(posts.subList(0, 30)), postDetailsList));
+            clearData();
+            posts.addAll(postDetailsList);
+//        posts.addAll(0, postDetailsList);
+            result.dispatchUpdatesTo(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (posts == null) posts = new ArrayList<>();
+            posts.addAll(postDetailsList);
+            notifyDataSetChanged();
+            if (recyclerView != null) {
+                recyclerView.smoothScrollBy(0, 1);
+                recyclerView.smoothScrollBy(0, -1);
+            }
+        }
     }
 
-    @Override
-    public void release() {
-        colorArray.clear();
-        colorArray = null;
-        posts.clear();
-        listener = null;
-        context = null;
-        recyclerView = null;
-    }
-
-    GradientDrawable getBackground(ColorStateList color) {
-        GradientDrawable gradientDrawable = new GradientDrawable();
-//        if (colorArray.get(position) == 0) {
-//            colorArray.put(position, color);
-//        }
-        gradientDrawable.setColor(color);
-        gradientDrawable.setCornerRadius(getPixels(context, 2));
-        return gradientDrawable;
+    private void clearData() {
+        if (posts != null) {
+            posts.clear();
+        }
     }
 
     public interface OnPostAdapterInteractionListener {

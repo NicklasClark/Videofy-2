@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:gravity="end"
-                        app:drawableStartCompat="@drawable/ic_volumeon"
+                        app:drawableStartCompat="@drawable/ic_volume_up"
                         android:paddingTop="@dimen/padding_half"
                         android:paddingBottom="@dimen/padding_half"
                         android:layout_marginEnd="14dp"
@@ -412,17 +412,17 @@
 
             <RelativeLayout
                 android:visibility="gone"
-                android:id="@+id/uploadingStatusLayout"
+                android:id="@+id/uploading_status_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:id="@+id/uploadProgressText"
+                    android:id="@+id/upload_progress_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <ProgressBar
-                    android:layout_below="@+id/uploadProgressText"
-                    android:id="@+id/uploadProgress"
+                    android:layout_below="@+id/upload_progress_text"
+                    android:id="@+id/video_upload_progress"
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="5dp"

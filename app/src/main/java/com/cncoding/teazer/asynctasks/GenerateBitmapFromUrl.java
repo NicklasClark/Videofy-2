@@ -21,6 +21,7 @@ import retrofit2.Response;
 import static com.cncoding.teazer.ui.fragment.activity.EditProfile.bitmaptoByte;
 
 /**
+ *
  * Created by amit on 18/12/17.
  */
 

@@ -144,7 +144,7 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
     ProgressBar topProgressBar;
     @BindView(R.id.video_upload_retake_btn)
     Button cancelBtn;
-    @BindView(R.id.video_upload_check_btn)
+    @BindView(R.id.video_upload_btn)
     Button uploadBtn;
     @BindView(R.id.video_upload_title)
     ProximaNovaRegularTextInputEditText videoTitle;
@@ -1020,11 +1020,11 @@ public class EditPostFragment extends Fragment implements EasyPermissions.Permis
                             startLocationUpdates();
                         }
                     } else {
-//                        permissions are denied, show empty list
+//                        permissions are denied, show empty myReactions
                         showEmptyList();
                     }
                 } else {
-//                        permissions are denied, show empty list
+//                        permissions are denied, show empty myReactions
                     showEmptyList();
                 }
                 break;

@@ -159,6 +159,9 @@
     <string name="changecategories">Change Categories</string>
     <string name="react">React</string>
     <string name="already_exists">Username, Email or Phone Number already exists!\nPlease login instead.</string>
+    <string name="already_exists_signup">
+        "Username, email or phone number already exists.\nOr you may have reached maximum OTP retry attempts"
+    </string>
     <string name="take_photo">Take photo</string>
     <string name="intro_message">This sample demonstrates how to record video using Camera2 API.</string>
     <string name="permission_request">Teazer needs permission for camera and audio recording.</string>
@@ -251,7 +254,7 @@
     <string name="wrong_otp">Otp entered is wrong! please try again.</string>
     <string name="swipe_down_to_retry">Swipe down to retry</string>
     <string name="sorry_message">Sorry for this inconvenience, we\'ll be back with you shortly</string>
-    <string name="something_went_wrong">Something went wrong. Please try again later.</string>
+    <string name="something_went_wrong">Something went wrong. Please try again.</string>
     <string name="edit">Edit</string>
     <string name="people">People</string>
     <string name="error_fetching_posts">There was an error fetching posts. Please try again later.</string>
@@ -337,7 +340,7 @@
     <string name="teazer_support_url">http://www.cnapplications.com</string>
     <string name="video_upload_confirm_notification">Video will be uploaded, you can check progress in notifications panel</string>
     <string name="loader">Loader</string>
-    <string name="failed">Failed, try again</string>
+    <string name="failed">Failed, please try again</string>
     <string name="there_is_no_reaction_yet">There is no reaction yet</string>
     <string name="report_user_dialog_title">Report User</string>
     <!--<string name="base_url">https://api.teazer.online/</string>-->
@@ -366,4 +369,14 @@
     <string name="artwork">artwork</string>
     <string name="inmobi_account_id">7d7af4467a38438e85c089beda6891f7</string>
     <string name="sponsored">Sponsored</string>
+    <string name="something_is_not_right">Something\'s not right, please check all the fields and try again.</string>
+    <string name="signup_failed">Signup failed, please check the fields and try again</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="otp_is_required">Otp is required</string>
+    <string name="reaction_no_longer_exists">This reaction no longer exists</string>
+    <string name="location_services_required">Location services are required to get your nearby locations.</string>
+    <string name="reaction_gif">Gif to react</string>
+    <string name="giphy_base_url">https://api.giphy.com</string>
+    <string name="giphy_api_key">igBNPPxps6xTrphCVK9UQDQn2q8BBsnb</string>
+    <string name="search_for_giphys">Search for Gifs</string>
 </resources>

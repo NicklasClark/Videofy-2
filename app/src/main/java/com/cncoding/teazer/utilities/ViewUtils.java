@@ -10,9 +10,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -35,25 +35,22 @@ import com.cncoding.teazer.R;
 import com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView;
 import com.cncoding.teazer.customViews.coachMark.ShowcaseConfig;
 import com.cncoding.teazer.customViews.coachMark.shape.CircleShape;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
-import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton;
 import com.cncoding.teazer.home.camera.CameraActivity;
 import com.cncoding.teazer.model.base.Dimension;
 import com.cncoding.teazer.model.base.UploadParams;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
-import com.cncoding.teazer.model.react.Reactions;
+import com.cncoding.teazer.model.react.MyReactions;
 import com.cncoding.teazer.ui.fragment.activity.ExoPlayerActivity;
 import com.cncoding.teazer.ui.fragment.activity.ReactionPlayerActivity;
 
 import java.io.File;
-import java.util.Locale;
 
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_DISCOVER;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_NORMAL;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveReactionUploadSession;
+import static com.cncoding.teazer.utilities.SharedPrefs.saveVideoUploadSession;
 
 /**
  *
@@ -64,8 +61,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 public class ViewUtils {
 
     //    private String email;
-    public static final int GALLERY_ACTIVITY_CODE=200;
-    public static final int RESULT_CROP = 400;
+//    public static final int GALLERY_ACTIVITY_CODE=200;
+//    public static final int RESULT_CROP = 400;
     public static final String BLANK_SPACE = " ";
     public static final String IS_REACTION = "isCameraLaunchedForReaction";
     public static final String IS_GALLERY = "IsFromGallery";
@@ -107,22 +104,24 @@ public class ViewUtils {
         context.startActivity(intent);
     }
 
-    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, Reactions reaction) {
+    public static void playOnlineVideoInExoPlayer(Context context, Integer source, PostReaction postReaction, MyReactions reaction, boolean isGif) {
         switch (source) {
             case POST_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
                 intent.putExtra("VIDEO_URL", postReaction.getMediaDetail().getMediaUrl());
                 intent.putExtra("POST_INFO", postReaction);
                 intent.putExtra("SOURCE", POST_REACTION);
+                intent.putExtra("IS_GIF", isGif);
 //                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 break;
             }
             case SELF_REACTION: {
                 Intent intent = new Intent(context, ReactionPlayerActivity.class);
-                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getMediaUrl());
+                intent.putExtra("VIDEO_URL", reaction.getMediaDetail().getReactMediaUrl());
                 intent.putExtra("POST_INFO", reaction);
                 intent.putExtra("SOURCE", SELF_REACTION);
+                intent.putExtra("IS_GIF", isGif);
 //                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 break;
@@ -204,26 +203,6 @@ public class ViewUtils {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    public static CountDownTimer startCountDownTimer(final Context context, final ProximaNovaRegularTextView otpVerifiedTextView,
-                                                     final ProximaNovaSemiboldButton otpResendBtn) {
-        return new CountDownTimer(120000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                String remainingTime = context.getString(R.string.retry_in) + " " + String.format(Locale.UK, "%02d:%02d",
-                        MILLISECONDS.toMinutes(millisUntilFinished),
-                        MILLISECONDS.toSeconds(millisUntilFinished) -
-                                MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
-                otpVerifiedTextView.setText(remainingTime);
-            }
-
-            @Override
-            public void onFinish() {
-                otpVerifiedTextView.setText(R.string.you_can_try_again);
-                otpResendBtn.setEnabled(true);
-            }
-        };
-    }
-
     public static void launchVideoUploadCamera(Context packageContext) {
         Intent intent = new Intent(packageContext, CameraActivity.class);
         intent.putExtra(IS_REACTION, false);
@@ -238,17 +217,16 @@ public class ViewUtils {
     }
 
     public static void performVideoUpload(Context packageContext, UploadParams uploadParams) {
+        saveVideoUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
-        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
     }
 
     public static void performReactionUpload(Context packageContext, UploadParams uploadParams) {
-        SharedPrefs.saveReactionUploadSession(packageContext, uploadParams);
+        saveReactionUploadSession(packageContext, uploadParams);
         Intent intent = new Intent(packageContext, BaseBottomBarActivity.class);
-//        intent.putExtra(UPLOAD_PARAMS, uploadParams);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
         ((AppCompatActivity) packageContext).finish();
@@ -423,6 +401,7 @@ public class ViewUtils {
         return (int)((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 
+    @Nullable
     public static View getTabChild(TabLayout tabLayout, int tabIndex) {
         try {
             return ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(tabIndex);

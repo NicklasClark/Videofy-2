@@ -33,8 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PRIVATE;
-import static com.cncoding.teazer.MainActivity.ACCOUNT_TYPE_PUBLIC;
+import static com.cncoding.teazer.MainActivity.PRIVATE_ACCOUNT;
+import static com.cncoding.teazer.MainActivity.PUBLIC_ACCOUNT;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_ACCEPT;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOW;
 import static com.cncoding.teazer.home.notifications.NotificationsAdapter.BUTTON_TYPE_FOLLOWING;
@@ -140,7 +140,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (actionArray.get(position) == 0) {
                     switch (holder2.user.getAccountType()) {
 
-                        case ACCOUNT_TYPE_PRIVATE:
+                        case PRIVATE_ACCOUNT:
 
                             if(holder2.user.getYouBlocked()) {
                                 setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
@@ -193,7 +193,7 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 }
                             }
                             break;
-                        case ACCOUNT_TYPE_PUBLIC:
+                        case PUBLIC_ACCOUNT:
                             if(holder2.user.getYouBlocked()) {
 
                                 setActionButton(holder2.action, BUTTON_TYPE_UNBLOCK, position, true);
@@ -309,11 +309,11 @@ public class DiscoverSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                         if (baseFragment.isAdded()) {
                                                             if (response.code() == 200) {
                                                                 switch (holder2.user.getAccountType()) {
-                                                                    case ACCOUNT_TYPE_PRIVATE:
+                                                                    case PRIVATE_ACCOUNT:
                                                                         setActionButton(holder2.action, BUTTON_TYPE_REQUESTED,
                                                                                 holder2.getAdapterPosition(), true);
                                                                         break;
-                                                                    case ACCOUNT_TYPE_PUBLIC:
+                                                                    case PUBLIC_ACCOUNT:
                                                                         setActionButton(holder2.action, BUTTON_TYPE_FOLLOWING,
                                                                                 holder2.getAdapterPosition(), true);
                                                                         break;

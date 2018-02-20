@@ -18,6 +18,15 @@ public class BlockedUsersList {
     @SerializedName("blocked_users")
     @Expose
     private List<BlockedUser> blockedUsers = null;
+    private Throwable error;
+
+    public BlockedUsersList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public Boolean getNextPage() {
         return nextPage;

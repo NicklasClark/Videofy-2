@@ -23,6 +23,11 @@ public class ReportPostTitlesResponse implements Parcelable {
     @SerializedName("sub_reports")
     @Expose
     private List<ReportPostSubTitleResponse> subReports = null;
+    private Throwable error;
+
+    public ReportPostTitlesResponse(Throwable error) {
+        this.error = error;
+    }
 
     public Integer getReportTypeId() {
         return reportTypeId;
@@ -46,6 +51,10 @@ public class ReportPostTitlesResponse implements Parcelable {
 
     public void setSubReports(List<ReportPostSubTitleResponse> subReports) {
         this.subReports = subReports;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     @Override

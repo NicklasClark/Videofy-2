@@ -12,10 +12,19 @@ import java.util.ArrayList;
 public class TaggedUsersList {
     private boolean next_page;
     private ArrayList<TaggedUser> tagged_users;
+    private Throwable error;
 
     public TaggedUsersList(boolean next_page, ArrayList<TaggedUser> tagged_users) {
         this.next_page = next_page;
         this.tagged_users = tagged_users;
+    }
+
+    public TaggedUsersList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public boolean isNextPage() {

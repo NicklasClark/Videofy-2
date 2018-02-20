@@ -122,7 +122,7 @@ public class CommonWebServicesUtil {
                                         postReactDetail.getMediaDetail(), miniProfile, postReactDetail.getReactedAt());
 
                                 //play video in exo player
-                                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null);
+                                playOnlineVideoInExoPlayer(context, POST_REACTION, postReaction, null, true);
                             } else {
                                 Toast.makeText(context, "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
                             }

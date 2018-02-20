@@ -12,10 +12,19 @@ import java.util.ArrayList;
 public class UsersList {
     private boolean next_page;
     private ArrayList<MiniProfile> users;
+    private Throwable error;
 
     public UsersList(boolean next_page, ArrayList<MiniProfile> users) {
         this.next_page = next_page;
         this.users = users;
+    }
+
+    public UsersList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public boolean isNextPage() {

@@ -11,6 +11,15 @@ public class NotificationsList {
     private ArrayList<Notification> notifications;
     private int unread_count;
     private boolean next_page;
+    private Throwable error;
+
+    public NotificationsList(Throwable error) {
+        this.error = error;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
 
     public NotificationsList(ArrayList<Notification> notifications, int unread_count, boolean next_page) {
         this.notifications = notifications;

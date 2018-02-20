@@ -43,6 +43,8 @@ import iknow.android.utils.callback.SingleCallback;
 import iknow.android.utils.thread.BackgroundExecutor;
 import iknow.android.utils.thread.UiThreadExecutor;
 
+import static com.cncoding.teazer.videoTrim.utils.TrimVideoUtil.MIN_TIME_FRAME;
+
 public class VideoTrimmerView extends FrameLayout {
     private static boolean isDebugMode = false;
 
@@ -84,6 +86,8 @@ public class VideoTrimmerView extends FrameLayout {
     private boolean isAudioEnabled;
     private int currentVolume;
     private ProximaNovaSemiBoldTextView videoDuration;
+    private int mMinDuration;
+    private boolean isReaction;
 
     public VideoTrimmerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -314,6 +318,14 @@ public class VideoTrimmerView extends FrameLayout {
         mMaxDuration = maxDuration * 1000;
     }
 
+    public void setMinDuration(boolean isReaction) {
+        this.isReaction = isReaction;
+        if (isReaction)
+            MIN_TIME_FRAME = 3;
+        else
+            MIN_TIME_FRAME = 5;
+    }
+
     private void setUpListeners() {
         mListeners = new OnProgressVideoListener() {
             @Override
@@ -439,10 +451,14 @@ public class VideoTrimmerView extends FrameLayout {
     }
 
     private void onSaveClicked() {
-        if (mEndPosition/1000 - mStartPosition/1000 < TrimVideoUtil.MIN_TIME_FRAME) {
-            Toast.makeText(mContext, "Video length can not be less than 5 seconds", Toast.LENGTH_SHORT).show();
+        if (mEndPosition/1000.0 - mStartPosition/1000.0 < TrimVideoUtil.MIN_TIME_FRAME) {
+            if (isReaction) {
+                Toast.makeText(mContext, "Video length can not be less than 3 seconds", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Video length can not be less than 5 seconds", Toast.LENGTH_SHORT).show();
+            }
         }
-        else if(mEndPosition/1000 - mStartPosition/1000 > TrimVideoUtil.VIDEO_MAX_DURATION)
+        else if(mEndPosition/1000.0 - mStartPosition/1000.0 > TrimVideoUtil.VIDEO_MAX_DURATION)
         {
             Toast.makeText(mContext, "Video length can not be more than 60 seconds", Toast.LENGTH_SHORT).show();
         }

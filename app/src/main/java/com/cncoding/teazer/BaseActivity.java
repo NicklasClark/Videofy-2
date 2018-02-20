@@ -1,6 +1,5 @@
 package com.cncoding.teazer;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -14,7 +13,6 @@ import android.support.v7.widget.Toolbar;
  */
 
 @SuppressWarnings("unused")
-@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
 
     @Override

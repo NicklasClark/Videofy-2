@@ -13,12 +13,17 @@ public class ReactionUploadResult implements Parcelable {
     private int react_id;
     private String message;
     private ReactionDetails post_react_detail;
+    private Throwable error;
 
     public ReactionUploadResult(boolean status, int react_id, String message, ReactionDetails post_react_detail) {
         this.status = status;
         this.react_id = react_id;
         this.message = message;
         this.post_react_detail = post_react_detail;
+    }
+
+    public ReactionUploadResult(Throwable error) {
+        this.error = error;
     }
 
     protected ReactionUploadResult(Parcel in) {
@@ -52,6 +57,10 @@ public class ReactionUploadResult implements Parcelable {
             return new ReactionUploadResult[size];
         }
     };
+
+    public Throwable getError() {
+        return error;
+    }
 
     public boolean getStatus() {
         return status;

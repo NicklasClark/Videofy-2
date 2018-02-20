@@ -30,6 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bg_blur"
                     android:background="@color/colorDisabled"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/video_preview_thumbnail" />
@@ -41,6 +42,7 @@
                     android:layout_alignTop="@+id/video_preview_thumbnail"/>
 
                 <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/playBtn"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_centerInParent="true"
@@ -48,6 +50,7 @@
                     android:clickable="false"/>
 
                 <ProgressBar
+                    android:visibility="gone"
                     android:id="@+id/thumbnail_progress_bar"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
@@ -73,8 +76,8 @@
             <include layout="@layout/progress_bar_horizontal"/>
 
             <Switch
-                android:visibility="gone"
-                android:text=" Convert to gif"
+                android:visibility="visible"
+                android:text="Convert to gif"
                 android:id="@+id/gifSwitch"
                 android:layout_marginTop="4dp"
                 android:layout_gravity="center_horizontal"
@@ -89,6 +92,18 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp">
+
+                <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView
+                    android:id="@+id/erro_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#d22705"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="-30dp"
+                    android:text="@string/error_msg"
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_size_12sp" />
 
                 <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextInputEditText
                     style="@style/AppTheme.FullScreen.EditText"
@@ -241,7 +256,7 @@
     </ScrollView>
 
     <com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiboldButton
-        android:id="@+id/video_upload_check_btn"
+        android:id="@+id/video_upload_btn"
         style="@style/AppTheme.CancelUploadButtonsTheme"
         android:text="@string/upload"
         android:contentDescription="@string/check"

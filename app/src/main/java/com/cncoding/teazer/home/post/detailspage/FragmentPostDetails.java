@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -54,6 +52,7 @@ import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
+import com.cncoding.teazer.data.receiver.ReactionUploadReceiver;
 import com.cncoding.teazer.home.BaseFragment;
 import com.cncoding.teazer.home.post.homepage.PostsListFragment;
 import com.cncoding.teazer.model.base.TaggedUser;
@@ -62,11 +61,8 @@ import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.TaggedUsersList;
-import com.cncoding.teazer.services.receivers.ReactionUploadReceiver;
+import com.cncoding.teazer.model.react.GiphyReactionRequest;
 import com.cncoding.teazer.ui.fragment.fragment.ReportPostDialogFragment;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -88,8 +84,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -118,13 +112,13 @@ import static com.cncoding.teazer.BaseBottomBarActivity.COACH_MARK_DELAY;
 import static com.cncoding.teazer.BaseBottomBarActivity.REQUEST_CANCEL_UPLOAD;
 import static com.cncoding.teazer.customViews.coachMark.MaterialShowcaseView.TYPE_POST_DETAILS;
 import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_FILL;
-import static com.cncoding.teazer.services.ReactionUploadService.launchReactionUploadService;
-import static com.cncoding.teazer.services.VideoUploadService.ADD_WATERMARK;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_COMPLETE_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_ERROR_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
-import static com.cncoding.teazer.services.VideoUploadService.UPLOAD_PROGRESS;
-import static com.cncoding.teazer.services.VideoUploadService.VIDEO_PATH;
+import static com.cncoding.teazer.data.service.ReactionUploadService.launchReactionUploadService;
+import static com.cncoding.teazer.data.service.VideoUploadService.ADD_WATERMARK;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_COMPLETE_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_ERROR_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_IN_PROGRESS_CODE;
+import static com.cncoding.teazer.data.service.VideoUploadService.UPLOAD_PROGRESS;
+import static com.cncoding.teazer.data.service.VideoUploadService.VIDEO_PATH;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.CommonUtilities.deleteFilePermanently;
 import static com.cncoding.teazer.utilities.CommonWebServicesUtil.fetchReactionDetails;
@@ -188,9 +182,9 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
     @BindView(R.id.media_controller_reaction_2) CircularAppCompatImageView reaction2Pic;
     @BindView(R.id.media_controller_reaction_3) CircularAppCompatImageView reaction3Pic;
     @BindView(R.id.loader) GifTextView loader;
-    @BindView(R.id.uploadProgressText) ProximaNovaSemiBoldTextView uploadProgressText;
-    @BindView(R.id.uploadProgress) ProgressBar uploadProgress;
-    @BindView(R.id.uploadingStatusLayout) RelativeLayout uploadingStatusLayout;
+    @BindView(R.id.upload_progress_text) ProximaNovaSemiBoldTextView uploadProgressText;
+    @BindView(R.id.video_upload_progress) ProgressBar uploadProgress;
+    @BindView(R.id.uploading_status_layout) RelativeLayout uploadingStatusLayout;
     @BindView(R.id.liked_user_layout) FrameLayout frameLayout;
 
 //    private long playbackPosition;
@@ -683,14 +677,14 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
             if (isAudioEnabled) {
                 volume = 0;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeoff);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_off);
                 isAudioEnabled = false;
             } else {
                 if (currentVolume > 0)
                     volume = currentVolume;
                 else volume = maxVolume;
 //                volume = 100 * maxVolume + currentVolume;
-                setTextViewDrawableStart(remainingTime, R.drawable.ic_volumeon);
+                setTextViewDrawableStart(remainingTime, R.drawable.ic_volume_up);
                 isAudioEnabled = true;
             }
 
@@ -705,13 +699,11 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
         }
     }
 
-    @OnClick(R.id.react_btn)
-    public void react() {
+    @OnClick(R.id.react_btn) public void react() {
         launchReactionCamera(context, postDetails);
     }
 
-    @OnClick(R.id.like)
-    public void likePost() {
+    @OnClick(R.id.like) public void likePost() {
         Callback<ResultObject> callback = new Callback<ResultObject>() {
             @Override
             public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -822,8 +814,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
         popupMenu.show();
     }
 
-    @OnClick(R.id.controls)
-    public void toggleMediaControllerVisibility() {
+    @OnClick(R.id.controls) public void toggleMediaControllerVisibility() {
         try {
 
 //            if(player.getPlayWhenReady())
@@ -940,7 +931,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                                                         Toast.makeText(context,
                                                                 R.string.video_hide_successful,
                                                                 Toast.LENGTH_SHORT).show();
-                                                        getParentActivity().popFragment();
+                                                        navigation.popFragment();
 
                                                     } else {
                                                         Toast.makeText(context,
@@ -973,7 +964,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteVideo(postDetails.getPostId());
    //                                 PostsListFragment.postDetails = null;
-                                    getParentActivity().popFragment();
+                                    navigation.popFragment();
 
 //                                    getActivity().finish();
                                 }
@@ -1140,8 +1131,7 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
                                 oneShotFlag = false;
                                 if (!postDetails.canDelete()) {
                                     incrementViews();
-                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(),
-                                            context)
+                                    ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), context)
                                             .enqueue(new Callback<ResultObject>() {
                                                 @Override
                                                 public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
@@ -1174,12 +1164,10 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
                 @Override
                 public void onRepeatModeChanged(int repeatMode) {
-
                 }
 
                 @Override
                 public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
                 }
 
                 @Override
@@ -1208,7 +1196,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
                 @Override
                 public void onSeekProcessed() {
-
                 }
             });
 
@@ -1234,7 +1221,6 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
 
     //<editor-fold desc="Video upload handler">
     private void setupServiceReceiver() {
-
         reactionUploadReceiver = new ReactionUploadReceiver(new Handler())
                 .setReceiver(new ReactionUploadReceiver.Receiver() {
                     @Override
@@ -1314,47 +1300,37 @@ public class FragmentPostDetails extends BaseFragment implements AddWaterMarkAsy
             disableView(reactBtn, true);
             if (PostsListFragment.postDetails != null)
                 PostsListFragment.postDetails.canReact = false;
-            launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
-        }
-    }
 
-
-    @SuppressWarnings("unused")
-    private static class ShowShareDialog extends AsyncTask<String, Void, Bitmap> {
-
-        private WeakReference<FragmentPostDetails> reference;
-
-        ShowShareDialog(FragmentPostDetails context) {
-            reference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap bitmap = null;
-            try {
-                final URL url = new URL(strings[0]);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!uploadParams.isGiphy()) {
+                launchReactionUploadService(context, uploadParams, reactionUploadReceiver);
+            } else {
+                postGiphyReaction(uploadParams);
             }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(reference.get());
-            shareDialog.show(content);
-            // ShareApi.share(content, null);
-            super.onPostExecute(bitmap);
         }
     }
+
+    private void postGiphyReaction(UploadParams uploadParams) {
+
+        GiphyReactionRequest giphyReactionRequest = new GiphyReactionRequest(uploadParams.getPostDetails().getPostId(),
+                uploadParams.getTitle(),
+                uploadParams.getVideoPath());
+        ApiCallingService.React.createReactionByGiphy(giphyReactionRequest, context).enqueue(new Callback<ResultObject>() {
+            @Override
+            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+                if (response.code() == 200 || response.code() == 201) {
+                    getPostReactions(postDetails.getPostId(), 1);
+                    Toast.makeText(context, "Reaction posted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultObject> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     //</editor-fold>
 

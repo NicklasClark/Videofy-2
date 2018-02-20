@@ -279,24 +279,24 @@
         </receiver>
 
         <service
-            android:name=".firebase.MyFirebaseMessagingService"
+            android:name=".data.service.firebase.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".firebase.MyFirebaseInstanceIDService"
+            android:name=".data.service.firebase.MyFirebaseInstanceIDService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.VideoUploadService"
+            android:name=".data.service.VideoUploadService"
             android:exported="false" />
         <service
-            android:name=".services.ReactionUploadService"
+            android:name=".data.service.ReactionUploadService"
             android:exported="false" />
 
         <!--
@@ -336,7 +336,6 @@
             android:name=".ui.fragment.activity.PasswordChange"
             android:screenOrientation="portrait"
             android:theme="@style/MyCustomTextAppearance" />
-        <activity android:name=".ui.fragment.activity.OthersPostDetails" />
         <activity
             android:name=".ui.fragment.activity.Main2Activity"
             android:label="@string/title_activity_main2" />
@@ -372,7 +371,7 @@
             android:name=".ui.fragment.activity.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DetailAppTheme" />
-        <activity android:name=".ui.fragment.activity.ShareActivityApp" />
+        <activity android:name=".ui.fragment.activity.ShareActivityApp"/>
 
         <!-- //mobiruck starts// -->
 
@@ -398,7 +397,7 @@
             android:resizeableActivity="false"
             android:theme="@android:style/Theme.NoTitleBar"
             tools:ignore="UnusedAttribute" />
-
+        <activity android:name=".BaseActivity" />
     </application>
 
 </manifest>

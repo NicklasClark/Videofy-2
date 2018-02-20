@@ -9,10 +9,7 @@ import com.google.android.exoplayer2.Player;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import im.ene.toro.ToroPlayer;
-import im.ene.toro.helper.ToroPlayerHelper;
 import im.ene.toro.media.PlaybackInfo;
-import im.ene.toro.widget.Container;
 
 /**
  * 

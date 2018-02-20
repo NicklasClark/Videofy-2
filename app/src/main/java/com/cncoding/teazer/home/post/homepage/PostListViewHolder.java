@@ -1,25 +1,22 @@
 package com.cncoding.teazer.home.post.homepage;
 
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -28,12 +25,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.cncoding.teazer.R;
-import com.cncoding.teazer.apiCalls.ApiCallingService;
-import com.cncoding.teazer.apiCalls.ResultObject;
 import com.cncoding.teazer.customViews.CircularAppCompatImageView;
+import com.cncoding.teazer.customViews.exoplayer.Container;
 import com.cncoding.teazer.customViews.exoplayer.ExoPlayerViewHelper;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView;
 import com.cncoding.teazer.customViews.exoplayer.SimpleExoPlayerView.OnThumbReadyListener;
+import com.cncoding.teazer.customViews.exoplayer.ToroPlayer;
+import com.cncoding.teazer.customViews.exoplayer.ToroUtil;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaBoldButton;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
@@ -41,22 +39,21 @@ import com.cncoding.teazer.customViews.shimmer.ShimmerLinearLayout;
 import com.cncoding.teazer.customViews.shimmer.ShimmerRelativeLayout;
 import com.cncoding.teazer.home.BaseRecyclerViewHolder;
 import com.cncoding.teazer.model.post.AdFeedItem;
+import com.cncoding.teazer.model.base.CheckIn;
 import com.cncoding.teazer.model.post.PostDetails;
+import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.utilities.audio.AudioVolumeContentObserver.OnAudioVolumeChangedListener;
 import com.cncoding.teazer.utilities.audio.AudioVolumeObserver;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import im.ene.toro.ToroPlayer;
-import im.ene.toro.ToroUtil;
 import im.ene.toro.media.PlaybackInfo;
-import im.ene.toro.widget.Container;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.cncoding.teazer.BaseBottomBarActivity.ACTION_VIEW_PROFILE;
 import static com.cncoding.teazer.customViews.exoplayer.AspectRatioFrameLayout.RESIZE_MODE_ZOOM;
@@ -64,7 +61,18 @@ import static com.cncoding.teazer.model.base.MiniProfile.MALE;
 import static com.cncoding.teazer.utilities.CommonUtilities.decodeUnicodeString;
 import static com.cncoding.teazer.utilities.ViewUtils.disableView;
 import static com.cncoding.teazer.utilities.ViewUtils.enableView;
+import static com.cncoding.teazer.utilities.ViewUtils.getPixels;
 import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_CAN_LIKE;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_CAN_REACT;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_CHECKIN;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_HAS_CHECKIN;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_LIKES;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_POST_DETAILS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_REACTIONS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TITLE;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TOTAL_REACTIONS;
+import static com.cncoding.teazer.utilities.diffutil.PostsDiffCallback.DIFF_TOTAL_TAGS;
 
 /**
  *
@@ -73,7 +81,6 @@ import static com.cncoding.teazer.utilities.ViewUtils.launchReactionCamera;
 class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, OnAudioVolumeChangedListener, OnThumbReadyListener {
 
     @LayoutRes static final int LAYOUT_RES = R.layout.item_home_screen_post_new;
-    private static final long DOUBLE_CLICK_DURATION = 500;
 
     @BindView(R.id.title) ProximaNovaSemiBoldTextView title;
     @BindView(R.id.location) ProximaNovaRegularTextView location;
@@ -92,8 +99,6 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     @BindView(R.id.shimmer_layout_top) ShimmerLinearLayout shimmerLayoutTop;
     @BindView(R.id.shimmer_layout_mid) ShimmerRelativeLayout shimmerLayoutMid;
 
-    private Handler handler;
-    private Runnable runnable;
     private AudioVolumeObserver audioVolumeObserver;
     private PostsListAdapter postsListAdapter;
     private ExoPlayerViewHelper helper;
@@ -112,29 +117,13 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
             audioVolumeObserver = new AudioVolumeObserver(postsListAdapter.context);
         }
         registerAudioObserver();
-        viewed = false;
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                doubleClicked = false;
-                fetchPostDetails(postDetails.getPostId(), thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null);
-            }
-        };
     }
 
     @OnClick(R.id.content) void viewPost() {
-        if (doubleClicked) {
-            doubleClicked = false;
-            handler.removeCallbacks(runnable);
-            likeDislikePost();
-            return;
-        }
-
-        this.doubleClicked = true;
-//        Toast.makeText(this, "Hit back again to exit", Toast.LENGTH_SHORT).show();
-
-        handler.postDelayed(runnable, DOUBLE_CLICK_DURATION);
+        PostsListFragment.positionToUpdate = getAdapterPosition();
+        PostsListFragment.postDetails = postDetails;
+        postsListAdapter.listener.postDetails(postDetails, thumbnailDrawable != null ? thumbnailDrawable.getBitmap() : null,
+                true, false, postDetails.getMedias().get(0).getThumbUrl(), null);
     }
 
     @OnClick(R.id.dp) void viewProfileThroughDp() {
@@ -172,24 +161,21 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         return helper != null ? helper.getLatestPlaybackInfo() : new PlaybackInfo();
     }
 
-    @Override public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
-            if (helper == null)
-                helper = new ExoPlayerViewHelper(container, this,
-                        Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
-            helper.initialize(playbackInfo);
+    @Override
+    public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
+        if (helper == null)
+            helper = new ExoPlayerViewHelper(container, this, Uri.parse(postDetails.getMedias().get(0).getMediaUrl()));
+        helper.initialize(playbackInfo);
     }
 
     @Override public void play() {
         if (helper != null) helper.play();
-            adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
-            if (!viewed) {
-                viewed = true;
-                incrementView();
-            }
+        adjustVolumeButtons(audioVolumeObserver.getCurrentVolume());
     }
 
     @Override public void pause() {
         if (helper != null) helper.pause();
+        volumeControl.setVisibility(INVISIBLE);
     }
 
     @Override public boolean isPlaying() {
@@ -212,7 +198,8 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         return getAdapterPosition();
     }
 
-    @Override public void onSettled(Container container) {
+    @Override
+    public void onSettled(Container container) {
         // Do nothing
     }
 
@@ -229,25 +216,20 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
 
                 shimmerize(new View[]{title, location, category}, new View[]{username});
 
-//                /*Adjust view size before loading anything*/
-//            adjustViewSize(postsListAdapter.context, postDetails.getMedias().get(0).getDimension().getWidth(),
-//                    postDetails.getMedias().get(0).getDimension().getHeight(),
-//                    playerView.getLayoutParams(), position, null, true);
+            @DrawableRes int placeholder = postDetails.getPostOwner().getGender() == MALE ? R.drawable.ic_user_male_dp_small :
+                    R.drawable.ic_user_female_dp;
 
-                @DrawableRes int placeholder = postDetails.getPostOwner().getGender() == MALE ? R.drawable.ic_user_male_dp_small :
-                        R.drawable.ic_user_female_dp;
-
-                Glide.with(postsListAdapter.context)
-                        .load(postDetails.getPostOwner().getProfileMedia() != null ?
-                                postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
-                        .apply(new RequestOptions()
-                                .skipMemoryCache(false)
-                                .placeholder(R.drawable.ic_user_male_dp_small))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
+            Glide.with(postsListAdapter.context)
+                    .load(postDetails.getPostOwner().getProfileMedia() != null ?
+                            postDetails.getPostOwner().getProfileMedia().getThumbUrl() : placeholder)
+                    .apply(new RequestOptions()
+                            .skipMemoryCache(false)
+                            .placeholder(R.drawable.ic_user_male_dp_small))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
@@ -272,6 +254,58 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         }
     }
 
+    @Override
+    public void bind(int position, List<Object> payloads) {
+        if (payloads.isEmpty()) return;
+
+        if (payloads.get(0) instanceof PostDetails) {
+            bind(position);
+            return;
+        }
+
+        Bundle bundle = (Bundle) payloads.get(0);
+        if (bundle.containsKey(DIFF_POST_DETAILS)) {
+            postDetails = bundle.getParcelable(DIFF_POST_DETAILS);
+            return;
+        }
+
+        for (String key : bundle.keySet()) {
+            try {
+                switch (key) {
+                    case DIFF_LIKES:
+                        postDetails.setLikes(bundle.getInt(DIFF_LIKES));
+                        break;
+                    case DIFF_TOTAL_REACTIONS:
+                        postDetails.setTotalReactions(bundle.getInt(DIFF_TOTAL_REACTIONS));
+                        postDetails.setReactions(bundle.<PostReaction>getParcelableArrayList(DIFF_REACTIONS));
+                        break;
+                    case DIFF_TOTAL_TAGS:
+                        postDetails.setTotalTags(bundle.getInt(DIFF_TOTAL_TAGS));
+                        break;
+                    case DIFF_HAS_CHECKIN:
+                        postDetails.setHasCheckin(bundle.getBoolean(DIFF_HAS_CHECKIN));
+                        break;
+                    case DIFF_TITLE:
+                        postDetails.setTitle(bundle.getString(DIFF_TITLE));
+                        break;
+                    case DIFF_CAN_REACT:
+                        postDetails.setCanReact(bundle.getBoolean(DIFF_CAN_REACT));
+                        break;
+                    case DIFF_CAN_LIKE:
+                        postDetails.setCanReact(bundle.getBoolean(DIFF_CAN_REACT));
+                        break;
+                    case DIFF_CHECKIN:
+                        postDetails.setCheckIn((CheckIn) bundle.getParcelable(DIFF_CHECKIN));
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void setFields() {
         deShimmerize(new View[]{title, location, username});
 
@@ -293,7 +327,7 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
             if (category.getVisibility() == VISIBLE) {
                 category.setText(postDetails.getCategories().get(0).getCategoryName());
                 category.setBackground(
-                        postsListAdapter.getBackground(ColorStateList.valueOf(Color.parseColor(postDetails.getCategories().get(0).getMyColor()))));
+                        getBackground(ColorStateList.valueOf(Color.parseColor(postDetails.getCategories().get(0).getMyColor()))));
                 int categoriesSize = postDetails.getCategories().size();
                 if (categoriesSize > 1) {
                     categoryExtra.setVisibility(VISIBLE);
@@ -352,62 +386,71 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         popularityLayoutShimmer.setVisibility(GONE);
     }
 
-    private void likeDislikePost() {
-        Callback<ResultObject> callback = new Callback<ResultObject>() {
-            @Override
-            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                if (response.code() != 200) {
-                    if (response.body() != null)
-                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
-                    else
-                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
-                }
-            }
+//    private void likeDislikePost() {
+//        Callback<ResultObject> callback = new Callback<ResultObject>() {
+//            @Override
+//            public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                if (response.code() != 200) {
+//                    if (response.body() != null)
+//                        Log.e("LikeDislikePost", response.code() + " : " + response.body().getMessage());
+//                    else
+//                        Log.e("LikeDislikePost", response.code() + " : " + response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResultObject> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        };
+//
+//        if (postDetails.canLike()) {
+////            Like the post
+//            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, postsListAdapter.context).enqueue(callback);
+//            postDetails.canLike = false;
+//            postDetails.likes++;
+//        } else {
+////            Unlike the post
+//            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, postsListAdapter.context).enqueue(callback);
+//            postDetails.canLike = true;
+//            postDetails.likes--;
+//        }
+//
+//        setLikes();
+//        likes.startAnimation(AnimationUtils.loadAnimation(postsListAdapter.context, R.anim.selected));
+//    }
 
-            @Override
-            public void onFailure(Call<ResultObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        };
+//    private void incrementView() {
+//        if (!postDetails.canDelete()) {
+//            ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), postsListAdapter.context)
+//                    .enqueue(new Callback<ResultObject>() {
+//                        @Override
+//                        public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
+//                            try {
+//                                if (response.code() == 200 && response.body().getStatus()) {
+//                                    if (PostsListFragment.postDetails != null)
+//                                        PostsListFragment.postDetails.getMedias().get(0).views++;
+//                                    postDetails.getMedias().get(0).views++;
+//                                    setViews();
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ResultObject> call, Throwable t) {
+//                            t.printStackTrace();
+//                        }
+//                    });
+//        }
+//    }
 
-        if (postDetails.canLike()) {
-//            Like the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 1, postsListAdapter.context).enqueue(callback);
-            postDetails.canLike = false;
-            postDetails.likes++;
-        } else {
-//            Unlike the post
-            ApiCallingService.Posts.likeDislikePost(postDetails.getPostId(), 2, postsListAdapter.context).enqueue(callback);
-            postDetails.canLike = true;
-            postDetails.likes--;
-        }
-
-        setLikes();
-        likes.startAnimation(AnimationUtils.loadAnimation(postsListAdapter.context, R.anim.selected));
-    }
-
-    private void incrementView() {
-        ApiCallingService.Posts.incrementViewCount(postDetails.getMedias().get(0).getMediaId(), postsListAdapter.context)
-                .enqueue(new Callback<ResultObject>() {
-                    @Override
-                    public void onResponse(Call<ResultObject> call, Response<ResultObject> response) {
-                        try {
-                            if (response.code() == 200 && response.body().getStatus()) {
-                                if (PostsListFragment.postDetails != null)
-                                    PostsListFragment.postDetails.getMedias().get(0).views++;
-                                postDetails.getMedias().get(0).views++;
-                                setViews();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResultObject> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+    private GradientDrawable getBackground(ColorStateList color) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(color);
+        gradientDrawable.setCornerRadius(getPixels(postsListAdapter.context, 2));
+        return gradientDrawable;
     }
 
     private void registerAudioObserver() {
@@ -429,13 +472,13 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
     }
 
     private void adjustVolumeButtons(float currentVolume) {
-        volumeControl.setVisibility(VISIBLE);
+        volumeControl.setVisibility(isPlaying() ? VISIBLE : INVISIBLE);
         volumeControl.setImageResource(currentVolume == 0 ? R.drawable.ic_volume_off :
                 R.drawable.ic_volume_up);
     }
 
     @Override public void initialVolume(int currentVolume) {
-//        adjustVolumeButtons(currentVolume);
+        adjustVolumeButtons(currentVolume);
     }
 
     @Override public void onVolumeChanged(int currentVolume) {
@@ -447,34 +490,34 @@ class PostListViewHolder extends BaseRecyclerViewHolder implements ToroPlayer, O
         thumbnailDrawable = thumbnail;
     }
 
-    private void fetchPostDetails(int postId, final Bitmap thumbnail) {
-        ApiCallingService.Posts.getPostDetails(postId, postsListAdapter.context)
-                .enqueue(new Callback<PostDetails>() {
-                    @Override
-                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-                        if (response.code() == 200) {
-                            if (response.body() != null) {
-                                PostsListFragment.positionToUpdate = getAdapterPosition();
-                                PostsListFragment.postDetails = response.body();
-//                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
-
-                                postsListAdapter.listener.postDetails(response.body(), thumbnail, true,
-                                        false, response.body().getMedias().get(0).getThumbUrl(), null);
-                            } else {
-                                Toast.makeText(postsListAdapter.context,
-                                        "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
-                            }
-                        } else
-                            Toast.makeText(postsListAdapter.context,
-                                    "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostDetails> call, Throwable t) {
-                        t.printStackTrace();
-                        Toast.makeText(postsListAdapter.context,
-                                "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void fetchPostDetails(int postId, final Bitmap thumbnail) {
+//        ApiCallingService.Posts.getPostDetails(postId, postsListAdapter.context)
+//                .enqueue(new Callback<PostDetails>() {
+//                    @Override
+//                    public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
+//                        if (response.code() == 200) {
+//                            if (response.body() != null) {
+//                                PostsListFragment.positionToUpdate = getAdapterPosition();
+//                                PostsListFragment.postDetails = response.body();
+////                                listener.onPostInteraction(ACTION_VIEW_POST, postDetails, holder.postThumbnail, holder.layout);
+//
+//                                postsListAdapter.listener.postDetails(response.body(), thumbnail, true,
+//                                        false, response.body().getMedias().get(0).getThumbUrl(), null);
+//                            } else {
+//                                Toast.makeText(postsListAdapter.context,
+//                                        "Either post is not available or deleted by owner", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } else
+//                            Toast.makeText(postsListAdapter.context,
+//                                    "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<PostDetails> call, Throwable t) {
+//                        t.printStackTrace();
+//                        Toast.makeText(postsListAdapter.context,
+//                                "Could not play this video, please try again later", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }
