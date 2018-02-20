@@ -3,7 +3,6 @@ package com.cncoding.teazer.home.post.homepage;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -86,11 +85,6 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         AuthTokenViewModelFactory factory = new AuthTokenViewModelFactory(getAuthToken(getParentActivity().getApplicationContext()));
         postDetailsViewModel = ViewModelProviders.of(this, factory).get(PostDetailsViewModel.class);
         currentPage = 1;
-
-        //inmobi ads
-//        InMobiNative nativeAd = new InMobiNative(getActivity(), Long.parseLong("1519192553502"), nativeAdListener);
-//        nativeAd.load();
-//        mNativeAds.add(nativeAd);
     }
 
     @Override
@@ -143,8 +137,8 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
                     refreshPosts(false, false);
 
                     //for inmobi ads
-                    createStrands();
-                    loadAds();
+//                    createStrands();
+//                    loadAds();
                 }
             }
 
@@ -211,31 +205,17 @@ public class PostsListFragment extends BaseFragment implements View.OnKeyListene
         mFeedMap.clear();
     }
 
-    public void refreshPosts() {
-        swipeRefreshLayout.setRefreshing(true);
-        postDetailsViewModel.clearData();
-        postListAdapter.clear();
-        getHomePagePosts(1);
-
-        //to refresh inmobi ads
-        refreshAds();
-
-        scrollListener.resetState();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000);
-    }
-
     public void refreshPosts(boolean scrollToTop, boolean isRefreshing) {
         if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing() && isRefreshing) swipeRefreshLayout.setRefreshing(true);
         if (!isListAtTop() && scrollToTop) recyclerView.scrollToPosition(0);
         toggleRecyclerViewScrolling(false);
         if (scrollListener != null) scrollListener.resetState();
         postDetailsViewModel.clearData();
+        currentPage = 1;
         getHomePagePosts(1);
+
+        //to refresh inmobi ads
+        refreshAds();
     }
 
     public void getHomePagePosts(int page) {

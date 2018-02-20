@@ -81,6 +81,11 @@ public class PostDetails implements Parcelable {
         this.error = error;
     }
 
+    @Ignore
+    public PostDetails(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public PostDetails(Parcel in) {
         postId = in.readByte() == 0 ? null : in.readInt();
         postedBy = in.readByte() == 0 ? null : in.readInt();
