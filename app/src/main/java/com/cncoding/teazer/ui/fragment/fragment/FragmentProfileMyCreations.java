@@ -89,9 +89,7 @@ public class FragmentProfileMyCreations extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
                 if(next) {
-
                     if(page>2)
                     {
                         loader.setVisibility(View.VISIBLE);
@@ -100,12 +98,10 @@ public class FragmentProfileMyCreations extends Fragment {
                 }
             }
         };
-
         recyclerView.addOnScrollListener(scrollListener);
     }
 
     public void getProfileVideos(final int page) {
-
         ApiCallingService.Posts.getPostedVideos(context, page).enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
@@ -118,11 +114,10 @@ public class FragmentProfileMyCreations extends Fragment {
                             progress_bar.setVisibility(View.GONE);
                             loader.setVisibility(View.GONE);
                         } else
-
-                        {
-                            next = response.body().isNextPage();
-                            list.addAll(response.body().getPosts());
-                            recyclerView.getAdapter().notifyDataSetChanged();
+                            {
+                                next = response.body().isNextPage();
+                                list.addAll(response.body().getPosts());
+                                recyclerView.getAdapter().notifyDataSetChanged();
 
                             profileMyCreationAdapter.notifyItemRangeInserted(profileMyCreationAdapter.getItemCount(), list.size() - 1);
                             progress_bar.setVisibility(View.GONE);

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.cncoding.teazer.model.base.Category;
 import com.cncoding.teazer.model.base.Medias;
+import com.cncoding.teazer.model.profile.CoverMedia;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -61,6 +62,13 @@ public class PublicProfile implements Parcelable {
     @SerializedName("profile_media")
     @Expose
     private Medias profileMedia;
+    @SerializedName("has_cover_media")
+    @Expose
+    private Boolean hasCoverMedia;
+    @SerializedName("cover_media")
+    @Expose
+    private CoverMedia coverMedia;
+
     @SerializedName("categories")
     @Expose
     private ArrayList<Category> categories = null;
@@ -102,6 +110,70 @@ public class PublicProfile implements Parcelable {
         updatedAt = in.readString();
         byte tmpHasProfileMedia = in.readByte();
         hasProfileMedia = tmpHasProfileMedia == 0 ? null : tmpHasProfileMedia == 1;
+        profileMedia = in.readParcelable(Medias.class.getClassLoader());
+        byte tmpHasCoverMedia = in.readByte();
+        hasCoverMedia = tmpHasCoverMedia == 0 ? null : tmpHasCoverMedia == 1;
+        categories = in.createTypedArrayList(Category.CREATOR);
+
+    }
+
+    public Boolean getHasCoverMedia() {
+        return hasCoverMedia;
+    }
+
+    public CoverMedia getCoverMedia() {
+        return coverMedia;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (userId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(userId);
+        }
+        dest.writeString(userName);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(email);
+        if (phoneNumber == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(phoneNumber);
+        }
+        if (countryCode == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(countryCode);
+        }
+        if (gender == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(gender);
+        }
+        dest.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
+        dest.writeString(description);
+        if (accountType == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(accountType);
+        }
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        dest.writeByte((byte) (hasProfileMedia == null ? 0 : hasProfileMedia ? 1 : 2));
+        dest.writeParcelable(profileMedia, flags);
+        dest.writeByte((byte) (hasCoverMedia == null ? 0 : hasCoverMedia ? 1 : 2));
+        dest.writeTypedList(categories);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<PublicProfile> CREATOR = new Creator<PublicProfile>() {
@@ -242,53 +314,5 @@ public class PublicProfile implements Parcelable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        if (userId == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(userId);
-        }
-        parcel.writeString(userName);
-        parcel.writeString(firstName);
-        parcel.writeString(lastName);
-        parcel.writeString(email);
-        if (phoneNumber == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeLong(phoneNumber);
-        }
-        if (countryCode == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(countryCode);
-        }
-        if (gender == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(gender);
-        }
-        parcel.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
-        parcel.writeString(description);
-        if (accountType == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(accountType);
-        }
-        parcel.writeString(createdAt);
-        parcel.writeString(updatedAt);
-        parcel.writeByte((byte) (hasProfileMedia == null ? 0 : hasProfileMedia ? 1 : 2));
     }
 }

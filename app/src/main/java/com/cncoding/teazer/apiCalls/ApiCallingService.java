@@ -25,6 +25,7 @@ import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.CoverImageResponse;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
@@ -676,6 +677,11 @@ public class ApiCallingService {
         public static Call<ResultObject> updateUserProfileMedia(MultipartBody.Part file, Context context) {
             return getUserService(context).updateUserProfileMedia(file);
         }
+
+        public static Call<CoverImageResponse> updateUserProfileCoverMedia(MultipartBody.Part file, Context context) {
+            return getUserService(context).updateUserProfileCoverMedia(file);
+        }
+
 
         public static  Call<ResultObject> resetFcmToken(String header, String token, Context context) {
             return getUserService(context).resetFcmToken(header, token);

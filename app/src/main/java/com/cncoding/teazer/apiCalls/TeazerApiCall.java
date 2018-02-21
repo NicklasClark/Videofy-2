@@ -2,7 +2,6 @@ package com.cncoding.teazer.apiCalls;
 
 import android.support.annotation.Nullable;
 
-
 import com.cncoding.teazer.model.application.DeactivateTypes;
 import com.cncoding.teazer.model.application.ReportPostTitlesResponse;
 import com.cncoding.teazer.model.base.Authorize;
@@ -17,12 +16,12 @@ import com.cncoding.teazer.model.post.LandingPosts;
 import com.cncoding.teazer.model.post.LikedUserPost;
 import com.cncoding.teazer.model.post.PostDetails;
 import com.cncoding.teazer.model.post.PostList;
-import com.cncoding.teazer.model.post.PostReaction;
 import com.cncoding.teazer.model.post.PostReactionsList;
 import com.cncoding.teazer.model.post.PostUploadResult;
 import com.cncoding.teazer.model.post.ReportPost;
 import com.cncoding.teazer.model.post.TaggedUsersList;
 import com.cncoding.teazer.model.post.UpdatePostRequest;
+import com.cncoding.teazer.model.profile.CoverImageResponse;
 import com.cncoding.teazer.model.react.ReactVideoDetailsResponse;
 import com.cncoding.teazer.model.react.ReactionResponse;
 import com.cncoding.teazer.model.react.ReactionUploadResult;
@@ -721,6 +720,12 @@ import retrofit2.http.Query;
         @Multipart
         @POST("/api/v1/user/update/profile/media")
         Call<ResultObject> updateUserProfileMedia(@Part MultipartBody.Part media);
+
+
+        @Multipart
+        @POST("/api/v1/user/update/profile/cover/media")
+        Call<CoverImageResponse> updateUserProfileCoverMedia(@Part MultipartBody.Part media);
+
 
         /**
          * Reset the FCM Token

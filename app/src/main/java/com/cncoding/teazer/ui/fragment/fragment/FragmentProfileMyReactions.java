@@ -74,7 +74,7 @@ public class FragmentProfileMyReactions extends Fragment {
         list=new ArrayList<>();
         layoutManager=new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
-        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list);
+        profileMyReactionAdapter = new ProfileMyReactionAdapter(context, list,getParentFragment());
         recyclerView.setAdapter(profileMyReactionAdapter);
         getReactions(1);
 

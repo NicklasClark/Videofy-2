@@ -18,24 +18,24 @@
     android:layout_width="match_parent"
     app:cardElevation="2dp"
     android:layout_margin="10dp"
-    android:layout_height="250dp">
+    android:layout_height="180dp">
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="180dp">
         <ImageView
             android:id="@+id/demoimage"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
-            android:layout_height="250dp" />
+            android:layout_height="180dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="180dp">
         <ImageView
             android:layout_width="match_parent"
             android:background="@drawable/bg_vignette"
-            android:layout_height="250dp" />
+            android:layout_height="180dp" />
 
     </RelativeLayout>
 

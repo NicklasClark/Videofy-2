@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+  >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        app:cardElevation="2dp"
+        android:layout_height="90dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+    <ImageView
+        android:id="@+id/profile_id2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#8b0576ff"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_add_white"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/profile_pic" />
+
+        <TextView
+            android:id="@+id/bullets"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/profile_id2"
+            android:layout_margin="5dp"
+            android:textColor="#8b0576ff"
+            android:textSize="@dimen/text_size_content"
+            android:text="Add your own Cover"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

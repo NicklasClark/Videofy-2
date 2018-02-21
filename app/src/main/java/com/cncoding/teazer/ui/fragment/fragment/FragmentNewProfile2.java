@@ -2,15 +2,19 @@ package com.cncoding.teazer.ui.fragment.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +31,7 @@ import com.cncoding.teazer.adapter.ProfileCreationReactionPagerAdapter;
 import com.cncoding.teazer.adapter.ProfileMyCreationAdapter;
 import com.cncoding.teazer.adapter.ProfileMyReactionAdapter;
 import com.cncoding.teazer.apiCalls.ApiCallingService;
+import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaSemiBoldTextView;
 import com.cncoding.teazer.home.BaseFragment;
@@ -56,11 +56,13 @@ import retrofit2.Response;
 import static com.cncoding.teazer.utilities.FabricAnalyticsUtil.logProfileShareEvent;
 
 /**
- * Created by farazhabib on 08/02/18.
+ * Created by farazhabib on 19/02/18.
  */
 
-public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener,ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction{
+public class FragmentNewProfile2 extends BaseFragment implements ProfileMyCreationAdapter.OnChildFragmentUpdateVideos, ProfileMyReactionAdapter.OnChildFragmentUpdateReaction
 
+{
+    private static final int RC_REQUEST_STORAGE = 1001;
 
     PublicProfile userProfile;
     TextView _creations;
@@ -71,13 +73,12 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     ProximaNovaRegularCheckedTextView _name;
     ProximaNovaSemiBoldTextView _username;
     ProximaNovaRegularCheckedTextView _detail;
-    de.hdodenhof.circleimageview.CircleImageView profile_id;
+    CircularAppCompatImageView profile_id;
 
     int totalfollowers;
     int totalfollowing;
     int totalvideos;
     int reactions;
-
     String firstname;
     String userId;
     String lastname;
@@ -91,42 +92,24 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     int countrycode;
     String detail;
     private String userProfileThumbnail;
-    private String userCoverThumbnail;
     private String userCoverUrl;
     private String userProfileUrl;
     ImageView placeholder;
 
     Context context;
-    CollapsingToolbarLayout collapsingToolbar;
-
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
+    private FragmentNewProfile2.FollowerListListener mListener;
+    AppBarLayout app_bar;
 
-
-    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
-    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
-    private static final int ALPHA_ANIMATIONS_DURATION = 200;
-
-    private boolean mIsTheTitleVisible = false;
-    private boolean mIsTheTitleContainerVisible = true;
     public static boolean checkpostupdated = false;
     public static boolean checkprofileupdated = false;
     public static boolean checkpicUpdated = false;
-    public static boolean checkCoverpicUpdated = false;
 
-
-
-    private LinearLayout mTitleContainer;
-    private ProximaNovaRegularCheckedTextView mTitle;
-    private AppBarLayout mAppBarLayout;
-    private Toolbar mToolbar;
-
-    private NewProfileFragment.FollowerListListener mListener;
-
-    public static NewProfileFragment newInstance(int page) {
-        return new NewProfileFragment();
+    public static FragmentNewProfile2 newInstance(int page) {
+        return new FragmentNewProfile2();
     }
 
     @Override
@@ -136,20 +119,18 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     }
 
 
-    // 12-02-2017
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context = container.getContext();
-        View view = inflater.inflate(R.layout.fragment_profile_scrol, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_profile3, container, false);
         ButterKnife.bind(this, view);
-        mToolbar = view.findViewById(R.id.main_toolbar);
-        mTitle = view.findViewById(R.id.main_textview_title);
-        mTitleContainer = view.findViewById(R.id.main_linearlayout_title);
-        mAppBarLayout = view.findViewById(R.id.main_appbar);
+        context=container.getContext();
+        final android.support.v7.widget.Toolbar toolbar = view.findViewById(R.id.toolbar);
+        getParentActivity().setSupportActionBar(toolbar);
+        getParentActivity().getSupportActionBar().setTitle("");
+        //  toolbar.setSubtitle("Android-er.blogspot.com");
+        //  toolbar.setLogo(android.R.drawable.ic_menu_info_details);
 
-        placeholder = view.findViewById(R.id.placeholder);
+        placeholder = view.findViewById(R.id.background);
         _name = view.findViewById(R.id.name);
         _username = view.findViewById(R.id.username);
         _detail = view.findViewById(R.id.detail);
@@ -158,67 +139,7 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
         _following = view.findViewById(R.id.following);
         _reactions = view.findViewById(R.id.reaction);
         profile_id = view.findViewById(R.id.profilepic);
-
-        mAppBarLayout.addOnOffsetChangedListener(NewProfileFragment.this);
-        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
-        getParentActivity().setSupportActionBar(mToolbar);
-
-//
-//        collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
-//
-//        collapsingToolbar.setTitle("Mohd Arif");
-//
-//        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-//        AppBarLayout appBarLayout =  view.findViewById(R.id.app_bar_layout);
-//
-//  appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
-//                    // Collapsed
-//                    mainlayout.setVisibility(View.GONE);
-//
-//                } else if (verticalOffset == 0) {
-//                    mainlayout.setVisibility(View.VISIBLE);
-//
-//                } else if(verticalOffset< -750){
-//                    mainlayout.setVisibility(View.VISIBLE);
-//                }
-//
-//            }
-//        });
-
-
-//        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//           // boolean isShow = false;
-//            //int scrollRange = -1;
-//
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//
-//
-//                int maxScroll = appBarLayout.getTotalScrollRange();
-//                float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
-//                handleAlphaOnTitle(percentage);
-//                handleToolbarTitleVisibility(percentage);
-//
-////                if (scrollRange == -1) {
-////                    scrollRange = appBarLayout.getTotalScrollRange();
-////
-////                }
-////                if (scrollRange + verticalOffset ==0) {
-////                    isShow = true;
-////
-////                    fadeOutAndHideImage(mainlayout);
-////
-////                } else  {
-////                    isShow = false;
-////                    mainlayout.setVisibility(View.VISIBLE);
-////
-////                }
-//            }
-//        });
-//
+        app_bar = view.findViewById(R.id.app_bar);
 
 
         _followers.setOnClickListener(new View.OnClickListener() {
@@ -253,55 +174,87 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
         });
 
+
+
+//        ViewPager viewPager = view.findViewById(R.id.viewpager);
+//        viewPager.setAdapter(new TestPagerAdapter(getActivity().getSupportFragmentManager()));
+//        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+//        tabLayout.setupWithViewPager(viewPager);
+
+        app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    // Collapsed
+                    _name.setTextColor(Color.parseColor("#FFFFFF"));
+                    _username.setTextColor(Color.parseColor("#FFFFFF"));
+                    toolbar.setBackgroundResource(R.color.blur);
+                    //Blurry.with(getContext()).from(photobitmap).into(placeholder);
+
+                }
+                else if (verticalOffset <-200&& verticalOffset>-400)
+                {
+                    _name.setTextColor(Color.parseColor("#c6c6c6"));
+                    _username.setTextColor(Color.parseColor("#c6c6c6"));
+                    toolbar.setBackgroundResource(R.color.blur2);
+
+
+                }
+                else if (verticalOffset <0 && verticalOffset>-200)
+                {
+                    _name.setTextColor(Color.parseColor("#88232323"));
+                    _username.setTextColor(Color.parseColor("#88232323"));
+                    toolbar.setBackgroundResource(R.color.blur2);
+
+                }
+                else if (verticalOffset == 0) {
+                    // Expanded
+                    _name.setTextColor(Color.parseColor("#000000"));
+                    _username.setTextColor(Color.parseColor("#000000"));
+                    toolbar.setBackgroundResource(R.color.blur2);
+
+
+                } else {
+                    // Somewhere in between
+//                    _name.setTextColor(Color.parseColor("#c6c6c6"));
+//                    _username.setTextColor(Color.parseColor("#c6c6c6"));
+                    toolbar.setBackgroundResource(R.color.blur2);
+
+
+                }
+            }
+        });
         return view;
     }
 
-    private void fadeOutAndHideImage(final RelativeLayout img) {
-        Animation fadeOut = new AlphaAnimation(0, 0);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(10);
 
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                img.setVisibility(View.GONE);
-            }
 
-            public void onAnimationRepeat(Animation animation) {
-            }
 
-            public void onAnimationStart(Animation animation) {
-            }
-        });
 
-        img.startAnimation(fadeOut);
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         getParentActivity().hideToolbar();
 
-
-        if (NewProfileFragment.checkprofileupdated) {
+        if (FragmentNewProfile2.checkprofileupdated) {
             updateProfile();
-            NewProfileFragment.checkprofileupdated = false;
         }
 
-
-        if(NewProfileFragment.checkpostupdated)
+        if(FragmentNewProfile2.checkpostupdated)
         {
 
             viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
             tabLayout.setupWithViewPager(viewPager);
-            NewProfileFragment.checkpostupdated=false;
+            FragmentNewProfile2.checkpostupdated=false;
         }
+
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getParentActivity().showToolbar();
 
     }
 
@@ -314,22 +267,11 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getProfileDetail();
 
-
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-//                R.drawable.backgroundprofile);
-//        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-//            @Override
-//            public void onGenerated(Palette palette) {
-//                collapsingToolbar.setContentScrimColor(palette.getMutedColor(R.attr.colorPrimary));
-//                collapsingToolbar.setStatusBarScrimColor(palette.getMutedColor(R.attr.colorPrimaryDark));
-//            }
-//        });
         viewPager.setAdapter(new ProfileCreationReactionPagerAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
 
-
+        getProfileDetail();
     }
 
     @Override
@@ -337,9 +279,10 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
         super.onAttach(context);
         if (context instanceof NewProfileFragment.FollowerListListener) {
-            mListener = (NewProfileFragment.FollowerListListener) context;
-
+            mListener = (FragmentNewProfile2.FollowerListListener) context;
         }
+
+
     }
 
     @Override
@@ -351,12 +294,13 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_new_profile, menu);
+         menu.clear();
+         inflater.inflate(R.menu.menu_new_profile, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
 
         switch (item.getItemId()) {
 
@@ -417,7 +361,7 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                         {
 
                         }
-                          //  loader.setVisibility(View.GONE);
+                        //  loader.setVisibility(View.GONE);
                     }
                 });
 
@@ -450,62 +394,25 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
 
         }
+
         return true;
+    }
+    @Override
+    public void updateVideosCreation(int count) {
+
+
+        int counter=totalvideos-count;
+        totalvideos=counter;
+        _creations.setText(String.valueOf(totalvideos));
+
     }
 
     @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
+    public void updateReaction(int count) {
 
-
-
-
-
-    private void handleToolbarTitleVisibility(float percentage) {
-        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
-
-            if (!mIsTheTitleVisible) {
-                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleVisible = true;
-            }
-
-        } else {
-
-            if (mIsTheTitleVisible) {
-                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleVisible = false;
-            }
-        }
-    }
-
-    private void handleAlphaOnTitle(float percentage) {
-        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
-            if (mIsTheTitleContainerVisible) {
-                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleContainerVisible = false;
-            }
-
-        } else {
-
-            if (!mIsTheTitleContainerVisible) {
-                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleContainerVisible = true;
-            }
-        }
-    }
-
-    public static void startAlphaAnimation(View v, long duration, int visibility) {
-        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
-                ? new AlphaAnimation(0f, 1f)
-                : new AlphaAnimation(1f, 0f);
-
-        alphaAnimation.setDuration(duration);
-        alphaAnimation.setFillAfter(true);
-        v.startAnimation(alphaAnimation);
+        int counter=reactions-count;
+        reactions=counter;
+        _reactions.setText(String.valueOf(reactions));
     }
 
 
@@ -552,68 +459,51 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
-
                     }
                     else
                     {
-
-
-
                         if(gender==1)
                         {
                             Glide.with(context)
                                     .load(R.drawable.ic_user_male_dp)
                                     .into(profile_id);
-
                         }
                         else if(gender==2)
                         {
                             Glide.with(context)
                                     .load(R.drawable.ic_user_female_dp)
                                     .into(profile_id);
-
                         }
                         else
                         {
                             Glide.with(context)
                                     .load(R.drawable.ic_user_male_dp)
                                     .into(profile_id);
-
                         }
                     }
-
-
                     if (hasCoverMedia)
                     {
-
                         userCoverUrl=userProfile.getCoverMedia().getMediaUrl();
-                        //userCoverUrl=userProfile.getCoverMedia().getThumbUrl();
 
                         Glide.with(context)
                                 .load(userCoverUrl)
                                 .into(placeholder);
-
                     }
                     else
                     {
-
                     }
                     _detail.setText(detail);
                     _name.setText(firstname + " " + lastname);
                     _username.setText(username);
-                    mTitle.setText(username);
-
                     _followers.setText(String.valueOf(totalfollowers));
                     _following.setText(String.valueOf(totalfollowing));
                     _creations.setText(String.valueOf(totalvideos));
                     _reactions.setText(String.valueOf(reactions));
 
-//
-//
-//
 //                    blur_bacground.setVisibility(View.VISIBLE);
 //                    loader.setVisibility(View.GONE);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
 //                    blur_bacground.setVisibility(View.GONE);
 //                    loader.setVisibility(View.GONE);
 //                    e.printStackTrace();
@@ -632,7 +522,9 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
 
 
     public void updateProfile() {
-       // loader.setVisibility(View.VISIBLE);
+
+        FragmentNewProfile2.checkprofileupdated = false;
+        // loader.setVisibility(View.VISIBLE);
         //blur_bacground.setVisibility(View.GONE);
         ApiCallingService.User.getUserProfile(context).enqueue(new Callback<UserProfile>() {
             @Override
@@ -646,6 +538,7 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                     email = userProfile.getEmail();
                     accountType = userProfile.getAccountType();
                     hasProfleMedia = userProfile.getHasProfileMedia();
+                    hasCoverMedia = userProfile.getHasCoverMedia();
                     totalfollowers = response.body().getFollowers();
                     totalfollowing = response.body().getFollowings();
                     totalvideos = response.body().getTotalVideos();
@@ -661,8 +554,8 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                     countrycode = userProfile.getCountryCode();
                     detail = userProfile.getDescription();
 
-                    if(NewProfileFragment.checkpicUpdated){
-                        NewProfileFragment.checkpicUpdated=false;
+                    if(FragmentNewProfile2.checkpicUpdated){
+                        FragmentNewProfile2.checkpicUpdated=false;
                         userProfileUrl=null;
                     }
 
@@ -673,20 +566,15 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                         Glide.with(context)
                                 .load(userProfileUrl)
                                 .into(profile_id);
-                   //     profileBlur(userProfileUrl);
+
                     }
                     else
                     {
-//                        Glide.with(context)
-//                                .load(R.drawable.ic_default_bg)
-//                                .into(bgImage);
-
                         if(gender==1)
                         {
                             Glide.with(context)
                                     .load(R.drawable.ic_user_male_dp)
                                     .into(profile_id);
-
                         }
                         else if(gender==2)
                         {
@@ -702,6 +590,22 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                                     .into(profile_id);
 
                         }
+                        userCoverUrl=null;
+
+                    }
+                    if (hasCoverMedia)
+                    {
+                        userCoverUrl=userProfile.getCoverMedia().getMediaUrl();
+                        //userCoverUrl=userProfile.getCoverMedia().getThumbUrl();
+
+
+                        Glide.with(context)
+                                .load(userCoverUrl)
+                                .into(placeholder);
+                    }
+                    else
+                    {
+
                     }
                     _detail.setText(detail);
                     _name.setText(firstname);
@@ -711,13 +615,11 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
                     _creations.setText(String.valueOf(totalvideos));
                     _reactions.setText(String.valueOf(reactions));
 
-
-                 //   loader.setVisibility(View.GONE);
-                  //  blur_bacground.setVisibility(View.VISIBLE);
+                    //   loader.setVisibility(View.GONE);
+                    //  blur_bacground.setVisibility(View.VISIBLE);
                 }
                 catch (Exception e) {
-
-                  //  loader.setVisibility(View.GONE);
+                    //  loader.setVisibility(View.GONE);
                     e.printStackTrace();
 
                 }
@@ -730,31 +632,81 @@ public class NewProfileFragment extends BaseFragment implements AppBarLayout.OnO
         });
     }
 
-    @Override
-    public void updateVideosCreation(int count) {
-
-
-            int counter=totalvideos-count;
-            totalvideos=counter;
-            _creations.setText(String.valueOf(totalvideos));
-
-    }
-
-    @Override
-    public void updateReaction(int count) {
-
-        int counter=reactions-count;
-        reactions=counter;
-        _reactions.setText(String.valueOf(reactions));
-    }
-
-
     public interface FollowerListListener {
 
         void onFollowerListListener(String id, String identifier);
-
         void onFollowingListListener(String id, String identifier);
     }
 
 
+    static class TestPagerAdapter extends FragmentPagerAdapter {
+
+        public TestPagerAdapter(FragmentManager fm) {
+
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new TestFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+            return "Tab " + (position + 1);
+        }
+    }
+
+
+
+
+    public static class TestFragment extends Fragment {
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+            View view = inflater.inflate(R.layout.tab_page, container, false);
+
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(new TestAdapter());
+
+            return view;
+        }
+    }
+
+    static class TestAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+        @Override
+        public int getItemCount() {
+            return 100;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            ((TextView) holder.itemView).setText("List Item " + (position + 1));
+        }
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
 }
+

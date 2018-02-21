@@ -62,10 +62,9 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         if (fragment instanceof OnChildFragmentUpdateVideos) {
             onChildFragmentUpdateVideosllistrener = (OnChildFragmentUpdateVideos) fragment;
         }
-
         else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnChildFragmentInteractionListener");
+            throw new RuntimeException(context.toString()
+                    + " must implement OnChildFragmentInteractionListener");
         }
     }
 
@@ -87,7 +86,6 @@ public class ProfileMyCreationAdapter extends RecyclerView.Adapter<ProfileMyCrea
         final String likes;
         final int reactions;
         final int postId;
-
         try {
             cont = list.get(i);
             videoTitle = cont.getTitle();

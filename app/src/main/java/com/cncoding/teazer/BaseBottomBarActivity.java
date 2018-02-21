@@ -79,6 +79,8 @@ import com.cncoding.teazer.ui.fragment.activity.FollowersListActivity;
 import com.cncoding.teazer.ui.fragment.activity.FollowingListActivities;
 import com.cncoding.teazer.ui.fragment.activity.OthersProfileFragment;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentLikedUserReaction;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewOtherProfile;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentReactionplayer;
 import com.cncoding.teazer.ui.fragment.fragment.NewProfileFragment;
 import com.cncoding.teazer.utilities.FragmentHistory;
@@ -168,7 +170,7 @@ public class BaseBottomBarActivity extends BaseActivity
 //    Notification listeners
         OnNotificationsInteractionListener, OnNotificationsFragmentInteractionListener,
 //    Profile listeners
-        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener,
+        OtherProfileListener, FollowerListListener, myCreationListener, OtherProfileListenerFollowing, FollowerCreationListener, NewProfileFragment.FollowerListListener,FragmentNewProfile2.FollowerListListener,
 //    Profile listeners LikedUser
         CallProfileListener,
 //    Reaction related listeners
@@ -227,7 +229,7 @@ public class BaseBottomBarActivity extends BaseActivity
         setContentView(R.layout.activity_base_bottom_bar);
         ButterKnife.bind(this);
 
-       Log.d("FCM", SharedPrefs.getFcmToken(this));
+//       Log.d("FCM", SharedPrefs.getFcmToken(this));
 //        Glide.with(this)
 //                .load(R.drawable.ic_loader)
 //                .asGif()
@@ -707,7 +709,7 @@ public class BaseBottomBarActivity extends BaseActivity
             switchTab(TAB2);
         else if (navigationController.getCurrentFragment() instanceof NotificationsFragment)
             switchTab(TAB4);
-        else if (navigationController.getCurrentFragment() instanceof NewProfileFragment)
+        else if (navigationController.getCurrentFragment() instanceof FragmentNewProfile2)
             switchTab(TAB5);
     }
 
@@ -940,7 +942,7 @@ public class BaseBottomBarActivity extends BaseActivity
                 break;
             case TAB5:
                 //currentFragment = ProfileFragment.newInstance();
-                currentFragment = NewProfileFragment.newInstance(1);
+                currentFragment = FragmentNewProfile2.newInstance(1);
                 break;
             default:
                 currentFragment = PostsListFragment.newInstance();
@@ -1074,7 +1076,8 @@ public class BaseBottomBarActivity extends BaseActivity
 
     @Override
     public void viewOthersProfile(String id, String username, String type) {
-        pushFragment(OthersProfileFragment.newInstance(id, type, username));
+     //   pushFragment(OthersProfileFragment.newInstance(id, type, username));
+        pushFragment(FragmentNewOtherProfile.newInstance(1));
     }
 
     @Override

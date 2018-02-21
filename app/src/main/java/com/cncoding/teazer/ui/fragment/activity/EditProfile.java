@@ -38,8 +38,8 @@ import com.cncoding.teazer.customViews.CircularAppCompatImageView;
 import com.cncoding.teazer.customViews.proximanovaviews.ProximaNovaRegularCheckedTextView;
 import com.cncoding.teazer.model.updatemobilenumber.ChangeMobileNumber;
 import com.cncoding.teazer.model.user.ProfileUpdateRequest;
+import com.cncoding.teazer.ui.fragment.fragment.FragmentNewProfile2;
 import com.cncoding.teazer.ui.fragment.fragment.FragmentVerifyOTP;
-import com.cncoding.teazer.ui.fragment.fragment.NewProfileFragment;
 import com.hbb20.CountryCodePicker;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -105,6 +105,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     ProximaNovaRegularCheckedTextView maletext;
     @BindView(R.id.femaletxt)
     ProximaNovaRegularCheckedTextView femaletxt;
+    @BindView(R.id.coverpicilayout)
+    RelativeLayout coverpicilayout;
+
 
 
     Button fab;
@@ -118,6 +121,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
     boolean flag = false;
     private String userProfileThumbnail;
     private String userProfileUrl;
+    private String userCoverUrl;
     public static final String VERIFY_OTP="fragment_verify_otp";
     public static boolean isNumberUpdated=false;
 
@@ -170,6 +174,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         lastname = intent.getStringExtra("LastName");
         String mobileno = intent.getStringExtra("MobileNumber");
         userProfileThumbnail = intent.getStringExtra("ProfileThumb");
+        userCoverUrl = intent.getStringExtra("CoverMedia");
         userProfileUrl = intent.getStringExtra("ProfileMedia");
         if (mobileno != null) {
             mobilenumber = Long.parseLong(mobileno);
@@ -270,23 +275,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                NewProfileFragment.checkprofileupdated = true;
-
-
-                // PickImageDialog.build(new PickSetup()).show(EditProfile.this);
-
-
-
-//                CropImage.activity(Uri.parse(userProfileUrl))
-//                        .start(EditProfile.this);
-
-
-//                CropImage.activity(Uri.parse(userProfileUrl))
-//                        .start(EditProfile.this);
-
-                //showPictureDialog();
-
+                FragmentNewProfile2.checkprofileupdated = true;
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setFixAspectRatio(true)
@@ -298,29 +287,54 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
             Glide.with(context)
                     .load(Uri.parse(userProfileUrl))
                     .into(profile_image);
-            profileBlur();
+
+
+            //profileBlur();
+           // bgImage
         }
+
+        if(userCoverUrl !=null)
+        {
+
+            Glide.with(context)
+                    .load(Uri.parse(userCoverUrl))
+                    .into(bgImage);
+        }
+
+        coverpicilayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              //  Toast.makeText(context,"change cover pic",Toast.LENGTH_SHORT).show();
+                layoutdetail.setVisibility(View.GONE);
+//                getSupportFragmentManager().beginTransaction()
+//                        .setCustomAnimations(slide_in_right, slide_out_left, slide_in_left, slide_out_right)
+//                        .replace(R.id.container, FragmentChangeCoverPhoto.newInstance())
+//                        .addToBackStack("FragmentChangeCoverpic")
+//                        .commit();
+                Intent intent=new Intent(getApplicationContext(),CoverPicChangeActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-           NewProfileFragment.checkprofileupdated = true;
+
+            FragmentNewProfile2.checkprofileupdated = true;
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                // cropImageView.setImageUriAsync(resultUri);
 
-//                Picasso.with(EditProfile.this)
-//                        .load(resultUri)
-//                        .into(profile_image);
                 try {
 
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(EditProfile.this.getContentResolver(), resultUri);
                     Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
 
-                    Blurry.with(EditProfile.this).from(scaledBitmap).into(bgImage);
+                   // Blurry.with(EditProfile.this).from(scaledBitmap).into(bgImage);
                     profile_image.setImageBitmap(scaledBitmap);
 
 
@@ -353,7 +367,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         if (r.getError() == null) {
             try {
 
-                NewProfileFragment.checkprofileupdated = true;
+                FragmentNewProfile2.checkprofileupdated = true;
 
 //                SharedPreferences prfs = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
 //                final String imageUri = prfs.getString("MYIMAGES", "");
@@ -377,7 +391,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                 bgImage.setImageBitmap(b);
 
                 byte[] bte = bitmaptoByte(b);
-                Blurry.with(EditProfile.this).from(b).into(bgImage);
+               // Blurry.with(EditProfile.this).from(b).into(bgImage);
 
                 SharedPreferences preferences = getSharedPreferences("AUTHENTICATION_FILE_NAME", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -541,6 +555,19 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
         layoutdetail.setVisibility(View.VISIBLE);
         simpleProgressBar.setVisibility(View.GONE);
 
+        if(CoverPicChangeActivity.coverPicUrl!=null)
+        {
+            userCoverUrl=CoverPicChangeActivity.coverPicUrl;
+            Glide.with(context)
+                            .load(Uri.parse(userCoverUrl))
+                            .into(bgImage);
+            CoverPicChangeActivity.coverPicUrl=null;
+
+
+        }
+
+
+
     }
 
 
@@ -558,7 +585,7 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                             Toast.makeText(getApplicationContext(), "Your Profile has been updated", Toast.LENGTH_SHORT).show();
                             simpleProgressBar.setVisibility(View.GONE);
                             layoutdetail.setVisibility(View.VISIBLE);
-                            NewProfileFragment.checkprofileupdated = true;
+                            FragmentNewProfile2.checkprofileupdated = true;
                             finish();
                         } else {
                             Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -825,6 +852,9 @@ public class EditProfile extends AppCompatActivity implements IPickResult, EasyP
                     }
                 });
     }
+
+
+
 }
 
 

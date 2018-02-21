@@ -210,6 +210,7 @@ public class ProfileFragment extends BaseFragment implements ProfileMyCreationAd
         btnshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String profileUrl = null;
                 try {
                     profileUrl = userProfile.getProfileMedia() == null? null:userProfile.getProfileMedia().getMediaUrl();
